@@ -1,7 +1,12 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'dart:async';
+
+import 'package:harmonoid/globals.dart';
+import 'package:harmonoid/albumviewer.dart';
+
 
 class SearchResult extends StatefulWidget {
   final String keyword;
@@ -11,10 +16,13 @@ class SearchResult extends StatefulWidget {
   _SearchResult createState() => _SearchResult();
 }
 
-class _SearchResult extends State<SearchResult> with SingleTickerProviderStateMixin {
+class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
 
+  SearchResultLabels _searchResultLabels;
   AnimationController _searchProgressController;
   Animation<double> _searchProgressAnimation;
+  Animation<double> _searchResultOpacity;
+  AnimationController _searchResultOpacityController;
   double _welcomeOpacity = 1.0;
   List _albums;
   List<Widget> _albumElements = new List<Widget>();
@@ -26,7 +34,7 @@ class _SearchResult extends State<SearchResult> with SingleTickerProviderStateMi
       this._welcomeOpacity = 0.0;
       Timer(Duration(milliseconds: 200), () {
         this._searchResultState = true;
-        this._welcomeOpacity = 1.0;
+        Timer(Duration(milliseconds: 200), () => this._searchResultOpacityController.forward());
       }); 
     });
   }
@@ -34,6 +42,8 @@ class _SearchResult extends State<SearchResult> with SingleTickerProviderStateMi
   @override
   void initState() {
     super.initState();
+    
+    this._searchResultLabels = SearchResultLabels(widget.searchMode);
 
     (() async {
       Uri uri = Uri.https('alexmercerind.herokuapp.com', '/search', {
@@ -47,15 +57,15 @@ class _SearchResult extends State<SearchResult> with SingleTickerProviderStateMi
       .then((response) {
         this._albums = convert.jsonDecode(response.body)[widget.searchMode.toLowerCase()];
 
-        int elementsPerRow = 2;
+        int elementsPerRow = MediaQuery.of(context).size.width ~/ 172.0;
         List<Widget> rowChildren = new List<Widget>();
         for (int index = 1; index < 10; index++) { 
           rowChildren.add(
             Container(
-              child: Card(
-                elevation: 2,
-                clipBehavior: Clip.antiAlias,
-                child: Container(
+              margin: EdgeInsets.all(8),
+              child: OpenContainer(
+                closedElevation: 2,
+                closedBuilder: (ctx, act) => Container(
                   width: 156,
                   height: widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 272 : 246,
                   child: Column(
@@ -136,9 +146,14 @@ class _SearchResult extends State<SearchResult> with SingleTickerProviderStateMi
                       ),
                     ],
                   ),
-                )
+                ),
+                openBuilder: (ctx, act) => AlbumViewer(
+                  albumId: this._albums[index]['album_id'],
+                  albumName: this._albums[index]['album_name'],
+                  albumArt: this._albums[index]['album_art_300'],
+                ),
               ),
-            ),
+            )
           );
           if (rowChildren.length == elementsPerRow) {
             this._albumElements.add(
@@ -156,134 +171,136 @@ class _SearchResult extends State<SearchResult> with SingleTickerProviderStateMi
           Container(
             margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
             child: Text(
-              'Here is the most close ${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)} from your request...',
+              _searchResultLabels.stringSearchResultTopSubheader,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black54,
               ),
             ),
           ),
-          Card(
-            clipBehavior: Clip.antiAlias,
-            elevation: 2,
-            margin: EdgeInsets.only(
-              left: 16,
-              right: 16,
-            ),
-            child: Container(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.network(
-                        this._albums[0]['album_art_300'],
-                        height: 156,
-                        width: 156,
-                        fit: BoxFit.fill,
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 18),
-                        width: MediaQuery.of(context).size.width - 16 - 16 - 156,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'],
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.black87,
-                              ),
-                              maxLines: 2,
-                              textAlign: TextAlign.start,
-                            ),
-                            Divider(
-                              color: Colors.white,
-                              height: 12,
-                              thickness: 12,
-                            ),
-                            widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 
-                            Text(
-                              this._albums[0]['album_name'],
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black54,
-                              ),
-                              maxLines: 2,
-                              textAlign: TextAlign.start,
-                            ) :
-                            Container(),
-                            Divider(
-                              color: Colors.white,
-                              height: 2,
-                              thickness: 2,
-                            ),
-                            Text(
-                              this._albums[0]['album_artists'].join(', '),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black54,
-                              ),
-                              maxLines: 2,
-                              textAlign: TextAlign.start,
-                            ),
-                            Divider(
-                              color: Colors.white,
-                              height: 2,
-                              thickness: 2,
-                            ),
-                            Text(
-                              '(${this._albums[0]['year']})',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black54,
-                              ),
-                              maxLines: 1,
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
+          Container(
+            margin: EdgeInsets.only(left: 16, right: 16),
+            child: OpenContainer(
+              closedBuilder: (ctx, act) => Container(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.network(
+                          this._albums[0]['album_art_300'],
+                          height: 156,
+                          width: 156,
+                          fit: BoxFit.fill,
                         ),
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    color: Colors.black12,
-                    height: 1,
-                    thickness: 1,
-                  ),
-                  ButtonBar(
-                    alignment: MainAxisAlignment.end,
-                    children: [
-                      MaterialButton(
-                        splashColor: Colors.deepPurple[50],
-                        highlightColor: Colors.deepPurple[100],
-                        onPressed: () {},
-                        child: Text(
-                          'DOWNLOAD ${widget.searchMode.toUpperCase().substring(0, widget.searchMode.length - 1)}',
-                          style: TextStyle(color: Theme.of(context).primaryColor),
+                        Container(
+                          padding: EdgeInsets.only(left: 18),
+                          width: MediaQuery.of(context).size.width - 16 - 16 - 156,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'],
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: Colors.black87,
+                                ),
+                                maxLines: 2,
+                                textAlign: TextAlign.start,
+                              ),
+                              Divider(
+                                color: Colors.white,
+                                height: 12,
+                                thickness: 12,
+                              ),
+                              widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 
+                              Text(
+                                this._albums[0]['album_name'],
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black54,
+                                ),
+                                maxLines: 2,
+                                textAlign: TextAlign.start,
+                              ) :
+                              Container(),
+                              Divider(
+                                color: Colors.white,
+                                height: 2,
+                                thickness: 2,
+                              ),
+                              Text(
+                                this._albums[0]['album_artists'].join(', '),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black54,
+                                ),
+                                maxLines: 2,
+                                textAlign: TextAlign.start,
+                              ),
+                              Divider(
+                                color: Colors.white,
+                                height: 2,
+                                thickness: 2,
+                              ),
+                              Text(
+                                '(${this._albums[0]['year']})',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black54,
+                                ),
+                                maxLines: 1,
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      MaterialButton(
-                        splashColor: Colors.deepPurple[50],
-                        highlightColor: Colors.deepPurple[100],
-                        onPressed: () {},
-                        child: Text(
-                          'SHOW ${widget.searchMode.toUpperCase().substring(0, widget.searchMode.length - 1)}',
-                          style: TextStyle(color: Theme.of(context).primaryColor),
+                      ],
+                    ),
+                    Divider(
+                      color: Colors.black12,
+                      height: 1,
+                      thickness: 1,
+                    ),
+                    ButtonBar(
+                      alignment: MainAxisAlignment.end,
+                      children: [
+                        MaterialButton(
+                          splashColor: Colors.deepPurple[50],
+                          highlightColor: Colors.deepPurple[100],
+                          onPressed: () {},
+                          child: Text(
+                            _searchResultLabels.stringSearchResultTopButtonLabel0,
+                            style: TextStyle(color: Theme.of(context).primaryColor),
+                          ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
-              )
+                        MaterialButton(
+                          splashColor: Colors.deepPurple[50],
+                          highlightColor: Colors.deepPurple[100],
+                          onPressed: () {},
+                          child: Text(
+                            _searchResultLabels.stringSearchResultTopButtonLabel1,
+                            style: TextStyle(color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              ),
+              openBuilder: (ctx, act) => AlbumViewer(
+                  albumId: this._albums[0]['album_id'],
+                  albumName: this._albums[0]['album_name'],
+                  albumArt: this._albums[0]['album_art_300'],
+              ),
             ),
           ),
           Container(
             margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
             child: Text(
-              'More ${widget.searchMode.toLowerCase()} from the result...',
+              _searchResultLabels.stringSearchResultOtherSubheader,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black54,
@@ -296,7 +313,32 @@ class _SearchResult extends State<SearchResult> with SingleTickerProviderStateMi
 
         switchLoaderResult();
       })
-      .catchError((error) => print(error));
+      .catchError((error) {
+        this._sliverListDelegateList = [
+          Container(
+            height: 128,
+            margin: EdgeInsets.all(36),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Icon(
+                  Icons.signal_cellular_connected_no_internet_4_bar, 
+                  size: 64,
+                  color: Colors.black54,
+                ),
+                Text(
+                  Globals.STRING_INTERNET_ERROR,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ];
+        switchLoaderResult();
+      });
     })();
 
     this._searchProgressController = AnimationController(
@@ -306,6 +348,14 @@ class _SearchResult extends State<SearchResult> with SingleTickerProviderStateMi
       this.setState(() {});
     });
     this._searchProgressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(this._searchProgressController);
+
+    this._searchResultOpacityController = new AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    )..addListener(() {
+      this.setState(() {});
+    });
+    this._searchResultOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(this._searchResultOpacityController);
 
     this._searchProgressController.forward(); 
   }
@@ -340,8 +390,11 @@ class _SearchResult extends State<SearchResult> with SingleTickerProviderStateMi
           expandedHeight: 162,
         ),
         this._searchResultState ? 
-        SliverList(
-          delegate: SliverChildListDelegate(this._sliverListDelegateList),
+        SliverOpacity(
+          opacity: this._searchResultOpacity.value,
+          sliver: SliverList(
+            delegate: SliverChildListDelegate(this._sliverListDelegateList),
+          ),
         )
         :
         SliverFillRemaining(
@@ -356,7 +409,7 @@ class _SearchResult extends State<SearchResult> with SingleTickerProviderStateMi
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Getting your music...', style: TextStyle(fontSize: 16, color: Colors.black87)),
+                    Text(Globals.STRING_SEARCH_RESULT_LOADER_LABEL, style: TextStyle(fontSize: 16, color: Colors.black87)),
                     LinearProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurpleAccent[400],),
                       backgroundColor: Colors.deepPurpleAccent[100],
@@ -370,5 +423,34 @@ class _SearchResult extends State<SearchResult> with SingleTickerProviderStateMi
         ),
       ],
     );
+  }
+}
+
+
+class SearchResultLabels {
+  String stringSearchResultTopSubheader;
+  String stringSearchResultTopButtonLabel0;
+  String stringSearchResultTopButtonLabel1;
+  String stringSearchResultOtherSubheader;
+
+  SearchResultLabels(searchMode) {
+    if (searchMode.toLowerCase() == 'albums') {
+      this.stringSearchResultTopSubheader = Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM;
+      this.stringSearchResultTopButtonLabel0 = Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM;
+      this.stringSearchResultTopButtonLabel1 = Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM;
+      this.stringSearchResultOtherSubheader = Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM;
+    }
+    else if (searchMode.toLowerCase() == 'tracks') {
+      this.stringSearchResultTopSubheader = Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK;
+      this.stringSearchResultTopButtonLabel0 = Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK;
+      this.stringSearchResultTopButtonLabel1 = Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK;
+      this.stringSearchResultOtherSubheader = Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK;
+    }
+    else if (searchMode.toLowerCase() == 'artists') {
+      this.stringSearchResultTopSubheader = Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST;
+      this.stringSearchResultTopButtonLabel0 = Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST;
+      this.stringSearchResultTopButtonLabel1 = Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST;
+      this.stringSearchResultOtherSubheader = Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST;
+    }
   }
 }

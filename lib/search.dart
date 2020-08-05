@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 
+import 'package:harmonoid/globals.dart';
 import 'package:harmonoid/searchresult.dart';
 
 enum SearchMode {
@@ -49,13 +50,13 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
       String resultTitle(SearchMode mode) {
         String resultTitle;
         if (mode == SearchMode.album) {
-          resultTitle = 'Albums';
+          resultTitle = Globals.STRING_SEARCH_MODE_TITLE_ALBUM;
         }
         else if (mode == SearchMode.track) {
-          resultTitle = 'Tracks';
+          resultTitle = Globals.STRING_SEARCH_MODE_TITLE_TRACK;
         }
         else if (mode == SearchMode.artist) {
-          resultTitle = 'Artists';
+          resultTitle = Globals.STRING_SEARCH_MODE_TITLE_ARTIST;
         }
         return resultTitle;
       }
@@ -81,9 +82,9 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
       this._scaleColor[index] = Colors.black54;
       this._scaleController[index] = AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 200),
+        duration: Duration(milliseconds: 400),
       );
-      this._scaleAnimation[index] = Tween<double>(begin: 1.0, end: 1.5).animate(new CurvedAnimation(
+      this._scaleAnimation[index] = Tween<double>(begin: 1.0, end: 1.6).animate(new CurvedAnimation(
         curve: Curves.easeInOutCubic,
         parent: this._scaleController[index],
       ));
@@ -119,9 +120,8 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
           children: [
             Expanded(
               child: Container(
-                alignment: Alignment.topCenter,
+                alignment: Alignment.center,
                 height: 56,
-                padding: EdgeInsets.only(bottom: 6, left: 4),
                 child: TextField(
                   onSubmitted: (value) => this._searchHandler(this._keyword),
                   autocorrect: false,
@@ -135,19 +135,12 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                   onChanged: (value) => this.setState(() {
                     this._keyword = value;
                   }),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
+                  decoration: InputDecoration.collapsed(
+                    hintText: Globals.STRING_SEARCH_HEADER,
                     hintStyle: TextStyle(
                       color: Colors.white,
                     ),
-                    labelStyle: TextStyle(
-                      color: Colors.white,
-                    ),
-                    labelText: 'Search Music',
-                    hintText: 'Search Music',
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    alignLabelWithHint: true,
-                  ),
+                  )
                 ),
               ),
             ),
@@ -178,7 +171,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                   Container(
                     margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
                     child: Text(
-                      'What are you looking for ?',
+                      Globals.STRING_SEARCH_MODE_SUBHEADER,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black54,
@@ -187,35 +180,35 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                   ),
                   ListTile(
                     onTap: () => this.setState(() {
-                      _selectSearchMode(SearchMode.album);
+                      this._selectSearchMode(SearchMode.album);
                       this._searchMode = SearchMode.album;
                     }),
-                    leading: ScaleTransition(child: Icon(Icons.album, color: this._scaleColor[0], size: 24,), scale: _scaleAnimation[0]),
-                    title: Text('Albums'),
-                    subtitle: Text('Search music from your favourite albums...'),
+                    leading: ScaleTransition(child: Icon(Icons.album, color: this._scaleColor[0], size: 24,), scale: this._scaleAnimation[0]),
+                    title: Text(Globals.STRING_SEARCH_MODE_TITLE_ALBUM),
+                    subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM),
                   ),
                   ListTile(
                     onTap: () => this.setState(() {
-                      _selectSearchMode(SearchMode.track);
+                      this._selectSearchMode(SearchMode.track);
                       this._searchMode = SearchMode.track;
                     }),
-                    leading: ScaleTransition(child: Icon(Icons.music_note, color: this._scaleColor[1], size: 24,), scale: _scaleAnimation[1]),
-                    title: Text('Tracks'),
-                    subtitle: Text('Search for your favourite tracks...'),
+                    leading: ScaleTransition(child: Icon(Icons.music_note, color: this._scaleColor[1], size: 24,), scale: this._scaleAnimation[1]),
+                    title: Text(Globals.STRING_SEARCH_MODE_TITLE_TRACK),
+                    subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK),
                   ),
                   ListTile(
                     onTap: () => this.setState(() {
-                      _selectSearchMode(SearchMode.artist);
+                      this._selectSearchMode(SearchMode.artist);
                       this._searchMode = SearchMode.artist;
                     }),
-                    leading: ScaleTransition(child: Icon(Icons.person, color: this._scaleColor[2], size: 24,), scale: _scaleAnimation[2]),
-                    title: Text('Artists'),
-                    subtitle: Text('Search music from your favourite artists...'),
+                    leading: ScaleTransition(child: Icon(Icons.person, color: this._scaleColor[2], size: 24,), scale: this._scaleAnimation[2]),
+                    title: Text(Globals.STRING_SEARCH_MODE_TITLE_ARTIST),
+                    subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST),
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
                     child: Text(
-                      'Your recent searches...',
+                      Globals.STRING_SEARCH_HISTORY_SUBHEADER,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black54,
@@ -268,7 +261,7 @@ class SearchState extends State<Search> {
                     ),
                     Expanded(
                       child: Text(
-                        'Search Music',
+                        Globals.STRING_SEARCH_HEADER,
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.black54
