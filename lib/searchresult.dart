@@ -360,6 +360,12 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
     this._searchProgressController.forward(); 
   }
 
+  @override void dispose() {
+    this._searchProgressController.dispose(); 
+    this._searchResultOpacityController.dispose();
+    super.dispose();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(

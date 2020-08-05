@@ -23,8 +23,8 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
   List<Animation<double>> _scaleAnimation = new List<Animation<double>>(3);
   List<Color> _scaleColor = new List<Color>(3);
   List<AnimationController> _scaleController = new List<AnimationController>(3);
-
   String _keyword = '';
+  SearchMode _searchMode = SearchMode.album;
 
   void _selectSearchMode(SearchMode value) {
     for (int index = 0; index <= 2; index++) {
@@ -78,7 +78,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    for (int index = 0; index<=2; index++){
+    for (int index = 0; index <= 2; index++){
       this._scaleColor[index] = Colors.black54;
       this._scaleController[index] = AnimationController(
         vsync: this,
@@ -95,7 +95,12 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
     });
   }
 
-  SearchMode _searchMode = SearchMode.album;
+  @override void dispose() {
+    for (int index = 0; index <= 2; index++){
+      this._scaleController[index].dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
