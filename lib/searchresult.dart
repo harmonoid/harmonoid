@@ -7,10 +7,16 @@ import 'dart:async';
 import 'package:harmonoid/globals.dart';
 import 'package:harmonoid/albumviewer.dart';
 
+class SearchResultArguments {
+  final String keyword;
+  final String searchMode;
+  SearchResultArguments(this.keyword, this.searchMode);
+}
 
 class SearchResult extends StatefulWidget {
   final String keyword;
   final String searchMode;
+  static String pageRoute = '/searchresult';
   
   SearchResult({Key key, @required this.keyword, @required this.searchMode}) : super(key : key);
   _SearchResult createState() => _SearchResult();
@@ -46,7 +52,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
     this._searchResultLabels = SearchResultLabels(widget.searchMode);
 
     (() async {
-      Uri uri = Uri.https('alexmercerind.herokuapp.com', '/search', {
+      Uri uri = Uri.https(Globals.STRING_HOME_URL, '/search', {
         'keyword': widget.keyword,
         'mode' : widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1),
         'limit' : '10',
@@ -93,7 +99,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                             Container(
                               height: 38,
                               child: Text(
-                                this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'],
+                                this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim(),
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.black87,
@@ -109,7 +115,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                             ),
                             widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 
                             Text(
-                              this._albums[index]['album_name'],
+                              this._albums[index]['album_name'].split('(')[0].trim(),
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black54,
@@ -149,7 +155,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                 ),
                 openBuilder: (ctx, act) => AlbumViewer(
                   albumId: this._albums[index]['album_id'],
-                  albumName: this._albums[index]['album_name'],
+                  headerName: this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim(),
                   albumArt: this._albums[index]['album_art_300'],
                 ),
               ),
@@ -202,7 +208,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'],
+                                this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim(),
                                 style: TextStyle(
                                   fontSize: 24,
                                   color: Colors.black87,
@@ -217,7 +223,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                               ),
                               widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 
                               Text(
-                                this._albums[0]['album_name'],
+                                this._albums[0]['album_name'].split('(')[0].trim(),
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black54,
@@ -292,7 +298,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
               ),
               openBuilder: (ctx, act) => AlbumViewer(
                   albumId: this._albums[0]['album_id'],
-                  albumName: this._albums[0]['album_name'],
+                  headerName: this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim(),
                   albumArt: this._albums[0]['album_art_300'],
               ),
             ),
@@ -368,66 +374,68 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
   
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          leading: Container(
-            height: 56,
-            width: 56,
-            alignment: Alignment.center,
-            child: IconButton(
-              iconSize: 24,
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            leading: Container(
+              height: 56,
+              width: 56,
+              alignment: Alignment.center,
+              child: IconButton(
+                iconSize: 24,
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+                splashRadius: 20,
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(widget.searchMode),
+              background: Image.asset(
+                'assets/images/${widget.searchMode.toLowerCase()}.jpg',
+                fit: BoxFit.fitWidth,
               ),
-              splashRadius: 20,
-              onPressed: () => Navigator.of(context).pop(),
-            )
+            ),
+            pinned: true,
+            expandedHeight: 162,
           ),
-          flexibleSpace: FlexibleSpaceBar(
-            title: Text(widget.searchMode),
-            background: Image.asset(
-              'assets/images/${widget.searchMode.toLowerCase()}.jpg',
-              fit: BoxFit.fitWidth,
+          this._searchResultState ? 
+          SliverOpacity(
+            opacity: this._searchResultOpacity.value,
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(this._sliverListDelegateList),
+            ),
+          )
+          :
+          SliverFillRemaining(
+            child: Center(
+              child: AnimatedOpacity(
+                duration: Duration(milliseconds: 200),
+                opacity: this._welcomeOpacity,
+                child: Container(
+                  width: 148,
+                  height: 36,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(Globals.STRING_SEARCH_RESULT_LOADER_LABEL, style: TextStyle(fontSize: 16, color: Colors.black87)),
+                      LinearProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurpleAccent[400],),
+                        backgroundColor: Colors.deepPurpleAccent[100],
+                        value: this._searchProgressAnimation.value,
+                      ),
+                    ],
+                  ),
+                ),
+              )
             ),
           ),
-          pinned: true,
-          expandedHeight: 162,
-        ),
-        this._searchResultState ? 
-        SliverOpacity(
-          opacity: this._searchResultOpacity.value,
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(this._sliverListDelegateList),
-          ),
-        )
-        :
-        SliverFillRemaining(
-          child: Center(
-            child: AnimatedOpacity(
-              duration: Duration(milliseconds: 200),
-              opacity: this._welcomeOpacity,
-              child: Container(
-                width: 148,
-                height: 36,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(Globals.STRING_SEARCH_RESULT_LOADER_LABEL, style: TextStyle(fontSize: 16, color: Colors.black87)),
-                    LinearProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurpleAccent[400],),
-                      backgroundColor: Colors.deepPurpleAccent[100],
-                      value: this._searchProgressAnimation.value,
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

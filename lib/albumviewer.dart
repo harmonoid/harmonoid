@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class AlbumViewer extends StatefulWidget {
   final String albumId;
-  final String albumName;
+  final String headerName;
   final String albumArt;
 
-  AlbumViewer({Key key, @required this.albumId, @required this.albumName, @required this.albumArt}): super(key: key);
+  AlbumViewer({Key key, @required this.albumId, @required this.headerName, @required this.albumArt}): super(key: key);
   _AlbumViewer createState() => _AlbumViewer();
 }
 
 class _AlbumViewer extends State<AlbumViewer> {
   
+  @override
+  void initState() {
+    super.initState();
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -33,7 +40,7 @@ class _AlbumViewer extends State<AlbumViewer> {
           pinned: true,
           expandedHeight: MediaQuery.of(context).size.width - MediaQuery.of(context).padding.top,
           flexibleSpace: FlexibleSpaceBar(
-            title: Text(widget.albumName.split('(')[0].trim()),
+            title: Text(widget.headerName.split('(')[0].trim()),
             background: Image.network(
               widget.albumArt,
               height: MediaQuery.of(context).size.width,

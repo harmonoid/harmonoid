@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/search.dart';
+import 'package:harmonoid/searchresult.dart';
 
 class Application extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -13,9 +14,23 @@ class Application extends StatelessWidget {
         primaryColorDark: Colors.deepPurpleAccent[700],
         splashFactory: InkRipple.splashFactory,
       ),
-      home: Scaffold(
-        body: Search(),
-      ),
+      initialRoute: '/welcome',
+      routes: {
+        '/welcome' : (context) => Scaffold(
+          body: Search(),
+        ),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == SearchResult.pageRoute) {
+          final SearchResultArguments args = settings.arguments;
+          return MaterialPageRoute(
+            builder: (context) => SearchResult(
+                keyword: args.keyword, 
+                searchMode: args.searchMode,
+            ),
+          );
+        }
+      },
     );
   }
 }

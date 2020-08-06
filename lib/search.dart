@@ -61,15 +61,9 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
         return resultTitle;
       }
 
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (BuildContext ctx) => Scaffold(
-            body: SearchResult(
-              keyword: _keyword,
-              searchMode: resultTitle(_searchMode),
-            ),
-          ),
-        ),
+      Navigator.of(context).pushNamed(
+        '/searchresult',
+        arguments: SearchResultArguments(this._keyword, resultTitle(this._searchMode))
       );
     }
   }

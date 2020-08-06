@@ -2,6 +2,7 @@ library globals;
 
 class Globals {
   //////////EN-US//////////
+  static const String STRING_HOME_URL                                        = 'harmonoidservice.herokuapp.com';
   static const String STRING_INTERNET_ERROR                                  = 'Check your internet connection...';
   static const String STRING_SEARCH_HEADER                                   = 'Search Music';
   static const String STRING_SEARCH_MODE_SUBHEADER                           = 'What are you looking for ?';
@@ -22,7 +23,7 @@ class Globals {
   static const String STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM          = 'SHOW ALBUM';
   static const String STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK          = 'SHOW TRACK';
   static const String STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST         = 'SHOW ARTIST';
-  static const String STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = ' More tracks from the result...';
+  static const String STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'More albums from the result...';
   static const String STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'More tracks from the result...';
   static const String STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'More similar artists...';
 }
