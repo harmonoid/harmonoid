@@ -82,7 +82,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                         height: 156,
                         width: 156,
                         child: Image.network(
-                          this._albums[index]['album_art_300'],
+                          this._albums[index]['album_art_640'],
                           height: 156,
                           width: 156,
                         ),
@@ -156,7 +156,8 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                 openBuilder: (ctx, act) => AlbumViewer(
                   albumId: this._albums[index]['album_id'],
                   headerName: this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim(),
-                  albumArt: this._albums[index]['album_art_300'],
+                  albumArt: this._albums[index]['album_art_640'],
+                  albumIcon: this._albums[index]['album_art_64'],
                 ),
               ),
             )
@@ -195,7 +196,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.network(
-                          this._albums[0]['album_art_300'],
+                          this._albums[0]['album_art_640'],
                           height: 156,
                           width: 156,
                           fit: BoxFit.fill,
@@ -299,7 +300,8 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
               openBuilder: (ctx, act) => AlbumViewer(
                   albumId: this._albums[0]['album_id'],
                   headerName: this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim(),
-                  albumArt: this._albums[0]['album_art_300'],
+                  albumArt: this._albums[0]['album_art_640'],
+                  albumIcon: this._albums[0]['album_art_64'],
               ),
             ),
           ),
