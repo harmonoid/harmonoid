@@ -26,4 +26,6 @@ class Globals {
   static const String STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'More albums from the result...';
   static const String STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'More tracks from the result...';
   static const String STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'More similar artists...';
+  static const String STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Getting tracks...';
+  static const String STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Here are the tracks from this album...';
 }
