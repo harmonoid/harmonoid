@@ -10,8 +10,9 @@ class AlbumViewer extends StatefulWidget {
   final String headerName;
   final String albumArt;
   final String albumIcon;
+  final Map<String, dynamic> albumJson;
 
-  AlbumViewer({Key key, @required this.albumId, @required this.headerName, @required this.albumArt, @required this.albumIcon}): super(key: key);
+  AlbumViewer({Key key, @required this.albumJson, @required this.albumId, @required this.headerName, @required this.albumArt, @required this.albumIcon}): super(key: key);
   _AlbumViewer createState() => _AlbumViewer();
 }
 
@@ -20,7 +21,7 @@ class _AlbumViewer extends State<AlbumViewer> with SingleTickerProviderStateMixi
   double _loaderShowing = 1.0;
   Animation<double> _searchResultOpacity;
   AnimationController _searchResultOpacityController;
-  Color _accentColor = Colors.deepPurpleAccent;
+  Color _accentColor = Colors.black87;
 
   List<Widget> _albumTracks = [
     Container(
@@ -78,7 +79,7 @@ class _AlbumViewer extends State<AlbumViewer> with SingleTickerProviderStateMixi
         this._albumTracks.add(
           ListTile(
             onTap: () {},
-            title: Text(albumTracks[index]['track_name'].split('(')[0].trim()),
+            title: Text(albumTracks[index]['track_name'].split('(')[0].trim().split('-')[0].trim()),
             subtitle: Text(albumTracks[index]['track_artists'].join(', ')),
             leading: CircleAvatar(
               child: Text(albumTracks[index]['track_number'].toString(),
@@ -93,7 +94,105 @@ class _AlbumViewer extends State<AlbumViewer> with SingleTickerProviderStateMixi
         );
       }
       this.setState(() {
-        this._loaderShowing = 0.0; 
+        this._loaderShowing = 0.0;
+        this._albumTracks.insertAll(0, 
+          [
+            Container(
+              margin: EdgeInsets.only(left: 16, top: 24, bottom: 18),
+              child: Text(
+                Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                ),
+              ),
+            ),
+            Card(
+              elevation: 1,
+              margin: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.network(
+                      widget.albumJson['album_art_640'],
+                      height: 128,
+                      width: 128,
+                      fit: BoxFit.fill,
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 18),
+                      width: MediaQuery.of(context).size.width - 16 - 16 - 128,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim(),
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.black87,
+                            ),
+                            maxLines: 2,
+                            textAlign: TextAlign.start,
+                          ),
+                          Divider(
+                            color: Colors.white,
+                            height: 12,
+                            thickness: 12,
+                          ),
+                          Divider(
+                            color: Colors.white,
+                            height: 2,
+                            thickness: 2,
+                          ),
+                          Text(
+                            widget.albumJson['album_artists'].join(', '),
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black54,
+                            ),
+                            maxLines: 2,
+                            textAlign: TextAlign.start,
+                          ),
+                          Divider(
+                            color: Colors.white,
+                            height: 2,
+                            thickness: 2,
+                          ),
+                          Text(
+                            '${widget.albumJson['year']}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black54,
+                            ),
+                            maxLines: 1,
+                            textAlign: TextAlign.start,
+                          ),
+                          Divider(
+                            color: Colors.white,
+                            height: 2,
+                            thickness: 2,
+                          ),
+                          Text(
+                            '${widget.albumJson['album_length']}' + ' '+ Globals.STRING_SEARCH_MODE_TITLE_TRACK.toLowerCase(),
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black54,
+                            ),
+                            maxLines: 1,
+                            textAlign: TextAlign.start,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+            ),
+          ),
+        ]
+      );
       });
       this._searchResultOpacityController.forward();
     })
@@ -157,7 +256,7 @@ class _AlbumViewer extends State<AlbumViewer> with SingleTickerProviderStateMixi
             pinned: true,
             expandedHeight: MediaQuery.of(context).size.width - MediaQuery.of(context).padding.top,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(widget.headerName.split('(')[0].trim()),
+              title: Text(widget.headerName.split('(')[0].trim().split('-')[0].trim()),
               background: Image.network(
                 widget.albumArt,
                 height: MediaQuery.of(context).size.width,

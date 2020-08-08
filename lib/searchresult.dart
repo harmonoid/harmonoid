@@ -99,7 +99,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                             Container(
                               height: 38,
                               child: Text(
-                                this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim(),
+                                this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim().split('-')[0].trim(),
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.black87,
@@ -115,7 +115,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                             ),
                             widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 
                             Text(
-                              this._albums[index]['album_name'].split('(')[0].trim(),
+                              this._albums[index]['album_name'].split('(')[0].trim().split('-')[0].trim(),
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black54,
@@ -154,8 +154,9 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                   ),
                 ),
                 openBuilder: (ctx, act) => AlbumViewer(
+                  albumJson: this._albums[index],
                   albumId: this._albums[index]['album_id'],
-                  headerName: this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim(),
+                  headerName: this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim().split('-')[0].trim(),
                   albumArt: this._albums[index]['album_art_640'],
                   albumIcon: this._albums[index]['album_art_64'],
                 ),
@@ -209,7 +210,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim(),
+                                this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim().split('-')[0].trim(),
                                 style: TextStyle(
                                   fontSize: 24,
                                   color: Colors.black87,
@@ -224,7 +225,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                               ),
                               widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 
                               Text(
-                                this._albums[0]['album_name'].split('(')[0].trim(),
+                                this._albums[0]['album_name'].split('(')[0].trim().split('-')[0].trim(),
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black54,
@@ -298,8 +299,9 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                 )
               ),
               openBuilder: (ctx, act) => AlbumViewer(
+                  albumJson: this._albums[0],
                   albumId: this._albums[0]['album_id'],
-                  headerName: this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim(),
+                  headerName: this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim().split('-')[0].trim(),
                   albumArt: this._albums[0]['album_art_640'],
                   albumIcon: this._albums[0]['album_art_64'],
               ),
