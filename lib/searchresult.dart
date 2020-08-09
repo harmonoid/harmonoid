@@ -155,10 +155,6 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                 ),
                 openBuilder: (ctx, act) => AlbumViewer(
                   albumJson: this._albums[index],
-                  albumId: this._albums[index]['album_id'],
-                  headerName: this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim().split('-')[0].trim(),
-                  albumArt: this._albums[index]['album_art_640'],
-                  albumIcon: this._albums[index]['album_art_64'],
                 ),
               ),
             )
@@ -300,10 +296,6 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
               ),
               openBuilder: (ctx, act) => AlbumViewer(
                   albumJson: this._albums[0],
-                  albumId: this._albums[0]['album_id'],
-                  headerName: this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim().split('-')[0].trim(),
-                  albumArt: this._albums[0]['album_art_640'],
-                  albumIcon: this._albums[0]['album_art_64'],
               ),
             ),
           ),
