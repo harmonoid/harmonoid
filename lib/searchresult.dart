@@ -65,7 +65,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
 
         int elementsPerRow = MediaQuery.of(context).size.width ~/ 172.0;
         List<Widget> rowChildren = new List<Widget>();
-        for (int index = 1; index < 10; index++) { 
+        for (int index = 1; index < this._albums.length; index++) { 
           rowChildren.add(
             Container(
               margin: EdgeInsets.all(8),
