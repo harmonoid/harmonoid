@@ -3,18 +3,95 @@ import 'package:palette_generator/palette_generator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import 'package:harmonoid/scripts/savetrack.dart';
+
 import 'package:harmonoid/globals.dart';
 
+
+class TrackElement extends StatefulWidget {
+  final List<dynamic> albumTracks;
+  final int index;
+  final Map<String, dynamic> albumJson;
+  TrackElement({Key key, @required this.index, @required this.albumTracks, @required this.albumJson}) : super(key: key);
+  _TrackElement createState() => _TrackElement();
+}
+
+
+class _TrackElement extends State<TrackElement> {
+
+  Widget _leading;
+
+  @override
+  void initState() {
+    super.initState();
+    this._leading = CircleAvatar(
+      child: Text(
+        widget.albumTracks[widget.index]['track_number'].toString(),
+        style: TextStyle(
+          fontSize: 16,
+        ),
+      ),
+      backgroundImage: NetworkImage(widget.albumJson['album_art_64']),
+    );
+  }
+
+  String trackDuration(int durationMilliseconds) {
+    String trackDurationLabel;
+    int durationSeconds = durationMilliseconds ~/ 1000;
+    int minutes = durationSeconds ~/ 60;
+    int seconds = durationSeconds - minutes * 60;
+    if (seconds.toString().length == 2) {
+      trackDurationLabel = minutes.toString() + ":" + seconds.toString();
+    }
+    else {
+      trackDurationLabel = minutes.toString() + ":0" + seconds.toString();
+    }
+    return trackDurationLabel;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        (() async {
+          this.setState(() {
+            this._leading = CircularProgressIndicator(); 
+          });
+          Downloader trackDownloader = Downloader(
+            widget.albumTracks[widget.index]['track_number'], 
+            widget.albumTracks[widget.index]['track_id'], 
+            widget.albumJson
+          );
+          await trackDownloader.start();
+          this.setState(() {
+            this._leading = CircleAvatar(
+              child: Text(
+                widget.albumTracks[widget.index]['track_number'].toString(),
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              backgroundImage: NetworkImage(widget.albumJson['album_art_64']),
+            );
+          });
+        })();
+      },
+      title: Text(widget.albumTracks[widget.index]['track_name'].split('(')[0].trim().split('-')[0].trim()),
+      subtitle: Text(widget.albumTracks[widget.index]['track_artists'].join(', ')),
+      leading: this._leading,
+      trailing: Text(this.trackDuration(widget.albumTracks[widget.index]['track_duration'])),
+    );
+  }
+}
+
+
 class AlbumViewer extends StatefulWidget {
-  final String albumId;
-  final String headerName;
-  final String albumArt;
-  final String albumIcon;
   final Map<String, dynamic> albumJson;
 
-  AlbumViewer({Key key, @required this.albumJson, @required this.albumId, @required this.headerName, @required this.albumArt, @required this.albumIcon}): super(key: key);
+  AlbumViewer({Key key, @required this.albumJson}): super(key: key);
   _AlbumViewer createState() => _AlbumViewer();
 }
+
 
 class _AlbumViewer extends State<AlbumViewer> with SingleTickerProviderStateMixin {
   
@@ -46,7 +123,7 @@ class _AlbumViewer extends State<AlbumViewer> with SingleTickerProviderStateMixi
       return paletteGenerator.dominantColor.color;
     }
     this.setState(() {
-      (() async => this._accentColor = await getImageColor(NetworkImage(widget.albumIcon)))(); 
+      (() async => this._accentColor = await getImageColor(NetworkImage(widget.albumJson['album_art_64'])))(); 
     });
 
     this._searchResultOpacityController = new AnimationController(
@@ -57,39 +134,16 @@ class _AlbumViewer extends State<AlbumViewer> with SingleTickerProviderStateMixi
     });
     this._searchResultOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(this._searchResultOpacityController);
 
-    String trackDuration(int durationMilliseconds) {
-      String trackDurationLabel;
-      int durationSeconds = durationMilliseconds ~/ 1000;
-      int minutes = durationSeconds ~/ 60;
-      int seconds = durationSeconds - minutes * 60;
-      if (seconds.toString().length == 2) {
-        trackDurationLabel = minutes.toString() + ":" + seconds.toString();
-      }
-      else {
-        trackDurationLabel = minutes.toString() + ":0" + seconds.toString();
-      }
-      return trackDurationLabel;
-    }
-
-    Uri uri = Uri.https(Globals.STRING_HOME_URL, '/albuminfo', {'album_id': widget.albumId});
+    Uri uri = Uri.https(Globals.STRING_HOME_URL, '/albuminfo', {'album_id': widget.albumJson['album_id']});
     http.get(uri)
     .then((response) {
       List<dynamic> albumTracks = convert.jsonDecode(response.body)['tracks'];
       for (int index = 0; index < albumTracks.length; index++) {
         this._albumTracks.add(
-          ListTile(
-            onTap: () {},
-            title: Text(albumTracks[index]['track_name'].split('(')[0].trim().split('-')[0].trim()),
-            subtitle: Text(albumTracks[index]['track_artists'].join(', ')),
-            leading: CircleAvatar(
-              child: Text(albumTracks[index]['track_number'].toString(),
-              style: TextStyle(
-                fontSize: 16,
-              ),
-              ),
-              backgroundImage: NetworkImage(widget.albumIcon),
-            ),
-            trailing: Text(trackDuration(albumTracks[index]['track_duration'])),
+          TrackElement(
+            index: index,
+            albumTracks: albumTracks,
+            albumJson: widget.albumJson,
           ),
         );
       }
@@ -256,9 +310,9 @@ class _AlbumViewer extends State<AlbumViewer> with SingleTickerProviderStateMixi
             pinned: true,
             expandedHeight: MediaQuery.of(context).size.width - MediaQuery.of(context).padding.top,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(widget.headerName.split('(')[0].trim().split('-')[0].trim()),
+              title: Text(widget.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim()),
               background: Image.network(
-                widget.albumArt,
+                widget.albumJson['album_art_640'],
                 height: MediaQuery.of(context).size.width,
                 width: MediaQuery.of(context).size.width,
                 fit: BoxFit.fitWidth,
