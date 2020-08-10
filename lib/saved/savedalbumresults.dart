@@ -195,7 +195,6 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
           if (incompleteRow) {
             rowChildren = new List<Widget>();
             for (int index = (this._albums.length - (this._albums.length - 1) % elementsPerRow); index < this._albums.length; index++) {
-              print('ye!');
               rowChildren.add(
                 AlbumTile(
                   refresh: this.refresh,
