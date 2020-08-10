@@ -11,6 +11,7 @@ class Application extends StatelessWidget {
         accentColor: Colors.deepPurpleAccent[700],
         colorScheme: ColorScheme.light(),
         primaryColor: Colors.deepPurpleAccent[400],
+        primaryColorLight: Colors.deepPurpleAccent[100],
         primaryColorDark: Colors.deepPurpleAccent[700],
         splashFactory: InkRipple.splashFactory,
       ),
