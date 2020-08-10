@@ -50,10 +50,11 @@ class TrackElement extends StatelessWidget {
 
 
 class SavedAlbumViewer extends StatefulWidget {
+  final Function refresh;
   final Map<String, dynamic> albumJson;
   final File albumArt;
 
-  SavedAlbumViewer({Key key, @required this.albumJson, @required this.albumArt}): super(key: key);
+  SavedAlbumViewer({Key key, @required this.refresh, @required this.albumJson, @required this.albumArt}): super(key: key);
   _SavedAlbumViewer createState() => _SavedAlbumViewer();
 }
 
@@ -229,6 +230,59 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with SingleTickerProvide
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            actions: [
+              Container(
+                height: 56,
+                width: 56,
+                alignment: Alignment.center,
+                child: IconButton(
+                  iconSize: 24,
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                  splashRadius: 20,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                          title: Text(Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER),
+                          actions: [
+                            MaterialButton(
+                              splashColor: Colors.deepPurple[50],
+                              highlightColor: Colors.deepPurple[100],
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                (() async {
+                                  await GetSavedMusic.deleteAlbum(widget.albumJson['album_id']);
+                                  await widget.refresh();
+                                  Navigator.of(context).pop();
+                                })();
+                              },
+                              child: Text(
+                                Globals.STRING_YES,
+                                style: TextStyle(color: Theme.of(context).primaryColor),
+                              ),
+                            ),
+                            MaterialButton(
+                              splashColor: Colors.deepPurple[50],
+                              highlightColor: Colors.deepPurple[100],
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                Globals.STRING_NO,
+                                style: TextStyle(color: Theme.of(context).primaryColor),
+                              ),
+                            ),
+                          ],
+                          content: Text(Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY),
+                      )
+                    );
+                  },
+                )
+              ),
+            ],
             backgroundColor: this._accentColor,
             leading: Container(
               height: 56,
