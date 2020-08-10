@@ -231,59 +231,97 @@ class Search extends StatefulWidget {
 }
 
 
-class SearchState extends State<Search> {
+class SearchState extends State<Search> with SingleTickerProviderStateMixin {
 
+  AnimationController _showController;
+  Animation<Offset> _showAnimation;
+
+  void showSearchBar() {
+    this._showController.reverse();
+  }
+
+  void hideSearchBar() {
+    this._showController.forward();
+  }
+
+  @override
+  void dispose() {
+    this._showController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this._showController = new AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+      reverseDuration: Duration(milliseconds: 200),
+    )..addListener(() => this.setState(() {}));
+    this._showAnimation = Tween<Offset>(begin: Offset(0, 0), end: Offset(0, -0.15)).animate(
+      new CurvedAnimation(
+        curve: Curves.easeInCubic,
+        reverseCurve: Curves.easeInCubic,
+        parent: this._showController,
+      )
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.topCenter,
-      margin: EdgeInsets.only(top: 36),
-      child: Column(
-        children: [
-          OpenContainer(
-            closedElevation: 2,
-            transitionDuration: Duration(milliseconds: 400),
-            closedBuilder: (ctx, act) => Container(
-              height: 56,
-              width: MediaQuery.of(context).size.width - 36.0,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Container(
-                      height: 56,
-                      width: 56,
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.menu,
-                        color: Colors.black54,
-                        size: 24,
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        Globals.STRING_SEARCH_HEADER,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black54
+    return SlideTransition(
+      position: this._showAnimation,
+      child: Container(
+        alignment: Alignment.topCenter,
+        margin: EdgeInsets.only(top: 8),
+        child: Column(
+          children: [
+            OpenContainer(
+              closedElevation: 2,
+              transitionDuration: Duration(milliseconds: 400),
+              closedBuilder: (ctx, act) => Container(
+                height: 56,
+                width: MediaQuery.of(context).size.width - 36.0,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
+                        height: 56,
+                        width: 56,
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.menu,
+                          color: Colors.black54,
+                          size: 24,
                         ),
                       ),
-                    ),
-                    Container(
-                      height: 56,
-                      width: 56,
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.search,
-                        color: Colors.black54,
-                        size: 24,
+                      Expanded(
+                        child: Text(
+                          Globals.STRING_SEARCH_HEADER,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black54
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                      Container(
+                        height: 56,
+                        width: 56,
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.search,
+                          color: Colors.black54,
+                          size: 24,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            openBuilder: (ctx, act) => SearchScreen(),
+              openBuilder: (ctx, act) => SearchScreen(),
+            ),
+            ],
           ),
-          ],
         ),
-      );
+    );
   }
 }
