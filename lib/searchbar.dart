@@ -258,7 +258,7 @@ class SearchState extends State<Search> with SingleTickerProviderStateMixin {
       duration: Duration(milliseconds: 200),
       reverseDuration: Duration(milliseconds: 200),
     )..addListener(() => this.setState(() {}));
-    this._showAnimation = Tween<Offset>(begin: Offset(0, 0), end: Offset(0, -0.15)).animate(
+    this._showAnimation = Tween<Offset>(begin: Offset(0, 0), end: Offset(0, -0.28)).animate(
       new CurvedAnimation(
         curve: Curves.easeInCubic,
         reverseCurve: Curves.easeInCubic,
