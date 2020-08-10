@@ -195,6 +195,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
           if (incompleteRow) {
             rowChildren = new List<Widget>();
             for (int index = (this._albums.length - (this._albums.length - 1) % elementsPerRow); index < this._albums.length; index++) {
+              print('ye!');
               rowChildren.add(
                 AlbumTile(
                   refresh: this.refresh,
@@ -202,25 +203,25 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                   albumJson: this._albums[index],
                 ),
               );
-              for (int index = 0; index < elementsPerRow - (rowChildren.length - 1); index++) {
-                rowChildren.add(
-                  Container(
-                    margin: EdgeInsets.all(8),
-                    child: Container(
-                      width: 156,
-                      height: 246,
-                    ),
-                  )
-                );
-              }
-              this._albumElements.add(
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: rowChildren,
-                ),
+            }
+            for (int index = 0; index < elementsPerRow - rowChildren.length; index++) {
+              rowChildren.add(
+                Container(
+                  margin: EdgeInsets.all(8),
+                  child: Container(
+                    width: 156,
+                    height: 246,
+                  ),
+                )
               );
             }
+            this._albumElements.add(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: rowChildren,
+              ),
+            );
           }
         }
 
