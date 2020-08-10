@@ -32,6 +32,16 @@ class GetSavedMusic {
     return albums;
   }
 
+  static Future<void> deleteAlbum(String albumId) async {
+
+    Directory externalDirectory = (await path.getExternalStorageDirectory());
+    Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+    Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
+
+    Directory albumDirectory = Directory(path.join(musicDirectory.path, albumId));
+    await albumDirectory.delete(recursive: true);
+  }
+
   static Future<Map<String, dynamic>> tracks(String albumId) async {
 
     Directory externalDirectory = (await path.getExternalStorageDirectory());
