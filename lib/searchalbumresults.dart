@@ -5,24 +5,24 @@ import 'dart:convert' as convert;
 import 'dart:async';
 
 import 'package:harmonoid/globals.dart';
-import 'package:harmonoid/albumviewer.dart';
+import 'package:harmonoid/searchalbumviewer.dart';
 
-class SearchResultArguments {
+class SearchAlbumResultArguments {
   final String keyword;
   final String searchMode;
-  SearchResultArguments(this.keyword, this.searchMode);
+  SearchAlbumResultArguments(this.keyword, this.searchMode);
 }
 
-class SearchResult extends StatefulWidget {
+class SearchAlbumResults extends StatefulWidget {
   final String keyword;
   final String searchMode;
   static String pageRoute = '/searchresult';
   
-  SearchResult({Key key, @required this.keyword, @required this.searchMode}) : super(key : key);
-  _SearchResult createState() => _SearchResult();
+  SearchAlbumResults({Key key, @required this.keyword, @required this.searchMode}) : super(key : key);
+  _SearchAlbumResults createState() => _SearchAlbumResults();
 }
 
-class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
+class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderStateMixin {
 
   SearchResultLabels _searchResultLabels;
   AnimationController _searchProgressController;
@@ -153,7 +153,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                     ],
                   ),
                 ),
-                openBuilder: (ctx, act) => AlbumViewer(
+                openBuilder: (ctx, act) => SearchAlbumViewer(
                   albumJson: this._albums[index],
                 ),
               ),
@@ -294,7 +294,7 @@ class _SearchResult extends State<SearchResult> with TickerProviderStateMixin {
                   ],
                 )
               ),
-              openBuilder: (ctx, act) => AlbumViewer(
+              openBuilder: (ctx, act) => SearchAlbumViewer(
                   albumJson: this._albums[0],
               ),
             ),

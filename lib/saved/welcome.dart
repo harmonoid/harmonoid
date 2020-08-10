@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:harmonoid/saved/albumsaved.dart';
-import 'package:harmonoid/search.dart';
+import 'package:harmonoid/saved/savedalbumresults.dart';
+import 'package:harmonoid/searchbar.dart';
 
 
 class Welcome extends StatefulWidget {
@@ -42,7 +42,7 @@ class _Welcome extends State<Welcome> {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            AlbumSaved(scrollController : _albumsScrollController),
+            SavedAlbumResults(scrollController : _albumsScrollController),
             Search(key: this._search),
           ],
         ),

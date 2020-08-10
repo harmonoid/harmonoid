@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 
 import 'package:harmonoid/saved/savedalbumviewer.dart';
-import 'package:harmonoid/scripts/savedalbums.dart';
+import 'package:harmonoid/scripts/getsavedmusic.dart';
 import 'package:harmonoid/globals.dart';
 
 class AlbumTile extends StatelessWidget {
@@ -99,14 +99,14 @@ class AlbumTile extends StatelessWidget {
   }
 }
 
-class AlbumSaved extends StatefulWidget {
+class SavedAlbumResults extends StatefulWidget {
   final ScrollController scrollController;
-  AlbumSaved({Key key, @required this.scrollController}) : super(key : key);
-  _AlbumSaved createState() => _AlbumSaved();
+  SavedAlbumResults({Key key, @required this.scrollController}) : super(key : key);
+  _SavedAlbumResults createState() => _SavedAlbumResults();
 }
 
 
-class _AlbumSaved extends State<AlbumSaved> {
+class _SavedAlbumResults extends State<SavedAlbumResults> {
 
   List<Map<String, dynamic>> _albums;
   List<File> _albumArts;
@@ -122,8 +122,8 @@ class _AlbumSaved extends State<AlbumSaved> {
     super.initState();
     
     (() async {
-      this._albums = (await SavedAlbums.albums())['albums'];
-      this._albumArts = await SavedAlbums.albumArts();
+      this._albums = (await GetSavedMusic.albums())['albums'];
+      this._albumArts = await GetSavedMusic.albumArts();
 
       this.setState(() {
         int elementsPerRow = MediaQuery.of(context).size.width ~/ 172.0;

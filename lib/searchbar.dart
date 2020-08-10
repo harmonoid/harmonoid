@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 
 import 'package:harmonoid/globals.dart';
-import 'package:harmonoid/searchresult.dart';
+import 'package:harmonoid/searchalbumresults.dart';
 
 enum SearchMode {
   album,
@@ -50,20 +50,20 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
       String resultTitle(SearchMode mode) {
         String resultTitle;
         if (mode == SearchMode.album) {
-          resultTitle = Globals.STRING_SEARCH_MODE_TITLE_ALBUM;
+          resultTitle = Globals.STRING_ALBUM;
         }
         else if (mode == SearchMode.track) {
-          resultTitle = Globals.STRING_SEARCH_MODE_TITLE_TRACK;
+          resultTitle = Globals.STRING_TRACK;
         }
         else if (mode == SearchMode.artist) {
-          resultTitle = Globals.STRING_SEARCH_MODE_TITLE_ARTIST;
+          resultTitle = Globals.STRING_ARTIST;
         }
         return resultTitle;
       }
 
       Navigator.of(context).pushNamed(
         '/searchresult',
-        arguments: SearchResultArguments(this._keyword, resultTitle(this._searchMode))
+        arguments: SearchAlbumResultArguments(this._keyword, resultTitle(this._searchMode))
       );
     }
   }
@@ -183,7 +183,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                       this._searchMode = SearchMode.album;
                     }),
                     leading: ScaleTransition(child: Icon(Icons.album, color: this._scaleColor[0], size: 24,), scale: this._scaleAnimation[0]),
-                    title: Text(Globals.STRING_SEARCH_MODE_TITLE_ALBUM),
+                    title: Text(Globals.STRING_ALBUM),
                     subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM),
                   ),
                   ListTile(
@@ -192,7 +192,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                       this._searchMode = SearchMode.track;
                     }),
                     leading: ScaleTransition(child: Icon(Icons.music_note, color: this._scaleColor[1], size: 24,), scale: this._scaleAnimation[1]),
-                    title: Text(Globals.STRING_SEARCH_MODE_TITLE_TRACK),
+                    title: Text(Globals.STRING_TRACK),
                     subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK),
                   ),
                   ListTile(
@@ -201,7 +201,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                       this._searchMode = SearchMode.artist;
                     }),
                     leading: ScaleTransition(child: Icon(Icons.person, color: this._scaleColor[2], size: 24,), scale: this._scaleAnimation[2]),
-                    title: Text(Globals.STRING_SEARCH_MODE_TITLE_ARTIST),
+                    title: Text(Globals.STRING_ARTIST),
                     subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST),
                   ),
                   Container(

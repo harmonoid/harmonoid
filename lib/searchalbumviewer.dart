@@ -3,9 +3,8 @@ import 'package:palette_generator/palette_generator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-import 'package:harmonoid/scripts/savetrack.dart';
-
 import 'package:harmonoid/globals.dart';
+import 'package:harmonoid/scripts/addsavedmusic.dart';
 
 
 class TrackElement extends StatefulWidget {
@@ -57,12 +56,12 @@ class _TrackElement extends State<TrackElement> {
           this.setState(() {
             this._leading = CircularProgressIndicator(); 
           });
-          Downloader trackDownloader = Downloader(
+          AddSavedMusic trackDownloader = AddSavedMusic(
             widget.albumTracks[widget.index]['track_number'], 
             widget.albumTracks[widget.index]['track_id'], 
             widget.albumJson
           );
-          await trackDownloader.start();
+          await trackDownloader.save();
           this.setState(() {
             this._leading = CircleAvatar(
               child: Text(
@@ -85,15 +84,15 @@ class _TrackElement extends State<TrackElement> {
 }
 
 
-class AlbumViewer extends StatefulWidget {
+class SearchAlbumViewer extends StatefulWidget {
   final Map<String, dynamic> albumJson;
 
-  AlbumViewer({Key key, @required this.albumJson}): super(key: key);
-  _AlbumViewer createState() => _AlbumViewer();
+  SearchAlbumViewer({Key key, @required this.albumJson}): super(key: key);
+  _SearchAlbumViewer createState() => _SearchAlbumViewer();
 }
 
 
-class _AlbumViewer extends State<AlbumViewer> with SingleTickerProviderStateMixin {
+class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProviderStateMixin {
   
   double _loaderShowing = 1.0;
   Animation<double> _searchResultOpacity;
@@ -230,7 +229,7 @@ class _AlbumViewer extends State<AlbumViewer> with SingleTickerProviderStateMixi
                             thickness: 2,
                           ),
                           Text(
-                            '${widget.albumJson['album_length']}' + ' '+ Globals.STRING_SEARCH_MODE_TITLE_TRACK.toLowerCase(),
+                            '${widget.albumJson['album_length']}' + ' '+ Globals.STRING_TRACK.toLowerCase(),
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,

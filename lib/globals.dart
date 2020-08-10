@@ -6,9 +6,9 @@ class Globals {
   static const String STRING_INTERNET_ERROR                                  = 'Check your internet connection...';
   static const String STRING_SEARCH_HEADER                                   = 'Search Music';
   static const String STRING_SEARCH_MODE_SUBHEADER                           = 'What are you looking for ?';
-  static const String STRING_SEARCH_MODE_TITLE_ALBUM                         = 'Albums';
-  static const String STRING_SEARCH_MODE_TITLE_TRACK                         = 'Tracks';
-  static const String STRING_SEARCH_MODE_TITLE_ARTIST                        = 'Artists';
+  static const String STRING_ALBUM                                           = 'Albums';
+  static const String STRING_TRACK                                           = 'Tracks';
+  static const String STRING_ARTIST                                          = 'Artists';
   static const String STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Search music from your favorite albums...';
   static const String STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Search for your favorite tracks...';
   static const String STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Search music from your favorite artists...';

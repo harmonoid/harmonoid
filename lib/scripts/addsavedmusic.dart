@@ -1,4 +1,5 @@
-library savetrack;
+library addsavedmusic;
+
 import 'package:harmonoid/globals.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'dart:io';
@@ -7,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 
-class Downloader extends SaveTrack {
+class AddSavedMusic extends SaveTrack {
   @override
   int trackNumber;
   @override
@@ -15,9 +16,9 @@ class Downloader extends SaveTrack {
   @override
   Map<String, dynamic> albumJson;
 
-  Downloader(this.trackNumber, this.trackId, this.albumJson);
+  AddSavedMusic(this.trackNumber, this.trackId, this.albumJson);
 
-  Future<bool> start() async {
+  Future<bool> save() async {
 
     await createAppDirectory();
     bool isAlbumSaved = !(await albumSaved());

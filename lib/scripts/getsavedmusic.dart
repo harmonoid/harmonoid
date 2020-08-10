@@ -1,11 +1,11 @@
-library savedalbums;
+library getsavedmusic;
 
 import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:path/path.dart' as path;
 
-class SavedAlbums {
+class GetSavedMusic {
 
   static Future<Map<String, dynamic>> albums() async {
 

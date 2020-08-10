@@ -1,10 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:harmonoid/scripts/savedalbums.dart';
+import 'package:harmonoid/scripts/getsavedmusic.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
 
 import 'package:harmonoid/globals.dart';
 
@@ -102,7 +100,7 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with SingleTickerProvide
     this._searchResultOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(this._searchResultOpacityController);
 
     (() async {
-      List<dynamic> albumTracks = (await SavedAlbums.tracks(widget.albumJson['album_id']))['tracks'];
+      List<dynamic> albumTracks = (await GetSavedMusic.tracks(widget.albumJson['album_id']))['tracks'];
       for (int index = 0; index < albumTracks.length; index++) {
         this._albumTracks.add(
           TrackElement(
@@ -195,7 +193,7 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with SingleTickerProvide
                             thickness: 2,
                           ),
                           Text(
-                            '${widget.albumJson['album_length']}' + ' '+ Globals.STRING_SEARCH_MODE_TITLE_TRACK.toLowerCase(),
+                            '${widget.albumJson['album_length']}' + ' '+ Globals.STRING_TRACK.toLowerCase(),
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
