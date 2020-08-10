@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'dart:math';
 
 import 'package:harmonoid/saved/savedalbumresults.dart';
 import 'package:harmonoid/searchbar.dart';
@@ -19,6 +20,8 @@ class _Welcome extends State<Welcome> {
   ScrollController _albumsScrollController = new ScrollController();
 
   int _index = 1;
+  double _rotationValue = 2 * pi;
+  int _rotations = 1;
 
   @override
   void initState() {
@@ -58,13 +61,27 @@ class _Welcome extends State<Welcome> {
     ];
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => this._savedAlbumResultsKey.currentState.refresh(),
-        child: Icon(
-          Icons.refresh,
-          color: Colors.white,
+      floatingActionButton: TweenAnimationBuilder(
+        duration: Duration(seconds: 1),
+        tween: Tween<double>(begin: 0.0, end: this._rotationValue),
+        builder: (context, value, child) => Transform.rotate(
+          angle: value,
+          child: FloatingActionButton(
+            onPressed: () {
+              this.setState(() {
+                this._rotations++;
+                this._rotationValue = 2 * this._rotations * pi; 
+              });
+              this._savedAlbumResultsKey.currentState.refresh();
+            },
+            child: Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ),
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          alignment: Alignment.center,
         ),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: PageTransitionSwitcher(
         duration: Duration(milliseconds: 400),
