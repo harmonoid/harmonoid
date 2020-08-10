@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -17,9 +18,12 @@ class _Welcome extends State<Welcome> {
   GlobalKey<SavedAlbumResultsState> _savedAlbumResultsKey = new GlobalKey<SavedAlbumResultsState>();
   ScrollController _albumsScrollController = new ScrollController();
 
+  int _index = 1;
+
   @override
   void initState() {
     super.initState();
+
     this._albumsScrollController..addListener(() {
 
       ScrollDirection currentScrollDirection;
@@ -37,6 +41,22 @@ class _Welcome extends State<Welcome> {
 
   @override
   Widget build(BuildContext context) {
+
+    final List<Widget> _screens = [
+      Center(child: Text('Hello World!'),),
+      Container(
+        margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            SavedAlbumResults(scrollController : _albumsScrollController, key: _savedAlbumResultsKey,),
+            Search(key: this._search),
+          ],
+        ),
+      ),
+      Center(child: Text('Hello World!'),),
+    ];
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () => this._savedAlbumResultsKey.currentState.refresh(),
@@ -46,16 +66,31 @@ class _Welcome extends State<Welcome> {
         ),
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: Container(
-        margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            SavedAlbumResults(scrollController : _albumsScrollController, key: _savedAlbumResultsKey,),
-            Search(key: this._search),
-          ],
+      body: PageTransitionSwitcher(
+        duration: Duration(milliseconds: 400),
+        child: _screens[this._index],
+        transitionBuilder: (child, primaryAnimation, secondaryAnimation) => FadeThroughTransition(
+          animation: primaryAnimation,
+          secondaryAnimation: secondaryAnimation,
+          child: child,
         ),
-      )
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        elevation: 8.0,
+        currentIndex: this._index,
+        onTap: (int index) => this.setState(() => this._index = index),
+        selectedFontSize: 14,
+        unselectedFontSize: 12,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Theme.of(context).primaryColorLight,
+        backgroundColor: Theme.of(context).accentColor,
+        showUnselectedLabels: true,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.play_arrow), title: Text('Now Playing')),
+          BottomNavigationBarItem(icon: Icon(Icons.library_music), title: Text('Collection')),
+          BottomNavigationBarItem(icon: Icon(Icons.info), title: Text('About')),
+        ],
+      ),
     );
   }
 }
