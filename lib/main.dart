@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:harmonoid/search.dart';
+import 'package:harmonoid/saved/welcome.dart';
 import 'package:harmonoid/searchresult.dart';
 
 class Application extends StatelessWidget {
@@ -16,9 +16,7 @@ class Application extends StatelessWidget {
       ),
       initialRoute: '/welcome',
       routes: {
-        '/welcome' : (context) => Scaffold(
-          body: Search(),
-        ),
+        '/welcome' : (context) => Welcome(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == SearchResult.pageRoute) {
