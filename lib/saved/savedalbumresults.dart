@@ -9,9 +9,10 @@ import 'package:harmonoid/globals.dart';
 class AlbumTile extends StatelessWidget {
 
   final File albumArt;
+  final Function refresh;
   final Map<String, dynamic> albumJson;
 
-  AlbumTile({Key key, @required this.albumArt,  @required this.albumJson});
+  AlbumTile({Key key, @required this.albumArt,  @required this.albumJson, @required this.refresh});
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +92,7 @@ class AlbumTile extends StatelessWidget {
           ),
         ),
         openBuilder: (ctx, act) => SavedAlbumViewer(
+          refresh: this.refresh,
           albumJson: this.albumJson,
           albumArt: this.albumArt,
         ),
@@ -99,14 +101,46 @@ class AlbumTile extends StatelessWidget {
   }
 }
 
-class SavedAlbumResults extends StatefulWidget {
-  final ScrollController scrollController;
-  SavedAlbumResults({Key key, @required this.scrollController}) : super(key : key);
-  _SavedAlbumResults createState() => _SavedAlbumResults();
+
+class NoResultsComponent extends StatelessWidget {
+  
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        height: 128,
+        margin: EdgeInsets.only(top: 192),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Icon(
+              Icons.library_music, 
+              size: 64,
+              color: Colors.black38,
+            ),
+            Text(
+              Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black54,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 
-class _SavedAlbumResults extends State<SavedAlbumResults> {
+class SavedAlbumResults extends StatefulWidget {
+  final ScrollController scrollController;
+  SavedAlbumResults({Key key, @required this.scrollController}) : super(key : key);
+  SavedAlbumResultsState createState() => SavedAlbumResultsState();
+}
+
+
+class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerProviderStateMixin {
 
   List<Map<String, dynamic>> _albums;
   List<File> _albumArts;
@@ -117,64 +151,76 @@ class _SavedAlbumResults extends State<SavedAlbumResults> {
     )
   ];
 
-  @override
-  void initState() {
-    super.initState();
+  Future<void> refresh() async {
     
-    (() async {
-      this._albums = (await GetSavedMusic.albums())['albums'];
-      this._albumArts = await GetSavedMusic.albumArts();
+    this._albumElements.clear();
+    this._albums = (await GetSavedMusic.albums())['albums'];
+    this._albumArts = await GetSavedMusic.albumArts();
 
+    if (this._albums.length == 0) {
+      this.setState(() {
+
+        this._listView = [
+          NoResultsComponent(),
+        ];
+      });
+    }
+    else {
       this.setState(() {
         int elementsPerRow = MediaQuery.of(context).size.width ~/ 172.0;
         List<Widget> rowChildren = new List<Widget>();
-        bool incompleteRow = (this._albums.length - 1) % elementsPerRow == 0 ? false : true;
-        for (int index = 1; index < this._albums.length; index++) { 
-          rowChildren.add(
-            AlbumTile(
-              albumArt: this._albumArts[index],
-              albumJson: this._albums[index],
-            ),
-          );
-          if (rowChildren.length == elementsPerRow) {
-            this._albumElements.add(
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: rowChildren,
-              ),
-            );
-            rowChildren = new List<Widget>();
-          }
-        }
-
-        if (incompleteRow) {
-          rowChildren = new List<Widget>();
-          for (int index = (this._albums.length - (this._albums.length - 1) % elementsPerRow); index < this._albums.length; index++) {
+        
+        if (this._albums.length > 1) {
+          bool incompleteRow = (this._albums.length - 1) % elementsPerRow == 0 ? false : true;
+          for (int index = 1; index < this._albums.length; index++) { 
             rowChildren.add(
               AlbumTile(
+                refresh: this.refresh,
                 albumArt: this._albumArts[index],
                 albumJson: this._albums[index],
               ),
             );
-            for (int index = 0; index < elementsPerRow - (rowChildren.length - 1); index++) {
+            if (rowChildren.length == elementsPerRow) {
+              this._albumElements.add(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: rowChildren,
+                ),
+              );
+              rowChildren = new List<Widget>();
+            }
+          }
+
+          if (incompleteRow) {
+            rowChildren = new List<Widget>();
+            for (int index = (this._albums.length - (this._albums.length - 1) % elementsPerRow); index < this._albums.length; index++) {
               rowChildren.add(
-                Container(
-                  margin: EdgeInsets.all(8),
-                  child: Container(
-                    width: 156,
-                    height: 246,
-                  ),
-                )
+                AlbumTile(
+                  refresh: this.refresh,
+                  albumArt: this._albumArts[index],
+                  albumJson: this._albums[index],
+                ),
+              );
+              for (int index = 0; index < elementsPerRow - (rowChildren.length - 1); index++) {
+                rowChildren.add(
+                  Container(
+                    margin: EdgeInsets.all(8),
+                    child: Container(
+                      width: 156,
+                      height: 246,
+                    ),
+                  )
+                );
+              }
+              this._albumElements.add(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: rowChildren,
+                ),
               );
             }
-            this._albumElements.add(
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: rowChildren,
-              ),
-            );
           }
         }
 
@@ -211,7 +257,7 @@ class _SavedAlbumResults extends State<SavedAlbumResults> {
                       padding: EdgeInsets.only(left: 18),
                       width: MediaQuery.of(context).size.width - 16 - 16 - 156,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -258,8 +304,9 @@ class _SavedAlbumResults extends State<SavedAlbumResults> {
                 ),
               ),
               openBuilder: (ctx, act) => SavedAlbumViewer(
-                  albumJson: this._albums[0],
-                  albumArt: this._albumArts[0],
+                refresh: this.refresh,
+                albumJson: this._albums[0],
+                albumArt: this._albumArts[0],
               ),
             ),
           ),
@@ -276,7 +323,13 @@ class _SavedAlbumResults extends State<SavedAlbumResults> {
         ];
         this._listView.addAll(this._albumElements); 
       });
-    })();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
   }
   
   @override
