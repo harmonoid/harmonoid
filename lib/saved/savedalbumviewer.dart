@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:harmonoid/scripts/getsavedmusic.dart';
 import 'package:palette_generator/palette_generator.dart';
 
+import 'package:harmonoid/scripts/getsavedmusic.dart';
+import 'package:harmonoid/scripts/playsavedmusic.dart';
 import 'package:harmonoid/globals.dart';
 
 
@@ -31,7 +32,11 @@ class TrackElement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {},
+      onTap: () {
+        (() async {
+          await PlaySavedMusic.playTrack(this.albumJson['album_id'], this.albumTracks[this.index]['track_number']);
+        })();
+      },
       title: Text(this.albumTracks[this.index]['track_name'].split('(')[0].trim().split('-')[0].trim()),
       subtitle: Text(this.albumTracks[this.index]['track_artists'].join(', ')),
       leading: CircleAvatar(
@@ -245,7 +250,7 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with SingleTickerProvide
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (_) => AlertDialog(
+                      builder: (BuildContext context) => AlertDialog(
                           title: Text(Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER),
                           actions: [
                             MaterialButton(
