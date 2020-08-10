@@ -14,6 +14,7 @@ class Welcome extends StatefulWidget {
 class _Welcome extends State<Welcome> {
 
   GlobalKey<SearchState> _search = new GlobalKey<SearchState>();
+  GlobalKey<SavedAlbumResultsState> _savedAlbumResultsKey = new GlobalKey<SavedAlbumResultsState>();
   ScrollController _albumsScrollController = new ScrollController();
 
   @override
@@ -37,12 +38,20 @@ class _Welcome extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => this._savedAlbumResultsKey.currentState.refresh(),
+        child: Icon(
+          Icons.refresh,
+          color: Colors.white,
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: Container(
         margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            SavedAlbumResults(scrollController : _albumsScrollController),
+            SavedAlbumResults(scrollController : _albumsScrollController, key: _savedAlbumResultsKey,),
             Search(key: this._search),
           ],
         ),
