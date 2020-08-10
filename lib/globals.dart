@@ -6,6 +6,8 @@ class Globals {
   static const String STRING_INTERNET_ERROR                                  = 'Check your internet connection...';
   static const String STRING_SEARCH_HEADER                                   = 'Search Music';
   static const String STRING_SEARCH_MODE_SUBHEADER                           = 'What are you looking for ?';
+  static const String STRING_YES                                             = 'YEA';
+  static const String STRING_NO                                              = 'NO';
   static const String STRING_ALBUM                                           = 'Albums';
   static const String STRING_TRACK                                           = 'Tracks';
   static const String STRING_ARTIST                                          = 'Artists';
@@ -29,8 +31,11 @@ class Globals {
   static const String STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Getting tracks...';
   static const String STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Here are the tracks from this album...';
   static const String STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Some insights of the album...';
+  static const String STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Search & download some music, to see it here.';
   static const String STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Here is the latest album saved by you...';
   static const String STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Here are your other albums...';
   static const String STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Here are the tracks you saved...';
   static const String STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Some insights of the album...';
+  static const String STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Delete this album ?';
+  static const String STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'You surely wanna delete this...';
 }
