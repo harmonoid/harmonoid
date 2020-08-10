@@ -29,6 +29,7 @@ dependencies:
   path: ^1.7.0
   path_provider: ^1.6.11
   palette_generator: ^0.2.3
+  audioplayers: ^0.15.1
 
 
   # The following adds the Cupertino Icons font to your application.
