@@ -29,17 +29,15 @@ class TrackElementState extends State<TrackElement> {
 
   void switchArt() {
     this.setState(() {
-      this.setState(() {
-        this._leading = CircleAvatar(
-          child: Text(
-            widget.albumTracks[widget.index]['track_number'].toString(),
-            style: TextStyle(
-              fontSize: 16,
-            ),
+      this._leading = CircleAvatar(
+        child: Text(
+          widget.albumTracks[widget.index]['track_number'].toString(),
+          style: TextStyle(
+            fontSize: 14,
           ),
-          backgroundImage: NetworkImage(widget.albumJson['album_art_64']),
-        );
-      });
+        ),
+        backgroundImage: NetworkImage(widget.albumJson['album_art_64']),
+      );
     });
   }
 
@@ -50,7 +48,7 @@ class TrackElementState extends State<TrackElement> {
       child: Text(
         widget.albumTracks[widget.index]['track_number'].toString(),
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 12,
         ),
       ),
       backgroundImage: NetworkImage(widget.albumJson['album_art_64']),
@@ -111,7 +109,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
         this._trackKeyList[trackNumber - 1].currentState.switchLoader();
       }
       for (int trackNumber in this._nonDownloadingTrackList) {
-        this._trackKeyList[trackNumber].currentState.switchArt();
+        this._trackKeyList[trackNumber - 1].currentState.switchArt();
       }
     }
     catch(e) {}
@@ -203,7 +201,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
       child: Text(
         Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER,
         style: TextStyle(
-          fontSize: 14,
+          fontSize: 12,
           color: Colors.black54,
         ),
       ),
@@ -262,7 +260,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
               child: Text(
                 Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 12,
                   color: Colors.black54,
                 ),
               ),
@@ -291,7 +289,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                           Text(
                             widget.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim(),
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 18,
                               color: Colors.black87,
                             ),
                             maxLines: 2,
@@ -310,7 +308,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                           Text(
                             widget.albumJson['album_artists'].join(', '),
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Colors.black54,
                             ),
                             maxLines: 2,
@@ -324,7 +322,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                           Text(
                             '${widget.albumJson['year']}',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Colors.black54,
                             ),
                             maxLines: 1,
@@ -338,7 +336,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                           Text(
                             '${widget.albumJson['album_length']}' + ' '+ Globals.STRING_TRACK.toLowerCase(),
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Colors.black54,
                             ),
                             maxLines: 1,

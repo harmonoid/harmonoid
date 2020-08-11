@@ -43,7 +43,7 @@ class TrackElement extends StatelessWidget {
         child: Text(
           this.albumTracks[this.index]['track_number'].toString(),
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 14,
           ),
         ),
         backgroundImage: NetworkImage(this.albumJson['album_art_64']),
@@ -77,7 +77,7 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with SingleTickerProvide
       child: Text(
         Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER,
         style: TextStyle(
-          fontSize: 14,
+          fontSize: 12,
           color: Colors.black54,
         ),
       ),
@@ -125,7 +125,7 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with SingleTickerProvide
               child: Text(
                 Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 12,
                   color: Colors.black54,
                 ),
               ),
@@ -154,7 +154,7 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with SingleTickerProvide
                           Text(
                             widget.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim(),
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 18,
                               color: Colors.black87,
                             ),
                             maxLines: 2,
@@ -173,7 +173,7 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with SingleTickerProvide
                           Text(
                             widget.albumJson['album_artists'].join(', '),
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Colors.black54,
                             ),
                             maxLines: 2,
@@ -187,7 +187,7 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with SingleTickerProvide
                           Text(
                             '${widget.albumJson['year']}',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Colors.black54,
                             ),
                             maxLines: 1,
@@ -201,7 +201,7 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with SingleTickerProvide
                           Text(
                             '${widget.albumJson['album_length']}' + ' '+ Globals.STRING_TRACK.toLowerCase(),
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Colors.black54,
                             ),
                             maxLines: 1,
@@ -328,7 +328,7 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with SingleTickerProvide
                   duration: Duration(seconds: 8),
                   tween: Tween<double>(begin: 0.0, end: 1.0),
                   curve: Curves.linear,
-                  child: Text(Globals.STRING_ALBUM_VIEW_LOADER_LABEL, style: TextStyle(fontSize: 16, color: Colors.black87)),
+                  child: Text(Globals.STRING_ALBUM_VIEW_LOADER_LABEL, style: TextStyle(fontSize: 14, color: Colors.black87)),
                   builder: (context, value, child) => Container(
                     width: 148,
                     height: 36,

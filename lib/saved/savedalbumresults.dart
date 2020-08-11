@@ -65,7 +65,7 @@ class AlbumTile extends StatelessWidget {
                     Text(
                       this.albumJson['album_artists'].join(', '),
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         color: Colors.black54,
                       ),
                       maxLines: 1,
@@ -74,7 +74,7 @@ class AlbumTile extends StatelessWidget {
                     Text(
                       '(${this.albumJson['year']})',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         color: Colors.black54,
                       ),
                       maxLines: 1,
@@ -121,7 +121,7 @@ class NoResultsComponent extends StatelessWidget {
             Text(
               Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 color: Colors.black54,
               ),
             )
@@ -234,7 +234,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
             child: Text(
               Globals.STRING_LOCAL_TOP_SUBHEADER_ALBUM,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 color: Colors.black54,
               ),
             ),
@@ -263,7 +263,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                           Text(
                             this._albums[0]['album_name'].split('(')[0].trim().split('-')[0].trim(),
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 18,
                               color: Colors.black87,
                             ),
                             maxLines: 2,
@@ -277,7 +277,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                           Text(
                             this._albums[0]['album_artists'].join(', '),
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Colors.black54,
                             ),
                             maxLines: 2,
@@ -291,7 +291,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                           Text(
                             '(${this._albums[0]['year']})',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 12,
                               color: Colors.black54,
                             ),
                             maxLines: 1,
@@ -315,7 +315,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
             child: Text(
               Globals.STRING_LOCAL_OTHER_SUBHEADER_ALBUM,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 color: Colors.black54,
               ),
             ),

@@ -101,7 +101,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                               child: Text(
                                 this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim().split('-')[0].trim(),
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 16,
                                   color: Colors.black87,
                                 ),
                                 maxLines: 2,
@@ -117,7 +117,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                             Text(
                               this._albums[index]['album_name'].split('(')[0].trim().split('-')[0].trim(),
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 color: Colors.black54,
                               ),
                               maxLines: 2,
@@ -127,7 +127,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                             Text(
                               this._albums[index]['album_artists'].join(', '),
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 color: Colors.black54,
                               ),
                               maxLines: 1,
@@ -136,7 +136,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                             Text(
                               '(${this._albums[index]['year']})',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 color: Colors.black54,
                               ),
                               maxLines: 1,
@@ -177,7 +177,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
             child: Text(
               _searchResultLabels.stringSearchResultTopSubheader,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 color: Colors.black54,
               ),
             ),
@@ -208,7 +208,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                               Text(
                                 this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim().split('-')[0].trim(),
                                 style: TextStyle(
-                                  fontSize: 24,
+                                  fontSize: 18,
                                   color: Colors.black87,
                                 ),
                                 maxLines: 2,
@@ -223,7 +223,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                               Text(
                                 this._albums[0]['album_name'].split('(')[0].trim().split('-')[0].trim(),
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   color: Colors.black54,
                                 ),
                                 maxLines: 2,
@@ -238,7 +238,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                               Text(
                                 this._albums[0]['album_artists'].join(', '),
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   color: Colors.black54,
                                 ),
                                 maxLines: 2,
@@ -252,7 +252,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                               Text(
                                 '(${this._albums[0]['year']})',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   color: Colors.black54,
                                 ),
                                 maxLines: 1,
@@ -304,7 +304,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
             child: Text(
               _searchResultLabels.stringSearchResultOtherSubheader,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 color: Colors.black54,
               ),
             ),
@@ -331,7 +331,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                 Text(
                   Globals.STRING_INTERNET_ERROR,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     color: Colors.black54,
                   ),
                 )
@@ -412,18 +412,21 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                 duration: Duration(milliseconds: 200),
                 opacity: this._welcomeOpacity,
                 child: Container(
-                  width: 148,
-                  height: 36,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(Globals.STRING_SEARCH_RESULT_LOADER_LABEL, style: TextStyle(fontSize: 16, color: Colors.black87)),
-                      LinearProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurpleAccent[400],),
-                        backgroundColor: Colors.deepPurpleAccent[100],
-                        value: this._searchProgressAnimation.value,
-                      ),
+                      Text(Globals.STRING_SEARCH_RESULT_LOADER_LABEL, style: TextStyle(fontSize: 14, color: Colors.black87)),
+                      Container(
+                        width: 148,
+                        height: 36,
+                        alignment: Alignment.center,
+                        child: LinearProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurpleAccent[400],),
+                          backgroundColor: Colors.deepPurpleAccent[100],
+                          value: this._searchProgressAnimation.value,
+                        ),
+                      )
                     ],
                   ),
                 ),

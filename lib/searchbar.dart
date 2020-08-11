@@ -129,7 +129,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                   cursorColor: Colors.white,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 16,
                   ),
                   onChanged: (value) => this.setState(() {
                     this._keyword = value;
@@ -172,7 +172,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                     child: Text(
                       Globals.STRING_SEARCH_MODE_SUBHEADER,
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         color: Colors.black54,
                       ),
                     ),
@@ -184,7 +184,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                     }),
                     leading: ScaleTransition(child: Icon(Icons.album, color: this._scaleColor[0], size: 24,), scale: this._scaleAnimation[0]),
                     title: Text(Globals.STRING_ALBUM),
-                    subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM),
+                    subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM, style: TextStyle(fontSize: 12)),
                   ),
                   ListTile(
                     onTap: () => this.setState(() {
@@ -193,7 +193,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                     }),
                     leading: ScaleTransition(child: Icon(Icons.music_note, color: this._scaleColor[1], size: 24,), scale: this._scaleAnimation[1]),
                     title: Text(Globals.STRING_TRACK),
-                    subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK),
+                    subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK, style: TextStyle(fontSize: 12)),
                   ),
                   ListTile(
                     onTap: () => this.setState(() {
@@ -202,14 +202,14 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                     }),
                     leading: ScaleTransition(child: Icon(Icons.person, color: this._scaleColor[2], size: 24,), scale: this._scaleAnimation[2]),
                     title: Text(Globals.STRING_ARTIST),
-                    subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST),
+                    subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST, style: TextStyle(fontSize: 12)),
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
                     child: Text(
                       Globals.STRING_SEARCH_HISTORY_SUBHEADER,
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         color: Colors.black54,
                       ),
                     ),
@@ -299,7 +299,7 @@ class SearchState extends State<Search> with SingleTickerProviderStateMixin {
                         child: Text(
                           Globals.STRING_SEARCH_HEADER,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
                             color: Colors.black54
                           ),
                         ),
