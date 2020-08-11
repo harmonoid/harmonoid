@@ -49,7 +49,7 @@ abstract class GenerateDirectories {
     this.musicDirectory = Directory(path.join(this.applicationDirectory.path, 'musicLibrary'));
 
     if (!(await applicationDirectory.exists())) {
-      await musicDirectory.create();
+      await musicDirectory.create(recursive: true);
     }
   }
 }
@@ -70,7 +70,7 @@ abstract class SaveAlbumAssets extends GenerateDirectories {
       return true;
     }
     else {
-      await this.albumDirectory.create();
+      await this.albumDirectory.create(recursive: true);
       return false;
     }
   }
@@ -125,7 +125,7 @@ abstract class SaveTrack extends SaveAlbumAssets {
         savedTracks = convert.jsonDecode(await trackAssets.readAsString())['tracks'];
       }
       else {
-        await trackAssets.create();
+        await trackAssets.create(recursive: true);
         await trackAssets.writeAsString(convert.jsonEncode({'tracks': []}));
       }
 

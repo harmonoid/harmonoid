@@ -14,7 +14,7 @@ class GetSavedMusic {
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
 
     if (!(await applicationDirectory.exists())) {
-      await musicDirectory.create();
+      await musicDirectory.create(recursive: true);
     }
 
     Map<String, dynamic> albums = {'albums': ''};
@@ -60,7 +60,7 @@ class GetSavedMusic {
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
 
     if (!(await applicationDirectory.exists())) {
-      await musicDirectory.create();
+      await musicDirectory.create(recursive: true);
     }
 
     List<File> albumArts = new List<File>();
