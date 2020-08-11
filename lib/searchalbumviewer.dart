@@ -110,26 +110,48 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
       for (int trackNumber in this._downloadStack) {
         this._trackKeyList[trackNumber - 1].currentState.switchLoader();
       }
-    }
-    catch(e) {}
-    try {
       for (int trackNumber in this._nonDownloadingTrackList) {
-        this._trackKeyList[trackNumber - 1].currentState.switchArt();
+        this._trackKeyList[trackNumber].currentState.switchArt();
       }
     }
     catch(e) {}
   }
 
   Future<void> downloadTrack(albumTracks, albumJson, index) async {
-    this.addTrackStack(albumTracks[index]['track_number']);
-    this.refreshUI();
-    AddSavedMusic track = AddSavedMusic(
-      albumTracks[index]['track_number'], 
-      albumTracks[index]['track_id'], 
-      albumJson
-    );
-    await track.save();
-    this.removeTrackStack(albumTracks[index]['track_number']);
+    if (this._downloadStack.contains(albumTracks[index]['track_number'])) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE),
+          content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE),
+          actions: [
+            MaterialButton(
+              splashColor: Colors.deepPurple[50],
+              highlightColor: Colors.deepPurple[100],
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                Globals.STRING_OK,
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+            ),
+          ],
+        )
+      );
+    }
+    else {
+      this.addTrackStack(albumTracks[index]['track_number']);
+      this.refreshUI();
+      AddSavedMusic track = AddSavedMusic(
+        albumTracks[index]['track_number'], 
+        albumTracks[index]['track_id'], 
+        albumJson
+      );
+      await track.save();
+      this.removeTrackStack(albumTracks[index]['track_number']);
+      this.refreshUI();
+    }
   }
 
   Future<bool> checkTrackStack() async {
@@ -166,7 +188,6 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
       this._downloadStack.add(trackNumber);
       this._nonDownloadingTrackList.remove(trackNumber);
     }
-    print(this._downloadStack);
   }
   void removeTrackStack(int trackNumber) {
     this._downloadStack.remove(trackNumber);
@@ -368,14 +389,6 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
     return WillPopScope(
       onWillPop: this.checkTrackStack,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: Theme.of(context).primaryColor,
-          child: Icon(
-            Icons.save_alt,
-            color: Colors.white,
-          ),
-        ),
         body: CustomScrollView(
           controller: scrollController,
           slivers: [
