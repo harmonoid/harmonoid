@@ -8,17 +8,40 @@ import 'package:harmonoid/scripts/addsavedmusic.dart';
 
 
 class TrackElement extends StatefulWidget {
+  final Function downloadTrack;
   final List<dynamic> albumTracks;
   final int index;
   final Map<String, dynamic> albumJson;
-  TrackElement({Key key, @required this.index, @required this.albumTracks, @required this.albumJson}) : super(key: key);
-  _TrackElement createState() => _TrackElement();
+  TrackElement({Key key, @required this.index, @required this.albumTracks, @required this.albumJson, @required this.downloadTrack}) : super(key: key);
+  TrackElementState createState() => TrackElementState();
 }
 
 
-class _TrackElement extends State<TrackElement> {
+class TrackElementState extends State<TrackElement> {
 
   Widget _leading;
+
+  void switchLoader() {
+    this.setState(() {
+      this._leading =  CircularProgressIndicator();
+    });
+  }
+
+  void switchArt() {
+    this.setState(() {
+      this.setState(() {
+        this._leading = CircleAvatar(
+          child: Text(
+            widget.albumTracks[widget.index]['track_number'].toString(),
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          backgroundImage: NetworkImage(widget.albumJson['album_art_64']),
+        );
+      });
+    });
+  }
 
   @override
   void initState() {
@@ -52,28 +75,7 @@ class _TrackElement extends State<TrackElement> {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        (() async {
-          this.setState(() {
-            this._leading = CircularProgressIndicator(); 
-          });
-          AddSavedMusic trackDownloader = AddSavedMusic(
-            widget.albumTracks[widget.index]['track_number'], 
-            widget.albumTracks[widget.index]['track_id'], 
-            widget.albumJson
-          );
-          await trackDownloader.save();
-          this.setState(() {
-            this._leading = CircleAvatar(
-              child: Text(
-                widget.albumTracks[widget.index]['track_number'].toString(),
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              backgroundImage: NetworkImage(widget.albumJson['album_art_64']),
-            );
-          });
-        })();
+        widget.downloadTrack(widget.albumTracks, widget.albumJson, widget.index);
       },
       title: Text(widget.albumTracks[widget.index]['track_name'].split('(')[0].trim().split('-')[0].trim()),
       subtitle: Text(widget.albumTracks[widget.index]['track_artists'].join(', ')),
@@ -98,6 +100,81 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
   Animation<double> _searchResultOpacity;
   AnimationController _searchResultOpacityController;
   Color _accentColor = Colors.black87;
+  List<int> _downloadStack = new List<int>();
+  List<GlobalKey<TrackElementState>> _trackKeyList = new List<GlobalKey<TrackElementState>>();
+  List<int> _nonDownloadingTrackList = new List<int>();
+  ScrollController scrollController = new ScrollController();
+
+  void refreshUI() {
+    try {
+      for (int trackNumber in this._downloadStack) {
+        this._trackKeyList[trackNumber - 1].currentState.switchLoader();
+      }
+    }
+    catch(e) {}
+    try {
+      for (int trackNumber in this._nonDownloadingTrackList) {
+        this._trackKeyList[trackNumber - 1].currentState.switchArt();
+      }
+    }
+    catch(e) {}
+  }
+
+  Future<void> downloadTrack(albumTracks, albumJson, index) async {
+    this.addTrackStack(albumTracks[index]['track_number']);
+    this.refreshUI();
+    AddSavedMusic track = AddSavedMusic(
+      albumTracks[index]['track_number'], 
+      albumTracks[index]['track_id'], 
+      albumJson
+    );
+    await track.save();
+    this.removeTrackStack(albumTracks[index]['track_number']);
+  }
+
+  Future<bool> checkTrackStack() async {
+    if (this._downloadStack.length == 0) {
+      return true;
+    }
+    else {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE),
+          content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE),
+          actions: [
+            MaterialButton(
+              splashColor: Colors.deepPurple[50],
+              highlightColor: Colors.deepPurple[100],
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                Globals.STRING_OK,
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+            ),
+          ],
+        )
+      );
+      return false;
+    }
+  }
+
+  void addTrackStack(int trackNumber) {
+    if (!(this._downloadStack.contains(trackNumber))) {
+      this._downloadStack.add(trackNumber);
+      this._nonDownloadingTrackList.remove(trackNumber);
+    }
+    print(this._downloadStack);
+  }
+  void removeTrackStack(int trackNumber) {
+    this._downloadStack.remove(trackNumber);
+    this._nonDownloadingTrackList.add(trackNumber);
+  }
+  void clearTrackStack(int trackNumber) {
+    this._downloadStack.clear();
+  }
 
   List<Widget> _albumTracks = [
     Container(
@@ -115,6 +192,13 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
   @override
   void initState() {
     super.initState();
+
+    for (int index = 0; index < widget.albumJson['album_length']; index++) {
+      this._trackKeyList.add(new GlobalKey<TrackElementState>());
+      _nonDownloadingTrackList.add(index + 1);
+    }
+
+    scrollController.addListener(this.refreshUI);
 
     Future<Color> getImageColor (ImageProvider imageProvider) async {
       final PaletteGenerator paletteGenerator = await PaletteGenerator
@@ -140,9 +224,11 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
       for (int index = 0; index < albumTracks.length; index++) {
         this._albumTracks.add(
           TrackElement(
+            key: this._trackKeyList[index],
             index: index,
             albumTracks: albumTracks,
             albumJson: widget.albumJson,
+            downloadTrack: this.downloadTrack,
           ),
         );
       }
@@ -279,87 +365,91 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(
-          Icons.save_alt,
-          color: Colors.white,
+    return WillPopScope(
+      onWillPop: this.checkTrackStack,
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: Theme.of(context).primaryColor,
+          child: Icon(
+            Icons.save_alt,
+            color: Colors.white,
+          ),
         ),
-      ),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: this._accentColor,
-            leading: Container(
-              height: 56,
-              width: 56,
-              alignment: Alignment.center,
-              child: IconButton(
-                iconSize: 24,
-                icon: Icon(
-                  Icons.close,
-                  color: Colors.white,
+        body: CustomScrollView(
+          controller: scrollController,
+          slivers: [
+            SliverAppBar(
+              backgroundColor: this._accentColor,
+              leading: Container(
+                height: 56,
+                width: 56,
+                alignment: Alignment.center,
+                child: IconButton(
+                  iconSize: 24,
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                  splashRadius: 20,
+                  onPressed: () => Navigator.of(context).pop(),
+                )
+              ),
+              pinned: true,
+              expandedHeight: MediaQuery.of(context).size.width - MediaQuery.of(context).padding.top,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(widget.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim()),
+                background: Image.network(
+                  widget.albumJson['album_art_640'],
+                  height: MediaQuery.of(context).size.width,
+                  width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.fitWidth,
                 ),
-                splashRadius: 20,
-                onPressed: () => Navigator.of(context).pop(),
-              )
-            ),
-            pinned: true,
-            expandedHeight: MediaQuery.of(context).size.width - MediaQuery.of(context).padding.top,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(widget.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim()),
-              background: Image.network(
-                widget.albumJson['album_art_640'],
-                height: MediaQuery.of(context).size.width,
-                width: MediaQuery.of(context).size.width,
-                fit: BoxFit.fitWidth,
               ),
             ),
-          ),
-          this._loaderShowing != 0.0 ?
-          SliverFillRemaining(
-            child: Center(
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 200),
-                opacity: this._loaderShowing,
-                child: TweenAnimationBuilder(
-                  onEnd: () => this.setState(() {
-                    this._loaderShowing = 0.0;
-                  }),
-                  duration: Duration(seconds: 8),
-                  tween: Tween<double>(begin: 0.0, end: 1.0),
-                  curve: Curves.linear,
-                  child: Text(Globals.STRING_ALBUM_VIEW_LOADER_LABEL, style: TextStyle(fontSize: 16, color: Colors.black87)),
-                  builder: (context, value, child) => Container(
-                    width: 148,
-                    height: 36,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        child,
-                        LinearProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurpleAccent[400],),
-                          backgroundColor: Colors.deepPurpleAccent[100],
-                          value: value,
-                        ),
-                      ],
+            this._loaderShowing != 0.0 ?
+            SliverFillRemaining(
+              child: Center(
+                child: AnimatedOpacity(
+                  duration: Duration(milliseconds: 200),
+                  opacity: this._loaderShowing,
+                  child: TweenAnimationBuilder(
+                    onEnd: () => this.setState(() {
+                      this._loaderShowing = 0.0;
+                    }),
+                    duration: Duration(seconds: 8),
+                    tween: Tween<double>(begin: 0.0, end: 1.0),
+                    curve: Curves.linear,
+                    child: Text(Globals.STRING_ALBUM_VIEW_LOADER_LABEL, style: TextStyle(fontSize: 16, color: Colors.black87)),
+                    builder: (context, value, child) => Container(
+                      width: 148,
+                      height: 36,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          child,
+                          LinearProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurpleAccent[400],),
+                            backgroundColor: Colors.deepPurpleAccent[100],
+                            value: value,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
+            )
+            :
+            SliverOpacity(
+              opacity: this._searchResultOpacity.value,
+              sliver: SliverList(
+                delegate: SliverChildListDelegate(this._albumTracks),
+              ),
             ),
-          )
-          :
-          SliverOpacity(
-            opacity: this._searchResultOpacity.value,
-            sliver: SliverList(
-              delegate: SliverChildListDelegate(this._albumTracks),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
