@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 import 'package:harmonoid/globals.dart';
+import 'package:harmonoid/scripts/getsavedmusic.dart';
 import 'package:harmonoid/scripts/addsavedmusic.dart';
 
 
@@ -100,15 +101,17 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
   Color _accentColor = Colors.black87;
   List<int> _downloadStack = new List<int>();
   List<GlobalKey<TrackElementState>> _trackKeyList = new List<GlobalKey<TrackElementState>>();
-  List<int> _nonDownloadingTrackList = new List<int>();
+  List<int> _nonDownloadStack = new List<int>();
   ScrollController scrollController = new ScrollController();
 
   void refreshUI() {
+    // print('Downloading    :' + _downloadStack.toString());
+    // print('Non Downloading:' + _nonDownloadStack.toString());
     try {
       for (int trackNumber in this._downloadStack) {
         this._trackKeyList[trackNumber - 1].currentState.switchLoader();
       }
-      for (int trackNumber in this._nonDownloadingTrackList) {
+      for (int trackNumber in this._nonDownloadStack) {
         this._trackKeyList[trackNumber - 1].currentState.switchArt();
       }
     }
@@ -140,15 +143,37 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
     }
     else {
       this.addTrackStack(albumTracks[index]['track_number']);
-      this.refreshUI();
       AddSavedMusic track = AddSavedMusic(
         albumTracks[index]['track_number'], 
         albumTracks[index]['track_id'], 
         albumJson
       );
-      await track.save();
+      bool result = await track.save();
+      if (!result) {
+        GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_TITLE),
+            content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SUBTITLE),
+            actions: [
+              MaterialButton(
+                splashColor: Colors.deepPurple[50],
+                highlightColor: Colors.deepPurple[100],
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  Globals.STRING_OK,
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+            ],
+          )
+        );
+      }
       this.removeTrackStack(albumTracks[index]['track_number']);
-      this.refreshUI();
+      this._trackKeyList[albumTracks[index]['track_number'] - 1].currentState.switchArt();
     }
   }
 
@@ -184,12 +209,14 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
   void addTrackStack(int trackNumber) {
     if (!(this._downloadStack.contains(trackNumber))) {
       this._downloadStack.add(trackNumber);
-      this._nonDownloadingTrackList.remove(trackNumber);
+      this._nonDownloadStack.remove(trackNumber);
+      this.refreshUI();
     }
   }
   void removeTrackStack(int trackNumber) {
     this._downloadStack.remove(trackNumber);
-    this._nonDownloadingTrackList.add(trackNumber);
+    this._nonDownloadStack.add(trackNumber);
+    this.refreshUI();
   }
   void clearTrackStack(int trackNumber) {
     this._downloadStack.clear();
@@ -214,7 +241,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
 
     for (int index = 0; index < widget.albumJson['album_length']; index++) {
       this._trackKeyList.add(new GlobalKey<TrackElementState>());
-      _nonDownloadingTrackList.add(index + 1);
+      _nonDownloadStack.add(index + 1);
     }
 
     scrollController.addListener(this.refreshUI);
@@ -403,8 +430,34 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                     color: Colors.white,
                   ),
                   splashRadius: 20,
-                  onPressed: () => Navigator.of(context).pop(),
-                )
+                  onPressed: () {
+                    if (this._downloadStack.length == 0) {
+                      Navigator.of(context).pop();
+                    }
+                    else {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE),
+                          content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE),
+                          actions: [
+                            MaterialButton(
+                              splashColor: Colors.deepPurple[50],
+                              highlightColor: Colors.deepPurple[100],
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                Globals.STRING_OK,
+                                style: TextStyle(color: Theme.of(context).primaryColor),
+                              ),
+                            ),
+                          ],
+                        )
+                      );
+                    }
+                  },
+                ),
               ),
               pinned: true,
               expandedHeight: MediaQuery.of(context).size.width - MediaQuery.of(context).padding.top,
