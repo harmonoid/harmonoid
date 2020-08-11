@@ -6,6 +6,7 @@ class Globals {
   static const String STRING_INTERNET_ERROR                                  = 'Check your internet connection...';
   static const String STRING_SEARCH_HEADER                                   = 'Search Music';
   static const String STRING_SEARCH_MODE_SUBHEADER                           = 'What are you looking for ?';
+  static const String STRING_OK                                              = 'OK';
   static const String STRING_YES                                             = 'YEA';
   static const String STRING_NO                                              = 'NO';
   static const String STRING_ALBUM                                           = 'Albums';
@@ -28,6 +29,8 @@ class Globals {
   static const String STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'More albums from the result...';
   static const String STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'More tracks from the result...';
   static const String STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'More similar artists...';
+  static const String STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE                  = 'You cannot go back...';
+  static const String STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE               = 'One or more tracks are being saved offline. Please wait until all the tracks are saved...';
   static const String STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Getting tracks...';
   static const String STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Here are the tracks from this album...';
   static const String STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Some insights of the album...';
