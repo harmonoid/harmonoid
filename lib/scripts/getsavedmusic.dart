@@ -44,24 +44,32 @@ class GetSavedMusic {
 
   static Future<int> deleteTrack(String albumId, int trackNumber) async {
 
+    bool isNumeric(String str) {
+      if(str == null) {
+        return false;
+      }
+      return double.tryParse(str) != null;
+    }
+
     Directory externalDirectory = (await path.getExternalStorageDirectory());
     Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
+    List<FileSystemEntity> albumDirectory = Directory(path.join(musicDirectory.path, albumId)).listSync();
 
-    List<dynamic> savedTracks = convert.jsonDecode(await ( File(path.join(musicDirectory.path, albumId, 'trackAssets.json')).readAsString()))['tracks'];
-    
-    for (var index = 0; index < savedTracks.length; index++) {
-      if (savedTracks[index]['track_number'] == trackNumber) {
-        savedTracks.removeAt(index);
+    File trackJson = File(path.join(musicDirectory.path, albumId, '$trackNumber.json'));
+    File trackFile = File(path.join(musicDirectory.path, albumId, '$trackNumber.m4a'));
+
+    int tracksNumber = 0;
+    for (int index = 0; index < albumDirectory.length; index++) {
+      if (path.basename(albumDirectory[index].path).split('.')[1] == 'json' && isNumeric(path.basename(albumDirectory[index].path).split('.')[0])) {
+        tracksNumber++;
       }
     }
 
-    await ( File(path.join(musicDirectory.path, albumId, 'trackAssets.json')).writeAsString(convert.jsonEncode({'tracks': savedTracks})));
-
-    File trackFile = File(path.join(musicDirectory.path, albumId, '$trackNumber.m4a'));
+    await trackJson.delete();
     await trackFile.delete();
 
-    return savedTracks.length;
+    return tracksNumber;
   }
 
   static Future<Map<String, dynamic>> tracks(String albumId) async {
