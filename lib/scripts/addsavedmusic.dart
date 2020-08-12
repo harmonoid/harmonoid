@@ -132,29 +132,37 @@ abstract class SaveTrack extends SaveAlbumAssets {
       Uri uri = Uri.https(Globals.STRING_HOME_URL, '/albuminfo', {'album_id': this.albumJson['album_id']});
       Map<String, dynamic> albumTracks = convert.jsonDecode((await http.get(uri)).body);
 
-      for (var index = 0; index < this.albumJson['album_length']; index++) {
-        if (albumTracks['tracks'][index]['track_number'] == this.trackNumber) {
-          if (!savedTracks.contains(albumTracks['tracks'][index])) {
+      bool isDuplicate = false;
+
+      for (var index = 0; index < savedTracks.length; index++) {
+        if (savedTracks[index]['track_number'] == this.trackNumber) {
+          isDuplicate = true;
+        }
+      }
+
+      if (!isDuplicate) {
+        for (var index = 0; index < this.albumJson['album_length']; index++) {
+          if (albumTracks['tracks'][index]['track_number'] == this.trackNumber) {
             savedTracks.add(albumTracks['tracks'][index]);
             break;
           }
         }
-      }
-      
-      while (savedTracks.length > 0) {
-        int minTrackNumber = 0;
-        int switchIndex = 0;
-        for (int index = 0; index < savedTracks.length; index++) {
-          if (savedTracks[index]['track_number'] > minTrackNumber) {
-            minTrackNumber = savedTracks[index]['track_number'];
-            switchIndex = index;
+        
+        while (savedTracks.length > 0) {
+          int minTrackNumber = 0;
+          int switchIndex = 0;
+          for (int index = 0; index < savedTracks.length; index++) {
+            if (savedTracks[index]['track_number'] > minTrackNumber) {
+              minTrackNumber = savedTracks[index]['track_number'];
+              switchIndex = index;
+            }
           }
+          savedTracksSorted.insert(0, savedTracks[switchIndex]);
+          savedTracks.removeAt(switchIndex);
         }
-        savedTracksSorted.insert(0, savedTracks[switchIndex]);
-        savedTracks.removeAt(switchIndex);
-      }
 
-      await trackAssets.writeAsString(convert.jsonEncode({'tracks': savedTracksSorted}));
+        await trackAssets.writeAsString(convert.jsonEncode({'tracks': savedTracksSorted}));
+      }
     }
     catch(error) {
       this.saveSuccess = false;
