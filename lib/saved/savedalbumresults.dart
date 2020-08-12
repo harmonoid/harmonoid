@@ -142,7 +142,7 @@ class SavedAlbumResults extends StatefulWidget {
 
 class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerProviderStateMixin {
 
-  List<Map<String, dynamic>> _albums;
+  List<dynamic> _albums;
   List<File> _albumArts;
   List<Widget> _albumElements = new List<Widget>();
   List<Widget> _listView = [
