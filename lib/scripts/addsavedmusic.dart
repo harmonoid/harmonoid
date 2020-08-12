@@ -116,52 +116,18 @@ abstract class SaveTrack extends SaveAlbumAssets {
   }
 
   Future<void> saveTrackAssets() async {
-    File trackAssets = File(path.join(this.albumDirectory.path, 'trackAssets.json'));
-    List<dynamic> savedTracks = new List<dynamic>();
-    List<dynamic> savedTracksSorted = new List<dynamic>();
-    
+    File trackAssets = File(path.join(this.albumDirectory.path, '${this.trackNumber}.json'));
+
     try {
-      if (await trackAssets.exists()) {
-        savedTracks = convert.jsonDecode(await trackAssets.readAsString())['tracks'];
-      }
+      if (await trackAssets.exists()) {}
       else {
+
+        Uri uri = Uri.https(Globals.STRING_HOME_URL, '/albuminfo', {'album_id': this.albumJson['album_id']});
+        Map<String, dynamic> albumTracks = convert.jsonDecode((await http.get(uri)).body);
+        String trackJson = convert.jsonEncode(albumTracks['tracks'][this.trackNumber - 1]);
+
         await trackAssets.create(recursive: true);
-        await trackAssets.writeAsString(convert.jsonEncode({'tracks': []}));
-      }
-
-      Uri uri = Uri.https(Globals.STRING_HOME_URL, '/albuminfo', {'album_id': this.albumJson['album_id']});
-      Map<String, dynamic> albumTracks = convert.jsonDecode((await http.get(uri)).body);
-
-      bool isDuplicate = false;
-
-      for (var index = 0; index < savedTracks.length; index++) {
-        if (savedTracks[index]['track_number'] == this.trackNumber) {
-          isDuplicate = true;
-        }
-      }
-
-      if (!isDuplicate) {
-        for (var index = 0; index < this.albumJson['album_length']; index++) {
-          if (albumTracks['tracks'][index]['track_number'] == this.trackNumber) {
-            savedTracks.add(albumTracks['tracks'][index]);
-            break;
-          }
-        }
-        
-        while (savedTracks.length > 0) {
-          int minTrackNumber = 0;
-          int switchIndex = 0;
-          for (int index = 0; index < savedTracks.length; index++) {
-            if (savedTracks[index]['track_number'] > minTrackNumber) {
-              minTrackNumber = savedTracks[index]['track_number'];
-              switchIndex = index;
-            }
-          }
-          savedTracksSorted.insert(0, savedTracks[switchIndex]);
-          savedTracks.removeAt(switchIndex);
-        }
-
-        await trackAssets.writeAsString(convert.jsonEncode({'tracks': savedTracksSorted}));
+        await trackAssets.writeAsString(trackJson);
       }
     }
     catch(error) {

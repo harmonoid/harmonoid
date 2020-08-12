@@ -66,13 +66,44 @@ class GetSavedMusic {
 
   static Future<Map<String, dynamic>> tracks(String albumId) async {
 
+    bool isNumeric(String str) {
+      if(str == null) {
+        return false;
+      }
+      return double.tryParse(str) != null;
+    }
+
     Directory externalDirectory = (await path.getExternalStorageDirectory());
     Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
 
-    File albumAssetsFile = File(path.join(musicDirectory.path, albumId, 'trackAssets.json'));
-    Map<String, dynamic> tracks = convert.jsonDecode(await albumAssetsFile.readAsString());
-    return tracks;
+    List<Map<String, dynamic>> savedTracks = new List<Map<String, dynamic>>();
+    List<Map<String, dynamic>> sortedSavedTracks = new List<Map<String, dynamic>>();
+
+    List<FileSystemEntity> albumDirectory = Directory(path.join(musicDirectory.path, albumId)).listSync();
+    
+    for (int index = 0; index < albumDirectory.length; index++) {
+      if (path.basename(albumDirectory[index].path).split('.')[1] == 'json' && isNumeric(path.basename(albumDirectory[index].path).split('.')[0])) {
+        File trackFile = File(albumDirectory[index].path);
+        Map<String, dynamic> trackJson = convert.jsonDecode(await trackFile.readAsString());
+        savedTracks.add(trackJson);
+      }
+    }
+
+    while (savedTracks.length > 0) {
+      int minTrackNumber = 0;
+      int switchIndex = 0;
+      for (int index = 0; index < savedTracks.length; index++) {
+        if (savedTracks[index]['track_number'] > minTrackNumber) {
+          minTrackNumber = savedTracks[index]['track_number'];
+          switchIndex = index;
+        }
+      }
+      sortedSavedTracks.insert(0, savedTracks[switchIndex]);
+      savedTracks.removeAt(switchIndex);
+    }
+
+    return {'tracks' : sortedSavedTracks};
   }
 
   static Future<List<File>> albumArts() async {
