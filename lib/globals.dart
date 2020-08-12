@@ -38,11 +38,13 @@ class Globals {
   static const String STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Getting tracks...';
   static const String STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Here are the tracks from this album';
   static const String STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Some insights of the album';
-  static const String STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Search & download some music, to see it here.';
+  static const String STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Search & save some music to see it here.';
   static const String STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Here is the latest album saved by you';
   static const String STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Here are your other albums';
   static const String STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Here are the tracks you saved';
   static const String STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Some insights of the album';
   static const String STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Delete this album ?';
   static const String STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'You surely wanna delete this...';
+  static const String STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Wanna delete this?';
+  static const String STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Do you want to remove this track saved on your device?';
 }
