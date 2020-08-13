@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -15,7 +16,8 @@ class TrackElement extends StatelessWidget {
   final Map<String, dynamic> albumJson;
   final Function refresh;
   final Function refreshTracks;
-  TrackElement({Key key, @required this.index, @required this.albumTracks, @required this.albumJson, @required this.refresh, @required this.refreshTracks}) : super(key: key);
+  final File albumArt;
+  TrackElement({Key key, @required this.index, @required this.albumTracks, @required this.albumJson, @required this.refresh, @required this.refreshTracks, @required this.albumArt}) : super(key: key);
 
   String trackDuration(int durationMilliseconds) {
     String trackDurationLabel;
@@ -90,10 +92,12 @@ class TrackElement extends StatelessWidget {
         child: Text(
           this.albumTracks[this.index]['track_number'].toString(),
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 12,
           ),
         ),
-        backgroundImage: NetworkImage(this.albumJson['album_art_64']),
+        backgroundImage: FileImage(
+          this.albumArt,
+        ),
       ),
       trailing: Text(this.trackDuration(this.albumTracks[this.index]['track_duration'])),
     );
@@ -161,6 +165,7 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with TickerProviderState
           albumJson: widget.albumJson,
           refresh: widget.refresh,
           refreshTracks: this.refreshTracks,
+          albumArt: widget.albumArt,
         ),
       );
     }
@@ -264,7 +269,6 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with TickerProviderState
         ),
       ]
     );
-    });
     this._searchResultOpacityController = new AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
@@ -273,12 +277,13 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with TickerProviderState
     });
     this._searchResultOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(this._searchResultOpacityController);
     this._searchResultOpacityController.forward();
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    this.refreshTracks();
+    Timer(Duration(milliseconds: 800), () => this.refreshTracks());
   }
 
   @override
