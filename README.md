@@ -9,6 +9,15 @@ The app is meant to be used in such a way, that you download your favorite music
 THE CURRENT PRE-RELEASE OF APP IS JUST TO SHOWCASE THE IDEA & FEATURES (i.e. FREE MUSIC DOWNLOAD, OFFLINE PLAYBACK & USER INTERFACE, YOU CAN LOOK AT TEMPORARILY INCLUDED [CURRENTLY ADDED](#zap-currently-added) SECTION OF README.) OF THE APP. MANY FEATURES, THAT AN IDEAL MUSIC APP HAS, ARE STILL MISSING. YOU CAN CONTRIBUTE, IF YOU WANT TO. THE UI SHOULD BE SMOOTH BUT, YOU CAN ENCOUNTER DOWNLOAD RELATED BUGS RARELY AT THE MOMENT & I'M TRYING TO FIX THEM. :star: STAR THE REPO TO SUPPORT THE PROJECT.
 
 
+## :camera: The Fluid Experience
+
+These GIFs are only 25 FPS :worried:.
+
+|||
+|-|-|
+|![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/album_demo.gif) |![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/ui_demo.gif)|
+
+
 ## :heavy_check_mark: Features
 
 
@@ -22,6 +31,13 @@ THE CURRENT PRE-RELEASE OF APP IS JUST TO SHOWCASE THE IDEA & FEATURES (i.e. FRE
 
 - :heart: __Ads Free Forever__
   - No advertisements! Please star :star: the repository, project needs YOUR SUPPORT to grow.
+  
+  
+  ## :mag_right: More Features Showcase
+
+|Listen Music Offline|Download Music|Search Your Favourite|
+|-|-|-|
+|![browse_offline](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/browse_offline.jpg)|![download_music](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/download_music.jpg)|![search_modes](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/search_modes.jpg)|
 
 
 ## :zap: Currently Added
