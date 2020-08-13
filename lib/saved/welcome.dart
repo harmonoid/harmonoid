@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:math';
 
-import 'package:audio_service/audio_service.dart';
-
-import 'package:harmonoid/main.dart';
 import 'package:harmonoid/saved/savedalbumresults.dart';
 import 'package:harmonoid/searchbar.dart';
 
@@ -29,15 +26,6 @@ class _Welcome extends State<Welcome> {
   @override
   void initState() {
     super.initState();
-
-    AudioService.start(
-      backgroundTaskEntrypoint: backgroundTaskEntryPoint,
-      androidNotificationChannelName: 'com.alexmercerind.harmonoid',
-      androidNotificationColor: 0xFF6200EA,
-      androidNotificationIcon: 'mipmap/ic_launcher',
-      androidStopForegroundOnPause: true,
-      androidNotificationChannelDescription: 'Harmonoid Music Playing Service' 
-    );
 
     this._albumsScrollController..addListener(() {
 

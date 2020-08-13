@@ -6,7 +6,7 @@ import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:path/path.dart' as path;
-
+import 'package:harmonoid/main.dart';
 import 'package:harmonoid/scripts/getsavedmusic.dart';
 
 class PlaySavedMusic {
@@ -22,6 +22,15 @@ class PlaySavedMusic {
 
     List<Map<String, dynamic>> albumTracks = (await GetSavedMusic.tracks(albumId))['tracks'];
     List<MediaItem> trackQueue = new List<MediaItem>();
+
+    await AudioService.start(
+      backgroundTaskEntrypoint: backgroundTaskEntryPoint,
+      androidNotificationChannelName: 'com.alexmercerind.harmonoid',
+      androidNotificationColor: 0xFF6200EA,
+      androidNotificationIcon: 'mipmap/ic_launcher',
+      androidStopForegroundOnPause: true,
+      androidNotificationChannelDescription: 'Harmonoid Music Playing Service' 
+    );
 
     for (int index = 0; index < albumTracks.length; index++) {
       trackQueue.add(
