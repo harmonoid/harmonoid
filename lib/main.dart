@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:audio_service/audio_service.dart';
+
 import 'package:harmonoid/saved/welcome.dart';
 import 'package:harmonoid/searchalbumresults.dart';
+import 'package:harmonoid/scripts/backgroundtask.dart';
 
 class Application extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -17,7 +20,10 @@ class Application extends StatelessWidget {
       ),
       initialRoute: '/welcome',
       routes: {
-        '/welcome' : (context) => Welcome(),
+        '/welcome' : (context) => 
+        AudioServiceWidget(
+          child: Welcome()
+        ),
       },
       onGenerateRoute: (settings) {
         if (settings.name == SearchAlbumResults.pageRoute) {
@@ -35,3 +41,5 @@ class Application extends StatelessWidget {
 }
 
 void main() => runApp(Application());
+
+void backgroundTaskEntryPoint() => AudioServiceBackground.run(() => BackgroundTask());
