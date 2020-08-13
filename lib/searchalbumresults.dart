@@ -71,6 +71,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
               margin: EdgeInsets.all(8),
               child: OpenContainer(
                 closedElevation: 2,
+                transitionDuration: Duration(milliseconds: 400),
                 closedBuilder: (ctx, act) => Container(
                   width: 156,
                   height: widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 272 : 246,
@@ -185,6 +186,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
           Container(
             margin: EdgeInsets.only(left: 16, right: 16),
             child: OpenContainer(
+              transitionDuration: Duration(milliseconds: 400),
               closedBuilder: (ctx, act) => Container(
                 child: Column(
                   children: [
