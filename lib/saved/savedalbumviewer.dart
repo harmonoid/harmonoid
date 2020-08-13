@@ -51,7 +51,6 @@ class TrackElement extends StatelessWidget {
                   onPressed: () {
                     (() async {
                       int result = await GetSavedMusic.deleteTrack(this.albumJson['album_id'], this.albumTracks[this.index]['track_number']);
-                      print(result);
                       if (result == 1) {
                         Navigator.of(context).pop();
                         await GetSavedMusic.deleteAlbum(this.albumJson['album_id']);
