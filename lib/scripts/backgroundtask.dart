@@ -1,6 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 
+
 class BackgroundTask extends BackgroundAudioTask {
 
   AudioPlayer _audioPlayer = new AudioPlayer()..playerStateStream.listen(
@@ -31,9 +32,9 @@ class BackgroundTask extends BackgroundAudioTask {
 
   @override
   Future<void> onSkipToPrevious() async {
-    print('Current Track Index: ' + this._currentTrackIndex.toString());
-    print('Album Track Numbers: ' + this._albumTrackNumbers.toString());
-    print('Audio Player Queue : ' + this._audioPlayerQueue.toString());
+    // print('Current Track Index: ' + this._currentTrackIndex.toString());
+    // print('Album Track Numbers: ' + this._albumTrackNumbers.toString());
+    // print('Audio Player Queue : ' + this._audioPlayerQueue.toString());
     this._currentTrackIndex--;
     if (this._currentTrackIndex == -1) {
       this._currentTrackIndex = this._audioPlayerQueue.length - 1;
@@ -43,9 +44,9 @@ class BackgroundTask extends BackgroundAudioTask {
 
   @override
   Future<void> onSkipToNext() async {
-    print('Current Track Index: ' + this._currentTrackIndex.toString());
-    print('Album Track Numbers: ' + this._albumTrackNumbers.toString());
-    print('Audio Player Queue : ' + this._audioPlayerQueue.toString());
+    // print('Current Track Index: ' + this._currentTrackIndex.toString());
+    // print('Album Track Numbers: ' + this._albumTrackNumbers.toString());
+    // print('Audio Player Queue : ' + this._audioPlayerQueue.toString());
     this._currentTrackIndex++;
     if (this._currentTrackIndex == this._audioPlayerQueue.length) {
       this._currentTrackIndex = 0;
@@ -55,12 +56,13 @@ class BackgroundTask extends BackgroundAudioTask {
 
   @override
   Future<void> onPlayFromMediaId(String mediaId) async {
+    
+    // print('Media ID required: ' + mediaId);
 
     int currentTrackNumber;
-    this._audioPlayerQueue = new List<MediaItem>();
-    this._albumTrackNumbers = new List<int>();
 
     for (MediaItem mediaItem in this._audioPlayerQueue) {
+      // print('Media ID found  : ' + mediaItem.id);
       this._albumTrackNumbers.add(
         mediaItem.extras['track_number'],
       );
@@ -87,6 +89,9 @@ class BackgroundTask extends BackgroundAudioTask {
 
   @override
   Future<void> onUpdateQueue(List<MediaItem> mediaItems) async {
+    this._audioPlayerQueue = new List<MediaItem>();
+    this._albumTrackNumbers = new List<int>();
+
     this._audioPlayerQueue = mediaItems;
   }
   
@@ -94,6 +99,7 @@ class BackgroundTask extends BackgroundAudioTask {
   Future<void> onStop() async {
     super.onStop();
     await this._audioPlayer.stop();
+    print('Audio service is stopped.');
   }
 
   @override
