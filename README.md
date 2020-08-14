@@ -33,7 +33,7 @@ These GIFs are only 25 FPS :worried:.
   - No advertisements! Please star :star: the repository, project needs YOUR SUPPORT to grow.
   
   
-  ## :mag_right: More Features Showcase
+## :tada: More Features Showcase
 
 |Listen Music Offline|Download Music|Search Your Favourite|
 |-|-|-|
