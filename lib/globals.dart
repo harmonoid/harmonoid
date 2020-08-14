@@ -30,9 +30,13 @@ class Globals {
   static const String STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'More tracks from the result';
   static const String STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'More similar artists';
   static const String STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE                  = 'You cannot go back';
-  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_TITLE                 = 'The track could not be saved';
-  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SUBTITLE              = 'We recommend you to check your internet connection and try again.';
   static const String STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE               = 'One or more tracks are being saved offline. Please wait until all the tracks are saved.';
+  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'The track could not be saved';
+  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'One or more tracks are being saved offline. Please wait until all the tracks are saved.';
+  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'We all have bad days';
+  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving your music, this generally means that the rate limiting is applied by the server. This can also mean that the dependencies of the server are not up to date. This error has nothing to do with you, you can inform the owner of the project by opening an issue or on twitter & expect a fix within an hour, if he lives in the same time zone as you. Enjoy your downloaded music in the mean time. Thanks a lot for your support.';
+  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'We could not save this track';
+  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'This track specifically could not be saved. We are still trying to figure out what causes this. Please listen to some other music in the mean time. Thanks a lot for your kind support.';
   static const String STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Wait';
   static const String STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'This track is already being downloaded.';
   static const String STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Getting tracks...';
