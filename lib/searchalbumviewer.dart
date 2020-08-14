@@ -148,14 +148,63 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
         albumTracks[index]['track_id'], 
         albumJson
       );
-      bool result = await track.save();
-      if (!result) {
+      int result = await track.save();
+
+      print('Download Status Code: ' + result.toString());
+
+      if (result == 400) {
         GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_TITLE),
-            content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SUBTITLE),
+            title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE),
+            content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE),
+            actions: [
+              MaterialButton(
+                splashColor: Colors.deepPurple[50],
+                highlightColor: Colors.deepPurple[100],
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  Globals.STRING_OK,
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+            ],
+          )
+        );
+      }
+      else if (result == 500) {
+        GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE),
+            content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE),
+            actions: [
+              MaterialButton(
+                splashColor: Colors.deepPurple[50],
+                highlightColor: Colors.deepPurple[100],
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  Globals.STRING_OK,
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+            ],
+          )
+        );
+      }
+      else if (result == 403) {
+        GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE),
+            content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE),
             actions: [
               MaterialButton(
                 splashColor: Colors.deepPurple[50],
