@@ -66,8 +66,8 @@ class GetSavedMusic {
       }
     }
 
-    await trackJson.delete();
-    await trackFile.delete();
+    try {await trackJson.delete();} catch(e) {}
+    try {await trackFile.delete();} catch(e) {}
 
     return tracksNumber;
   }

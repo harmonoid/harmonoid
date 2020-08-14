@@ -18,7 +18,7 @@ class AddSavedMusic extends SaveTrack {
 
   AddSavedMusic(this.trackNumber, this.trackId, this.albumJson);
 
-  Future<bool> save() async {
+  Future<int> save() async {
 
     await createAppDirectory();
     bool isAlbumSaved = !(await albumSaved());
@@ -31,7 +31,7 @@ class AddSavedMusic extends SaveTrack {
     await saveTrackAssets();
     await saveTrackFile();
 
-    return this.saveSuccess;
+    return this.statusCode;
   }
 }
 
@@ -61,7 +61,7 @@ abstract class SaveAlbumAssets extends GenerateDirectories {
   String trackId;
   Map<String, dynamic> albumJson;
   Directory albumDirectory;
-  bool saveSuccess = true;
+  int statusCode = 200;
 
   Future<bool> albumSaved() async {
     this.albumDirectory = Directory(path.join(this.musicDirectory.path, this.albumJson['album_id']));
@@ -82,7 +82,7 @@ abstract class SaveAlbumAssets extends GenerateDirectories {
       await albumAssets.writeAsString(convert.jsonEncode(this.albumJson));
     }
     catch(error) {
-      this.saveSuccess = false;
+      this.statusCode = 400;
     }
   }
 
@@ -94,7 +94,7 @@ abstract class SaveAlbumAssets extends GenerateDirectories {
       await albumAssets.writeAsBytes(imageBinary);
     }
     catch(error) {
-      this.saveSuccess = false;
+      this.statusCode = 400;
     }
   }
 }
@@ -107,11 +107,27 @@ abstract class SaveTrack extends SaveAlbumAssets {
 
     Uri trackDownloadUri = Uri.https(Globals.STRING_HOME_URL, '/trackdownload', {'track_id': this.trackId});
     try {
-      var trackBinary = (await http.get(trackDownloadUri)).bodyBytes;
-      await trackFile.writeAsBytes(trackBinary);
+      http.Response response = await http.get(trackDownloadUri);
+      int contentLength = response.contentLength;
+      int statusCode = response.statusCode;
+      // print('Content Length:' + contentLength.toString());
+      // print('Status Code   :' + statusCode.toString());
+
+      if (statusCode == 200) {
+        if (contentLength < 500000) {
+          this.statusCode = 403;
+        }
+        else {
+          var trackBinary = response.bodyBytes;
+          await trackFile.writeAsBytes(trackBinary);
+        }
+      }
+      else {
+        this.statusCode = 500;
+      }
     }
     catch(error) {
-      this.saveSuccess = false;
+      this.statusCode = 400;
     }
   }
 
@@ -131,7 +147,7 @@ abstract class SaveTrack extends SaveAlbumAssets {
       }
     }
     catch(error) {
-      this.saveSuccess = false;
+      this.statusCode = 400;
     }
   }
 }
