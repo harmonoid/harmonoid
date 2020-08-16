@@ -31,6 +31,7 @@ dependencies:
   palette_generator: ^0.2.3
   just_audio: ^0.3.2
   audio_service: ^0.13.0
+  url_launcher: ^5.5.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -57,6 +58,7 @@ flutter:
     - assets/images/albums.jpg
     - assets/images/tracks.jpg
     - assets/images/artists.jpg
+    - assets/images/about.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
