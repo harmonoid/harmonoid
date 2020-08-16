@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 
+import 'package:harmonoid/scripts/searchhistory.dart';
+
 import 'package:harmonoid/globals.dart';
 import 'package:harmonoid/searchalbumresults.dart';
 
@@ -25,6 +27,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
   List<AnimationController> _scaleController = new List<AnimationController>(3);
   String _keyword = '';
   SearchMode _searchMode = SearchMode.album;
+  List<StatelessWidget> _searchHistoryItems = new List<StatelessWidget>();
 
   void _selectSearchMode(SearchMode value) {
     for (int index = 0; index <= 2; index++) {
@@ -61,6 +64,8 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
         return resultTitle;
       }
 
+      SearchHistory.addSearchHistory(keyword, resultTitle(this._searchMode));
+
       Navigator.of(context).pushNamed(
         '/searchresult',
         arguments: SearchAlbumResultArguments(this._keyword, resultTitle(this._searchMode))
@@ -71,6 +76,30 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    (() async {
+      List<dynamic> searchHistory = (await SearchHistory.getSearchHistory())['searches'];
+      for (int index = 0; index < searchHistory.length; index++) {
+        this._searchHistoryItems.add(
+          ListTile(
+            onTap: () => Navigator.of(context).pushNamed(
+              '/searchresult',
+              arguments: SearchAlbumResultArguments(searchHistory[index]['keyword'], searchHistory[index]['mode'])
+            ),
+            leading: CircleAvatar(
+              child: Icon(
+                Icons.search,
+                color: Colors.black26,
+              ),
+              backgroundColor: Color(0x00000000),
+            ),
+            title: Text(searchHistory[index]['keyword']),
+            subtitle: Text(searchHistory[index]['mode'], style: TextStyle(fontSize: 12)),
+          ),
+        );
+      }
+      this.setState(() {});
+    })();
 
     for (int index = 0; index <= 2; index++){
       this._scaleColor[index] = Colors.black54;
@@ -195,15 +224,15 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                     title: Text(Globals.STRING_TRACK),
                     subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK, style: TextStyle(fontSize: 12)),
                   ),
-                  ListTile(
-                    onTap: () => this.setState(() {
-                      this._selectSearchMode(SearchMode.artist);
-                      this._searchMode = SearchMode.artist;
-                    }),
-                    leading: ScaleTransition(child: Icon(Icons.person, color: this._scaleColor[2], size: 24,), scale: this._scaleAnimation[2]),
-                    title: Text(Globals.STRING_ARTIST),
-                    subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST, style: TextStyle(fontSize: 12)),
-                  ),
+                  // ListTile(
+                  //   onTap: () => this.setState(() {
+                  //     this._selectSearchMode(SearchMode.artist);
+                  //     this._searchMode = SearchMode.artist;
+                  //   }),
+                  //   leading: ScaleTransition(child: Icon(Icons.person, color: this._scaleColor[2], size: 24,), scale: this._scaleAnimation[2]),
+                  //   title: Text(Globals.STRING_ARTIST),
+                  //   subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST, style: TextStyle(fontSize: 12)),
+                  // ),
                   Container(
                     margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
                     child: Text(
@@ -214,7 +243,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-                ],
+                ] + this._searchHistoryItems,
               ),
               ),
           ],
