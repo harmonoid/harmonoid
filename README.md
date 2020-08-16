@@ -17,6 +17,12 @@ These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they 
 |-|-|
 |![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/album_demo.gif) |![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/ui_demo.gif)|
 
+#### More Screenshots
+
+|Browse Offline|Download Music|Listen Offline|
+|-|-|-|
+|![browse_offline](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/browse_offline.jpg)|![download_music](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/download_music.jpg)|![search_modes](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/now_playing_demo.jpg)|
+
 
 ## :heavy_check_mark: Features
 
@@ -34,13 +40,6 @@ These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they 
   
 - :shield: __Safe To Use__
   - The app does not ask for any of your device permissions at all. (Not even storage).
-  
-  
-## :tada: Look Of The App
-
-|Browse Offline|Download Music|Listen Offline|
-|-|-|-|
-|![browse_offline](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/browse_offline.jpg)|![download_music](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/download_music.jpg)|![search_modes](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/now_playing_demo.jpg)|
 
 
 ## :zap: Currently Added
