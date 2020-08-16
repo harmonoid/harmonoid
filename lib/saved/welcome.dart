@@ -4,7 +4,9 @@ import 'package:flutter/rendering.dart';
 import 'dart:math';
 
 import 'package:harmonoid/saved/savedalbumresults.dart';
+import 'package:harmonoid/saved/nowplaying.dart';
 import 'package:harmonoid/searchbar.dart';
+import 'package:harmonoid/about.dart';
 
 
 class Welcome extends StatefulWidget {
@@ -46,7 +48,7 @@ class _Welcome extends State<Welcome> {
   Widget build(BuildContext context) {
 
     final List<Widget> _screens = [
-      Center(child: Text('Hello World!'),),
+      NowPlaying(),
       Container(
         margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Stack(
@@ -60,11 +62,11 @@ class _Welcome extends State<Welcome> {
           ],
         ),
       ),
-      Center(child: Text('Hello World!'),),
+      About(),
     ];
 
     return Scaffold(
-      floatingActionButton: TweenAnimationBuilder(
+      floatingActionButton: this._index == 1 ? TweenAnimationBuilder(
         duration: Duration(seconds: 1),
         tween: Tween<double>(begin: 0.0, end: this._rotationValue),
         builder: (context, value, child) => Transform.rotate(
@@ -85,7 +87,7 @@ class _Welcome extends State<Welcome> {
           ),
           alignment: Alignment.center,
         ),
-      ),
+      ) : null,
       body: PageTransitionSwitcher(
         duration: Duration(milliseconds: 400),
         child: _screens[this._index],
@@ -98,7 +100,10 @@ class _Welcome extends State<Welcome> {
       bottomNavigationBar: BottomNavigationBar(
         elevation: 8.0,
         currentIndex: this._index,
-        onTap: (int index) => this.setState(() => this._index = index),
+        onTap: (int index) => this.setState(() {
+          this._index = index;
+          this._rotations = 1;
+        }),
         selectedFontSize: 14,
         unselectedFontSize: 12,
         selectedItemColor: Colors.white,
