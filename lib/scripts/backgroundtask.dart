@@ -4,13 +4,7 @@ import 'package:just_audio/just_audio.dart';
 
 class BackgroundTask extends BackgroundAudioTask {
 
-  AudioPlayer _audioPlayer = new AudioPlayer()..playerStateStream.listen(
-    (state) {
-      if (state.processingState == ProcessingState.completed) {
-        AudioService.skipToNext();
-      }
-    }
-  );
+  AudioPlayer _audioPlayer;
   List<MediaItem> _audioPlayerQueue = new List<MediaItem>();
   List<int> _albumTrackNumbers = new List<int>();
   int _currentTrackIndex;
@@ -28,6 +22,42 @@ class BackgroundTask extends BackgroundAudioTask {
         MediaControl.skipToNext
       ],
     );
+  }
+
+  @override
+  Future<void> onStart(Map<String, dynamic> params) async {
+    _audioPlayer = new AudioPlayer()..playerStateStream.listen(
+      (state) {
+        if (state.processingState == ProcessingState.completed) {
+          AudioService.skipToNext();
+        }
+        if (state.processingState == ProcessingState.ready) {
+          AudioServiceBackground.sendCustomEvent(['currentTrackDuration', this._audioPlayer.duration]);
+          AudioServiceBackground.sendCustomEvent(['currentTrackQueue', [this._currentTrackIndex, this._audioPlayerQueue]]);
+        }
+      }
+    )..positionStream.listen((position) {
+      AudioServiceBackground.sendCustomEvent(['playingTrackDuration', position]);
+    });
+  }
+
+  @override
+  Future<dynamic> onCustomAction(String action, dynamic params) async {
+    if (action == 'currentTrackDuration') {
+      AudioServiceBackground.sendCustomEvent(['currentTrackDuration', this._audioPlayer.duration]);
+    }
+    if (action == 'playingTrackDuration') {
+      AudioServiceBackground.sendCustomEvent(['playingTrackDuration', this._audioPlayer.position]);
+    }
+    if (action == 'currentTrackQueue') {
+      AudioServiceBackground.sendCustomEvent(['currentTrackQueue', [this._currentTrackIndex, this._audioPlayerQueue]]);
+    }
+    if (action == 'currentTrackIndexSwitch') {
+      await AudioService.playMediaItem(_audioPlayerQueue[params]);
+    }
+    if (action == 'isPlaying') {
+      return this._audioPlayer.playing;
+    }
   }
 
   @override
@@ -93,6 +123,11 @@ class BackgroundTask extends BackgroundAudioTask {
     this._albumTrackNumbers = new List<int>();
 
     this._audioPlayerQueue = mediaItems;
+  }
+
+  @override
+  Future<void> onSeekTo(Duration duration) async {
+    this._audioPlayer.seek(duration);
   }
   
   @override
