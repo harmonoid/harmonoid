@@ -25,7 +25,7 @@ class PlaySavedMusic {
 
     await AudioService.start(
       backgroundTaskEntrypoint: backgroundTaskEntryPoint,
-      androidNotificationChannelName: 'com.alexmercerind.harmonoid',
+      androidNotificationChannelName: 'Harmonoid',
       androidNotificationColor: 0xFF6200EA,
       androidNotificationIcon: 'mipmap/ic_launcher',
       androidStopForegroundOnPause: true,
@@ -41,9 +41,12 @@ class PlaySavedMusic {
           artist: albumAssets['album_artists'][0],
           artUri: 'file://${path.join(musicDirectory.path, albumId, 'albumArt.png')}',
           extras: {
-            'album_id': albumAssets['album_id'], 
+            'album_id': albumAssets['album_id'],
+            'album_art': path.join(musicDirectory.path, albumId, 'albumArt.png'),
             'track_id': albumTracks[index]['track_id'],
             'track_number': albumTracks[index]['track_number'],
+            'track_index': index,
+            'year': albumAssets['year'],
             'track_path': path.join(musicDirectory.path, albumId, '${albumTracks[index]['track_number']}.m4a')
           },
         ),
