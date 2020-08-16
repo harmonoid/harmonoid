@@ -37,6 +37,17 @@ class TrackElement extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          elevation: 2,
+          behavior: SnackBarBehavior.floating,
+          action: SnackBarAction(
+            textColor: Colors.white,
+            label: Globals.STRING_OK,
+            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+          ),
+          duration: Duration(seconds: 2),
+          content: Text('${Globals.STRING_NOW_PLAYING}: ${this.albumTracks[this.index]['track_name']}'),
+        ));
         (() async {
           await PlaySavedMusic.playTrack(this.albumJson['album_id'], this.albumTracks[this.index]['track_number']);
         })();
@@ -296,18 +307,6 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with TickerProviderState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          (() async {
-            await PlaySavedMusic.playTrack(widget.albumJson['album_id'], this.albumTracks[0]['track_number']);
-          })();
-        },
-        backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(
-          Icons.play_arrow,
-          color: Colors.white,
-        ),
-      ),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
