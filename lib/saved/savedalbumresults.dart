@@ -51,7 +51,7 @@ class AlbumTile extends StatelessWidget {
                       child: Text(
                         this.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim(),
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           color: Colors.black87,
                         ),
                         maxLines: 2,
@@ -173,7 +173,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
         
         if (this._albums.length > 1) {
           bool incompleteRow = (this._albums.length - 1) % elementsPerRow == 0 ? false : true;
-          for (int index = 1; index < this._albums.length; index++) { 
+          for (int index = 0; index < this._albums.length - 1; index++) { 
             rowChildren.add(
               AlbumTile(
                 refresh: this.refresh,
@@ -195,7 +195,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
 
           if (incompleteRow) {
             rowChildren = new List<Widget>();
-            for (int index = (this._albums.length - (this._albums.length - 1) % elementsPerRow); index < this._albums.length; index++) {
+            for (int index = ((this._albums.length - 1) - ((this._albums.length - 1) % elementsPerRow)); index < this._albums.length - 1; index++) {
               rowChildren.add(
                 AlbumTile(
                   refresh: this.refresh,
@@ -204,7 +204,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                 ),
               );
             }
-            for (int index = 0; index < elementsPerRow - rowChildren.length; index++) {
+            for (int index = 0; index < elementsPerRow - (rowChildren.length - 1); index++) {
               rowChildren.add(
                 Container(
                   margin: EdgeInsets.all(8),
@@ -250,7 +250,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.file(
-                      this._albumArts[0],
+                      this._albumArts[this._albumArts.length - 1],
                       height: 156,
                       width: 156,
                       fit: BoxFit.fill,
@@ -263,7 +263,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            this._albums[0]['album_name'].split('(')[0].trim().split('-')[0].trim(),
+                            this._albums[this._albumArts.length - 1]['album_name'].split('(')[0].trim().split('-')[0].trim(),
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.black87,
@@ -277,7 +277,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                             thickness: 2,
                           ),
                           Text(
-                            this._albums[0]['album_artists'].join(', '),
+                            this._albums[this._albumArts.length - 1]['album_artists'].join(', '),
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black54,
@@ -291,7 +291,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                             thickness: 2,
                           ),
                           Text(
-                            '(${this._albums[0]['year']})',
+                            '(${this._albums[this._albumArts.length - 1]['year']})',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.black54,
@@ -307,8 +307,8 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
               ),
               openBuilder: (ctx, act) => SavedAlbumViewer(
                 refresh: this.refresh,
-                albumJson: this._albums[0],
-                albumArt: this._albumArts[0],
+                albumJson: this._albums[this._albumArts.length - 1],
+                albumArt: this._albumArts[this._albumArts.length - 1],
               ),
             ),
           ),
