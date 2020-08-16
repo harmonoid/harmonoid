@@ -121,6 +121,7 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with TickerProviderState
   Animation<double> _searchResultOpacity;
   AnimationController _searchResultOpacityController;
   Color _accentColor = Colors.black87;
+  List<dynamic> albumTracks;
   List<Widget> _albumTracks = [
     Container(
       margin: EdgeInsets.only(left: 16, top: 24, bottom: 18),
@@ -156,12 +157,12 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with TickerProviderState
     }
     this._accentColor = await getImageColor(FileImage(widget.albumArt)); 
 
-    List<dynamic> albumTracks = (await GetSavedMusic.tracks(widget.albumJson['album_id']))['tracks'];
+    this.albumTracks = (await GetSavedMusic.tracks(widget.albumJson['album_id']))['tracks'];
     for (int index = 0; index < albumTracks.length; index++) {
       this._albumTracks.add(
         TrackElement(
           index: index,
-          albumTracks: albumTracks,
+          albumTracks: this.albumTracks,
           albumJson: widget.albumJson,
           refresh: widget.refresh,
           refreshTracks: this.refreshTracks,
@@ -287,10 +288,20 @@ class _SavedAlbumViewer extends State<SavedAlbumViewer> with TickerProviderState
   }
 
   @override
+  void dispose() {
+    this._searchResultOpacityController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          (() async {
+            await PlaySavedMusic.playTrack(widget.albumJson['album_id'], this.albumTracks[0]['track_number']);
+          })();
+        },
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(
           Icons.play_arrow,
