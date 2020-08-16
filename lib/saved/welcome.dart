@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:harmonoid/globals.dart';
 import 'dart:math';
 
 import 'package:harmonoid/saved/savedalbumresults.dart';
@@ -111,9 +112,9 @@ class _Welcome extends State<Welcome> {
         backgroundColor: Theme.of(context).accentColor,
         showUnselectedLabels: true,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.play_arrow), title: Text('Now Playing')),
-          BottomNavigationBarItem(icon: Icon(Icons.library_music), title: Text('Collection')),
-          BottomNavigationBarItem(icon: Icon(Icons.info), title: Text('About')),
+          BottomNavigationBarItem(icon: Icon(Icons.play_arrow), title: Text(Globals.STRING_NOW_PLAYING)),
+          BottomNavigationBarItem(icon: Icon(Icons.library_music), title: Text(Globals.STRING_COLLECTION)),
+          BottomNavigationBarItem(icon: Icon(Icons.info), title: Text(Globals.STRING_ABOUT)),
         ],
       ),
     );
