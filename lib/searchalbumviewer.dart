@@ -150,7 +150,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
       );
       int result = await track.save();
 
-      print('Download Status Code: ' + result.toString());
+      // print('Download Status Code: ' + result.toString());
 
       if (result == 400) {
         GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
