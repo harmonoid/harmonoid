@@ -121,6 +121,7 @@ class NoResultsComponent extends StatelessWidget {
             ),
             Text(
               Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black54,
