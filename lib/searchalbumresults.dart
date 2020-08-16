@@ -55,7 +55,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
       Uri uri = Uri.https(Globals.STRING_HOME_URL, '/search', {
         'keyword': widget.keyword,
         'mode' : widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1),
-        'limit' : '10',
+        'limit' : '20',
         'offset' : '0',
       });
       
@@ -270,29 +270,29 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                       height: 1,
                       thickness: 1,
                     ),
-                    ButtonBar(
-                      alignment: MainAxisAlignment.end,
-                      children: [
-                        MaterialButton(
-                          splashColor: Colors.deepPurple[50],
-                          highlightColor: Colors.deepPurple[100],
-                          onPressed: () {},
-                          child: Text(
-                            _searchResultLabels.stringSearchResultTopButtonLabel0,
-                            style: TextStyle(color: Theme.of(context).primaryColor),
-                          ),
-                        ),
-                        MaterialButton(
-                          splashColor: Colors.deepPurple[50],
-                          highlightColor: Colors.deepPurple[100],
-                          onPressed: () {},
-                          child: Text(
-                            _searchResultLabels.stringSearchResultTopButtonLabel1,
-                            style: TextStyle(color: Theme.of(context).primaryColor),
-                          ),
-                        ),
-                      ],
-                    )
+                    // ButtonBar(
+                    //   alignment: MainAxisAlignment.end,
+                    //   children: [
+                    //     MaterialButton(
+                    //       splashColor: Colors.deepPurple[50],
+                    //       highlightColor: Colors.deepPurple[100],
+                    //       onPressed: () {},
+                    //       child: Text(
+                    //         _searchResultLabels.stringSearchResultTopButtonLabel0,
+                    //         style: TextStyle(color: Theme.of(context).primaryColor),
+                    //       ),
+                    //     ),
+                    //     MaterialButton(
+                    //       splashColor: Colors.deepPurple[50],
+                    //       highlightColor: Colors.deepPurple[100],
+                    //       onPressed: () {},
+                    //       child: Text(
+                    //         _searchResultLabels.stringSearchResultTopButtonLabel1,
+                    //         style: TextStyle(color: Theme.of(context).primaryColor),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // )
                   ],
                 )
               ),
