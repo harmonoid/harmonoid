@@ -32,17 +32,17 @@ class Globals {
   static const String STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE                  = 'You cannot go back';
   static const String STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE               = 'One or more tracks are being saved offline. Please wait until all the tracks are saved.';
   static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'The track could not be saved';
-  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'One or more tracks are being saved offline. Please wait until all the tracks are saved.';
+  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'We strongly recommend you to check your internet connection & try again in a while.';
   static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'We all have bad days';
-  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving your music, this generally means that the rate limiting is applied by the server. This can also mean that the dependencies of the server are not up to date. This error has nothing to do with you, you can inform the owner of the project by opening an issue or on twitter & expect a fix within an hour, if he lives in the same time zone as you. Enjoy your downloaded music in the mean time. Thanks a lot for your support.';
+  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving your music. This generally means that our IP address is blocked due to large number of requests in a given time. Although, this can also mean that the dependencies of the server are not up to date. This error has nothing to do with you. You can inform the owner of the project, by opening an issue on Github or on Twitter & expect a fix within an hour, if he lives in the same time zone as you. Enjoy your downloaded music in the mean time. Thanks a lot for your support.';
   static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'We could not save this track';
-  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'This track specifically could not be saved. We are still trying to figure out what causes this. Please listen to some other music in the mean time. Thanks a lot for your kind support.';
+  static const String STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'This track specifically could not be saved. We are still trying to figure out, what causes this error. Please download some other music in the mean time. Thanks a lot for your kind support.';
   static const String STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Wait';
   static const String STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'This track is already being downloaded.';
   static const String STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Getting tracks...';
   static const String STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Here are the tracks from this album';
   static const String STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Some insights of the album';
-  static const String STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Search & save some music to see it here.';
+  static const String STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Search & save some music to see it here. Spin the refresh button to see your newly added music.';
   static const String STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Here is the latest album saved by you';
   static const String STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Here are your other albums';
   static const String STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Here are the tracks you saved';
@@ -51,4 +51,15 @@ class Globals {
   static const String STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'You surely wanna delete this...';
   static const String STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Wanna delete this?';
   static const String STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Do you want to remove this track saved on your device?';
+  static const String STRING_NOW_PLAYING_NEXT_TRACK                          = 'NEXT';
+  static const String STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'PREVIOUS';
+  static const String STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Nothing is being played...';
+  static const String STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Play something from your collection.';
+  static const String STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = "We're all set...";
+  static const String STRING_ABOUT_GITHUB                                    = 'GITHUB';
+  static const String STRING_ABOUT_STAR_GITHUB                               = 'STAR THE PROJECT';
+  static const String STRING_ABOUT_STARGAZERS_TITLE                          = 'Project Stargazers';
+  static const String STRING_ABOUT_STARGAZERS_SUBTITLE                       = 'Thanks a lot for your support...';
+  static const String STRING_ABOUT_REPOSITORY_INFORMATION_ERROR              = 'We are unable to get latest info about us, you are most likely offline.';
+  static const String STRING_ABOUT_STARGAZERS_INFORMATION_ERROR              = 'We could not retrieve the information about latest stargazers.';
 }
