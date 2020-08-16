@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:flutter/services.dart';
 
 import 'package:harmonoid/saved/welcome.dart';
 import 'package:harmonoid/searchalbumresults.dart';
@@ -8,6 +9,10 @@ import 'package:harmonoid/scripts/backgroundtask.dart';
 
 class Application extends StatelessWidget {
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
       title: 'Harmonoid',
       theme: ThemeData(
