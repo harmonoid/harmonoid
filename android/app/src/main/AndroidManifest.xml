@@ -7,6 +7,7 @@
          FlutterApplication and put your custom class here. -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:usesCleartextTraffic="true"
         android:name="io.flutter.app.FlutterApplication"
