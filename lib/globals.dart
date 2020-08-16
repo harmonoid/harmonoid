@@ -6,7 +6,10 @@ class Globals {
   static const String STRING_INTERNET_ERROR                                  = 'Check your internet connection...';
   static const String STRING_SEARCH_HEADER                                   = 'Search Music';
   static const String STRING_SEARCH_MODE_SUBHEADER                           = 'What are you looking for ?';
-  static const String STRING_OK                                              = 'OK';
+  static const String STRING_COLLECTION                                      = 'Collection';
+  static const String STRING_NOW_PLAYING                                     = 'Now Playing';
+  static const String STRING_ABOUT                                           = 'About';
+  static const String STRING_OK                                              = 'OKAY';
   static const String STRING_YES                                             = 'YEA';
   static const String STRING_NO                                              = 'NO';
   static const String STRING_ALBUM                                           = 'Albums';
@@ -42,7 +45,7 @@ class Globals {
   static const String STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Getting tracks...';
   static const String STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Here are the tracks from this album';
   static const String STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Some insights of the album';
-  static const String STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Search & save some music to see it here. Spin the refresh button to see your newly added music.';
+  static const String STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Search & save some music to see it here.\nSpin the refresh to see new stuff.';
   static const String STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Here is the latest album saved by you';
   static const String STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Here are your other albums';
   static const String STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Here are the tracks you saved';
