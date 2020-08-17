@@ -4,7 +4,7 @@
 
 The app is meant to be used in such a way, that you download your favorite music offline & listen it whenever without internet connection.
 
-:arrow_down: Android users can download here pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.1)
+:arrow_down: Android users can download pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.1)
 
 ## :warning: THIS IS JUST A PRE-RELEASE
 
