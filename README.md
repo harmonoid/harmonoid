@@ -132,6 +132,12 @@ _For pre-release v0.0.1_
   
 - __How do I control media playback?__
   - 'Now Playing' tab of the app is for this job. You can do the basic job from the app notification itself.
+
+- __How do I delete a saved track?__
+  - In your 'Collection' tab, open the album to which that track belongs. Long press that track (which you want to delete) and tap 'YES' for deleting confirmation.
+
+- __How do I delete a saved album?__
+  - In your 'Collection' tab, open the album that you wanna delete. Press the bin button in the top right corner.
   
 - __Why is the first search on app generally slower & delayed ?__
   - This is because of the fact that our backend goes to sleep, if no users are online. So it takes time for it, to warm up again on your first request.
