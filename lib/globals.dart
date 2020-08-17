@@ -57,7 +57,7 @@ class Globals {
   static const String STRING_NOW_PLAYING_NEXT_TRACK                          = 'NEXT';
   static const String STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'PREVIOUS';
   static const String STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Nothing is being played...';
-  static const String STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Play something from your collection.';
+  static const String STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Play from your collection.';
   static const String STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = "We're all set...";
   static const String STRING_ABOUT_GITHUB                                    = 'GITHUB';
   static const String STRING_ABOUT_STAR_GITHUB                               = 'STAR THE PROJECT';
