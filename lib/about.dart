@@ -13,6 +13,9 @@ class About extends StatefulWidget {
 
 class AboutState extends State<About> {
 
+  String repository = 'harmonoid';
+  String developer = 'alexmercerind';
+
   Widget _projectInfo = Center(
     child: Container(
       margin: EdgeInsets.all(56),
@@ -25,8 +28,8 @@ class AboutState extends State<About> {
   void initState() {
     super.initState();
 
-    Uri githubRepoUri = Uri.https('api.github.com', '/repos/alexmercerind/harmonoid', {});
-    Uri githubStargazersUri = Uri.https('api.github.com', '/repos/alexmercerind/harmonoid/stargazers', {});
+    Uri githubRepoUri = Uri.https('api.github.com', '/repos/${this.developer}/${this.repository}', {});
+    Uri githubStargazersUri = Uri.https('api.github.com', '/repos/${this.developer}/${this.repository}/stargazers', {'per_page': '100'});
     http.get(githubRepoUri)
     .then((response) {
       Map<String, dynamic> githubRepo = convert.jsonDecode(response.body);
@@ -97,7 +100,7 @@ class AboutState extends State<About> {
               Container(
                 margin: EdgeInsets.only(left: 16, right: 16, bottom: 8,),
                 child: Text(
-                  'Copyright © ' + githubRepo['updated_at'].split('-')[0] + ' ' +  githubRepo['owner']['login'],
+                  'Copyright © ' + githubRepo['updated_at'].split('-')[0],
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.black54,
