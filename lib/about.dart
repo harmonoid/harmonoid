@@ -202,11 +202,70 @@ class AboutState extends State<About> {
     .catchError((error) {
       this.setState(() {
         this._projectInfo = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.all(16),
+            Divider(
+              indent: 32,
+              endIndent: 32,
+              height: 4,
+              thickness: 1,
+              color: Colors.black12,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width - 32,
+              padding: EdgeInsets.only(top: 16, bottom: 4),
+              child: Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 16, right: 16),
+                    child: CircleAvatar(
+                      backgroundColor: Color(0x00000000),
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        this.repository,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 24,
+                        ),
+                      ),
+                      Divider(
+                        color: Colors.white,
+                        height: 4,
+                        thickness: 0,
+                      ),
+                      Text(
+                        this.developer,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 16, right: 16, bottom: 4, top: 8),
               child: Text(
-                Globals.STRING_ABOUT_REPOSITORY_INFORMATION_ERROR,
+                'MIT License',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 16, right: 16, bottom: 8,),
+              child: Text(
+                'Copyright © 2020',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.black54,
