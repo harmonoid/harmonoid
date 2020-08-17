@@ -104,6 +104,7 @@ class _Welcome extends State<Welcome> {
         onTap: (int index) => this.setState(() {
           this._index = index;
           this._rotations = 1;
+          this._rotationValue = 2 * pi;
         }),
         selectedFontSize: 14,
         unselectedFontSize: 12,
