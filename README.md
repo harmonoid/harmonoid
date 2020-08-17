@@ -6,22 +6,22 @@ The app is meant to be used in such a way, that you download your favorite music
 
 ## :warning: THIS IS JUST A PRE-RELEASE
 
-THE CURRENT PRE-RELEASE OF APP IS JUST TO HAVE BASIC FEATURES, LIKE FREE MUSIC DOWNLOAD, OFFLINE PLAYBACK & USER INTERFACE. YOU CAN LOOK AT TEMPORARILY INCLUDED [CURRENTLY ADDED](#zap-currently-added) SECTION OF README, FOR THE SENSE OF PROGRESS. MANY FEATURES, THAT AN IDEAL MUSIC APP HAS, ARE STILL MISSING. YOU CAN CONTRIBUTE, IF YOU WANT TO. THE UI SHOULD BE SMOOTH BUT, YOU CAN ENCOUNTER DOWNLOAD RELATED BUGS RARELY AT THE MOMENT & I'M TRYING TO FIX THEM. **PLEASE** :star: STAR THE REPOSITORY TO SUPPORT THE PROJECT. YOU CAN OPEN ISSUES, IF YOU FEEL CONFUSED WHEN USING THE APP.
+THE CURRENT PRE-RELEASE OF APP IS JUST TO HAVE BASIC FEATURES, LIKE FREE MUSIC DOWNLOAD, OFFLINE PLAYBACK & USER INTERFACE. YOU CAN LOOK AT TEMPORARILY INCLUDED [CURRENTLY ADDED](#zap-currently-added) SECTION OF README, FOR THE SENSE OF PROGRESS. MANY FEATURES, THAT AN IDEAL MUSIC APP HAS, ARE STILL MISSING. YOU CAN CONTRIBUTE, IF YOU WANT TO. THE UI SHOULD BE SMOOTH BUT, YOU CAN ENCOUNTER DOWNLOAD RELATED BUGS RARELY AT THE MOMENT & I'M TRYING TO FIX THEM. **PLEASE** :star: STAR THE REPOSITORY TO SUPPORT THE PROJECT. IF YOU FEEL CONFUSED WHEN USING THE APP, THEN YOU CAN TAKE HELP FROM THE [FAQ](#grey_question-FAQ).
 
 
 ## :camera: The Fluid Experience
+
+|Browse Offline|Download Music|Listen Offline|
+|-|-|-|
+|![browse_offline](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/browse_offline.jpg)|![download_music](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/download_music.jpg)|![search_modes](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/now_playing_demo.jpg)|
+
+#### More Motion
 
 These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they appear choppy to you.
 
 |||
 |-|-|
 |![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/album_demo.gif) |![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/ui_demo.gif)|
-
-#### More Screenshots
-
-|Browse Offline|Download Music|Listen Offline|
-|-|-|-|
-|![browse_offline](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/browse_offline.jpg)|![download_music](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/download_music.jpg)|![search_modes](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/now_playing_demo.jpg)|
 
 
 ## :heavy_check_mark: Features
@@ -116,3 +116,26 @@ SOFTWARE.
 |[just_audio](https://github.com/ryanheise/audio_service)       |[ryanheise](https://github.com/ryanheise)|
 |[audio_service](https://github.com/ryanheise/audio_service)    |[ryanheise](https://github.com/ryanheise)|
 |[url_launcher](https://pub.dev/packages/url_launcher)          |[flutter](https://github.com/flutter)    |
+
+
+## :grey_question: FAQ
+
+_For pre-release v0.0.1_
+
+- __How do I download music?__
+  - Go to the 'Collection' tab, and tap on the search bar. Then, enter a keyword to search & select the mode (i.e Album or Track) in which you want to search. You'll be greeted with the music close to your keyword in a moment. Tap on your preferred result, it's album will show up to you. Now, tap on the tracks you want to save offline.
+
+- __How do I play my saved music?__
+  - Go to the 'Collection' tab, tap (or should I say, spin) the refresh button to see your latest music. Now, play whatever you want.
+  
+- __How do I control media playback?__
+  - 'Now Playing' tab of the app is for this job. You can do the basic job from the app notification itself.
+  
+- __Why is the first search on app generally slower & delayed ?__
+  - This is because of the fact that our backend goes to sleep, if no users are online. So it takes time for it, to warm up again on your first request.
+  
+- __My favorite music is incorrectly downloaded. What is wrong with it?__
+  - Open issue, providing the name of album & track.
+  
+- __I'm seeing the error 'We all have bad days' when downloading my music. What is wrong?__
+  - This will most likely happen when something is wrong on our side (like dependencies of server are not up to date or our server's IP got blocked with 429 responses due to high amount of requests etc.). You can open issue, if you see this over a long period of time, generally I'll fix this quickly.
