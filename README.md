@@ -4,12 +4,13 @@
 
 The app is meant to be used in such a way, that you download your favorite music offline & listen it whenever without internet connection.
 
-:arrow_down: Android users can download pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.1)
+### :arrow_down: Android users can download pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.1/harmonoid-v0.0.1-pre-release.apk)
 
 ## :warning: THIS IS JUST A PRE-RELEASE
 
 THE CURRENT PRE-RELEASE OF APP IS JUST TO HAVE BASIC FEATURES, LIKE FREE MUSIC DOWNLOAD, OFFLINE PLAYBACK & USER INTERFACE. YOU CAN LOOK AT TEMPORARILY INCLUDED [CURRENTLY ADDED](#zap-currently-added) SECTION OF README, FOR THE SENSE OF PROGRESS. MANY FEATURES, THAT AN IDEAL MUSIC APP HAS, ARE STILL MISSING. YOU CAN CONTRIBUTE, IF YOU WANT TO. THE UI SHOULD BE SMOOTH BUT, YOU CAN ENCOUNTER DOWNLOAD RELATED BUGS RARELY AT THE MOMENT & I'M TRYING TO FIX THEM. **PLEASE** :star: STAR THE REPOSITORY TO SUPPORT THE PROJECT. IF YOU FEEL CONFUSED WHEN USING THE APP, THEN YOU CAN TAKE HELP FROM THE [FAQ](#grey_question-FAQ).
 
+You can open issues if you get confused in the UI of app & request features too!
 
 ## :camera: The Fluid Experience
 
