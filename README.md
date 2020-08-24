@@ -130,7 +130,7 @@ _For pre-release v0.0.1_
   - Go to the 'Collection' tab, and tap on the search bar. Then, enter a keyword to search & select the mode (i.e Album or Track) in which you want to search. You'll be greeted with the music close to your keyword in a moment. Tap on your preferred result, it's album will show up to you. Now, tap on the tracks you want to save offline.
 
 - __How do I play my saved music?__
-  - Go to the 'Collection' tab, tap (or should I say, spin) the refresh button to see your latest music. Now, play whatever you want.
+  - Go to the 'Collection' tab (or the starting screen of the app), and tap (or should I say, spin) the refresh button to see your latest music. Now, play whatever you want.
   
 - __How do I control media playback?__
   - 'Now Playing' tab of the app is for this job. You can do the basic job from the app notification itself.
