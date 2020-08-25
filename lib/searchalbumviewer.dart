@@ -3,7 +3,7 @@ import 'package:palette_generator/palette_generator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-import 'package:harmonoid/globals.dart';
+import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/scripts/getsavedmusic.dart';
 import 'package:harmonoid/scripts/addsavedmusic.dart';
 
@@ -343,6 +343,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             ),
             Card(
               elevation: 1,
+              clipBehavior: Clip.antiAlias,
               margin: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
               child: Container(
                 child: Row(
