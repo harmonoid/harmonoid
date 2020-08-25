@@ -71,11 +71,24 @@ These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they 
 |~~Improve download speed~~                                                               |                                                                                                  |
 
 
+## :book: Inner Workings
+
+This app is uses Python 3 in its back-end. You can see the repository powering this app [here](https://github.com/raitonoberu/harmonoid-service).
+
+
 ## :white_check_mark: Help With Translations
 
 You can help me by providing translations for the app in your language & see the app running in your native language.
 
-For that purpose, you can checkout [this](https://github.com/alexmercerind/harmonoid/blob/master/lib/globals.dart) file on the repository, you can translate this, even if you have little to no knowledge of Dart.
+For that purpose, you can checkout [this](https://github.com/alexmercerind/harmonoid/blob/master/lib/scripts/globalsupdater.dart) file on the repository, you can translate this, even if you have little to no knowledge of Dart.
+
+##### Translation Credits
+
+|Language       |Provider       |
+|---------------|---------------|
+|Russian        |@raitonoberu   |
+|Slovenian      |@mytja         |
+
 
 Thankyou!
 
