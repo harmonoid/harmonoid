@@ -153,7 +153,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                 child: TextField(
                   onSubmitted: (value) => this._searchHandler(this._keyword),
                   autocorrect: false,
-                  autofocus: false,
+                  autofocus: true,
                   cursorWidth: 1,
                   cursorColor: Colors.white,
                   style: TextStyle(
@@ -172,22 +172,24 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            Container(
-              height: 56,
-              width: 56,
-              alignment: Alignment.center,
-              child: IconButton(
-                iconSize: 24,
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                splashRadius: 20,
-                onPressed: () => this._searchHandler(this._keyword),
-              )
-            ),
           ],
         ),
+        actions: [
+          Container(
+            height: 56,
+            width: 56,
+            alignment: Alignment.center,
+            child: IconButton(
+              iconSize: 24,
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              splashRadius: 20,
+              onPressed: () => this._searchHandler(this._keyword),
+            )
+          ),
+        ],
       ),
       body: ListView(
         children: [
