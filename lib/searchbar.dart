@@ -4,7 +4,7 @@ import 'package:animations/animations.dart';
 
 import 'package:harmonoid/scripts/searchhistory.dart';
 
-import 'package:harmonoid/globals.dart';
+import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/searchalbumresults.dart';
 
 enum SearchMode {
@@ -50,25 +50,29 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
 
   void _searchHandler(keyword) {
     if (keyword!='') {
-      String resultTitle(SearchMode mode) {
+      List<String> resultTitle(SearchMode mode) {
         String resultTitle;
+        String resultMode;
         if (mode == SearchMode.album) {
           resultTitle = Globals.STRING_ALBUM;
+          resultMode = Globals.ALBUM;
         }
         else if (mode == SearchMode.track) {
           resultTitle = Globals.STRING_TRACK;
+          resultMode = Globals.TRACK;
         }
         else if (mode == SearchMode.artist) {
           resultTitle = Globals.STRING_ARTIST;
+          resultMode = Globals.ARTIST;
         }
-        return resultTitle;
+        return [resultMode, resultTitle];
       }
 
-      SearchHistory.addSearchHistory(keyword, resultTitle(this._searchMode));
+      SearchHistory.addSearchHistory(keyword, resultTitle(this._searchMode)[0], resultTitle(this._searchMode)[1]);
 
       Navigator.of(context).pushNamed(
         '/searchresult',
-        arguments: SearchAlbumResultArguments(this._keyword, resultTitle(this._searchMode))
+        arguments: SearchAlbumResultArguments(this._keyword, resultTitle(this._searchMode)[0], resultTitle(this._searchMode)[1])
       );
     }
   }
@@ -84,7 +88,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
           ListTile(
             onTap: () => Navigator.of(context).pushNamed(
               '/searchresult',
-              arguments: SearchAlbumResultArguments(searchHistory[index]['keyword'], searchHistory[index]['mode'])
+              arguments: SearchAlbumResultArguments(searchHistory[index]['keyword'], searchHistory[index]['mode'], searchHistory[index]['title'])
             ),
             leading: CircleAvatar(
               child: Icon(
@@ -94,7 +98,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
               backgroundColor: Color(0x00000000),
             ),
             title: Text(searchHistory[index]['keyword']),
-            subtitle: Text(searchHistory[index]['mode'], style: TextStyle(fontSize: 12)),
+            subtitle: Text(searchHistory[index]['title'], style: TextStyle(fontSize: 12)),
           ),
         );
       }
