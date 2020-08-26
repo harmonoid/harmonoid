@@ -7,7 +7,7 @@ import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/saved/savedalbumresults.dart';
 import 'package:harmonoid/saved/nowplaying.dart';
 import 'package:harmonoid/searchbar.dart';
-import 'package:harmonoid/about.dart';
+import 'package:harmonoid/setting.dart';
 
 
 class Welcome extends StatefulWidget {
@@ -63,7 +63,7 @@ class _Welcome extends State<Welcome> {
           ],
         ),
       ),
-      About(),
+      Setting(),
     ];
 
     return Scaffold(
@@ -115,7 +115,7 @@ class _Welcome extends State<Welcome> {
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.play_arrow), title: Text(Globals.STRING_NOW_PLAYING)),
           BottomNavigationBarItem(icon: Icon(Icons.library_music), title: Text(Globals.STRING_COLLECTION)),
-          BottomNavigationBarItem(icon: Icon(Icons.info), title: Text(Globals.STRING_ABOUT)),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), title: Text(Globals.STRING_SETTING)),
         ],
       ),
     );
