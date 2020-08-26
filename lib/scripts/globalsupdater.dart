@@ -86,12 +86,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                    = 'Changing server for the app...';
   }
   else if (languageRegion == 'ru_ru') {
-    Globals.STRING_INTERNET_ERROR                                  = 'Проверьте интернет-соединение...';
+    Globals.STRING_INTERNET_ERROR                                  = 'Проверьте интернет-соединение.';
     Globals.STRING_SEARCH_HEADER                                   = 'Поиск музыки';
     Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'Что вы ищите?';
     Globals.STRING_COLLECTION                                      = 'Коллекция';
     Globals.STRING_NOW_PLAYING                                     = 'Сейчас играет';
-    Globals.STRING_SETTING                                           = 'Настройки';
+    Globals.STRING_SETTING                                         = 'Настройки';
     Globals.STRING_OK                                              = 'ЛАДНО';
     Globals.STRING_YES                                             = 'ДА';
     Globals.STRING_NO                                              = 'НЕТ';
@@ -139,29 +139,29 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Вы действительно хотите удалить сохранённый трек?';
     Globals.STRING_NOW_PLAYING_NEXT_TRACK                          = 'СЛЕДУЮЩИЙ';
     Globals.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'ПРЕДЫДУЩИЙ';
-    Globals.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Ничего не играет...';
+    Globals.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Ничего не играет.';
     Globals.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Включите что-нибудь из коллекции.';
-    Globals.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = "Всё готово..";
-    Globals.STRING_SETTING_GITHUB                                    = 'GITHUB';
-    Globals.STRING_SETTING_STAR_GITHUB                               = 'Оценить проект';
-    Globals.STRING_SETTING_STARGAZERS_TITLE                          = 'Оценившие проект';
-    Globals.STRING_SETTING_STARGAZERS_SUBTITLE                       = 'Спасибо за вашу поддержку...';
-    Globals.STRING_SETTING_REPOSITORY_INFORMATION_ERROR              = 'Не удалось получить информацию, скорее всего, вы оффлайн.';
-    Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR              = 'Не удалось получить информацию об оценивших проект.';
-    Globals.STRING_SETTING_LANGUAGE_TITLE                            = 'Язык';
-    Globals.STRING_SETTING_LANGUAGE_SUBTITLE                         = 'Измените то, как вы видите приложение ...';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE             = 'Информация';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE          = 'Вы должны перезапустить приложение, чтобы увидеть изменения.';
-    Globals.STRING_ABOUT_TITLE                                       = 'About';
-    Globals.STRING_ABOUT_SUBTITLE                                    = 'Information about the project and its developers...';
-    Globals.STRING_SETTING_SERVER_CHANGE_TITLE                       = 'Server';
-    Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE                    = 'Change where the app requests for its content...';
-    Globals.STRING_SETTING_SERVER_CHANGE_SERVER_HINT                 = 'Enter a server URL';
-    Globals.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL                = 'Server URL';
-    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID               = 'It is not a valid server URL for the app...';
-    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK               = 'Please check your internet connection...';
-    Globals.STRING_SETTING_SERVER_CHANGE_DONE                        = 'Server changed successfully...';
-    Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                    = 'Changing server for the app...';
+    Globals.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = 'Всё готово...';
+    Globals.STRING_SETTING_GITHUB                                  = 'GITHUB';
+    Globals.STRING_SETTING_STAR_GITHUB                             = 'Оценить проект';
+    Globals.STRING_SETTING_STARGAZERS_TITLE                        = 'Оценившие проект';
+    Globals.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Спасибо за вашу поддержку!';
+    Globals.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'Не удалось получить информацию. Скорее всего, вы оффлайн.';
+    Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Не удалось получить информацию об оценивших проект.';
+    Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'Язык';
+    Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Изменить язык приложения.';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Информация';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Вы должны перезапустить приложение, чтобы увидеть изменения.';
+    Globals.STRING_ABOUT_TITLE                                     = 'О приложении';
+    Globals.STRING_ABOUT_SUBTITLE                                  = 'Информация о проекте и его разработчиках.';
+    Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Сервер';
+    Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Изменить источник получения данных.';
+    Globals.STRING_SETTING_SERVER_CHANGE_SERVER_HINT               = 'Введите ссылку на сервер';
+    Globals.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL              = 'Ссылка';
+    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID             = 'Эта ссылка не подходит.';
+    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Проверьте интернет-соединение';
+    Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Сервер успешно сменён.';
+    Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Изменение сервера...';
   }
   else if (languageRegion == 'sl_si') {
     Globals.STRING_INTERNET_ERROR                                  = 'Prosimo, preverite vašo internetno povezavo';
