@@ -1,6 +1,6 @@
 library addsavedmusic;
 
-import 'package:harmonoid/globals.dart';
+import 'package:harmonoid/globals.dart' as Globals;
 import 'package:path_provider/path_provider.dart' as path;
 import 'dart:io';
 import 'package:path/path.dart' as path;

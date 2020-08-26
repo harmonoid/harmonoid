@@ -6,7 +6,7 @@ import 'package:palette_generator/palette_generator.dart';
 
 import 'package:harmonoid/scripts/getsavedmusic.dart';
 import 'package:harmonoid/scripts/playsavedmusic.dart';
-import 'package:harmonoid/globals.dart';
+import 'package:harmonoid/globals.dart' as Globals;
 
 
 class TrackElement extends StatelessWidget {

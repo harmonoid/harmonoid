@@ -29,7 +29,7 @@ class SearchHistory {
     return searchHistory;
   }
 
-  static Future<void> addSearchHistory(String keyword, String mode) async {
+  static Future<void> addSearchHistory(String keyword, String mode, String title) async {
     Directory externalDirectory = (await path.getExternalStorageDirectory());
     Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
 
@@ -43,6 +43,7 @@ class SearchHistory {
     searchHistory.add({
       'keyword': keyword,
       'mode': mode,
+      'title': title,
     });
     await searchHistoryFile.writeAsString(convert.jsonEncode({'searches' : searchHistory}));
   }
