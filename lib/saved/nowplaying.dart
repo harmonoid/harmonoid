@@ -167,7 +167,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
         children: [
           this._trackName == null ?
           Card(
-            elevation: 2,
+            elevation: 1,
             clipBehavior: Clip.antiAlias,
             margin: EdgeInsets.only(left: 16, right: 16),
             child: Container(
@@ -388,7 +388,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
           )
           :
           Card(
-            elevation: 2,
+            elevation: 1,
             clipBehavior: Clip.antiAlias,
             margin: EdgeInsets.only(left: 16, right: 16),
             child: Container(
