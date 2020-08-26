@@ -88,19 +88,19 @@ void updateGlobals(String languageRegion) {
   else if (languageRegion == 'ru_ru') {
     Globals.STRING_INTERNET_ERROR                                  = 'Проверьте интернет-соединение.';
     Globals.STRING_SEARCH_HEADER                                   = 'Поиск музыки';
-    Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'Что вы ищите?';
+    Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'Что вы ищете?';
     Globals.STRING_COLLECTION                                      = 'Коллекция';
-    Globals.STRING_NOW_PLAYING                                     = 'Сейчас играет';
+    Globals.STRING_NOW_PLAYING                                     = 'Плеер';
     Globals.STRING_SETTING                                         = 'Настройки';
-    Globals.STRING_OK                                              = 'ЛАДНО';
+    Globals.STRING_OK                                              = 'ОК';
     Globals.STRING_YES                                             = 'ДА';
     Globals.STRING_NO                                              = 'НЕТ';
     Globals.STRING_ALBUM                                           = 'Альбомы';
     Globals.STRING_TRACK                                           = 'Треки';
     Globals.STRING_ARTIST                                          = 'Исполнители';
-    Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Поиск по любимым альбомам';
-    Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Поиск по любимым трекам';
-    Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Поиск по любимым исполнителям';
+    Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Поиск любимыых альбомов';
+    Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Поиск любимыых треков';
+    Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Поиск любимыых исполнителей';
     Globals.STRING_SEARCH_HISTORY_SUBHEADER                        = 'Недавние запросы';
     Globals.STRING_SEARCH_RESULT_LOADER_LABEL                      = 'Получаем музыку...';
     Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Лучшее совпадение';
@@ -137,14 +137,14 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'Вы действительно хотите удалить альбом?';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Удалить трек';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Вы действительно хотите удалить сохранённый трек?';
-    Globals.STRING_NOW_PLAYING_NEXT_TRACK                          = 'СЛЕДУЮЩИЙ';
-    Globals.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'ПРЕДЫДУЩИЙ';
+    Globals.STRING_NOW_PLAYING_NEXT_TRACK                          = 'ВПЕРЁД';
+    Globals.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'НАЗАД';
     Globals.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Ничего не играет.';
     Globals.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Включите что-нибудь из коллекции.';
     Globals.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = 'Всё готово...';
     Globals.STRING_SETTING_GITHUB                                  = 'GITHUB';
     Globals.STRING_SETTING_STAR_GITHUB                             = 'Оценить проект';
-    Globals.STRING_SETTING_STARGAZERS_TITLE                        = 'Оценившие проект';
+    Globals.STRING_SETTING_STARGAZERS_TITLE                        = 'Оценили проект';
     Globals.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Спасибо за вашу поддержку!';
     Globals.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'Не удалось получить информацию. Скорее всего, вы оффлайн.';
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Не удалось получить информацию об оценивших проект.';
@@ -160,7 +160,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL              = 'Ссылка';
     Globals.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID             = 'Эта ссылка не подходит.';
     Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Проверьте интернет-соединение';
-    Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Сервер успешно сменён.';
+    Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Сервер успешно изменён.';
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Изменение сервера...';
   }
   else if (languageRegion == 'sl_si') {
