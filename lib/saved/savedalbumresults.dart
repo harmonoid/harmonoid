@@ -19,7 +19,7 @@ class AlbumTile extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(8),
       child: OpenContainer(
-        closedElevation: 2,
+        closedElevation: 1,
         transitionDuration: Duration(milliseconds: 400),
         closedBuilder: (ctx, act) => Container(
           width: 156,
@@ -244,7 +244,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
           Container(
             margin: EdgeInsets.only(left: 16, right: 16),
             child: OpenContainer(
-              closedElevation: 2,
+              closedElevation: 1,
               transitionDuration: Duration(milliseconds: 400),
               closedBuilder: (ctx, act) => Container(
                 child: Row(

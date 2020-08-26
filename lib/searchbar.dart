@@ -312,7 +312,7 @@ class SearchState extends State<Search> with SingleTickerProviderStateMixin {
         child: Column(
           children: [
             OpenContainer(
-              closedElevation: 2,
+              closedElevation: 1,
               transitionDuration: Duration(milliseconds: 400),
               closedBuilder: (ctx, act) => Container(
                 height: 56,

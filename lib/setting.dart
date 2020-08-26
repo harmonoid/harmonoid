@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert' as convert;
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:http/http.dart' as http;
@@ -15,24 +16,136 @@ enum LanguageRegion {
   hiIn,
 }
 
-class About extends StatefulWidget {
-  About({Key key}) : super(key : key);
-  AboutState createState() => AboutState();
+class Setting extends StatefulWidget {
+  Setting({Key key}) : super(key : key);
+  SettingState createState() => SettingState();
 }
 
-class AboutState extends State<About> {
+class SettingState extends State<Setting> {
 
   String _repository = 'harmonoid';
   String _developer = 'alexmercerind';
-
+  TextEditingController _serverInputController = new TextEditingController(text: Globals.STRING_HOME_URL);
   LanguageRegion _language;
+  Widget _serverLabelWidget = Container(
+    height: 18,
+  );
+
+  void _updateServerURL(String url) {
+    this.setState(() {
+      this._serverLabelWidget = Container(
+        height: 18,
+        child: Row(
+          children: [
+            Icon(
+              Icons.info,
+              color: Theme.of(context).primaryColor,
+              size: 24,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Text(
+                Globals.STRING_SETTING_SERVER_CHANGE_CHANGING,
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ); 
+    });
+    http.get(Uri.https(url, '/', {}))
+    .then((response) {
+      this.setState(() {
+        if (response.body == Globals.VERIFICATION_STRING) {
+          Globals.STRING_HOME_URL = url;
+          GlobalsPersistent.changeConfiguration('server', url);
+          this._serverLabelWidget = Container(
+            height: 18,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.check,
+                  color: Colors.green,
+                  size: 24,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Text(
+                    Globals.STRING_SETTING_SERVER_CHANGE_DONE,
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        else {
+          this._serverLabelWidget = Container(
+            height: 18,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.close,
+                  color: Colors.red,
+                  size: 24,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Text(
+                    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID,
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      });
+    })
+    .catchError((error) => this.setState(() {
+      print(error);
+      this._serverLabelWidget = Container(
+        height: 18,
+        child: Row(
+          children: [
+            Icon(
+              Icons.close,
+              color: Colors.red,
+              size: 24,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Text(
+                Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }));
+  }
+
+  String _serverURL = Globals.STRING_HOME_URL;
 
   void _showRestartDialog() {
     Timer(Duration(milliseconds: 400), () => showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_TITLE),
-        content: Text(Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_SUBTITLE),
+        title: Text(Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE),
+        content: Text(Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE),
         actions: [
           MaterialButton(
             splashColor: Colors.deepPurple[50],
@@ -115,7 +228,7 @@ class AboutState extends State<About> {
                           ),
                         ),
                         Divider(
-                          color: Colors.white,
+                          color: Color(0x00000000),
                           height: 4,
                           thickness: 0,
                         ),
@@ -214,7 +327,7 @@ class AboutState extends State<About> {
                     highlightColor: Colors.deepPurple[100],
                     onPressed: () => url_launcher.launch(githubRepo['html_url']),
                     child: Text(
-                      Globals.STRING_ABOUT_STAR_GITHUB,
+                      Globals.STRING_SETTING_STAR_GITHUB,
                       style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
                   ),
@@ -223,7 +336,7 @@ class AboutState extends State<About> {
                     highlightColor: Colors.deepPurple[100],
                     onPressed: () => url_launcher.launch(githubRepo['html_url'] + '/blob/master/README.md'),
                     child: Text(
-                      Globals.STRING_ABOUT_GITHUB,
+                      Globals.STRING_SETTING_GITHUB,
                       style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
                   ),
@@ -316,7 +429,7 @@ class AboutState extends State<About> {
                   highlightColor: Colors.deepPurple[100],
                   onPressed: () => url_launcher.launch('https://github.com/alexmercerind/harmonoid'),
                   child: Text(
-                    Globals.STRING_ABOUT_STAR_GITHUB,
+                    Globals.STRING_SETTING_STAR_GITHUB,
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                 ),
@@ -325,7 +438,7 @@ class AboutState extends State<About> {
                   highlightColor: Colors.deepPurple[100],
                   onPressed: () => url_launcher.launch('https://github.com/alexmercerind/harmonoid/blob/master/README.md'),
                   child: Text(
-                    Globals.STRING_ABOUT_GITHUB,
+                    Globals.STRING_SETTING_GITHUB,
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                 ),
@@ -359,7 +472,7 @@ class AboutState extends State<About> {
           Padding(
             padding: EdgeInsets.all(16),
             child: Text(
-              Globals.STRING_ABOUT_STARGAZERS_INFORMATION_ERROR,
+              Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black54,
@@ -378,28 +491,115 @@ class AboutState extends State<About> {
         scrollDirection: Axis.vertical,
         children: [
           Card(
-            clipBehavior: Clip.antiAlias,
-            elevation: 2,
-            margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+            elevation: 1,
+            margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
             child: Container(
               width: MediaQuery.of(context).size.width - 32,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    'assets/images/about.jpg',
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.topCenter,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(left: 16, right: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Divider(
+                          color: Color(0x00000000),
+                          height: 16,
+                          thickness: 0,
+                        ),
+                        Text(
+                          Globals.STRING_SETTING_SERVER_CHANGE_TITLE,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Divider(
+                          color: Color(0x00000000),
+                          height: 4,
+                          thickness: 0,
+                        ),
+                        Text(
+                          Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Divider(
+                          color: Color(0x00000000),
+                          height: 16,
+                          thickness: 0,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16, bottom: 16),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: this._serverInputController,
+                                  onSubmitted: (value) => this._updateServerURL(value),
+                                  onChanged: (value) => this._serverURL = value,
+                                  autocorrect: false,
+                                  autofocus: false,
+                                  cursorWidth: 1,
+                                  cursorColor: Theme.of(context).primaryColor,
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 16,
+                                  ),
+                                  decoration: InputDecoration(
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
+                                    ),
+                                    hintText: Globals.STRING_SETTING_SERVER_CHANGE_SERVER_HINT,
+                                    hintStyle: TextStyle(
+                                      color: Colors.black26,
+                                    ),
+                                    labelText: Globals.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL,
+                                    labelStyle: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                height: 56,
+                                width: 56,
+                                alignment: Alignment.center,
+                                child: IconButton(
+                                  onPressed: () => this._updateServerURL(this._serverURL),
+                                  icon: Icon(
+                                    Icons.check,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  iconSize: 24,
+                                  splashRadius: 20,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        this._serverLabelWidget,
+                        Divider(
+                          color: Color(0x00000000),
+                          height: 16,
+                          thickness: 0,
+                        ),
+                      ],
+                    ),
                   ),
-                  this._projectInfo,
                 ],
               ),
             ),
           ),
           Card(
-            clipBehavior: Clip.antiAlias,
-            elevation: 2,
+            elevation: 1,
             margin: EdgeInsets.only(left: 16, right: 16, top: 8),
             child: Container(
               width: MediaQuery.of(context).size.width - 32,
@@ -413,12 +613,12 @@ class AboutState extends State<About> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Divider(
-                          color: Colors.white,
+                          color: Color(0x00000000),
                           height: 16,
                           thickness: 0,
                         ),
                         Text(
-                          Globals.STRING_ABOUT_LANGUAGE_TITLE,
+                          Globals.STRING_SETTING_LANGUAGE_TITLE,
                           maxLines: 1,
                           style: TextStyle(
                             color: Colors.black87,
@@ -426,12 +626,12 @@ class AboutState extends State<About> {
                           ),
                         ),
                         Divider(
-                          color: Colors.white,
+                          color: Color(0x00000000),
                           height: 4,
                           thickness: 0,
                         ),
                         Text(
-                          Globals.STRING_ABOUT_LANGUAGE_SUBTITLE,
+                          Globals.STRING_SETTING_LANGUAGE_SUBTITLE,
                           maxLines: 1,
                           style: TextStyle(
                             color: Colors.black54,
@@ -439,7 +639,7 @@ class AboutState extends State<About> {
                           ),
                         ),
                         Divider(
-                          color: Colors.white,
+                          color: Color(0x00000000),
                           height: 16,
                           thickness: 0,
                         ),
@@ -565,62 +765,119 @@ class AboutState extends State<About> {
               ),
             ),
           ),
-          Card(
-            clipBehavior: Clip.antiAlias,
-            elevation: 2,
-            margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-            child: Container(
-              width: MediaQuery.of(context).size.width - 32,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(left: 16, right: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Divider(
-                          color: Colors.white,
-                          height: 16,
-                          thickness: 0,
-                        ),
-                        Text(
-                          Globals.STRING_ABOUT_STARGAZERS_TITLE,
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 18,
-                          ),
-                        ),
-                        Divider(
-                          color: Colors.white,
-                          height: 4,
-                          thickness: 0,
-                        ),
-                        Text(
-                          Globals.STRING_ABOUT_STARGAZERS_SUBTITLE,
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 14,
-                          ),
-                        ),
-                        Divider(
-                          color: Colors.white,
-                          height: 16,
-                          thickness: 0,
-                        ),
-                      ],
+          OpenContainer(
+            closedElevation: 0,
+            closedColor: Color(0x00000000),
+            openElevation: 0,
+            openColor: Color(0x00000000),
+            transitionDuration: Duration(milliseconds: 400),
+            closedBuilder: (ctx, act) => Card(
+              margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+              child: ListTile(
+                title: Text(Globals.STRING_ABOUT_TITLE),
+                subtitle: Text(Globals.STRING_ABOUT_SUBTITLE),
+              ),
+            ),
+            openBuilder: (ctx, act) => Scaffold(
+              appBar: AppBar(
+                leading: Container(
+                  height: 56,
+                  width: 56,
+                  alignment: Alignment.center,
+                  child: IconButton(
+                    iconSize: 24,
+                    icon: Icon(
+                      Icons.close,
+                      color: Colors.white,
                     ),
+                    splashRadius: 20,
+                    onPressed: () => Navigator.of(context).pop(),
                   )
-                ] + this._githubStargazers.reversed.toList() + [
-                  Divider(
-                    color: Colors.white,
-                    height: 16,
-                    thickness: 0,
+                ),
+                title: Text(Globals.STRING_ABOUT_TITLE)
+              ),
+              body: ListView(
+                children: [
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    elevation: 1,
+                    margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width - 32,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            'assets/images/about.jpg',
+                            fit: BoxFit.fitWidth,
+                            alignment: Alignment.topCenter,
+                          ),
+                          this._projectInfo,
+                        ],
+                      ),
+                    ),
+                  ),
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    elevation: 1,
+                    margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width - 32,
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(left: 16, right: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Divider(
+                                  color: Color(0x00000000),
+                                  height: 16,
+                                  thickness: 0,
+                                ),
+                                Text(
+                                  Globals.STRING_SETTING_STARGAZERS_TITLE,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Divider(
+                                  color: Color(0x00000000),
+                                  height: 4,
+                                  thickness: 0,
+                                ),
+                                Text(
+                                  Globals.STRING_SETTING_STARGAZERS_SUBTITLE,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Divider(
+                                  color: Color(0x00000000),
+                                  height: 16,
+                                  thickness: 0,
+                                ),
+                              ],
+                            ),
+                          )
+                        ] + this._githubStargazers.reversed.toList() + [
+                          Divider(
+                            color: Colors.white,
+                            height: 16,
+                            thickness: 0,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
+            )
           ),
         ],
       ),

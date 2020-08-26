@@ -38,7 +38,7 @@ class TrackElement extends StatelessWidget {
     return ListTile(
       onTap: () {
         Scaffold.of(context).showSnackBar(SnackBar(
-          elevation: 2,
+          elevation: 1,
           behavior: SnackBarBehavior.floating,
           action: SnackBarAction(
             textColor: Colors.white,
