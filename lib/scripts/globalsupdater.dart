@@ -230,16 +230,16 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                         = 'Spremenite način prikaza aplikacije ...';
     Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE             = 'Informacije';
     Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE          = 'Za ogled sprememb morate znova zagnati aplikacijo.';
-    Globals.STRING_SETTING_SERVER_CHANGE_TITLE                       = 'Server';
-    Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE                    = 'Change where the app requests for its content...';
-    Globals.STRING_ABOUT_TITLE                                       = 'About';
-    Globals.STRING_ABOUT_SUBTITLE                                    = 'Information about the project and its developers...';
-    Globals.STRING_SETTING_SERVER_CHANGE_SERVER_HINT                 = 'Enter a server URL';
-    Globals.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL                = 'Server URL';
-    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID               = 'It is not a valid server URL for the app...';
-    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK               = 'Please check your internet connection...';
-    Globals.STRING_SETTING_SERVER_CHANGE_DONE                        = 'Server changed successfully...';
-    Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                    = 'Changing server for the app...';
+    Globals.STRING_SETTING_SERVER_CHANGE_TITLE                       = 'Strežnik';
+    Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE                    = 'Spremeni, kje aplikacija zahteva prenose...';
+    Globals.STRING_ABOUT_TITLE                                       = 'O nas';
+    Globals.STRING_ABOUT_SUBTITLE                                    = 'Informacije o nas...';
+    Globals.STRING_SETTING_SERVER_CHANGE_SERVER_HINT                 = 'Napiši strežnikov naslov';
+    Globals.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL                = 'URL naslov strežnika';
+    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID               = 'Ni veljaven URL...';
+    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK               = 'Prosimo, preverite vašo internetno povezavo...';
+    Globals.STRING_SETTING_SERVER_CHANGE_DONE                        = 'Strežnik zamenjan...';
+    Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                    = 'Menjanje strežnika...';
   }
   else if (languageRegion == 'pt_br') {
     Globals.STRING_INTERNET_ERROR                                  = 'Verifique sua conexão com a internet...';
