@@ -10,6 +10,15 @@ import 'package:harmonoid/searchalbumresults.dart';
 import 'package:harmonoid/scripts/backgroundtask.dart';
 
 class Application extends StatelessWidget {
+
+  Future<void> _setupGlobals() async {
+    String languageRegion = await GlobalsPersistent.getConfiguration('language');
+    String homeURL = await GlobalsPersistent.getConfiguration('server');
+    updateGlobals(languageRegion);
+    updateHomeURL(homeURL);
+  }
+
+  @override 
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -24,13 +33,14 @@ class Application extends StatelessWidget {
         primaryColorLight: Colors.deepPurpleAccent[100],
         primaryColorDark: Colors.deepPurpleAccent[700],
         splashFactory: InkRipple.splashFactory,
+        textSelectionHandleColor: Colors.deepPurpleAccent[400],
       ),
       initialRoute: '/welcome',
       routes: {
         '/welcome' : (context) => 
         AudioServiceWidget(
           child: FutureBuilder(
-            future: GlobalsPersistent.getConfiguration('language').then((value) => updateGlobals(value)),
+            future:  this._setupGlobals(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Welcome();
