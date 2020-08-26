@@ -54,7 +54,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Some insights of the album';
     Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Delete this album ?';
     Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'You surely wanna delete this...';
-    Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Wanna delete this?';
+    Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Wanna delete this track?';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Do you want to remove this track saved on your device?';
     Globals.STRING_NOW_PLAYING_NEXT_TRACK                          = 'NEXT';
     Globals.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'PREVIOUS';
@@ -209,7 +209,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ABOUT_LANGUAGE_SUBTITLE                         = 'Spremenite način prikaza aplikacije ...';
     Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_TITLE             = 'Informacije';
     Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_SUBTITLE          = 'Za ogled sprememb morate znova zagnati aplikacijo.';
-  } else if (languageRegion == 'pt_br') {
+  }
+  else if (languageRegion == 'pt_br') {
     Globals.STRING_HOME_URL                                        = 'harmonoidservice.herokuapp.com';
     Globals.STRING_INTERNET_ERROR                                  = 'Verifique sua conexão com a internet...';
     Globals.STRING_SEARCH_HEADER                                   = 'Procurar uma música';
@@ -277,5 +278,74 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ABOUT_LANGUAGE_SUBTITLE                         = 'Mude o jeito que você enxerga o aplicativo...';
     Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_TITLE             = 'Informação';
     Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_SUBTITLE          = 'Você precisa reiniciar o aplicativo para ver as mudanças.';
+  }
+  else if (languageRegion == 'hi_in') {
+    Globals.STRING_HOME_URL                                        = 'harmonoidservice.herokuapp.com';
+    Globals.STRING_INTERNET_ERROR                                  = 'अपना इंटरनेट कनेक्शन चेक करें...';
+    Globals.STRING_SEARCH_HEADER                                   = 'गाना खोजें';
+    Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'आप किस तरह से गाना खोजेंगे?';
+    Globals.STRING_COLLECTION                                      = 'कलेक्शन';
+    Globals.STRING_NOW_PLAYING                                     = 'अभी बजता';
+    Globals.STRING_ABOUT                                           = 'बारे में';
+    Globals.STRING_OK                                              = 'ठीक';
+    Globals.STRING_YES                                             = 'हाँ';
+    Globals.STRING_NO                                              = 'नहीं';
+    Globals.STRING_ALBUM                                           = 'एल्बम';
+    Globals.STRING_TRACK                                           = 'गाना';
+    Globals.STRING_ARTIST                                          = 'कलाकार';
+    Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'अपनी पसंदीदा एल्बमों से गाना खोजें';
+    Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'अपने मनपसंद गाने खोजें';
+    Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'अपने पसंदीदा कलाकारों के गाना खोजें';
+    Globals.STRING_SEARCH_HISTORY_SUBHEADER                        = 'आपके पिछले खोज';
+    Globals.STRING_SEARCH_RESULT_LOADER_LABEL                      = 'आपका गाना आ रहा है...';
+    Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'यह रही आपकी खोज से सबसे मिलती-जुलती एल्बम';
+    Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK               = 'यह रही आपकी खोज से सबसे मिलता-जुलता गाना';
+    Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST              = 'आपकी पसंद का कलाकार यहाँ है';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'डाउनलोड एल्बम';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'डाउनलोड गाना';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'डाउनलोड कलाकार';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM          = 'एल्बम दिखाएं';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK          = 'गाना दिखाएं';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST         = 'कलाकार दिखाएं';
+    Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'अधिक एल्बम';
+    Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'अधिक गाने';
+    Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'मिलते-जुलते बाकी कलाकार';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE                  = 'आप वापस नहीं जा सकते';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE               = 'अभी एक या अधिक गाने ऑफलाइन सेव हो रहे हैं| इंतज़ार करे|';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'हम इस गाने को सेव नहीं कर सके';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'हम आपको अपना इंटरनेट चेक करने की सलाह देते हैं| थोड़ी देर में दोबारा प्रयास करें|';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'हम सभी के ख़राब दिन आते हैं';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'हमें आपका गाने सेव करते हुए एक एरर प्राप्त हुआ है| इसका अक्सर यही मतलब होता है की हमारा IP एड्रेस, काम समय में बहुत अधिक उपयोग के कारण ब्लॉक किया जा चुका है| हलाकि, इसका यह मतलब भी हो सकता है की हमारे सर्वर की डेपेंडेन्सीज़ अप-टु-डेट नहीं हैं| इस एरर का आपसे कोई भी सम्बन्ध नहीं है| आप इस प्रोजेक्ट के मालिक को Twitter या GitHub पर इशू खोलकर बता सकते हैं और एक घंटे के अन्दर फिक्स की उम्मीद कर सकते हैं, अगर वह आपके टाइम-जोन में रहता है| आप अभी अपने डौन्लोडेड गाने सुनें| आपके प्यार के लिए धन्यवाद|';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'हम इस गाने को सेव नहीं कर सके';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'यह गाना सेव नहीं किया जा सका| हम जानने का प्रयास कर रहे हैं की यह किस कारण से हो रहा है| आपके प्यार के लिए धन्यवाद|';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'रुको';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'यह गाना डाउनलोड हो ही रहा है|';
+    Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'हम गाने ला रहे हैं...';
+    Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'यह रहे इस एल्बम के गाने';
+    Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'इस एल्बम के बारे में थोड़ी जानकारी';
+    Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'अपने पसंद के गानों को यहाँ सुनने के लिए, उन्हें ढूंढे व सेव करे|\nअपना कलेक्शन रिफ्रेश करने के लिए रिफ्रेश बटन दबायें';
+    Globals.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'यह रही आपके कलेक्शन की सबसे नयी एल्बम';
+    Globals.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'आपकी बाकी एल्बम';
+    Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'यह रहे इस एल्बम के गाने';
+    Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'इस एल्बम के बारे में थोड़ी जानकारी';
+    Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'इस एल्बम को डिलीट करें?';
+    Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'क्या आप निश्चित हैं...';
+    Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'क्या आप इस गाने को डिलीट करना चाहते हैं?';
+    Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'आप इस गाने को अपने कलेक्शन से हटाना चाहते हैं?';
+    Globals.STRING_NOW_PLAYING_NEXT_TRACK                          = 'अगला गाना';
+    Globals.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'पिछला गाना';
+    Globals.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'अभी कुछ भी नहीं बज रहा है...';
+    Globals.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'अपने कलेक्शन में से गाना बजाएं';
+    Globals.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = 'हम तैयार हैं...';
+    Globals.STRING_ABOUT_GITHUB                                    = 'GITHUB';
+    Globals.STRING_ABOUT_STAR_GITHUB                               = 'स्टार करें';
+    Globals.STRING_ABOUT_STARGAZERS_TITLE                          = 'प्रोजेक्ट स्टारगेज़र्स';
+    Globals.STRING_ABOUT_STARGAZERS_SUBTITLE                       = 'आपके प्यार के लिए शुक्रिया...';
+    Globals.STRING_ABOUT_REPOSITORY_INFORMATION_ERROR              = 'हमारे बारे में नयी जानकारी की लिए इंटरनेट से कनेक्ट हों|';
+    Globals.STRING_ABOUT_STARGAZERS_INFORMATION_ERROR              = 'हम अपने नए स्टारगेज़र्स के बारे में जानकारी नहीं प्राप्त कर सके|';
+    Globals.STRING_ABOUT_LANGUAGE_TITLE                            = 'भाषा';
+    Globals.STRING_ABOUT_LANGUAGE_SUBTITLE                         = 'अपनी ऐप की भाषा बदलें...';
+    Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_TITLE             = 'जानकारी';
+    Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_SUBTITLE          = 'चेंज देखने के लिए ऐप को दोबारा शुरू करें|';
   }
 }

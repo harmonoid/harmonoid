@@ -11,6 +11,8 @@ enum LanguageRegion {
   enUs,
   ruRu,
   slSi,
+  ptBr,
+  hiIn,
 }
 
 class About extends StatefulWidget {
@@ -26,7 +28,7 @@ class AboutState extends State<About> {
   LanguageRegion _language;
 
   void _showRestartDialog() {
-    Timer(Duration(seconds: 2), () => showDialog(
+    Timer(Duration(milliseconds: 400), () => showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_TITLE),
@@ -66,6 +68,8 @@ class AboutState extends State<About> {
         if (value == 'en_us') this._language = LanguageRegion.enUs;
         else if (value == 'ru_ru') this._language = LanguageRegion.ruRu;
         else if (value == 'sl_si') this._language = LanguageRegion.slSi; 
+        else if (value == 'pt_br') this._language = LanguageRegion.ptBr; 
+        else if (value == 'hi_in') this._language = LanguageRegion.hiIn; 
       });
     });
 
@@ -501,6 +505,50 @@ class AboutState extends State<About> {
                       groupValue: this._language,
                       onChanged: (LanguageRegion language) {
                         GlobalsPersistent.changeConfiguration('language', 'sl_si');
+                        this.setState(() {
+                          this._language = language;
+                        });
+                        this._showRestartDialog();
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('Português'),
+                    subtitle: Text('Brasil'),
+                    onTap: () {
+                      GlobalsPersistent.changeConfiguration('language', 'pt_br');
+                      this.setState(() {
+                        this._language = LanguageRegion.ptBr;
+                      });
+                      this._showRestartDialog();
+                    },
+                    leading: Radio(
+                      value: LanguageRegion.ptBr,
+                      groupValue: this._language,
+                      onChanged: (LanguageRegion language) {
+                        GlobalsPersistent.changeConfiguration('language', 'pt_br');
+                        this.setState(() {
+                          this._language = language;
+                        });
+                        this._showRestartDialog();
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('हिन्दी'),
+                    subtitle: Text('भारत'),
+                    onTap: () {
+                      GlobalsPersistent.changeConfiguration('language', 'hi_in');
+                      this.setState(() {
+                        this._language = LanguageRegion.hiIn;
+                      });
+                      this._showRestartDialog();
+                    },
+                    leading: Radio(
+                      value: LanguageRegion.hiIn,
+                      groupValue: this._language,
+                      onChanged: (LanguageRegion language) {
+                        GlobalsPersistent.changeConfiguration('language', 'hi_in');
                         this.setState(() {
                           this._language = language;
                         });
