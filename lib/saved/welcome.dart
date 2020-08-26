@@ -1,9 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:harmonoid/globals.dart';
 import 'dart:math';
 
+import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/saved/savedalbumresults.dart';
 import 'package:harmonoid/saved/nowplaying.dart';
 import 'package:harmonoid/searchbar.dart';

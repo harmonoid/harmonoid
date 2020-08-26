@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:harmonoid/saved/savedalbumviewer.dart';
 import 'package:harmonoid/scripts/getsavedmusic.dart';
-import 'package:harmonoid/globals.dart';
+import 'package:harmonoid/globals.dart' as Globals;
 
 class AlbumTile extends StatelessWidget {
 
@@ -244,6 +244,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
           Container(
             margin: EdgeInsets.only(left: 16, right: 16),
             child: OpenContainer(
+              closedElevation: 2,
               transitionDuration: Duration(milliseconds: 400),
               closedBuilder: (ctx, act) => Container(
                 child: Row(

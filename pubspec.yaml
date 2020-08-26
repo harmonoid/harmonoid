@@ -59,6 +59,7 @@ flutter:
     - assets/images/tracks.jpg
     - assets/images/artists.jpg
     - assets/images/about.jpg
+    - assets/config.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

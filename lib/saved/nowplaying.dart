@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:audio_service/audio_service.dart';
 
-import 'package:harmonoid/globals.dart';
+import 'package:harmonoid/globals.dart' as Globals;
 
 
 class NowPlaying extends StatefulWidget {

@@ -38,7 +38,7 @@ class PlaySavedMusic {
           id: albumAssets['album_id'] + '_' + albumTracks[index]['track_number'].toString(),
           title: albumTracks[index]['track_name'].split('(')[0].trim().split('-')[0].trim(),
           album: albumAssets['album_name'].split('(')[0].trim().split('-')[0].trim(),
-          artist: albumAssets['album_artists'][0],
+          artist: albumTracks[index]['track_artists'].join(', '),
           artUri: 'file://${path.join(musicDirectory.path, albumId, 'albumArt.png')}',
           extras: {
             'album_id': albumAssets['album_id'],
