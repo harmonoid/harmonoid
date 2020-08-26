@@ -4,21 +4,23 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'dart:async';
 
-import 'package:harmonoid/globals.dart';
+import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/searchalbumviewer.dart';
 
 class SearchAlbumResultArguments {
   final String keyword;
   final String searchMode;
-  SearchAlbumResultArguments(this.keyword, this.searchMode);
+  final String searchTitle;
+  SearchAlbumResultArguments(this.keyword, this.searchMode, this.searchTitle);
 }
 
 class SearchAlbumResults extends StatefulWidget {
   final String keyword;
   final String searchMode;
+  final String searchTitle;
   static String pageRoute = '/searchresult';
   
-  SearchAlbumResults({Key key, @required this.keyword, @required this.searchMode}) : super(key : key);
+  SearchAlbumResults({Key key, @required this.keyword, @required this.searchMode, @required this.searchTitle}) : super(key : key);
   _SearchAlbumResults createState() => _SearchAlbumResults();
 }
 
@@ -391,7 +393,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
               )
             ),
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(widget.searchMode),
+              title: Text(widget.searchTitle),
               background: Image.asset(
                 'assets/images/${widget.searchMode.toLowerCase()}.jpg',
                 fit: BoxFit.fitWidth,
