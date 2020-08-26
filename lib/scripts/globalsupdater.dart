@@ -455,16 +455,26 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                    = 'Es wird nichts gespielt...';
     Globals.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                 = 'Aus Ihrer Sammlung abspielen';
     Globals.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                   = "Wir sind alle bereit...";
-    Globals.STRING_ABOUT_GITHUB                                     = 'GITHUB';
-    Globals.STRING_ABOUT_STAR_GITHUB                                = 'STAR THE PROJECT';
-    Globals.STRING_ABOUT_STARGAZERS_TITLE                           = 'Projekt Sterngucker';
-    Globals.STRING_ABOUT_STARGAZERS_SUBTITLE                        = 'Vielen Dank für Ihre Unterstützung...';
-    Globals.STRING_ABOUT_REPOSITORY_INFORMATION_ERROR               = 'Wir sind nicht in der Lage, aktuelle Informationen über uns zu erhalten, Sie sind höchstwahrscheinlich offline';
-    Globals.STRING_ABOUT_STARGAZERS_INFORMATION_ERROR               = 'Wir konnten die Informationen über die neuesten Sterngucker nicht abrufen';
-    Globals.STRING_ABOUT_LANGUAGE_TITLE                             = 'Sprache';
-    Globals.STRING_ABOUT_LANGUAGE_SUBTITLE                          = 'Ändern Sie die Art und Weise, wie Sie die Anwendung sehen...';
-    Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_TITLE              = 'Information';
-    Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_SUBTITLE           = 'Sie müssen die Anwendung neu starten, um die Änderungen zu sehen';
+    Globals.STRING_SETTING_GITHUB                                   =   'GITHUB';
+    Globals.STRING_SETTING_STAR_GITHUB                              =   'STAR THE PROJECT';
+    Globals.STRING_SETTING_STARGAZERS_TITLE                         =   'Projekt Sterngucker';
+    Globals.STRING_SETTING_STARGAZERS_SUBTITLE                      =   'Vielen Dank für Ihre Unterstützung...';
+    Globals.STRING_SETTING_REPOSITORY_INFORMATION_ERROR             =   'Wir sind nicht in der Lage, aktuelle Informationen über uns zu erhalten, Sie sind höchstwahrscheinlich offline...';
+    Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR             =   'Wir konnten die Informationen über die neuesten Sterngucker nicht abrufen...';
+    Globals.STRING_SETTING_LANGUAGE_TITLE                           =   'Sprachen';
+    Globals.STRING_SETTING_LANGUAGE_SUBTITLE                        =   'Ändern Sie die Art und Weise, wie Sie die Anwendung sehen...';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE            =   'Informationen';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE         =   'Sie müssen die Anwendung neu starten, um die Änderungen zu sehen';
+    Globals.STRING_ABOUT_TITLE                                      =   'Über';
+    Globals.STRING_ABOUT_SUBTITLE                                   =   'Informationen über die Anwendung und ihre Entwickler...';
+    Globals.STRING_SETTING_SERVER_CHANGE_TITLE                      =   'Server';
+    Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE                   =   'Änderung, wo die Anwendung ihren Inhalt anfordert...';
+    Globals.STRING_SETTING_SERVER_CHANGE_SERVER_HINT                =   'Geben Sie eine Server-URL ein';
+    Globals.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL               =   'Server-URL';
+    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID              =   'Es ist keine gültige Server-URL für die Anwendung...';
+    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK              =   'Bitte überprüfen Sie Ihre Internetverbindung...';
+    Globals.STRING_SETTING_SERVER_CHANGE_DONE                       =   'Server erfolgreich geändert...';
+    Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                   =   'Server für die Anwendung gewechselt...';
   }
 }
 
