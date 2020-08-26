@@ -88,7 +88,8 @@ For that purpose, you can checkout [this](https://github.com/alexmercerind/harmo
 |---------------|---------------|
 |Russian        |@raitonoberu   |
 |Slovenian      |@mytja         |
-
+|Portuguese     |@bdlukaa       |
+|Hindi          |@alexmercerind |
 
 Thankyou!
 
