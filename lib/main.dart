@@ -4,6 +4,8 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/services.dart';
 
 import 'package:harmonoid/saved/welcome.dart';
+import 'package:harmonoid/scripts/globalspersistent.dart';
+import 'package:harmonoid/scripts/globalsupdater.dart';
 import 'package:harmonoid/searchalbumresults.dart';
 import 'package:harmonoid/scripts/backgroundtask.dart';
 
@@ -27,7 +29,17 @@ class Application extends StatelessWidget {
       routes: {
         '/welcome' : (context) => 
         AudioServiceWidget(
-          child: Welcome()
+          child: FutureBuilder(
+            future: GlobalsPersistent.getConfiguration('language').then((value) => updateGlobals(value)),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Welcome();
+              }
+              else {
+                return Scaffold();
+              }
+            },
+          ),
         ),
       },
       onGenerateRoute: (settings) {
@@ -37,6 +49,7 @@ class Application extends StatelessWidget {
             builder: (context) => SearchAlbumResults(
                 keyword: args.keyword, 
                 searchMode: args.searchMode,
+                searchTitle: args.searchTitle,
             ),
           );
         }

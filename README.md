@@ -71,41 +71,27 @@ These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they 
 |~~Improve download speed~~                                                               |                                                                                                  |
 
 
+## :book: Inner Workings
+
+This app is uses Python 3 in its back-end. You can see the repository powering this app [here](https://github.com/raitonoberu/harmonoid-service).
+
+
 ## :white_check_mark: Help With Translations
 
 You can help me by providing translations for the app in your language & see the app running in your native language.
 
-For that purpose, you can checkout [this](https://github.com/alexmercerind/harmonoid/blob/master/lib/globals.dart) file on the repository, you can translate this, even if you have little to no knowledge of Dart.
+For that purpose, you can checkout [this](https://github.com/alexmercerind/harmonoid/blob/master/lib/scripts/globalsupdater.dart) file on the repository, you can translate this, even if you have little to no knowledge of Dart.
+
+##### Translation Credits
+
+|Language       |Provider       |
+|---------------|---------------|
+|Russian        |@raitonoberu   |
+|Slovenian      |@mytja         |
+|Portuguese     |@bdlukaa       |
+|Hindi          |@alexmercerind |
 
 Thankyou!
-
-
-## :page_facing_up: LICENSE
-
-
-```
-MIT License
-
-Copyright (c) 2020 Hitesh Kumar Saini
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
 
 
 ## :arrow_down: Dependencies
@@ -130,7 +116,7 @@ _For pre-release v0.0.1_
   - Go to the 'Collection' tab, and tap on the search bar. Then, enter a keyword to search & select the mode (i.e Album or Track) in which you want to search. You'll be greeted with the music close to your keyword in a moment. Tap on your preferred result, it's album will show up to you. Now, tap on the tracks you want to save offline.
 
 - __How do I play my saved music?__
-  - Go to the 'Collection' tab, tap (or should I say, spin) the refresh button to see your latest music. Now, play whatever you want.
+  - Go to the 'Collection' tab (or the starting screen of the app), and tap (or should I say, spin) the refresh button to see your latest music. Now, play whatever you want.
   
 - __How do I control media playback?__
   - 'Now Playing' tab of the app is for this job. You can do the basic job from the app notification itself.

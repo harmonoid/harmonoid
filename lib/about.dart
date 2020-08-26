@@ -1,10 +1,19 @@
+import 'dart:async';
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:http/http.dart' as http;
 
-import 'package:harmonoid/globals.dart';
+import 'package:harmonoid/globals.dart' as Globals;
+import 'package:harmonoid/scripts/globalspersistent.dart';
 
+enum LanguageRegion {
+  enUs,
+  ruRu,
+  slSi,
+  ptBr,
+  hiIn,
+}
 
 class About extends StatefulWidget {
   About({Key key}) : super(key : key);
@@ -13,8 +22,33 @@ class About extends StatefulWidget {
 
 class AboutState extends State<About> {
 
-  String repository = 'harmonoid';
-  String developer = 'alexmercerind';
+  String _repository = 'harmonoid';
+  String _developer = 'alexmercerind';
+
+  LanguageRegion _language;
+
+  void _showRestartDialog() {
+    Timer(Duration(milliseconds: 400), () => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_TITLE),
+        content: Text(Globals.STRING_ABOUT_LANGUAGE_RESTART_DIALOG_SUBTITLE),
+        actions: [
+          MaterialButton(
+            splashColor: Colors.deepPurple[50],
+            highlightColor: Colors.deepPurple[100],
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              Globals.STRING_OK,
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+          ),
+        ],
+      ),
+    ));
+  }
 
   Widget _projectInfo = Center(
     child: Container(
@@ -28,8 +62,19 @@ class AboutState extends State<About> {
   void initState() {
     super.initState();
 
-    Uri githubRepoUri = Uri.https('api.github.com', '/repos/${this.developer}/${this.repository}', {});
-    Uri githubStargazersUri = Uri.https('api.github.com', '/repos/${this.developer}/${this.repository}/stargazers', {'per_page': '100'});
+    GlobalsPersistent.getConfiguration('language')
+    .then((value) {
+      this.setState(() {
+        if (value == 'en_us') this._language = LanguageRegion.enUs;
+        else if (value == 'ru_ru') this._language = LanguageRegion.ruRu;
+        else if (value == 'sl_si') this._language = LanguageRegion.slSi; 
+        else if (value == 'pt_br') this._language = LanguageRegion.ptBr; 
+        else if (value == 'hi_in') this._language = LanguageRegion.hiIn; 
+      });
+    });
+
+    Uri githubRepoUri = Uri.https('api.github.com', '/repos/${this._developer}/${this._repository}', {});
+    Uri githubStargazersUri = Uri.https('api.github.com', '/repos/${this._developer}/${this._repository}/stargazers', {'per_page': '100'});
     http.get(githubRepoUri)
     .then((response) {
       Map<String, dynamic> githubRepo = convert.jsonDecode(response.body);
@@ -148,16 +193,6 @@ class AboutState extends State<About> {
                   ),
                 ],
               ),
-              Container(
-                margin: EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
-                child: Text(
-                  githubRepo['description'],
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black54,
-                  ),
-                ),
-              ),
               Divider(
                 color: Colors.white,
                 height: 4,
@@ -227,7 +262,7 @@ class AboutState extends State<About> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        this.repository,
+                        this._repository,
                         maxLines: 1,
                         style: TextStyle(
                           color: Colors.black87,
@@ -240,7 +275,7 @@ class AboutState extends State<About> {
                         thickness: 0,
                       ),
                       Text(
-                        this.developer,
+                        this._developer,
                         maxLines: 1,
                         style: TextStyle(
                           color: Colors.black54,
@@ -358,6 +393,174 @@ class AboutState extends State<About> {
                     alignment: Alignment.topCenter,
                   ),
                   this._projectInfo,
+                ],
+              ),
+            ),
+          ),
+          Card(
+            clipBehavior: Clip.antiAlias,
+            elevation: 2,
+            margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+            child: Container(
+              width: MediaQuery.of(context).size.width - 32,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 16, right: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Divider(
+                          color: Colors.white,
+                          height: 16,
+                          thickness: 0,
+                        ),
+                        Text(
+                          Globals.STRING_ABOUT_LANGUAGE_TITLE,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.white,
+                          height: 4,
+                          thickness: 0,
+                        ),
+                        Text(
+                          Globals.STRING_ABOUT_LANGUAGE_SUBTITLE,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.white,
+                          height: 16,
+                          thickness: 0,
+                        ),
+                      ],
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('English'),
+                    subtitle: Text('United States'),
+                    onTap: () {
+                      GlobalsPersistent.changeConfiguration('language', 'en_us');
+                      this.setState(() {
+                        this._language = LanguageRegion.enUs;
+                      });
+                      this._showRestartDialog();
+                    },
+                    leading: Radio(
+                      value: LanguageRegion.enUs,
+                      groupValue: this._language,
+                      onChanged: (LanguageRegion language) {
+                        GlobalsPersistent.changeConfiguration('language', 'en_us');
+                        this.setState(() {
+                          this._language = language;
+                        });
+                        this._showRestartDialog();
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('русский'),
+                    subtitle: Text('Россия'),
+                    onTap: () {
+                      GlobalsPersistent.changeConfiguration('language', 'ru_ru');
+                      this.setState(() {
+                        this._language = LanguageRegion.ruRu;
+                      });
+                      this._showRestartDialog();
+                    },
+                    leading: Radio(
+                      value: LanguageRegion.ruRu,
+                      groupValue: this._language,
+                      onChanged: (LanguageRegion language) {
+                        GlobalsPersistent.changeConfiguration('language', 'ru_ru');
+                        this.setState(() {
+                          this._language = language;
+                        });
+                        this._showRestartDialog();
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('Slovenščina'),
+                    subtitle: Text('Slovenia'),
+                    onTap: () {
+                      GlobalsPersistent.changeConfiguration('language', 'sl_si');
+                      this.setState(() {
+                        this._language = LanguageRegion.slSi;
+                      });
+                      this._showRestartDialog();
+                    },
+                    leading: Radio(
+                      value: LanguageRegion.slSi,
+                      groupValue: this._language,
+                      onChanged: (LanguageRegion language) {
+                        GlobalsPersistent.changeConfiguration('language', 'sl_si');
+                        this.setState(() {
+                          this._language = language;
+                        });
+                        this._showRestartDialog();
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('Português'),
+                    subtitle: Text('Brasil'),
+                    onTap: () {
+                      GlobalsPersistent.changeConfiguration('language', 'pt_br');
+                      this.setState(() {
+                        this._language = LanguageRegion.ptBr;
+                      });
+                      this._showRestartDialog();
+                    },
+                    leading: Radio(
+                      value: LanguageRegion.ptBr,
+                      groupValue: this._language,
+                      onChanged: (LanguageRegion language) {
+                        GlobalsPersistent.changeConfiguration('language', 'pt_br');
+                        this.setState(() {
+                          this._language = language;
+                        });
+                        this._showRestartDialog();
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('हिन्दी'),
+                    subtitle: Text('भारत'),
+                    onTap: () {
+                      GlobalsPersistent.changeConfiguration('language', 'hi_in');
+                      this.setState(() {
+                        this._language = LanguageRegion.hiIn;
+                      });
+                      this._showRestartDialog();
+                    },
+                    leading: Radio(
+                      value: LanguageRegion.hiIn,
+                      groupValue: this._language,
+                      onChanged: (LanguageRegion language) {
+                        GlobalsPersistent.changeConfiguration('language', 'hi_in');
+                        this.setState(() {
+                          this._language = language;
+                        });
+                        this._showRestartDialog();
+                      },
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.white,
+                    height: 16,
+                    thickness: 0,
+                  ),
                 ],
               ),
             ),
