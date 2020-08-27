@@ -63,7 +63,7 @@ These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they 
 
 | :honeybee: Bugs                                                                         | :zap: Features Upcoming                                                                  |
 |-----------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
-|Refresh button is to be pressed for refreshing downloaded music.                         |Exporting tracks outside the app for sharing.                                              |
+|~~Refresh button is to be pressed for refreshing downloaded music.~~                     |Exporting tracks outside the app for sharing.                                              |
 |Artist search result page does not work at the moment.                                   |Searching downloaded tracks & albums.                                                          |
 |The track search result page uses same widgets as album result page                      |Determinate loading bar for downloading tracks in notification area.                              |
 |~~Downloaded tracks do not play sometimes.~~                                             |Better management for downloaded albums & tracks, which includes sorting them acc. to date added, A to Z etc.  (It is very basic at the moment)|
