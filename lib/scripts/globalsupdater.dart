@@ -404,7 +404,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'Wonach suchen Sie?';
     Globals.STRING_COLLECTION                                      = 'Sammlung';
     Globals.STRING_NOW_PLAYING                                     = 'Jetzt spielen';
-    Globals.STRING_ABOUT                                           = 'Über';
+    Globals.STRING_SETTING                                         = 'Einstellungen';
     Globals.STRING_OK                                              = 'OKAY';
     Globals.STRING_YES                                             = 'JA';
     Globals.STRING_NO                                              = 'NEIN';
@@ -419,12 +419,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Hier ist das Album, das Ihrer Anfrage am nächsten kommt';
     Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK               = 'Hier ist der nächstgelegene Track aus Ihrer Anfrage';
     Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST              = 'Hier ist der Künstler Ihrer Anfrage';
-    Globals.STRING_SEARCH_RESULT_RESULT_TOP_BUTTON_LABEL_0_ALBUM   = 'HERUNTERLADEN ALBUM';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'HERUNTERLADEN ALBUM';
     Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'HERUNTERLADEN TRACK';
-    Globals.STRING_SEARCH_RESULT_RESULT_TOP_BUTTON_LABEL_0_ARTIST  = 'HERUNTERLADEN KÜNSTLER';
-    Globals.STRING_SEARCH_RESULT_RESULT_TOP_BUTTON_LABEL_1_ALBUM   = 'ALBUM ANZEIGEN';
-    Globals.STRING_SEARCH_RESULT_RESULT_TOP_BUTTON_LABEL_1_TRACK   = 'ZEIGE TRACK';
-    Globals.STRING_SEARCH_RESULT_RESULT_TOP_BUTTON_LABEL_1_ARTIST  = 'KÜNSTLER ANZEIGEN';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'HERUNTERLADEN KÜNSTLER';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM          = 'ALBUM ANZEIGEN';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK          = 'ZEIGE TRACK';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST         = 'KÜNSTLER ANZEIGEN';
     Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'Mehr Alben aus dem Ergebnis';
     Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'Mehr Spuren aus dem Ergebnis';
     Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'Ähnlichere Künstler';
