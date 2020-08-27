@@ -84,13 +84,13 @@ For that purpose, you can checkout [this](https://github.com/alexmercerind/harmo
 
 ##### Translation Credits
 
-|Language       |Provider       |
-|---------------|---------------|
-|Russian        |@raitonoberu   |
-|Slovenian      |@mytja         |
-|Portuguese     |@bdlukaa       |
-|Hindi          |@alexmercerind |
-|German         |@mytja         |
+|Language       |Provider       |Notes                          |
+|---------------|---------------|-------------------------------|
+|Russian        |@raitonoberu   |                               |
+|Slovenian      |@mytja         |                               |
+|Portuguese     |@bdlukaa       |                               |
+|Hindi          |@alexmercerind |                               |
+|German         |@mytja         |Improve this translation!      |
 
 Thankyou!
 
