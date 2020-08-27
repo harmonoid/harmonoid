@@ -1,10 +1,7 @@
 library globalsupdater;
 
 import 'package:harmonoid/globals.dart' as Globals;
-
-void updateHomeURL(String url) {
-  Globals.STRING_HOME_URL = url;
-}
+import 'package:harmonoid/scripts/globalspersistent.dart';
 
 void updateGlobals(String languageRegion) {
   if (languageRegion == 'en_us') {
@@ -398,7 +395,6 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'सर्वर बदला जा रहा है...';
   }
   else if (languageRegion == 'de_de') {
-    Globals.STRING_HOME_URL                                        = 'harmonoidservice.herokuapp.com';
     Globals.STRING_INTERNET_ERROR                                  = 'Überprüfen Sie Ihre Internetverbindung...';
     Globals.STRING_SEARCH_HEADER                                   = 'Musik suchen';
     Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'Wonach suchen Sie?';
@@ -476,4 +472,15 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Server erfolgreich geändert.';
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Server für die Anwendung gewechselt...';
   }
+}
+
+void updateHomeURL(String url) {
+  Globals.STRING_HOME_URL = url;
+}
+
+Future<void> setupStartupGlobals() async {
+  String languageRegion = await GlobalsPersistent.getConfiguration('language');
+  String homeURL = await GlobalsPersistent.getConfiguration('server');
+  updateGlobals(languageRegion);
+  updateHomeURL(homeURL);
 }

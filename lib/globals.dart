@@ -78,7 +78,9 @@ String STRING_SETTING_SERVER_CHANGE_CHANGING;
 String STRING_ABOUT_TITLE;
 String STRING_ABOUT_SUBTITLE;
 
-const String ALBUM  = 'Albums';
-const String TRACK  = 'Tracks';
-const String ARTIST = 'Artists';
-const String VERIFICATION_STRING = 'service is running';
+const String ALBUM                                      = 'Albums';
+const String TRACK                                      = 'Tracks';
+const String ARTIST                                     = 'Artists';
+const String VERIFICATION_STRING                        = 'service is running';
+const String STRING_SETTING_LANGUAGE_PROVIDERS_TITLE    = 'Translation Providers';
+const String STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE = 'Thanks a lot for your support to the app';
