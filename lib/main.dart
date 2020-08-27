@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
-
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/services.dart';
 
 import 'package:harmonoid/saved/welcome.dart';
-import 'package:harmonoid/scripts/globalspersistent.dart';
 import 'package:harmonoid/scripts/globalsupdater.dart';
 import 'package:harmonoid/searchalbumresults.dart';
 import 'package:harmonoid/scripts/backgroundtask.dart';
 
+
 class Application extends StatelessWidget {
-
-  Future<void> _setupGlobals() async {
-    String languageRegion = await GlobalsPersistent.getConfiguration('language');
-    String homeURL = await GlobalsPersistent.getConfiguration('server');
-    updateGlobals(languageRegion);
-    updateHomeURL(homeURL);
-  }
-
   @override 
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -40,7 +31,7 @@ class Application extends StatelessWidget {
         '/welcome' : (context) => 
         AudioServiceWidget(
           child: FutureBuilder(
-            future:  this._setupGlobals(),
+            future:  setupStartupGlobals(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Welcome();
