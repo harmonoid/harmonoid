@@ -1,7 +1,9 @@
 import 'package:animations/animations.dart';
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:math';
+import 'dart:async';
 
 import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/saved/savedalbumresults.dart';
@@ -25,6 +27,12 @@ class _Welcome extends State<Welcome> {
   int _index = 1;
   double _rotationValue = 2 * pi;
   int _rotations = 1;
+  StreamSubscription _nowPlayingNotificationStream;
+
+  Future<void> refreshCollection() async {
+    await this._savedAlbumResultsKey.currentState.refresh();
+    print('Refreshed Collection.');
+  }
 
   @override
   void initState() {
@@ -43,6 +51,21 @@ class _Welcome extends State<Welcome> {
         _search.currentState.showSearchBar();
       }
     });
+
+    this._nowPlayingNotificationStream = AudioService.notificationClickEventStream.listen((event) {
+      if (event) {
+        this.setState(() {
+          //print('Notification Was Tapped.');
+          this._index = 0;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    this._nowPlayingNotificationStream.cancel();
+    super.dispose();
   }
 
   @override
@@ -59,7 +82,7 @@ class _Welcome extends State<Welcome> {
               scrollController : _albumsScrollController, 
               key: _savedAlbumResultsKey,
               ),
-            Search(key: this._search),
+            Search(key: this._search, refreshCollection: this.refreshCollection),
           ],
         ),
       ),

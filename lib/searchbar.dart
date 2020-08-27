@@ -15,7 +15,8 @@ enum SearchMode {
 
 
 class SearchScreen extends StatefulWidget {
-  SearchScreen({Key key}) : super(key : key);
+  Function refreshCollection;
+  SearchScreen({Key key, @required this.refreshCollection}) : super(key : key);
   _SearchScreen createState() => _SearchScreen();
 }
 
@@ -129,138 +130,150 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  Future<bool> _onWillPop() async {
+    widget.refreshCollection();
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Container(
-          height: 56,
-          width: 56,
-          alignment: Alignment.center,
-          child: IconButton(
-            iconSize: 24,
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            splashRadius: 20,
-            onPressed: () => Navigator.of(context).pop(),
-          )
-        ),
-        title: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: Container(
-                alignment: Alignment.center,
-                height: 56,
-                child: TextField(
-                  onSubmitted: (value) => this._searchHandler(this._keyword),
-                  autocorrect: false,
-                  autofocus: true,
-                  cursorWidth: 1,
-                  cursorColor: Colors.white,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                  onChanged: (value) => this.setState(() {
-                    this._keyword = value;
-                  }),
-                  decoration: InputDecoration.collapsed(
-                    hintText: Globals.STRING_SEARCH_HEADER,
-                    hintStyle: TextStyle(
-                      color: Colors.white,
-                    ),
-                  )
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          Container(
+    return WillPopScope(
+      onWillPop: this._onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: Container(
             height: 56,
             width: 56,
             alignment: Alignment.center,
             child: IconButton(
               iconSize: 24,
               icon: Icon(
-                Icons.search,
+                Icons.arrow_back,
                 color: Colors.white,
               ),
               splashRadius: 20,
-              onPressed: () => this._searchHandler(this._keyword),
+              onPressed: () {
+                Navigator.of(context).pop();
+                widget.refreshCollection();
+              },
             )
           ),
-        ],
-      ),
-      body: ListView(
-        children: [
-            Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
-                    child: Text(
-                      Globals.STRING_SEARCH_MODE_SUBHEADER,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black54,
-                      ),
+          title: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 56,
+                  child: TextField(
+                    onSubmitted: (value) => this._searchHandler(this._keyword),
+                    autocorrect: false,
+                    autofocus: true,
+                    cursorWidth: 1,
+                    cursorColor: Colors.white,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
                     ),
-                  ),
-                  ListTile(
-                    onTap: () => this.setState(() {
-                      this._selectSearchMode(SearchMode.album);
-                      this._searchMode = SearchMode.album;
+                    onChanged: (value) => this.setState(() {
+                      this._keyword = value;
                     }),
-                    leading: ScaleTransition(child: Icon(Icons.album, color: this._scaleColor[0], size: 24,), scale: this._scaleAnimation[0]),
-                    title: Text(Globals.STRING_ALBUM),
-                    subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM, style: TextStyle(fontSize: 12)),
-                  ),
-                  ListTile(
-                    onTap: () => this.setState(() {
-                      this._selectSearchMode(SearchMode.track);
-                      this._searchMode = SearchMode.track;
-                    }),
-                    leading: ScaleTransition(child: Icon(Icons.music_note, color: this._scaleColor[1], size: 24,), scale: this._scaleAnimation[1]),
-                    title: Text(Globals.STRING_TRACK),
-                    subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK, style: TextStyle(fontSize: 12)),
-                  ),
-                  // ListTile(
-                  //   onTap: () => this.setState(() {
-                  //     this._selectSearchMode(SearchMode.artist);
-                  //     this._searchMode = SearchMode.artist;
-                  //   }),
-                  //   leading: ScaleTransition(child: Icon(Icons.person, color: this._scaleColor[2], size: 24,), scale: this._scaleAnimation[2]),
-                  //   title: Text(Globals.STRING_ARTIST),
-                  //   subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST, style: TextStyle(fontSize: 12)),
-                  // ),
-                  Container(
-                    margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
-                    child: Text(
-                      Globals.STRING_SEARCH_HISTORY_SUBHEADER,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black54,
+                    decoration: InputDecoration.collapsed(
+                      hintText: Globals.STRING_SEARCH_HEADER,
+                      hintStyle: TextStyle(
+                        color: Colors.white,
                       ),
-                    ),
+                    )
                   ),
-                ] + this._searchHistoryItems,
+                ),
               ),
+            ],
+          ),
+          actions: [
+            Container(
+              height: 56,
+              width: 56,
+              alignment: Alignment.center,
+              child: IconButton(
+                iconSize: 24,
+                icon: Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
+                splashRadius: 20,
+                onPressed: () => this._searchHandler(this._keyword),
+              )
+            ),
+          ],
+        ),
+        body: ListView(
+          children: [
+              Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
+                      child: Text(
+                        Globals.STRING_SEARCH_MODE_SUBHEADER,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () => this.setState(() {
+                        this._selectSearchMode(SearchMode.album);
+                        this._searchMode = SearchMode.album;
+                      }),
+                      leading: ScaleTransition(child: Icon(Icons.album, color: this._scaleColor[0], size: 24,), scale: this._scaleAnimation[0]),
+                      title: Text(Globals.STRING_ALBUM),
+                      subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM, style: TextStyle(fontSize: 12)),
+                    ),
+                    ListTile(
+                      onTap: () => this.setState(() {
+                        this._selectSearchMode(SearchMode.track);
+                        this._searchMode = SearchMode.track;
+                      }),
+                      leading: ScaleTransition(child: Icon(Icons.music_note, color: this._scaleColor[1], size: 24,), scale: this._scaleAnimation[1]),
+                      title: Text(Globals.STRING_TRACK),
+                      subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK, style: TextStyle(fontSize: 12)),
+                    ),
+                    // ListTile(
+                    //   onTap: () => this.setState(() {
+                    //     this._selectSearchMode(SearchMode.artist);
+                    //     this._searchMode = SearchMode.artist;
+                    //   }),
+                    //   leading: ScaleTransition(child: Icon(Icons.person, color: this._scaleColor[2], size: 24,), scale: this._scaleAnimation[2]),
+                    //   title: Text(Globals.STRING_ARTIST),
+                    //   subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST, style: TextStyle(fontSize: 12)),
+                    // ),
+                    Container(
+                      margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
+                      child: Text(
+                        Globals.STRING_SEARCH_HISTORY_SUBHEADER,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                  ] + this._searchHistoryItems,
+                ),
               ),
           ],
         ),
-      );
+      ),
+    );
   }
 }
 
 
 class Search extends StatefulWidget {
-  Search({Key key,}) : super(key : key);
+  Function refreshCollection;
+  Search({Key key, @required this.refreshCollection}) : super(key : key);
 
   SearchState createState() => SearchState();
 }
@@ -352,7 +365,7 @@ class SearchState extends State<Search> with SingleTickerProviderStateMixin {
                     ],
                   ),
                 ),
-              openBuilder: (ctx, act) => SearchScreen(),
+              openBuilder: (ctx, act) => SearchScreen(refreshCollection: widget.refreshCollection,),
             ),
             ],
           ),
