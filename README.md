@@ -73,7 +73,7 @@ These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they 
 
 ## :book: Inner Workings
 
-This app is uses Python 3 in its back-end. You can see the repository powering this app [here](https://github.com/raitonoberu/harmonoid-service).
+This app is uses Python 3 in its back-end. You can see the repository powering this app [here](https://github.com/raitonoberu/spotiyt-server).
 
 
 ## :white_check_mark: Help With Translations
@@ -107,6 +107,35 @@ Thankyou!
 |[just_audio](https://github.com/ryanheise/audio_service)       |[ryanheise](https://github.com/ryanheise)|
 |[audio_service](https://github.com/ryanheise/audio_service)    |[ryanheise](https://github.com/ryanheise)|
 |[url_launcher](https://pub.dev/packages/url_launcher)          |[flutter](https://github.com/flutter)    |
+
+
+## :closed_book: Starting Development
+
+This application is powered by Flutter, which uses Dart as its programming language.
+
+The only reason to choose Flutter for this app was because, it seemed promising & has great pre-defined widgets and styles. It was a great moment for me to learn it, as it is growing (becoming popular) at a very fast rate. 
+
+Assuming that you have already installed [Flutter](https://flutter.dev) SDK on your device.
+
+You can start the app in following way:
+
+- **Clone the repository and enter it**
+  - ```git clone https://github.com/alexmercerind/harmonoid.git && cd harmonoid```
+- **Get the dependencies**
+  -```flutter packages get```
+- **Run the application on your device**
+  -```flutter run```
+  - This will run the application in the debug mode, and most likely you will experience lag. To get the optimal performance, use either of the additional paramters ```--release``` or ```--profile```.
+
+**For building a performant APK, you can write following in your terminal:**
+
+Don't forget to setup your keystore.
+
+```
+flutter build apk
+```
+
+You can use additional parameter ```--split-per-abi``` to reduce APK size by building separate APKs for each architecture.
 
 
 ## :grey_question: FAQ
