@@ -95,9 +95,9 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM                                           = 'Альбомы';
     Globals.STRING_TRACK                                           = 'Треки';
     Globals.STRING_ARTIST                                          = 'Исполнители';
-    Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Поиск любимыых альбомов';
-    Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Поиск любимыых треков';
-    Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Поиск любимыых исполнителей';
+    Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Поиск любимых альбомов';
+    Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Поиск любимых треков';
+    Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Поиск любимых исполнителей';
     Globals.STRING_SEARCH_HISTORY_SUBHEADER                        = 'Недавние запросы';
     Globals.STRING_SEARCH_RESULT_LOADER_LABEL                      = 'Получаем музыку...';
     Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Лучшее совпадение';
