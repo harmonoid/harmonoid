@@ -92,7 +92,7 @@ For that purpose, you can checkout [this](https://github.com/alexmercerind/harmo
 |Slovenian      |@mytja         |                               |
 |Portuguese     |@bdlukaa       |                               |
 |Hindi          |@alexmercerind |                               |
-|German         |@mytja         |Improve this translation!      |
+|German         |@MickLesk      |                               |
 
 Thankyou!
 

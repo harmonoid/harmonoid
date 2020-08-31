@@ -1074,7 +1074,7 @@ class SettingState extends State<Setting> {
                     ),
                   ),
                   ListTile(
-                    title: Text('Deutsche'),
+                    title: Text('Deutsch'),
                     subtitle: Text('Deutschland'),
                     onTap: () {
                       GlobalsPersistent.changeConfiguration('language', 'de_de');
@@ -1282,9 +1282,9 @@ class SettingState extends State<Setting> {
                             )
                           ),
                           ListTile(
-                            title: Text('mytja'),
-                            subtitle: Text('Deutsche'),
-                            onTap: () => url_launcher.launch('https://github.com/mytja'),
+                            title: Text('MickLesk'),
+                            subtitle: Text('Deutsch'),
+                            onTap: () => url_launcher.launch('https://github.com/MickLesk'),
                             leading: CircleAvatar(
                               child: Icon(
                                 Icons.open_in_new,
