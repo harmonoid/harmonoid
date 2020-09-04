@@ -15,7 +15,7 @@ class BackgroundTask extends BackgroundAudioTask {
     await AudioServiceBackground.setState(
       playing: false,
       processingState: AudioProcessingState.completed,
-      androidCompactActions: [1],
+      androidCompactActions: [0, 1, 2],
       controls: [
         MediaControl.skipToPrevious,
         MediaControl.play,
@@ -35,9 +35,10 @@ class BackgroundTask extends BackgroundAudioTask {
           AudioServiceBackground.sendCustomEvent(['currentTrackDuration', this._audioPlayer.duration]);
           AudioServiceBackground.sendCustomEvent(['currentTrackQueue', [this._currentTrackIndex, this._audioPlayerQueue]]);
         }
-      }
-    )..positionStream.listen((position) {
+    })..positionStream.listen((position) {
       AudioServiceBackground.sendCustomEvent(['playingTrackDuration', position]);
+    })..playingStream.listen((playing) {
+      AudioServiceBackground.sendCustomEvent(['playing', playing]);
     });
   }
 
@@ -53,7 +54,8 @@ class BackgroundTask extends BackgroundAudioTask {
       AudioServiceBackground.sendCustomEvent(['currentTrackQueue', [this._currentTrackIndex, this._audioPlayerQueue]]);
     }
     if (action == 'currentTrackIndexSwitch') {
-      await AudioService.playMediaItem(_audioPlayerQueue[params]);
+      this._currentTrackIndex = params;
+      await AudioService.playMediaItem(_audioPlayerQueue[this._currentTrackIndex]);
     }
     if (action == 'isPlaying') {
       return this._audioPlayer.playing;
@@ -103,7 +105,7 @@ class BackgroundTask extends BackgroundAudioTask {
         await AudioServiceBackground.setState(
           playing: true,
           processingState: AudioProcessingState.completed,
-          androidCompactActions: [1],
+          androidCompactActions: [0, 1, 2],
           controls: [
             MediaControl.skipToPrevious,
             MediaControl.pause,
@@ -144,7 +146,7 @@ class BackgroundTask extends BackgroundAudioTask {
     await AudioServiceBackground.setState(
       playing: true,
       processingState: AudioProcessingState.completed,
-      androidCompactActions: [1],
+      androidCompactActions: [0, 1, 2],
       controls: [
         MediaControl.skipToPrevious,
         MediaControl.pause,
@@ -160,7 +162,7 @@ class BackgroundTask extends BackgroundAudioTask {
     await AudioServiceBackground.setState(
       playing: true,
       processingState: AudioProcessingState.completed,
-      androidCompactActions: [1],
+      androidCompactActions: [0, 1, 2],
       controls: [
         MediaControl.skipToPrevious,
         MediaControl.pause,

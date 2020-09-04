@@ -33,6 +33,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   Widget _playlistList = Container();
   StreamSubscription _currentMediaItemStreamSubscription;
   StreamSubscription _currentTrackDurationStreamSubscription;
+  StreamSubscription _playingStreamSubscription;
   AnimationController _animationController;
   Animation<double> _animationCurved;
   AnimationController _animationController1;
@@ -57,8 +58,11 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
     super.initState();
     try {
       (() async {
-        bool playingResult = await AudioService.customAction('isPlaying', []);
-        this.setState(() => this._isPlaying = playingResult);
+        this._playingStreamSubscription = AudioService.customEventStream.listen((event) {
+          if (event[0] == 'playing') {
+            this.setState(() => this._isPlaying = event[1]);
+          }
+        });
       })();
       this._currentMediaItemStreamSubscription = AudioService.currentMediaItemStream.listen((state) {
         this.setState(() {
@@ -154,6 +158,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    this._playingStreamSubscription.cancel();
     this._currentMediaItemStreamSubscription.cancel();
     this._currentTrackDurationStreamSubscription.cancel();
     super.dispose();
