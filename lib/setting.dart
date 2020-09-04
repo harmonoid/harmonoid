@@ -986,7 +986,7 @@ class SettingState extends State<Setting> {
                     ),
                   ),
                   ListTile(
-                    title: Text('русский'),
+                    title: Text('Русский'),
                     subtitle: Text('Россия'),
                     onTap: () {
                       GlobalsPersistent.changeConfiguration('language', 'ru_ru');
@@ -1228,7 +1228,7 @@ class SettingState extends State<Setting> {
                           ),
                           ListTile(
                             title: Text('raitonoberu'),
-                            subtitle: Text('русский'),
+                            subtitle: Text('Русский'),
                             onTap: () => url_launcher.launch('https://github.com/raitonoberu'),
                             leading: CircleAvatar(
                               child: Icon(
