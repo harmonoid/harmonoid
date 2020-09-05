@@ -145,7 +145,7 @@ class _Welcome extends State<Welcome> {
         selectedFontSize: 14,
         unselectedFontSize: 12,
         selectedItemColor: Colors.white,
-        unselectedItemColor: Theme.of(context).primaryColorLight,
+        unselectedItemColor: Colors.white.withOpacity(0.5),
         backgroundColor: Theme.of(context).accentColor,
         showUnselectedLabels: true,
         items: [

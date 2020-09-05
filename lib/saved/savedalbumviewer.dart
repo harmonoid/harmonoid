@@ -58,17 +58,16 @@ class TrackElement extends StatelessWidget {
               title: Text(Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER),
               actions: [
                 MaterialButton(
-                  splashColor: Colors.deepPurple[50],
-                  highlightColor: Colors.deepPurple[100],
+                  
                   onPressed: () {
                     (() async {
                       int result = await GetSavedMusic.deleteTrack(this.albumJson['album_id'], this.albumTracks[this.index]['track_number']);
+                      await RefreshCollection.refreshAlbumsCollection();
                       this.refreshTracks();
                       if (result == 1) {
                         Navigator.of(context).pop();
                         await GetSavedMusic.deleteAlbum(this.albumJson['album_id']);
                         Navigator.of(context).pop();
-                        await RefreshCollection.refreshAlbumsCollection();
                         await this.refresh();
                       }
                       else {
@@ -82,8 +81,6 @@ class TrackElement extends StatelessWidget {
                   ),
                 ),
                 MaterialButton(
-                  splashColor: Colors.deepPurple[50],
-                  highlightColor: Colors.deepPurple[100],
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
