@@ -276,8 +276,6 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                     //   alignment: MainAxisAlignment.end,
                     //   children: [
                     //     MaterialButton(
-                    //       splashColor: Colors.deepPurple[50],
-                    //       highlightColor: Colors.deepPurple[100],
                     //       onPressed: () {},
                     //       child: Text(
                     //         _searchResultLabels.stringSearchResultTopButtonLabel0,
@@ -285,8 +283,6 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                     //       ),
                     //     ),
                     //     MaterialButton(
-                    //       splashColor: Colors.deepPurple[50],
-                    //       highlightColor: Colors.deepPurple[100],
                     //       onPressed: () {},
                     //       child: Text(
                     //         _searchResultLabels.stringSearchResultTopButtonLabel1,

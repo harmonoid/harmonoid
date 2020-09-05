@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/services.dart';
 
+import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/saved/welcome.dart';
 import 'package:harmonoid/scripts/globalsupdater.dart';
 import 'package:harmonoid/searchalbumresults.dart';
@@ -19,13 +20,13 @@ class Application extends StatelessWidget {
     return MaterialApp(
       title: 'Harmonoid',
       theme: ThemeData(
-        accentColor: Colors.deepPurpleAccent[700],
+        accentColor: Globals.globalColor,
         colorScheme: ColorScheme.light(),
-        primaryColor: Colors.deepPurpleAccent[400],
-        primaryColorLight: Colors.deepPurpleAccent[100],
-        primaryColorDark: Colors.deepPurpleAccent[700],
+        primaryColor: Globals.globalColor,
+        primaryColorLight: Colors.black12,
+        primaryColorDark: Globals.globalColor,
         splashFactory: InkRipple.splashFactory,
-        textSelectionHandleColor: Colors.deepPurpleAccent[400],
+        textSelectionHandleColor: Globals.globalColor,
       ),
       initialRoute: '/welcome',
       routes: {

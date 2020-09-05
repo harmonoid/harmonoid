@@ -157,8 +157,6 @@ class SettingState extends State<Setting> {
         content: Text(Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE),
         actions: [
           MaterialButton(
-            splashColor: Colors.deepPurple[50],
-            highlightColor: Colors.deepPurple[100],
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -340,8 +338,6 @@ class SettingState extends State<Setting> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   MaterialButton(
-                    splashColor: Colors.deepPurple[50],
-                    highlightColor: Colors.deepPurple[100],
                     onPressed: () => url_launcher.launch(githubRepo['html_url']),
                     child: Text(
                       Globals.STRING_SETTING_STAR_GITHUB,
@@ -349,8 +345,6 @@ class SettingState extends State<Setting> {
                     ),
                   ),
                   MaterialButton(
-                    splashColor: Colors.deepPurple[50],
-                    highlightColor: Colors.deepPurple[100],
                     onPressed: () => url_launcher.launch(githubRepo['html_url'] + '/blob/master/README.md'),
                     child: Text(
                       Globals.STRING_SETTING_GITHUB,
@@ -442,8 +436,6 @@ class SettingState extends State<Setting> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 MaterialButton(
-                  splashColor: Colors.deepPurple[50],
-                  highlightColor: Colors.deepPurple[100],
                   onPressed: () => url_launcher.launch('https://github.com/alexmercerind/harmonoid'),
                   child: Text(
                     Globals.STRING_SETTING_STAR_GITHUB,
@@ -451,8 +443,6 @@ class SettingState extends State<Setting> {
                   ),
                 ),
                 MaterialButton(
-                  splashColor: Colors.deepPurple[50],
-                  highlightColor: Colors.deepPurple[100],
                   onPressed: () => url_launcher.launch('https://github.com/alexmercerind/harmonoid/blob/master/README.md'),
                   child: Text(
                     Globals.STRING_SETTING_GITHUB,
@@ -620,8 +610,6 @@ class SettingState extends State<Setting> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   MaterialButton(
-                    splashColor: Colors.deepPurple[50],
-                    highlightColor: Colors.deepPurple[100],
                     onPressed: () => url_launcher.launch(githubRepo['html_url']),
                     child: Text(
                       Globals.STRING_SETTING_STAR_GITHUB,
@@ -629,8 +617,6 @@ class SettingState extends State<Setting> {
                     ),
                   ),
                   MaterialButton(
-                    splashColor: Colors.deepPurple[50],
-                    highlightColor: Colors.deepPurple[100],
                     onPressed: () => url_launcher.launch(githubRepo['html_url'] + '/blob/master/README.md'),
                     child: Text(
                       Globals.STRING_SETTING_GITHUB,
@@ -742,8 +728,6 @@ class SettingState extends State<Setting> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 MaterialButton(
-                  splashColor: Colors.deepPurple[50],
-                  highlightColor: Colors.deepPurple[100],
                   onPressed: () => url_launcher.launch('https://github.com/raitonoberu/harmonoid-service'),
                   child: Text(
                     Globals.STRING_SETTING_STAR_GITHUB,
@@ -751,8 +735,6 @@ class SettingState extends State<Setting> {
                   ),
                 ),
                 MaterialButton(
-                  splashColor: Colors.deepPurple[50],
-                  highlightColor: Colors.deepPurple[100],
                   onPressed: () => url_launcher.launch('https://github.com/raitonoberu/harmonoid-service/blob/master/README.md'),
                   child: Text(
                     Globals.STRING_SETTING_GITHUB,

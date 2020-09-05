@@ -127,8 +127,6 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
           content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE),
           actions: [
             MaterialButton(
-              splashColor: Colors.deepPurple[50],
-              highlightColor: Colors.deepPurple[100],
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -161,8 +159,6 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE),
             actions: [
               MaterialButton(
-                splashColor: Colors.deepPurple[50],
-                highlightColor: Colors.deepPurple[100],
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -184,8 +180,6 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE),
             actions: [
               MaterialButton(
-                splashColor: Colors.deepPurple[50],
-                highlightColor: Colors.deepPurple[100],
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -207,8 +201,6 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE),
             actions: [
               MaterialButton(
-                splashColor: Colors.deepPurple[50],
-                highlightColor: Colors.deepPurple[100],
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -238,8 +230,6 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
           content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE),
           actions: [
             MaterialButton(
-              splashColor: Colors.deepPurple[50],
-              highlightColor: Colors.deepPurple[100],
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -492,8 +482,6 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                           content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE),
                           actions: [
                             MaterialButton(
-                              splashColor: Colors.deepPurple[50],
-                              highlightColor: Colors.deepPurple[100],
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
