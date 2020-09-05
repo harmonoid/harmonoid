@@ -15,7 +15,7 @@ enum SearchMode {
 
 
 class SearchScreen extends StatefulWidget {
-  Function refreshCollection;
+  final Function refreshCollection;
   SearchScreen({Key key, @required this.refreshCollection}) : super(key : key);
   _SearchScreen createState() => _SearchScreen();
 }
@@ -272,7 +272,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
 
 
 class Search extends StatefulWidget {
-  Function refreshCollection;
+  final Function refreshCollection;
   Search({Key key, @required this.refreshCollection}) : super(key : key);
 
   SearchState createState() => SearchState();
@@ -321,7 +321,7 @@ class SearchState extends State<Search> with SingleTickerProviderStateMixin {
       position: this._showAnimation,
       child: Container(
         alignment: Alignment.topCenter,
-        margin: EdgeInsets.only(top: 8),
+        margin: EdgeInsets.only(top: 8 + MediaQuery.of(context).padding.top),
         child: Column(
           children: [
             OpenContainer(
