@@ -2,6 +2,7 @@ library globalsupdater;
 
 import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/scripts/globalspersistent.dart';
+import 'package:harmonoid/scripts/refreshcollection.dart';
 
 void updateGlobals(String languageRegion) {
   if (languageRegion == 'en_us') {
@@ -407,7 +408,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'सर्वर बदल दिया गया है।';
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'सर्वर बदला जा रहा है...';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'अनुवाद प्रदाता';
-    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'आपके योगदान के लिए बहुत बहुत धन्यवाद';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'आपके योगदान के लिए शुक्रिया';
   }
   else if (languageRegion == 'de_de') {
     /////////DE-DE/////////
@@ -501,4 +502,5 @@ Future<void> setupStartupGlobals() async {
   String homeURL = await GlobalsPersistent.getConfiguration('server');
   updateGlobals(languageRegion);
   updateHomeURL(homeURL);
+  await RefreshCollection.refreshAlbumsCollection();
 }
