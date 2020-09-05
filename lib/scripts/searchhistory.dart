@@ -40,11 +40,21 @@ class SearchHistory {
     if (searchHistory.length > 5 && searchHistory.isNotEmpty) {
       searchHistory.removeAt(0);
     }
-    searchHistory.add({
+    Map<String, String> newHistory = {
       'keyword': keyword,
       'mode': mode,
       'title': title,
-    });
+    };
+    bool isFresh = true;
+    for (var element in searchHistory) {
+      if (element.toString() == newHistory.toString()) {
+        isFresh = false;
+        break;
+      }
+    }
+    if (isFresh) {
+      searchHistory.add(newHistory);
+    }
     await searchHistoryFile.writeAsString(convert.jsonEncode({'searches' : searchHistory}));
   }
 }
