@@ -9,6 +9,7 @@ import 'package:harmonoid/scripts/backgroundtask.dart';
 
 
 class Application extends StatelessWidget {
+
   @override 
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -30,17 +31,7 @@ class Application extends StatelessWidget {
       routes: {
         '/welcome' : (context) => 
         AudioServiceWidget(
-          child: FutureBuilder(
-            future:  setupStartupGlobals(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return Welcome();
-              }
-              else {
-                return Scaffold();
-              }
-            },
-          ),
+          child: Welcome(),
         ),
       },
       onGenerateRoute: (settings) {
@@ -59,6 +50,10 @@ class Application extends StatelessWidget {
   }
 }
 
-void main() => runApp(Application());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupStartupGlobals();
+  runApp(Application());
+}
 
 void backgroundTaskEntryPoint() => AudioServiceBackground.run(() => BackgroundTask());
