@@ -39,6 +39,8 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   AnimationController _animationController1;
   Animation<double> _animationCurved1;
 
+  double _playlistEnd;
+
   String trackDuration(Duration duration) {
     String trackDurationLabel;
     int durationSeconds = duration.inMilliseconds ~/ 1000;
@@ -66,12 +68,28 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
       })();
       this._currentMediaItemStreamSubscription = AudioService.currentMediaItemStream.listen((state) {
         this.setState(() {
-          this._albumArt = state.extras['album_art'];
-          this._trackName = state.title;
-          this._albumName = state.album;
-          this._trackArtist = state.artist;
-          this._trackNumber= state.extras['track_number'].toString();
-          this._year = state.extras['year'].toString();
+          try {
+            this._albumArt = state.extras['album_art'];
+            this._trackName = state.title;
+            this._albumName = state.album;
+            this._trackArtist = state.artist;
+            this._trackNumber= state.extras['track_number'].toString();
+            this._year = state.extras['year'].toString();
+          }
+          catch(error) {
+            this._animationController1 = new AnimationController(
+              vsync: this,
+              duration: Duration(milliseconds: 400),
+              reverseDuration: Duration(milliseconds: 400),
+            );
+            this._animationCurved1 = Tween<double>(begin: 0, end: 0).animate(
+              new CurvedAnimation(
+                curve: Curves.easeOutCubic,
+                reverseCurve: Curves.easeInCubic,
+                parent: this._animationController1,
+              )
+            );
+          }
         });
       });
       this._currentTrackDurationStreamSubscription = AudioService.customEventStream.listen((event) {
@@ -96,24 +114,43 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
             for (int index = 0; index < this._currentTrackQueue.length; index++) {
               MediaItem mediaItem = this._currentTrackQueue[index];
               this._playlist.add(
-                ListTile(
-                  onTap: () {
-                    AudioService.customAction('currentTrackIndexSwitch', index);
-                  },
-                  leading: CircleAvatar(
-                    child: Text(mediaItem.extras['track_number'].toString()),
-                    backgroundImage: FileImage(
-                      File(mediaItem.extras['album_art']),
+                Container(
+                  height: 72,
+                  child: ListTile(
+                    onTap: () {
+                      AudioService.customAction('currentTrackIndexSwitch', index);
+                    },
+                    leading: CircleAvatar(
+                      child: Text(mediaItem.extras['track_number'].toString()),
+                      backgroundImage: FileImage(
+                        File(mediaItem.extras['album_art']),
+                      ),
                     ),
+                    title: Text(mediaItem.title),
+                    subtitle: Text(mediaItem.album),
                   ),
-                  title: Text(mediaItem.title),
-                  subtitle: Text(mediaItem.album),
                 ),
               );
             }
-            this._playlistList = ListView(
+            this._playlistList = Column(
               children: this._playlist,
             );
+            this._playlistEnd = (this._playlist.length * 72).toDouble() == null ? 0.0 : (this._playlist.length * 72).toDouble();
+
+            if (this._isInfoShowing) {
+              this._animationController1 = new AnimationController(
+                vsync: this,
+                duration: Duration(milliseconds: 400),
+                reverseDuration: Duration(milliseconds: 400),
+              );
+              this._animationCurved1 = Tween<double>(begin: 0, end: this._playlistEnd).animate(
+                new CurvedAnimation(
+                  curve: Curves.easeOutCubic,
+                  reverseCurve: Curves.easeInCubic,
+                  parent: this._animationController1,
+                )
+              );
+            }
           });
         }
       });
@@ -131,25 +168,14 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
       duration: Duration(milliseconds: 400),
       reverseDuration: Duration(milliseconds: 400),
     );
-    this._animationCurved = Tween<double>(begin: 0, end: 296).animate(
+    this._animationCurved = Tween<double>(begin: 0, end: MediaQuery.of(Globals.globalContext).size.width - 32).animate(
       new CurvedAnimation(
         curve: Curves.easeOutCubic,
         reverseCurve: Curves.easeInCubic,
         parent: this._animationController,
       )
     );
-    this._animationController1 = new AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 400),
-      reverseDuration: Duration(milliseconds: 400),
-    );
-    this._animationCurved1 = Tween<double>(begin: 0, end: 296).animate(
-      new CurvedAnimation(
-        curve: Curves.easeOutCubic,
-        reverseCurve: Curves.easeInCubic,
-        parent: this._animationController1,
-      )
-    );
+
     Timer(Duration(milliseconds: 100), () {
       this._animationController.forward();
       this._animationController1.reverse();
@@ -572,6 +598,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           ),
                           splashRadius: 20,
                           onPressed: () {
+                            
                             this._isInfoShowing = !this._isInfoShowing;
                             if (this._animationController.isCompleted) {
                               this._animationController.reverse();
