@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 
 import 'package:harmonoid/saved/savedalbumviewer.dart';
-import 'package:harmonoid/scripts/getsavedmusic.dart';
 import 'package:harmonoid/globals.dart' as Globals;
+
 
 class AlbumTile extends StatelessWidget {
 
@@ -150,29 +150,22 @@ class SavedAlbumResults extends StatefulWidget {
 
 class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerProviderStateMixin {
 
-  List<dynamic> _albums;
-  List<File> _albumArts;
   List<List<TrackElement>> _albumTracksList = new List<List<TrackElement>>();
   List<List<Widget>> _albumLeadingsList = new List<List<Widget>>();
   List<Widget> _albumElements = new List<Widget>();
-  List<List<dynamic>> _tracksList = new List<List<dynamic>>();
   List<Widget> _listView = new List<Widget>();
-  List<GlobalKey<SavedAlbumViewerState>> _albumsGlobalKey = new List<GlobalKey<SavedAlbumViewerState>>();
+  List<GlobalKey<SavedAlbumViewerState>> _albumGlobalKeys = new List<GlobalKey<SavedAlbumViewerState>>();
 
   Future<void> refresh() async {
-    
-    this._albums = (await GetSavedMusic.albums())['albums'];
-    this._albumArts = await GetSavedMusic.albumArts();
 
     this._albumElements.clear();
     this._albumTracksList.clear();
     this._albumLeadingsList.clear();
     this._albumElements.clear();
-    this._tracksList.clear();
     this._listView.clear();
-    this._albumsGlobalKey.clear();
+    this._albumGlobalKeys.clear();
 
-    if (this._albums.length == 0) {
+    if (Globals.albums.length == 0) {
       this.setState(() {
         this._listView = [
           NoResultsComponent(),
@@ -180,22 +173,20 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
       });
     }
     else {
-      for (int index = 0; index < this._albums.length; index++) {
-        this._albumsGlobalKey.add(
+
+      for (int index = 0; index < Globals.albums.length; index++) {
+        this._albumGlobalKeys.add(
           new GlobalKey<SavedAlbumViewerState>(),
-        );
-        this._tracksList.add(
-          (await GetSavedMusic.tracks(this._albums[index]['album_id']))['tracks']
         );
       }
 
       this.setState(() {
-        int elementsPerRow = MediaQuery.of(context).size.width ~/ 172.0;
+        int elementsPerRow = MediaQuery.of(Globals.globalContext).size.width ~/ 172.0;
         List<Widget> rowChildren = new List<Widget>();
         
-        if (this._albums.length > 1) {
-          bool incompleteRow = (this._albums.length) % elementsPerRow == 0 ? false : true;
-          for (int index = 0; index < this._albums.length; index++) {
+        if (Globals.albums.length > 1) {
+          bool incompleteRow = (Globals.albums.length) % elementsPerRow == 0 ? false : true;
+          for (int index = 0; index < Globals.albums.length; index++) {
             List<TrackElement> albumTracks = [];
             List<Widget> albumLeadings = [
               Container(
@@ -217,20 +208,20 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.file(
-                          this._albumArts[index],
+                          Globals.albumArts[index],
                           height: 128,
                           width: 128,
                           fit: BoxFit.fill,
                         ),
                         Container(
                           padding: EdgeInsets.only(left: 18),
-                          width: MediaQuery.of(context).size.width - 16 - 16 - 128,
+                          width: MediaQuery.of(Globals.globalContext).size.width - 16 - 16 - 128,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                this._albums[index]['album_name'].split('(')[0].trim().split('-')[0].trim(),
+                                Globals.albums[index]['album_name'].split('(')[0].trim().split('-')[0].trim(),
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.black87,
@@ -249,7 +240,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                                 thickness: 2,
                               ),
                               Text(
-                                this._albums[index]['album_artists'].join(', '),
+                                Globals.albums[index]['album_artists'].join(', '),
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.black54,
@@ -263,7 +254,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                                 thickness: 2,
                               ),
                               Text(
-                                '${this._albums[index]['year']}',
+                                '${Globals.albums[index]['year']}',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.black54,
@@ -277,7 +268,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                                 thickness: 2,
                               ),
                               Text(
-                                '${this._albums[index]['album_length']}' + ' '+ Globals.STRING_TRACK.toLowerCase(),
+                                '${Globals.albums[index]['album_length']}' + ' '+ Globals.STRING_TRACK.toLowerCase(),
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.black54,
@@ -303,15 +294,15 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                 ),
               ),
             ];
-            for (int albumIndex = 0; albumIndex < _tracksList[index].length; albumIndex++) {
+            for (int albumIndex = 0; albumIndex < Globals.tracksList[index].length; albumIndex++) {
               albumTracks.add(
                 TrackElement(
                   index: albumIndex,
-                  albumTracks: _tracksList[index],
-                  albumJson: this._albums[index],
+                  albumTracks: Globals.tracksList[index],
+                  albumJson: Globals.albums[index],
                   refresh: this.refresh,
-                  refreshTracks: () => this._albumsGlobalKey[index].currentState.refreshTracks(albumIndex),
-                  albumArt: this._albumArts[index],
+                  refreshTracks: () => this._albumGlobalKeys[index].currentState.refreshTracks(albumIndex),
+                  albumArt: Globals.albumArts[index],
                 ),
               );
             }
@@ -319,10 +310,10 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
             this._albumLeadingsList.add(albumLeadings);
             rowChildren.add(
               AlbumTile(
-                globalKey: this._albumsGlobalKey[index],
+                globalKey: this._albumGlobalKeys[index],
                 refresh: this.refresh,
-                albumArt: this._albumArts[index],
-                albumJson: this._albums[index],
+                albumArt: Globals.albumArts[index],
+                albumJson: Globals.albums[index],
                 albumTracks: this._albumTracksList[index],
                 albumLeadings: this._albumLeadingsList[index],
               ),
@@ -341,13 +332,13 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
 
           if (incompleteRow) {
             rowChildren = new List<Widget>();
-            for (int index = ((this._albums.length) - ((this._albums.length) % elementsPerRow)); index < this._albums.length; index++) {
+            for (int index = ((Globals.albums.length) - ((Globals.albums.length) % elementsPerRow)); index < Globals.albums.length; index++) {
               rowChildren.add(
                 AlbumTile(
-                  globalKey: this._albumsGlobalKey[index],
+                  globalKey: this._albumGlobalKeys[index],
                   refresh: this.refresh,
-                  albumArt: this._albumArts[index],
-                  albumJson: this._albums[index],
+                  albumArt: Globals.albumArts[index],
+                  albumJson: Globals.albums[index],
                   albumTracks: _albumTracksList[index],
                   albumLeadings: this._albumLeadingsList[index],
                 ),
@@ -377,7 +368,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
         this._listView = [
           Container(
             height: 48,
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(Globals.globalContext).size.width,
           ),
           Container(
             margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
@@ -400,20 +391,20 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.file(
-                      this._albumArts[this._albumArts.length - 1],
+                      Globals.albumArts[Globals.albumArts.length - 1],
                       height: 156,
                       width: 156,
                       fit: BoxFit.fill,
                     ),
                     Container(
                       padding: EdgeInsets.only(left: 18),
-                      width: MediaQuery.of(context).size.width - 16 - 16 - 156,
+                      width: MediaQuery.of(Globals.globalContext).size.width - 16 - 16 - 156,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            this._albums[this._albumArts.length - 1]['album_name'].split('(')[0].trim().split('-')[0].trim(),
+                            Globals.albums[Globals.albumArts.length - 1]['album_name'].split('(')[0].trim().split('-')[0].trim(),
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.black87,
@@ -427,7 +418,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                             thickness: 2,
                           ),
                           Text(
-                            this._albums[this._albumArts.length - 1]['album_artists'].join(', '),
+                            Globals.albums[Globals.albumArts.length - 1]['album_artists'].join(', '),
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black54,
@@ -441,7 +432,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                             thickness: 2,
                           ),
                           Text(
-                            '(${this._albums[this._albumArts.length - 1]['year']})',
+                            '(${Globals.albums[Globals.albumArts.length - 1]['year']})',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.black54,
@@ -456,12 +447,12 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                 ),
               ),
               openBuilder: (ctx, act) => SavedAlbumViewer(
-                key: this._albumsGlobalKey[this._albumArts.length - 1],
+                key: this._albumGlobalKeys[Globals.albumArts.length - 1],
                 refresh: this.refresh,
-                albumJson: this._albums[this._albumArts.length - 1],
-                albumArt: this._albumArts[this._albumArts.length - 1],
-                albumLeadings: this._albumLeadingsList[this._albumArts.length - 1],
-                albumTracks: this._albumTracksList[this._albumArts.length - 1],
+                albumJson: Globals.albums[Globals.albumArts.length - 1],
+                albumArt: Globals.albumArts[Globals.albumArts.length - 1],
+                albumLeadings: this._albumLeadingsList[Globals.albumArts.length - 1],
+                albumTracks: this._albumTracksList[Globals.albumArts.length - 1],
               ),
             ),
           ),

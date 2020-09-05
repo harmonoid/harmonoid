@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/scripts/getsavedmusic.dart';
 import 'package:harmonoid/scripts/playsavedmusic.dart';
 import 'package:harmonoid/globals.dart' as Globals;
+import 'package:harmonoid/scripts/refreshcollection.dart';
 
 
 class TrackElement extends StatelessWidget {
@@ -44,7 +45,7 @@ class TrackElement extends StatelessWidget {
             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
           ),
           duration: Duration(seconds: 2),
-          content: Text('${Globals.STRING_NOW_PLAYING}: ${this.albumTracks[this.index]['track_name']}'),
+          content: Text('${Globals.STRING_NOW_PLAYING}: ${this.albumTracks[this.index]['track_name'].split('-')[0].trim()}'),
         ));
         (() async {
           await PlaySavedMusic.playTrack(this.albumJson['album_id'], this.albumTracks[this.index]['track_number']);
@@ -67,6 +68,7 @@ class TrackElement extends StatelessWidget {
                         Navigator.of(context).pop();
                         await GetSavedMusic.deleteAlbum(this.albumJson['album_id']);
                         Navigator.of(context).pop();
+                        await RefreshCollection.refreshAlbumsCollection();
                         await this.refresh();
                       }
                       else {
@@ -95,7 +97,7 @@ class TrackElement extends StatelessWidget {
           )
         );
       },
-      title: Text(this.albumTracks[this.index]['track_name']),
+      title: Text(this.albumTracks[this.index]['track_name'].split('-')[0].trim()),
       subtitle: Text(this.albumTracks[this.index]['track_artists'].join(', ')),
       leading: CircleAvatar(
         child: Text(
@@ -178,6 +180,7 @@ class SavedAlbumViewerState extends State<SavedAlbumViewer> with TickerProviderS
                                 (() async {
                                   await GetSavedMusic.deleteAlbum(widget.albumJson['album_id']);
                                   Navigator.of(context).pop();
+                                  await RefreshCollection.refreshAlbumsCollection();
                                   await widget.refresh();
                                 })();
                               },

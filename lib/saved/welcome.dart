@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/saved/savedalbumresults.dart';
 import 'package:harmonoid/saved/nowplaying.dart';
+import 'package:harmonoid/scripts/refreshcollection.dart';
 import 'package:harmonoid/searchbar.dart';
 import 'package:harmonoid/setting.dart';
 
@@ -28,8 +29,10 @@ class _Welcome extends State<Welcome> {
   double _rotationValue = 2 * pi;
   int _rotations = 1;
   StreamSubscription _nowPlayingNotificationStream;
+  bool notRefreshing = true;
 
   Future<void> refreshCollection() async {
+    await RefreshCollection.refreshAlbumsCollection();
     await this._savedAlbumResultsKey.currentState.refresh();
   }
 
@@ -54,7 +57,6 @@ class _Welcome extends State<Welcome> {
     this._nowPlayingNotificationStream = AudioService.notificationClickEventStream.listen((event) {
       if (event) {
         this.setState(() {
-          //print('Notification Was Tapped.');
           this._index = 0;
         });
       }
@@ -70,15 +72,20 @@ class _Welcome extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
 
+    Globals.globalContext = context;
+
     final List<Widget> _screens = [
       NowPlaying(),
       Stack(
         alignment: Alignment.topCenter,
         children: [
-          SavedAlbumResults(
-            scrollController : _albumsScrollController, 
-            key: _savedAlbumResultsKey,
+          Container(
+            margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            child: SavedAlbumResults(
+              scrollController : _albumsScrollController, 
+              key: _savedAlbumResultsKey,
             ),
+          ),
           Search(key: this._search, refreshCollection: this.refreshCollection),
           Container(
             color: Colors.white,
@@ -97,12 +104,17 @@ class _Welcome extends State<Welcome> {
         builder: (context, value, child) => Transform.rotate(
           angle: value,
           child: FloatingActionButton(
-            onPressed: () {
-              this.setState(() {
-                this._rotations++;
-                this._rotationValue = 2 * this._rotations * pi; 
-              });
-              this._savedAlbumResultsKey.currentState.refresh();
+            onPressed: () async {
+              if (this.notRefreshing) {
+                this.notRefreshing = false;
+                await RefreshCollection.refreshAlbumsCollection();
+                this.setState(() {
+                  this._rotations++;
+                  this._rotationValue = 2 * this._rotations * pi;
+                  this._savedAlbumResultsKey.currentState.refresh();
+                  this.notRefreshing = true;
+                });
+              }
             },
             child: Icon(
               Icons.refresh,
