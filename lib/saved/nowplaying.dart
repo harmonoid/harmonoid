@@ -176,6 +176,21 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
       )
     );
 
+    if (this._trackName == null) {
+      this._animationController1 = new AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 400),
+        reverseDuration: Duration(milliseconds: 400),
+      );
+      this._animationCurved1 = Tween<double>(begin: 0, end: 0).animate(
+        new CurvedAnimation(
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+          parent: this._animationController1,
+        )
+      );
+    }
+
     Timer(Duration(milliseconds: 100), () {
       this._animationController.forward();
       this._animationController1.reverse();
@@ -383,8 +398,6 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             MaterialButton(
-                              splashColor: Colors.deepPurple[50],
-                              highlightColor: Colors.deepPurple[100],
                               onPressed: () {},
                               child: Text(
                                 Globals.STRING_NOW_PLAYING_PREVIOUS_TRACK,
@@ -392,8 +405,6 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               ),
                             ),
                             MaterialButton(
-                              splashColor: Colors.deepPurple[50],
-                              highlightColor: Colors.deepPurple[100],
                               onPressed: () {},
                               child: Text(
                                 Globals.STRING_NOW_PLAYING_NEXT_TRACK,
@@ -617,8 +628,6 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             MaterialButton(
-                              splashColor: Colors.deepPurple[50],
-                              highlightColor: Colors.deepPurple[100],
                               onPressed: () => AudioService.skipToPrevious(),
                               child: Text(
                                 Globals.STRING_NOW_PLAYING_PREVIOUS_TRACK,
@@ -626,8 +635,6 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               ),
                             ),
                             MaterialButton(
-                              splashColor: Colors.deepPurple[50],
-                              highlightColor: Colors.deepPurple[100],
                               onPressed: () => AudioService.skipToNext(),
                               child: Text(
                                 Globals.STRING_NOW_PLAYING_NEXT_TRACK,
