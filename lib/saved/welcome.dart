@@ -31,7 +31,6 @@ class _Welcome extends State<Welcome> {
 
   Future<void> refreshCollection() async {
     await this._savedAlbumResultsKey.currentState.refresh();
-    print('Refreshed Collection.');
   }
 
   @override
@@ -73,18 +72,20 @@ class _Welcome extends State<Welcome> {
 
     final List<Widget> _screens = [
       NowPlaying(),
-      Container(
-        margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            SavedAlbumResults(
-              scrollController : _albumsScrollController, 
-              key: _savedAlbumResultsKey,
-              ),
-            Search(key: this._search, refreshCollection: this.refreshCollection),
-          ],
-        ),
+      Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          SavedAlbumResults(
+            scrollController : _albumsScrollController, 
+            key: _savedAlbumResultsKey,
+            ),
+          Search(key: this._search, refreshCollection: this.refreshCollection),
+          Container(
+            color: Colors.white,
+            height: MediaQuery.of(context).padding.top,
+            width: MediaQuery.of(context).size.width,
+          )
+        ],
       ),
       Setting(),
     ];
