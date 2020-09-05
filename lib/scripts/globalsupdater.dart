@@ -5,6 +5,7 @@ import 'package:harmonoid/scripts/globalspersistent.dart';
 
 void updateGlobals(String languageRegion) {
   if (languageRegion == 'en_us') {
+    /////////EN-US/////////
     Globals.STRING_INTERNET_ERROR                                  = 'Check your internet connection...';
     Globals.STRING_SEARCH_HEADER                                   = 'Search Music';
     Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'What are you looking for?';
@@ -81,8 +82,11 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Please check your internet connection.';
     Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Server changed successfully.';
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Changing server for the app...';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
   }
   else if (languageRegion == 'ru_ru') {
+    /////////RU-RU/////////
     Globals.STRING_INTERNET_ERROR                                  = 'Проверьте интернет-соединение.';
     Globals.STRING_SEARCH_HEADER                                   = 'Поиск музыки';
     Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'Что вы ищете?';
@@ -159,8 +163,11 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Проверьте интернет-соединение.';
     Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Сервер успешно изменён.';
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Изменение сервера...';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
   }
   else if (languageRegion == 'sl_si') {
+    /////////SL-SI/////////
     Globals.STRING_INTERNET_ERROR                                  = 'Prosimo, preverite vašo internetno povezavo';
     Globals.STRING_SEARCH_HEADER                                   = 'Preišči glasbo';
     Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'Kaj pa iščeš?';
@@ -237,8 +244,11 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Prosimo, preverite vašo internetno povezavo.';
     Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Strežnik zamenjan.';
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Menjanje strežnika...';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
   }
   else if (languageRegion == 'pt_br') {
+    /////////PT-BR/////////
     Globals.STRING_INTERNET_ERROR                                  = 'Verifique sua conexão com a internet...';
     Globals.STRING_SEARCH_HEADER                                   = 'Procurar uma música';
     Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'O que você está procurando?';
@@ -315,8 +325,11 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Por favor verifique sua conexão com a internet.';
     Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Servidor alterado com sucesso.';
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Mudando de servidor...';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
   }
   else if (languageRegion == 'hi_in') {
+    /////////HI-IN/////////
     Globals.STRING_INTERNET_ERROR                                  = 'अपना इंटरनेट कनेक्शन चेक करें...';
     Globals.STRING_SEARCH_HEADER                                   = 'गाना खोजें';
     Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'आप किस तरह से गाना खोजेंगे?';
@@ -327,7 +340,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_YES                                             = 'हाँ';
     Globals.STRING_NO                                              = 'नहीं';
     Globals.STRING_ALBUM                                           = 'एल्बम';
-    Globals.STRING_TRACK                                           = 'गाना';
+    Globals.STRING_TRACK                                           = 'गाने';
     Globals.STRING_ARTIST                                          = 'कलाकार';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'अपनी पसंदीदा एल्बमों से गाना खोजें';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'अपने मनपसंद गाने खोजें';
@@ -383,7 +396,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'अपनी ऐप की भाषा बदलें';
     Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'जानकारी';
     Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'चेंज देखने के लिए ऐप को दोबारा शुरू करें।';
-    Globals.STRING_ABOUT_TITLE                                     = 'प्रोजेक्ट बारे में';
+    Globals.STRING_ABOUT_TITLE                                     = 'प्रोजेक्ट के बारे में';
     Globals.STRING_ABOUT_SUBTITLE                                  = 'प्रोजेक्ट और इसके डेवलपर्स के बारे में जानकारी';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'सर्वर';
     Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'अपनी ऐप के लिए सर्वर बदलें';
@@ -393,8 +406,11 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'अपना इंटरनेट कनेक्शन चेक करें।';
     Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'सर्वर बदल दिया गया है।';
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'सर्वर बदला जा रहा है...';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'अनुवाद प्रदाता';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'आपके योगदान के लिए बहुत बहुत धन्यवाद';
   }
   else if (languageRegion == 'de_de') {
+    /////////DE-DE/////////
     Globals.STRING_INTERNET_ERROR                                  = 'Überprüfen Sie Ihre Internetverbindung...';
     Globals.STRING_SEARCH_HEADER                                   = 'Musik suchen';
     Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'Wonach suchen Sie?';
@@ -471,6 +487,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Bitte überprüfen Sie Ihre Internetverbindung.';
     Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Server erfolgreich geändert.';
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Server für die Anwendung gewechselt...';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
   }
 }
 
