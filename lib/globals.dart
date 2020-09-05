@@ -1,5 +1,9 @@
 library globals;
 
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+
 /////////Display Constant Strings/////////
 
 String STRING_HOME_URL;
@@ -82,7 +86,12 @@ String STRING_ABOUT_SUBTITLE;
 String STRING_SETTING_LANGUAGE_PROVIDERS_TITLE;
 String STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE;
 
-/////////Internal Strings/////////
+/////////Internal Management And Configuration/////////
+
+List<dynamic> albums;
+List<File> albumArts;
+List<List<dynamic>> tracksList;
+BuildContext globalContext;
 
 const String ALBUM                                      = 'Albums';
 const String TRACK                                      = 'Tracks';
