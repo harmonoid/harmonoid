@@ -20,13 +20,13 @@ class Application extends StatelessWidget {
     return MaterialApp(
       title: 'Harmonoid',
       theme: ThemeData(
-        accentColor: Globals.globalColor,
+        accentColor: Globals.colors[Globals.globalColor][Globals.globalTheme],
         colorScheme: ColorScheme.light(),
-        primaryColor: Globals.globalColor,
+        primaryColor: Globals.colors[Globals.globalColor][Globals.globalTheme],
         primaryColorLight: Colors.black12,
-        primaryColorDark: Globals.globalColor,
+        primaryColorDark: Globals.colors[Globals.globalColor][Globals.globalTheme],
         splashFactory: InkRipple.splashFactory,
-        textSelectionHandleColor: Globals.globalColor,
+        textSelectionHandleColor: Globals.colors[Globals.globalColor][Globals.globalTheme],
       ),
       initialRoute: '/welcome',
       routes: {
