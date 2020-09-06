@@ -1,5 +1,8 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart' as path;
+import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
@@ -10,10 +13,11 @@ import 'package:harmonoid/scripts/addsavedmusic.dart';
 
 class TrackElement extends StatefulWidget {
   final Function downloadTrack;
+  final Function cancelDownloadTrack;
   final List<dynamic> albumTracks;
   final int index;
   final Map<String, dynamic> albumJson;
-  TrackElement({Key key, @required this.index, @required this.albumTracks, @required this.albumJson, @required this.downloadTrack}) : super(key: key);
+  TrackElement({Key key, @required this.index, @required this.albumTracks, @required this.albumJson, @required this.downloadTrack, this.cancelDownloadTrack}) : super(key: key);
   TrackElementState createState() => TrackElementState();
 }
 
@@ -21,10 +25,13 @@ class TrackElement extends StatefulWidget {
 class TrackElementState extends State<TrackElement> {
 
   Widget _leading;
+  bool _trailing = true;
+  bool _isSaved = false;
 
   void switchLoader() {
     this.setState(() {
       this._leading =  CircularProgressIndicator();
+      this._trailing = false;
     });
   }
 
@@ -39,7 +46,28 @@ class TrackElementState extends State<TrackElement> {
         ),
         backgroundImage: NetworkImage(widget.albumJson['album_art_64']),
       );
+      this._trailing = true;
     });
+  }
+
+  Future<void> refreshSaved() async {
+    Directory externalDirectory = (await path.getExternalStorageDirectory());
+    Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+    Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
+    if (
+      await File(
+        path.join(musicDirectory.path, widget.albumJson['album_id'], widget.albumTracks[widget.index]['track_number'].toString() + '.m4a')
+      ).exists()
+      &&
+      await File(
+        path.join(musicDirectory.path, widget.albumJson['album_id'], widget.albumTracks[widget.index]['track_number'].toString() + '.json')
+      ).exists()
+    ) {
+      this.setState(() => this._isSaved = true);
+    }
+    else {
+      this.setState(() => this._isSaved = false);
+    }
   }
 
   @override
@@ -54,6 +82,7 @@ class TrackElementState extends State<TrackElement> {
       ),
       backgroundImage: NetworkImage(widget.albumJson['album_art_64']),
     );
+    this.refreshSaved();
   }
 
   String trackDuration(int durationMilliseconds) {
@@ -73,13 +102,49 @@ class TrackElementState extends State<TrackElement> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {
-        widget.downloadTrack(widget.albumTracks, widget.albumJson, widget.index);
-      },
+      onTap: () => widget.downloadTrack(widget.albumTracks, widget.albumJson, widget.index, this._isSaved),
       title: Text(widget.albumTracks[widget.index]['track_name'].split('(')[0].trim().split('-')[0].trim()),
       subtitle: Text(widget.albumTracks[widget.index]['track_artists'].join(', ')),
       leading: this._leading,
-      trailing: Text(this.trackDuration(widget.albumTracks[widget.index]['track_duration'])),
+      trailing: this._trailing ? this._isSaved ? Chip(
+        avatar: CircleAvatar(
+          child: Icon(
+            Icons.arrow_downward,
+            color: Colors.white,
+          ),
+          backgroundColor: Color(0x00000000),
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
+        label: Text(
+          Globals.STRING_SAVED,
+        ),
+        labelStyle: TextStyle(
+          color: Colors.white,
+        ),
+      ):
+      CircleAvatar(
+        child: Text(
+          this.trackDuration(widget.albumTracks[widget.index]['track_duration']),
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.black87,
+          ),
+        ),
+        backgroundColor: Color(0x00000000),
+      ) : IconButton(
+        onPressed: () async {
+          await widget.cancelDownloadTrack(widget.albumTracks[widget.index]['track_number'] - 1);
+          this.setState(() {
+            this._trailing = true; 
+          });
+          int result = await GetSavedMusic.deleteTrack(widget.albumJson['album_id'], widget.albumTracks[widget.index]['track_number']);
+          if (result == 1) {
+            await GetSavedMusic.deleteAlbum(widget.albumJson['album_id']);
+          }
+        },
+        icon: Icon(Icons.close),
+        color: Theme.of(context).primaryColor,
+      ),
     );
   }
 }
@@ -98,15 +163,14 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
   double _loaderShowing = 1.0;
   Animation<double> _searchResultOpacity;
   AnimationController _searchResultOpacityController;
-  Color _accentColor = Colors.black87;
+  Color _accentColor = Theme.of(Globals.globalContext).primaryColor;
   List<int> _downloadStack = new List<int>();
   List<GlobalKey<TrackElementState>> _trackKeyList = new List<GlobalKey<TrackElementState>>();
   List<int> _nonDownloadStack = new List<int>();
   ScrollController scrollController = new ScrollController();
+  List<StreamSubscription> _downloadTask;
 
   void refreshUI() {
-    // print('Downloading    :' + _downloadStack.toString());
-    // print('Non Downloading:' + _nonDownloadStack.toString());
     try {
       for (int trackNumber in this._downloadStack) {
         this._trackKeyList[trackNumber - 1].currentState.switchLoader();
@@ -118,20 +182,135 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
     catch(e) {}
   }
 
-  Future<void> downloadTrack(albumTracks, albumJson, index) async {
-    if (this._downloadStack.contains(albumTracks[index]['track_number'])) {
+  Future<void> cancelDownloadTrack(int index) async {
+    await this._downloadTask[index].cancel();
+    this.removeTrackStack(index + 1);
+    this._trackKeyList[index].currentState.switchArt();
+    this._trackKeyList[index].currentState.refreshSaved();
+  }
+
+  Future<void> downloadTrack(albumTracks, albumJson, index, isSaved) async {
+    Future<void> proceedDownload() async {
+      if (this._downloadStack.contains(albumTracks[index]['track_number'])) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE),
+            content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE),
+            actions: [
+              MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  Globals.STRING_OK,
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+            ],
+          )
+        );
+      }
+      else {
+        this.addTrackStack(albumTracks[index]['track_number']);
+        AddSavedMusic track = AddSavedMusic(
+          albumTracks[index]['track_number'], 
+          albumTracks[index]['track_id'], 
+          albumJson
+        );
+        this._downloadTask[index] = track.save().asStream().listen((result) async {
+          if (result == 400) {
+            GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE),
+                content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE),
+                actions: [
+                  MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      Globals.STRING_OK,
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                  ),
+                ],
+              )
+            );
+          }
+          else if (result == 500) {
+            GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE),
+                content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE),
+                actions: [
+                  MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      Globals.STRING_OK,
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                  ),
+                ],
+              )
+            );
+          }
+          else if (result == 403) {
+            GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE),
+                content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE),
+                actions: [
+                  MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      Globals.STRING_OK,
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                  ),
+                ],
+              )
+            );
+          }
+          this.removeTrackStack(albumTracks[index]['track_number']);
+          this._trackKeyList[albumTracks[index]['track_number'] - 1].currentState.switchArt();
+          this._trackKeyList[albumTracks[index]['track_number'] - 1].currentState.refreshSaved();
+        });
+      }
+    }
+    if (isSaved) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE),
-          content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE),
+          title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE),
+          content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE),
           actions: [
+            MaterialButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await proceedDownload();
+              },
+              child: Text(
+                Globals.STRING_YES,
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+            ),
             MaterialButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
               child: Text(
-                Globals.STRING_OK,
+                Globals.STRING_NO,
                 style: TextStyle(color: Theme.of(context).primaryColor),
               ),
             ),
@@ -140,81 +319,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
       );
     }
     else {
-      this.addTrackStack(albumTracks[index]['track_number']);
-      AddSavedMusic track = AddSavedMusic(
-        albumTracks[index]['track_number'], 
-        albumTracks[index]['track_id'], 
-        albumJson
-      );
-      int result = await track.save();
-
-      // print('Download Status Code: ' + result.toString());
-
-      if (result == 400) {
-        GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE),
-            content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE),
-            actions: [
-              MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  Globals.STRING_OK,
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-              ),
-            ],
-          )
-        );
-      }
-      else if (result == 500) {
-        GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE),
-            content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE),
-            actions: [
-              MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  Globals.STRING_OK,
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-              ),
-            ],
-          )
-        );
-      }
-      else if (result == 403) {
-        GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE),
-            content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE),
-            actions: [
-              MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  Globals.STRING_OK,
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-              ),
-            ],
-          )
-        );
-      }
-      this.removeTrackStack(albumTracks[index]['track_number']);
-      this._trackKeyList[albumTracks[index]['track_number'] - 1].currentState.switchArt();
+      await proceedDownload();
     }
   }
 
@@ -278,21 +383,14 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
   void initState() {
     super.initState();
 
+    this._downloadTask = new List<StreamSubscription>(widget.albumJson['album_length']);
+
     for (int index = 0; index < widget.albumJson['album_length']; index++) {
       this._trackKeyList.add(new GlobalKey<TrackElementState>());
       _nonDownloadStack.add(index + 1);
     }
 
     scrollController.addListener(this.refreshUI);
-
-    Future<Color> getImageColor (ImageProvider imageProvider) async {
-      final PaletteGenerator paletteGenerator = await PaletteGenerator
-          .fromImageProvider(imageProvider);
-      return paletteGenerator.dominantColor.color;
-    }
-    this.setState(() {
-      (() async => this._accentColor = await getImageColor(NetworkImage(widget.albumJson['album_art_64'])))(); 
-    });
 
     this._searchResultOpacityController = new AnimationController(
       vsync: this,
@@ -314,6 +412,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             albumTracks: albumTracks,
             albumJson: widget.albumJson,
             downloadTrack: this.downloadTrack,
+            cancelDownloadTrack: this.cancelDownloadTrack,
           ),
         );
       }

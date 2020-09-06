@@ -24,8 +24,8 @@ class AddSavedMusic extends SaveTrack {
     bool isAlbumSaved = !(await albumSaved());
 
     if (isAlbumSaved) {
-      saveAlbumAssets();
-      saveAlbumArt();
+      await saveAlbumAssets();
+      await saveAlbumArt();
     }
 
     await saveTrackAssets();
@@ -105,13 +105,11 @@ abstract class SaveTrack extends SaveAlbumAssets {
   Future<void> saveTrackFile() async {
     File trackFile = File(path.join(this.albumDirectory.path, '${this.trackNumber}.m4a'));
 
-    Uri trackDownloadUri = Uri.https(Globals.STRING_HOME_URL, '/trackdownload', {'track_id': this.trackId});
+    Uri trackDownloadUri = Uri.https(Globals.STRING_HOME_URL, '/trackdownload', {'track_id': this.trackId, 'album_id': this.albumJson['album_id']});
     try {
       http.Response response = await http.get(trackDownloadUri);
       int contentLength = response.contentLength;
       int statusCode = response.statusCode;
-      // print('Content Length:' + contentLength.toString());
-      // print('Status Code   :' + statusCode.toString());
 
       if (statusCode == 200) {
         if (contentLength < 500000) {

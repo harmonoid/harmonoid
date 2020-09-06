@@ -20,6 +20,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM                                           = 'Albums';
     Globals.STRING_TRACK                                           = 'Tracks';
     Globals.STRING_ARTIST                                          = 'Artists';
+    Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Search music from your favorite albums';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Search for your favorite tracks';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Search music from your favorite artists';
@@ -47,6 +48,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'This track specifically could not be saved. We are still trying to figure out, what causes this error. Please download some other music in the mean time. Thanks a lot for your kind support.';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Wait';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'This track is already being downloaded.';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
     Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Getting tracks...';
     Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Here are the tracks from this album';
     Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Some insights of the album';
@@ -105,6 +108,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM                                           = 'Альбомы';
     Globals.STRING_TRACK                                           = 'Треки';
     Globals.STRING_ARTIST                                          = 'Исполнители';
+    Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Поиск любимых альбомов';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Поиск любимых треков';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Поиск любимых исполнителей';
@@ -132,6 +136,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Этот трек не был загружен. Мы пытаемся выяснить причину проблем. Пожалуйста, скачайте другую музыку. Спасибо за понимание.';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Подождите';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Этот трек уже скачивается.';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
     Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Получаем треки...';
     Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Треки из этого альбома';
     Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Немного об альбоме';
@@ -171,6 +177,10 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Изменение сервера...';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
+    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
+    Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
   }
   else if (languageRegion == 'sl_si') {
     /////////SL-SI/////////
@@ -186,6 +196,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM                                           = 'Albumi';
     Globals.STRING_TRACK                                           = 'Pesmi';
     Globals.STRING_ARTIST                                          = 'Skladatelji';
+    Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Preišči glasbo iz priljubljenih albumov';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Preišči za najljubše pesmi';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Preišči za pesmi od priljubljenih avtorjev';
@@ -213,6 +224,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Ta specifična pesem se ne more shraniti. Še vedno ugotavljamo, zakaj je prišlo do napake. Prosimo, da preneseš druge pesmi medtem. Najlepša hvala za podporo.';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Počakaj';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Ta pesem se že prenaša.';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
     Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Prenašam pesmi...';
     Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Tukaj so pesmi iz tega albuma';
     Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Nekaj informacij o albumu';
@@ -252,6 +265,10 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Menjanje strežnika...';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
+    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
+    Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
   }
   else if (languageRegion == 'pt_br') {
     /////////PT-BR/////////
@@ -267,6 +284,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM                                           = 'Álbuns';
     Globals.STRING_TRACK                                           = 'Músicas';
     Globals.STRING_ARTIST                                          = 'Artistas';
+    Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Procurar músicas do seu álbum favorito';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Procurar suas músicas preferidas';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Procurar músicas do seu artistas preferidos';
@@ -294,6 +312,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Essa música não pode ser salva. Nós ainda estamos tentando descobrir a causa do erro. Por favor baixe outra música enquanto isso. Muito obrigado pela sua compreensão e espera. :)';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Aguarde';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Essa música já está sendo baixada.';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
     Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Buscando músicas...';
     Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Aqui estão as músicas desse álbum';
     Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Alguns insights do álbum';
@@ -333,6 +353,10 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Mudando de servidor...';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
+    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
+    Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
   }
   else if (languageRegion == 'hi_in') {
     /////////HI-IN/////////
@@ -348,6 +372,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM                                           = 'एल्बम';
     Globals.STRING_TRACK                                           = 'गाने';
     Globals.STRING_ARTIST                                          = 'कलाकार';
+    Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'अपनी पसंदीदा एल्बमों से गाना खोजें';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'अपने मनपसंद गाने खोजें';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'अपने पसंदीदा कलाकारों के गाना खोजें';
@@ -375,6 +400,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'यह गाना सेव नहीं किया जा सका। हम जानने का प्रयास कर रहे हैं की यह किस कारण से हो रहा है। आपके प्यार के लिए धन्यवाद।';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'रुको';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'यह गाना डाउनलोड हो ही रहा है।';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
     Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'हम गाने ला रहे हैं...';
     Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'यह रहे इस एल्बम के गाने';
     Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'इस एल्बम के बारे में थोड़ी जानकारी';
@@ -414,6 +441,10 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'सर्वर बदला जा रहा है...';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'अनुवाद प्रदाता';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'आपके योगदान के लिए शुक्रिया';
+    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
+    Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
   }
   else if (languageRegion == 'de_de') {
     /////////DE-DE/////////
@@ -429,6 +460,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM                                           = 'Alben';
     Globals.STRING_TRACK                                           = 'Spuren';
     Globals.STRING_ARTIST                                          = 'Künstler';
+    Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Musik aus Ihren Lieblingsalben suchen';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Suche nach Ihren Lieblingstracks';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Musik von Ihren Lieblingskünstlern suchen';
@@ -456,6 +488,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Dieser Titel konnte speziell nicht gespeichert werden. Wir versuchen immer noch herauszufinden, was diesen Fehler verursacht. Bitte laden Sie in der Zwischenzeit etwas andere Musik herunter. Vielen Dank für Ihre freundliche Unterstützung';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Warten';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Dieser Titel wird bereits heruntergeladen';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
     Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Spuren erhalten...';
     Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Hier sind die Titel aus diesem Album';
     Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Einige Einblicke in das Album';
@@ -495,6 +529,10 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Server für die Anwendung gewechselt...';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
+    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
+    Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
   }
 }
 
