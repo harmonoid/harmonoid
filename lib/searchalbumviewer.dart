@@ -532,8 +532,8 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                         children: [
                           child,
                           LinearProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurpleAccent[400],),
-                            backgroundColor: Colors.deepPurpleAccent[100],
+                            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.4),
                             value: value,
                           ),
                         ],

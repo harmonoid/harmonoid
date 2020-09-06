@@ -340,6 +340,8 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           },
                         ),
                         data: SliderThemeData(
+                          thumbColor: Theme.of(context).primaryColor,
+                          activeTrackColor: Theme.of(context).primaryColor,
                           thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8),
                           trackHeight: 0.5,
                         ),
@@ -567,6 +569,8 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               },
                             ),
                             data: SliderThemeData(
+                              thumbColor: Theme.of(context).primaryColor,
+                              activeTrackColor: Theme.of(context).primaryColor,
                               thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8),
                               trackHeight: 0.5,
                             ),

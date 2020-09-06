@@ -422,8 +422,8 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                         height: 36,
                         alignment: Alignment.center,
                         child: LinearProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurpleAccent[400],),
-                          backgroundColor: Colors.deepPurpleAccent[100],
+                          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.4),
                           value: this._searchProgressAnimation.value,
                         ),
                       )
