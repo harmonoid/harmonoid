@@ -1,5 +1,6 @@
 library globalsupdater;
 
+import 'package:flutter/material.dart';
 import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/scripts/globalspersistent.dart';
 import 'package:harmonoid/scripts/refreshcollection.dart';
@@ -85,6 +86,10 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Changing server for the app...';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
+    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
+    Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
   }
   else if (languageRegion == 'ru_ru') {
     /////////RU-RU/////////
@@ -497,10 +502,18 @@ void updateHomeURL(String url) {
   Globals.STRING_HOME_URL = url;
 }
 
+void updateAccentColor(int accentIndex, int themeIndex) {
+  Globals.globalTheme = themeIndex;
+  Globals.globalColor = accentIndex;
+}
+
 Future<void> setupStartupGlobals() async {
   String languageRegion = await GlobalsPersistent.getConfiguration('language');
   String homeURL = await GlobalsPersistent.getConfiguration('server');
+  int accentIndex = await GlobalsPersistent.getConfiguration('accent');
+  int themeIndex = await GlobalsPersistent.getConfiguration('theme');
   updateGlobals(languageRegion);
   updateHomeURL(homeURL);
+  updateAccentColor(accentIndex, themeIndex);
   await RefreshCollection.refreshAlbumsCollection();
 }
