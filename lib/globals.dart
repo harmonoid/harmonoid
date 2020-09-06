@@ -92,11 +92,23 @@ String STRING_ABOUT_SUBTITLE;
 
 /////////Internal Management And Configuration/////////
 
-Color globalColor = Colors.deepPurpleAccent[400];
+int globalColor;
+int globalTheme;
 List<dynamic> albums;
 List<File> albumArts;
 List<List<dynamic>> tracksList;
 BuildContext globalContext;
+
+List<List<Color>> colors = [
+  [Colors.deepPurpleAccent[400]  , Colors.deepPurpleAccent[100]  ],
+  [Colors.blueAccent[700]        , Colors.blueAccent[100]        ],
+  [Colors.deepOrangeAccent[700]  , Colors.deepOrangeAccent[100]  ],
+  [Colors.blueGrey[700]          , Colors.blueGrey[100]          ],
+  [Colors.pink[600]              , Colors.pinkAccent[100]        ],
+  [Colors.teal[400]              , Colors.teal[100]              ],
+  [Colors.redAccent[700]         , Colors.redAccent[100]         ],
+  [Colors.indigo[700]            , Colors.indigo[200]            ],
+];
 
 const String ALBUM                                      = 'Albums';
 const String TRACK                                      = 'Tracks';
