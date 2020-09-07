@@ -18,18 +18,18 @@ class AboutScreenState extends State<AboutScreen> {
 
   String _repository1 = 'spotiyt-server';
   String _developer1 = 'raitonoberu';
-  List<Widget> _githubStargazers = [CircularProgressIndicator()];
+  List<Widget> _githubStargazers = [CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(Globals.globalContext).primaryColor))];
 
   Widget _projectInfo = Center(
     child: Container(
       margin: EdgeInsets.all(56),
-      child: CircularProgressIndicator(),
+      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(Globals.globalContext).primaryColor)),
     ),
   );
   Widget _projectInfo1 = Center(
     child: Container(
       margin: EdgeInsets.all(56),
-      child: CircularProgressIndicator(),
+      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(Globals.globalContext).primaryColor)),
     ),
   );
 
