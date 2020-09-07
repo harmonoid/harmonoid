@@ -22,6 +22,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_LIGHT                                           = 'Light';
     Globals.STRING_DARK                                            = 'Dark';
+    Globals.STRING_OPTIONS                                         = 'Options';
     Globals.STRING_EXPORT_TRACK                                    = 'Export track';
     Globals.STRING_DELETE_TRACK                                    = 'Delete track';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Search music from your favorite albums';
@@ -114,6 +115,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SAVED                                           = 'Сохранено';
     Globals.STRING_LIGHT                                           = 'День';
     Globals.STRING_DARK                                            = 'Ночь';
+    Globals.STRING_OPTIONS                                         = 'Параметры';
     Globals.STRING_EXPORT_TRACK                                    = 'Экспортировать трек';
     Globals.STRING_DELETE_TRACK                                    = 'Удалить трек';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Поиск любимых альбомов';
@@ -206,6 +208,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_LIGHT                                           = 'Light';
     Globals.STRING_DARK                                            = 'Dark';
+    Globals.STRING_OPTIONS                                         = 'Options';
     Globals.STRING_EXPORT_TRACK                                    = 'Export track';
     Globals.STRING_DELETE_TRACK                                    = 'Delete track';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Preišči glasbo iz priljubljenih albumov';
@@ -298,6 +301,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_LIGHT                                           = 'Light';
     Globals.STRING_DARK                                            = 'Dark';
+    Globals.STRING_OPTIONS                                         = 'Options';
     Globals.STRING_EXPORT_TRACK                                    = 'Export track';
     Globals.STRING_DELETE_TRACK                                    = 'Delete track';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Procurar músicas do seu álbum favorito';
@@ -390,6 +394,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SAVED                                           = 'सेव्ड';
     Globals.STRING_LIGHT                                           = 'लाइट';
     Globals.STRING_DARK                                            = 'डार्क';
+    Globals.STRING_OPTIONS                                         = 'विकल्प';
     Globals.STRING_EXPORT_TRACK                                    = 'गाना एक्सपोर्ट करें';
     Globals.STRING_DELETE_TRACK                                    = 'गाना डिलीट करें';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'अपनी पसंदीदा एल्बमों से गाना खोजें';
@@ -482,6 +487,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_LIGHT                                           = 'Light';
     Globals.STRING_DARK                                            = 'Dark';
+    Globals.STRING_OPTIONS                                         = 'Options';
     Globals.STRING_EXPORT_TRACK                                    = 'Export track';
     Globals.STRING_DELETE_TRACK                                    = 'Delete track';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Musik aus Ihren Lieblingsalben suchen';
