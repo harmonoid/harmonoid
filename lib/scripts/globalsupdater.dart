@@ -205,12 +205,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM                                           = 'Albumi';
     Globals.STRING_TRACK                                           = 'Pesmi';
     Globals.STRING_ARTIST                                          = 'Skladatelji';
-    Globals.STRING_SAVED                                           = 'Saved';
-    Globals.STRING_LIGHT                                           = 'Light';
-    Globals.STRING_DARK                                            = 'Dark';
-    Globals.STRING_OPTIONS                                         = 'Options';
-    Globals.STRING_EXPORT_TRACK                                    = 'Export track';
-    Globals.STRING_DELETE_TRACK                                    = 'Delete track';
+    Globals.STRING_SAVED                                           = 'Shranjeno';
+    Globals.STRING_LIGHT                                           = 'Svetli';
+    Globals.STRING_DARK                                            = 'Temni';
+    Globals.STRING_OPTIONS                                         = 'Opcije';
+    Globals.STRING_EXPORT_TRACK                                    = 'Izvozi pesem';
+    Globals.STRING_DELETE_TRACK                                    = 'Izbriši pesem';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Preišči glasbo iz priljubljenih albumov';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Preišči za najljubše pesmi';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Preišči za pesmi od priljubljenih avtorjev';
@@ -277,12 +277,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Prosimo, preverite vašo internetno povezavo.';
     Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Strežnik zamenjan.';
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Menjanje strežnika...';
-    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
-    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
-    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
-    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
-    Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
-    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Prevajalci projekta';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Najlepša hvala za podporo pri aplikaciji';
+    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Barva';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Zamenjaj barve na aplikaciji';
+    Globals.STRING_SETTING_THEME_TITLE                             = 'Način';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Menjaj med temnim in svetlim načinom';
   }
   else if (languageRegion == 'pt_br') {
     /////////PT-BR/////////
