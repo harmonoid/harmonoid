@@ -21,7 +21,7 @@ class Application extends StatelessWidget {
       title: 'Harmonoid',
       theme: ThemeData(
         accentColor: Globals.globalTheme == 0 ? Globals.colors[Globals.globalColor][Globals.globalTheme] : Colors.white10,
-        colorScheme: ColorScheme.light(),
+        colorScheme: Globals.globalTheme == 0 ? ColorScheme.light() : ColorScheme.dark(),
         primaryColor: Globals.colors[Globals.globalColor][Globals.globalTheme],
         primaryColorLight: Colors.black12,
         primaryColorDark: Globals.colors[Globals.globalColor][Globals.globalTheme],

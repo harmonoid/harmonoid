@@ -161,7 +161,7 @@ class _Welcome extends State<Welcome> {
         unselectedFontSize: 12,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white.withOpacity(0.5),
-        backgroundColor: Theme.of(context).accentColor,
+        backgroundColor: Globals.globalTheme == 0 ? Theme.of(context).primaryColor : Colors.white.withOpacity(0.16),
         showUnselectedLabels: true,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.play_arrow), title: Text(Globals.STRING_NOW_PLAYING)),
