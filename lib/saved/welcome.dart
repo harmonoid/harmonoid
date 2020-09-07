@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'dart:math';
 import 'dart:async';
 
@@ -39,6 +40,17 @@ class _Welcome extends State<Welcome> {
   @override
   void initState() {
     super.initState();
+
+    if (Globals.globalTheme == 0) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.dark,
+      ));
+    }
+    else {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.light,
+      ));
+    }
 
     this._albumsScrollController..addListener(() {
 
@@ -80,6 +92,7 @@ class _Welcome extends State<Welcome> {
         alignment: Alignment.topCenter,
         children: [
           Container(
+            color: Globals.globalTheme == 0 ? Colors.black.withOpacity(0.02) : Color(0xFF121212),
             margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             child: SavedAlbumResults(
               scrollController : _albumsScrollController, 
@@ -88,7 +101,7 @@ class _Welcome extends State<Welcome> {
           ),
           Search(key: this._search, refreshCollection: this.refreshCollection),
           Container(
-            color: Colors.white,
+            color: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
             height: MediaQuery.of(context).padding.top,
             width: MediaQuery.of(context).size.width,
           )
@@ -98,6 +111,7 @@ class _Welcome extends State<Welcome> {
     ];
 
     return Scaffold(
+      backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
       floatingActionButton: this._index == 1 ? TweenAnimationBuilder(
         duration: Duration(seconds: 1),
         tween: Tween<double>(begin: 0.0, end: this._rotationValue),
@@ -129,6 +143,7 @@ class _Welcome extends State<Welcome> {
         duration: Duration(milliseconds: 400),
         child: _screens[this._index],
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) => FadeThroughTransition(
+          fillColor: Globals.globalTheme == 0 ? Colors.black.withOpacity(0.02) : Color(0xFF121212),
           animation: primaryAnimation,
           secondaryAnimation: secondaryAnimation,
           child: child,

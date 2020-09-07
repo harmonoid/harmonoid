@@ -106,7 +106,7 @@ List<List<Color>> colors = [
   [Colors.deepPurpleAccent[400]  , Colors.deepPurpleAccent[100]  ],
   [Colors.blueAccent[700]        , Colors.blueAccent[100]        ],
   [Colors.deepOrangeAccent[700]  , Colors.deepOrangeAccent[100]  ],
-  [Colors.blueGrey[700]          , Colors.blueGrey[100]          ],
+  [Colors.green[700]             , Colors.green                  ],
   [Colors.pink[600]              , Colors.pinkAccent[100]        ],
   [Colors.teal[400]              , Colors.teal[100]              ],
   [Colors.redAccent[700]         , Colors.redAccent[100]         ],

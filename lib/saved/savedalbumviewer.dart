@@ -45,7 +45,7 @@ class TrackElement extends StatelessWidget {
             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
           ),
           duration: Duration(seconds: 2),
-          content: Text('${Globals.STRING_NOW_PLAYING}: ${this.albumTracks[this.index]['track_name'].split('-')[0].trim()}'),
+          content: Text('${Globals.STRING_NOW_PLAYING}: ${this.albumTracks[this.index]['track_name']}'),
         ));
         (() async {
           await PlaySavedMusic.playTrack(this.albumJson['album_id'], this.albumTracks[this.index]['track_number']);
@@ -55,10 +55,15 @@ class TrackElement extends StatelessWidget {
         showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-              title: Text(Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER),
+              backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+              title: Text(
+                Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
+                style: TextStyle(
+                  color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                ),
+              ),
               actions: [
-                MaterialButton(
-                  
+                MaterialButton(    
                   onPressed: () {
                     (() async {
                       int result = await GetSavedMusic.deleteTrack(this.albumJson['album_id'], this.albumTracks[this.index]['track_number']);
@@ -67,6 +72,7 @@ class TrackElement extends StatelessWidget {
                       if (result == 1) {
                         Navigator.of(context).pop();
                         await GetSavedMusic.deleteAlbum(this.albumJson['album_id']);
+                        await RefreshCollection.refreshAlbumsCollection();
                         Navigator.of(context).pop();
                         await this.refresh();
                       }
@@ -90,12 +96,27 @@ class TrackElement extends StatelessWidget {
                   ),
                 ),
               ],
-              content: Text(Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY),
+              content: Text(
+                Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
+                style: TextStyle(
+                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                ),
+              ),
           )
         );
       },
-      title: Text(this.albumTracks[this.index]['track_name'].split('-')[0].trim()),
-      subtitle: Text(this.albumTracks[this.index]['track_artists'].join(', ')),
+      title: Text(
+        this.albumTracks[this.index]['track_name'],
+        style: TextStyle(
+          color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+        ),
+      ),
+      subtitle: Text(
+        this.albumTracks[this.index]['track_artists'].join(', '),
+        style: TextStyle(
+          color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+        ),
+      ),
       leading: CircleAvatar(
         child: Text(
           this.albumTracks[this.index]['track_number'].toString(),
@@ -107,7 +128,12 @@ class TrackElement extends StatelessWidget {
           this.albumArt,
         ),
       ),
-      trailing: Text(this.trackDuration(this.albumTracks[this.index]['track_duration'])),
+      trailing: Text(
+        this.trackDuration(this.albumTracks[this.index]['track_duration']),
+        style: TextStyle(
+          color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+        ),
+      ),
     );
   }
 }
@@ -148,9 +174,12 @@ class SavedAlbumViewerState extends State<SavedAlbumViewer> with TickerProviderS
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            brightness: Brightness.dark,
+            backgroundColor: Globals.globalTheme == 0 ? Theme.of(context).primaryColor : Color.fromRGBO(42, 42, 42, 1),
             actions: [
               Container(
                 height: 56,
@@ -160,14 +189,20 @@ class SavedAlbumViewerState extends State<SavedAlbumViewer> with TickerProviderS
                   iconSize: 24,
                   icon: Icon(
                     Icons.delete,
-                    color: Colors.white,
+                    color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.87),
                   ),
                   splashRadius: 20,
                   onPressed: () {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
-                          title: Text(Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER),
+                          backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+                          title: Text(
+                            Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER,
+                            style: TextStyle(
+                              color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                            ),
+                          ),
                           actions: [
                             MaterialButton(
                               splashColor: Colors.deepPurple[50],
@@ -198,14 +233,18 @@ class SavedAlbumViewerState extends State<SavedAlbumViewer> with TickerProviderS
                               ),
                             ),
                           ],
-                          content: Text(Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY),
-                      )
+                          content: Text(
+                            Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY,
+                            style: TextStyle(
+                              color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                            ),
+                          ),
+                      ),
                     );
                   },
                 )
               ),
             ],
-            backgroundColor: Theme.of(context).primaryColor,
             leading: Container(
               height: 56,
               width: 56,
@@ -214,7 +253,7 @@ class SavedAlbumViewerState extends State<SavedAlbumViewer> with TickerProviderS
                 iconSize: 24,
                 icon: Icon(
                   Icons.close,
-                  color: Colors.white,
+                  color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.87),
                 ),
                 splashRadius: 20,
                 onPressed: () => Navigator.of(context).pop(),
@@ -223,7 +262,12 @@ class SavedAlbumViewerState extends State<SavedAlbumViewer> with TickerProviderS
             pinned: true,
             expandedHeight: MediaQuery.of(context).size.width - MediaQuery.of(context).padding.top,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(widget.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim()),
+              title: Text(
+                widget.albumJson['album_name'][0] == '(' ? widget.albumJson['album_name']: widget.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim(),
+                style: TextStyle(
+                  color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.87),
+                ),
+              ),
               background: Image.file(
                 widget.albumArt,
                 height: MediaQuery.of(context).size.width,

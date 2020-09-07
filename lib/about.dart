@@ -53,7 +53,7 @@ class AboutScreenState extends State<AboutScreen> {
                 endIndent: 32,
                 height: 4,
                 thickness: 1,
-                color: Colors.black12,
+                color: Globals.globalTheme == 0 ? Colors.black12 : Colors.white.withOpacity(0.12),
               ),
               Container(
                 width: MediaQuery.of(context).size.width - 32,
@@ -74,7 +74,7 @@ class AboutScreenState extends State<AboutScreen> {
                           githubRepo['name'],
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black87,
+                            color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
                             fontSize: 24,
                           ),
                         ),
@@ -87,7 +87,7 @@ class AboutScreenState extends State<AboutScreen> {
                           githubRepo['owner']['login'],
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black54,
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                             fontSize: 14,
                           ),
                         ),
@@ -102,7 +102,7 @@ class AboutScreenState extends State<AboutScreen> {
                   githubRepo['license']['name'],
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.black54,
+                    color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                   ),
                 ),
               ),
@@ -112,7 +112,7 @@ class AboutScreenState extends State<AboutScreen> {
                   'Copyright © ' + githubRepo['updated_at'].split('-')[0],
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.black54,
+                    color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                   ),
                 ),
               ),
@@ -130,7 +130,7 @@ class AboutScreenState extends State<AboutScreen> {
                         ),
                         backgroundColor: Color(0x00000000),
                       ),
-                      backgroundColor: Colors.black26,
+                      backgroundColor: Globals.globalTheme == 0 ? Colors.black26 : Colors.black54,
                       label: Text(
                         githubRepo['stargazers_count'].toString() + ' stars'
                       ),
@@ -147,7 +147,7 @@ class AboutScreenState extends State<AboutScreen> {
                       ),
                       backgroundColor: Color(0x00000000),
                     ),
-                    backgroundColor: Colors.black26,
+                    backgroundColor: Globals.globalTheme == 0 ? Colors.black26 : Colors.black54,
                     label: Text(
                       githubRepo['forks_count'].toString() + ' forks'
                     ),
@@ -158,14 +158,14 @@ class AboutScreenState extends State<AboutScreen> {
                 ],
               ),
               Divider(
-                color: Colors.white,
+                color: Color(0x00000000),
                 height: 4,
                 thickness: 0,
               ),
               Divider(
                 indent: 32,
                 endIndent: 32,
-                color: Colors.black12,
+                color: Globals.globalTheme == 0 ? Colors.black12 : Colors.white.withOpacity(0.12),
                 height: 1,
                 thickness: 1,
               ),
@@ -205,7 +205,7 @@ class AboutScreenState extends State<AboutScreen> {
               endIndent: 32,
               height: 4,
               thickness: 1,
-              color: Colors.black12,
+              color: Globals.globalTheme == 0 ? Colors.black12 : Colors.white.withOpacity(0.12),
             ),
             Container(
               width: MediaQuery.of(context).size.width - 32,
@@ -225,12 +225,12 @@ class AboutScreenState extends State<AboutScreen> {
                         this._repository,
                         maxLines: 1,
                         style: TextStyle(
-                          color: Colors.black87,
+                          color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
                           fontSize: 24,
                         ),
                       ),
                       Divider(
-                        color: Colors.white,
+                        color: Color(0x00000000),
                         height: 4,
                         thickness: 0,
                       ),
@@ -238,7 +238,7 @@ class AboutScreenState extends State<AboutScreen> {
                         this._developer,
                         maxLines: 1,
                         style: TextStyle(
-                          color: Colors.black54,
+                          color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                           fontSize: 14,
                         ),
                       ),
@@ -253,7 +253,7 @@ class AboutScreenState extends State<AboutScreen> {
                 'GNU General Public License v3.0',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black54,
+                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                 ),
               ),
             ),
@@ -263,7 +263,7 @@ class AboutScreenState extends State<AboutScreen> {
                 'Copyright © 2020',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black54,
+                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                 ),
               ),
             ),
@@ -305,7 +305,7 @@ class AboutScreenState extends State<AboutScreen> {
                 endIndent: 32,
                 height: 4,
                 thickness: 1,
-                color: Colors.black12,
+                color: Globals.globalTheme == 0 ? Colors.black12 : Colors.white.withOpacity(0.12),
               ),
               Container(
                 width: MediaQuery.of(context).size.width - 32,
@@ -326,7 +326,7 @@ class AboutScreenState extends State<AboutScreen> {
                           githubRepo['name'],
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black87,
+                            color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
                             fontSize: 24,
                           ),
                         ),
@@ -339,7 +339,7 @@ class AboutScreenState extends State<AboutScreen> {
                           githubRepo['owner']['login'],
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black54,
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                             fontSize: 14,
                           ),
                         ),
@@ -354,7 +354,7 @@ class AboutScreenState extends State<AboutScreen> {
                   githubRepo['license']['name'],
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.black54,
+                    color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                   ),
                 ),
               ),
@@ -364,7 +364,7 @@ class AboutScreenState extends State<AboutScreen> {
                   'Copyright © ' + githubRepo['updated_at'].split('-')[0],
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.black54,
+                    color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                   ),
                 ),
               ),
@@ -374,17 +374,17 @@ class AboutScreenState extends State<AboutScreen> {
                   "Thanks a lot for your help. I'm really glad.",
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.black54,
+                    color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                   ),
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(left: 16, right: 16, bottom: 8,),
                 child: Text(
-                  "Improvements made by you to the server are really great.",
+                  "Improvements made by you to the server are great.",
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.black54,
+                    color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                   ),
                 ),
               ),
@@ -402,7 +402,7 @@ class AboutScreenState extends State<AboutScreen> {
                         ),
                         backgroundColor: Color(0x00000000),
                       ),
-                      backgroundColor: Colors.black26,
+                      backgroundColor: Globals.globalTheme == 0 ? Colors.black26 : Colors.black54,
                       label: Text(
                         githubRepo['stargazers_count'].toString() + ' stars'
                       ),
@@ -419,7 +419,7 @@ class AboutScreenState extends State<AboutScreen> {
                       ),
                       backgroundColor: Color(0x00000000),
                     ),
-                    backgroundColor: Colors.black26,
+                    backgroundColor: Globals.globalTheme == 0 ? Colors.black26 : Colors.black54,
                     label: Text(
                       githubRepo['forks_count'].toString() + ' forks'
                     ),
@@ -430,14 +430,14 @@ class AboutScreenState extends State<AboutScreen> {
                 ],
               ),
               Divider(
-                color: Colors.white,
+                color: Color(0x00000000),
                 height: 4,
                 thickness: 0,
               ),
               Divider(
                 indent: 32,
                 endIndent: 32,
-                color: Colors.black12,
+                color: Globals.globalTheme == 0 ? Colors.black12 : Colors.white.withOpacity(0.12),
                 height: 1,
                 thickness: 1,
               ),
@@ -477,7 +477,7 @@ class AboutScreenState extends State<AboutScreen> {
               endIndent: 32,
               height: 4,
               thickness: 1,
-              color: Colors.black12,
+              color: Globals.globalTheme == 0 ? Colors.black12 : Colors.white.withOpacity(0.12),
             ),
             Container(
               width: MediaQuery.of(context).size.width - 32,
@@ -497,7 +497,7 @@ class AboutScreenState extends State<AboutScreen> {
                         this._repository1,
                         maxLines: 1,
                         style: TextStyle(
-                          color: Colors.black87,
+                          color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
                           fontSize: 24,
                         ),
                       ),
@@ -510,7 +510,7 @@ class AboutScreenState extends State<AboutScreen> {
                         this._developer1,
                         maxLines: 1,
                         style: TextStyle(
-                          color: Colors.black54,
+                          color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                           fontSize: 14,
                         ),
                       ),
@@ -525,7 +525,7 @@ class AboutScreenState extends State<AboutScreen> {
                 'MIT License',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black54,
+                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                 ),
               ),
             ),
@@ -535,7 +535,7 @@ class AboutScreenState extends State<AboutScreen> {
                 'Copyright © 2020',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black54,
+                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                 ),
               ),
             ),
@@ -545,17 +545,17 @@ class AboutScreenState extends State<AboutScreen> {
                 "Thanks a lot for your help. I'm really glad.",
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black54,
+                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                 ),
               ),
             ),
             Container(
               margin: EdgeInsets.only(left: 16, right: 16, bottom: 8,),
               child: Text(
-                "Improvements made by you to the server are really great.",
+                "Improvements made by you to the server are great.",
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black54,
+                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                 ),
               ),
             ),
@@ -595,7 +595,12 @@ class AboutScreenState extends State<AboutScreen> {
                 backgroundColor: Colors.white,
                 backgroundImage: NetworkImage(stargazer['avatar_url']),
               ),
-              title: Text(stargazer['login']),
+              title: Text(
+                stargazer['login'],
+                style: TextStyle(
+                  color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                ),
+              ),
             )
           );
         } 
@@ -610,7 +615,7 @@ class AboutScreenState extends State<AboutScreen> {
               Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.black54,
+                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
               ),
             ),
           ),
@@ -622,7 +627,10 @@ class AboutScreenState extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Globals.globalTheme == 0 ? Colors.white.withOpacity(0.99) : Color(0xFF121212),
       appBar: AppBar(
+        brightness: Brightness.dark,
+        backgroundColor: Globals.globalTheme == 0 ? Theme.of(context).primaryColor : Colors.white10,
         leading: Container(
           height: 56,
           width: 56,
@@ -631,19 +639,25 @@ class AboutScreenState extends State<AboutScreen> {
             iconSize: 24,
             icon: Icon(
               Icons.close,
-              color: Colors.white,
+              color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.87),
             ),
             splashRadius: 20,
             onPressed: () => Navigator.of(context).pop(),
           )
         ),
-        title: Text(Globals.STRING_ABOUT_TITLE)
+        title: Text(
+          Globals.STRING_ABOUT_TITLE,
+          style: TextStyle(
+            color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.87),
+          ),
+        ),
       ),
       body: ListView(
         children: [
           Card(
             clipBehavior: Clip.antiAlias,
             elevation: 1,
+            color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
             margin: EdgeInsets.only(left: 16, right: 16, top: 8),
             child: Container(
               width: MediaQuery.of(context).size.width - 32,
@@ -664,6 +678,7 @@ class AboutScreenState extends State<AboutScreen> {
           Card(
             clipBehavior: Clip.antiAlias,
             elevation: 1,
+            color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
             margin: EdgeInsets.only(left: 16, right: 16, top: 8),
             child: Container(
               width: MediaQuery.of(context).size.width - 32,
@@ -686,6 +701,7 @@ class AboutScreenState extends State<AboutScreen> {
           Card(
             clipBehavior: Clip.antiAlias,
             elevation: 1,
+            color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
             margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
             child: Container(
               width: MediaQuery.of(context).size.width - 32,
@@ -705,7 +721,7 @@ class AboutScreenState extends State<AboutScreen> {
                           Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE,
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black87,
+                            color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
                             fontSize: 18,
                           ),
                         ),
@@ -718,7 +734,7 @@ class AboutScreenState extends State<AboutScreen> {
                           Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE,
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black54,
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                             fontSize: 14,
                           ),
                         ),
@@ -731,81 +747,117 @@ class AboutScreenState extends State<AboutScreen> {
                     ),
                   ),
                   ListTile(
-                    title: Text('raitonoberu'),
-                    subtitle: Text('Русский'),
+                    title: Text(
+                      'raitonoberu',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Русский',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                      ),
+                    ),
                     onTap: () => url_launcher.launch('https://github.com/raitonoberu'),
                     leading: CircleAvatar(
                       child: Icon(
                         Icons.open_in_new,
-                        color: Colors.black26,
+                        color: Globals.globalTheme == 0 ? Colors.black26 : Colors.white.withOpacity(0.18),
                       ),
                       backgroundColor: Color(0x00000000),
                     )
                   ),
                   ListTile(
-                    title: Text('mytja'),
-                    subtitle: Text('Slovenščina'),
+                    title: Text(
+                      'mytja',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Slovenščina',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                      ),
+                    ),
                     onTap: () => url_launcher.launch('https://github.com/mytja'),
                     leading: CircleAvatar(
                       child: Icon(
                         Icons.open_in_new,
-                        color: Colors.black26,
-                      ),
-                      backgroundColor: Color(0x00000000),
-                    ),
-                    trailing: CircleAvatar(
-                      child: Icon(
-                        Icons.star_border,
-                        color: Colors.yellow,
+                        color: Globals.globalTheme == 0 ? Colors.black26 : Colors.white.withOpacity(0.18),
                       ),
                       backgroundColor: Color(0x00000000),
                     ),
                   ),
                   ListTile(
-                    title: Text('bdlukaa'),
-                    subtitle: Text('Português'),
+                    title: Text(
+                      'bdlukaa',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Português',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                      ),
+                    ),
                     onTap: () => url_launcher.launch('https://github.com/bdlukaa'),
                     leading: CircleAvatar(
                       child: Icon(
                         Icons.open_in_new,
-                        color: Colors.black26,
+                        color: Globals.globalTheme == 0 ? Colors.black26 : Colors.white.withOpacity(0.18),
                       ),
                       backgroundColor: Color(0x00000000),
                     )
                   ),
                   ListTile(
-                    title: Text('alexmercerind'),
-                    subtitle: Text('हिन्दी'),
+                    title: Text(
+                      'alexmercerind',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'हिन्दी',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                      ),
+                    ),
                     onTap: () => url_launcher.launch('https://github.com/alexmercerind'),
                     leading: CircleAvatar(
                       child: Icon(
                         Icons.open_in_new,
-                        color: Colors.black26,
+                        color: Globals.globalTheme == 0 ? Colors.black26 : Colors.white.withOpacity(0.18),
                       ),
                       backgroundColor: Color(0x00000000),
                     )
                   ),
                   ListTile(
-                    title: Text('mytja'),
-                    subtitle: Text('Deutsche'),
-                    onTap: () => url_launcher.launch('https://github.com/mytja'),
+                    title: Text(
+                      'MickLesk',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Deutsche',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                      ),
+                    ),
+                    onTap: () => url_launcher.launch('https://github.com/MickLesk'),
                     leading: CircleAvatar(
                       child: Icon(
                         Icons.open_in_new,
-                        color: Colors.black26,
-                      ),
-                      backgroundColor: Color(0x00000000),
-                    ),
-                    trailing: CircleAvatar(
-                      child: Icon(
-                        Icons.star_border,
-                        color: Colors.yellow,
+                        color: Globals.globalTheme == 0 ? Colors.black26 : Colors.white.withOpacity(0.18),
                       ),
                       backgroundColor: Color(0x00000000),
                     ),
                   ),
                   Divider(
-                    color: Colors.white,
+                    color: Color(0x00000000),
                     height: 16,
                     thickness: 0,
                   ),
@@ -816,6 +868,7 @@ class AboutScreenState extends State<AboutScreen> {
           Card(
             clipBehavior: Clip.antiAlias,
             elevation: 1,
+            color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
             margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
             child: Container(
               width: MediaQuery.of(context).size.width - 32,
@@ -835,7 +888,7 @@ class AboutScreenState extends State<AboutScreen> {
                           Globals.STRING_SETTING_STARGAZERS_TITLE,
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black87,
+                            color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
                             fontSize: 18,
                           ),
                         ),
@@ -848,7 +901,7 @@ class AboutScreenState extends State<AboutScreen> {
                           Globals.STRING_SETTING_STARGAZERS_SUBTITLE,
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black54,
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                             fontSize: 14,
                           ),
                         ),
@@ -862,7 +915,7 @@ class AboutScreenState extends State<AboutScreen> {
                   )
                 ] + this._githubStargazers.reversed.toList() + [
                   Divider(
-                    color: Colors.white,
+                    color: Color(0x00000000),
                     height: 16,
                     thickness: 0,
                   ),

@@ -73,8 +73,11 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
               margin: EdgeInsets.all(8),
               child: OpenContainer(
                 closedElevation: 1,
+                closedColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+                openColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
                 transitionDuration: Duration(milliseconds: 400),
                 closedBuilder: (ctx, act) => Container(
+                  color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
                   width: 156,
                   height: widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 272 : 246,
                   child: Column(
@@ -95,33 +98,33 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                         child: Column(
                           children: [
                             Divider(
-                              color: Colors.white,
+                              color: Color(0x00000000),
                               height: 2,
                               thickness: 2,
                             ),
                             Container(
                               height: 38,
                               child: Text(
-                                this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim().split('-')[0].trim(),
+                                this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'],
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.black87,
+                                  color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                                 ),
                                 maxLines: 2,
                                 textAlign: TextAlign.center,
                               ),
                             ),
                             Divider(
-                              color: Colors.white,
+                              color: Color(0x00000000),
                               height: 8,
                               thickness: 8,
                             ),
                             widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 
                             Text(
-                              this._albums[index]['album_name'].split('(')[0].trim().split('-')[0].trim(),
+                              this._albums[index]['album_name'],
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.black54,
+                                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                               ),
                               maxLines: 2,
                               textAlign: TextAlign.center,
@@ -131,7 +134,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                               this._albums[index]['album_artists'].join(', '),
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.black54,
+                                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                               ),
                               maxLines: 1,
                               textAlign: TextAlign.center,
@@ -140,13 +143,13 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                               '(${this._albums[index]['year']})',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.black54,
+                                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                               ),
                               maxLines: 1,
                               textAlign: TextAlign.center,
                             ),
                             Divider(
-                              color: Colors.white,
+                              color: Color(0x00000000),
                               height: 4,
                               thickness: 4,
                             ),
@@ -181,15 +184,19 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
               _searchResultLabels.stringSearchResultTopSubheader,
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.black54,
+                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
               ),
             ),
           ),
           Container(
             margin: EdgeInsets.only(left: 16, right: 16),
             child: OpenContainer(
+              closedElevation: 1,
               transitionDuration: Duration(milliseconds: 400),
+              closedColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+              openColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
               closedBuilder: (ctx, act) => Container(
+                color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
                 child: Column(
                   children: [
                     Row(
@@ -210,32 +217,32 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'].split('(')[0].trim().split('-')[0].trim(),
+                                this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'],
                                 style: TextStyle(
                                   fontSize: 18,
-                                  color: Colors.black87,
+                                  color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                                 ),
                                 maxLines: 2,
                                 textAlign: TextAlign.start,
                               ),
                               Divider(
-                                color: Colors.white,
+                                color: Color(0x00000000),
                                 height: 12,
                                 thickness: 12,
                               ),
                               widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 
                               Text(
-                                this._albums[0]['album_name'].split('(')[0].trim().split('-')[0].trim(),
+                                this._albums[0]['album_name'],
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.black54,
+                                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                                 ),
                                 maxLines: 2,
                                 textAlign: TextAlign.start,
                               ) :
                               Container(),
                               Divider(
-                                color: Colors.white,
+                                color: Color(0x00000000),
                                 height: 2,
                                 thickness: 2,
                               ),
@@ -243,13 +250,13 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                                 this._albums[0]['album_artists'].join(', '),
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.black54,
+                                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                                 ),
                                 maxLines: 2,
                                 textAlign: TextAlign.start,
                               ),
                               Divider(
-                                color: Colors.white,
+                                color: Color(0x00000000),
                                 height: 2,
                                 thickness: 2,
                               ),
@@ -257,7 +264,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                                 '(${this._albums[0]['year']})',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.black54,
+                                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                                 ),
                                 maxLines: 1,
                                 textAlign: TextAlign.start,
@@ -267,30 +274,6 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                         ),
                       ],
                     ),
-                    Divider(
-                      color: Colors.black12,
-                      height: 1,
-                      thickness: 1,
-                    ),
-                    // ButtonBar(
-                    //   alignment: MainAxisAlignment.end,
-                    //   children: [
-                    //     MaterialButton(
-                    //       onPressed: () {},
-                    //       child: Text(
-                    //         _searchResultLabels.stringSearchResultTopButtonLabel0,
-                    //         style: TextStyle(color: Theme.of(context).primaryColor),
-                    //       ),
-                    //     ),
-                    //     MaterialButton(
-                    //       onPressed: () {},
-                    //       child: Text(
-                    //         _searchResultLabels.stringSearchResultTopButtonLabel1,
-                    //         style: TextStyle(color: Theme.of(context).primaryColor),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // )
                   ],
                 )
               ),
@@ -305,7 +288,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
               _searchResultLabels.stringSearchResultOtherSubheader,
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.black54,
+                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
               ),
             ),
           ),
@@ -326,13 +309,13 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                 Icon(
                   Icons.signal_cellular_connected_no_internet_4_bar, 
                   size: 64,
-                  color: Colors.black54,
+                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                 ),
                 Text(
                   Globals.STRING_INTERNET_ERROR,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.black54,
+                    color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                   ),
                 )
               ],
@@ -371,9 +354,12 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            brightness: Brightness.dark,
+            backgroundColor: Globals.globalTheme == 0 ? Theme.of(context).primaryColor : Color.fromRGBO(42, 42, 42, 1),
             leading: Container(
               height: 56,
               width: 56,
@@ -389,7 +375,12 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
               )
             ),
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(widget.searchTitle),
+              title: Text(
+                widget.searchTitle,
+                style: TextStyle(
+                  color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.87),
+                ),
+              ),
               background: Image.asset(
                 'assets/images/${widget.searchMode.toLowerCase()}.jpg',
                 fit: BoxFit.fitWidth,
@@ -416,7 +407,13 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(Globals.STRING_SEARCH_RESULT_LOADER_LABEL, style: TextStyle(fontSize: 14, color: Colors.black87)),
+                      Text(
+                        Globals.STRING_SEARCH_RESULT_LOADER_LABEL, 
+                        style: TextStyle(
+                        fontSize: 14,
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                        ),
+                      ),
                       Container(
                         width: 148,
                         height: 36,
