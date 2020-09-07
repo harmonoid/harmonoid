@@ -126,8 +126,18 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                         File(mediaItem.extras['album_art']),
                       ),
                     ),
-                    title: Text(mediaItem.title),
-                    subtitle: Text(mediaItem.album),
+                    title: Text(
+                      mediaItem.title,
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    subtitle: Text(
+                      mediaItem.album,
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                      ),
+                    ),
                   ),
                 ),
               );
@@ -207,14 +217,16 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      color: Globals.globalTheme == 0 ? Colors.black.withOpacity(0.02) : Color(0xFF121212),
       child: ListView(
         children: [
           this._trackName == null ?
           Card(
             elevation: 1,
             clipBehavior: Clip.antiAlias,
+            color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
             margin: EdgeInsets.only(left: 16, right: 16),
             child: Container(
               width: MediaQuery.of(context).size.width - 32,
@@ -247,7 +259,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               color: Colors.white,
                               size: 28,
                             ),
-                            backgroundColor: Theme.of(context).accentColor,
+                            backgroundColor: Theme.of(context).primaryColor,
                           ),
                         )
                       ],
@@ -282,12 +294,12 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               Globals.STRING_NOW_PLAYING_NOT_PLAYING_TITLE,
                               maxLines: 1,
                               style: TextStyle(
-                                color: Colors.black87,
+                                color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                                 fontSize: 18,
                               ),
                             ),
                             Divider(
-                              color: Colors.white,
+                              color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.0),
                               height: 4,
                               thickness: 0,
                             ),
@@ -295,7 +307,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               Globals.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE,
                               maxLines: 1,
                               style: TextStyle(
-                                color: Colors.black54,
+                                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                                 fontSize: 14,
                               ),
                             ),
@@ -310,7 +322,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                       Globals.STRING_NOW_PLAYING_NOT_PLAYING_HEADER,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black54,
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                       ),
                     ),
                   ),
@@ -325,7 +337,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                         child: Text(
                           '0:00',
                           style: TextStyle(
-                            color: Colors.black54
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                           ),
                         ),
                       ),
@@ -340,6 +352,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           },
                         ),
                         data: SliderThemeData(
+                          inactiveTrackColor: Globals.globalTheme == 0 ? Colors.black38 : Colors.white.withOpacity(0.12),
                           thumbColor: Theme.of(context).primaryColor,
                           activeTrackColor: Theme.of(context).primaryColor,
                           thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8),
@@ -352,19 +365,19 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                         child: Text(
                           '0:00',
                           style: TextStyle(
-                            color: Colors.black54
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                           ),
                         ),
                       ),
                     ],
                   ),
                   Divider(
-                    color: Colors.white,
+                    color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.0),
                     height: 4,
                     thickness: 0,
                   ),
                   Divider(
-                    color: Colors.black12,
+                    color: Globals.globalTheme == 0 ? Colors.black12 : Colors.white.withOpacity(0.12),
                     height: 1,
                     thickness: 1,
                   ),
@@ -378,20 +391,11 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           iconSize: 24,
                           icon: Icon(
                             this._isInfoShowing ? Icons.expand_more : Icons.expand_less,
-                            color: Colors.black45,
+                            color: Globals.globalTheme == 0 ? Colors.black45 : Colors.white.withOpacity(0.38),
                           ),
+                          
                           splashRadius: 20,
-                          onPressed: () {
-                            this._isInfoShowing = !this._isInfoShowing;
-                            if (this._animationController.isCompleted) {
-                              this._animationController.reverse();
-                              this._animationController1.forward();
-                            }
-                            else if (this._animationController.isDismissed) {
-                              this._animationController.forward();
-                              this._animationController1.reverse();
-                            }
-                          },
+                          onPressed: () {},
                         )
                       ),
                       Expanded(
@@ -434,6 +438,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
           Card(
             elevation: 1,
             clipBehavior: Clip.antiAlias,
+            color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
             margin: EdgeInsets.only(left: 16, right: 16),
             child: Container(
               width: MediaQuery.of(context).size.width - 32,
@@ -469,7 +474,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               color: Colors.white,
                               size: 28,
                             ),
-                            backgroundColor: Theme.of(context).accentColor,
+                            backgroundColor: Theme.of(context).primaryColor,
                           ),
                         )
                       ],
@@ -504,12 +509,12 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               this._trackName,
                               maxLines: 1,
                               style: TextStyle(
-                                color: Colors.black87,
+                                color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                                 fontSize: 18,
                               ),
                             ),
                             Divider(
-                              color: Colors.white,
+                              color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.0),
                               height: 4,
                               thickness: 0,
                             ),
@@ -517,7 +522,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               this._albumName,
                               maxLines: 1,
                               style: TextStyle(
-                                color: Colors.black54,
+                                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                                 fontSize: 14,
                               ),
                             ),
@@ -532,7 +537,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                       this._trackArtist + ' ' + '(' + this._year + ')',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black54,
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                       ),
                     ),
                   ),
@@ -547,7 +552,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                         child: Text(
                           this._position,
                           style: TextStyle(
-                            color: Colors.black54
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                           ),
                         ),
                       ),
@@ -569,6 +574,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               },
                             ),
                             data: SliderThemeData(
+                              inactiveTrackColor: Globals.globalTheme == 0 ? Colors.black38 : Colors.white.withOpacity(0.38),
                               thumbColor: Theme.of(context).primaryColor,
                               activeTrackColor: Theme.of(context).primaryColor,
                               thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8),
@@ -583,19 +589,19 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                         child: Text(
                           this._duration,
                           style: TextStyle(
-                            color: Colors.black54
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                           ),
                         ),
                       ),
                     ],
                   ),
                   Divider(
-                    color: Colors.white,
+                    color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.0),
                     height: 4,
                     thickness: 0,
                   ),
                   Divider(
-                    color: Colors.black12,
+                    color: Globals.globalTheme == 0 ? Colors.black12 : Colors.white.withOpacity(0.12),
                     height: 1,
                     thickness: 1,
                   ),
@@ -609,7 +615,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           iconSize: 24,
                           icon: Icon(
                             this._isInfoShowing ? Icons.expand_more : Icons.expand_less,
-                            color: Colors.black45,
+                            color: Globals.globalTheme == 0 ? Colors.black45 : Colors.white.withOpacity(0.38),
                           ),
                           splashRadius: 20,
                           onPressed: () {
@@ -663,7 +669,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
             ),
           ),
           Divider(
-            color: Colors.white,
+            color: Globals.globalTheme == 0 ? Colors.black.withOpacity(0.02) : Color(0xFF121212),
             height: 8,
           )
         ],

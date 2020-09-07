@@ -103,8 +103,18 @@ class TrackElementState extends State<TrackElement> {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () => widget.downloadTrack(widget.albumTracks, widget.albumJson, widget.index, this._isSaved),
-      title: Text(widget.albumTracks[widget.index]['track_name'].split('(')[0].trim().split('-')[0].trim()),
-      subtitle: Text(widget.albumTracks[widget.index]['track_artists'].join(', ')),
+      title: Text(
+        widget.albumTracks[widget.index]['track_name'],
+        style: TextStyle(
+          color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+        ),
+      ),
+      subtitle: Text(
+        widget.albumTracks[widget.index]['track_artists'].join(', '),
+        style: TextStyle(
+          color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+        ),
+      ),
       leading: this._leading,
       trailing: this._trailing ? this._isSaved ? Chip(
         avatar: CircleAvatar(
@@ -127,11 +137,12 @@ class TrackElementState extends State<TrackElement> {
           this.trackDuration(widget.albumTracks[widget.index]['track_duration']),
           style: TextStyle(
             fontSize: 12,
-            color: Colors.black87,
+            color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
           ),
         ),
         backgroundColor: Color(0x00000000),
       ) : IconButton(
+        splashRadius: 24,
         onPressed: () async {
           await widget.cancelDownloadTrack(widget.albumTracks[widget.index]['track_number'] - 1);
           this.setState(() {
@@ -195,8 +206,19 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE),
-            content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE),
+            backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+            title: Text(
+              Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE,
+              style: TextStyle(
+                color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+              ),
+            ),
+            content: Text(
+              Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE,
+              style: TextStyle(
+                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+              ),
+            ),
             actions: [
               MaterialButton(
                 onPressed: () {
@@ -224,8 +246,19 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE),
-                content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE),
+                backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+                title: Text(
+                  Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE,
+                  style: TextStyle(
+                    color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                  ),
+                ),
+                content: Text(
+                  Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE,
+                  style: TextStyle(
+                    color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                  ),
+                ),
                 actions: [
                   MaterialButton(
                     onPressed: () {
@@ -245,8 +278,19 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE),
-                content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE),
+                backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+                title: Text(
+                  Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE,
+                  style: TextStyle(
+                    color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                  ),
+                ),
+                content: Text(
+                  Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE,
+                  style: TextStyle(
+                    color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                  ),
+                ),
                 actions: [
                   MaterialButton(
                     onPressed: () {
@@ -266,8 +310,19 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE),
-                content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE),
+                backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+                title: Text(
+                  Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE,
+                  style: TextStyle(
+                    color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                  ),
+                ),
+                content: Text(
+                  Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE,
+                  style: TextStyle(
+                    color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                  ),
+                ),
                 actions: [
                   MaterialButton(
                     onPressed: () {
@@ -292,8 +347,19 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE),
-          content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE),
+          backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+          title: Text(
+            Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE,
+            style: TextStyle(
+              color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+            ),
+          ),
+          content: Text(
+            Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE,
+            style: TextStyle(
+              color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+            ),
+          ),
           actions: [
             MaterialButton(
               onPressed: () async {
@@ -331,8 +397,19 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
       await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE),
-          content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE),
+          backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+          title: Text(
+            Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE,
+            style: TextStyle(
+              color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+            ),
+          ),
+          content: Text(
+            Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE,
+            style: TextStyle(
+              color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+            ),
+          ),
           actions: [
             MaterialButton(
               onPressed: () {
@@ -373,7 +450,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
         Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER,
         style: TextStyle(
           fontSize: 12,
-          color: Colors.black54,
+          color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
         ),
       ),
     ),
@@ -426,12 +503,13 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                 Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.black54,
+                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                 ),
               ),
             ),
             Card(
               elevation: 1,
+              color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
               clipBehavior: Clip.antiAlias,
               margin: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
               child: Container(
@@ -453,21 +531,21 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim(),
+                            widget.albumJson['album_name'],
                             style: TextStyle(
                               fontSize: 18,
-                              color: Colors.black87,
+                              color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                             ),
                             maxLines: 2,
                             textAlign: TextAlign.start,
                           ),
                           Divider(
-                            color: Colors.white,
+                            color: Color(0x00000000),
                             height: 12,
                             thickness: 12,
                           ),
                           Divider(
-                            color: Colors.white,
+                            color: Color(0x00000000),
                             height: 2,
                             thickness: 2,
                           ),
@@ -475,13 +553,13 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                             widget.albumJson['album_artists'].join(', '),
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black54,
+                              color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                             ),
                             maxLines: 2,
                             textAlign: TextAlign.start,
                           ),
                           Divider(
-                            color: Colors.white,
+                            color: Color(0x00000000),
                             height: 2,
                             thickness: 2,
                           ),
@@ -489,13 +567,13 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                             '${widget.albumJson['year']}',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black54,
+                              color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                             ),
                             maxLines: 1,
                             textAlign: TextAlign.start,
                           ),
                           Divider(
-                            color: Colors.white,
+                            color: Color(0x00000000),
                             height: 2,
                             thickness: 2,
                           ),
@@ -503,7 +581,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                             '${widget.albumJson['album_length']}' + ' '+ Globals.STRING_TRACK.toLowerCase(),
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black54,
+                              color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                             ),
                             maxLines: 1,
                             textAlign: TextAlign.start,
@@ -531,13 +609,13 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
               Icon(
                 Icons.signal_cellular_connected_no_internet_4_bar, 
                 size: 64,
-                color: Colors.black54,
+                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
               ),
               Text(
                 Globals.STRING_INTERNET_ERROR,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.black54,
+                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                 ),
               )
             ],
@@ -553,11 +631,13 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
     return WillPopScope(
       onWillPop: this.checkTrackStack,
       child: Scaffold(
+        backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
         body: CustomScrollView(
           controller: scrollController,
           slivers: [
             SliverAppBar(
-              backgroundColor: this._accentColor,
+              brightness: Brightness.dark,
+              backgroundColor: Globals.globalTheme == 0 ? Theme.of(context).primaryColor : Color.fromRGBO(42, 42, 42, 1),
               leading: Container(
                 height: 56,
                 width: 56,
@@ -577,8 +657,19 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE),
-                          content: Text(Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE),
+                          backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+                          title: Text(
+                            Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE,
+                            style: TextStyle(
+                              color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                            ),
+                          ),
+                          content: Text(
+                            Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE,
+                            style: TextStyle(
+                              color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                            ),
+                          ),
                           actions: [
                             MaterialButton(
                               onPressed: () {
@@ -599,7 +690,12 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
               pinned: true,
               expandedHeight: MediaQuery.of(context).size.width - MediaQuery.of(context).padding.top,
               flexibleSpace: FlexibleSpaceBar(
-                title: Text(widget.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim()),
+                title: Text(
+                  widget.albumJson['album_name'][0] == '(' ? widget.albumJson['album_name']: widget.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim(),
+                  style: TextStyle(
+                    color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.87),
+                  ),
+                ),
                 background: Image.network(
                   widget.albumJson['album_art_640'],
                   height: MediaQuery.of(context).size.width,
@@ -621,7 +717,13 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                     duration: Duration(seconds: 8),
                     tween: Tween<double>(begin: 0.0, end: 1.0),
                     curve: Curves.linear,
-                    child: Text(Globals.STRING_ALBUM_VIEW_LOADER_LABEL, style: TextStyle(fontSize: 16, color: Colors.black87)),
+                    child: Text(
+                      Globals.STRING_ALBUM_VIEW_LOADER_LABEL,
+                      style: TextStyle(
+                        fontSize: 16, 
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
                     builder: (context, value, child) => Container(
                       width: 148,
                       height: 36,

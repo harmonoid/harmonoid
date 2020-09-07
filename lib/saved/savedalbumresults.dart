@@ -23,8 +23,11 @@ class AlbumTile extends StatelessWidget {
       margin: EdgeInsets.all(8),
       child: OpenContainer(
         closedElevation: 1,
+        closedColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+        openColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
         transitionDuration: Duration(milliseconds: 400),
         closedBuilder: (ctx, act) => Container(
+          color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
           width: 156,
           height: 246,
           child: Column(
@@ -45,24 +48,24 @@ class AlbumTile extends StatelessWidget {
                 child: Column(
                   children: [
                     Divider(
-                      color: Colors.white,
+                      color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.0),
                       height: 2,
                       thickness: 2,
                     ),
                     Container(
                       height: 38,
                       child: Text(
-                        this.albumJson['album_name'].split('(')[0].trim().split('-')[0].trim(),
+                        this.albumJson['album_name'],
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.black87,
+                          color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                         ),
                         maxLines: 2,
                         textAlign: TextAlign.center,
                       ),
                     ),
                     Divider(
-                      color: Colors.white,
+                      color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.0),
                       height: 8,
                       thickness: 8,
                     ),
@@ -70,7 +73,7 @@ class AlbumTile extends StatelessWidget {
                       this.albumJson['album_artists'].join(', '),
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black54,
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                       ),
                       maxLines: 1,
                       textAlign: TextAlign.center,
@@ -79,13 +82,13 @@ class AlbumTile extends StatelessWidget {
                       '(${this.albumJson['year']})',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black54,
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                       ),
                       maxLines: 1,
                       textAlign: TextAlign.center,
                     ),
                     Divider(
-                      color: Colors.white,
+                      color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.0),
                       height: 4,
                       thickness: 4,
                     ),
@@ -123,14 +126,14 @@ class NoResultsComponent extends StatelessWidget {
             Icon(
               Icons.library_music, 
               size: 64,
-              color: Colors.black38,
+              color: Globals.globalTheme == 0 ? Colors.black38 : Colors.white.withOpacity(0.38),
             ),
             Text(
               Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.black54,
+                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.54),
               ),
             )
           ],
@@ -195,12 +198,13 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                     Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.black54,
+                      color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                     ),
                   ),
                 ),
                 Card(
                   elevation: 1,
+                  color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
                   margin: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
                   child: Container(
                     child: Row(
@@ -221,21 +225,21 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                Globals.albums[index]['album_name'].split('(')[0].trim().split('-')[0].trim(),
+                                Globals.albums[index]['album_name'],
                                 style: TextStyle(
                                   fontSize: 18,
-                                  color: Colors.black87,
+                                  color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                                 ),
                                 maxLines: 2,
                                 textAlign: TextAlign.start,
                               ),
                               Divider(
-                                color: Colors.white,
+                                color: Color(0x00000000),
                                 height: 12,
                                 thickness: 12,
                               ),
                               Divider(
-                                color: Colors.white,
+                                color: Color(0x00000000),
                                 height: 2,
                                 thickness: 2,
                               ),
@@ -243,13 +247,13 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                                 Globals.albums[index]['album_artists'].join(', '),
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.black54,
+                                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.54),
                                 ),
                                 maxLines: 2,
                                 textAlign: TextAlign.start,
                               ),
                               Divider(
-                                color: Colors.white,
+                                color: Color(0x00000000),
                                 height: 2,
                                 thickness: 2,
                               ),
@@ -257,13 +261,13 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                                 '${Globals.albums[index]['year']}',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.black54,
+                                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.54),
                                 ),
                                 maxLines: 1,
                                 textAlign: TextAlign.start,
                               ),
                               Divider(
-                                color: Colors.white,
+                                color: Color(0x00000000),
                                 height: 2,
                                 thickness: 2,
                               ),
@@ -271,7 +275,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                                 '${Globals.albums[index]['album_length']}' + ' '+ Globals.STRING_TRACK.toLowerCase(),
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.black54,
+                                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.54),
                                 ),
                                 maxLines: 1,
                                 textAlign: TextAlign.start,
@@ -289,7 +293,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                   Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.black54,
+                    color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                   ),
                 ),
               ),
@@ -376,7 +380,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
               Globals.STRING_LOCAL_TOP_SUBHEADER_ALBUM,
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.black54,
+                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
               ),
             ),
           ),
@@ -384,8 +388,11 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
             margin: EdgeInsets.only(left: 16, right: 16),
             child: OpenContainer(
               closedElevation: 1,
+              closedColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+              openColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
               transitionDuration: Duration(milliseconds: 400),
               closedBuilder: (ctx, act) => Container(
+                color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -404,16 +411,16 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            Globals.albums[Globals.albumArts.length - 1]['album_name'].split('(')[0].trim().split('-')[0].trim(),
+                            Globals.albums[Globals.albumArts.length - 1]['album_name'],
                             style: TextStyle(
                               fontSize: 18,
-                              color: Colors.black87,
+                              color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                             ),
                             maxLines: 2,
                             textAlign: TextAlign.start,
                           ),
                           Divider(
-                            color: Colors.white,
+                            color: Color(0x00000000),
                             height: 2,
                             thickness: 2,
                           ),
@@ -421,13 +428,13 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                             Globals.albums[Globals.albumArts.length - 1]['album_artists'].join(', '),
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black54,
+                              color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                             ),
                             maxLines: 2,
                             textAlign: TextAlign.start,
                           ),
                           Divider(
-                            color: Colors.white,
+                            color: Color(0x00000000),
                             height: 2,
                             thickness: 2,
                           ),
@@ -435,7 +442,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
                             '(${Globals.albums[Globals.albumArts.length - 1]['year']})',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.black54,
+                              color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                             ),
                             maxLines: 1,
                             textAlign: TextAlign.start,
@@ -462,7 +469,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
               Globals.STRING_LOCAL_OTHER_SUBHEADER_ALBUM,
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.black54,
+                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
               ),
             ),
           ),

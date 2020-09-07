@@ -33,7 +33,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
   void _selectSearchMode(SearchMode value) {
     for (int index = 0; index <= 2; index++) {
       this._scaleController[index].reverse();
-      this._scaleColor[index] = Colors.black54;
+      this._scaleColor[index] = Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.87);
     }
     if (value == SearchMode.album) {
       this._scaleController[0].forward();
@@ -94,12 +94,22 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
             leading: CircleAvatar(
               child: Icon(
                 Icons.search,
-                color: Colors.black26,
+                color: Globals.globalTheme == 0 ? Colors.black26: Colors.white.withOpacity(0.60),
               ),
               backgroundColor: Color(0x00000000),
             ),
-            title: Text(searchHistory[index]['keyword']),
-            subtitle: Text(searchHistory[index]['title'], style: TextStyle(fontSize: 12)),
+            title: Text(
+              searchHistory[index]['keyword'],
+              style: TextStyle(
+                color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
+              ),
+            ),
+            subtitle: Text(searchHistory[index]['title'], 
+              style: TextStyle(
+                fontSize: 12,
+                color: Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.60),
+              ),
+            ),
           ),
         );
       }
@@ -107,7 +117,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
     })();
 
     for (int index = 0; index <= 2; index++){
-      this._scaleColor[index] = Colors.black54;
+      this._scaleColor[index] = Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.87);
       this._scaleController[index] = AnimationController(
         vsync: this,
         duration: Duration(milliseconds: 400),
@@ -140,7 +150,10 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
     return WillPopScope(
       onWillPop: this._onWillPop,
       child: Scaffold(
+        backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
         appBar: AppBar(
+          brightness: Brightness.dark,
+          backgroundColor: Globals.globalTheme == 0 ? Theme.of(context).primaryColor : Colors.white10,
           leading: Container(
             height: 56,
             width: 56,
@@ -149,7 +162,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
               iconSize: 24,
               icon: Icon(
                 Icons.arrow_back,
-                color: Colors.white,
+                color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.87),
               ),
               splashRadius: 20,
               onPressed: () {
@@ -172,7 +185,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                     cursorWidth: 1,
                     cursorColor: Colors.white,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.87),
                       fontSize: 16,
                     ),
                     onChanged: (value) => this.setState(() {
@@ -181,7 +194,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                     decoration: InputDecoration.collapsed(
                       hintText: Globals.STRING_SEARCH_HEADER,
                       hintStyle: TextStyle(
-                        color: Colors.white,
+                        color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.87),
                       ),
                     )
                   ),
@@ -198,7 +211,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                 iconSize: 24,
                 icon: Icon(
                   Icons.search,
-                  color: Colors.white,
+                  color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.87),
                 ),
                 splashRadius: 20,
                 onPressed: () => this._searchHandler(this._keyword),
@@ -219,7 +232,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                         Globals.STRING_SEARCH_MODE_SUBHEADER,
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.black54,
+                          color: Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.60),
                         ),
                       ),
                     ),
@@ -228,35 +241,54 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                         this._selectSearchMode(SearchMode.album);
                         this._searchMode = SearchMode.album;
                       }),
-                      leading: ScaleTransition(child: Icon(Icons.album, color: this._scaleColor[0], size: 24,), scale: this._scaleAnimation[0]),
-                      title: Text(Globals.STRING_ALBUM),
-                      subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM, style: TextStyle(fontSize: 12)),
+                      leading: CircleAvatar(
+                        child: ScaleTransition(child: Icon(Icons.album, color: this._scaleColor[0], size: 24,), scale: this._scaleAnimation[0]),
+                        backgroundColor: Color(0x00000000),
+                      ),
+                      title: Text(
+                        Globals.STRING_ALBUM,
+                        style: TextStyle(
+                          color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
+                        ),
+                      ),
+                      subtitle: Text(
+                        Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM, 
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.60),
+                        ),
+                      ),
                     ),
                     ListTile(
                       onTap: () => this.setState(() {
                         this._selectSearchMode(SearchMode.track);
                         this._searchMode = SearchMode.track;
                       }),
-                      leading: ScaleTransition(child: Icon(Icons.music_note, color: this._scaleColor[1], size: 24,), scale: this._scaleAnimation[1]),
-                      title: Text(Globals.STRING_TRACK),
-                      subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK, style: TextStyle(fontSize: 12)),
+                      leading: CircleAvatar(
+                        child: ScaleTransition(child: Icon(Icons.music_note, color: this._scaleColor[1], size: 24,), scale: this._scaleAnimation[1]),
+                        backgroundColor: Color(0x00000000),
+                      ),
+                      title: Text(
+                        Globals.STRING_TRACK,
+                        style: TextStyle(
+                          color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
+                        ),
+                      ),
+                      subtitle: Text(
+                        Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK, 
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.60),
+                        )
+                      ),
                     ),
-                    // ListTile(
-                    //   onTap: () => this.setState(() {
-                    //     this._selectSearchMode(SearchMode.artist);
-                    //     this._searchMode = SearchMode.artist;
-                    //   }),
-                    //   leading: ScaleTransition(child: Icon(Icons.person, color: this._scaleColor[2], size: 24,), scale: this._scaleAnimation[2]),
-                    //   title: Text(Globals.STRING_ARTIST),
-                    //   subtitle: Text(Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST, style: TextStyle(fontSize: 12)),
-                    // ),
                     Container(
                       margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
                       child: Text(
                         Globals.STRING_SEARCH_HISTORY_SUBHEADER,
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.black54,
+                          color: Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.60),
                         ),
                       ),
                     ),
@@ -325,10 +357,13 @@ class SearchState extends State<Search> with SingleTickerProviderStateMixin {
         child: Column(
           children: [
             OpenContainer(
+              closedColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+              openColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
               closedElevation: 1,
               transitionDuration: Duration(milliseconds: 400),
               closedBuilder: (ctx, act) => Container(
                 height: 56,
+                color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
                 width: MediaQuery.of(context).size.width - 36.0,
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
@@ -339,7 +374,7 @@ class SearchState extends State<Search> with SingleTickerProviderStateMixin {
                         alignment: Alignment.center,
                         child: Icon(
                           Icons.menu,
-                          color: Colors.black54,
+                          color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.87),
                           size: 24,
                         ),
                       ),
@@ -348,7 +383,7 @@ class SearchState extends State<Search> with SingleTickerProviderStateMixin {
                           Globals.STRING_SEARCH_HEADER,
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.black54
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.87),
                           ),
                         ),
                       ),
@@ -358,7 +393,7 @@ class SearchState extends State<Search> with SingleTickerProviderStateMixin {
                         alignment: Alignment.center,
                         child: Icon(
                           Icons.search,
-                          color: Colors.black54,
+                          color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.87),
                           size: 24,
                         ),
                       ),

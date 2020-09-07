@@ -253,8 +253,19 @@ class SettingState extends State<Setting> {
     Timer(Duration(milliseconds: 400), () => showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE),
-        content: Text(Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE),
+        backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+        title: Text(
+          Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE,
+          style: TextStyle(
+            color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+          ),
+        ),
+        content: Text(
+          Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE,
+          style: TextStyle(
+            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+          ),
+        ),
         actions: [
           MaterialButton(
             onPressed: () {
@@ -295,6 +306,7 @@ class SettingState extends State<Setting> {
         children: [
           Card(
             elevation: 1,
+            color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
             margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
             child: Container(
               width: MediaQuery.of(context).size.width - 32,
@@ -315,7 +327,7 @@ class SettingState extends State<Setting> {
                           Globals.STRING_SETTING_ACCENT_COLOR_TITLE,
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black87,
+                            color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                             fontSize: 18,
                           ),
                         ),
@@ -328,7 +340,7 @@ class SettingState extends State<Setting> {
                           Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE,
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black54,
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
                             fontSize: 14,
                           ),
                         ),
@@ -352,7 +364,7 @@ class SettingState extends State<Setting> {
                       Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE,
                       maxLines: 1,
                       style: TextStyle(
-                        color: Colors.black54,
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
                         fontSize: 14,
                       ),
                     ),
@@ -368,6 +380,7 @@ class SettingState extends State<Setting> {
           ),
           Card(
             elevation: 1,
+            color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
             margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
             child: Container(
               width: MediaQuery.of(context).size.width - 32,
@@ -389,7 +402,7 @@ class SettingState extends State<Setting> {
                           Globals.STRING_SETTING_LANGUAGE_TITLE,
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black87,
+                            color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                             fontSize: 18,
                           ),
                         ),
@@ -402,7 +415,7 @@ class SettingState extends State<Setting> {
                           Globals.STRING_SETTING_LANGUAGE_SUBTITLE,
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black54,
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
                             fontSize: 14,
                           ),
                         ),
@@ -415,8 +428,18 @@ class SettingState extends State<Setting> {
                     ),
                   ),
                   ListTile(
-                    title: Text('English'),
-                    subtitle: Text('United States'),
+                    title: Text(
+                      'English',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'United States',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                      ),
+                    ),
                     onTap: () {
                       GlobalsPersistent.changeConfiguration('language', 'en_us');
                       this.setState(() {
@@ -425,6 +448,7 @@ class SettingState extends State<Setting> {
                       this._showRestartDialog();
                     },
                     leading: Radio(
+                      activeColor: Theme.of(context).primaryColor,
                       value: LanguageRegion.enUs,
                       groupValue: this._language,
                       onChanged: (LanguageRegion language) {
@@ -437,8 +461,18 @@ class SettingState extends State<Setting> {
                     ),
                   ),
                   ListTile(
-                    title: Text('Русский'),
-                    subtitle: Text('Россия'),
+                    title: Text(
+                      'Русский',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Россия',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                      ),
+                    ),
                     onTap: () {
                       GlobalsPersistent.changeConfiguration('language', 'ru_ru');
                       this.setState(() {
@@ -447,6 +481,7 @@ class SettingState extends State<Setting> {
                       this._showRestartDialog();
                     },
                     leading: Radio(
+                      activeColor: Theme.of(context).primaryColor,
                       value: LanguageRegion.ruRu,
                       groupValue: this._language,
                       onChanged: (LanguageRegion language) {
@@ -459,8 +494,18 @@ class SettingState extends State<Setting> {
                     ),
                   ),
                   ListTile(
-                    title: Text('Slovenščina'),
-                    subtitle: Text('Slovenia'),
+                    title: Text(
+                      'Slovenščina',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Slovenia',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                      ),
+                    ),
                     onTap: () {
                       GlobalsPersistent.changeConfiguration('language', 'sl_si');
                       this.setState(() {
@@ -469,6 +514,7 @@ class SettingState extends State<Setting> {
                       this._showRestartDialog();
                     },
                     leading: Radio(
+                      activeColor: Theme.of(context).primaryColor,
                       value: LanguageRegion.slSi,
                       groupValue: this._language,
                       onChanged: (LanguageRegion language) {
@@ -481,8 +527,18 @@ class SettingState extends State<Setting> {
                     ),
                   ),
                   ListTile(
-                    title: Text('Português'),
-                    subtitle: Text('Brasil'),
+                    title: Text(
+                      'Português',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Brasil',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                      ),
+                    ),
                     onTap: () {
                       GlobalsPersistent.changeConfiguration('language', 'pt_br');
                       this.setState(() {
@@ -491,6 +547,7 @@ class SettingState extends State<Setting> {
                       this._showRestartDialog();
                     },
                     leading: Radio(
+                      activeColor: Theme.of(context).primaryColor,
                       value: LanguageRegion.ptBr,
                       groupValue: this._language,
                       onChanged: (LanguageRegion language) {
@@ -503,8 +560,18 @@ class SettingState extends State<Setting> {
                     ),
                   ),
                   ListTile(
-                    title: Text('हिन्दी'),
-                    subtitle: Text('भारत'),
+                    title: Text(
+                      'हिन्दी',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'भारत',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                      ),
+                    ),
                     onTap: () {
                       GlobalsPersistent.changeConfiguration('language', 'hi_in');
                       this.setState(() {
@@ -513,6 +580,7 @@ class SettingState extends State<Setting> {
                       this._showRestartDialog();
                     },
                     leading: Radio(
+                      activeColor: Theme.of(context).primaryColor,
                       value: LanguageRegion.hiIn,
                       groupValue: this._language,
                       onChanged: (LanguageRegion language) {
@@ -525,8 +593,18 @@ class SettingState extends State<Setting> {
                     ),
                   ),
                   ListTile(
-                    title: Text('Deutsche'),
-                    subtitle: Text('Deutschland'),
+                    title: Text(
+                      'Deutsche',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Deutschland',
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                      ),
+                    ),
                     onTap: () {
                       GlobalsPersistent.changeConfiguration('language', 'de_de');
                       this.setState(() {
@@ -535,6 +613,7 @@ class SettingState extends State<Setting> {
                       this._showRestartDialog();
                     },
                     leading: Radio(
+                      activeColor: Theme.of(context).primaryColor,
                       value: LanguageRegion.deDe,
                       groupValue: this._language,
                       onChanged: (LanguageRegion language) {
@@ -547,7 +626,7 @@ class SettingState extends State<Setting> {
                     ),
                   ),
                   Divider(
-                    color: Colors.white,
+                    color: Color(0x000000),
                     height: 16,
                     thickness: 0,
                   ),
@@ -557,6 +636,7 @@ class SettingState extends State<Setting> {
           ),
           Card(
             elevation: 1,
+            color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
             margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
             child: Container(
               width: MediaQuery.of(context).size.width - 32,
@@ -576,7 +656,7 @@ class SettingState extends State<Setting> {
                           Globals.STRING_SETTING_SERVER_CHANGE_TITLE,
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black87,
+                            color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                             fontSize: 18,
                           ),
                         ),
@@ -589,7 +669,7 @@ class SettingState extends State<Setting> {
                           Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE,
                           maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black54,
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
                             fontSize: 14,
                           ),
                         ),
@@ -612,7 +692,7 @@ class SettingState extends State<Setting> {
                                   cursorWidth: 1,
                                   cursorColor: Theme.of(context).primaryColor,
                                   style: TextStyle(
-                                    color: Colors.black87,
+                                    color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                                     fontSize: 16,
                                   ),
                                   decoration: InputDecoration(
@@ -670,10 +750,21 @@ class SettingState extends State<Setting> {
             openColor: Color(0x00000000),
             transitionDuration: Duration(milliseconds: 400),
             closedBuilder: (ctx, act) => Card(
+              color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
               margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
               child: ListTile(
-                title: Text(Globals.STRING_ABOUT_TITLE),
-                subtitle: Text(Globals.STRING_ABOUT_SUBTITLE),
+                title: Text(
+                  Globals.STRING_ABOUT_TITLE,
+                  style: TextStyle(
+                    color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                  ),
+                ),
+                subtitle: Text(
+                  Globals.STRING_ABOUT_SUBTITLE,
+                  style: TextStyle(
+                    color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                  ),
+                ),
               ),
             ),
             openBuilder: (ctx, act) => AboutScreen(),
