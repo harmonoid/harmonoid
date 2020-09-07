@@ -30,6 +30,7 @@ class TrackElementState extends State<TrackElement> {
 
   void switchLoader() {
     this.setState(() {
+      this._trailing = false;
       this._leading =  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(Globals.globalContext).primaryColor));
     });
   }
