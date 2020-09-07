@@ -560,7 +560,7 @@ Future<void> setupStartupGlobals() async {
   String languageRegion = await GlobalsPersistent.getConfiguration('language');
   String homeURL = await GlobalsPersistent.getConfiguration('server');
   int accentIndex = await GlobalsPersistent.getConfiguration('accent');
-  int themeIndex = 1;
+  int themeIndex = await GlobalsPersistent.getConfiguration('theme');
   updateGlobals(languageRegion);
   updateHomeURL(homeURL);
   updateAccentColor(accentIndex, themeIndex);
