@@ -111,11 +111,11 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM                                           = 'Альбомы';
     Globals.STRING_TRACK                                           = 'Треки';
     Globals.STRING_ARTIST                                          = 'Исполнители';
-    Globals.STRING_SAVED                                           = 'Saved';
-    Globals.STRING_LIGHT                                           = 'Light';
-    Globals.STRING_DARK                                            = 'Dark';
-    Globals.STRING_EXPORT_TRACK                                    = 'Export track';
-    Globals.STRING_DELETE_TRACK                                    = 'Delete track';
+    Globals.STRING_SAVED                                           = 'Сохранено';
+    Globals.STRING_LIGHT                                           = 'День';
+    Globals.STRING_DARK                                            = 'Ночь';
+    Globals.STRING_EXPORT_TRACK                                    = 'Экспортировать трек';
+    Globals.STRING_DELETE_TRACK                                    = 'Удалить трек';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Поиск любимых альбомов';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Поиск любимых треков';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Поиск любимых исполнителей';
@@ -143,8 +143,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Этот трек не был загружен. Мы пытаемся выяснить причину проблем. Пожалуйста, скачайте другую музыку. Спасибо за понимание.';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Подождите';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Этот трек уже скачивается.';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Трек уже скачан';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Хотите скачать его заново?';
     Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Получаем треки...';
     Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Треки из этого альбома';
     Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Немного об альбоме';
@@ -182,12 +182,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Проверьте интернет-соединение.';
     Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Сервер успешно изменён.';
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Изменение сервера...';
-    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
-    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
-    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
-    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
-    Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
-    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Переводчики';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Огромное спасибо за вашу поддержку';
+    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Цвет акцента';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Измените дополнительный цвет приложения';
+    Globals.STRING_SETTING_THEME_TITLE                             = 'Тема';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Смените тему приложения';
   }
   else if (languageRegion == 'sl_si') {
     /////////SL-SI/////////
