@@ -371,7 +371,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM                                           = 'एल्बम';
     Globals.STRING_TRACK                                           = 'गाने';
     Globals.STRING_ARTIST                                          = 'कलाकार';
-    Globals.STRING_SAVED                                           = 'Saved';
+    Globals.STRING_SAVED                                           = 'सेव्ड';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'अपनी पसंदीदा एल्बमों से गाना खोजें';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'अपने मनपसंद गाने खोजें';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'अपने पसंदीदा कलाकारों के गाना खोजें';
@@ -440,10 +440,10 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'सर्वर बदला जा रहा है...';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'अनुवाद प्रदाता';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'आपके योगदान के लिए शुक्रिया';
-    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
-    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
-    Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
-    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
+    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'ऐप रंग';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'ऐप के लिए रंग बदलें';
+    Globals.STRING_SETTING_THEME_TITLE                             = 'ऐप मोड';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'ऐप को डार्क या लाइट मोड में बदलें';
   }
   else if (languageRegion == 'de_de') {
     /////////DE-DE/////////
