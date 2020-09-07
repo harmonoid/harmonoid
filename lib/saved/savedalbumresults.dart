@@ -187,7 +187,7 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
         int elementsPerRow = MediaQuery.of(Globals.globalContext).size.width ~/ 172.0;
         List<Widget> rowChildren = new List<Widget>();
         
-        if (Globals.albums.length > 1) {
+        if (Globals.albums.length >= 1) {
           bool incompleteRow = (Globals.albums.length) % elementsPerRow == 0 ? false : true;
           for (int index = 0; index < Globals.albums.length; index++) {
             List<TrackElement> albumTracks = [];
