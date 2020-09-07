@@ -123,6 +123,11 @@ enum LanguageRegion {
   deDe,
 }
 
+enum AppTheme {
+  light,
+  dark,
+}
+
 class Setting extends StatefulWidget {
   Setting({Key key}) : super(key : key);
   SettingState createState() => SettingState();
@@ -132,6 +137,7 @@ class SettingState extends State<Setting> {
 
   TextEditingController _serverInputController = new TextEditingController(text: Globals.STRING_HOME_URL);
   LanguageRegion _language;
+  AppTheme _theme;
   Widget _serverLabelWidget = Container(
     height: 18,
   );
@@ -296,6 +302,14 @@ class SettingState extends State<Setting> {
         else if (value == 'de_de') this._language = LanguageRegion.deDe; 
       });
     });
+
+    GlobalsPersistent.getConfiguration('theme')
+    .then((value) {
+      this.setState(() {
+        if (value == 0) this._theme = AppTheme.light;
+        else if (value == 1) this._theme = AppTheme.dark;
+      });
+    });
   }
 
   Widget build(BuildContext context) {
@@ -304,6 +318,118 @@ class SettingState extends State<Setting> {
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
+          Card(
+            elevation: 1,
+            color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
+            margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+            child: Container(
+              width: MediaQuery.of(context).size.width - 32,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 16, right: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Divider(
+                          color: Color(0x00000000),
+                          height: 16,
+                          thickness: 0,
+                        ),
+                        Text(
+                          Globals.STRING_SETTING_THEME_TITLE,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                            fontSize: 18,
+                          ),
+                        ),
+                        Divider(
+                          color: Color(0x00000000),
+                          height: 4,
+                          thickness: 0,
+                        ),
+                        Text(
+                          Globals.STRING_SETTING_THEME_SUBTITLE,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Divider(
+                          color: Color(0x00000000),
+                          height: 16,
+                          thickness: 0,
+                        ),
+                      ],
+                    ),
+                  ),
+                  ListTile(
+                    title: Text(
+                      Globals.STRING_LIGHT,
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    onTap: () {
+                      GlobalsPersistent.changeConfiguration('theme', 0);
+                      this.setState(() {
+                        this._theme = AppTheme.light;
+                      });
+                      this._showRestartDialog();
+                    },
+                    leading: Radio(
+                      activeColor: Theme.of(context).primaryColor,
+                      value: AppTheme.light,
+                      groupValue: this._theme,
+                      onChanged: (AppTheme theme) {
+                        GlobalsPersistent.changeConfiguration('theme', 0);
+                        this.setState(() {
+                          this._theme = AppTheme.light;
+                        });
+                        this._showRestartDialog();
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: Text(
+                      Globals.STRING_DARK,
+                      style: TextStyle(
+                        color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                      ),
+                    ),
+                    onTap: () {
+                      GlobalsPersistent.changeConfiguration('theme', 1);
+                      this.setState(() {
+                        this._theme = AppTheme.dark;
+                      });
+                      this._showRestartDialog();
+                    },
+                    leading: Radio(
+                      activeColor: Theme.of(context).primaryColor,
+                      value: AppTheme.dark,
+                      groupValue: this._theme,
+                      onChanged: (AppTheme theme) {
+                        GlobalsPersistent.changeConfiguration('theme', 1);
+                        this.setState(() {
+                          this._theme = AppTheme.dark;
+                        });
+                        this._showRestartDialog();
+                      },
+                    ),
+                  ),
+                  Divider(
+                    color: Color(0x000000),
+                    height: 16,
+                    thickness: 0,
+                  ),
+                ],
+              ),
+            ),
+          ),
           Card(
             elevation: 1,
             color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
