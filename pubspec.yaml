@@ -27,7 +27,6 @@ dependencies:
   http: ^0.12.2
   path: ^1.7.0
   path_provider: ^1.6.11
-  palette_generator: ^0.2.3
   just_audio: ^0.3.2
   audio_service: ^0.13.0
   url_launcher: ^5.5.0
