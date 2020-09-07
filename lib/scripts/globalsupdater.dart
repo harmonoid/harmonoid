@@ -20,6 +20,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_TRACK                                           = 'Tracks';
     Globals.STRING_ARTIST                                          = 'Artists';
     Globals.STRING_SAVED                                           = 'Saved';
+    Globals.STRING_LIGHT                                           = 'Light';
+    Globals.STRING_DARK                                            = 'Dark';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Search music from your favorite albums';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Search for your favorite tracks';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Search music from your favorite artists';
@@ -108,6 +110,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_TRACK                                           = 'Треки';
     Globals.STRING_ARTIST                                          = 'Исполнители';
     Globals.STRING_SAVED                                           = 'Saved';
+    Globals.STRING_LIGHT                                           = 'Light';
+    Globals.STRING_DARK                                            = 'Dark';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Поиск любимых альбомов';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Поиск любимых треков';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Поиск любимых исполнителей';
@@ -196,6 +200,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_TRACK                                           = 'Pesmi';
     Globals.STRING_ARTIST                                          = 'Skladatelji';
     Globals.STRING_SAVED                                           = 'Saved';
+    Globals.STRING_LIGHT                                           = 'Light';
+    Globals.STRING_DARK                                            = 'Dark';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Preišči glasbo iz priljubljenih albumov';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Preišči za najljubše pesmi';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Preišči za pesmi od priljubljenih avtorjev';
@@ -284,6 +290,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_TRACK                                           = 'Músicas';
     Globals.STRING_ARTIST                                          = 'Artistas';
     Globals.STRING_SAVED                                           = 'Saved';
+    Globals.STRING_LIGHT                                           = 'Light';
+    Globals.STRING_DARK                                            = 'Dark';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Procurar músicas do seu álbum favorito';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Procurar suas músicas preferidas';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Procurar músicas do seu artistas preferidos';
@@ -372,6 +380,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_TRACK                                           = 'गाने';
     Globals.STRING_ARTIST                                          = 'कलाकार';
     Globals.STRING_SAVED                                           = 'सेव्ड';
+    Globals.STRING_LIGHT                                           = 'लाइट';
+    Globals.STRING_DARK                                            = 'डार्क';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'अपनी पसंदीदा एल्बमों से गाना खोजें';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'अपने मनपसंद गाने खोजें';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'अपने पसंदीदा कलाकारों के गाना खोजें';
@@ -443,7 +453,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'ऐप रंग';
     Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'ऐप के लिए रंग बदलें';
     Globals.STRING_SETTING_THEME_TITLE                             = 'ऐप मोड';
-    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'ऐप को डार्क या लाइट मोड में बदलें';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'ऐप को लाइट या डार्क मोड में यूज़ करें';
   }
   else if (languageRegion == 'de_de') {
     /////////DE-DE/////////
@@ -460,6 +470,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_TRACK                                           = 'Spuren';
     Globals.STRING_ARTIST                                          = 'Künstler';
     Globals.STRING_SAVED                                           = 'Saved';
+    Globals.STRING_LIGHT                                           = 'Light';
+    Globals.STRING_DARK                                            = 'Dark';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Musik aus Ihren Lieblingsalben suchen';
     Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Suche nach Ihren Lieblingstracks';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Musik von Ihren Lieblingskünstlern suchen';
