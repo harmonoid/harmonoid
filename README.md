@@ -59,6 +59,8 @@ You can open issues if you get confused in the UI of app & request features too!
 - Simultaneously downloading tracks of an album.
 - Playlist Support (Very basic at the moment, will improve in future.)
 - Now Playing (Will improve in future.) &  About Screens
+- Accent Colors 
+- Dark Mode
 
 
 ## :information_source: Features Planned & Current Bugs
@@ -92,7 +94,7 @@ For that purpose, you can checkout [this](https://github.com/alexmercerind/harmo
 |Slovenian      |@mytja         |
 |Portuguese     |@bdlukaa       |
 |Hindi          |@alexmercerind |
-|German         |@mytja         |
+|German         |@MickLesk      |
 
 Thankyou!
 
