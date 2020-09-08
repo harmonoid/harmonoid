@@ -776,7 +776,7 @@ class AboutScreenState extends State<AboutScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      'Slovenščina',
+                      'slovenščina',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                       ),

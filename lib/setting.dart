@@ -648,7 +648,7 @@ class SettingState extends State<Setting> {
                   ),
                   ListTile(
                     title: Text(
-                      'Slovenščina',
+                      'slovenščina',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                       ),
