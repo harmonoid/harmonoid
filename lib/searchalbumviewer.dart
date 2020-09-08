@@ -242,7 +242,10 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
         );
         this._downloadTask[index] = track.save().asStream().listen((result) async {
           if (result == 400) {
-            GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
+            int deleteResult = await GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
+            if (deleteResult == 1) {
+              await GetSavedMusic.deleteAlbum(albumJson['album_id']);
+            }
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
@@ -274,7 +277,10 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             );
           }
           else if (result == 500) {
-            GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
+            int deleteResult = await GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
+            if (deleteResult == 1) {
+              await GetSavedMusic.deleteAlbum(albumJson['album_id']);
+            }
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
@@ -306,7 +312,10 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             );
           }
           else if (result == 403) {
-            GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
+            int deleteResult = await GetSavedMusic.deleteTrack(albumJson['album_id'], albumTracks[index]['track_number']);
+            if (deleteResult == 1) {
+              await GetSavedMusic.deleteAlbum(albumJson['album_id']);
+            }
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
@@ -711,9 +720,6 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                   duration: Duration(milliseconds: 200),
                   opacity: this._loaderShowing,
                   child: TweenAnimationBuilder(
-                    onEnd: () => this.setState(() {
-                      this._loaderShowing = 0.0;
-                    }),
                     duration: Duration(seconds: 8),
                     tween: Tween<double>(begin: 0.0, end: 1.0),
                     curve: Curves.linear,
