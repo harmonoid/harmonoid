@@ -295,12 +295,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Zamenjaj barve na aplikaciji';
     Globals.STRING_SETTING_THEME_TITLE                             = 'Način';
     Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Menjaj med temnim in svetlim načinom';
-    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
-    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
-    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
-    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Aplikacija je že posodobljena.';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'PRENESI POSODOBITEV';
+    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'Verzija aplikacije';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Informacija o trenutni verziji.';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Nameščena verzija : ';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Najnovejša verzija     : ';
   }
   else if (languageRegion == 'pt_br') {
     /////////PT-BR/////////
