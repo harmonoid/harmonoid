@@ -16,7 +16,7 @@ class AboutScreenState extends State<AboutScreen> {
   String _repository = 'harmonoid';
   String _developer = 'alexmercerind';
 
-  String _repository1 = 'spotiyt-server';
+  String _repository1 = 'harmonoid-service';
   String _developer1 = 'raitonoberu';
   List<Widget> _githubStargazers = [CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(Globals.globalContext).primaryColor))];
 
