@@ -101,8 +101,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
     Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
     Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version';
   }
   else if (languageRegion == 'ru_ru') {
     /////////RU-RU/////////
@@ -119,8 +119,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_TRACK                                           = 'Треки';
     Globals.STRING_ARTIST                                          = 'Исполнители';
     Globals.STRING_SAVED                                           = 'Сохранено';
-    Globals.STRING_LIGHT                                           = 'Светлая';
-    Globals.STRING_DARK                                            = 'Тёмная';
+    Globals.STRING_LIGHT                                           = 'День';
+    Globals.STRING_DARK                                            = 'Ночь';
     Globals.STRING_OPTIONS                                         = 'Параметры';
     Globals.STRING_EXPORT_TRACK                                    = 'Экспортировать трек';
     Globals.STRING_DELETE_TRACK                                    = 'Удалить трек';
@@ -200,8 +200,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_DOWNLOAD_UPDATE                                 = 'СКАЧАТЬ ОБНОВЛЕНИЕ';
     Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'Версия приложения';
     Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Информация о текущей версии приложения';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Текущая версия    : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Последняя версия   : ';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Текущая версия';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Последняя версия';
   }
   else if (languageRegion == 'sl_si') {
     /////////SL-SI/////////
@@ -299,8 +299,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_DOWNLOAD_UPDATE                                 = 'PRENESI POSODOBITEV';
     Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'Verzija aplikacije';
     Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Informacija o trenutni verziji.';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Nameščena verzija : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Najnovejša verzija     : ';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Nameščena verzija';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Najnovejša verzija';
   }
   else if (languageRegion == 'pt_br') {
     /////////PT-BR/////////
@@ -398,8 +398,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
     Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
     Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version';
   }
   else if (languageRegion == 'hi_in') {
     /////////HI-IN/////////
@@ -448,8 +448,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'यह गाना सेव नहीं किया जा सका। हम जानने का प्रयास कर रहे हैं की यह किस कारण से हो रहा है। आपके प्यार के लिए धन्यवाद।';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'रुको';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'यह गाना डाउनलोड हो ही रहा है।';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'यह गाना पहले से सेव है';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'क्या आप इस गाने को दोबारा डाउनलोड करना चाहते हैं?';
     Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'हम गाने ला रहे हैं...';
     Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'यह रहे इस एल्बम के गाने';
     Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'इस एल्बम के बारे में थोड़ी जानकारी';
@@ -493,12 +493,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'ऐप के लिए रंग बदलें';
     Globals.STRING_SETTING_THEME_TITLE                             = 'ऐप मोड';
     Globals.STRING_SETTING_THEME_SUBTITLE                          = 'ऐप को लाइट या डार्क मोड में यूज़ करें';
-    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
-    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
-    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
-    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'आपकी ऐप पहले से अपडेट है';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'डाउनलोड अपडेट';
+    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'ऐप वर्ज़न';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'ऐप के इस वर्ज़न के बारे में जानकारी';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'इन्सटाल्ड वर्ज़न';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'लेटेस्ट वर्ज़न';
   }
   else if (languageRegion == 'de_de') {
     /////////DE-DE/////////
@@ -596,8 +596,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
     Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
     Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version';
   }
 }
 
