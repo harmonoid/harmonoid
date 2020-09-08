@@ -370,12 +370,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Por favor verifique sua conexão com a internet.';
     Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Servidor alterado com sucesso.';
     Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Mudando de servidor...';
-    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
-    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
-    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
-    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
-    Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
-    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Tradutores';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Muito obrigado pelo seu apoio no aplicativo';
+    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Cor de destaque';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Mude a cor de destaque do aplicativo';
+    Globals.STRING_SETTING_THEME_TITLE                             = 'Tema';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Mude o tema do aplicativo para claro ou escuro';
   }
   else if (languageRegion == 'hi_in') {
     /////////HI-IN/////////
