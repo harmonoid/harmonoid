@@ -144,7 +144,7 @@ class TrackElementState extends State<TrackElement> {
       ) : IconButton(
         splashRadius: 24,
         onPressed: () async {
-          await widget.cancelDownloadTrack(widget.albumTracks[widget.index]['track_number'] - 1);
+          await widget.cancelDownloadTrack(widget.index);
           this.setState(() {
             this._trailing = true; 
           });
@@ -175,34 +175,34 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
   Animation<double> _searchResultOpacity;
   AnimationController _searchResultOpacityController;
   Color _accentColor = Theme.of(Globals.globalContext).primaryColor;
-  List<int> _downloadStack = new List<int>();
+  List<int> _downloadQueue = new List<int>();
   List<GlobalKey<TrackElementState>> _trackKeyList = new List<GlobalKey<TrackElementState>>();
-  List<int> _nonDownloadStack = new List<int>();
+  List<int> _nonDownloadQueue = new List<int>();
   ScrollController scrollController = new ScrollController();
   List<StreamSubscription> _downloadTask;
 
   void refreshUI() {
     try {
-      for (int trackNumber in this._downloadStack) {
-        this._trackKeyList[trackNumber - 1].currentState.switchLoader();
+      for (int trackIndex in this._downloadQueue) {
+        this._trackKeyList[trackIndex].currentState.switchLoader();
       }
-      for (int trackNumber in this._nonDownloadStack) {
-        this._trackKeyList[trackNumber - 1].currentState.switchArt();
+      for (int trackIndex in this._nonDownloadQueue) {
+        this._trackKeyList[trackIndex].currentState.switchArt();
       }
     }
     catch(e) {}
   }
 
-  Future<void> cancelDownloadTrack(int index) async {
-    await this._downloadTask[index].cancel();
-    this.removeTrackStack(index + 1);
-    this._trackKeyList[index].currentState.switchArt();
-    this._trackKeyList[index].currentState.refreshSaved();
+  Future<void> cancelDownloadTrack(int trackIndex) async {
+    await this._downloadTask[trackIndex].cancel();
+    this.removeTrackQueue(trackIndex);
+    this._trackKeyList[trackIndex].currentState.switchArt();
+    this._trackKeyList[trackIndex].currentState.refreshSaved();
   }
 
   Future<void> downloadTrack(albumTracks, albumJson, index, isSaved) async {
     Future<void> proceedDownload() async {
-      if (this._downloadStack.contains(albumTracks[index]['track_number'])) {
+      if (this._downloadQueue.contains(index)) {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -234,7 +234,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
         );
       }
       else {
-        this.addTrackStack(albumTracks[index]['track_number']);
+        this.addTrackQueue(index);
         AddSavedMusic track = AddSavedMusic(
           albumTracks[index]['track_number'], 
           albumTracks[index]['track_id'], 
@@ -346,9 +346,9 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
               )
             );
           }
-          this.removeTrackStack(albumTracks[index]['track_number']);
-          this._trackKeyList[albumTracks[index]['track_number'] - 1].currentState.switchArt();
-          this._trackKeyList[albumTracks[index]['track_number'] - 1].currentState.refreshSaved();
+          this.removeTrackQueue(index);
+          this._trackKeyList[index].currentState.switchArt();
+          this._trackKeyList[index].currentState.refreshSaved();
         });
       }
     }
@@ -398,8 +398,8 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
     }
   }
 
-  Future<bool> checkTrackStack() async {
-    if (this._downloadStack.length == 0) {
+  Future<bool> checkTrackQueue() async {
+    if (this._downloadQueue.length == 0) {
       return true;
     }
     else {
@@ -436,20 +436,20 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
     }
   }
 
-  void addTrackStack(int trackNumber) {
-    if (!(this._downloadStack.contains(trackNumber))) {
-      this._downloadStack.add(trackNumber);
-      this._nonDownloadStack.remove(trackNumber);
+  void addTrackQueue(int trackIndex) {
+    if (!(this._downloadQueue.contains(trackIndex))) {
+      this._downloadQueue.add(trackIndex);
+      this._nonDownloadQueue.remove(trackIndex);
       this.refreshUI();
     }
   }
-  void removeTrackStack(int trackNumber) {
-    this._downloadStack.remove(trackNumber);
-    this._nonDownloadStack.add(trackNumber);
+  void removeTrackQueue(int trackIndex) {
+    this._downloadQueue.remove(trackIndex);
+    this._nonDownloadQueue.add(trackIndex);
     this.refreshUI();
   }
-  void clearTrackStack(int trackNumber) {
-    this._downloadStack.clear();
+  void clearTrackQueue(int trackIndex) {
+    this._downloadQueue.clear();
   }
 
   List<Widget> _albumTracks = [
@@ -473,7 +473,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
 
     for (int index = 0; index < widget.albumJson['album_length']; index++) {
       this._trackKeyList.add(new GlobalKey<TrackElementState>());
-      _nonDownloadStack.add(index + 1);
+      _nonDownloadQueue.add(index);
     }
 
     scrollController.addListener(this.refreshUI);
@@ -638,7 +638,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: this.checkTrackStack,
+      onWillPop: this.checkTrackQueue,
       child: Scaffold(
         backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
         body: CustomScrollView(
@@ -659,7 +659,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                   ),
                   splashRadius: 20,
                   onPressed: () {
-                    if (this._downloadStack.length == 0) {
+                    if (this._downloadQueue.length == 0) {
                       Navigator.of(context).pop();
                     }
                     else {
