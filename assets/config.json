@@ -1,5 +1,5 @@
 {
-    "current_version": "0.0.2",
+    "current_version": "0.0.2+2",
     "language": "en_us",
     "server": "harmonoidservice.herokuapp.com",
     "startup_completed": false,
