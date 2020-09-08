@@ -1,6 +1,9 @@
 library globalsupdater;
 
+import 'dart:convert';
+
 import 'package:harmonoid/globals.dart' as Globals;
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:harmonoid/scripts/globalspersistent.dart';
 import 'package:harmonoid/scripts/refreshcollection.dart';
 
@@ -610,11 +613,20 @@ void updateAccentColor(int accentIndex, int themeIndex) {
   Globals.globalColor = accentIndex;
 }
 
+Future<void> checkVersion() async {
+  String thisVersion = jsonDecode(await rootBundle.loadString('assets/config.json'))['current_version'];
+  String currentVersion = await GlobalsPersistent.getConfiguration('current_version');
+  if (thisVersion  != currentVersion) {
+    await GlobalsPersistent.changeConfiguration('current_version', thisVersion);
+  }
+}
+
 Future<void> setupStartupGlobals() async {
   String languageRegion = await GlobalsPersistent.getConfiguration('language');
   String homeURL = await GlobalsPersistent.getConfiguration('server');
   int accentIndex = await GlobalsPersistent.getConfiguration('accent');
   int themeIndex = await GlobalsPersistent.getConfiguration('theme');
+  await checkVersion();
   updateGlobals(languageRegion);
   updateHomeURL(homeURL);
   updateAccentColor(accentIndex, themeIndex);
