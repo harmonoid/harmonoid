@@ -119,8 +119,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_TRACK                                           = 'Треки';
     Globals.STRING_ARTIST                                          = 'Исполнители';
     Globals.STRING_SAVED                                           = 'Сохранено';
-    Globals.STRING_LIGHT                                           = 'День';
-    Globals.STRING_DARK                                            = 'Ночь';
+    Globals.STRING_LIGHT                                           = 'Светлая';
+    Globals.STRING_DARK                                            = 'Тёмная';
     Globals.STRING_OPTIONS                                         = 'Параметры';
     Globals.STRING_EXPORT_TRACK                                    = 'Экспортировать трек';
     Globals.STRING_DELETE_TRACK                                    = 'Удалить трек';
@@ -193,15 +193,15 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Переводчики';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Огромное спасибо за вашу поддержку';
     Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Цвет акцента';
-    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Измените дополнительный цвет приложения';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Изменить дополнительный цвет приложения';
     Globals.STRING_SETTING_THEME_TITLE                             = 'Тема';
-    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Смените тему приложения';
-    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
-    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
-    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
-    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Сменить тему приложения';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'У вас последняя версия';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'СКАЧАТЬ ОБНОВЛЕНИЕ';
+    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'Версия приложения';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Информация о текущей версии приложения';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Текущая версия    : ';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Последняя версия   : ';
   }
   else if (languageRegion == 'sl_si') {
     /////////SL-SI/////////
