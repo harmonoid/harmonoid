@@ -89,7 +89,7 @@ class TrackElementState extends State<TrackElement> {
     String trackDurationLabel;
     int durationSeconds = durationMilliseconds ~/ 1000;
     int minutes = durationSeconds ~/ 60;
-    int seconds = durationSeconds - minutes * 60;
+    int seconds = durationSeconds - minutes * 60 - 1;
     if (seconds.toString().length == 2) {
       trackDurationLabel = minutes.toString() + ":" + seconds.toString();
     }
