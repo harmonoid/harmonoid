@@ -238,8 +238,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Ta specifična pesem se ne more shraniti. Še vedno ugotavljamo, zakaj je prišlo do napake. Prosimo, da preneseš druge pesmi medtem. Najlepša hvala za podporo.';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Počakaj';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Ta pesem se že prenaša.';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Pesem je že shranjena.';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Ali hočeš še enkrat prenesti to pesem?';
     Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Iščem pesmi...';
     Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Tukaj so pesmi iz tega albuma';
     Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Nekaj informacij o albumu';
