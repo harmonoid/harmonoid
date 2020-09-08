@@ -754,7 +754,7 @@ class AboutScreenState extends State<AboutScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      'Русский',
+                      'русский',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                       ),
@@ -798,7 +798,7 @@ class AboutScreenState extends State<AboutScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      'Português',
+                      'português',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                       ),
@@ -842,7 +842,7 @@ class AboutScreenState extends State<AboutScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      'Deutsch',
+                      'deutsch',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                       ),

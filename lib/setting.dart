@@ -582,7 +582,7 @@ class SettingState extends State<Setting> {
                   ),
                   ListTile(
                     title: Text(
-                      'English',
+                      'english',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                       ),
@@ -615,7 +615,7 @@ class SettingState extends State<Setting> {
                   ),
                   ListTile(
                     title: Text(
-                      'Русский',
+                      'русский',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                       ),
@@ -681,7 +681,7 @@ class SettingState extends State<Setting> {
                   ),
                   ListTile(
                     title: Text(
-                      'Português',
+                      'português',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                       ),
@@ -747,7 +747,7 @@ class SettingState extends State<Setting> {
                   ),
                   ListTile(
                     title: Text(
-                      'Deutsch',
+                      'deutsch',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                       ),
