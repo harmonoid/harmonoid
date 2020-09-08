@@ -101,7 +101,7 @@ class _Welcome extends State<Welcome> {
           ),
           Search(key: this._search, refreshCollection: this.refreshCollection),
           Container(
-            color: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+            color: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
             height: MediaQuery.of(context).padding.top,
             width: MediaQuery.of(context).size.width,
           )
@@ -111,7 +111,7 @@ class _Welcome extends State<Welcome> {
     ];
 
     return Scaffold(
-      backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+      backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
       floatingActionButton: this._index == 1 ? TweenAnimationBuilder(
         duration: Duration(seconds: 1),
         tween: Tween<double>(begin: 0.0, end: this._rotationValue),

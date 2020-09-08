@@ -55,7 +55,7 @@ class TrackElement extends StatelessWidget {
         showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-              backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+              backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
               title: Text(
                 Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
                 style: TextStyle(
@@ -174,7 +174,7 @@ class SavedAlbumViewerState extends State<SavedAlbumViewer> with TickerProviderS
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+      backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -196,7 +196,7 @@ class SavedAlbumViewerState extends State<SavedAlbumViewer> with TickerProviderS
                     showDialog(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
-                          backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+                          backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
                           title: Text(
                             Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER,
                             style: TextStyle(
