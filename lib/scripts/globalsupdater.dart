@@ -250,8 +250,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Ta specifična pesem se ne more shraniti. Še vedno ugotavljamo, zakaj je prišlo do napake. Prosimo, da preneseš druge pesmi medtem. Najlepša hvala za podporo.';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Počakaj';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Ta pesem se že prenaša.';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Pesem je že shranjena.';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Ali hočeš še enkrat prenesti to pesem?';
     Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Iščem pesmi...';
     Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Tukaj so pesmi iz tega albuma';
     Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Nekaj informacij o albumu';
@@ -295,12 +295,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Zamenjaj barve na aplikaciji';
     Globals.STRING_SETTING_THEME_TITLE                             = 'Način';
     Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Menjaj med temnim in svetlim načinom';
-    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
-    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
-    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
-    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Aplikacija je že posodobljena.';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'PRENESI POSODOBITEV';
+    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'Verzija aplikacije';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Informacija o trenutni verziji.';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Nameščena verzija : ';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Najnovejša verzija     : ';
   }
   else if (languageRegion == 'pt_br') {
     /////////PT-BR/////////
