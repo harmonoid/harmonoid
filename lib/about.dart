@@ -627,7 +627,7 @@ class AboutScreenState extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Globals.globalTheme == 0 ? Colors.white.withOpacity(0.99) : Color(0xFF121212),
+      backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
       appBar: AppBar(
         brightness: Brightness.dark,
         backgroundColor: Globals.globalTheme == 0 ? Theme.of(context).primaryColor : Colors.white10,
