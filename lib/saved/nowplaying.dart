@@ -234,40 +234,39 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AnimatedBuilder(
-                    child: Stack(
-                      overflow: Overflow.clip,
-                      clipBehavior: Clip.antiAlias,
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        Container(
-                          color: Colors.black12,
-                          alignment: Alignment.center,
-                          height: MediaQuery.of(context).size.width - 32,
-                          width: MediaQuery.of(context).size.width - 32,
-                          child: Icon(
-                            Icons.album,
-                            color: Colors.white,
-                            size: 108,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: FloatingActionButton(
-                            onPressed: () {},
-                            child: Icon(
-                              Icons.play_arrow,
-                              color: Colors.white,
-                              size: 28,
-                            ),
-                            backgroundColor: Theme.of(context).primaryColor,
-                          ),
-                        )
-                      ],
-                    ),
                     animation: _animationController,
                     builder: (context, child) => Container(
                       height: _animationCurved.value,
-                      child: child,
+                      child: Stack(
+                        overflow: Overflow.clip,
+                        clipBehavior: Clip.antiAlias,
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          Container(
+                            color: Colors.black12,
+                            alignment: Alignment.center,
+                            height: MediaQuery.of(context).size.width - 32,
+                            width: MediaQuery.of(context).size.width - 32,
+                            child: Icon(
+                              Icons.album,
+                              color: Colors.white,
+                              size: 108,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: FloatingActionButton(
+                              onPressed: () {},
+                              child: Icon(
+                                Icons.play_arrow,
+                                color: Colors.white,
+                                size: _animationCurved.value * 28 / (MediaQuery.of(context).size.width - 32),
+                              ),
+                              backgroundColor: Theme.of(context).primaryColor,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   Container(
@@ -446,43 +445,42 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AnimatedBuilder(
-                    child: Stack(
-                      overflow: Overflow.clip,
-                      clipBehavior: Clip.antiAlias,
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        Image.file(
-                          File(this._albumArt),
-                          height: MediaQuery.of(context).size.width - 32,
-                          width: MediaQuery.of(context).size.width - 32,
-                          fit: BoxFit.fitWidth,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: FloatingActionButton(
-                            onPressed: () {
-                              this._isPlaying = !this._isPlaying;
-                              if (this._isPlaying) {
-                                AudioService.play();
-                              }
-                              else {
-                                AudioService.pause();
-                              }
-                            },
-                            child: Icon(
-                              this._isPlaying ? Icons.pause : Icons.play_arrow,
-                              color: Colors.white,
-                              size: 28,
-                            ),
-                            backgroundColor: Theme.of(context).primaryColor,
-                          ),
-                        )
-                      ],
-                    ),
                     animation: _animationController,
                     builder: (context, child) => Container(
                       height: _animationCurved.value,
-                      child: child,
+                      child: Stack(
+                        overflow: Overflow.clip,
+                        clipBehavior: Clip.antiAlias,
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          Image.file(
+                            File(this._albumArt),
+                            height: MediaQuery.of(context).size.width - 32,
+                            width: MediaQuery.of(context).size.width - 32,
+                            fit: BoxFit.fitWidth,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: FloatingActionButton(
+                              onPressed: () {
+                                this._isPlaying = !this._isPlaying;
+                                if (this._isPlaying) {
+                                  AudioService.play();
+                                }
+                                else {
+                                  AudioService.pause();
+                                }
+                              },
+                              child: Icon(
+                                this._isPlaying ? Icons.pause : Icons.play_arrow,
+                                color: Colors.white,
+                                size: _animationCurved.value * 28 / (MediaQuery.of(context).size.width - 32),
+                              ),
+                              backgroundColor: Theme.of(context).primaryColor,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   Container(

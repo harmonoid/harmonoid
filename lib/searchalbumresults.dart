@@ -73,8 +73,8 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
               margin: EdgeInsets.all(8),
               child: OpenContainer(
                 closedElevation: 1,
-                closedColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
-                openColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+                closedColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
+                openColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
                 transitionDuration: Duration(milliseconds: 400),
                 closedBuilder: (ctx, act) => Container(
                   color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
@@ -193,8 +193,8 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
             child: OpenContainer(
               closedElevation: 1,
               transitionDuration: Duration(milliseconds: 400),
-              closedColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
-              openColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+              closedColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
+              openColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
               closedBuilder: (ctx, act) => Container(
                 color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
                 child: Column(
@@ -354,7 +354,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+      backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(

@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert' as convert;
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/scripts/globalspersistent.dart';
@@ -138,6 +140,10 @@ class SettingState extends State<Setting> {
   TextEditingController _serverInputController = new TextEditingController(text: Globals.STRING_HOME_URL);
   LanguageRegion _language;
   AppTheme _theme;
+  String _installedVersion = '';
+  String _latestVersion = '';
+  String _downloadUri = '';
+  bool _isVersionShowing = false;
   Widget _serverLabelWidget = Container(
     height: 18,
   );
@@ -290,6 +296,27 @@ class SettingState extends State<Setting> {
   @override
   void initState() {
     super.initState();
+
+    (() async {
+      try {
+        this._installedVersion = await GlobalsPersistent.getConfiguration('current_version');
+        http.Response latestVersionResponse = await http.get('https://api.github.com/repos/alexmercerind/harmonoid/releases');
+        List<dynamic> latestVersion = convert.jsonDecode(latestVersionResponse.body);
+
+        this.setState(() {
+          this._downloadUri = latestVersion[0]['assets'][0]['browser_download_url'];
+          this._latestVersion = latestVersion[0]['tag_name'].substring(1, latestVersion[0]['tag_name'].length);
+          this._isVersionShowing = true;
+        });
+      }
+      catch(error) {
+        this.setState(() {
+          this._latestVersion = Globals.STRING_INTERNET_ERROR;
+          this._isVersionShowing = false;
+        });
+      }
+      
+    })();
 
     GlobalsPersistent.getConfiguration('language')
     .then((value) {
@@ -488,7 +515,7 @@ class SettingState extends State<Setting> {
                     margin: EdgeInsets.only(left: 16, right: 16),
                     child: Text(
                       Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE,
-                      maxLines: 1,
+                      maxLines: 2,
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
                         fontSize: 14,
@@ -865,6 +892,112 @@ class SettingState extends State<Setting> {
                       ],
                     ),
                   ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            elevation: 1,
+            color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
+            margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+            child: Container(
+              width: MediaQuery.of(context).size.width - 32,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 16, right: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Divider(
+                          color: Color(0x00000000),
+                          height: 16,
+                          thickness: 0,
+                        ),
+                        Text(
+                          Globals.STRING_SETTING_APP_VERSION_TITLE,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                            fontSize: 18,
+                          ),
+                        ),
+                        Divider(
+                          color: Color(0x00000000),
+                          height: 4,
+                          thickness: 0,
+                        ),
+                        Text(
+                          Globals.STRING_SETTING_APP_VERSION_SUBTITLE,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Divider(
+                          color: Color(0x00000000),
+                          height: 16,
+                          thickness: 0,
+                        ),
+                        Text(
+                          Globals.STRING_SETTING_APP_VERSION_INSTALLED + this._installedVersion,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                            fontSize: 14,
+                          ),
+                        ),
+                        Divider(
+                          color: Color(0x00000000),
+                          height: 4,
+                          thickness: 0,
+                        ),
+                        Text(
+                          Globals.STRING_SETTING_APP_VERSION_LATEST + this._latestVersion,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Color(0x000000),
+                    height: 16,
+                    thickness: 0,
+                  ),
+                  this._isVersionShowing ? 
+                  (this._installedVersion != this._latestVersion ?
+                    ButtonBar(
+                      alignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        MaterialButton(
+                          onPressed: () => url_launcher.launch(this._downloadUri),
+                          child: Text(
+                            Globals.STRING_DOWNLOAD_UPDATE,
+                            style: TextStyle(color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      ],
+                    ) : 
+                    Padding(
+                      padding: EdgeInsets.only(left: 16, bottom: 16),
+                      child: Text(
+                        Globals.STRING_NO_DOWNLOAD_UPDATE,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
+                          fontSize: 14,
+                        ),
+                      ),
+                    )
+                  ) : Container(),
                 ],
               ),
             ),
