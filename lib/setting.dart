@@ -515,7 +515,7 @@ class SettingState extends State<Setting> {
                     margin: EdgeInsets.only(left: 16, right: 16),
                     child: Text(
                       Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE,
-                      maxLines: 1,
+                      maxLines: 2,
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
                         fontSize: 14,
