@@ -107,7 +107,7 @@ Thankyou!
 |[http](https://pub.dev/packages/http)                          |[flutter](https://github.com/flutter)    |
 |[path](https://pub.dev/packages/path)                          |[flutter](https://github.com/flutter)    |
 |[path_provider](https://pub.dev/packages/path_provider)        |[flutter](https://github.com/flutter)    |
-|[just_audio](https://github.com/ryanheise/audio_service)       |[ryanheise](https://github.com/ryanheise)|
+|[just_audio](https://github.com/ryanheise/just_audio)          |[ryanheise](https://github.com/ryanheise)|
 |[audio_service](https://github.com/ryanheise/audio_service)    |[ryanheise](https://github.com/ryanheise)|
 |[url_launcher](https://pub.dev/packages/url_launcher)          |[flutter](https://github.com/flutter)    |
 
