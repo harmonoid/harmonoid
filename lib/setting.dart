@@ -380,7 +380,7 @@ class SettingState extends State<Setting> {
                         ),
                         Text(
                           Globals.STRING_SETTING_THEME_SUBTITLE,
-                          maxLines: 1,
+                          maxLines: 2,
                           style: TextStyle(
                             color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
                             fontSize: 14,
@@ -491,7 +491,7 @@ class SettingState extends State<Setting> {
                         ),
                         Text(
                           Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE,
-                          maxLines: 1,
+                          maxLines: 2,
                           style: TextStyle(
                             color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
                             fontSize: 14,
@@ -566,7 +566,7 @@ class SettingState extends State<Setting> {
                         ),
                         Text(
                           Globals.STRING_SETTING_LANGUAGE_SUBTITLE,
-                          maxLines: 1,
+                          maxLines: 2,
                           style: TextStyle(
                             color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
                             fontSize: 14,
@@ -820,7 +820,7 @@ class SettingState extends State<Setting> {
                         ),
                         Text(
                           Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE,
-                          maxLines: 1,
+                          maxLines: 2,
                           style: TextStyle(
                             color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
                             fontSize: 14,
@@ -931,7 +931,7 @@ class SettingState extends State<Setting> {
                         ),
                         Text(
                           Globals.STRING_SETTING_APP_VERSION_SUBTITLE,
-                          maxLines: 1,
+                          maxLines: 2,
                           style: TextStyle(
                             color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
                             fontSize: 14,

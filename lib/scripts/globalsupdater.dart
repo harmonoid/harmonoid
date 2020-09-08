@@ -97,6 +97,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
     Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
     Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
+    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
   }
   else if (languageRegion == 'ru_ru') {
     /////////RU-RU/////////
@@ -190,6 +196,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Измените дополнительный цвет приложения';
     Globals.STRING_SETTING_THEME_TITLE                             = 'Тема';
     Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Смените тему приложения';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
+    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
   }
   else if (languageRegion == 'sl_si') {
     /////////SL-SI/////////
@@ -283,6 +295,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Zamenjaj barve na aplikaciji';
     Globals.STRING_SETTING_THEME_TITLE                             = 'Način';
     Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Menjaj med temnim in svetlim načinom';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
+    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
   }
   else if (languageRegion == 'pt_br') {
     /////////PT-BR/////////
@@ -376,6 +394,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Mude a cor de destaque do aplicativo';
     Globals.STRING_SETTING_THEME_TITLE                             = 'Tema';
     Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Mude o tema do aplicativo para claro ou escuro';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
+    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
   }
   else if (languageRegion == 'hi_in') {
     /////////HI-IN/////////
@@ -469,6 +493,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'ऐप के लिए रंग बदलें';
     Globals.STRING_SETTING_THEME_TITLE                             = 'ऐप मोड';
     Globals.STRING_SETTING_THEME_SUBTITLE                          = 'ऐप को लाइट या डार्क मोड में यूज़ करें';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
+    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
   }
   else if (languageRegion == 'de_de') {
     /////////DE-DE/////////
@@ -562,6 +592,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
     Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
     Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
+    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
   }
 }
 

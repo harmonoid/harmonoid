@@ -97,6 +97,12 @@ String STRING_SETTING_THEME_TITLE;
 String STRING_SETTING_THEME_SUBTITLE;
 String STRING_ABOUT_TITLE;
 String STRING_ABOUT_SUBTITLE;
+String STRING_NO_DOWNLOAD_UPDATE;
+String STRING_DOWNLOAD_UPDATE;
+String STRING_SETTING_APP_VERSION_TITLE;
+String STRING_SETTING_APP_VERSION_SUBTITLE;
+String STRING_SETTING_APP_VERSION_INSTALLED;
+String STRING_SETTING_APP_VERSION_LATEST;
 
 /////////Internal Management And Configuration/////////
 
@@ -122,12 +128,3 @@ const String ALBUM                                      = 'Albums';
 const String TRACK                                      = 'Tracks';
 const String ARTIST                                     = 'Artists';
 const String VERIFICATION_STRING                        = 'service is running';
-
-//////////Version Management//////////
-
-String STRING_NO_DOWNLOAD_UPDATE                        = 'Your app is already updated';
-String STRING_DOWNLOAD_UPDATE                           = 'DOWNLOAD UPDATE';
-String STRING_SETTING_APP_VERSION_TITLE                 = 'App Version';
-String STRING_SETTING_APP_VERSION_SUBTITLE              = 'Information about current app version';
-String STRING_SETTING_APP_VERSION_INSTALLED             = 'Installed Version : ';
-String STRING_SETTING_APP_VERSION_LATEST                = 'Latest Version     : ';
