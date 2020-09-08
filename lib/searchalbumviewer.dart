@@ -206,7 +206,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+            backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
             title: Text(
               Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE,
               style: TextStyle(
@@ -246,7 +246,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+                backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
                 title: Text(
                   Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE,
                   style: TextStyle(
@@ -278,7 +278,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+                backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
                 title: Text(
                   Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE,
                   style: TextStyle(
@@ -310,7 +310,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+                backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
                 title: Text(
                   Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE,
                   style: TextStyle(
@@ -347,7 +347,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+          backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
           title: Text(
             Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE,
             style: TextStyle(
@@ -397,7 +397,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
       await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+          backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
           title: Text(
             Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE,
             style: TextStyle(
@@ -631,7 +631,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
     return WillPopScope(
       onWillPop: this.checkTrackStack,
       child: Scaffold(
-        backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+        backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
         body: CustomScrollView(
           controller: scrollController,
           slivers: [
@@ -657,7 +657,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+                          backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
                           title: Text(
                             Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE,
                             style: TextStyle(

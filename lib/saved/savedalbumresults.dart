@@ -23,8 +23,8 @@ class AlbumTile extends StatelessWidget {
       margin: EdgeInsets.all(8),
       child: OpenContainer(
         closedElevation: 1,
-        closedColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
-        openColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+        closedColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
+        openColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
         transitionDuration: Duration(milliseconds: 400),
         closedBuilder: (ctx, act) => Container(
           color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
@@ -388,8 +388,8 @@ class SavedAlbumResultsState extends State<SavedAlbumResults> with SingleTickerP
             margin: EdgeInsets.only(left: 16, right: 16),
             child: OpenContainer(
               closedElevation: 1,
-              closedColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
-              openColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+              closedColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
+              openColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
               transitionDuration: Duration(milliseconds: 400),
               closedBuilder: (ctx, act) => Container(
                 color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),

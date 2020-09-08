@@ -150,7 +150,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
     return WillPopScope(
       onWillPop: this._onWillPop,
       child: Scaffold(
-        backgroundColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+        backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
         appBar: AppBar(
           brightness: Brightness.dark,
           backgroundColor: Globals.globalTheme == 0 ? Theme.of(context).primaryColor : Colors.white10,
@@ -357,8 +357,8 @@ class SearchState extends State<Search> with SingleTickerProviderStateMixin {
         child: Column(
           children: [
             OpenContainer(
-              closedColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
-              openColor: Globals.globalTheme == 0 ? Colors.white : Color(0xFF121212),
+              closedColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
+              openColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
               closedElevation: 1,
               transitionDuration: Duration(milliseconds: 400),
               closedBuilder: (ctx, act) => Container(
