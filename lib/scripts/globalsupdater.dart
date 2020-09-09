@@ -82,8 +82,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'We could not retrieve the information about latest stargazers.';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'Language';
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Change the language of the app';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Information';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'You must restart the app to see changes.';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Do you want to restart the app now?';
     Globals.STRING_ABOUT_TITLE                                     = 'About';
     Globals.STRING_ABOUT_SUBTITLE                                  = 'Information about the app & its developers';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Server';
@@ -181,8 +181,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Не удалось получить информацию об оценивших проект.';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'Язык';
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Изменить язык приложения';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Информация';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Вы должны перезапустить приложение, чтобы увидеть изменения.';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Do you want to restart the app now?';
     Globals.STRING_ABOUT_TITLE                                     = 'О приложении';
     Globals.STRING_ABOUT_SUBTITLE                                  = 'Информация о проекте и его разработчиках.';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Сервер';
@@ -280,8 +280,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Ne moremo dobiti informacij o všečkerjih projekta.';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'Jezik';
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Spremenite način prikaza aplikacije';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Informacije';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Za ogled sprememb morate znova zagnati aplikacijo.';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Do you want to restart the app now?';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Strežnik';
     Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Spremeni, kje aplikacija zahteva prenose';
     Globals.STRING_ABOUT_TITLE                                     = 'O nas';
@@ -379,8 +379,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Nós não conseguimos pegar as últimas informações sobre stargazers.';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'Idioma';
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Mude o jeito que você enxerga o aplicativo';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Informação';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Você precisa reiniciar o aplicativo para ver as mudanças.';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Do you want to restart the app now?';
     Globals.STRING_ABOUT_TITLE                                     = 'Sobre';
     Globals.STRING_ABOUT_SUBTITLE                                  = 'Informações sobre o projeto e seus desenvolvedores';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Servidor';
@@ -478,8 +478,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'हम अपने नए स्टारगेज़र्स के बारे में जानकारी नहीं प्राप्त कर सके।';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'भाषा';
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'अपनी ऐप की भाषा बदलें';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'जानकारी';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'चेंज देखने के लिए ऐप को दोबारा शुरू करें।';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'ऐप रीस्टार्ट';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'क्या आप ऐप को अभी रीस्टार्ट करना चाहेंगे?';
     Globals.STRING_ABOUT_TITLE                                     = 'प्रोजेक्ट के बारे में';
     Globals.STRING_ABOUT_SUBTITLE                                  = 'प्रोजेक्ट और इसके डेवलपर्स के बारे में जानकारी';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'सर्वर';
@@ -577,8 +577,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Wir konnten die Informationen über die neuesten "Star"-Geber (Github) nicht abrufen.';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'Sprachen';
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Ändern Sie die Spracheinstellungen der App.';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Informationen';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Sie müssen die Anwendung neu starten, um die Änderungen zu sehen';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Do you want to restart the app now?';
     Globals.STRING_ABOUT_TITLE                                     = 'Über';
     Globals.STRING_ABOUT_SUBTITLE                                  = 'Informationen über die App und deren Entwickler';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Server';
