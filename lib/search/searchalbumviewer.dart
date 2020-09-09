@@ -476,7 +476,7 @@ class _SearchAlbumViewer extends State<SearchAlbumViewer> with SingleTickerProvi
       _nonDownloadQueue.add(index);
     }
 
-    scrollController.addListener(this.refreshUI);
+    this.scrollController.addListener(this.refreshUI);
 
     this._searchResultOpacityController = new AnimationController(
       vsync: this,
