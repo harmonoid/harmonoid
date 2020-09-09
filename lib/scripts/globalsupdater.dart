@@ -36,9 +36,9 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Here is the most close album from your request';
     Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK               = 'Here is the most close track from your request';
     Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST              = 'Here is the artist of your request';
-    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'DOWNLOAD ALBUM';
-    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'DOWNLOAD TRACK';
-    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'DOWNLOAD ARTIST';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'SAVE ALBUM';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'SAVE TRACK';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'SAVE ARTIST';
     Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM          = 'SHOW ALBUM';
     Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK          = 'SHOW TRACK';
     Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST         = 'SHOW ARTIST';
@@ -66,7 +66,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Here are the tracks you saved';
     Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Some insights of the album';
     Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Are you sure?';
-    Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'Do you want to delete this album?';
+    Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'Do you want to remove this album saved on your device?';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Are you sure?';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Do you want to remove this track saved on your device?';
     Globals.STRING_NOW_PLAYING_NEXT_TRACK                          = 'NEXT';
