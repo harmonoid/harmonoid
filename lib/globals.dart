@@ -124,7 +124,4 @@ List<List<Color>> colors = [
   [Colors.green[700]             , Colors.green                  ],
 ];
 
-const String ALBUM                                      = 'Albums';
-const String TRACK                                      = 'Tracks';
-const String ARTIST                                     = 'Artists';
 const String VERIFICATION_STRING                        = 'service is running';
