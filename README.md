@@ -4,7 +4,7 @@
 
 The app is meant to be used in such a way, that you download your favorite music offline & listen it whenever without internet connection.
 
-###### :arrow_down: Android users can download pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.2/harmonoid-v0.0.2-pre-release.apk) (Changelog: [v0.0.2-pre-release](https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.2))
+###### :arrow_down: Android users can download pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.2%2B2/harmonoid-v0.0.2+2-pre-release.apk) (Changelog: [v0.0.2+2-pre-release](https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.2%2B2))
 ###### NOTE: You might see a dialog "Your phone and personal data are more vulnerable to attack by unknown apps." when installing this app. But let me tell you that, this app is safe as you are seeing the code in this repository & secondly the app will not ask for any of your device permissions at all (not even storage). So, you are safe. Still, it is your choice.
 
 
@@ -69,7 +69,7 @@ You can open issues if you get confused in the UI of app & request features too!
 |-----------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
 |~~Refresh button is to be pressed for refreshing downloaded music.~~                     |Exporting tracks outside the app for sharing.                                              |
 |Artist search result page does not work at the moment.                                   |Searching downloaded tracks & albums.                                                          |
-|The track search result page uses same widgets as album result page                      |Determinate loading bar for downloading tracks in notification area.                              |
+|~~The track search result page uses same widgets as album result page~~                  |Determinate loading bar for downloading tracks in notification area.                              |
 |~~Downloaded tracks do not play sometimes.~~                                             |Better management for downloaded albums & tracks, which includes sorting them acc. to date added, A to Z etc.  (It is very basic at the moment)|
 |~~Recent searches don't show under "Your recent searches"~~                              |Lyrics for downloaded tracks                                                                    |
 |~~Improve download speed~~                                                               |                                                                                                  |
@@ -114,7 +114,7 @@ Thankyou!
 
 ## :grey_question: FAQ
 
-_For pre-release v0.0.1_
+_For pre-release v0.0.2+2_
 
 - __How do I download music?__
   - Go to the 'Collection' tab, and tap on the search bar. Then, enter a keyword to search & select the mode (i.e Album or Track) in which you want to search. You'll be greeted with the music close to your keyword in a moment. Tap on your preferred result, it's album will show up to you. Now, tap on the tracks you want to save offline.
