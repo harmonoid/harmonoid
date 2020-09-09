@@ -5,8 +5,15 @@ import 'package:flutter/services.dart';
 import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/saved/welcome.dart';
 import 'package:harmonoid/scripts/globalsupdater.dart';
-import 'package:harmonoid/searchalbumresults.dart';
+import 'package:harmonoid/search/searchalbumresults.dart';
 import 'package:harmonoid/scripts/backgroundtask.dart';
+import 'package:harmonoid/search/searchtrackresults.dart';
+
+
+class SearchResultArguments {
+  final String keyword;
+  SearchResultArguments(this.keyword);
+}
 
 
 class Application extends StatelessWidget {
@@ -38,12 +45,18 @@ class Application extends StatelessWidget {
       },
       onGenerateRoute: (settings) {
         if (settings.name == SearchAlbumResults.pageRoute) {
-          final SearchAlbumResultArguments args = settings.arguments;
+          final SearchResultArguments args = settings.arguments;
           return MaterialPageRoute(
             builder: (context) => SearchAlbumResults(
-                keyword: args.keyword, 
-                searchMode: args.searchMode,
-                searchTitle: args.searchTitle,
+                keyword: args.keyword,
+            ),
+          );
+        }
+        if (settings.name == SearchTrackResults.pageRoute) {
+          final SearchResultArguments args = settings.arguments;
+          return MaterialPageRoute(
+            builder: (context) => SearchTrackResults(
+                keyword: args.keyword,
             ),
           );
         }
