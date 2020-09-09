@@ -49,6 +49,20 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
     } 
   }
 
+  String _historyModeTitle(String mode) {
+    String result;
+    if (mode == 'Albums') {
+      result = Globals.STRING_ALBUM;
+    }
+    if (mode == 'Tracks') {
+      result = Globals.STRING_TRACK;
+    }
+    if (mode == 'Artists') {
+      result = Globals.STRING_ARTIST;
+    }
+    return result;
+  }
+
   void _searchHandler(keyword) {
     if (keyword!='') {
 
@@ -63,6 +77,13 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
         SearchHistory.addSearchHistory(keyword, 'Tracks');
         Navigator.of(context).pushNamed(
           '/searchtrackresults',
+          arguments: SearchResultArguments(this._keyword),
+        );
+      }
+      else if (this._searchMode == SearchMode.artist) {
+        SearchHistory.addSearchHistory(keyword, 'Artists');
+        Navigator.of(context).pushNamed(
+          '/searchartistresults',
           arguments: SearchResultArguments(this._keyword),
         );
       }
@@ -91,6 +112,12 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                   arguments: SearchResultArguments(searchHistory[index]['keyword'])
                 )
               }
+              else if (searchHistory[index]['mode'] == 'Artists') {
+                Navigator.of(context).pushNamed(
+                  '/searchartistresults',
+                  arguments: SearchResultArguments(searchHistory[index]['keyword'])
+                )
+              }
             },
             leading: CircleAvatar(
               child: Icon(
@@ -105,7 +132,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                 color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
               ),
             ),
-            subtitle: Text(searchHistory[index]['mode'] == 'Albums' ? Globals.STRING_ALBUM : Globals.STRING_TRACK, 
+            subtitle: Text(this._historyModeTitle(searchHistory[index]['mode']), 
               style: TextStyle(
                 fontSize: 12,
                 color: Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.60),
@@ -281,6 +308,29 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                           fontSize: 12,
                           color: Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.60),
                         )
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () => this.setState(() {
+                        this._selectSearchMode(SearchMode.artist);
+                        this._searchMode = SearchMode.artist;
+                      }),
+                      leading: CircleAvatar(
+                        child: ScaleTransition(child: Icon(Icons.person, color: this._scaleColor[2], size: 24,), scale: this._scaleAnimation[2]),
+                        backgroundColor: Color(0x00000000),
+                      ),
+                      title: Text(
+                        Globals.STRING_ARTIST,
+                        style: TextStyle(
+                          color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
+                        ),
+                      ),
+                      subtitle: Text(
+                        Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST, 
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.60),
+                        ),
                       ),
                     ),
                     Container(
