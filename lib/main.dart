@@ -7,6 +7,7 @@ import 'package:harmonoid/saved/welcome.dart';
 import 'package:harmonoid/scripts/globalsupdater.dart';
 import 'package:harmonoid/search/searchalbumresults.dart';
 import 'package:harmonoid/scripts/backgroundtask.dart';
+import 'package:harmonoid/search/searchartistresults.dart';
 import 'package:harmonoid/search/searchtrackresults.dart';
 
 
@@ -48,7 +49,7 @@ class Application extends StatelessWidget {
           final SearchResultArguments args = settings.arguments;
           return MaterialPageRoute(
             builder: (context) => SearchAlbumResults(
-                keyword: args.keyword,
+              keyword: args.keyword,
             ),
           );
         }
@@ -56,7 +57,15 @@ class Application extends StatelessWidget {
           final SearchResultArguments args = settings.arguments;
           return MaterialPageRoute(
             builder: (context) => SearchTrackResults(
-                keyword: args.keyword,
+              keyword: args.keyword,
+            ),
+          );
+        }
+        if (settings.name == SearchArtistResults.pageRoute) {
+          final SearchResultArguments args = settings.arguments;
+          return MaterialPageRoute(
+            builder: (context) => SearchArtistResults(
+              keyword: args.keyword,
             ),
           );
         }
