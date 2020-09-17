@@ -2,6 +2,7 @@
 @import "rouge-github";
 @import "variables";
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
 @mixin large {
   @media screen and (min-width: #{$large-breakpoint}) {
@@ -28,7 +29,7 @@
 body {
   padding: 0;
   margin: 0;
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 16px;
   line-height: 1.5;
   color: $body-text-color;
@@ -219,7 +220,7 @@ a {
 
   code {
     padding: 2px 4px;
-    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-family: 'Roboto', sans-serif;
     font-size: 0.9rem;
     color: $code-text-color;
     background-color: $code-bg-color;
