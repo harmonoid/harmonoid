@@ -13,7 +13,7 @@ The app is meant to be used in such a way, that you download your favorite music
 
 |Browse Offline|Download Music|Listen Offline|
 |-|-|-|
-|![browse_offline](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/browse_offline.jpg)|![download_music](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/download_music.jpg)|![search_modes](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/now_playing_demo.jpg)|
+|![browse_offline](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/browse_offline.jpg?raw=true)|![download_music](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/download_music.jpg?raw=true)|![search_modes](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/now_playing_demo.jpg?raw=true)|
 
 #### UI In Motion
 
@@ -21,7 +21,7 @@ These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they 
 
 |||
 |-|-|
-|![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/album_demo.gif) |![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/ui_demo.gif)|
+|![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/album_demo.gif?raw=true) |![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/ui_demo.gif?raw=true)|
 
 
 ## ⚠ THIS IS JUST A PRE-RELEASE
