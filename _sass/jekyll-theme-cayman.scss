@@ -2,7 +2,7 @@
 @import "rouge-github";
 @import "variables";
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 @mixin large {
   @media screen and (min-width: #{$large-breakpoint}) {
@@ -65,9 +65,9 @@ a {
 .btn {
   display: inline-block;
   margin-bottom: 1rem;
-  color: rgba(255, 255, 255, 0.7);
-  background-color: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
   border-style: solid;
   border-width: 1px;
   border-radius: 0.3rem;
@@ -76,7 +76,7 @@ a {
   &:hover {
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.3);
     border-color: rgba(255, 255, 255, 0.3);
   }
 
@@ -126,19 +126,20 @@ a {
 }
 
 .project-name {
-  margin-top: 0;
+  margin-top: 2;
+  font-weight: normal;
   margin-bottom: 0.1rem;
 
   @include large {
-    font-size: 3.25rem;
+    font-size: 4.25rem;
   }
 
   @include medium {
-    font-size: 2.25rem;
+    font-size: 3.25rem;
   }
 
   @include small {
-    font-size: 1.75rem;
+    font-size: 2.75rem;
   }
 }
 

@@ -1,8 +1,11 @@
 The app is meant to be used in such a way, that you download your favorite music offline & listen it whenever without internet connection.
 
-#### 📱 Android users can download pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.2%2B2/harmonoid-v0.0.2+2-pre-release.apk) (Changelog: [v0.0.2+2-pre-release](https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.2%2B2))
+
+**📱 Android users can download pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.2%2B2/harmonoid-v0.0.2+2-pre-release.apk) (Changelog: [v0.0.2+2-pre-release](https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.2%2B2))**
+
+
 ##### Please consider ⭐ starring the repository, if you are enjoying the app. You can join [Gitter](https://gitter.im/harmonoid/community) for feedback.
-###### NOTE: You might see a dialog "Your phone and personal data are more vulnerable to attack by unknown apps." when installing this app. But let me tell you that, this app is safe as you are seeing the code in this repository & secondly the app will not ask for any of your device permissions at all (not even storage). So, you are safe. Still, it is your choice.
+NOTE: You might see a dialog "Your phone and personal data are more vulnerable to attack by unknown apps." when installing this app. But let me tell you that, this app is safe as you are seeing the code in this repository & secondly the app will not ask for any of your device permissions at all (not even storage). So, you are safe. Still, it is your choice.
 
 
 ## 💎 The Experience You Always Wanted
