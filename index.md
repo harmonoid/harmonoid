@@ -1,11 +1,6 @@
 The app is meant to be used in such a way, that you download your favorite music offline & listen it whenever without internet connection.
 
-
-**📱 Android users can download pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.2%2B2/harmonoid-v0.0.2+2-pre-release.apk) (Changelog: [v0.0.2+2-pre-release](https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.2%2B2))**
-
-
 ##### Please consider ⭐ starring the repository, if you are enjoying the app. You can join [Gitter](https://gitter.im/harmonoid/community) for feedback.
-NOTE: You might see a dialog "Your phone and personal data are more vulnerable to attack by unknown apps." when installing this app. But let me tell you that, this app is safe as you are seeing the code in this repository & secondly the app will not ask for any of your device permissions at all (not even storage). So, you are safe. Still, it is your choice.
 
 
 ## 💎 The Experience You Always Wanted
@@ -79,20 +74,6 @@ For that purpose, you can checkout [this](https://github.com/alexmercerind/harmo
 
 Thankyou!
 
-
-## 📦 Dependencies
-
-|Package                                                        |Maintainer                               |
-|---------------------------------------------------------------|-----------------------------------------|
-|[animations](https://pub.dev/packages/animations)              |[flutter](https://github.com/flutter)    |
-|[http](https://pub.dev/packages/http)                          |[flutter](https://github.com/flutter)    |
-|[path](https://pub.dev/packages/path)                          |[flutter](https://github.com/flutter)    |
-|[path_provider](https://pub.dev/packages/path_provider)        |[flutter](https://github.com/flutter)    |
-|[just_audio](https://github.com/ryanheise/just_audio)          |[ryanheise](https://github.com/ryanheise)|
-|[audio_service](https://github.com/ryanheise/audio_service)    |[ryanheise](https://github.com/ryanheise)|
-|[url_launcher](https://pub.dev/packages/url_launcher)          |[flutter](https://github.com/flutter)    |
-
-
 ## ❔ FAQ
 
 _For pre-release v0.0.2+2_
@@ -120,32 +101,3 @@ _For pre-release v0.0.2+2_
   
 - __I'm seeing the error 'We all have bad days' when downloading my music. What is wrong?__
   - This will most likely happen when something is wrong on our side (like dependencies of server are not up to date or our server's IP got blocked with 429 responses due to high amount of requests etc.). You can open issue, if you see this over a long period of time, generally I'll fix this quickly.
-
-
-## 🔧 Starting Development
-
-This application is powered by Flutter, which uses Dart as its programming language.
-
-The only reason to choose Flutter for this app was because, it seemed promising & has great pre-defined widgets and styles. It was a great moment for me to learn it, as it is growing (becoming popular) at a very fast rate. 
-
-Assuming that you have already installed [Flutter](https://flutter.dev) SDK on your device.
-
-You can start the app in following way:
-
-- **Clone the repository and enter it**
-  - ```git clone https://github.com/alexmercerind/harmonoid.git && cd harmonoid```
-- **Get the dependencies**
-  - ```flutter packages get```
-- **Run the application on your device**
-  - ```flutter run```
-  - This will run the application in the debug mode. To get the optimal performance, use any of the additional paramters ```--release``` or ```--profile```.
-
-**For building a performant APK, you can write following in your terminal:**
-
-Don't forget to setup your keystore.
-
-```
-flutter build apk
-```
-
-You can use additional parameter ```--split-per-abi``` to reduce APK size by building separate APKs for each architecture.
