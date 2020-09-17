@@ -1,15 +1,15 @@
 # [Harmonoid](https://github.com/alexmercerind/harmonoid/)
 
-#### The :musical_note: music app, that can download music from spotify for free & has no advertisements!
+#### The 🎵 music app, that can download music from spotify for free & has no advertisements!
 
 The app is meant to be used in such a way, that you download your favorite music offline & listen it whenever without internet connection.
 
-#### :arrow_down: Android users can download pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.2%2B2/harmonoid-v0.0.2+2-pre-release.apk) (Changelog: [v0.0.2+2-pre-release](https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.2%2B2))
-##### Please consider :star: starring the repository, if you are enjoying the app. You can join [Gitter](https://gitter.im/harmonoid/community) for feedback.
+#### ⬇ Android users can download pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.2%2B2/harmonoid-v0.0.2+2-pre-release.apk) (Changelog: [v0.0.2+2-pre-release](https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.2%2B2))
+##### Please consider ⭐ starring the repository, if you are enjoying the app. You can join [Gitter](https://gitter.im/harmonoid/community) for feedback.
 ###### NOTE: You might see a dialog "Your phone and personal data are more vulnerable to attack by unknown apps." when installing this app. But let me tell you that, this app is safe as you are seeing the code in this repository & secondly the app will not ask for any of your device permissions at all (not even storage). So, you are safe. Still, it is your choice.
 
 
-## :gem: The Experience You Always Wanted
+## 💎 The Experience You Always Wanted
 
 |Browse Offline|Download Music|Listen Offline|
 |-|-|-|
@@ -24,30 +24,30 @@ These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they 
 |![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/album_demo.gif) |![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/ui_demo.gif)|
 
 
-## :warning: THIS IS JUST A PRE-RELEASE
+## ⚠ THIS IS JUST A PRE-RELEASE
 
 THE CURRENT PRE-RELEASE OF APP IS JUST TO HAVE BASIC FEATURES, LIKE FREE MUSIC DOWNLOAD, OFFLINE PLAYBACK & USER INTERFACE. YOU CAN LOOK AT TEMPORARILY INCLUDED [CURRENTLY ADDED](#zap-currently-added) AND [TO DO](https://github.com/alexmercerind/harmonoid/issues/29) SECTION OF README, FOR THE SENSE OF PROGRESS. MANY FEATURES, THAT AN IDEAL MUSIC APP HAS, ARE STILL MISSING. YOU CAN CONTRIBUTE, IF YOU WANT TO. **PLEASE** :star: STAR THE REPOSITORY TO SUPPORT THE PROJECT. IF YOU FEEL CONFUSED WHEN USING THE APP, THEN YOU CAN TAKE HELP FROM THE [FAQ](#grey_question-FAQ).
 
 
-## :white_check_mark: Features
+## ✅ Features
 
 
  Beautiful looking, yet full of unique features.
 
-- :arrow_down: __Free Music Download__
+- ⬇ __Free Music Download__
   - You download the music of your choice for free and listen offline.
 
-- :sparkles: __Stunning User Interface__
+- ✨ __Stunning User Interface__
   - The app has every element on screen beautifully animated, & very strictly follows [material.io](https://material.io) guidelines. 
 
-- :gift_heart: __Ads Free Forever__
+- 💝 __Ads Free Forever__
   - No advertisements!
   
-- :shield: __Safe To Use__
+- 🛡 __Safe To Use__
   - The app does not ask for any of your device permissions at all. (Not even storage).
 
 
-## :ok_hand: Currently Added
+## 👌 Currently Added
 
 - Album & track search.
 - Track downloads for offline playback. (Generally a track will take under ~~30~~ **10** seconds to be downloaded. ~~20~~ **5** seconds, if you have good connection.)
@@ -62,13 +62,13 @@ THE CURRENT PRE-RELEASE OF APP IS JUST TO HAVE BASIC FEATURES, LIKE FREE MUSIC D
 - Dark Mode
 
 
-## :book: Inner Workings
+## 📖 Inner Workings
 
 The code that this app uses for the majority of work like saving, deleting, playing music & managing history etc. is [here](https://github.com/alexmercerind/harmonoid/tree/master/lib/scripts) in the repository.
 
 Apart from above, the app uses Python 3 based back-end for serving to the user requests. You can see it [here in this repository](https://github.com/raitonoberu/harmonoid-service). It is managed by [@raitonoberu](https://github.com/raitonoberu) & me.
 
-## :tada: Help With Translations
+## 🎉 Help With Translations
 
 You can help me by providing translations for the app in your language & see the app running in your native language.
 
@@ -87,7 +87,7 @@ For that purpose, you can checkout [this](https://github.com/alexmercerind/harmo
 Thankyou!
 
 
-## :package: Dependencies
+## 📦 Dependencies
 
 |Package                                                        |Maintainer                               |
 |---------------------------------------------------------------|-----------------------------------------|
@@ -100,7 +100,7 @@ Thankyou!
 |[url_launcher](https://pub.dev/packages/url_launcher)          |[flutter](https://github.com/flutter)    |
 
 
-## :grey_question: FAQ
+## ❔ FAQ
 
 _For pre-release v0.0.2+2_
 
@@ -129,7 +129,7 @@ _For pre-release v0.0.2+2_
   - This will most likely happen when something is wrong on our side (like dependencies of server are not up to date or our server's IP got blocked with 429 responses due to high amount of requests etc.). You can open issue, if you see this over a long period of time, generally I'll fix this quickly.
 
 
-## :wrench: Starting Development
+## 🔧 Starting Development
 
 This application is powered by Flutter, which uses Dart as its programming language.
 
