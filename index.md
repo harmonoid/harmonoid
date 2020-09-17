@@ -19,7 +19,6 @@ These GIFs are only 25 FPS 😅. Please wait for the GIFs to load, if they appea
 
 ## ✅ Features
 
-
  Beautiful looking, yet full of unique features.
 
 - 💾 __Free Music Download__
@@ -37,42 +36,23 @@ These GIFs are only 25 FPS 😅. Please wait for the GIFs to load, if they appea
 
 ## 👌 Currently Added
 
-- Album & track search.
-- Track downloads for offline playback. (Generally a track will take under ~~30~~ **10** seconds to be downloaded. ~~20~~ **5** seconds, if you have good connection.)
-- Saving track & album metadata offline.
-- Background play & media notification.
-- Adding whole album to playlist, when playing a track from it.
-- Deleting downloaded tracks.
-- Simultaneously downloading tracks of an album.
-- Playlist Support (Very basic at the moment, will improve in future.)
-- Now Playing (Will improve in future.) &  About Screens
-- Accent Colors 
-- Dark Mode
-
-
-## 📖 Inner Workings
-
-The code that this app uses for the majority of work like saving, deleting, playing music & managing history etc. is [here](https://github.com/alexmercerind/harmonoid/tree/master/lib/scripts) in the repository.
-
-Apart from above, the app uses Python 3 based back-end for serving to the user requests. You can see it [here in this repository](https://github.com/raitonoberu/harmonoid-service). It is managed by [@raitonoberu](https://github.com/raitonoberu) & me.
+- 🔎 Album & track search.
+- 💾 Track downloads for offline playback. (Generally a track will take under ~~30~~ **10** seconds to be downloaded. ~~20~~ **5** seconds, if you have good connection.)
+- ⏯ Saving track & album metadata offline.
+- 📱 Background play & media notification.
+- 📃 Adding whole album to playlist, when playing a track from it.
+- ❎ Deleting downloaded tracks.
+- ⚡ Simultaneously downloading tracks of an album.
+- 🔖 Playlist Support (Very basic at the moment, will improve in future.)
+- 🎉 Now Playing (Will improve in future.) &  About Screens
+- 🌈 Accent Colors 
+- 😎 Dark Mode
 
 ## 🎉 Help With Translations
 
 You can help me by providing translations for the app in your language & see the app running in your native language.
 
 For that purpose, you can checkout [this](https://github.com/alexmercerind/harmonoid/blob/master/lib/scripts/globalsupdater.dart) file on the repository, you can translate this, even if you have little to no knowledge of Dart.
-
-##### Translation Credits
-
-|Language       |Provider       |
-|---------------|---------------|
-|Russian        |@raitonoberu   |
-|Slovenian      |@mytja         |
-|Portuguese     |@bdlukaa       |
-|Hindi          |@alexmercerind |
-|German         |@MickLesk      |
-
-Thankyou!
 
 ## ❔ FAQ
 
