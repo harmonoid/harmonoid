@@ -1,12 +1,10 @@
 import 'dart:io';
 
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/scripts/addsavedmusic.dart';
 import 'package:harmonoid/scripts/getsavedmusic.dart';
 import 'package:harmonoid/search/searchalbumviewer.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart' as path;
 import 'package:path/path.dart' as path;
 import 'dart:convert' as convert;
 import 'dart:async';
@@ -53,12 +51,11 @@ class TrackElementState extends State<TrackElement> {
   }
 
   Future<void> refreshSaved() async {
-    Directory externalDirectory = (await path.getExternalStorageDirectory());
-    Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+    Directory applicationDirectory = Directory(path.join(Globals.APP_DIR, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
     if (
       await File(
-        path.join(musicDirectory.path, widget.tracks[widget.index]['album_id'], widget.tracks[widget.index]['track_number'].toString() + '.m4a')
+        path.join(musicDirectory.path, widget.tracks[widget.index]['album_id'], widget.tracks[widget.index]['track_number'].toString() + '.mp3')
       ).exists()
       &&
       await File(
@@ -193,12 +190,11 @@ class TrackElementStateHero extends State<TrackElementHero> {
   }
 
   Future<void> refreshSaved() async {
-    Directory externalDirectory = (await path.getExternalStorageDirectory());
-    Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+    Directory applicationDirectory = Directory(path.join(Globals.APP_DIR, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
     if (
       await File(
-        path.join(musicDirectory.path, widget.track['album_id'], widget.track['track_number'].toString() + '.m4a')
+        path.join(musicDirectory.path, widget.track['album_id'], widget.track['track_number'].toString() + '.mp3')
       ).exists()
       &&
       await File(

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:path_provider/path_provider.dart' as path;
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -51,12 +50,11 @@ class TrackElementState extends State<TrackElement> {
   }
 
   Future<void> refreshSaved() async {
-    Directory externalDirectory = (await path.getExternalStorageDirectory());
-    Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+    Directory applicationDirectory = Directory(path.join(Globals.APP_DIR, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
     if (
       await File(
-        path.join(musicDirectory.path, widget.albumJson['album_id'], widget.albumTracks[widget.index]['track_number'].toString() + '.m4a')
+        path.join(musicDirectory.path, widget.albumJson['album_id'], widget.albumTracks[widget.index]['track_number'].toString() + '.mp3')
       ).exists()
       &&
       await File(

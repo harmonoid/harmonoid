@@ -1,6 +1,6 @@
 import 'dart:io';
+import 'package:harmonoid/globals.dart' as Globals;
 import 'dart:convert' as convert;
-import 'package:path_provider/path_provider.dart' as path;
 import 'package:path/path.dart' as path;
 
 
@@ -9,8 +9,7 @@ class SearchHistory {
   static Future<Map<String, dynamic>> getSearchHistory() async {
     Map<String, dynamic> searchHistory;
     try {
-      Directory externalDirectory = (await path.getExternalStorageDirectory());
-      Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+      Directory applicationDirectory = Directory(path.join(Globals.APP_DIR, '.harmonoid'));
 
       File searchHistoryFile = File(path.join(applicationDirectory.path, 'search.json'));
 
@@ -30,8 +29,7 @@ class SearchHistory {
   }
 
   static Future<void> addSearchHistory(String keyword, String mode) async {
-    Directory externalDirectory = (await path.getExternalStorageDirectory());
-    Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+    Directory applicationDirectory = Directory(path.join(Globals.APP_DIR, '.harmonoid'));
 
     File searchHistoryFile = File(path.join(applicationDirectory.path, 'search.json'));
     

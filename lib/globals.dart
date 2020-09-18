@@ -124,4 +124,5 @@ List<List<Color>> colors = [
   [Colors.green[700]             , Colors.green                  ],
 ];
 
+const String APP_DIR                                    = 'C:/Users/Alex Mercer/Music';
 const String VERIFICATION_STRING                        = 'service is running';

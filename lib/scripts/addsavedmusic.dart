@@ -1,7 +1,6 @@
 library addsavedmusic;
 
 import 'package:harmonoid/globals.dart' as Globals;
-import 'package:path_provider/path_provider.dart' as path;
 import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
@@ -43,9 +42,7 @@ abstract class GenerateDirectories {
   Directory musicDirectory;
 
   Future<void> createAppDirectory() async {
-    this.externalDirectory = (await path.getExternalStorageDirectory());
-
-    this.applicationDirectory = Directory(path.join(this.externalDirectory.path, '.harmonoid'));
+    this.applicationDirectory = Directory(path.join(Globals.APP_DIR, '.harmonoid'));
     this.musicDirectory = Directory(path.join(this.applicationDirectory.path, 'musicLibrary'));
 
     if (!(await applicationDirectory.exists())) {
@@ -103,7 +100,7 @@ abstract class SaveAlbumAssets extends GenerateDirectories {
 abstract class SaveTrack extends SaveAlbumAssets {
 
   Future<void> saveTrackFile() async {
-    File trackFile = File(path.join(this.albumDirectory.path, '${this.trackNumber}.m4a'));
+    File trackFile = File(path.join(this.albumDirectory.path, '${this.trackNumber}.mp3'));
 
     Uri trackDownloadUri = Uri.https(Globals.STRING_HOME_URL, '/trackdownload', {'track_id': this.trackId, 'album_id': this.albumJson['album_id']});
     try {

@@ -1,59 +1,20 @@
 library playsavedmusic;
 
-import 'package:audio_service/audio_service.dart';
-
 import 'dart:io';
-import 'dart:convert' as convert;
-import 'package:path_provider/path_provider.dart' as path;
+import 'package:flutter_audio_desktop/flutter_audio_desktop.dart';
+import 'package:harmonoid/globals.dart' as Globals;
 import 'package:path/path.dart' as path;
-import 'package:harmonoid/main.dart';
-import 'package:harmonoid/scripts/getsavedmusic.dart';
+
 
 class PlaySavedMusic {
   static Future<void> playTrack(String albumId, int trackNumber) async {
 
-    Directory externalDirectory = (await path.getExternalStorageDirectory());
-    Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+    Directory applicationDirectory = Directory(path.join(Globals.APP_DIR, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
+    
+    AudioPlayer audioPlayer = new AudioPlayer();
 
-    File albumAssetsFile = File(path.join(musicDirectory.path, albumId, 'albumAssets.json'));
-
-    Map<String, dynamic> albumAssets = convert.jsonDecode(await albumAssetsFile.readAsString());
-
-    List<Map<String, dynamic>> albumTracks = (await GetSavedMusic.tracks(albumId))['tracks'];
-    List<MediaItem> trackQueue = new List<MediaItem>();
-
-    await AudioService.start(
-      backgroundTaskEntrypoint: backgroundTaskEntryPoint,
-      androidNotificationChannelName: 'Harmonoid',
-      androidNotificationColor: 0xFF6200EA,
-      androidNotificationIcon: 'mipmap/ic_launcher',
-      androidStopForegroundOnPause: true,
-      androidNotificationChannelDescription: 'Harmonoid Music Playing Service' 
-    );
-
-    for (int index = 0; index < albumTracks.length; index++) {
-      trackQueue.add(
-        MediaItem(
-          id: albumAssets['album_id'] + '_' + albumTracks[index]['track_number'].toString(),
-          title: albumTracks[index]['track_name'].split('(')[0].trim().split('-')[0].trim(),
-          album: albumAssets['album_name'].split('(')[0].trim().split('-')[0].trim(),
-          artist: albumTracks[index]['track_artists'].join(', '),
-          artUri: 'file://${path.join(musicDirectory.path, albumId, 'albumArt.png')}',
-          extras: {
-            'album_id': albumAssets['album_id'],
-            'album_art': path.join(musicDirectory.path, albumId, 'albumArt.png'),
-            'track_id': albumTracks[index]['track_id'],
-            'track_number': albumTracks[index]['track_number'],
-            'track_index': index,
-            'year': albumAssets['year'],
-            'track_path': path.join(musicDirectory.path, albumId, '${albumTracks[index]['track_number']}.m4a')
-          },
-        ),
-      );
-    }
-
-    await AudioService.updateQueue(trackQueue);
-    await AudioService.playFromMediaId(albumAssets['album_id'] + '_' + trackNumber.toString());
+    await audioPlayer.load(path.join(musicDirectory.path, albumId, trackNumber.toString() + '.mp3'));
+    audioPlayer.play();
   }
 }

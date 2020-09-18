@@ -26,9 +26,7 @@ dependencies:
   animations: ^1.1.2
   http: ^0.12.2
   path: ^1.7.0
-  path_provider: ^1.6.11
-  just_audio: ^0.3.2
-  audio_service: ^0.13.0
+  flutter_audio_desktop: ^0.0.6
   url_launcher: ^5.5.0
 
   # The following adds the Cupertino Icons font to your application.

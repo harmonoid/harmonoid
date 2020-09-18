@@ -1,5 +1,4 @@
 import 'package:animations/animations.dart';
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +7,6 @@ import 'dart:async';
 
 import 'package:harmonoid/globals.dart' as Globals;
 import 'package:harmonoid/saved/savedalbumresults.dart';
-import 'package:harmonoid/saved/nowplaying.dart';
 import 'package:harmonoid/scripts/refreshcollection.dart';
 import 'package:harmonoid/searchbar.dart';
 import 'package:harmonoid/setting.dart';
@@ -29,7 +27,6 @@ class _Welcome extends State<Welcome> {
   int _index = 1;
   double _rotationValue = 2 * pi;
   int _rotations = 1;
-  StreamSubscription _nowPlayingNotificationStream;
   bool notRefreshing = true;
 
   Future<void> refreshCollection() async {
@@ -65,20 +62,6 @@ class _Welcome extends State<Welcome> {
         _search.currentState.showSearchBar();
       }
     });
-
-    this._nowPlayingNotificationStream = AudioService.notificationClickEventStream.listen((event) {
-      if (event) {
-        this.setState(() {
-          this._index = 0;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    this._nowPlayingNotificationStream.cancel();
-    super.dispose();
   }
 
   @override
@@ -87,7 +70,9 @@ class _Welcome extends State<Welcome> {
     Globals.globalContext = context;
 
     final List<Widget> _screens = [
-      NowPlaying(),
+      Center(
+        child: Text('Coming Soon...'),
+      ),
       Stack(
         alignment: Alignment.topCenter,
         children: [

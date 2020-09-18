@@ -1,16 +1,15 @@
 library getsavedmusic;
 
 import 'dart:io';
+import 'package:harmonoid/globals.dart' as Globals;
 import 'dart:convert' as convert;
-import 'package:path_provider/path_provider.dart' as path;
 import 'package:path/path.dart' as path;
 
 class GetSavedMusic {
 
   static Future<Map<String, dynamic>> albums() async {
 
-    Directory externalDirectory = (await path.getExternalStorageDirectory());
-    Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+    Directory applicationDirectory = Directory(path.join(Globals.APP_DIR, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
 
     if (!(await applicationDirectory.exists())) {
@@ -33,9 +32,7 @@ class GetSavedMusic {
   }
 
   static Future<void> deleteAlbum(String albumId) async {
-
-    Directory externalDirectory = (await path.getExternalStorageDirectory());
-    Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+    Directory applicationDirectory = Directory(path.join(Globals.APP_DIR, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
 
     Directory albumDirectory = Directory(path.join(musicDirectory.path, albumId));
@@ -51,13 +48,12 @@ class GetSavedMusic {
       return double.tryParse(str) != null;
     }
 
-    Directory externalDirectory = (await path.getExternalStorageDirectory());
-    Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+    Directory applicationDirectory = Directory(path.join(Globals.APP_DIR, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
     List<FileSystemEntity> albumDirectory = Directory(path.join(musicDirectory.path, albumId)).listSync();
 
     File trackJson = File(path.join(musicDirectory.path, albumId, '$trackNumber.json'));
-    File trackFile = File(path.join(musicDirectory.path, albumId, '$trackNumber.m4a'));
+    File trackFile = File(path.join(musicDirectory.path, albumId, '$trackNumber.mp3'));
 
     int tracksNumber = 0;
     for (int index = 0; index < albumDirectory.length; index++) {
@@ -81,8 +77,7 @@ class GetSavedMusic {
       return double.tryParse(str) != null;
     }
 
-    Directory externalDirectory = (await path.getExternalStorageDirectory());
-    Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+    Directory applicationDirectory = Directory(path.join(Globals.APP_DIR, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
 
     List<Map<String, dynamic>> savedTracks = new List<Map<String, dynamic>>();
@@ -116,8 +111,7 @@ class GetSavedMusic {
 
   static Future<List<File>> albumArts() async {
 
-    Directory externalDirectory = (await path.getExternalStorageDirectory());
-    Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
+    Directory applicationDirectory = Directory(path.join(Globals.APP_DIR, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
 
     if (!(await applicationDirectory.exists())) {
