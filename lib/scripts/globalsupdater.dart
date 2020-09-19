@@ -221,7 +221,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NO                                              = 'NE';
     Globals.STRING_ALBUM                                           = 'Albumi';
     Globals.STRING_TRACK                                           = 'Pesmi';
-    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
+    Globals.STRING_TOP_TRACKS                                      = 'NAJBOLJŠE PESMI';
     Globals.STRING_ARTIST                                          = 'Skladatelji';
     Globals.STRING_SAVED                                           = 'Shranjeno';
     Globals.STRING_LIGHT                                           = 'Svetli';
@@ -283,8 +283,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Ne moremo dobiti informacij o všečkerjih projekta.';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'Jezik';
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Spremenite način prikaza aplikacije';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Do you want to restart the app now?';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Ponovni zagon aplikacije je potreben';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Ali želiš ponovno zagnati aplikacijo zdaj?';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Strežnik';
     Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Spremeni, kje aplikacija zahteva prenose';
     Globals.STRING_ABOUT_TITLE                                     = 'O nas';
