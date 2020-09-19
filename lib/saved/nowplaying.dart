@@ -298,7 +298,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               ),
                             ),
                             Divider(
-                              color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.0),
+                              color: Color(0x00000000),
                               height: 4,
                               thickness: 0,
                             ),
@@ -371,7 +371,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                     ],
                   ),
                   Divider(
-                    color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.0),
+                    color: Color(0x00000000),
                     height: 4,
                     thickness: 0,
                   ),
@@ -512,7 +512,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               ),
                             ),
                             Divider(
-                              color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.0),
+                              color: Color(0x00000000),
                               height: 4,
                               thickness: 0,
                             ),
@@ -594,7 +594,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                     ],
                   ),
                   Divider(
-                    color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.0),
+                    color: Color(0x00000000),
                     height: 4,
                     thickness: 0,
                   ),
@@ -667,7 +667,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
             ),
           ),
           Divider(
-            color: Globals.globalTheme == 0 ? Colors.black.withOpacity(0.02) : Color(0xFF121212),
+            color: Color(0x00000000),
             height: 8,
           )
         ],

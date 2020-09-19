@@ -5,7 +5,7 @@ import 'package:animations/animations.dart';
 import 'package:harmonoid/scripts/searchhistory.dart';
 
 import 'package:harmonoid/globals.dart' as Globals;
-import 'package:harmonoid/searchalbumresults.dart';
+import 'package:harmonoid/main.dart';
 
 enum SearchMode {
   album,
@@ -49,32 +49,44 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
     } 
   }
 
+  String _historyModeTitle(String mode) {
+    String result;
+    if (mode == 'Albums') {
+      result = Globals.STRING_ALBUM;
+    }
+    if (mode == 'Tracks') {
+      result = Globals.STRING_TRACK;
+    }
+    if (mode == 'Artists') {
+      result = Globals.STRING_ARTIST;
+    }
+    return result;
+  }
+
   void _searchHandler(keyword) {
     if (keyword!='') {
-      List<String> resultTitle(SearchMode mode) {
-        String resultTitle;
-        String resultMode;
-        if (mode == SearchMode.album) {
-          resultTitle = Globals.STRING_ALBUM;
-          resultMode = Globals.ALBUM;
-        }
-        else if (mode == SearchMode.track) {
-          resultTitle = Globals.STRING_TRACK;
-          resultMode = Globals.TRACK;
-        }
-        else if (mode == SearchMode.artist) {
-          resultTitle = Globals.STRING_ARTIST;
-          resultMode = Globals.ARTIST;
-        }
-        return [resultMode, resultTitle];
+
+      if (this._searchMode == SearchMode.album) {
+        SearchHistory.addSearchHistory(keyword, 'Albums');
+        Navigator.of(context).pushNamed(
+          '/searchalbumresults',
+          arguments: SearchResultArguments(this._keyword),
+        );
       }
-
-      SearchHistory.addSearchHistory(keyword, resultTitle(this._searchMode)[0], resultTitle(this._searchMode)[1]);
-
-      Navigator.of(context).pushNamed(
-        '/searchresult',
-        arguments: SearchAlbumResultArguments(this._keyword, resultTitle(this._searchMode)[0], resultTitle(this._searchMode)[1])
-      );
+      else if (this._searchMode == SearchMode.track) {
+        SearchHistory.addSearchHistory(keyword, 'Tracks');
+        Navigator.of(context).pushNamed(
+          '/searchtrackresults',
+          arguments: SearchResultArguments(this._keyword),
+        );
+      }
+      else if (this._searchMode == SearchMode.artist) {
+        SearchHistory.addSearchHistory(keyword, 'Artists');
+        Navigator.of(context).pushNamed(
+          '/searchartistresults',
+          arguments: SearchResultArguments(this._keyword),
+        );
+      }
     }
   }
 
@@ -87,10 +99,26 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
       for (int index = 0; index < searchHistory.length; index++) {
         this._searchHistoryItems.add(
           ListTile(
-            onTap: () => Navigator.of(context).pushNamed(
-              '/searchresult',
-              arguments: SearchAlbumResultArguments(searchHistory[index]['keyword'], searchHistory[index]['mode'], searchHistory[index]['title'])
-            ),
+            onTap: () => {
+              if (searchHistory[index]['mode'] == 'Albums') {
+                Navigator.of(context).pushNamed(
+                  '/searchalbumresults',
+                  arguments: SearchResultArguments(searchHistory[index]['keyword'])
+                )
+              }
+              else if (searchHistory[index]['mode'] == 'Tracks') {
+                Navigator.of(context).pushNamed(
+                  '/searchtrackresults',
+                  arguments: SearchResultArguments(searchHistory[index]['keyword'])
+                )
+              }
+              else if (searchHistory[index]['mode'] == 'Artists') {
+                Navigator.of(context).pushNamed(
+                  '/searchartistresults',
+                  arguments: SearchResultArguments(searchHistory[index]['keyword'])
+                )
+              }
+            },
             leading: CircleAvatar(
               child: Icon(
                 Icons.search,
@@ -104,7 +132,7 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                 color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
               ),
             ),
-            subtitle: Text(searchHistory[index]['title'], 
+            subtitle: Text(this._historyModeTitle(searchHistory[index]['mode']), 
               style: TextStyle(
                 fontSize: 12,
                 color: Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.60),
@@ -280,6 +308,29 @@ class _SearchScreen extends State<SearchScreen> with TickerProviderStateMixin {
                           fontSize: 12,
                           color: Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.60),
                         )
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () => this.setState(() {
+                        this._selectSearchMode(SearchMode.artist);
+                        this._searchMode = SearchMode.artist;
+                      }),
+                      leading: CircleAvatar(
+                        child: ScaleTransition(child: Icon(Icons.person, color: this._scaleColor[2], size: 24,), scale: this._scaleAnimation[2]),
+                        backgroundColor: Color(0x00000000),
+                      ),
+                      title: Text(
+                        Globals.STRING_ARTIST,
+                        style: TextStyle(
+                          color: Globals.globalTheme == 0 ? Colors.black87: Colors.white.withOpacity(0.87),
+                        ),
+                      ),
+                      subtitle: Text(
+                        Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST, 
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Globals.globalTheme == 0 ? Colors.black54: Colors.white.withOpacity(0.60),
+                        ),
                       ),
                     ),
                     Container(

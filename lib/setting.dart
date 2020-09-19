@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert' as convert;
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -282,9 +283,19 @@ class SettingState extends State<Setting> {
           MaterialButton(
             onPressed: () {
               Navigator.of(context).pop();
+              SystemNavigator.pop();
             },
             child: Text(
-              Globals.STRING_OK,
+              Globals.STRING_YES,
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+          ),
+          MaterialButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              Globals.STRING_NO,
               style: TextStyle(color: Theme.of(context).primaryColor),
             ),
           ),
@@ -508,22 +519,6 @@ class SettingState extends State<Setting> {
                   ColorPicker(),
                   Divider(
                     color: Color(0x00000000),
-                    height: 8,
-                    thickness: 0,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 16, right: 16),
-                    child: Text(
-                      Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE,
-                      maxLines: 2,
-                      style: TextStyle(
-                        color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60) ,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    color: Color(0x00000000),
                     height: 16,
                     thickness: 0,
                   ),
@@ -582,7 +577,7 @@ class SettingState extends State<Setting> {
                   ),
                   ListTile(
                     title: Text(
-                      'English',
+                      'english',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                       ),
@@ -615,7 +610,7 @@ class SettingState extends State<Setting> {
                   ),
                   ListTile(
                     title: Text(
-                      'Русский',
+                      'русский',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                       ),
@@ -648,7 +643,7 @@ class SettingState extends State<Setting> {
                   ),
                   ListTile(
                     title: Text(
-                      'Slovenščina',
+                      'slovenščina',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                       ),
@@ -681,7 +676,7 @@ class SettingState extends State<Setting> {
                   ),
                   ListTile(
                     title: Text(
-                      'Português',
+                      'português',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                       ),
@@ -747,7 +742,7 @@ class SettingState extends State<Setting> {
                   ),
                   ListTile(
                     title: Text(
-                      'Deutsche',
+                      'deutsch',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
                       ),
@@ -942,26 +937,63 @@ class SettingState extends State<Setting> {
                           height: 16,
                           thickness: 0,
                         ),
-                        Text(
-                          Globals.STRING_SETTING_APP_VERSION_INSTALLED + this._installedVersion,
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
-                            fontSize: 14,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 108,
+                              child: Text(
+                                Globals.STRING_SETTING_APP_VERSION_INSTALLED,
+                                maxLines: 1,
+                                style: TextStyle(
+                                  color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              this._installedVersion,
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
                         Divider(
                           color: Color(0x00000000),
                           height: 4,
                           thickness: 0,
                         ),
-                        Text(
-                          Globals.STRING_SETTING_APP_VERSION_LATEST + this._latestVersion,
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
-                            fontSize: 14,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 108,
+                              child: Text(
+                                Globals.STRING_SETTING_APP_VERSION_LATEST,
+                                maxLines: 2,
+                                style: TextStyle(
+                                  color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width - 64 - 108,
+                              child: Text(
+                                this._latestVersion,
+                                maxLines: 2,
+                                style: TextStyle(
+                                  color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

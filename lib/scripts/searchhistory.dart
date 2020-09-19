@@ -29,7 +29,7 @@ class SearchHistory {
     return searchHistory;
   }
 
-  static Future<void> addSearchHistory(String keyword, String mode, String title) async {
+  static Future<void> addSearchHistory(String keyword, String mode) async {
     Directory externalDirectory = (await path.getExternalStorageDirectory());
     Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
 
@@ -43,7 +43,6 @@ class SearchHistory {
     Map<String, String> newHistory = {
       'keyword': keyword,
       'mode': mode,
-      'title': title,
     };
     bool isFresh = true;
     for (var element in searchHistory) {
