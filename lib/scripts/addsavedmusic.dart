@@ -48,7 +48,7 @@ abstract class GenerateDirectories {
     this.applicationDirectory = Directory(path.join(this.externalDirectory.path, '.harmonoid'));
     this.musicDirectory = Directory(path.join(this.applicationDirectory.path, 'musicLibrary'));
 
-    if (!(await applicationDirectory.exists())) {
+    if (!(await musicDirectory.exists())) {
       await musicDirectory.create(recursive: true);
     }
   }
