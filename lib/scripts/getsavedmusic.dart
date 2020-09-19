@@ -13,7 +13,7 @@ class GetSavedMusic {
     Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
 
-    if (!(await applicationDirectory.exists())) {
+    if (!(await musicDirectory.exists())) {
       await musicDirectory.create(recursive: true);
     }
 
@@ -122,7 +122,7 @@ class GetSavedMusic {
     Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
 
-    if (!(await applicationDirectory.exists())) {
+    if (!(await musicDirectory.exists())) {
       await musicDirectory.create(recursive: true);
     }
 
