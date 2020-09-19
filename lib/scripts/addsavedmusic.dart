@@ -110,10 +110,10 @@ abstract class SaveTrack extends SaveAlbumAssets {
       http.Response response = await http.get(trackDownloadUri);
       int contentLength = response.contentLength;
       int statusCode = response.statusCode;
-      if (response.headers['Content-Type'] == 'audio/mpeg') {
+      if (response.headers['content-type'] == 'audio/mpeg') {
         trackFile = File(path.join(this.albumDirectory.path, '${this.trackNumber}.mp3'));
       }
-      else if (response.headers['Content-Type'] == 'audio/mp4') {
+      else if (response.headers['content-type'] == 'audio/mp4') {
         trackFile = File(path.join(this.albumDirectory.path, '${this.trackNumber}.m4a'));
       }
 
