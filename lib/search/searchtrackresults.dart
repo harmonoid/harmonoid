@@ -57,9 +57,13 @@ class TrackElementState extends State<TrackElement> {
     Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
     if (
-      await File(
-        path.join(musicDirectory.path, widget.tracks[widget.index]['album_id'], widget.tracks[widget.index]['track_number'].toString() + '.m4a')
-      ).exists()
+      (
+        await File(
+          path.join(musicDirectory.path, widget.tracks[widget.index]['album_id'], widget.tracks[widget.index]['track_number'].toString() + '.m4a')
+        ).exists() || await File(
+          path.join(musicDirectory.path, widget.tracks[widget.index]['album_id'], widget.tracks[widget.index]['track_number'].toString() + '.mp3')
+        ).exists()
+      )
       &&
       await File(
         path.join(musicDirectory.path, widget.tracks[widget.index]['album_id'], widget.tracks[widget.index]['track_number'].toString() + '.json')

@@ -57,7 +57,8 @@ class GetSavedMusic {
     List<FileSystemEntity> albumDirectory = Directory(path.join(musicDirectory.path, albumId)).listSync();
 
     File trackJson = File(path.join(musicDirectory.path, albumId, '$trackNumber.json'));
-    File trackFile = File(path.join(musicDirectory.path, albumId, '$trackNumber.m4a'));
+    File trackFile0 = File(path.join(musicDirectory.path, albumId, '$trackNumber.m4a'));
+    File trackFile1 = File(path.join(musicDirectory.path, albumId, '$trackNumber.m4a'));
 
     int tracksNumber = 0;
     for (int index = 0; index < albumDirectory.length; index++) {
@@ -67,7 +68,8 @@ class GetSavedMusic {
     }
 
     try {await trackJson.delete();} catch(e) {}
-    try {await trackFile.delete();} catch(e) {}
+    try {await trackFile0.delete();} catch(e) {}
+    try {await trackFile1.delete();} catch(e) {}
 
     return tracksNumber;
   }
