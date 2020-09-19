@@ -1,6 +1,9 @@
 library globalsupdater;
 
+import 'dart:convert';
+
 import 'package:harmonoid/globals.dart' as Globals;
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:harmonoid/scripts/globalspersistent.dart';
 import 'package:harmonoid/scripts/refreshcollection.dart';
 
@@ -18,6 +21,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NO                                              = 'NO';
     Globals.STRING_ALBUM                                           = 'Albums';
     Globals.STRING_TRACK                                           = 'Tracks';
+    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
     Globals.STRING_ARTIST                                          = 'Artists';
     Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_LIGHT                                           = 'Light';
@@ -33,9 +37,9 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Here is the most close album from your request';
     Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK               = 'Here is the most close track from your request';
     Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST              = 'Here is the artist of your request';
-    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'DOWNLOAD ALBUM';
-    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'DOWNLOAD TRACK';
-    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'DOWNLOAD ARTIST';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'SAVE ALBUM';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'SAVE TRACK';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'SAVE ARTIST';
     Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM          = 'SHOW ALBUM';
     Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK          = 'SHOW TRACK';
     Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST         = 'SHOW ARTIST';
@@ -63,7 +67,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Here are the tracks you saved';
     Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Some insights of the album';
     Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Are you sure?';
-    Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'Do you want to delete this album?';
+    Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'Do you want to remove this album saved on your device?';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Are you sure?';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Do you want to remove this track saved on your device?';
     Globals.STRING_NOW_PLAYING_NEXT_TRACK                          = 'NEXT';
@@ -79,8 +83,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'We could not retrieve the information about latest stargazers.';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'Language';
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Change the language of the app';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Information';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'You must restart the app to see changes.';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Do you want to restart the app now?';
     Globals.STRING_ABOUT_TITLE                                     = 'About';
     Globals.STRING_ABOUT_SUBTITLE                                  = 'Information about the app & its developers';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Server';
@@ -101,8 +105,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
     Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
     Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version';
   }
   else if (languageRegion == 'ru_ru') {
     /////////RU-RU/////////
@@ -117,6 +121,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NO                                              = 'НЕТ';
     Globals.STRING_ALBUM                                           = 'Альбомы';
     Globals.STRING_TRACK                                           = 'Треки';
+    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
     Globals.STRING_ARTIST                                          = 'Исполнители';
     Globals.STRING_SAVED                                           = 'Сохранено';
     Globals.STRING_LIGHT                                           = 'День';
@@ -178,8 +183,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Не удалось получить информацию об оценивших проект.';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'Язык';
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Изменить язык приложения';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Информация';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Вы должны перезапустить приложение, чтобы увидеть изменения.';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Do you want to restart the app now?';
     Globals.STRING_ABOUT_TITLE                                     = 'О приложении';
     Globals.STRING_ABOUT_SUBTITLE                                  = 'Информация о проекте и его разработчиках.';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Сервер';
@@ -193,15 +198,15 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Переводчики';
     Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Огромное спасибо за вашу поддержку';
     Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Цвет акцента';
-    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Измените дополнительный цвет приложения';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Изменить дополнительный цвет приложения';
     Globals.STRING_SETTING_THEME_TITLE                             = 'Тема';
-    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Смените тему приложения';
-    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
-    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
-    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
-    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Сменить тему приложения';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'У вас последняя версия';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'СКАЧАТЬ ОБНОВЛЕНИЕ';
+    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'Версия приложения';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Информация о текущей версии приложения';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Текущая версия';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Последняя версия';
   }
   else if (languageRegion == 'sl_si') {
     /////////SL-SI/////////
@@ -216,6 +221,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NO                                              = 'NE';
     Globals.STRING_ALBUM                                           = 'Albumi';
     Globals.STRING_TRACK                                           = 'Pesmi';
+    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
     Globals.STRING_ARTIST                                          = 'Skladatelji';
     Globals.STRING_SAVED                                           = 'Shranjeno';
     Globals.STRING_LIGHT                                           = 'Svetli';
@@ -277,8 +283,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Ne moremo dobiti informacij o všečkerjih projekta.';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'Jezik';
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Spremenite način prikaza aplikacije';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Informacije';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Za ogled sprememb morate znova zagnati aplikacijo.';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Do you want to restart the app now?';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Strežnik';
     Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Spremeni, kje aplikacija zahteva prenose';
     Globals.STRING_ABOUT_TITLE                                     = 'O nas';
@@ -299,8 +305,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_DOWNLOAD_UPDATE                                 = 'PRENESI POSODOBITEV';
     Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'Verzija aplikacije';
     Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Informacija o trenutni verziji.';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Nameščena verzija : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Najnovejša verzija     : ';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Nameščena verzija';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Najnovejša verzija';
   }
   else if (languageRegion == 'pt_br') {
     /////////PT-BR/////////
@@ -315,6 +321,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NO                                              = 'NÃO';
     Globals.STRING_ALBUM                                           = 'Álbuns';
     Globals.STRING_TRACK                                           = 'Músicas';
+    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
     Globals.STRING_ARTIST                                          = 'Artistas';
     Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_LIGHT                                           = 'Light';
@@ -376,8 +383,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Nós não conseguimos pegar as últimas informações sobre stargazers.';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'Idioma';
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Mude o jeito que você enxerga o aplicativo';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Informação';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Você precisa reiniciar o aplicativo para ver as mudanças.';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Do you want to restart the app now?';
     Globals.STRING_ABOUT_TITLE                                     = 'Sobre';
     Globals.STRING_ABOUT_SUBTITLE                                  = 'Informações sobre o projeto e seus desenvolvedores';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Servidor';
@@ -398,8 +405,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
     Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
     Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version';
   }
   else if (languageRegion == 'hi_in') {
     /////////HI-IN/////////
@@ -414,6 +421,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NO                                              = 'नहीं';
     Globals.STRING_ALBUM                                           = 'एल्बम';
     Globals.STRING_TRACK                                           = 'गाने';
+    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
     Globals.STRING_ARTIST                                          = 'कलाकार';
     Globals.STRING_SAVED                                           = 'सेव्ड';
     Globals.STRING_LIGHT                                           = 'लाइट';
@@ -448,8 +456,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'यह गाना सेव नहीं किया जा सका। हम जानने का प्रयास कर रहे हैं की यह किस कारण से हो रहा है। आपके प्यार के लिए धन्यवाद।';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'रुको';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'यह गाना डाउनलोड हो ही रहा है।';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'यह गाना पहले से सेव है';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'क्या आप इस गाने को दोबारा डाउनलोड करना चाहते हैं?';
     Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'हम गाने ला रहे हैं...';
     Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'यह रहे इस एल्बम के गाने';
     Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'इस एल्बम के बारे में थोड़ी जानकारी';
@@ -475,8 +483,8 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'हम अपने नए स्टारगेज़र्स के बारे में जानकारी नहीं प्राप्त कर सके।';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'भाषा';
     Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'अपनी ऐप की भाषा बदलें';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'जानकारी';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'चेंज देखने के लिए ऐप को दोबारा शुरू करें।';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'ऐप रीस्टार्ट';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'क्या आप ऐप को अभी रीस्टार्ट करना चाहेंगे?';
     Globals.STRING_ABOUT_TITLE                                     = 'प्रोजेक्ट के बारे में';
     Globals.STRING_ABOUT_SUBTITLE                                  = 'प्रोजेक्ट और इसके डेवलपर्स के बारे में जानकारी';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'सर्वर';
@@ -493,12 +501,12 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'ऐप के लिए रंग बदलें';
     Globals.STRING_SETTING_THEME_TITLE                             = 'ऐप मोड';
     Globals.STRING_SETTING_THEME_SUBTITLE                          = 'ऐप को लाइट या डार्क मोड में यूज़ करें';
-    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
-    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
-    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
-    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'आपकी ऐप पहले से अपडेट है';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'डाउनलोड अपडेट';
+    Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'ऐप वर्ज़न';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'ऐप के इस वर्ज़न के बारे में जानकारी';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'इन्सटाल्ड वर्ज़न';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'लेटेस्ट वर्ज़न';
   }
   else if (languageRegion == 'de_de') {
     /////////DE-DE/////////
@@ -506,98 +514,99 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_SEARCH_HEADER                                   = 'Musik suchen';
     Globals.STRING_SEARCH_MODE_SUBHEADER                           = 'Wonach suchen Sie?';
     Globals.STRING_COLLECTION                                      = 'Sammlung';
-    Globals.STRING_NOW_PLAYING                                     = 'Jetzt spielen';
+    Globals.STRING_NOW_PLAYING                                     = 'Jetzt abspielen';
     Globals.STRING_SETTING                                         = 'Einstellungen';
     Globals.STRING_OK                                              = 'OKAY';
     Globals.STRING_YES                                             = 'JA';
     Globals.STRING_NO                                              = 'NEIN';
     Globals.STRING_ALBUM                                           = 'Alben';
-    Globals.STRING_TRACK                                           = 'Spuren';
+    Globals.STRING_TRACK                                           = 'Songs';
+    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
     Globals.STRING_ARTIST                                          = 'Künstler';
-    Globals.STRING_SAVED                                           = 'Saved';
+    Globals.STRING_SAVED                                           = 'gespeichert';
     Globals.STRING_LIGHT                                           = 'Light';
     Globals.STRING_DARK                                            = 'Dark';
-    Globals.STRING_OPTIONS                                         = 'Options';
-    Globals.STRING_EXPORT_TRACK                                    = 'Export track';
-    Globals.STRING_DELETE_TRACK                                    = 'Delete track';
+    Globals.STRING_OPTIONS                                         = 'Optionen';
+    Globals.STRING_EXPORT_TRACK                                    = 'Song exportieren';
+    Globals.STRING_DELETE_TRACK                                    = 'Song löschen';
     Globals.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Musik aus Ihren Lieblingsalben suchen';
-    Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Suche nach Ihren Lieblingstracks';
-    Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Musik von Ihren Lieblingskünstlern suchen';
+    Globals.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Suche nach Ihren Lieblings-Songs';
+    Globals.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Musik von Ihren Lieblings-Künstlern suchen';
     Globals.STRING_SEARCH_HISTORY_SUBHEADER                        = 'Ihre letzten Suchen';
-    Globals.STRING_SEARCH_RESULT_LOADER_LABEL                      = 'Ihre Musik bekommen...';
-    Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Hier ist das Album, das Ihrer Anfrage am nächsten kommt';
-    Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK               = 'Hier ist der nächstgelegene Track aus Ihrer Anfrage';
-    Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST              = 'Hier ist der Künstler Ihrer Anfrage';
-    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'HERUNTERLADEN ALBUM';
-    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'HERUNTERLADEN TRACK';
-    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'HERUNTERLADEN KÜNSTLER';
+    Globals.STRING_SEARCH_RESULT_LOADER_LABEL                      = 'Musik laden...';
+    Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Hier ist das Album, das Ihrer Suche am nächsten kommt';
+    Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK               = 'Hier ist der nächstgelegene Song  zu Ihrer Suche';
+    Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST              = 'Hier ist der Künstler zu Ihrer Suche';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'ALBUM HERUNTERLADEN';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'SONG HERUNTERLADEN';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'KÜNSTLER HERUNTERLADEN';
     Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM          = 'ALBUM ANZEIGEN';
-    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK          = 'ZEIGE TRACK';
+    Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK          = 'SONG ANZEIGEN';
     Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST         = 'KÜNSTLER ANZEIGEN';
-    Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'Mehr Alben aus dem Ergebnis';
-    Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'Mehr Spuren aus dem Ergebnis';
-    Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'Ähnlichere Künstler';
+    Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'Mehr Alben zum Ergebnis';
+    Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'Mehr Songs zum Ergebnis';
+    Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'Ähnliche Künstler';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE                  = 'Sie können nicht zurückgehen';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE               = 'Eine oder mehrere Spuren werden offline gespeichert. Bitte warten Sie, bis alle Tracks gespeichert sind';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Der Titel konnte nicht gespeichert werden';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE               = 'Einer oder mehrere Songs werden offline gespeichert. Bitte warten Sie, bis alle Songs gespeichert wurden.';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Der Song konnte nicht gespeichert werden';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Wir empfehlen Ihnen dringend, Ihre Internetverbindung zu überprüfen und es in einer Weile erneut zu versuchen';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Wir haben alle schlechte Tage';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Wir sind beim Speichern Ihrer Musik auf einen Fehler gestoßen. Dies bedeutet im Allgemeinen, dass unsere IP-Adresse aufgrund einer großen Anzahl von Anfragen in einer bestimmten Zeit blockiert wird. Dies kann aber auch bedeuten, dass die Abhängigkeiten des Servers nicht auf dem neuesten Stand sind. Dieser Fehler hat nichts mit Ihnen zu tun. Sie können den Eigentümer des Projekts informieren, indem Sie ein Problem auf Github oder Twitter öffnen & innerhalb einer Stunde eine Behebung erwarten, wenn er in der gleichen Zeitzone wie Sie wohnt. Genießen Sie in der Zwischenzeit Ihre heruntergeladene Musik. Vielen Dank für Ihre Unterstützung';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'Wir konnten diesen Titel nicht speichern';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Dieser Titel konnte speziell nicht gespeichert werden. Wir versuchen immer noch herauszufinden, was diesen Fehler verursacht. Bitte laden Sie in der Zwischenzeit etwas andere Musik herunter. Vielen Dank für Ihre freundliche Unterstützung';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Wir sind beim Speichern Ihrer Musik auf einen Fehler gestoßen. Dies bedeutet meist, dass unsere IP-Adresse aufgrund einer großen Anzahl von Anfragen in einer bestimmten Zeit blockiert wird. Dies kann aber auch bedeuten, dass die Abhängigkeiten des Servers nicht auf dem neuesten Stand sind. Dieser Fehler hat nichts mit Ihnen zu tun. Sie können den Eigentümer des Projekts informieren, indem Sie ein Problem auf Github oder Twitter öffnen & innerhalb einer Stunde eine Behebung erwarten, wenn er in der gleichen Zeitzone wie Sie wohnt. Genießen Sie in der Zwischenzeit Ihre heruntergeladene Musik. Vielen Dank für Ihre Unterstützung';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'Wir konnten diesen Song nicht speichern';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Speziell dieser Song konnte nicht gespeichert werden. Wir versuchen immer noch herauszufinden, was diesen Fehler verursacht. Bitte laden Sie in der Zwischenzeit etwas andere Musik herunter. Vielen Dank für Ihre freundliche Unterstützung';
     Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Warten';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Dieser Titel wird bereits heruntergeladen';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
-    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
-    Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Spuren erhalten...';
-    Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Hier sind die Titel aus diesem Album';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Dieser Song wird bereits heruntergeladen';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Dieser Song wurde bereits heruntergeladen.';
+    Globals.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Möchten Sie diesen Song erneut herunterladen?';
+    Globals.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Songs laden...';
+    Globals.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Hier sind die Songs aus diesem Album';
     Globals.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Einige Einblicke in das Album';
-    Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Suche & speichere etwas Musik, um sie hier zu sehen.\nDrehe die Aktualisierung, um neue Sachen zu sehen';
+    Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Suche & speichere etwas Musik, um sie hier zu sehen.\nDrehe den Aktualisierungsbutton, um neue Sachen zu sehen';
     Globals.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Hier ist das letzte von Ihnen gespeicherte Album';
     Globals.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Hier sind Ihre anderen Alben';
-    Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Hier sind die Spuren, die Sie gespeichert haben';
+    Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Hier sind die Songs, die Sie gespeichert haben';
     Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Einige Einblicke in das Album';
     Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Dieses Album löschen ?';
-    Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'Das wollen Sie sicher löschen...';
-    Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Wollen Sie diesen Titel löschen?';
-    Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Möchten Sie diesen auf Ihrem Gerät gespeicherten Track entfernen?';
+    Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'Löschen - Sicher...?';
+    Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Wollen Sie diesen Song löschen?';
+    Globals.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Möchten Sie diesen auf Ihrem Gerät gespeicherten Song entfernen?';
     Globals.STRING_NOW_PLAYING_NEXT_TRACK                          = 'NÄCHSTER';
-    Globals.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'BISHERIGE';
-    Globals.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Es wird nichts gespielt...';
+    Globals.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'VORHERIGER';
+    Globals.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Es wird aktuell nichts gespielt...';
     Globals.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Aus Ihrer Sammlung abspielen';
-    Globals.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = 'Wir sind alle bereit...';
+    Globals.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = '';
     Globals.STRING_SETTING_GITHUB                                  = 'GITHUB';
-    Globals.STRING_SETTING_STAR_GITHUB                             = 'STAR THE PROJECT';
-    Globals.STRING_SETTING_STARGAZERS_TITLE                        = 'Projekt Sterngucker';
+    Globals.STRING_SETTING_STAR_GITHUB                             = 'Projekt mit "Star" versehen (GitHub)';
+    Globals.STRING_SETTING_STARGAZERS_TITLE                        = 'Projekt "Star"-Geber (GitHub)';
     Globals.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Vielen Dank für Ihre Unterstützung';
-    Globals.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'Wir sind nicht in der Lage, aktuelle Informationen über uns zu erhalten, Sie sind höchstwahrscheinlich offline.';
-    Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Wir konnten die Informationen über die neuesten Sterngucker nicht abrufen.';
+    Globals.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'Wir sind nicht in der Lage, aktuelle Informationen "Über uns" zu erhalten, Sie sind höchstwahrscheinlich offline.';
+    Globals.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Wir konnten die Informationen über die neuesten "Star"-Geber (Github) nicht abrufen.';
     Globals.STRING_SETTING_LANGUAGE_TITLE                          = 'Sprachen';
-    Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Ändern Sie die Art und Weise, wie Sie die Anwendung sehen';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Informationen';
-    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Sie müssen die Anwendung neu starten, um die Änderungen zu sehen';
+    Globals.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Ändern Sie die Spracheinstellungen der App.';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
+    Globals.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Do you want to restart the app now?';
     Globals.STRING_ABOUT_TITLE                                     = 'Über';
-    Globals.STRING_ABOUT_SUBTITLE                                  = 'Informationen über die Anwendung und ihre Entwickler';
+    Globals.STRING_ABOUT_SUBTITLE                                  = 'Informationen über die App und deren Entwickler';
     Globals.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Server';
-    Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Änderung, wo die Anwendung ihren Inhalt anfordert';
-    Globals.STRING_SETTING_SERVER_CHANGE_SERVER_HINT               = 'Geben Sie eine Server-URL ein';
+    Globals.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Nur ändern, um Songs von einen anderen Server zu erhalten.';
+    Globals.STRING_SETTING_SERVER_CHANGE_SERVER_HINT               = 'Bitte geben Sie eine Server-URL ein';
     Globals.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL              = 'Server-URL';
-    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID             = 'Es ist keine gültige Server-URL für die Anwendung.';
+    Globals.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID             = 'Dies ist keine gültige Server-URL.';
     Globals.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Bitte überprüfen Sie Ihre Internetverbindung.';
     Globals.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Server erfolgreich geändert.';
-    Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Server für die Anwendung gewechselt...';
-    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
-    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
-    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
-    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
+    Globals.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Server für die App gewechselt...';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Übersetzer';
+    Globals.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Vielen Dank für die Unterstützung!';
+    Globals.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Akzentfarbe';
+    Globals.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Ändern der Akzentfarbe der App';
     Globals.STRING_SETTING_THEME_TITLE                             = 'App Mode';
-    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
-    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
-    Globals.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
+    Globals.STRING_SETTING_THEME_SUBTITLE                          = 'Ändern Sie die App im Light-Mode oder Dark-Mode';
+    Globals.STRING_NO_DOWNLOAD_UPDATE                              = 'Ihre App ist bereits aktuell.';
+    Globals.STRING_DOWNLOAD_UPDATE                                 = 'UPDATE DOWNLOADEN';
     Globals.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
-    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version : ';
-    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version     : ';
+    Globals.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Informationen über die aktuelle App-Version';
+    Globals.STRING_SETTING_APP_VERSION_INSTALLED                   = 'installierte Version';
+    Globals.STRING_SETTING_APP_VERSION_LATEST                      = 'letzte Version';
   }
 }
 
@@ -610,11 +619,20 @@ void updateAccentColor(int accentIndex, int themeIndex) {
   Globals.globalColor = accentIndex;
 }
 
+Future<void> checkVersion() async {
+  String thisVersion = jsonDecode(await rootBundle.loadString('assets/config.json'))['current_version'];
+  String currentVersion = await GlobalsPersistent.getConfiguration('current_version');
+  if (thisVersion  != currentVersion) {
+    await GlobalsPersistent.changeConfiguration('current_version', thisVersion);
+  }
+}
+
 Future<void> setupStartupGlobals() async {
   String languageRegion = await GlobalsPersistent.getConfiguration('language');
   String homeURL = await GlobalsPersistent.getConfiguration('server');
   int accentIndex = await GlobalsPersistent.getConfiguration('accent');
   int themeIndex = await GlobalsPersistent.getConfiguration('theme');
+  await checkVersion();
   updateGlobals(languageRegion);
   updateHomeURL(homeURL);
   updateAccentColor(accentIndex, themeIndex);

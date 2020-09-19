@@ -5,28 +5,19 @@ import 'dart:convert' as convert;
 import 'dart:async';
 
 import 'package:harmonoid/globals.dart' as Globals;
-import 'package:harmonoid/searchalbumviewer.dart';
+import 'package:harmonoid/search/searchalbumviewer.dart';
 
-class SearchAlbumResultArguments {
-  final String keyword;
-  final String searchMode;
-  final String searchTitle;
-  SearchAlbumResultArguments(this.keyword, this.searchMode, this.searchTitle);
-}
 
 class SearchAlbumResults extends StatefulWidget {
   final String keyword;
-  final String searchMode;
-  final String searchTitle;
-  static String pageRoute = '/searchresult';
+  static String pageRoute = '/searchalbumresults';
   
-  SearchAlbumResults({Key key, @required this.keyword, @required this.searchMode, @required this.searchTitle}) : super(key : key);
+  SearchAlbumResults({Key key, @required this.keyword}) : super(key : key);
   _SearchAlbumResults createState() => _SearchAlbumResults();
 }
 
 class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderStateMixin {
 
-  SearchResultLabels _searchResultLabels;
   AnimationController _searchProgressController;
   Animation<double> _searchProgressAnimation;
   Animation<double> _searchResultOpacity;
@@ -51,19 +42,17 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
   void initState() {
     super.initState();
     
-    this._searchResultLabels = SearchResultLabels(widget.searchMode);
-
     (() async {
       Uri uri = Uri.https(Globals.STRING_HOME_URL, '/search', {
         'keyword': widget.keyword,
-        'mode' : widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1),
+        'mode' : 'album',
         'limit' : '20',
         'offset' : '0',
       });
       
       http.get(uri)
       .then((response) {
-        this._albums = convert.jsonDecode(response.body)[widget.searchMode.toLowerCase()];
+        this._albums = convert.jsonDecode(response.body)['albums'];
 
         int elementsPerRow = MediaQuery.of(context).size.width ~/ 172.0;
         List<Widget> rowChildren = new List<Widget>();
@@ -79,7 +68,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                 closedBuilder: (ctx, act) => Container(
                   color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.10),
                   width: 156,
-                  height: widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 272 : 246,
+                  height: 246,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -105,7 +94,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                             Container(
                               height: 38,
                               child: Text(
-                                this._albums[index]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'],
+                                this._albums[index]['album_name'],
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
@@ -119,17 +108,6 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                               height: 8,
                               thickness: 8,
                             ),
-                            widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 
-                            Text(
-                              this._albums[index]['album_name'],
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
-                              ),
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                            ) :
-                            Container(),
                             Text(
                               this._albums[index]['album_artists'].join(', '),
                               style: TextStyle(
@@ -181,7 +159,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
           Container(
             margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
             child: Text(
-              _searchResultLabels.stringSearchResultTopSubheader,
+              Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM,
               style: TextStyle(
                 fontSize: 12,
                 color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
@@ -217,7 +195,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                this._albums[0]['${widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1)}_name'],
+                                this._albums[0]['album_name'],
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Globals.globalTheme == 0 ? Colors.black87 : Colors.white.withOpacity(0.87),
@@ -230,17 +208,6 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
                                 height: 12,
                                 thickness: 12,
                               ),
-                              widget.searchMode.toLowerCase().substring(0, widget.searchMode.length - 1) == 'track' ? 
-                              Text(
-                                this._albums[0]['album_name'],
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
-                                ),
-                                maxLines: 2,
-                                textAlign: TextAlign.start,
-                              ) :
-                              Container(),
                               Divider(
                                 color: Color(0x00000000),
                                 height: 2,
@@ -285,7 +252,7 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
           Container(
             margin: EdgeInsets.only(left: 16, top: 24, bottom: 24),
             child: Text(
-              _searchResultLabels.stringSearchResultOtherSubheader,
+              Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM,
               style: TextStyle(
                 fontSize: 12,
                 color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
@@ -376,13 +343,13 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
             ),
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                widget.searchTitle,
+                Globals.STRING_ALBUM,
                 style: TextStyle(
                   color: Globals.globalTheme == 0 ? Colors.white : Colors.white.withOpacity(0.87),
                 ),
               ),
               background: Image.asset(
-                'assets/images/${widget.searchMode.toLowerCase()}.jpg',
+                'assets/images/albums.jpg',
                 fit: BoxFit.fitWidth,
               ),
             ),
@@ -433,34 +400,5 @@ class _SearchAlbumResults extends State<SearchAlbumResults> with TickerProviderS
         ],
       ),
     );
-  }
-}
-
-
-class SearchResultLabels {
-  String stringSearchResultTopSubheader;
-  String stringSearchResultTopButtonLabel0;
-  String stringSearchResultTopButtonLabel1;
-  String stringSearchResultOtherSubheader;
-
-  SearchResultLabels(searchMode) {
-    if (searchMode.toLowerCase() == 'albums') {
-      this.stringSearchResultTopSubheader = Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM;
-      this.stringSearchResultTopButtonLabel0 = Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM;
-      this.stringSearchResultTopButtonLabel1 = Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM;
-      this.stringSearchResultOtherSubheader = Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM;
-    }
-    else if (searchMode.toLowerCase() == 'tracks') {
-      this.stringSearchResultTopSubheader = Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK;
-      this.stringSearchResultTopButtonLabel0 = Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK;
-      this.stringSearchResultTopButtonLabel1 = Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK;
-      this.stringSearchResultOtherSubheader = Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK;
-    }
-    else if (searchMode.toLowerCase() == 'artists') {
-      this.stringSearchResultTopSubheader = Globals.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST;
-      this.stringSearchResultTopButtonLabel0 = Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST;
-      this.stringSearchResultTopButtonLabel1 = Globals.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST;
-      this.stringSearchResultOtherSubheader = Globals.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST;
-    }
   }
 }

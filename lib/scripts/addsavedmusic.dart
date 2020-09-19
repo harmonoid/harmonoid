@@ -48,7 +48,7 @@ abstract class GenerateDirectories {
     this.applicationDirectory = Directory(path.join(this.externalDirectory.path, '.harmonoid'));
     this.musicDirectory = Directory(path.join(this.applicationDirectory.path, 'musicLibrary'));
 
-    if (!(await applicationDirectory.exists())) {
+    if (!(await musicDirectory.exists())) {
       await musicDirectory.create(recursive: true);
     }
   }
@@ -103,13 +103,19 @@ abstract class SaveAlbumAssets extends GenerateDirectories {
 abstract class SaveTrack extends SaveAlbumAssets {
 
   Future<void> saveTrackFile() async {
-    File trackFile = File(path.join(this.albumDirectory.path, '${this.trackNumber}.m4a'));
+    File trackFile;
 
     Uri trackDownloadUri = Uri.https(Globals.STRING_HOME_URL, '/trackdownload', {'track_id': this.trackId, 'album_id': this.albumJson['album_id']});
     try {
       http.Response response = await http.get(trackDownloadUri);
       int contentLength = response.contentLength;
       int statusCode = response.statusCode;
+      if (response.headers['content-type'] == 'audio/mpeg') {
+        trackFile = File(path.join(this.albumDirectory.path, '${this.trackNumber}.mp3'));
+      }
+      else if (response.headers['content-type'] == 'audio/mp4') {
+        trackFile = File(path.join(this.albumDirectory.path, '${this.trackNumber}.m4a'));
+      }
 
       if (statusCode == 200) {
         if (contentLength < 500000) {

@@ -627,7 +627,7 @@ class AboutScreenState extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Globals.globalTheme == 0 ? Colors.white.withOpacity(0.99) : Color(0xFF121212),
+      backgroundColor: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
       appBar: AppBar(
         brightness: Brightness.dark,
         backgroundColor: Globals.globalTheme == 0 ? Theme.of(context).primaryColor : Colors.white10,
@@ -754,7 +754,7 @@ class AboutScreenState extends State<AboutScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      'Русский',
+                      'русский',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                       ),
@@ -776,7 +776,7 @@ class AboutScreenState extends State<AboutScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      'Slovenščina',
+                      'slovenščina',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                       ),
@@ -798,7 +798,7 @@ class AboutScreenState extends State<AboutScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      'Português',
+                      'português',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                       ),
@@ -842,7 +842,7 @@ class AboutScreenState extends State<AboutScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      'Deutsche',
+                      'deutsch',
                       style: TextStyle(
                         color: Globals.globalTheme == 0 ? Colors.black54 : Colors.white.withOpacity(0.60),
                       ),
