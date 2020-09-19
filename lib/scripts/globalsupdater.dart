@@ -21,6 +21,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NO                                              = 'NO';
     Globals.STRING_ALBUM                                           = 'Albums';
     Globals.STRING_TRACK                                           = 'Tracks';
+    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
     Globals.STRING_ARTIST                                          = 'Artists';
     Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_LIGHT                                           = 'Light';
@@ -120,6 +121,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NO                                              = 'НЕТ';
     Globals.STRING_ALBUM                                           = 'Альбомы';
     Globals.STRING_TRACK                                           = 'Треки';
+    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
     Globals.STRING_ARTIST                                          = 'Исполнители';
     Globals.STRING_SAVED                                           = 'Сохранено';
     Globals.STRING_LIGHT                                           = 'День';
@@ -219,6 +221,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NO                                              = 'NE';
     Globals.STRING_ALBUM                                           = 'Albumi';
     Globals.STRING_TRACK                                           = 'Pesmi';
+    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
     Globals.STRING_ARTIST                                          = 'Skladatelji';
     Globals.STRING_SAVED                                           = 'Shranjeno';
     Globals.STRING_LIGHT                                           = 'Svetli';
@@ -318,6 +321,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NO                                              = 'NÃO';
     Globals.STRING_ALBUM                                           = 'Álbuns';
     Globals.STRING_TRACK                                           = 'Músicas';
+    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
     Globals.STRING_ARTIST                                          = 'Artistas';
     Globals.STRING_SAVED                                           = 'Saved';
     Globals.STRING_LIGHT                                           = 'Light';
@@ -417,6 +421,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NO                                              = 'नहीं';
     Globals.STRING_ALBUM                                           = 'एल्बम';
     Globals.STRING_TRACK                                           = 'गाने';
+    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
     Globals.STRING_ARTIST                                          = 'कलाकार';
     Globals.STRING_SAVED                                           = 'सेव्ड';
     Globals.STRING_LIGHT                                           = 'लाइट';
@@ -516,6 +521,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_NO                                              = 'NEIN';
     Globals.STRING_ALBUM                                           = 'Alben';
     Globals.STRING_TRACK                                           = 'Songs';
+    Globals.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
     Globals.STRING_ARTIST                                          = 'Künstler';
     Globals.STRING_SAVED                                           = 'gespeichert';
     Globals.STRING_LIGHT                                           = 'Light';
