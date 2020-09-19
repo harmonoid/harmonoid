@@ -47,7 +47,9 @@ class PlaySavedMusic {
             'track_number': albumTracks[index]['track_number'],
             'track_index': index,
             'year': albumAssets['year'],
-            'track_path': path.join(musicDirectory.path, albumId, '${albumTracks[index]['track_number']}.m4a')
+            'track_path': await File(path.join(musicDirectory.path, albumId, '${albumTracks[index]['track_number']}.mp3')).exists() ? 
+            path.join(musicDirectory.path, albumId, '${albumTracks[index]['track_number']}.mp3') :
+            path.join(musicDirectory.path, albumId, '${albumTracks[index]['track_number']}.m4a'),
           },
         ),
       );

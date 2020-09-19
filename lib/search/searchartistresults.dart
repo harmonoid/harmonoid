@@ -83,7 +83,7 @@ class _SearchArtistResults extends State<SearchArtistResults> with TickerProvide
                             height: 138,
                             width: 138,
                           ),
-                        )
+                        ),
                       ),
                       Container(
                         height: 36,
