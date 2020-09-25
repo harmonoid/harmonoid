@@ -587,7 +587,11 @@ class _SearchTrackResults extends State<SearchTrackResults> with TickerProviderS
                     color: Colors.white,
                   ),
                   splashRadius: 20,
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () async {
+                    if (await this.checkTrackQueue()) {
+                      Navigator.of(context).pop();
+                    }
+                  }
                 )
               ),
               flexibleSpace: FlexibleSpaceBar(
