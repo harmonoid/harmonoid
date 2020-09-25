@@ -137,4 +137,33 @@ class GetSavedMusic {
 
     return albumArts;
   }
+
+  static Future<Map<String, dynamic>> artists() async {
+    List<dynamic> albums = (await GetSavedMusic.albums())['albums'];
+    
+    List<String> artists = new List<String>();
+    List<List<dynamic>> artistAlbums = new List<List<dynamic>>();
+    
+    for (dynamic album in albums) {
+      if (!artists.contains(album['album_artists'][0])) {
+        artists.add(album['album_artists'][0]);
+        artistAlbums.add([album]);
+      }
+      else {
+        int artistIndex = artists.indexOf(album['album_artists'][0]);
+        artistAlbums[artistIndex].add(album);
+      }
+    }
+
+    List<Map<String, dynamic>> result = new List<Map<String, dynamic>>();
+
+    for (int index = 0; index < artists.length; index++) {
+      result.add({
+        'album_artists': artists[index],
+        'albums': artistAlbums[index],
+      });
+    }
+
+    return {'artists': result};
+  }
 }
