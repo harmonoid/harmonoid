@@ -21,8 +21,10 @@ class SearchArtistViewerState extends State<SearchArtistViewer> with SingleTicke
   Widget albumsWidget = Center(
     child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(Globals.globalContext).primaryColor)),
   );
+  ScrollController _scrollController = new ScrollController();
   AnimationController aboutController;
   Animation<double> aboutTween;
+  double _parallaxPosition = 0;
   List<String> artistInfo = ['', '', ''];
 
   Future<void> _artistInfo() async {
@@ -33,8 +35,8 @@ class SearchArtistViewerState extends State<SearchArtistViewer> with SingleTicke
     Map<String, dynamic> artistData = convert.jsonDecode(response.body);
     this.artistInfo = [
       artistData['description'], 
-      artistData['subscribers'] + ' followers', 
-      artistData['views'].replaceAll('views', 'plays'),
+      artistData['subscribers'] + ' ' + Globals.STRING_FOLLOWERS, 
+      artistData['views'].replaceAll('views', Globals.STRING_PLAYS),
     ];
   }
 
@@ -55,6 +57,14 @@ class SearchArtistViewerState extends State<SearchArtistViewer> with SingleTicke
         parent: this.aboutController,
       )
     );
+
+    this._scrollController.addListener(() {
+      if (this._scrollController.position.pixels > 0) {
+        this.setState(() {
+          this._parallaxPosition = this._scrollController.position.pixels * 0.2;
+        });
+      }
+    });
 
     (() async {
       Uri uri = Uri.https(Globals.STRING_HOME_URL, '/artistalbums', {
@@ -200,24 +210,34 @@ class SearchArtistViewerState extends State<SearchArtistViewer> with SingleTicke
             fit: BoxFit.fill,
           ),
           Positioned(
-            top: MediaQuery.of(context).size.width - 256,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 256,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0x00000000),
-                    Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.0, 1.0],
+            top: MediaQuery.of(context).size.width - this._parallaxPosition > 0 ? MediaQuery.of(context).size.width - 256 - this._parallaxPosition : -256,
+            child: Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 256,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0x00000000),
+                        Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.0, 1.0],
+                    ),
+                  ),
                 ),
-              ),
-            ),
+                Container(
+                  color: Globals.globalTheme == 0 ? Colors.grey[50] : Color(0xFF121212),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                ),
+              ],
+            )
           ),
           ListView(
+            controller: this._scrollController,
             children: <Widget>[
               Container(
                 height: MediaQuery.of(context).size.width - 128,
@@ -271,7 +291,7 @@ class SearchArtistViewerState extends State<SearchArtistViewer> with SingleTicke
                         ),
                         Row(
                           children: [
-                            IconButton(
+                            /* IconButton(
                               iconSize: 24,
                               icon: Icon(
                                 this.aboutTween.isDismissed ? Icons.expand_more : Icons.expand_less,
@@ -282,7 +302,7 @@ class SearchArtistViewerState extends State<SearchArtistViewer> with SingleTicke
                                 (this.aboutTween.isDismissed ? this.aboutController.forward : this.aboutController.reverse)();
                                 this.setState(() {});
                               },
-                            ),
+                            ), 😉 */
                             Expanded(
                               child: ButtonBar(
                                 alignment: MainAxisAlignment.end,

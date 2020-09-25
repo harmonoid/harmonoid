@@ -319,7 +319,11 @@ class _ArtistTrackViewer extends State<ArtistTrackViewer> with TickerProviderSta
                     color: Colors.white,
                   ),
                   splashRadius: 20,
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () async {
+                    if (await this.checkTrackQueue()) {
+                      Navigator.of(context).pop();
+                    }
+                  },
                 )
               ),
               flexibleSpace: FlexibleSpaceBar(

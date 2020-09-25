@@ -48,8 +48,8 @@ class _SearchArtistResults extends State<SearchArtistResults> with TickerProvide
     Map<String, dynamic> artistData = convert.jsonDecode(response.body);
     this._artistInfoLabel = [
       artistData['description'], 
-      artistData['subscribers'] + ' followers', 
-      artistData['views'].replaceAll('views', 'plays'),
+      artistData['subscribers'] + ' ' + Globals.STRING_FOLLOWERS,
+      artistData['views'].replaceAll('views', Globals.STRING_PLAYS),
     ];
   }
 
