@@ -79,7 +79,7 @@ class SearchArtistViewerState extends State<SearchArtistViewer> with SingleTicke
       return convert.jsonDecode(response.body)['albums'];
     })()
     .then((_albums) {
-      for (int index = 1; index < _albums.length; index++) { 
+      for (int index = 0; index < _albums.length; index++) { 
         this.albums.add(
           Container(
             child: OpenContainer(
