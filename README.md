@@ -160,7 +160,7 @@ This application features some 1st and 3rd party server URLs, which are free to 
 
 - https://harmonoid-us.herokuapp.com - maintained by @mytja
 
-### ▶️ Youtube Music servers
+### ▶️ YouTube Music servers
 
 Youtube Music contains newest server code, and it's primary.
 
