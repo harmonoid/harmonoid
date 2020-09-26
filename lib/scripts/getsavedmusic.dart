@@ -159,7 +159,7 @@ class GetSavedMusic {
 
     for (int index = 0; index < artists.length; index++) {
       result.add({
-        'album_artists': artists[index],
+        'artist': artists[index],
         'albums': artistAlbums[index],
       });
     }
