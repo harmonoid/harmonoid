@@ -151,3 +151,28 @@ flutter build apk
 ```
 
 You can use additional parameter ```--split-per-abi``` to reduce APK size by building separate APKs for each architecture.
+
+## 🔗 Server URLs
+
+This application features some 1st and 3rd party server URLs, which are free to use:
+
+### Spotify servers
+
+- https://harmonoid-us.herokuapp.com - maintained by @mytja
+
+### ▶️ Youtube Music servers
+
+Youtube Music contains newest server code, and it's primary.
+
+#### 🇪🇺 EU servers
+
+- https://harmonoid-eu.herokuapp.com - maintained by @mytja
+
+#### 🇺🇸 USA servers
+
+- https://harmonoid.herokuapp.com - maintained by @alexmercerind
+- https://harmonoidservice.herokuapp.com - maintained by @alexmercerind
+- https://harmonoid-ru.herokuapp.com - maintained by @raitonoberu - Developement server (Server might be unstable)
+
+
+Thanks to all contributors of servers. You can contact author of this repository (@alexmercerind) and submit your server.
