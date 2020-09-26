@@ -201,9 +201,13 @@ class TrackElementStateHero extends State<TrackElementHero> {
     Directory applicationDirectory = Directory(path.join(externalDirectory.path, '.harmonoid'));
     Directory musicDirectory = Directory(path.join(applicationDirectory.path, 'musicLibrary'));
     if (
-      await File(
-        path.join(musicDirectory.path, widget.track['album_id'], widget.track['track_number'].toString() + '.m4a')
-      ).exists()
+      (
+        await File(
+          path.join(musicDirectory.path, widget.track['album_id'], widget.track['track_number'].toString() + '.m4a')
+        ).exists() || await File(
+          path.join(musicDirectory.path, widget.track['album_id'], widget.track['track_number'].toString() + '.mp3')
+        ).exists()
+      )
       &&
       await File(
         path.join(musicDirectory.path, widget.track['album_id'], widget.track['track_number'].toString() + '.json')
@@ -587,7 +591,11 @@ class _SearchTrackResults extends State<SearchTrackResults> with TickerProviderS
                     color: Colors.white,
                   ),
                   splashRadius: 20,
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () async {
+                    if (await this.checkTrackQueue()) {
+                      Navigator.of(context).pop();
+                    }
+                  }
                 )
               ),
               flexibleSpace: FlexibleSpaceBar(

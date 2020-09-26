@@ -67,17 +67,16 @@ class TrackElement extends StatelessWidget {
                   onPressed: () {
                     (() async {
                       int result = await GetSavedMusic.deleteTrack(this.albumJson['album_id'], this.albumTracks[this.index]['track_number']);
+                      await RefreshCollection.refreshArtistsCollection();
                       await RefreshCollection.refreshAlbumsCollection();
                       this.refreshTracks();
+                      Navigator.of(context).pop();
                       if (result == 1) {
-                        Navigator.of(context).pop();
                         await GetSavedMusic.deleteAlbum(this.albumJson['album_id']);
+                        Navigator.of(context).pop();
+                        await RefreshCollection.refreshArtistsCollection();
                         await RefreshCollection.refreshAlbumsCollection();
-                        Navigator.of(context).pop();
                         await this.refresh();
-                      }
-                      else {
-                        Navigator.of(context).pop();
                       }
                     })();
                   },
@@ -212,6 +211,7 @@ class SavedAlbumViewerState extends State<SavedAlbumViewer> with TickerProviderS
                                 (() async {
                                   await GetSavedMusic.deleteAlbum(widget.albumJson['album_id']);
                                   Navigator.of(context).pop();
+                                  await RefreshCollection.refreshArtistsCollection();
                                   await RefreshCollection.refreshAlbumsCollection();
                                   await widget.refresh();
                                 })();

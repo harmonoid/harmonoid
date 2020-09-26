@@ -24,6 +24,8 @@ String STRING_SAVED;
 String STRING_LIGHT;
 String STRING_DARK;
 String STRING_OPTIONS;
+String STRING_FOLLOWERS;
+String STRING_PLAYS;
 String STRING_EXPORT_TRACK;
 String STRING_DELETE_TRACK;
 String STRING_SEARCH_MODE_SUBTITLE_ALBUM;
@@ -61,6 +63,7 @@ String STRING_ALBUM_VIEW_INFO_SUBHEADER;
 String STRING_LOCAL_TOP_BODY_ALBUM_EMPTY;
 String STRING_LOCAL_TOP_SUBHEADER_ALBUM;
 String STRING_LOCAL_OTHER_SUBHEADER_ALBUM;
+String STRING_LOCAL_OTHER_SUBHEADER_ARTIST;
 String STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER;
 String STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER;
 String STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER;
@@ -105,13 +108,24 @@ String STRING_SETTING_APP_VERSION_SUBTITLE;
 String STRING_SETTING_APP_VERSION_INSTALLED;
 String STRING_SETTING_APP_VERSION_LATEST;
 
-/////////Internal Management And Configuration/////////
+/* Application Accent & Theme */
 
 int globalColor;
 int globalTheme;
+
+/* Albums Collection Caching */
+
 List<dynamic> albums;
 List<File> albumArts;
 List<List<dynamic>> tracksList;
+
+/* Artists Collection Caching */
+
+List<dynamic> artists;
+List<List<dynamic>> artistTracksList = new List<List<dynamic>>();
+
+/* A fallback BuildContext for making media queries */
+
 BuildContext globalContext;
 
 List<List<Color>> colors = [

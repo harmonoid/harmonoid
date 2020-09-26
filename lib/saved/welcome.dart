@@ -11,6 +11,7 @@ import 'package:harmonoid/saved/savedalbumresults.dart';
 import 'package:harmonoid/saved/nowplaying.dart';
 import 'package:harmonoid/scripts/refreshcollection.dart';
 import 'package:harmonoid/searchbar.dart';
+import 'package:harmonoid/saved/savedartistresults.dart';
 import 'package:harmonoid/setting.dart';
 
 
@@ -34,6 +35,7 @@ class _Welcome extends State<Welcome> {
 
   Future<void> refreshCollection() async {
     await RefreshCollection.refreshAlbumsCollection();
+    await RefreshCollection.refreshArtistsCollection();
     await this._savedAlbumResultsKey.currentState.refresh();
   }
 
@@ -108,6 +110,11 @@ class _Welcome extends State<Welcome> {
         ],
       ),
       Setting(),
+      /*
+      SavedArtistResults(
+        scrollController: _albumsScrollController,
+      ),
+      */
     ];
 
     return Scaffold(
@@ -122,6 +129,7 @@ class _Welcome extends State<Welcome> {
               if (this.notRefreshing) {
                 this.notRefreshing = false;
                 await RefreshCollection.refreshAlbumsCollection();
+                await RefreshCollection.refreshArtistsCollection();
                 this.setState(() {
                   this._rotations++;
                   this._rotationValue = 2 * this._rotations * pi;
