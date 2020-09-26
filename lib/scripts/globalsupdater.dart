@@ -66,6 +66,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Search & save some music to see it here.\nSpin the refresh to see new stuff.';
     Globals.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Here is the latest album saved by you';
     Globals.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Here are your other albums';
+    Globals.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are the artists saved on your device.';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Here are the tracks you saved';
     Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Some insights of the album';
     Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Are you sure?';
@@ -168,6 +169,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Ищите и сохраняйте музыку, чтобы увидеть её здесь.';
     Globals.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Последний сохранённый альбом';
     Globals.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Другие альбомы';
+    Globals.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are the artists saved on your device.';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Сохранённые треки';
     Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Немного об альбоме';
     Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Удалить альбом';
@@ -270,6 +272,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Poišči in shrani nekaj glasbe.\nZavrti osveži gumb, da se pokažejo nove pesmi.';
     Globals.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Tukaj je zadnji shranjeni avtor';
     Globals.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Tukaj so shranjeni albumi';
+    Globals.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are the artists saved on your device.';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Tukaj so shranjene pesmi';
     Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Nekaj stvari o albumu';
     Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Izbriši ta album?';
@@ -372,6 +375,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Procure & salve algumas músicas para vê-las aqui.\nGire para atualizar e ver as novidades.';
     Globals.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Aqui está o último álbum salvo por você';
     Globals.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Aqui estão alguns outros álbums';
+    Globals.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are the artists saved on your device.';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Aqui estão algumas músicas salvas por você';
     Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Alguns insights do álbum';
     Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Deletar esse álbum?';
@@ -474,6 +478,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'अपने पसंद के गानों को यहाँ सुनने के लिए, उन्हें ढूंढे व सेव करें।\nअपना कलेक्शन रिफ्रेश करने के लिए रिफ्रेश बटन दबायें।';
     Globals.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'यह रही आपके कलेक्शन की सबसे नयी एल्बम';
     Globals.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'आपकी बाकी एल्बम';
+    Globals.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are the artists saved on your device.';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'यह रहे इस एल्बम के गाने';
     Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'इस एल्बम के बारे में थोड़ी जानकारी';
     Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'इस एल्बम को डिलीट करें?';
@@ -576,6 +581,7 @@ void updateGlobals(String languageRegion) {
     Globals.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Suche & speichere etwas Musik, um sie hier zu sehen.\nDrehe den Aktualisierungsbutton, um neue Sachen zu sehen';
     Globals.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Hier ist das letzte von Ihnen gespeicherte Album';
     Globals.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Hier sind Ihre anderen Alben';
+    Globals.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are the artists saved on your device.';
     Globals.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Hier sind die Songs, die Sie gespeichert haben';
     Globals.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Einige Einblicke in das Album';
     Globals.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Dieses Album löschen ?';
@@ -649,4 +655,5 @@ Future<void> setupStartupGlobals() async {
   updateHomeURL(homeURL);
   updateAccentColor(accentIndex, themeIndex);
   await RefreshCollection.refreshAlbumsCollection();
+  await RefreshCollection.refreshArtistsCollection();
 }
