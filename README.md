@@ -1,6 +1,6 @@
 # [Harmonoid](https://github.com/alexmercerind/harmonoid/)
 
-### The 🎵 music app, that can download music for free & has no advertisements!
+### A 🎵 music app, that can download music for free & has no advertisements!
 #### From [alexmercerind](https://github.com/alexmercerind) & [contributors](https://github.com/alexmercerind/harmonoid/graphs/contributors)
 The app is meant to be used in such a way, that you download your favorite music offline & listen it whenever without internet connection.
 
