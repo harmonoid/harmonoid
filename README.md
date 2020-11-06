@@ -1,5 +1,9 @@
 # [Harmonoid](https://github.com/alexmercerind/harmonoid/)
 
+[![Discord](https://img.shields.io/discord/774213213113810944?color=%23738ADB&label=Discord&logo=Discord)](https://discord.gg/mRxH9zYkGy)
+[![Gitter](https://badges.gitter.im/harmonoid/community.svg)](https://gitter.im/harmonoid/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/alexmercerind/harmonoid)](https://github.com/alexmercerind/harmonoid/releases/latest)
+
 ### A 🎵 music app, that can download music for free & has no advertisements!
 #### From [alexmercerind](https://github.com/alexmercerind) & [contributors](https://github.com/alexmercerind/harmonoid/graphs/contributors)
 The app is meant to be used in such a way, that you download your favorite music offline & listen it whenever without internet connection.
