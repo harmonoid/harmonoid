@@ -31,6 +31,7 @@ dependencies:
   audio_service: ^0.13.0
   url_launcher: ^5.5.0
   dart_tags: ^0.3.1
+  permission_handler: ^5.0.1+1
 
 
   # The following adds the Cupertino Icons font to your application.
