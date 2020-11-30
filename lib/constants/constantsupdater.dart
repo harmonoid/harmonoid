@@ -1,12 +1,18 @@
 import 'package:harmonoid/constants/constants.dart';
 
 enum LanguageRegion {
-  enUs,
-  ruRu,
-  slSi,
-  ptBr,
-  hiIn,
-  deDe,
+
+  enUs, /* Credits: https://github.com/alexmercerind/           */
+
+  ruRu, /* Credits: https://github.com/raitonoberu/             */
+  
+  slSi, /* Credits: https://github.com/mytja/                   */
+
+  ptBr, /* Credits: https://github.com/bdlukaa/                 */
+
+  hiIn, /* Credits: https://github.com/alexmercerind/           */
+  
+  deDe, /* Credits: https://github.com/MickLesk/                */
 }
 
 class ConstantsUpdater {
@@ -70,7 +76,10 @@ class ConstantsUpdater {
       Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Search & save some music to see it here.\nSpin the refresh to see new stuff.';
       Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Here is the latest album saved by you';
       Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Here are your other albums';
-      Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are the artists saved on your device.';
+      Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Here is the latest track saved by you';
+      Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Here are your other tracks';
+      Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Here is the latest artist saved by you';
+      Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are your other albums';
       Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Here are the tracks you saved';
       Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Some insights of the album';
       Constants.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Are you sure?';
@@ -173,6 +182,9 @@ class ConstantsUpdater {
       Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Ищите и сохраняйте музыку, чтобы увидеть её здесь.';
       Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Последний сохранённый альбом';
       Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Другие альбомы';
+      Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Here is the latest track saved by you';
+      Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Here are your other tracks';
+      Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Here is the latest artist saved by you';
       Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are the artists saved on your device.';
       Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Сохранённые треки';
       Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Немного об альбоме';
@@ -276,6 +288,9 @@ class ConstantsUpdater {
       Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Poišči in shrani nekaj glasbe.\nZavrti osveži gumb, da se pokažejo nove pesmi.';
       Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Tukaj je zadnji shranjeni avtor';
       Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Tukaj so shranjeni albumi';
+      Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Here is the latest track saved by you';
+      Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Here are your other tracks';
+      Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Here is the latest artist saved by you';
       Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Tukaj so ustvarjalci, shranjeni v tvoji napravi.';
       Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Tukaj so shranjene pesmi';
       Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Nekaj stvari o albumu';
@@ -379,6 +394,9 @@ class ConstantsUpdater {
       Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Procure & salve algumas músicas para vê-las aqui.\nGire para atualizar e ver as novidades.';
       Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Aqui está o último álbum salvo por você';
       Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Aqui estão alguns outros álbums';
+      Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Here is the latest track saved by you';
+      Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Here are your other tracks';
+      Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Here is the latest artist saved by you';
       Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are the artists saved on your device.';
       Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Aqui estão algumas músicas salvas por você';
       Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Alguns insights do álbum';
@@ -482,6 +500,9 @@ class ConstantsUpdater {
       Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'अपने पसंद के गानों को यहाँ सुनने के लिए, उन्हें ढूंढे व सेव करें।\nअपना कलेक्शन रिफ्रेश करने के लिए रिफ्रेश बटन दबायें।';
       Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'यह रही आपके कलेक्शन की सबसे नयी एल्बम';
       Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'आपकी बाकी एल्बम';
+      Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Here is the latest track saved by you';
+      Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Here are your other tracks';
+      Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Here is the latest artist saved by you';
       Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are the artists saved on your device.';
       Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'यह रहे इस एल्बम के गाने';
       Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'इस एल्बम के बारे में थोड़ी जानकारी';
@@ -585,6 +606,9 @@ class ConstantsUpdater {
       Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Suche & speichere etwas Musik, um sie hier zu sehen.\nDrehe den Aktualisierungsbutton, um neue Sachen zu sehen';
       Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Hier ist das letzte von Ihnen gespeicherte Album';
       Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Hier sind Ihre anderen Alben';
+      Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Here is the latest track saved by you';
+      Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Here are your other tracks';
+      Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Here is the latest artist saved by you';
       Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are the artists saved on your device.';
       Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Hier sind die Songs, die Sie gespeichert haben';
       Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Einige Einblicke in das Album';
