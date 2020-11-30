@@ -1,8 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
+import 'package:flutter/rendering.dart';
 
 import 'package:harmonoid/constants/constants.dart';
 import 'package:harmonoid/screens/musiccollection.dart';
+
+
+class SubHeader extends StatelessWidget {
+
+  final String text;
+  SubHeader(this.text, {Key key}) : super(key: key);
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      height: 48,
+      margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.headline5,
+      ),
+    );
+  }
+}
 
 
 class Home extends StatefulWidget {
@@ -12,9 +30,42 @@ class Home extends StatefulWidget {
 }
 
 
-class HomeState extends State<Home> {
+class HomeState extends State<Home> with TickerProviderStateMixin {
 
   int _index = 1;
+  Animation<double> _opacity;
+  AnimationController _controller;
+  ScrollController _scrollController = new ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    this._controller = new AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+      reverseDuration: Duration(milliseconds: 200),
+    );
+    this._opacity = new Tween<double>(begin: 1.0, end: 0.0).animate(new CurvedAnimation(
+      parent: this._controller,
+      curve: Curves.easeInOutCubic,
+      reverseCurve: Curves.easeInOutCubic,
+    ));
+
+    this._scrollController.addListener(() {
+      if (this._scrollController.position.userScrollDirection == ScrollDirection.reverse && this._controller.isDismissed) {
+        this._controller.forward();
+      }
+      else if (this._scrollController.position.userScrollDirection == ScrollDirection.forward  && this._controller.isCompleted) {
+        this._controller.reverse();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    this._scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +81,7 @@ class HomeState extends State<Home> {
     ];
 
     return Scaffold(
-      body: PageTransitionSwitcher(
-        duration: Duration(milliseconds: 400),
-        child: screens[this._index],
-        transitionBuilder: (Widget child, Animation<double> animation, Animation<double> secondaryAnimation) => FadeThroughTransition(
-          animation: animation,
-          secondaryAnimation: secondaryAnimation,
-          child: child,
-          fillColor: Theme.of(context).scaffoldBackgroundColor,
-        ),
-      ),
+      body: screens[this._index],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: this._index,
         onTap: (int index) => this.setState(() => this._index = index),
