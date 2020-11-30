@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart' as path;
 
 import 'package:harmonoid/screens/home.dart';
 import 'package:harmonoid/scripts/collection.dart';
@@ -19,10 +19,23 @@ class Harmonoid extends StatelessWidget {
         primaryColorLight: Colors.deepPurpleAccent,
         primaryColor: Colors.deepPurpleAccent[400],
         primaryColorDark: Colors.deepPurpleAccent[700],
-        scaffoldBackgroundColor: Colors.grey[100],
+        scaffoldBackgroundColor: Colors.grey[50],
         cursorColor: Colors.deepPurpleAccent[700],
         accentColor: Colors.deepPurpleAccent[400],
         cardColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          color: Colors.white,
+          brightness: Brightness.light,
+          elevation: 2,
+          iconTheme: IconThemeData(
+            color: Colors.black54,
+            size: 24,
+          ),
+          actionsIconTheme: IconThemeData(
+            color: Colors.black54,
+            size: 24,
+          ),
+        ),
         iconTheme: IconThemeData(
           color: Colors.black54,
           size: 24,
@@ -70,6 +83,19 @@ class Harmonoid extends StatelessWidget {
         cursorColor: Colors.deepPurpleAccent[100],
         accentColor: Colors.deepPurpleAccent[100],
         cardColor: Colors.white.withOpacity(0.10),
+        appBarTheme: AppBarTheme(
+          color: Color.fromRGBO(42, 42, 42, 1),
+          brightness: Brightness.dark,
+          elevation: 2,
+          iconTheme: IconThemeData(
+            color: Colors.black54,
+            size: 24,
+          ),
+          actionsIconTheme: IconThemeData(
+            color: Colors.black54,
+            size: 24,
+          ),
+        ),
         iconTheme: IconThemeData(
           color: Colors.white.withOpacity(0.54),
           size: 24,
@@ -119,13 +145,19 @@ class Harmonoid extends StatelessWidget {
 
 void main() async {
 
+  WidgetsFlutterBinding.ensureInitialized();
+
   Stopwatch stopwatch = new Stopwatch()..start();
 
-  collection = new Collection(directory: Directory('/storage/emulated/0/Music'));
-  await collection.refresh();
+  collection = new Collection(
+    collectionDirectory: Directory('/home/alex/Music'),
+    cacheDirectory: Directory('/home/alex/Documents/cache'),
+  );
+  await collection.getFromCache();
   await ConstantsUpdater.update(LanguageRegion.enUs);
 
   print('Time Elapsed : ${stopwatch.elapsedMilliseconds}ms');
+  stopwatch.stop();
 
   runApp(new Harmonoid());
 }
