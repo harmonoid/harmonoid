@@ -22,6 +22,7 @@ class Track {
       'type': 'Track',
       'trackName': this.trackName,
       'albumName': this.albumName,
+      'trackNumber': this.trackNumber,
       'year': this.year,
       'artistNames': this.artistNames,
       'filePath' : this.filePath,
@@ -124,10 +125,10 @@ class Collection {
           [TagType.id3v2]
         );
 
-        String year = fileTags[0].tags['TDRC'] == null ? null : fileTags[0].tags['TDRC'];
+        String year = fileTags[0].tags['TDRC'] ?? fileTags[0].tags['year'] ?? 'Unknown Year';
         List<String> artistNames = fileTags[0].tags['artist'] == null ? ['Unknown Artist'] : fileTags[0].tags['artist'].split('/');
-        String trackNumber = fileTags[0].tags['track'] == null ? '0' : fileTags[0].tags['track'].split('/')[0];
-        String albumName = fileTags[0].tags['album'] == null ? 'Unknown Album' : fileTags[0].tags['album'];
+        String trackNumber = fileTags[0].tags['track'] == null ? '1' : fileTags[0].tags['track'].split('/')[0];
+        String albumName = fileTags[0].tags['album'] ?? 'Unknown Album';
         String trackName = fileTags[0].tags['title'];
         String filePath = object.path;
 
@@ -137,7 +138,7 @@ class Collection {
           }
           else {
             this._albumArts.add(fileTags[0].tags['picture'][fileTags[0].tags['picture'].keys.first].imageData);
-          };
+          }
         }
 
         this._arrange(trackName, albumName, year, trackNumber, artistNames, albumArtMethod, filePath);
@@ -153,7 +154,7 @@ class Collection {
       }
       else if (album.artistNames == null) {
         this.artists[this._foundArtists.indexOf(null)].albums.add(album);
-      };
+      }
     }
 
     return this;
@@ -195,10 +196,10 @@ class Collection {
         [TagType.id3v2]
       );
 
-      String year = fileTags[0].tags['TDRC'] == null ? null : fileTags[0].tags['TDRC'];
+      String year = fileTags[0].tags['TDRC'] ?? fileTags[0].tags['year'] ?? 'Unknown Year';
       List<String> artistNames = fileTags[0].tags['artist'] == null ? ['Unknown Artist'] : fileTags[0].tags['artist'].split('/');
-      String trackNumber = fileTags[0].tags['track'] == null ? '0' : fileTags[0].tags['track'].split('/')[0];
-      String albumName = fileTags[0].tags['album'] == null ? 'Unknown Album' : fileTags[0].tags['album'];
+      String trackNumber = fileTags[0].tags['track'] == null ? '1' : fileTags[0].tags['track'].split('/')[0];
+      String albumName = fileTags[0].tags['album'] ?? 'Unknown Album';
       String trackName = fileTags[0].tags['title'];
       String filePath = trackFile.path;
 
@@ -208,7 +209,7 @@ class Collection {
         }
         else {
           this._albumArts.add(fileTags[0].tags['picture'][fileTags[0].tags['picture'].keys.first].imageData);
-        };
+        }
       }
 
       this._arrange(trackName, albumName, year, trackNumber, artistNames, albumArtMethod, filePath);
@@ -352,7 +353,8 @@ class Collection {
     this._foundArtists.clear();
 
     if (!await File(path.join(this.cacheDirectory.path, 'cache.json')).exists()) {
-      this.saveToCache();
+      if (this.collectionDirectory.listSync().length != 0) await this.refresh();
+      await this.saveToCache();
     }
 
     Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'cache.json')).readAsString());
