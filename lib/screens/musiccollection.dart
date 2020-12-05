@@ -2,82 +2,86 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:harmonoid/constants/constants.dart';
-import 'package:harmonoid/screens/home.dart';
+import 'package:harmonoid/screens/savedalbum.dart';
 import 'package:harmonoid/scripts/collection.dart';
+import 'package:harmonoid/widgets.dart';
+import 'package:harmonoid/constants/constants.dart';
 
 
 class MusicCollection extends StatefulWidget {
-
   MusicCollection({Key key}) : super(key: key);
   MusicCollectionState createState() => MusicCollectionState();
 }
 
 class MusicCollectionState extends State<MusicCollection> with TickerProviderStateMixin{
-
-  int _index = 0;
+  int _elementsPerRow = 2;
   Animation<double> _opacity;
   AnimationController _controller;
   TabController _tabController;
   ScrollController _scrollController = new ScrollController();
-
   List<Widget> children = <Widget>[Center(child: CircularProgressIndicator())];
   List<Widget> trackChildren = new List<Widget>();
   List<Widget> albumChildren = new List<Widget>();
   List<Widget> artistChildren = new List<Widget>();
+  bool _init = true;
 
   void refreshAlbums() {
-    this.albumChildren.clear();
+    this.albumChildren = <Widget>[];
     this.albumChildren.addAll([
       SubHeader(Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM),
-      Card(
-        elevation: 2,
-        clipBehavior: Clip.antiAlias,
+      Container(
         margin: EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 0),
-        child: Container(
-          height: 156,
-          width: MediaQuery.of(context).size.width - 32,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.memory(
-                collection.getAlbumArt(collection.albums.last.albumArtId),
-                fit: BoxFit.fill,
-                height: 156,
-                width: 156,
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 8, right: 8),
-                width: MediaQuery.of(context).size.width - 48 - 156,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      collection.albums.last.albumName,
-                      style: Theme.of(context).textTheme.headline1,
-                      textAlign: TextAlign.start,
-                      maxLines: 1,
-                    ),
-                    Text(
-                      collection.albums.last.artistNames.length < 2 ? 
-                      collection.albums.last.artistNames.join(', ') : 
-                      collection.albums.last.artistNames.sublist(0, 2).join(', '),
-                      style: Theme.of(context).textTheme.headline3,
-                      textAlign: TextAlign.start,
-                      maxLines: 1,
-                    ),
-                    Text(
-                      '(${collection.albums.last.year})',
-                      style: Theme.of(context).textTheme.headline4,
-                      textAlign: TextAlign.start,
-                      maxLines: 1,
-                    ),
-                  ],
+        child: OpenContainer(
+          closedElevation: 2,
+          closedBuilder: (_, __) => Container(
+            height: 156,
+            width: MediaQuery.of(context).size.width - 32,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.memory(
+                  collection.getAlbumArt(collection.albums.last.albumArtId),
+                  fit: BoxFit.fill,
+                  height: 156,
+                  width: 156,
                 ),
-              ),
-            ],
+                Container(
+                  margin: EdgeInsets.only(left: 8, right: 8),
+                  width: MediaQuery.of(context).size.width - 48 - 156,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        collection.albums.last.albumName,
+                        style: Theme.of(context).textTheme.headline1,
+                        textAlign: TextAlign.start,
+                        maxLines: 1,
+                      ),
+                      Text(
+                        collection.albums.last.artistNames.length < 2 ? 
+                        collection.albums.last.artistNames.join(', ') : 
+                        collection.albums.last.artistNames.sublist(0, 2).join(', '),
+                        style: Theme.of(context).textTheme.headline3,
+                        textAlign: TextAlign.start,
+                        maxLines: 1,
+                      ),
+                      Text(
+                        '(${collection.albums.last.year})',
+                        style: Theme.of(context).textTheme.headline4,
+                        textAlign: TextAlign.start,
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          openBuilder: (_, __) => SavedAlbum(
+            album: collection.albums.last,
+            refreshCollection: this.refreshCollection,
           ),
         ),
       ),
@@ -88,11 +92,9 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
     List<Widget> rowChildren = new List<Widget>();
     for (int index = 0; index < collection.albums.length; index++) {
       rowChildren.add(
-        Card(
-          clipBehavior: Clip.antiAlias,
-          margin: EdgeInsets.zero,
-          elevation: 2,
-          child: Container(
+        OpenContainer(
+          closedElevation: 2,
+          closedBuilder: (_, __) => Container(
             height: 246,
             width: 156,
             child: Column(
@@ -114,7 +116,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                         height: 8,
                       ),
                       Container(
-                        height: 34,
+                        height: 38,
                         child: Text(
                           collection.albums[index].albumName,
                           style: Theme.of(context).textTheme.headline2,
@@ -124,8 +126,8 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                       ),
                       Divider(
                         color: Colors.transparent,
-                        height: 8,
-                        thickness: 8,
+                        height: 4,
+                        thickness: 4,
                       ),
                       Text(
                         collection.albums[index].artistNames.length < 2 ? 
@@ -152,10 +154,14 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
               ],
             ),
           ),
+          openBuilder: (_, __) => SavedAlbum(
+            album: collection.albums[index],
+            refreshCollection: this.refreshCollection,
+          ),
         ),
       );
       rowIndex++;
-      if (rowIndex > 1) {
+      if (rowIndex > this._elementsPerRow - 1) {
         this.albumChildren.add(
           new Container(
             height: 246.0 + 16.0,
@@ -177,7 +183,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
   }
 
   void refreshArtists() {
-    this.artistChildren.clear();
+    this.artistChildren = <Widget>[];
     this.artistChildren.addAll([
       SubHeader(Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST),
       Card(
@@ -245,7 +251,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                   alignment: Alignment.center,
                   child: ClipOval(
                     child: Image.memory(
-                    collection.getAlbumArt(collection.artists[index].tracks.last.albumArtId),
+                      collection.getAlbumArt(collection.artists[index].tracks.last.albumArtId),
                       fit: BoxFit.fill,
                       height: 132,
                       width: 132,
@@ -273,8 +279,8 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                       ),
                       Divider(
                         color: Colors.transparent,
-                        height: 8,
-                        thickness: 8,
+                        height: 4,
+                        thickness: 4,
                       ),
                     ],
                   ),
@@ -285,10 +291,10 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
         ),
       );
       rowIndex++;
-      if (rowIndex > 1) {
+      if (rowIndex > this._elementsPerRow - 1) {
         this.artistChildren.add(
           new Container(
-            height: 246.0 + 16.0,
+            height: 216.0 + 16.0,
             margin: EdgeInsets.only(left: 16, right: 16),
             alignment: Alignment.center,
             child: Row(
@@ -307,7 +313,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
   }
 
   void refreshTracks() {
-    this.trackChildren.clear();
+    this.trackChildren = <Widget>[];
     this.trackChildren.addAll([
       SubHeader(Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK),
       Card(
@@ -324,6 +330,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
               Image.memory(
                 collection.getAlbumArt(collection.tracks.last.albumArtId),
                 fit: BoxFit.fitWidth,
+                alignment: Alignment.topCenter,
                 height: 156,
                 width: MediaQuery.of(context).size.width - 32,
               ),
@@ -424,6 +431,17 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
     this.setState(() {});
   }
 
+  void refreshCollection(dynamic object) {
+    this.refreshAlbums();
+    this.refreshTracks();
+    this.refreshArtists();
+    this.setState(() {
+      if (object is Album) this.children = this.albumChildren;
+      else if (object is Track) this.children = this.trackChildren;
+      else if (object is Artist) this.children = this.artistChildren;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -438,7 +456,6 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
       curve: Curves.easeInOutCubic,
       reverseCurve: Curves.easeInOutCubic,
     ));
-
     this._scrollController.addListener(() {
       if (this._scrollController.position.userScrollDirection == ScrollDirection.reverse && this._controller.isDismissed) {
         this._controller.forward();
@@ -452,10 +469,14 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    this.refreshAlbums();
-    this.refreshTracks();
-    this.refreshArtists();
-    this.children = this.albumChildren;
+    if (this._init) {
+      this._elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
+      this.refreshAlbums();
+      this.refreshTracks();
+      this.refreshArtists();
+      this.children = this.albumChildren;
+    }
+    this._init = false;
   }
 
   @override
@@ -473,11 +494,13 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
           forceElevated: true,
           pinned: true,
           floating: true,
+          snap: true,
           leading: IconButton(
             icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
             iconSize: Theme.of(context).iconTheme.size,
             splashRadius: Theme.of(context).iconTheme.size - 4,
             onPressed: () {},
+            tooltip: Constants.STRING_MENU,
           ),
           title: Text('Harmonoid', style: Theme.of(context).textTheme.headline6),
           actions: [
@@ -485,18 +508,21 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
               icon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
               iconSize: Theme.of(context).iconTheme.size,
               splashRadius: Theme.of(context).iconTheme.size - 4,
+              tooltip: Constants.STRING_SEARCH_COLLECTION,
               onPressed: () {},
             ),
             IconButton(
               icon: Icon(Icons.brightness_medium, color: Theme.of(context).iconTheme.color),
               iconSize: Theme.of(context).iconTheme.size,
               splashRadius: Theme.of(context).iconTheme.size - 4,
+              tooltip: Constants.STRING_SWITCH_THEME,
               onPressed: () {},
             ),
             IconButton(
               icon: Icon(Icons.more_vert, color: Theme.of(context).iconTheme.color),
               iconSize: Theme.of(context).iconTheme.size,
               splashRadius: Theme.of(context).iconTheme.size - 4,
+              tooltip: Constants.STRING_OPTIONS,
               onPressed: () {},
             ),
           ],
@@ -512,7 +538,6 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                 isScrollable: true,
                 onTap: (int index) {
                   this.setState(() {
-                    this._index = index;
                     if (index == 0) this.children = this.albumChildren;
                     else if (index == 1) this.children = this.trackChildren;
                     else if (index == 2) this.children = this.artistChildren;
