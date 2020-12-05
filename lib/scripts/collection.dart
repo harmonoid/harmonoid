@@ -260,16 +260,22 @@ class Collection {
                 break;
               }
             }
-            for (Album album in artist.albums) {
-              if (object.albumName == album.albumName) {
-                for (int index = 0; index < album.tracks.length; index++) {
-                  if (object.trackName == album.tracks[index].trackName) {
-                    album.tracks.removeAt(index);
-                    if (artist.albums.length == 0) this.artists.remove(artist);
-                    break;
+            if (artist.tracks.length == 0) {
+              this.artists.remove(artist);
+              break;
+            }
+            else {
+              for (Album album in artist.albums) {
+                if (object.albumName == album.albumName) {
+                  for (int index = 0; index < album.tracks.length; index++) {
+                    if (object.trackName == album.tracks[index].trackName) {
+                      album.tracks.removeAt(index);
+                      if (artist.albums.length == 0) this.artists.remove(artist);
+                      break;
+                    }
                   }
+                  break;
                 }
-                break;
               }
             }
             break;
@@ -306,12 +312,18 @@ class Collection {
               }
             }
             artist.tracks = updatedTracks;
-            for (int index = 0; index < artist.albums.length; index++) {
+            if (artist.tracks.length == 0) {
+              this.artists.remove(artist);
+              break;
+            }
+            else {
+              for (int index = 0; index < artist.albums.length; index++) {
               if (object.albumName == artist.albums[index].albumName) {
                 artist.albums.removeAt(index);
                 if (artist.albums.length == 0) this.artists.remove(artist);
                 break;
               }
+            }
             }
             break;
           }
