@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -49,6 +48,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                 Image.memory(
                   collection.getAlbumArt(collection.albums.last.albumArtId),
                   fit: BoxFit.fill,
+                  filterQuality: FilterQuality.high,
                   height: 156,
                   width: 156,
                 ),
@@ -112,6 +112,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                 Image.memory(
                   collection.getAlbumArt(collection.albums[index].albumArtId),
                   fit: BoxFit.fill,
+                  filterQuality: FilterQuality.high,
                   height: 156,
                   width: 156,
                 ),
@@ -187,6 +188,104 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
         rowChildren = List<Widget>();
       }
     }
+    if (collection.albums.length % this._elementsPerRow != 0) {
+      rowChildren = <Widget>[];
+      for (int index = collection.albums.length - (collection.albums.length % this._elementsPerRow); index < collection.albums.length; index++) {
+        rowChildren.add(
+          OpenContainer(
+            closedElevation: 2,
+            closedColor: Theme.of(context).cardColor,
+            openColor: Theme.of(context).scaffoldBackgroundColor,
+            closedBuilder: (_, __) => Container(
+              height: 246,
+              width: 156,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.memory(
+                    collection.getAlbumArt(collection.albums[index].albumArtId),
+                    fit: BoxFit.fill,
+                    filterQuality: FilterQuality.high,
+                    height: 156,
+                    width: 156,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 2, right: 2),
+                    child: Column(
+                      children: [
+                        Divider(
+                          color: Colors.transparent,
+                          height: 8,
+                        ),
+                        Container(
+                          height: 38,
+                          child: Text(
+                            collection.albums[index].albumName,
+                            style: Theme.of(context).textTheme.headline2,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.transparent,
+                          height: 4,
+                          thickness: 4,
+                        ),
+                        Text(
+                          collection.albums[index].artistNames.length < 2 ? 
+                          collection.albums[index].artistNames.join(', ') : 
+                          collection.albums[index].artistNames.sublist(0, 2).join(', '),
+                          style: Theme.of(context).textTheme.headline4,
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          '(${collection.albums[index].year})',
+                          style: Theme.of(context).textTheme.headline4,
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                        ),
+                        Divider(
+                          color: Colors.transparent,
+                          height: 4,
+                          thickness: 4,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            openBuilder: (_, __) => SavedAlbum(
+              album: collection.albums[index],
+              refreshCollection: this.refreshCollection,
+            ),
+          ),
+        );
+      }
+      for (int index = 0; index < this._elementsPerRow - (collection.albums.length % this._elementsPerRow); index++) {
+        rowChildren.add(
+          Container(
+            height: 246,
+            width: 156,
+          ),
+        );
+      }
+      this.albumChildren.add(
+        new Container(
+          height: 246.0 + 16.0,
+          margin: EdgeInsets.only(left: 16, right: 16),
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: rowChildren,
+          ),
+        ),
+      );
+    }
     this.setState(() {});
   }
 
@@ -209,8 +308,9 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                 alignment: Alignment.center,
                 child: ClipOval(
                   child: Image.memory(
-                  collection.getAlbumArt(collection.artists.last.tracks.last.albumArtId),
+                    collection.getAlbumArt(collection.artists.last.tracks.last.albumArtId),
                     fit: BoxFit.fill,
+                    filterQuality: FilterQuality.high,
                     height: 132,
                     width: 132,
                   ),
@@ -261,6 +361,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                     child: Image.memory(
                       collection.getAlbumArt(collection.artists[index].tracks.last.albumArtId),
                       fit: BoxFit.fill,
+                      filterQuality: FilterQuality.high,
                       height: 132,
                       width: 132,
                     ),
@@ -317,6 +418,88 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
         rowChildren = List<Widget>();
       }
     }
+    if (collection.artists.length % this._elementsPerRow != 0) {
+      rowChildren = <Widget>[];
+      for (int index = collection.artists.length - (collection.artists.length % this._elementsPerRow); index < collection.artists.length; index++) {
+        rowChildren.add(
+          Card(
+            clipBehavior: Clip.antiAlias,
+            margin: EdgeInsets.zero,
+            elevation: 2,
+            child: Container(
+              height: 216,
+              width: 156,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    child: ClipOval(
+                      child: Image.memory(
+                        collection.getAlbumArt(collection.artists[index].tracks.last.albumArtId),
+                        fit: BoxFit.fill,
+                        filterQuality: FilterQuality.high,
+                        height: 132,
+                        width: 132,
+                      ),
+                    ),
+                    height: 156,
+                    width: 156,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 2, right: 2),
+                    child: Column(
+                      children: [
+                        Divider(
+                          color: Colors.transparent,
+                          height: 14,
+                        ),
+                        Container(
+                          height: 38,
+                          child: Text(
+                            collection.artists[index].artistName,
+                            style: Theme.of(context).textTheme.headline2,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.transparent,
+                          height: 4,
+                          thickness: 4,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }
+      for (int index = 0; index < this._elementsPerRow - (collection.artists.length % this._elementsPerRow); index++) {
+        rowChildren.add(
+          Container(
+            height: 216,
+            width: 156,
+          ),
+        );
+      }
+      this.artistChildren.add(
+        new Container(
+          height: 246.0 + 16.0,
+          margin: EdgeInsets.only(left: 16, right: 16),
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: rowChildren,
+          ),
+        ),
+      );
+    }
     this.setState(() {});
   }
 
@@ -338,6 +521,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
               Image.memory(
                 collection.getAlbumArt(collection.tracks.last.albumArtId),
                 fit: BoxFit.fitWidth,
+                filterQuality: FilterQuality.high,
                 alignment: Alignment.topCenter,
                 height: 156,
                 width: MediaQuery.of(context).size.width - 32,

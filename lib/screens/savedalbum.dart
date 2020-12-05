@@ -45,6 +45,7 @@ class SavedAlbumState extends State<SavedAlbum> {
                 height: 128,
                 width: 128,
                 fit: BoxFit.fill,
+                filterQuality: FilterQuality.high,
               ),
               Container(
                 padding: EdgeInsets.only(left: 18),
@@ -206,7 +207,11 @@ class SavedAlbumState extends State<SavedAlbum> {
                 color: Colors.white,
               ),
             ),
-            background: Image.memory(collection.getAlbumArt(widget.album.albumArtId)),
+            background: Image.memory(
+              collection.getAlbumArt(widget.album.albumArtId),
+              fit: BoxFit.fill,
+              filterQuality: FilterQuality.high,
+            ),
           ),
         ),
         SliverList(delegate: SliverChildListDelegate(this.children)),
