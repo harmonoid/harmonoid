@@ -1,13 +1,30 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart' as path;
 
 import 'package:harmonoid/screens/home.dart';
 import 'package:harmonoid/scripts/collection.dart';
+import 'package:harmonoid/scripts/appstate.dart';
 import 'package:harmonoid/constants/constantsupdater.dart';
 
 
-class Harmonoid extends StatelessWidget {
+class Harmonoid extends StatefulWidget {
+  Harmonoid({Key key}) : super(key: key);
+  HarmonoidState createState() => HarmonoidState();
+}
+
+
+class HarmonoidState extends State<Harmonoid> {
+  ThemeMode _themeMode = ThemeMode.light;
+
+  void switchTheme() => this.setState(() {
+    this._themeMode = this._themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+  });
+
+  @override
+  void initState() {
+    super.initState();
+    AppState.switchTheme = this.switchTheme;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +150,7 @@ class Harmonoid extends StatelessWidget {
           ),
         ),
       ),
-      themeMode: ThemeMode.light,
+      themeMode: this._themeMode,
       initialRoute: 'home',
       routes: {
         'home': (BuildContext context) => new Home(),

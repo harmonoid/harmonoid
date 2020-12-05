@@ -126,6 +126,7 @@ class ConstantsUpdater {
         Constants.STRING_MENU                                            = 'Menu';
         Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
+        Constants.STRING_DISCOVER                                        = 'Discover';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -235,6 +236,7 @@ class ConstantsUpdater {
         Constants.STRING_MENU                                            = 'Menu';
         Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
+        Constants.STRING_DISCOVER                                        = 'Discover';
       }
       break;
       case LanguageRegion.slSi: {
@@ -344,6 +346,7 @@ class ConstantsUpdater {
         Constants.STRING_MENU                                            = 'Menu';
         Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
+        Constants.STRING_DISCOVER                                        = 'Discover';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -453,6 +456,7 @@ class ConstantsUpdater {
         Constants.STRING_MENU                                            = 'Menu';
         Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
+        Constants.STRING_DISCOVER                                        = 'Discover';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -562,6 +566,7 @@ class ConstantsUpdater {
         Constants.STRING_MENU                                            = 'Menu';
         Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
+        Constants.STRING_DISCOVER                                        = 'Discover';
       }
       break;
       case LanguageRegion.deDe: {
@@ -671,6 +676,7 @@ class ConstantsUpdater {
         Constants.STRING_MENU                                            = 'Menu';
         Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
+        Constants.STRING_DISCOVER                                        = 'Discover';
       }
     }
   }

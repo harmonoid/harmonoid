@@ -32,7 +32,7 @@ class SavedAlbumState extends State<SavedAlbum> {
     this.children.addAll([
       SubHeader(Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER),
       Card(
-        elevation: 1,
+        elevation: 2,
         color: Theme.of(context).cardColor,
         margin: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
         child: Container(
@@ -159,7 +159,7 @@ class SavedAlbumState extends State<SavedAlbum> {
             splashRadius: Theme.of(context).iconTheme.size - 4,
             onPressed: Navigator.of(context).pop,
           ),
-          backgroundColor: Theme.of(context).primaryColorDark,
+          backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
           pinned: true,
           actions: [
             IconButton(
@@ -200,7 +200,12 @@ class SavedAlbumState extends State<SavedAlbum> {
           ],
           expandedHeight: MediaQuery.of(context).size.width,
           flexibleSpace: FlexibleSpaceBar(
-            title: Text(this.album.albumName),
+            title: Text(
+              this.album.albumName,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
             background: Image.memory(collection.getAlbumArt(widget.album.albumArtId)),
           ),
         ),

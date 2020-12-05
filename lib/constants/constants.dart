@@ -7,6 +7,7 @@ class Constants {
   static String STRING_COLLECTION;
   static String STRING_NOW_PLAYING;
   static String STRING_SETTING;
+  static String STRING_DISCOVER;
   static String STRING_OK;
   static String STRING_YES;
   static String STRING_NO;

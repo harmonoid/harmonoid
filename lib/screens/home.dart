@@ -77,8 +77,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             label: Constants.STRING_COLLECTION,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: Constants.STRING_SETTING,
+            icon: Icon(Icons.wifi),
+            label: Constants.STRING_DISCOVER,
           )
         ],
       ),

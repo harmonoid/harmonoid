@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:harmonoid/screens/savedalbum.dart';
 import 'package:harmonoid/scripts/collection.dart';
+import 'package:harmonoid/scripts/appstate.dart';
 import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/constants/constants.dart';
 
@@ -23,6 +26,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
   List<Widget> trackChildren = new List<Widget>();
   List<Widget> albumChildren = new List<Widget>();
   List<Widget> artistChildren = new List<Widget>();
+  IconData _themeIcon = Icons.brightness_medium;
   bool _init = true;
 
   void refreshAlbums() {
@@ -33,6 +37,8 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
         margin: EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 0),
         child: OpenContainer(
           closedElevation: 2,
+          closedColor: Theme.of(context).cardColor,
+          openColor: Theme.of(context).scaffoldBackgroundColor,
           closedBuilder: (_, __) => Container(
             height: 156,
             width: MediaQuery.of(context).size.width - 32,
@@ -94,6 +100,8 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
       rowChildren.add(
         OpenContainer(
           closedElevation: 2,
+          closedColor: Theme.of(context).cardColor,
+          openColor: Theme.of(context).scaffoldBackgroundColor,
           closedBuilder: (_, __) => Container(
             height: 246,
             width: 156,
@@ -412,6 +420,35 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
       this.trackChildren.add(
         ListTile(
           onTap: () {},
+          onLongPress: () => showDialog(
+            context: context,
+            builder: (subContext) => AlertDialog(
+              title: Text(
+                Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
+                style: Theme.of(subContext).textTheme.headline1,
+              ),
+              content: Text(
+                Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
+                style: Theme.of(subContext).textTheme.headline4,
+              ),
+              actions: [
+                MaterialButton(
+                  textColor: Theme.of(context).primaryColor,
+                  onPressed: () async {
+                    await collection.delete(collection.tracks[index]);
+                    this.refreshCollection(new Track());
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(Constants.STRING_YES),
+                ),
+                MaterialButton(
+                  textColor: Theme.of(context).primaryColor,
+                  onPressed: Navigator.of(subContext).pop,
+                  child: Text(Constants.STRING_NO),
+                ),
+              ],
+            ),
+          ),
           dense: false,
           isThreeLine: true,
           leading: CircleAvatar(
@@ -512,11 +549,17 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
               onPressed: () {},
             ),
             IconButton(
-              icon: Icon(Icons.brightness_medium, color: Theme.of(context).iconTheme.color),
+              icon: Icon(this._themeIcon, color: Theme.of(context).iconTheme.color),
               iconSize: Theme.of(context).iconTheme.size,
               splashRadius: Theme.of(context).iconTheme.size - 4,
               tooltip: Constants.STRING_SWITCH_THEME,
-              onPressed: () {},
+              onPressed: () {
+                this._themeIcon = this._themeIcon == Icons.brightness_medium ? Icons.brightness_high : Icons.brightness_medium;
+                AppState.switchTheme();
+                Timer(Duration(seconds: 1), () {
+                  this.refreshCollection(<dynamic>[new Album(), new Track(), new Artist()][this._tabController.index]);
+                });
+              },
             ),
             IconButton(
               icon: Icon(Icons.more_vert, color: Theme.of(context).iconTheme.color),
