@@ -104,4 +104,7 @@ class Constants {
   static String STRING_SETTING_APP_VERSION_SUBTITLE;
   static String STRING_SETTING_APP_VERSION_INSTALLED;
   static String STRING_SETTING_APP_VERSION_LATEST;
+  static String STRING_MENU;
+  static String STRING_SEARCH_COLLECTION;
+  static String STRING_SWITCH_THEME;
 }
