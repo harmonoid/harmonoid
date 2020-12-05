@@ -5,24 +5,6 @@ import 'package:harmonoid/constants/constants.dart';
 import 'package:harmonoid/screens/musiccollection.dart';
 
 
-class SubHeader extends StatelessWidget {
-
-  final String text;
-  SubHeader(this.text, {Key key}) : super(key: key);
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      height: 48,
-      margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.headline5,
-      ),
-    );
-  }
-}
-
-
 class Home extends StatefulWidget {
 
   Home({Key key}) : super(key : key);
@@ -72,11 +54,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
     final List<Widget> screens = <Widget>[
       Center(
-        child: Text('Hello #0!')
+        child: Text('Coming Soon...')
       ),
       MusicCollection(),
       Center(
-        child: Text('Hello #2!')
+        child: Text('Coming Soon...')
       ),
     ];
 
