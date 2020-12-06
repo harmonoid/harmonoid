@@ -1,25 +1,25 @@
 # [Harmonoid](https://github.com/alexmercerind/harmonoid/)
+### A 🎵 music app that has beautiful UI, can download music for free & has no ads.
+[![Discord](https://img.shields.io/discord/774213213113810944?color=%23738ADB&label=Discord&logo=Discord&style=for-the-badge)](https://discord.gg/mRxH9zYkGy)
 
-[![Discord](https://img.shields.io/discord/774213213113810944?color=%23738ADB&label=Discord&logo=Discord)](https://discord.gg/mRxH9zYkGy)
-[![Gitter](https://badges.gitter.im/harmonoid/community.svg)](https://gitter.im/harmonoid/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/alexmercerind/harmonoid)](https://github.com/alexmercerind/harmonoid/releases/latest)
+✒ Hello Everyone! As of November 6, 2020, I as the maintainer & main developer of project, has decided to rewrite this project & start from scratch, because current version of app has few issues in its core & code is less managable. Newer version of app (i.e. v3.0.0) will be a completely new app, with a lot more new features & control over your music. The project is alive & you can see the progress in the [development](https://github.com/alexmercerind/harmonoid/tree/development) branch of this repository. You can join Discord server of Harmonoid with above button, to get an early look at upcoming features and provide feedback or you may just talk to us about anything you want & chill. Thanks a lot for your love 💙!
 
-### A 🎵 music app, that can download music for free & has no advertisements!
 #### From [alexmercerind](https://github.com/alexmercerind) & [contributors](https://github.com/alexmercerind/harmonoid/graphs/contributors)
-The app is meant to be used in such a way, that you download your favorite music offline & listen it whenever without internet connection.
 
-##### 💾 Android users can download pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.2%2B2/harmonoid-v0.0.2+2-pre-release.apk) (Changelog: [v0.0.2+2-pre-release](https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.2%2B2))
-##### Please consider ⭐ starring the repository if you are enjoying the app & show YOUR SUPPORT.
-###### NOTE: You might see a dialog "Your phone and personal data are more vulnerable to attack by unknown apps." when installing this app. But let me tell you that, this app is safe as app will not ask for any of your device permissions at all (not even storage) & you are seeing the code in this repository. Still, it is your choice.
-
-
-## 💎 The Experience You Always Wanted
+## 🎵 Experience
 
 |Browse Offline|Download Music|Listen Offline|
 |-|-|-|
 |![browse_offline](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/browse_offline.jpg)|![download_music](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/download_music.jpg)|![search_modes](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/now_playing_demo.jpg)|
 
-#### UI In Motion
+The app is meant to be used in such a way, that you download your favorite music offline & listen it whenever without internet connection.
+
+## 📂 Download
+
+##### 💾 Android users can download pre-compiled APK here: [Download](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.2%2B2/harmonoid-v0.0.2+2-pre-release.apk) (Changelog: [v0.0.2+2-pre-release](https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.2%2B2))
+###### NOTE: You might see a dialog "Your phone and personal data are more vulnerable to attack by unknown apps." when installing this app. But let me tell you that, this app is safe as app will not ask for any of your device permissions at all (not even storage) & you are seeing the code in this repository. Still, it is your choice.
+
+## ⛷ Motion
 
 These GIFs are only 25 FPS 😣. Please wait for the GIFs to load, if they appear choppy to you.
 
@@ -46,7 +46,7 @@ These GIFs are only 25 FPS 😣. Please wait for the GIFs to load, if they appea
   - The app does not ask for any of your device permissions at all. (Not even storage).
 
 
-## 👌 Currently Added
+## 👌 Progress
 
 - 🔍 Album & track search.
 - 💾 Track downloads for offline playback. (generally a track will take under ~~30~~ **10** seconds to be downloaded. ~~20~~ **5** seconds, if you have good connection.)
@@ -60,7 +60,7 @@ These GIFs are only 25 FPS 😣. Please wait for the GIFs to load, if they appea
 - 🌈 Accent Colors 
 - 😎 Dark Mode
 
-## 🎉 Help With Translations
+## 🎉 Contributions
 
 You can help me by providing translations for the app in your language & see the app running in your native language.
 
@@ -79,7 +79,7 @@ For that purpose, you can checkout [this](https://github.com/alexmercerind/harmo
 Thankyou!
 
 
-## 📖 Inner Workings
+## 📖 Working
 
 The code that this app uses for the majority of work like saving, deleting, playing music & managing history etc. is [here](https://github.com/alexmercerind/harmonoid/tree/master/lib/scripts) in the repository.
 
@@ -128,7 +128,7 @@ For pre-release v0.0.3
 |[url_launcher](https://pub.dev/packages/url_launcher)          |[flutter](https://github.com/flutter)    |
 
 
-## 🔧 Starting Development
+## 🔧 Development
 
 This application is powered by Flutter, which uses Dart as its programming language.
 
