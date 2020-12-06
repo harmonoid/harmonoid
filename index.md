@@ -58,13 +58,13 @@ For that purpose, you can checkout [this](https://github.com/alexmercerind/harmo
 
 ##### Translation Credits
 
-|Language       |Provider       |
-|---------------|---------------|
-|Russian        |@raitonoberu   |
-|Slovenian      |@mytja         |
-|Portuguese     |@bdlukaa       |
-|Hindi          |@alexmercerind |
-|German         |@MickLesk      |
+|Language       |Provider                                          |
+|---------------|---------------                                   |
+|Russian        |[@raitonoberu](http://github.com/raitonoberu)     |
+|Slovenian      |[@mytja](http://github.com/mytja)                 |
+|Portuguese     |[@bdlukaa](http://github.com/bdlukaa)             |
+|Hindi          |[@alexmercerind](http://github.com/alexmercerind) |
+|German         |[@MickLesk](http://github.com/MickLesk)           |
 
 Thankyou!
 
