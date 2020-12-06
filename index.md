@@ -10,9 +10,9 @@
 
 ## 🎵 Experience
 
-|Browse Offline|Download Music|Listen Offline|
-|-|-|-|
-|![browse_offline](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/browse_offline.jpg)|![download_music](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/download_music.jpg)|![search_modes](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/now_playing_demo.jpg)|
+|Browse Offline|Listen Offline|
+|-|-|
+|![browse_offline](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/browse_offline.jpg)|![search_modes](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/now_playing_demo.jpg)|
 
 The app is meant to be used in such a way, that you download your favorite music offline & listen it whenever without internet connection.
 
