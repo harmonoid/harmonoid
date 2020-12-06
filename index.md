@@ -14,7 +14,7 @@ The app is meant to be used in such a way, that you download your favorite music
 
 ## 🏂 Motion
 
-These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they appear choppy to you.
+These GIFs are only 25 FPS 😟. Please wait for the GIFs to load, if they appear choppy to you.
 
 |||
 |-|-|
