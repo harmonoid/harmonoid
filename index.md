@@ -1,10 +1,10 @@
 [![Discord](https://img.shields.io/discord/774213213113810944?color=%23738ADB&label=Discord&logo=Discord&style=for-the-badge)](https://discord.gg/mRxH9zYkGy)
 
-:black_nib: Hello Everyone! As of November 6, 2020, I as the maintainer & main developer of project, has decided to rewrite this project & start from scratch, because current version of app has few issues in its core & code is less managable. Newer version of app (i.e. v3.0.0) will be a completely new app, with a lot more new features & control over your music. The project is alive & you can see the progress in the [development](https://github.com/alexmercerind/harmonoid/tree/development) branch of this repository. You can join Discord server of Harmonoid with above button, to get an early look at upcoming features and provide feedback or you may just talk to us about anything you want & chill. Thanks a lot for your love :blue_heart:!
+📎 Hello Everyone! As of November 6, 2020, I as the maintainer & main developer of project, has decided to rewrite this project & start from scratch, because current version of app has few issues in its core & code is less managable. Newer version of app (i.e. v3.0.0) will be a completely new app, with a lot more new features & control over your music. The project is alive & you can see the progress in the [development](https://github.com/alexmercerind/harmonoid/tree/development) branch of this repository. You can join Discord server of Harmonoid with above button, to get an early look at upcoming features and provide feedback or you may just talk to us about anything you want & chill. Thanks a lot for your love 💜!
 
 #### From [alexmercerind](https://github.com/alexmercerind) & [contributors](https://github.com/alexmercerind/harmonoid/graphs/contributors)
 
-## :musical_note: Experience
+## 🎵 Experience
 
 |Browse Offline|Listen Offline|
 |-|-|
@@ -12,7 +12,7 @@
 
 The app is meant to be used in such a way, that you download your favorite music offline & listen it whenever without internet connection.
 
-## :snowboarder: Motion
+## 🏂 Motion
 
 These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they appear choppy to you.
 
@@ -20,23 +20,23 @@ These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they 
 |-|-|
 |![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/album_demo.gif?raw=true) |![](https://github.com/alexmercerind/harmonoid/blob/master/README%20Assets/ui_demo.gif?raw=true)|
 
-## :white_check_mark: Features
+## ✅ Features
 
  Beautiful looking, yet full of unique features.
 
-- :floppy_disk: __Free Music Download__
+- 💾 __Free Music Download__
   - You download the music of your choice for free and listen offline.
 
-- :sparkles: __Stunning User Interface__
+- 🎇 __Stunning User Interface__
   - The app has every element on screen beautifully animated, & very strictly follows [material.io](https://material.io) guidelines. 
 
-- :heavy_heart_exclamation: __Ads Free Forever__
+- 💜 __Ads Free Forever__
   - No advertisements! This app is powered completely by YOUR LOVE.
   
-- :lock: __Safe To Use__
+- 🔒 __Safe To Use__
   - The app does not ask for any of your device permissions at all. (Not even storage).
 
-## :ok_hand: Progress
+## 👌 Progress
 
 - 🔍 Album & track search.
 - 💾 Track downloads for offline playback. (generally a track will take under ~~30~~ **10** seconds to be downloaded. ~~20~~ **5** seconds, if you have good connection.)
@@ -50,7 +50,7 @@ These GIFs are only 25 FPS :worried:. Please wait for the GIFs to load, if they 
 - 🌈 Accent Colors 
 - 😎 Dark Mode
 
-## :tada: Contributions
+## 🎉 Contributions
 
 You can help me by providing translations for the app in your language & see the app running in your native language.
 
@@ -68,7 +68,7 @@ For that purpose, you can checkout [this](https://github.com/alexmercerind/harmo
 
 Thankyou!
 
-## :grey_question: FAQ
+## ❔ FAQ
 
 For pre-release v0.0.3
 
