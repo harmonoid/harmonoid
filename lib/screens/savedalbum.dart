@@ -40,7 +40,7 @@ class SavedAlbumState extends State<SavedAlbum> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.memory(
+              Image.file(
                 collection.getAlbumArt(widget.album.albumArtId),
                 height: 128,
                 width: 128,
@@ -141,7 +141,7 @@ class SavedAlbumState extends State<SavedAlbum> {
           subtitle: Text(track.artistNames.join(', ')),
           leading: CircleAvatar(
             child: Text(track.trackNumber),
-            backgroundImage: MemoryImage(collection.getAlbumArt(widget.album.albumArtId)),
+            backgroundImage: FileImage(collection.getAlbumArt(widget.album.albumArtId)),
           ),
         )
       );
@@ -154,6 +154,7 @@ class SavedAlbumState extends State<SavedAlbum> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
+          brightness: Brightness.dark,
           leading: IconButton(
             icon: Icon(Icons.close, color: Colors.white),
             iconSize: Theme.of(context).iconTheme.size,
@@ -207,7 +208,7 @@ class SavedAlbumState extends State<SavedAlbum> {
                 color: Colors.white,
               ),
             ),
-            background: Image.memory(
+            background: Image.file(
               collection.getAlbumArt(widget.album.albumArtId),
               fit: BoxFit.fill,
               filterQuality: FilterQuality.high,

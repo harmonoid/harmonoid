@@ -35,6 +35,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
       Container(
         margin: EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 0),
         child: OpenContainer(
+          transitionDuration: Duration(milliseconds: 400),
           closedElevation: 2,
           closedColor: Theme.of(context).cardColor,
           openColor: Theme.of(context).scaffoldBackgroundColor,
@@ -45,7 +46,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.memory(
+                Image.file(
                   collection.getAlbumArt(collection.albums.last.albumArtId),
                   fit: BoxFit.fill,
                   filterQuality: FilterQuality.high,
@@ -63,7 +64,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                         collection.albums.last.albumName,
                         style: Theme.of(context).textTheme.headline1,
                         textAlign: TextAlign.start,
-                        maxLines: 1,
+                        maxLines: 2,
                       ),
                       Text(
                         collection.albums.last.artistNames.length < 2 ? 
@@ -99,6 +100,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
     for (int index = 0; index < collection.albums.length; index++) {
       rowChildren.add(
         OpenContainer(
+          transitionDuration: Duration(milliseconds: 400),
           closedElevation: 2,
           closedColor: Theme.of(context).cardColor,
           openColor: Theme.of(context).scaffoldBackgroundColor,
@@ -109,7 +111,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.memory(
+                Image.file(
                   collection.getAlbumArt(collection.albums[index].albumArtId),
                   fit: BoxFit.fill,
                   filterQuality: FilterQuality.high,
@@ -175,11 +177,11 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
           new Container(
             height: 246.0 + 16.0,
             margin: EdgeInsets.only(left: 16, right: 16),
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: rowChildren,
             ),
           ),
@@ -193,6 +195,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
       for (int index = collection.albums.length - (collection.albums.length % this._elementsPerRow); index < collection.albums.length; index++) {
         rowChildren.add(
           OpenContainer(
+            transitionDuration: Duration(milliseconds: 400),
             closedElevation: 2,
             closedColor: Theme.of(context).cardColor,
             openColor: Theme.of(context).scaffoldBackgroundColor,
@@ -203,7 +206,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.memory(
+                  Image.file(
                     collection.getAlbumArt(collection.albums[index].albumArtId),
                     fit: BoxFit.fill,
                     filterQuality: FilterQuality.high,
@@ -276,11 +279,11 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
         new Container(
           height: 246.0 + 16.0,
           margin: EdgeInsets.only(left: 16, right: 16),
-          alignment: Alignment.center,
+          alignment: Alignment.topCenter,
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: rowChildren,
           ),
         ),
@@ -307,7 +310,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
               Container(
                 alignment: Alignment.center,
                 child: ClipOval(
-                  child: Image.memory(
+                  child: Image.file(
                     collection.getAlbumArt(collection.artists.last.tracks.last.albumArtId),
                     fit: BoxFit.fill,
                     filterQuality: FilterQuality.high,
@@ -358,7 +361,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                 Container(
                   alignment: Alignment.center,
                   child: ClipOval(
-                    child: Image.memory(
+                    child: Image.file(
                       collection.getAlbumArt(collection.artists[index].tracks.last.albumArtId),
                       fit: BoxFit.fill,
                       filterQuality: FilterQuality.high,
@@ -405,11 +408,11 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
           new Container(
             height: 216.0 + 16.0,
             margin: EdgeInsets.only(left: 16, right: 16),
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: rowChildren,
             ),
           ),
@@ -436,7 +439,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                   Container(
                     alignment: Alignment.center,
                     child: ClipOval(
-                      child: Image.memory(
+                      child: Image.file(
                         collection.getAlbumArt(collection.artists[index].tracks.last.albumArtId),
                         fit: BoxFit.fill,
                         filterQuality: FilterQuality.high,
@@ -490,11 +493,11 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
         new Container(
           height: 246.0 + 16.0,
           margin: EdgeInsets.only(left: 16, right: 16),
-          alignment: Alignment.center,
+          alignment: Alignment.topCenter,
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: rowChildren,
           ),
         ),
@@ -518,7 +521,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.memory(
+              Image.file(
                 collection.getAlbumArt(collection.tracks.last.albumArtId),
                 fit: BoxFit.fitWidth,
                 filterQuality: FilterQuality.high,
@@ -637,7 +640,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
           isThreeLine: true,
           leading: CircleAvatar(
             child: Text(collection.tracks[index].trackNumber),
-            backgroundImage: MemoryImage(collection.getAlbumArt(collection.tracks[index].albumArtId)),
+            backgroundImage: FileImage(collection.getAlbumArt(collection.tracks[index].albumArtId)),
           ),
           title: Text(collection.tracks[index].trackName),
           subtitle: Text(
