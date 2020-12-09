@@ -1,3 +1,6 @@
+typedef SwitchTheme = void Function();
+
+
 class AppState {
-  static Function switchTheme;
+  static SwitchTheme switchTheme;
 }

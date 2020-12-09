@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:convert' as convert;
 import 'package:path/path.dart' as path;
 import 'package:dart_tags/dart_tags.dart';
@@ -86,14 +85,6 @@ class Artist {
   Artist({this.artistName});
 }
 
-
-enum SearchFilter {
-  album,
-  track,
-  artist,
-}
-
-
 class Collection {
 
   final Directory collectionDirectory;
@@ -101,8 +92,8 @@ class Collection {
 
   Collection({this.collectionDirectory, this.cacheDirectory}) {
 
-    if (!this.collectionDirectory.existsSync()) this.collectionDirectory.createSync();
-    if (!this.cacheDirectory.existsSync()) this.cacheDirectory.createSync();
+    if (!this.collectionDirectory.existsSync()) this.collectionDirectory.createSync(recursive: true);
+    if (!this.cacheDirectory.existsSync()) this.cacheDirectory.createSync(recursive: true);
   }
 
   List<Album> albums = <Album>[];
@@ -110,7 +101,8 @@ class Collection {
   List<Artist> artists = <Artist>[];
 
   Future<Collection> refresh() async {
-
+    if (!await this.cacheDirectory.exists()) this.cacheDirectory.createSync(recursive: true);
+    
     this.albums.clear();
     this.tracks.clear();
     this.artists.clear();
@@ -132,16 +124,18 @@ class Collection {
         String trackName = fileTags[0].tags['title'];
         String filePath = object.path;
 
-        void albumArtMethod() {
+        void albumArtMethod() async {
           if (fileTags[0].tags['picture'] == null) {
             this._albumArts.add(null);
           }
           else {
-            this._albumArts.add(fileTags[0].tags['picture'][fileTags[0].tags['picture'].keys.first].imageData);
+            File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${this._foundAlbums.indexOf(albumName)}.png'));
+            await albumArtFile.writeAsBytes(fileTags[0].tags['picture'][fileTags[0].tags['picture'].keys.first].imageData);
+            this._albumArts.add(albumArtFile);
           }
         }
 
-        this._arrange(trackName, albumName, year, trackNumber, artistNames, albumArtMethod, filePath);
+        await this._arrange(trackName, albumName, year, trackNumber, artistNames, albumArtMethod, filePath);
       }
     }
 
@@ -160,24 +154,24 @@ class Collection {
     return this;
   }
 
-  Future<List<dynamic>> search(String query, SearchFilter filter) async {
+  Future<List<dynamic>> search(String query, dynamic mode) async {
 
     List<dynamic> result = <dynamic>[];
-    if (filter == SearchFilter.album) {
+    if (mode is Album) {
       for (Album album in this.albums) {
         if (album.albumName.contains(query)) {
           result.add(album);
         }
       }
     }
-    else if (filter == SearchFilter.track) {
+    else if (mode is Track) {
       for (Track track in this.tracks) {
         if (track.trackName.contains(query)) {
           result.add(track);
         }
       }
     }
-    else if (filter == SearchFilter.artist) {
+    else if (mode is Artist) {
       for (Artist artist in this.artists) {
         if (artist.artistName.contains(query)) {
           result.add(artist);
@@ -187,9 +181,9 @@ class Collection {
     return result;
   }
 
-  Uint8List getAlbumArt(int albumArtId) => Uint8List.fromList(this._albumArts[albumArtId]);
+  File getAlbumArt(int albumArtId) => new File(path.join(this.cacheDirectory.path, 'albumArt$albumArtId.png'));
 
-  Future<void> add({Object object, Uint8List albumArtBytes, File trackFile}) async {
+  Future<void> add({File trackFile}) async {
     if (trackFile != null) {
       List<Tag> fileTags = await TagProcessor().getTagsFromByteArray(
         trackFile.readAsBytes(),
@@ -203,30 +197,18 @@ class Collection {
       String trackName = fileTags[0].tags['title'];
       String filePath = trackFile.path;
 
-      void albumArtMethod() {
+      void albumArtMethod() async {
         if (fileTags[0].tags['picture'] == null) {
           this._albumArts.add(null);
         }
         else {
-          this._albumArts.add(fileTags[0].tags['picture'][fileTags[0].tags['picture'].keys.first].imageData);
+          File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${this._foundAlbums.indexOf(albumName)}.png'));
+          await albumArtFile.writeAsBytes(fileTags[0].tags['picture'][fileTags[0].tags['picture'].keys.first].imageData);
+          this._albumArts.add(albumArtFile);
         }
       }
 
-      this._arrange(trackName, albumName, year, trackNumber, artistNames, albumArtMethod, filePath);
-    }
-    else if (object is Track) {
-      void albumArtMethod() {
-        this._albumArts.add(albumArtBytes.toList());
-      }
-      this._arrange(
-        object.trackName,
-        object.albumName,
-        object.year,
-        object.trackNumber,
-        object.artistNames,
-        albumArtMethod,
-        object.filePath
-      );
+      await this._arrange(trackName, albumName, year, trackNumber, artistNames, albumArtMethod, filePath);
     }
   }
 
@@ -340,17 +322,9 @@ class Collection {
   }
 
   Future<void> saveToCache() async {
-
-    this.cacheDirectory..deleteSync(recursive: true)..createSync(recursive: true);
-
-    JsonEncoder encoder = JsonEncoder.withIndent('    ');
-
+   JsonEncoder encoder = JsonEncoder.withIndent('    ');
     List<Map<String, dynamic>> tracks = <Map<String, dynamic>>[];
     collection.tracks.forEach((element) => tracks.add(element.toDictionary()));
-
-    for (int index = 0; index < this._albumArts.length; index++) {
-      await File(path.join(this.cacheDirectory.path, 'albumArt$index.png')).writeAsBytes(this._albumArts[index]);
-    }
 
     await File(path.join(this.cacheDirectory.path, 'cache.json')).writeAsString(encoder.convert({'tracks': tracks}));
   }
@@ -368,34 +342,35 @@ class Collection {
       if (this.collectionDirectory.listSync().length != 0) await this.refresh();
       await this.saveToCache();
     }
+    else {
+      Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'cache.json')).readAsString());
 
-    Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'cache.json')).readAsString());
+      for (Map<String, dynamic> track in collection['tracks']) {
+        String year = track['year'];
+        List<dynamic> artistNames = track['artistNames'];
+        String trackNumber = track['trackNumber'];
+        String albumName = track['albumName'];
+        String trackName = track['trackName'];
+        String filePath = track['filePath'];
 
-    for (Map<String, dynamic> track in collection['tracks']) {
-      String year = track['year'];
-      List<dynamic> artistNames = track['artistNames'];
-      String trackNumber = track['trackNumber'];
-      String albumName = track['albumName'];
-      String trackName = track['trackName'];
-      String filePath = track['filePath'];
+        void albumArtMethod() async {
+          this._albumArts.add(
+            File(path.join(this.cacheDirectory.path, 'albumArt${track['albumArtId']}.png')),
+          );
+        }
 
-      void albumArtMethod() {
-        this._albumArts.add(
-          File(path.join(this.cacheDirectory.path, 'albumArt${track['albumArtId']}.png')).readAsBytesSync().toList(),
-        );
+        await this._arrange(trackName, albumName, year, trackNumber, artistNames, albumArtMethod, filePath);
       }
-
-      this._arrange(trackName, albumName, year, trackNumber, artistNames, albumArtMethod, filePath);
     }
 
     return this;
   }
 
-  void _arrange(String trackName, String albumName, String year, String trackNumber, List<dynamic> artistNames, Function albumArtMethod, String filePath) {
+  Future<void> _arrange(String trackName, String albumName, String year, String trackNumber, List<dynamic> artistNames, Function albumArtMethod, String filePath) async {
     
     if (!this._foundAlbums.contains(albumName)) {
       this._foundAlbums.add(albumName);
-      albumArtMethod();
+      await albumArtMethod();
       this.albums.add(
         new Album(
           albumName: albumName,
@@ -481,7 +456,7 @@ class Collection {
     );
   }
   
-  List<List<int>> _albumArts = <List<int>>[];
+  List<File> _albumArts = <File>[];
   List<String> _foundAlbums = <String>[];
   List<String> _foundArtists = <String>[];
 }
