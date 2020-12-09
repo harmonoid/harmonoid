@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart' as path;
 
 import 'package:harmonoid/screens/home.dart';
 import 'package:harmonoid/scripts/collection.dart';
@@ -36,7 +37,7 @@ class HarmonoidState extends State<Harmonoid> {
         primaryColorLight: Colors.deepPurpleAccent,
         primaryColor: Colors.deepPurpleAccent[400],
         primaryColorDark: Colors.deepPurpleAccent[700],
-        scaffoldBackgroundColor: Colors.grey[50],
+        scaffoldBackgroundColor: Colors.grey[100],
         cursorColor: Colors.deepPurpleAccent[700],
         accentColor: Colors.deepPurpleAccent[400],
         cardColor: Colors.white,
@@ -167,8 +168,8 @@ void main() async {
   Stopwatch stopwatch = new Stopwatch()..start();
 
   collection = new Collection(
-    collectionDirectory: Directory('/home/alex/Music'),
-    cacheDirectory: Directory('/home/alex/Documents/cache'),
+    collectionDirectory: Directory('/storage/emulated/0/Music'),
+    cacheDirectory: await path.getExternalStorageDirectory(),
   );
   await collection.getFromCache();
   await ConstantsUpdater.update(LanguageRegion.enUs);

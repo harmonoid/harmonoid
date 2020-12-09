@@ -7,7 +7,7 @@ class SubHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      height: 42,
+      height: 48,
       margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
       child: Text(
         text,
