@@ -101,7 +101,9 @@ class Collection {
   List<Artist> artists = <Artist>[];
 
   Future<Collection> refresh() async {
-    if (!await this.cacheDirectory.exists()) this.cacheDirectory.createSync(recursive: true);
+    for (FileSystemEntity fileSystemEntity in this.cacheDirectory.listSync()) {
+      await fileSystemEntity.delete();
+    }
     
     this.albums.clear();
     this.tracks.clear();
@@ -154,26 +156,27 @@ class Collection {
     return this;
   }
 
-  Future<List<dynamic>> search(String query, dynamic mode) async {
+  Future<List<dynamic>> search(String query, {dynamic mode}) async {
+    if (query == '') return <dynamic>[];
 
     List<dynamic> result = <dynamic>[];
-    if (mode is Album) {
+    if (mode is Album || mode == null) {
       for (Album album in this.albums) {
-        if (album.albumName.contains(query)) {
+        if (album.albumName.toLowerCase().contains(query.toLowerCase())) {
           result.add(album);
         }
       }
     }
-    else if (mode is Track) {
+    if (mode is Track || mode == null) {
       for (Track track in this.tracks) {
-        if (track.trackName.contains(query)) {
+        if (track.trackName.toLowerCase().contains(query.toLowerCase())) {
           result.add(track);
         }
       }
     }
-    else if (mode is Artist) {
+    if (mode is Artist || mode == null) {
       for (Artist artist in this.artists) {
-        if (artist.artistName.contains(query)) {
+        if (artist.artistName.toLowerCase().contains(query.toLowerCase())) {
           result.add(artist);
         }
       }
