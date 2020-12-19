@@ -3,19 +3,160 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:harmonoid/screens/savedalbum.dart';
+import 'package:harmonoid/screens/collectionalbum.dart';
+import 'package:harmonoid/screens/collectiontrack.dart';
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/appstate.dart';
 import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/constants/constants.dart';
 
 
-class MusicCollection extends StatefulWidget {
-  MusicCollection({Key key}) : super(key: key);
-  MusicCollectionState createState() => MusicCollectionState();
+class MusicCollectionSearch extends StatefulWidget {
+  MusicCollectionSearch({Key key}) : super(key: key);
+  MusicCollectionSearchState createState() => MusicCollectionSearchState();
 }
 
-class MusicCollectionState extends State<MusicCollection> with TickerProviderStateMixin{
+
+class MusicCollectionSearchState extends State<MusicCollectionSearch> {
+  List<Widget> _albumResults = new List<Widget>();
+  List<Widget> _trackResults = new List<Widget>();
+  List<Widget> _artistResults = new List<Widget>();
+  TextEditingController _textFieldController = new TextEditingController();
+
+  bool noSearch() => this._albumResults.length == 0 && this._trackResults.length == 0 && this._textFieldController.text == '';
+  bool noResult() => this._albumResults.length == 0 && this._trackResults.length == 0 && this._textFieldController.text != '';
+  bool noAlbums() => this._albumResults.length == 0;
+  bool noTracks() => this._trackResults.length == 0;
+
+  void _refresh() {
+    String textFieldValue = this._textFieldController.text;
+    this._textFieldController.clear();
+    this._textFieldController.text = textFieldValue;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this._textFieldController.addListener(() async {
+      this._albumResults = [];
+      this._trackResults = [];
+      this._artistResults = [];
+      List<dynamic> resultCollection = await collection.search(this._textFieldController.text);
+      for (dynamic collectionItem in resultCollection) {
+        if (collectionItem is Album) {
+          this._albumResults.add(
+            Container(
+              margin: EdgeInsets.only(top: 6.0, bottom: 6.0, left: 16.0, right: 16.0),
+              child: CollectionAlbumTile(
+                album: collectionItem,
+              ),
+            ),
+          );
+        }
+        else if (collectionItem is Track) {
+          this._trackResults.add(
+            CollectionTrackTile(
+              track: collectionItem,
+            ),
+          );
+        }
+      }
+      this.setState(() {});
+    });
+    AppState.musicCollectionSearchRefresh = this._refresh;
+  }
+
+  @override
+  void dispose() {
+    AppState.musicCollectionSearchRefresh = null;
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: TextField(
+          autofocus: true,
+          controller: this._textFieldController,
+          cursorWidth: 1.0,
+          decoration: InputDecoration.collapsed(hintText: Constants.STRING_SEARCH_COLLECTION),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
+          iconSize: Theme.of(context).iconTheme.size,
+          splashRadius: Theme.of(context).iconTheme.size - 4,
+          onPressed: Navigator.of(context).pop,
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.close, color: Theme.of(context).iconTheme.color),
+            iconSize: Theme.of(context).iconTheme.size,
+            splashRadius: Theme.of(context).iconTheme.size - 4,
+            tooltip: Constants.STRING_OPTIONS,
+            onPressed: this._textFieldController.clear,
+          ),
+        ],
+      ),
+      body: ListView(
+        children: <Widget>[
+           this.noSearch() ? Container(
+            margin: EdgeInsets.only(top: 56),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                Icon(Icons.search, size: 72, color: Theme.of(context).iconTheme.color),
+                Divider(
+                  color: Colors.transparent,
+                  height: 8,
+                ),
+                Text(
+                  Constants.STRING_LOCAL_SEARCH_WELCOME,
+                  style: Theme.of(context).textTheme.headline4,
+                )
+              ],
+            ),
+          ) : Container(),
+          this.noResult() ? Container(
+            margin: EdgeInsets.only(top: 56),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                Icon(Icons.close, size: 72, color: Theme.of(context).iconTheme.color),
+                Divider(
+                  color: Colors.transparent,
+                  height: 8,
+                ),
+                Text(
+                  Constants.STRING_LOCAL_SEARCH_NO_RESULTS,
+                  style: Theme.of(context).textTheme.headline4,
+                )
+              ],
+            ),
+          ) : Container(),
+          this.noAlbums() ? Container(): SubHeader(Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER),
+          this.noAlbums() ? Container(): Container(
+            height: 258,
+            width: MediaQuery.of(context).size.width,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: this._albumResults,
+            ),
+          ),
+          this.noTracks() ? Container(): SubHeader(Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER),
+        ] + (this.noTracks() ? [Container()]: this._trackResults),
+      ),
+    );
+  }
+}
+
+
+class MusicCollectionHome extends StatefulWidget {
+  MusicCollectionHome({Key key}) : super(key: key);
+  MusicCollectionHomeState createState() => MusicCollectionHomeState();
+}
+
+class MusicCollectionHomeState extends State<MusicCollectionHome> with TickerProviderStateMixin {
   int _elementsPerRow = 2;
   Animation<double> _opacity;
   AnimationController _controller;
@@ -86,9 +227,8 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
               ],
             ),
           ),
-          openBuilder: (_, __) => SavedAlbum(
+          openBuilder: (_, __) => CollectionAlbum(
             album: collection.albums.last,
-            refreshCollection: this._refreshCollection,
           ),
         ),
       ),
@@ -99,73 +239,8 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
     List<Widget> rowChildren = new List<Widget>();
     for (int index = 0; index < collection.albums.length; index++) {
       rowChildren.add(
-        OpenContainer(
-          transitionDuration: Duration(milliseconds: 400),
-          closedElevation: 2,
-          closedColor: Theme.of(context).cardColor,
-          openColor: Theme.of(context).scaffoldBackgroundColor,
-          closedBuilder: (_, __) => Container(
-            height: 246,
-            width: 156,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.file(
-                  collection.getAlbumArt(collection.albums[index].albumArtId),
-                  fit: BoxFit.fill,
-                  filterQuality: FilterQuality.low,
-                  height: 156,
-                  width: 156,
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 2, right: 2),
-                  child: Column(
-                    children: [
-                      Divider(
-                        color: Colors.transparent,
-                        height: 4,
-                      ),
-                      Text(
-                        collection.albums[index].albumName,
-                        style: Theme.of(context).textTheme.headline2,
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                      ),
-                      Divider(
-                        color: Colors.transparent,
-                        height: 4,
-                        thickness: 4,
-                      ),
-                      Text(
-                        collection.albums[index].artistNames.length < 2 ? 
-                        collection.albums[index].artistNames.join(', ') : 
-                        collection.albums[index].artistNames.sublist(0, 2).join(', '),
-                        style: Theme.of(context).textTheme.headline4,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        '(${collection.albums[index].year})',
-                        style: Theme.of(context).textTheme.headline4,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                      ),
-                      Divider(
-                        color: Colors.transparent,
-                        height: 4,
-                        thickness: 4,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          openBuilder: (_, __) => SavedAlbum(
-            album: collection.albums[index],
-            refreshCollection: this._refreshCollection,
-          ),
+        CollectionAlbumTile(
+          album: collection.albums[index],
         ),
       );
       rowIndex++;
@@ -191,76 +266,8 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
       rowChildren = <Widget>[];
       for (int index = collection.albums.length - (collection.albums.length % this._elementsPerRow); index < collection.albums.length; index++) {
         rowChildren.add(
-          OpenContainer(
-            transitionDuration: Duration(milliseconds: 400),
-            closedElevation: 2,
-            closedColor: Theme.of(context).cardColor,
-            openColor: Theme.of(context).scaffoldBackgroundColor,
-            closedBuilder: (_, __) => Container(
-              height: 246,
-              width: 156,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.file(
-                    collection.getAlbumArt(collection.albums[index].albumArtId),
-                    fit: BoxFit.fill,
-                    filterQuality: FilterQuality.low,
-                    height: 156,
-                    width: 156,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 2, right: 2),
-                    child: Column(
-                      children: [
-                        Divider(
-                          color: Colors.transparent,
-                          height: 8,
-                        ),
-                        Container(
-                          height: 38,
-                          child: Text(
-                            collection.albums[index].albumName,
-                            style: Theme.of(context).textTheme.headline2,
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                          ),
-                        ),
-                        Divider(
-                          color: Colors.transparent,
-                          height: 4,
-                          thickness: 4,
-                        ),
-                        Text(
-                          collection.albums[index].artistNames.length < 2 ? 
-                          collection.albums[index].artistNames.join(', ') : 
-                          collection.albums[index].artistNames.sublist(0, 2).join(', '),
-                          style: Theme.of(context).textTheme.headline4,
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          '(${collection.albums[index].year})',
-                          style: Theme.of(context).textTheme.headline4,
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                        ),
-                        Divider(
-                          color: Colors.transparent,
-                          height: 4,
-                          thickness: 4,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            openBuilder: (_, __) => SavedAlbum(
-              album: collection.albums[index],
-              refreshCollection: this._refreshCollection,
-            ),
+          CollectionAlbumTile(
+            album: collection.albums[index],
           ),
         );
       }
@@ -602,101 +609,30 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
     ]);
     for (int index = 0; index < collection.tracks.length; index++) {
       this.trackChildren.add(
-        ListTile(
-          onTap: () {},
-          dense: false,
-          isThreeLine: true,
-          leading: CircleAvatar(
-            child: Text(collection.tracks[index].trackNumber),
-            backgroundImage: FileImage(collection.getAlbumArt(collection.tracks[index].albumArtId)),
-          ),
-          title: Text(collection.tracks[index].trackName),
-          subtitle: Text(
-            collection.tracks[index].albumName + '\n' + 
-            (collection.tracks[index].artistNames.length < 2 ? 
-            collection.tracks[index].artistNames.join(', ') : 
-            collection.tracks[index].artistNames.sublist(0, 2).join(', ')),
-          ),
-          trailing: PopupMenuButton(
-            elevation: 2,
-            color: Theme.of(context).cardColor,
-            onSelected: (index) {
-              switch(index) {
-                case 0: {
-                  showDialog(
-                    context: context,
-                    builder: (subContext) => AlertDialog(
-                      title: Text(
-                        Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
-                        style: Theme.of(subContext).textTheme.headline1,
-                      ),
-                      content: Text(
-                        Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
-                        style: Theme.of(subContext).textTheme.headline4,
-                      ),
-                      actions: [
-                        MaterialButton(
-                          textColor: Theme.of(context).primaryColor,
-                          onPressed: () async {
-                            await collection.delete(collection.tracks[index]);
-                            this._refreshCollection(new Track());
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(Constants.STRING_YES),
-                        ),
-                        MaterialButton(
-                              textColor: Theme.of(context).primaryColor,
-                          onPressed: Navigator.of(subContext).pop,
-                          child: Text(Constants.STRING_NO),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                break;
-              }
-            },
-            icon: Icon(Icons.more_vert, color: Theme.of(context).iconTheme.color, size: Theme.of(context).iconTheme.size),
-            tooltip: Constants.STRING_OPTIONS,
-            itemBuilder: (_) => <PopupMenuEntry>[
-              PopupMenuItem(
-                value: 0,
-                child: Text('Delete'),
-              ),
-              PopupMenuItem(
-                value: 1,
-                child: Text('Share'),
-              ),
-              PopupMenuItem(
-                value: 2,
-                child: Text('Add to playlist'),
-              ),
-              PopupMenuItem(
-                value: 3,
-                child: Text('Save to downloads'),
-              ),
-            ],
-          ),
+        CollectionTrackTile(
+          track: collection.tracks[index],
         ),
       );
     }
     this.setState(() {});
   }
 
-  void _refreshCollection(dynamic object) {
+  void _refresh(dynamic musicCollectionCurrentTab) {
     this.refreshAlbums();
     this.refreshTracks();
     this.refreshArtists();
     this.setState(() {
-      if (object is Album) this.children = this.albumChildren;
-      else if (object is Track) this.children = this.trackChildren;
-      else if (object is Artist) this.children = this.artistChildren;
+      if (musicCollectionCurrentTab is Album) this.children = this.albumChildren;
+      else if (musicCollectionCurrentTab is Track) this.children = this.trackChildren;
+      else if (musicCollectionCurrentTab is Artist) this.children = this.artistChildren;
     });
   }
 
   @override
   void initState() {
     super.initState();
+    AppState.musicCollectionRefresh = this._refresh;
+    AppState.musicCollectionCurrentTab = new Album();
     this._tabController = TabController(initialIndex: 0, length: 3, vsync: this);
     this._controller = new AnimationController(
       vsync: this,
@@ -733,6 +669,8 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
 
   @override
   void dispose() {
+    AppState.musicCollectionRefresh = null;
+    AppState.musicCollectionCurrentTab = null;
     this._scrollController.dispose();
     super.dispose();
   }
@@ -761,7 +699,13 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
               iconSize: Theme.of(context).iconTheme.size,
               splashRadius: Theme.of(context).iconTheme.size - 4,
               tooltip: Constants.STRING_SEARCH_COLLECTION,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => MusicCollectionSearch(),
+                  ),
+                );
+              },
             ),
             IconButton(
               icon: Icon(this._themeIcon, color: Theme.of(context).iconTheme.color),
@@ -772,7 +716,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                 this._themeIcon = this._themeIcon == Icons.brightness_medium ? Icons.brightness_high : Icons.brightness_medium;
                 AppState.switchTheme();
                 Timer(Duration(milliseconds: 400), () {
-                  this._refreshCollection(<dynamic>[new Album(), new Track(), new Artist()][this._tabController.index]);
+                  if (AppState.musicCollectionRefresh != null) AppState.musicCollectionRefresh(AppState.musicCollectionCurrentTab);
                 });
               },
             ),
@@ -795,12 +739,9 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                 indicatorColor: Theme.of(context).accentColor,
                 isScrollable: true,
                 onTap: (int index) {
-                  this.setState(() {
-                    if (index == 0) this.children = this.albumChildren;
-                    else if (index == 1) this.children = this.trackChildren;
-                    else if (index == 2) this.children = this.artistChildren;
-                    this._tabController.animateTo(index);
-                  });
+                  this._tabController.animateTo(index);
+                  AppState.musicCollectionCurrentTab = <dynamic>[new Album(), new Track(), new Artist()][this._tabController.index];
+                  if (AppState.musicCollectionRefresh != null) AppState.musicCollectionRefresh(AppState.musicCollectionCurrentTab);
                 },
                 tabs: [
                   Tab(
