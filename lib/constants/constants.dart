@@ -108,4 +108,6 @@ class Constants {
   static String STRING_MENU;
   static String STRING_SEARCH_COLLECTION;
   static String STRING_SWITCH_THEME;
+  static String STRING_PLAY;
+  static String STRING_PAUSE;
 }

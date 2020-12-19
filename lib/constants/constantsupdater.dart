@@ -127,6 +127,8 @@ class ConstantsUpdater {
         Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
         Constants.STRING_DISCOVER                                        = 'Discover';
+        Constants.STRING_PLAY                                            = 'Play';
+        Constants.STRING_PAUSE                                           = 'Pause';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -237,6 +239,8 @@ class ConstantsUpdater {
         Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
         Constants.STRING_DISCOVER                                        = 'Discover';
+        Constants.STRING_PLAY                                            = 'Play';
+        Constants.STRING_PAUSE                                           = 'Pause';
       }
       break;
       case LanguageRegion.slSi: {
@@ -347,6 +351,8 @@ class ConstantsUpdater {
         Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
         Constants.STRING_DISCOVER                                        = 'Discover';
+        Constants.STRING_PLAY                                            = 'Play';
+        Constants.STRING_PAUSE                                           = 'Pause';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -457,6 +463,8 @@ class ConstantsUpdater {
         Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
         Constants.STRING_DISCOVER                                        = 'Discover';
+        Constants.STRING_PLAY                                            = 'Play';
+        Constants.STRING_PAUSE                                           = 'Pause';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -567,6 +575,8 @@ class ConstantsUpdater {
         Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
         Constants.STRING_DISCOVER                                        = 'Discover';
+        Constants.STRING_PLAY                                            = 'Play';
+        Constants.STRING_PAUSE                                           = 'Pause';
       }
       break;
       case LanguageRegion.deDe: {
@@ -677,6 +687,8 @@ class ConstantsUpdater {
         Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
         Constants.STRING_DISCOVER                                        = 'Discover';
+        Constants.STRING_PLAY                                            = 'Play';
+        Constants.STRING_PAUSE                                           = 'Pause';
       }
     }
   }
