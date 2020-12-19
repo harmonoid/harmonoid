@@ -42,6 +42,7 @@ class HarmonoidState extends State<Harmonoid> {
         scaffoldBackgroundColor: Colors.grey[100],
         cursorColor: Colors.deepPurpleAccent[700],
         accentColor: Colors.deepPurpleAccent[400],
+        textSelectionHandleColor: Colors.deepPurpleAccent[400],
         cardColor: Colors.white,
         appBarTheme: AppBarTheme(
           color: Colors.white,
@@ -91,6 +92,11 @@ class HarmonoidState extends State<Harmonoid> {
             color: Colors.black54,
             fontSize: 12,
           ),
+          headline6: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.black87,
+            fontSize: 20,
+          ),
         ),
       ),
       darkTheme: new ThemeData(
@@ -102,6 +108,7 @@ class HarmonoidState extends State<Harmonoid> {
         scaffoldBackgroundColor: Color(0xFF121212),
         cursorColor: Colors.deepPurpleAccent[100],
         accentColor: Colors.deepPurpleAccent[100],
+        textSelectionHandleColor: Colors.deepPurpleAccent[100],
         cardColor: Colors.white.withOpacity(0.10),
         appBarTheme: AppBarTheme(
           color: Color.fromRGBO(42, 42, 42, 1),
@@ -150,6 +157,11 @@ class HarmonoidState extends State<Harmonoid> {
             fontWeight: FontWeight.normal,
             color: Colors.white.withOpacity(0.54),
             fontSize: 12,
+          ),
+          headline6: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.white.withOpacity(0.87),
+            fontSize: 20,
           ),
         ),
       ),

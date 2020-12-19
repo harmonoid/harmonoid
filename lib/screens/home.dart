@@ -7,21 +7,14 @@ import 'package:harmonoid/constants/constants.dart';
 
 
 class Home extends StatefulWidget {
-
   Home({Key key}) : super(key : key);
   HomeState createState() => HomeState();
 }
 
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
-
   int _index = 1;
   ScrollController _scrollController = new ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -37,11 +30,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         child: Text('Coming Soon...')
       ),
       Navigator(
-        initialRoute: 'musicCollection',
+        initialRoute: 'musicCollectionHome',
         onGenerateRoute: (RouteSettings routeSettings) {
           MaterialPageRoute route;
-          if (routeSettings.name == 'musicCollection') {
-            route = new MaterialPageRoute(builder: (BuildContext context) => MusicCollection());
+          if (routeSettings.name == 'musicCollectionHome') {
+            route = new MaterialPageRoute(builder: (BuildContext context) => MusicCollectionHome());
           }
           return route;
         },
