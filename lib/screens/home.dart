@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:harmonoid/constants/constants.dart';
 import 'package:harmonoid/screens/musiccollection.dart';
+import 'package:harmonoid/screens/nowplaying.dart';
+import 'package:harmonoid/constants/constants.dart';
 
 
 class Home extends StatefulWidget {
@@ -15,7 +16,6 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> with TickerProviderStateMixin {
 
   int _index = 1;
-  Animation<double> _opacity;
   AnimationController _controller;
   ScrollController _scrollController = new ScrollController();
 
@@ -27,20 +27,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       duration: Duration(milliseconds: 200),
       reverseDuration: Duration(milliseconds: 200),
     );
-    this._opacity = new Tween<double>(begin: 1.0, end: 0.0).animate(new CurvedAnimation(
-      parent: this._controller,
-      curve: Curves.easeInOutCubic,
-      reverseCurve: Curves.easeInOutCubic,
-    ));
-
-    this._scrollController.addListener(() {
-      if (this._scrollController.position.userScrollDirection == ScrollDirection.reverse && this._controller.isDismissed) {
-        this._controller.forward();
-      }
-      else if (this._scrollController.position.userScrollDirection == ScrollDirection.forward  && this._controller.isCompleted) {
-        this._controller.reverse();
-      }
-    });
   }
 
   @override
@@ -56,30 +42,40 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       Center(
         child: Text('Coming Soon...')
       ),
-      MusicCollection(),
-      Center(
-        child: Text('Coming Soon...')
+      Navigator(
+        initialRoute: 'musicCollection',
+        onGenerateRoute: (RouteSettings routeSettings) {
+          MaterialPageRoute route;
+          if (routeSettings.name == 'musicCollection') {
+            route = new MaterialPageRoute(builder: (BuildContext context) => MusicCollection());
+          }
+          return route;
+        },
       ),
     ];
 
     return Scaffold(
-      body: screens[this._index],
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: screens[this._index],
+          ),
+          NowPlaying(),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: this._index,
         onTap: (int index) => this.setState(() => this._index = index),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.play_arrow),
-            label: Constants.STRING_NOW_PLAYING,
+            icon: Icon(Icons.image_search),
+            label: Constants.STRING_DISCOVER,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.library_music),
             label: Constants.STRING_COLLECTION,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.wifi),
-            label: Constants.STRING_DISCOVER,
-          )
         ],
       ),
     );

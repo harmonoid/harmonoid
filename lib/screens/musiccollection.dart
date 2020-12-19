@@ -49,7 +49,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                 Image.file(
                   collection.getAlbumArt(collection.albums.last.albumArtId),
                   fit: BoxFit.fill,
-                  filterQuality: FilterQuality.high,
+                  filterQuality: FilterQuality.low,
                   height: 156,
                   width: 156,
                 ),
@@ -88,7 +88,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
           ),
           openBuilder: (_, __) => SavedAlbum(
             album: collection.albums.last,
-            refreshCollection: this.refreshCollection,
+            refreshCollection: this._refreshCollection,
           ),
         ),
       ),
@@ -114,7 +114,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                 Image.file(
                   collection.getAlbumArt(collection.albums[index].albumArtId),
                   fit: BoxFit.fill,
-                  filterQuality: FilterQuality.high,
+                  filterQuality: FilterQuality.low,
                   height: 156,
                   width: 156,
                 ),
@@ -124,16 +124,13 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                     children: [
                       Divider(
                         color: Colors.transparent,
-                        height: 8,
+                        height: 4,
                       ),
-                      Container(
-                        height: 38,
-                        child: Text(
-                          collection.albums[index].albumName,
-                          style: Theme.of(context).textTheme.headline2,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                        ),
+                      Text(
+                        collection.albums[index].albumName,
+                        style: Theme.of(context).textTheme.headline2,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
                       ),
                       Divider(
                         color: Colors.transparent,
@@ -167,7 +164,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
           ),
           openBuilder: (_, __) => SavedAlbum(
             album: collection.albums[index],
-            refreshCollection: this.refreshCollection,
+            refreshCollection: this._refreshCollection,
           ),
         ),
       );
@@ -209,7 +206,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                   Image.file(
                     collection.getAlbumArt(collection.albums[index].albumArtId),
                     fit: BoxFit.fill,
-                    filterQuality: FilterQuality.high,
+                    filterQuality: FilterQuality.low,
                     height: 156,
                     width: 156,
                   ),
@@ -262,7 +259,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
             ),
             openBuilder: (_, __) => SavedAlbum(
               album: collection.albums[index],
-              refreshCollection: this.refreshCollection,
+              refreshCollection: this._refreshCollection,
             ),
           ),
         );
@@ -313,7 +310,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                   child: Image.file(
                     collection.getAlbumArt(collection.artists.last.tracks.last.albumArtId),
                     fit: BoxFit.fill,
-                    filterQuality: FilterQuality.high,
+                    filterQuality: FilterQuality.low,
                     height: 132,
                     width: 132,
                   ),
@@ -364,7 +361,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                     child: Image.file(
                       collection.getAlbumArt(collection.artists[index].tracks.last.albumArtId),
                       fit: BoxFit.fill,
-                      filterQuality: FilterQuality.high,
+                      filterQuality: FilterQuality.low,
                       height: 132,
                       width: 132,
                     ),
@@ -442,7 +439,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
                       child: Image.file(
                         collection.getAlbumArt(collection.artists[index].tracks.last.albumArtId),
                         fit: BoxFit.fill,
-                        filterQuality: FilterQuality.high,
+                        filterQuality: FilterQuality.low,
                         height: 132,
                         width: 132,
                       ),
@@ -524,7 +521,7 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
               Image.file(
                 collection.getAlbumArt(collection.tracks.last.albumArtId),
                 fit: BoxFit.fitWidth,
-                filterQuality: FilterQuality.high,
+                filterQuality: FilterQuality.low,
                 alignment: Alignment.topCenter,
                 height: 156,
                 width: MediaQuery.of(context).size.width - 32,
@@ -607,35 +604,6 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
       this.trackChildren.add(
         ListTile(
           onTap: () {},
-          onLongPress: () => showDialog(
-            context: context,
-            builder: (subContext) => AlertDialog(
-              title: Text(
-                Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
-                style: Theme.of(subContext).textTheme.headline1,
-              ),
-              content: Text(
-                Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
-                style: Theme.of(subContext).textTheme.headline4,
-              ),
-              actions: [
-                MaterialButton(
-                  textColor: Theme.of(context).primaryColor,
-                  onPressed: () async {
-                    await collection.delete(collection.tracks[index]);
-                    this.refreshCollection(new Track());
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(Constants.STRING_YES),
-                ),
-                MaterialButton(
-                  textColor: Theme.of(context).primaryColor,
-                  onPressed: Navigator.of(subContext).pop,
-                  child: Text(Constants.STRING_NO),
-                ),
-              ],
-            ),
-          ),
           dense: false,
           isThreeLine: true,
           leading: CircleAvatar(
@@ -649,13 +617,73 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
             collection.tracks[index].artistNames.join(', ') : 
             collection.tracks[index].artistNames.sublist(0, 2).join(', ')),
           ),
+          trailing: PopupMenuButton(
+            elevation: 2,
+            color: Theme.of(context).cardColor,
+            onSelected: (index) {
+              switch(index) {
+                case 0: {
+                  showDialog(
+                    context: context,
+                    builder: (subContext) => AlertDialog(
+                      title: Text(
+                        Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
+                        style: Theme.of(subContext).textTheme.headline1,
+                      ),
+                      content: Text(
+                        Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
+                        style: Theme.of(subContext).textTheme.headline4,
+                      ),
+                      actions: [
+                        MaterialButton(
+                          textColor: Theme.of(context).primaryColor,
+                          onPressed: () async {
+                            await collection.delete(collection.tracks[index]);
+                            this._refreshCollection(new Track());
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(Constants.STRING_YES),
+                        ),
+                        MaterialButton(
+                              textColor: Theme.of(context).primaryColor,
+                          onPressed: Navigator.of(subContext).pop,
+                          child: Text(Constants.STRING_NO),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                break;
+              }
+            },
+            icon: Icon(Icons.more_vert, color: Theme.of(context).iconTheme.color, size: Theme.of(context).iconTheme.size),
+            tooltip: Constants.STRING_OPTIONS,
+            itemBuilder: (_) => <PopupMenuEntry>[
+              PopupMenuItem(
+                value: 0,
+                child: Text('Delete'),
+              ),
+              PopupMenuItem(
+                value: 1,
+                child: Text('Share'),
+              ),
+              PopupMenuItem(
+                value: 2,
+                child: Text('Add to playlist'),
+              ),
+              PopupMenuItem(
+                value: 3,
+                child: Text('Save to downloads'),
+              ),
+            ],
+          ),
         ),
       );
     }
     this.setState(() {});
   }
 
-  void refreshCollection(dynamic object) {
+  void _refreshCollection(dynamic object) {
     this.refreshAlbums();
     this.refreshTracks();
     this.refreshArtists();
@@ -743,8 +771,8 @@ class MusicCollectionState extends State<MusicCollection> with TickerProviderSta
               onPressed: () {
                 this._themeIcon = this._themeIcon == Icons.brightness_medium ? Icons.brightness_high : Icons.brightness_medium;
                 AppState.switchTheme();
-                Timer(Duration(seconds: 1), () {
-                  this.refreshCollection(<dynamic>[new Album(), new Track(), new Artist()][this._tabController.index]);
+                Timer(Duration(milliseconds: 400), () {
+                  this._refreshCollection(<dynamic>[new Album(), new Track(), new Artist()][this._tabController.index]);
                 });
               },
             ),

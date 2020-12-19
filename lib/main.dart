@@ -17,9 +17,12 @@ class Harmonoid extends StatefulWidget {
 class HarmonoidState extends State<Harmonoid> {
   ThemeMode _themeMode = ThemeMode.light;
 
-  void switchTheme() => this.setState(() {
-    this._themeMode = this._themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-  });
+  ThemeMode switchTheme() {
+    this.setState(() {
+      this._themeMode = this._themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    });
+    return this._themeMode;
+  }
 
   @override
   void initState() {
@@ -119,7 +122,7 @@ class HarmonoidState extends State<Harmonoid> {
           size: 24,
         ),
         bottomNavigationBarTheme: new BottomNavigationBarThemeData(
-          backgroundColor: Colors.white.withOpacity(0.14),
+          backgroundColor: Color.fromRGBO(42, 42, 42, 1),
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white54,
         ),
@@ -168,14 +171,15 @@ void main() async {
   Stopwatch stopwatch = new Stopwatch()..start();
 
   collection = new Collection(
-    collectionDirectory: Directory('/storage/emulated/0/Music'),
-    cacheDirectory: await path.getExternalStorageDirectory(),
+    collectionDirectory: Directory('/home/alex/Music'),
+    cacheDirectory: Directory('/home/alex/Documents/cache'),
   );
   await collection.getFromCache();
   await ConstantsUpdater.update(LanguageRegion.enUs);
 
   print('Time Elapsed : ${stopwatch.elapsedMilliseconds}ms');
   stopwatch.stop();
+
 
   runApp(new Harmonoid());
 }
