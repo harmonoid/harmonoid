@@ -16,17 +16,11 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> with TickerProviderStateMixin {
 
   int _index = 1;
-  AnimationController _controller;
   ScrollController _scrollController = new ScrollController();
 
   @override
   void initState() {
     super.initState();
-    this._controller = new AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-      reverseDuration: Duration(milliseconds: 200),
-    );
   }
 
   @override

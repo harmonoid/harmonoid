@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart' as path;
 
 import 'package:harmonoid/screens/home.dart';
 import 'package:harmonoid/scripts/collection.dart';
