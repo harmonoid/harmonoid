@@ -1,23 +1,25 @@
 import 'package:harmonoid/constants/constants.dart';
 
-enum LanguageRegion {
 
-  enUs, /* Credits: https://github.com/alexmercerind/           */
+class LanguageRegion {
 
-  ruRu, /* Credits: https://github.com/raitonoberu/             */
+  static const int enUs = 0; /* Credits: https://github.com/alexmercerind/           */
+
+  static const int ruRu = 1; /* Credits: https://github.com/raitonoberu/             */
   
-  slSi, /* Credits: https://github.com/mytja/                   */
+  static const int slSi = 2; /* Credits: https://github.com/mytja/                   */
 
-  ptBr, /* Credits: https://github.com/bdlukaa/                 */
+  static const int ptBr = 3; /* Credits: https://github.com/bdlukaa/                 */
 
-  hiIn, /* Credits: https://github.com/alexmercerind/           */
+  static const int hiIn = 4; /* Credits: https://github.com/alexmercerind/           */
   
-  deDe, /* Credits: https://github.com/MickLesk/                */
+  static const int deDe = 5; /* Credits: https://github.com/MickLesk/                */
 }
+
 
 class ConstantsUpdater {
   
-  static Future<void> update(LanguageRegion languageRegion) async {
+  static Future<void> update(int languageRegion) async {
     switch(languageRegion) {
       case LanguageRegion.enUs: {
         Constants.STRING_INTERNET_ERROR                                  = 'Check your internet connection...';
@@ -129,6 +131,17 @@ class ConstantsUpdater {
         Constants.STRING_DISCOVER                                        = 'Discover';
         Constants.STRING_PLAY                                            = 'Play';
         Constants.STRING_PAUSE                                           = 'Pause';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_SHARE                                           = 'Share';
+        Constants.STRING_ADD_TO_PLAYLIST                                 = 'Add to playlist';
+        Constants.STRING_SAVE_TO_DOWNLOADS                               = 'Save to downloads';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
+        Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
+        Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
+
       }
       break;
       case LanguageRegion.ruRu: {
@@ -241,6 +254,16 @@ class ConstantsUpdater {
         Constants.STRING_DISCOVER                                        = 'Discover';
         Constants.STRING_PLAY                                            = 'Play';
         Constants.STRING_PAUSE                                           = 'Pause';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_SHARE                                           = 'Share';
+        Constants.STRING_ADD_TO_PLAYLIST                                 = 'Add to playlist';
+        Constants.STRING_SAVE_TO_DOWNLOADS                               = 'Save to downloads';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
+        Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
+        Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
       }
       break;
       case LanguageRegion.slSi: {
@@ -353,6 +376,16 @@ class ConstantsUpdater {
         Constants.STRING_DISCOVER                                        = 'Discover';
         Constants.STRING_PLAY                                            = 'Play';
         Constants.STRING_PAUSE                                           = 'Pause';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_SHARE                                           = 'Share';
+        Constants.STRING_ADD_TO_PLAYLIST                                 = 'Add to playlist';
+        Constants.STRING_SAVE_TO_DOWNLOADS                               = 'Save to downloads';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
+        Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
+        Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -465,6 +498,16 @@ class ConstantsUpdater {
         Constants.STRING_DISCOVER                                        = 'Discover';
         Constants.STRING_PLAY                                            = 'Play';
         Constants.STRING_PAUSE                                           = 'Pause';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_SHARE                                           = 'Share';
+        Constants.STRING_ADD_TO_PLAYLIST                                 = 'Add to playlist';
+        Constants.STRING_SAVE_TO_DOWNLOADS                               = 'Save to downloads';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
+        Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
+        Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -577,6 +620,16 @@ class ConstantsUpdater {
         Constants.STRING_DISCOVER                                        = 'Discover';
         Constants.STRING_PLAY                                            = 'Play';
         Constants.STRING_PAUSE                                           = 'Pause';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_SHARE                                           = 'Share';
+        Constants.STRING_ADD_TO_PLAYLIST                                 = 'Add to playlist';
+        Constants.STRING_SAVE_TO_DOWNLOADS                               = 'Save to downloads';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
+        Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
+        Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
       }
       break;
       case LanguageRegion.deDe: {
@@ -689,6 +742,16 @@ class ConstantsUpdater {
         Constants.STRING_DISCOVER                                        = 'Discover';
         Constants.STRING_PLAY                                            = 'Play';
         Constants.STRING_PAUSE                                           = 'Pause';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_SHARE                                           = 'Share';
+        Constants.STRING_ADD_TO_PLAYLIST                                 = 'Add to playlist';
+        Constants.STRING_SAVE_TO_DOWNLOADS                               = 'Save to downloads';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_DELETE                                          = 'Delete';
+        Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
+        Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
+        Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
       }
     }
   }

@@ -110,4 +110,12 @@ class Constants {
   static String STRING_SWITCH_THEME;
   static String STRING_PLAY;
   static String STRING_PAUSE;
+  static String STRING_DELETE;
+  static String STRING_SHARE;
+  static String STRING_ADD_TO_PLAYLIST;
+  static String STRING_SAVE_TO_DOWNLOADS;
+  static String STRING_LOCAL_SEARCH_ALBUM_SUBHEADER;
+  static String STRING_LOCAL_SEARCH_TRACK_SUBHEADER;
+  static String STRING_LOCAL_SEARCH_WELCOME;
+  static String STRING_LOCAL_SEARCH_NO_RESULTS;
 }
