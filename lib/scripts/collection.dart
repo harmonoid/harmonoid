@@ -7,7 +7,6 @@ import 'package:dart_tags/dart_tags.dart';
 Collection collection;
 
 class Track {
-  
   final String trackName;
   final String albumName;
   final String trackNumber;
@@ -34,7 +33,6 @@ class Track {
 
 
 class Album {
-
   final String albumName;
   final String year;
   final List<dynamic> artistNames;
@@ -85,20 +83,45 @@ class Artist {
   Artist({this.artistName});
 }
 
-class Collection {
 
+class Playlist {
+  final String playlistName;
+  final int playlistId;
+  List<Track> tracks = <Track>[];
+
+  Map<String, dynamic> toDictionary() {
+    List<dynamic> tracks = <dynamic>[];
+    for (Track track in this.tracks) {
+      tracks.add(track.toDictionary());
+    }
+    return {
+      'type': 'Playlist',
+      'playlistName': this.playlistName,
+      'playlistId': this.playlistId,
+      'tracks': tracks,
+    };
+  }
+
+  Playlist({this.playlistName, this.playlistId});
+}
+
+
+class Collection {
   final Directory collectionDirectory;
   final Directory cacheDirectory;
 
-  Collection({this.collectionDirectory, this.cacheDirectory}) {
+  Collection(this.collectionDirectory, this.cacheDirectory);
 
-    if (!this.collectionDirectory.existsSync()) this.collectionDirectory.createSync(recursive: true);
-    if (!this.cacheDirectory.existsSync()) this.cacheDirectory.createSync(recursive: true);
+  static Future<void> init({collectionDirectory, cacheDirectory}) async {
+    collection = new Collection(collectionDirectory, cacheDirectory);
+    if (!await collection.collectionDirectory.exists()) await collection.collectionDirectory.create(recursive: true);
+    if (!await collection.cacheDirectory.exists()) await collection.cacheDirectory.create(recursive: true);
   }
 
   List<Album> albums = <Album>[];
   List<Track> tracks = <Track>[];
   List<Artist> artists = <Artist>[];
+  List<Playlist> playlists = <Playlist>[];
 
   Future<Collection> refresh() async {
     for (FileSystemEntity fileSystemEntity in this.cacheDirectory.listSync()) {
@@ -329,7 +352,7 @@ class Collection {
     List<Map<String, dynamic>> tracks = <Map<String, dynamic>>[];
     collection.tracks.forEach((element) => tracks.add(element.toDictionary()));
 
-    await File(path.join(this.cacheDirectory.path, 'cache.json')).writeAsString(encoder.convert({'tracks': tracks}));
+    await File(path.join(this.cacheDirectory.path, 'musicCollection.dart')).writeAsString(encoder.convert({'tracks': tracks}));
   }
 
   Future<Collection> getFromCache() async {
@@ -341,12 +364,12 @@ class Collection {
     this._foundAlbums.clear();
     this._foundArtists.clear();
 
-    if (!await File(path.join(this.cacheDirectory.path, 'cache.json')).exists()) {
+    if (!await File(path.join(this.cacheDirectory.path, 'musicCollection.dart')).exists()) {
       if (this.collectionDirectory.listSync().length != 0) await this.refresh();
       await this.saveToCache();
     }
     else {
-      Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'cache.json')).readAsString());
+      Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'musicCollection.dart')).readAsString());
 
       for (Map<String, dynamic> track in collection['tracks']) {
         String year = track['year'];
@@ -365,7 +388,7 @@ class Collection {
         await this._arrange(trackName, albumName, year, trackNumber, artistNames, albumArtMethod, filePath);
       }
     }
-
+    await this.playlistsGetFromCache();
     return this;
   }
 
@@ -457,6 +480,85 @@ class Collection {
         filePath: filePath,
       ),
     );
+  }
+
+  Future<void> playlistAdd(String playlistName) async {
+    if (this.playlists.length == 0) {
+      this.playlists.add(new Playlist(playlistName: playlistName, playlistId: 0));
+    }
+    else {
+      this.playlists.add(new Playlist(playlistName: playlistName, playlistId: this.playlists.last.playlistId + 1));
+    }
+    await this.playlistsSaveToCache();
+  }
+
+  Future<void> playlistRemove(Playlist playlist) async {
+    for (int index = 0; index < this.playlists.length; index++) {
+      if (this.playlists[index].playlistId == playlist.playlistId) {
+        this.playlists.removeAt(index);
+        break;
+      }
+    }
+    await this.playlistsSaveToCache();
+  }
+
+  Future<void> playlistAddTrack(Playlist playlist, Track track) async {
+    for (int index = 0; index < this.playlists.length; index++) {
+      if (this.playlists[index].playlistId == playlist.playlistId) {
+        this.playlists[index].tracks.add(track);
+        break;
+      }
+    }
+    await this.playlistsSaveToCache();
+  }
+
+  Future<void> playlistRemoveTrack(Playlist playlist, Track track) async {
+    for (int index = 0; index < this.playlists.length; index++) {
+      if (this.playlists[index].playlistId == playlist.playlistId) {
+        for (int trackIndex = 0; trackIndex < playlist.tracks.length; index++) {
+          if (this.playlists[index].tracks[trackIndex].trackName == track.trackName && this.playlists[index].tracks[trackIndex].albumName == track.albumName) {
+            this.playlists[index].tracks.removeAt(trackIndex);
+            break;
+          }
+        }
+        break;
+      }
+    }
+    await this.playlistsSaveToCache();
+  }
+  
+  Future<void> playlistsSaveToCache() async {
+    List<Map<String, dynamic>> playlists = <Map<String, dynamic>>[];
+    for (Playlist playlist in this.playlists) {
+      playlists.add(playlist.toDictionary());
+    }
+    File playlistFile = File(path.join(this.cacheDirectory.path, 'playlists.json'));
+    await playlistFile.writeAsString(JsonEncoder.withIndent('    ').convert({'playlists': playlists}));
+  }
+
+  Future<void> playlistsGetFromCache() async {
+    File playlistFile = File(path.join(this.cacheDirectory.path, 'playlists.json'));
+    if (!await playlistFile.exists()) await this.playlistsSaveToCache();
+    else {
+      List<dynamic> playlists = convert.jsonDecode(await playlistFile.readAsString())['playlists'];
+      for (dynamic playlist in playlists) {
+        this.playlists.add(new Playlist(
+          playlistName: playlist['playlistName'],
+          playlistId: playlist['playlistId'],
+        ));
+        for (dynamic track in playlist['tracks']) {
+          this.playlists.last.tracks.add(new Track(
+            trackName: track['trackName'],
+            albumName: track['albumName'],
+            trackNumber: track['trackNumber'],
+            year: track['year'],
+            artistNames: track['artistNames'],
+            albumArtId: track['albumArtId'],
+            filePath: track['filePath'],
+          ));
+        }
+      }
+    }
   }
   
   List<File> _albumArts = <File>[];
