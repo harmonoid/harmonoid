@@ -124,10 +124,9 @@ class Collection {
   List<Playlist> playlists = <Playlist>[];
 
   Future<Collection> refresh() async {
-    for (FileSystemEntity fileSystemEntity in this.cacheDirectory.listSync()) {
-      await fileSystemEntity.delete();
+    if (await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).exists()) {
+      await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).delete();
     }
-    
     this.albums.clear();
     this.tracks.clear();
     this.artists.clear();
@@ -175,7 +174,7 @@ class Collection {
         this.artists[this._foundArtists.indexOf(null)].albums.add(album);
       }
     }
-
+    await this.saveToCache();
     return this;
   }
 
@@ -365,8 +364,7 @@ class Collection {
     this._foundArtists.clear();
 
     if (!await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).exists()) {
-      if (this.collectionDirectory.listSync().length != 0) await this.refresh();
-      await this.saveToCache();
+      await this.refresh();
     }
     else {
       Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).readAsString());
