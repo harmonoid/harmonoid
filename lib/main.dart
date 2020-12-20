@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/screens/home.dart';
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/appstate.dart';
+import 'package:harmonoid/scripts/appconfiguration.dart';
 import 'package:harmonoid/constants/constantsupdater.dart';
 
 
@@ -180,8 +181,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   Stopwatch stopwatch = new Stopwatch()..start();
-
-  collection = new Collection(
+  
+  await AppConfiguration.init(
+    cacheDirectory: Directory('/home/alex/Documents/cache'),
+  );
+  await Collection.init(
     collectionDirectory: Directory('/home/alex/Music'),
     cacheDirectory: Directory('/home/alex/Documents/cache'),
   );
