@@ -141,7 +141,18 @@ class ConstantsUpdater {
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
         Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
-
+        Constants.STRING_PLAYLIST                                        = 'Playlist';
+        Constants.STRING_PLAYLISTS                                       = 'Playlists';
+        Constants.STRING_PLAYLISTS_SUBHEADER                             = 'Playlists created by you';
+        Constants.STRING_PLAYLISTS_CREATE                                = 'Create a new playlist';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Playlist Name';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Name for your new playlist';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Are you sure?';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Do you want to remove this playlist saved on your device?';
+        Constants.STRING_CANCEL                                          = 'CANCEL';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
+        Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -264,6 +275,18 @@ class ConstantsUpdater {
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
         Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
+        Constants.STRING_PLAYLIST                                        = 'Playlist';
+        Constants.STRING_PLAYLISTS                                       = 'Playlists';
+        Constants.STRING_PLAYLISTS_SUBHEADER                             = 'Playlists created by you';
+        Constants.STRING_PLAYLISTS_CREATE                                = 'Create a new playlist';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Playlist Name';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Name for your new playlist';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Are you sure?';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Do you want to remove this playlist saved on your device?';
+        Constants.STRING_CANCEL                                          = 'CANCEL';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
+        Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
       }
       break;
       case LanguageRegion.slSi: {
@@ -386,6 +409,18 @@ class ConstantsUpdater {
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
         Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
+        Constants.STRING_PLAYLIST                                        = 'Playlist';
+        Constants.STRING_PLAYLISTS                                       = 'Playlists';
+        Constants.STRING_PLAYLISTS_SUBHEADER                             = 'Playlists created by you';
+        Constants.STRING_PLAYLISTS_CREATE                                = 'Create a new playlist';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Playlist Name';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Name for your new playlist';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Are you sure?';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Do you want to remove this playlist saved on your device?';
+        Constants.STRING_CANCEL                                          = 'CANCEL';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
+        Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -508,6 +543,18 @@ class ConstantsUpdater {
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
         Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
+        Constants.STRING_PLAYLIST                                        = 'Playlist';
+        Constants.STRING_PLAYLISTS                                       = 'Playlists';
+        Constants.STRING_PLAYLISTS_SUBHEADER                             = 'Playlists created by you';
+        Constants.STRING_PLAYLISTS_CREATE                                = 'Create a new playlist';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Playlist Name';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Name for your new playlist';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Are you sure?';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Do you want to remove this playlist saved on your device?';
+        Constants.STRING_CANCEL                                          = 'CANCEL';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
+        Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -630,6 +677,18 @@ class ConstantsUpdater {
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
         Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
+        Constants.STRING_PLAYLIST                                        = 'Playlist';
+        Constants.STRING_PLAYLISTS                                       = 'Playlists';
+        Constants.STRING_PLAYLISTS_SUBHEADER                             = 'Playlists created by you';
+        Constants.STRING_PLAYLISTS_CREATE                                = 'Create a new playlist';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Playlist Name';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Name for your new playlist';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Are you sure?';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Do you want to remove this playlist saved on your device?';
+        Constants.STRING_CANCEL                                          = 'CANCEL';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
+        Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
       }
       break;
       case LanguageRegion.deDe: {
@@ -752,6 +811,18 @@ class ConstantsUpdater {
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
         Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
+        Constants.STRING_PLAYLIST                                        = 'Playlist';
+        Constants.STRING_PLAYLISTS                                       = 'Playlists';
+        Constants.STRING_PLAYLISTS_SUBHEADER                             = 'Playlists created by you';
+        Constants.STRING_PLAYLISTS_CREATE                                = 'Create a new playlist';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Playlist Name';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Name for your new playlist';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Are you sure?';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Do you want to remove this playlist saved on your device?';
+        Constants.STRING_CANCEL                                          = 'CANCEL';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
+        Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
       }
     }
   }
