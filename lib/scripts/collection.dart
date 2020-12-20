@@ -482,12 +482,12 @@ class Collection {
     );
   }
 
-  Future<void> playlistAdd(String playlistName) async {
+  Future<void> playlistAdd(Playlist playlist) async {
     if (this.playlists.length == 0) {
-      this.playlists.add(new Playlist(playlistName: playlistName, playlistId: 0));
+      this.playlists.add(new Playlist(playlistName: playlist.playlistName, playlistId: 0));
     }
     else {
-      this.playlists.add(new Playlist(playlistName: playlistName, playlistId: this.playlists.last.playlistId + 1));
+      this.playlists.add(new Playlist(playlistName: playlist.playlistName, playlistId: this.playlists.last.playlistId + 1));
     }
     await this.playlistsSaveToCache();
   }
