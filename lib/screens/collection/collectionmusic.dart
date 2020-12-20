@@ -3,21 +3,21 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:harmonoid/screens/collectionalbum.dart';
-import 'package:harmonoid/screens/collectiontrack.dart';
+import 'package:harmonoid/screens/collection/collectionalbum.dart';
+import 'package:harmonoid/screens/collection/collectiontrack.dart';
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/appstate.dart';
 import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/constants/constants.dart';
 
 
-class MusicCollectionSearch extends StatefulWidget {
-  MusicCollectionSearch({Key key}) : super(key: key);
-  MusicCollectionSearchState createState() => MusicCollectionSearchState();
+class CollectionMusicSearch extends StatefulWidget {
+  CollectionMusicSearch({Key key}) : super(key: key);
+  CollectionMusicSearchState createState() => CollectionMusicSearchState();
 }
 
 
-class MusicCollectionSearchState extends State<MusicCollectionSearch> {
+class CollectionMusicSearchState extends State<CollectionMusicSearch> {
   List<Widget> _albumResults = new List<Widget>();
   List<Widget> _trackResults = new List<Widget>();
   List<Widget> _artistResults = new List<Widget>();
@@ -151,12 +151,12 @@ class MusicCollectionSearchState extends State<MusicCollectionSearch> {
 }
 
 
-class MusicCollectionHome extends StatefulWidget {
-  MusicCollectionHome({Key key}) : super(key: key);
-  MusicCollectionHomeState createState() => MusicCollectionHomeState();
+class CollectionMusic extends StatefulWidget {
+  CollectionMusic({Key key}) : super(key: key);
+  CollectionMusicState createState() => CollectionMusicState();
 }
 
-class MusicCollectionHomeState extends State<MusicCollectionHome> with SingleTickerProviderStateMixin {
+class CollectionMusicState extends State<CollectionMusic> with SingleTickerProviderStateMixin {
   int _elementsPerRow = 2;
   TabController _tabController;
   ScrollController _scrollController = new ScrollController();
@@ -680,11 +680,7 @@ class MusicCollectionHomeState extends State<MusicCollectionHome> with SingleTic
               splashRadius: Theme.of(context).iconTheme.size - 4,
               tooltip: Constants.STRING_SEARCH_COLLECTION,
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => MusicCollectionSearch(),
-                  ),
-                );
+                Navigator.of(context).pushNamed('collectionMusicSearch');
               },
             ),
             IconButton(

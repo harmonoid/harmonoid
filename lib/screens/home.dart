@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:animations/animations.dart';
 
-import 'package:harmonoid/screens/musiccollection.dart';
+import 'package:harmonoid/screens/collection/collectionmusic.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
 import 'package:harmonoid/constants/constants.dart';
 
@@ -30,11 +31,23 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         child: Text('Coming Soon...')
       ),
       Navigator(
-        initialRoute: 'musicCollectionHome',
+        initialRoute: 'collectionMusic',
         onGenerateRoute: (RouteSettings routeSettings) {
-          MaterialPageRoute route;
-          if (routeSettings.name == 'musicCollectionHome') {
-            route = new MaterialPageRoute(builder: (BuildContext context) => MusicCollectionHome());
+          Route<dynamic> route;
+          if (routeSettings.name == 'collectionMusic') {
+            route = new MaterialPageRoute(builder: (BuildContext context) => CollectionMusic());
+          }
+          if (routeSettings.name == 'collectionMusicSearch') {
+            route = new PageRouteBuilder(
+              transitionDuration: Duration(milliseconds: 400),
+              reverseTransitionDuration: Duration(milliseconds: 400),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeThroughTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                child: child,
+              ),
+              pageBuilder: (context, animation, secondaryAnimation) => CollectionMusicSearch(),
+            );
           }
           return route;
         },

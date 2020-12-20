@@ -352,7 +352,7 @@ class Collection {
     List<Map<String, dynamic>> tracks = <Map<String, dynamic>>[];
     collection.tracks.forEach((element) => tracks.add(element.toDictionary()));
 
-    await File(path.join(this.cacheDirectory.path, 'musicCollection.dart')).writeAsString(encoder.convert({'tracks': tracks}));
+    await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).writeAsString(encoder.convert({'tracks': tracks}));
   }
 
   Future<Collection> getFromCache() async {
@@ -364,12 +364,12 @@ class Collection {
     this._foundAlbums.clear();
     this._foundArtists.clear();
 
-    if (!await File(path.join(this.cacheDirectory.path, 'musicCollection.dart')).exists()) {
+    if (!await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).exists()) {
       if (this.collectionDirectory.listSync().length != 0) await this.refresh();
       await this.saveToCache();
     }
     else {
-      Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'musicCollection.dart')).readAsString());
+      Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).readAsString());
 
       for (Map<String, dynamic> track in collection['tracks']) {
         String year = track['year'];
@@ -532,12 +532,12 @@ class Collection {
     for (Playlist playlist in this.playlists) {
       playlists.add(playlist.toDictionary());
     }
-    File playlistFile = File(path.join(this.cacheDirectory.path, 'playlists.json'));
+    File playlistFile = File(path.join(this.cacheDirectory.path, 'collectionPlaylists.json'));
     await playlistFile.writeAsString(JsonEncoder.withIndent('    ').convert({'playlists': playlists}));
   }
 
   Future<void> playlistsGetFromCache() async {
-    File playlistFile = File(path.join(this.cacheDirectory.path, 'playlists.json'));
+    File playlistFile = File(path.join(this.cacheDirectory.path, 'collectionPlaylists.json'));
     if (!await playlistFile.exists()) await this.playlistsSaveToCache();
     else {
       List<dynamic> playlists = convert.jsonDecode(await playlistFile.readAsString())['playlists'];
