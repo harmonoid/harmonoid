@@ -33,6 +33,7 @@ class HarmonoidState extends State<Harmonoid> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'harmonoid',
       theme: new ThemeData(
         splashFactory: InkRipple.splashFactory,
@@ -66,6 +67,38 @@ class HarmonoidState extends State<Harmonoid> {
           backgroundColor: Colors.deepPurpleAccent[700],
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white54,
+        ),
+        primaryTextTheme: new TextTheme(
+          headline1: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.black87,
+            fontSize: 18,
+          ),
+          headline2: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.black87,
+            fontSize: 16,
+          ),
+          headline3: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.black54,
+            fontSize: 16,
+          ),
+          headline4: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.black54,
+            fontSize: 14,
+          ),
+          headline5: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.black54,
+            fontSize: 12,
+          ),
+          headline6: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.black87,
+            fontSize: 20,
+          ),
         ),
         textTheme: new TextTheme(
           headline1: TextStyle(
@@ -132,6 +165,38 @@ class HarmonoidState extends State<Harmonoid> {
           backgroundColor: Color.fromRGBO(42, 42, 42, 1),
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white54,
+        ),
+        primaryTextTheme: new TextTheme(
+          headline1: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.white.withOpacity(0.87),
+            fontSize: 18,
+          ),
+          headline2: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.white.withOpacity(0.87),
+            fontSize: 16,
+          ),
+          headline3: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.white.withOpacity(0.54),
+            fontSize: 16,
+          ),
+          headline4: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.white.withOpacity(0.54),
+            fontSize: 14,
+          ),
+          headline5: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.white.withOpacity(0.54),
+            fontSize: 12,
+          ),
+          headline6: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: Colors.white.withOpacity(0.87),
+            fontSize: 20,
+          ),
         ),
         textTheme: new TextTheme(
           headline1: TextStyle(

@@ -173,6 +173,74 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                     ),
                   );
                 }
+                break;
+                case 2: {
+                  showDialog(
+                    context: context,
+                    builder: (subContext) => AlertDialog(
+                      contentPadding: EdgeInsets.zero,
+                      actionsPadding: EdgeInsets.zero,
+                      title: Text(
+                        Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE,
+                        style: Theme.of(subContext).textTheme.headline1,
+                      ),
+                      content: Container(
+                        height: 280,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 24, top: 8, bottom: 16),
+                              child: Text(
+                                Constants.STRING_PLAYLIST_ADD_DIALOG_BODY,
+                                style: Theme.of(subContext).textTheme.headline4,
+                              ),
+                            ),
+                            Container(
+                              height: 236,
+                              width: 280,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  top: BorderSide(color: Theme.of(context).iconTheme.color, width: 0.5),
+                                  bottom: BorderSide(color: Theme.of(context).iconTheme.color, width: 0.5),
+                                )
+                              ),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: collection.playlists.length,
+                                itemBuilder: (BuildContext context, int playlistIndex) => ListTile(
+                                  title: Text(collection.playlists[playlistIndex].playlistName, style: Theme.of(context).textTheme.headline2),
+                                  leading: Icon(
+                                    Icons.queue_music,
+                                    size: Theme.of(context).iconTheme.size,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                  onTap: () async {
+                                    await collection.playlistAddTrack(
+                                    collection.playlists[playlistIndex],
+                                    track,
+                                    );
+                                    Navigator.of(subContext).pop();
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        MaterialButton(
+                          textColor: Theme.of(context).primaryColor,
+                          onPressed: Navigator.of(subContext).pop,
+                          child: Text(Constants.STRING_CANCEL),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                break;
               }
             },
             icon: Icon(Icons.more_vert, color: Theme.of(context).iconTheme.color, size: Theme.of(context).iconTheme.size),

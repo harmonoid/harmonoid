@@ -15,13 +15,6 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
   int _index = 1;
-  ScrollController _scrollController = new ScrollController();
-
-  @override
-  void dispose() {
-    this._scrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -3,9 +3,10 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/screens/collection/collectionalbum.dart';
 import 'package:harmonoid/screens/collection/collectiontrack.dart';
-import 'package:harmonoid/scripts/collection.dart';
+import 'package:harmonoid/screens/collection/collectionplaylist.dart';
 import 'package:harmonoid/scripts/appstate.dart';
 import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/constants/constants.dart';
@@ -159,12 +160,13 @@ class CollectionMusic extends StatefulWidget {
 class CollectionMusicState extends State<CollectionMusic> with SingleTickerProviderStateMixin {
   int _elementsPerRow = 2;
   TabController _tabController;
-  ScrollController _scrollController = new ScrollController();
   List<Widget> children = <Widget>[Center(child: CircularProgressIndicator())];
   List<Widget> trackChildren = new List<Widget>();
   List<Widget> albumChildren = new List<Widget>();
   List<Widget> artistChildren = new List<Widget>();
+  List<Widget> playlistChildren = new List<Widget>();
   IconData _themeIcon = Icons.brightness_medium;
+  TextEditingController _textFieldController = new TextEditingController();
   bool _init = true;
 
   void refreshAlbums() {
@@ -615,14 +617,173 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
     this.setState(() {});
   }
 
+  void refreshPlaylists() {
+    this.playlistChildren = <Widget>[];
+    List<Widget> playlistChildren = <Widget>[];
+    for (Playlist playlist in collection.playlists) {
+      playlistChildren.add(
+        new ListTile(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) => CollectionPlaylist(
+                  playlist: playlist,
+                ),
+              ),
+            );
+          },
+          onLongPress: () => showDialog(
+            context: context,
+            builder: (subContext) => AlertDialog(
+              title: Text(
+                Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER,
+                style: Theme.of(subContext).textTheme.headline1,
+              ),
+              content: Text(
+                Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY,
+                style: Theme.of(subContext).textTheme.headline4,
+              ),
+              actions: [
+                MaterialButton(
+                  textColor: Theme.of(context).primaryColor,
+                  onPressed: () async {
+                    await collection.playlistRemove(playlist);
+                    Navigator.of(subContext).pop();
+                    this._refresh(new Playlist());
+                  },
+                  child: Text(Constants.STRING_YES),
+                ),
+                MaterialButton(
+                  textColor: Theme.of(context).primaryColor,
+                  onPressed: Navigator.of(subContext).pop,
+                  child: Text(Constants.STRING_NO),
+                ),
+              ],
+            ),
+          ),
+          leading: playlist.tracks.length != 0 ? CircleAvatar(
+            backgroundImage: FileImage(collection.getAlbumArt(playlist.tracks.last.albumArtId)),
+          ) : Icon(
+            Icons.queue_music,
+            size: Theme.of(context).iconTheme.size,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          title: Text(playlist.playlistName),
+          trailing: IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.play_arrow,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            iconSize: Theme.of(context).iconTheme.size,
+            splashRadius: Theme.of(context).iconTheme.size - 4,
+          ),
+        )
+      );
+    }
+    playlistChildren = playlistChildren.reversed.toList();
+
+    this.playlistChildren.addAll(
+      [
+        Container(
+          margin: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+          child: Card(
+            elevation: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(left: 16, top: 16, bottom: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(Constants.STRING_PLAYLISTS, style: Theme.of(context).textTheme.headline1),
+                      Text(Constants.STRING_PLAYLISTS_SUBHEADER, style: Theme.of(context).textTheme.headline4),
+                    ],
+                  ),
+                ),
+                ExpansionTile(
+                  maintainState: true,
+                  childrenPadding: EdgeInsets.only(top: 12, bottom: 12, left: 16, right: 16),
+                  leading: Icon(
+                    Icons.queue_music,
+                    size: Theme.of(context).iconTheme.size,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  trailing: Icon(
+                    Icons.add,
+                    size: Theme.of(context).iconTheme.size,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  title: Text(Constants.STRING_PLAYLISTS_CREATE, style: Theme.of(context).textTheme.headline2),
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: this._textFieldController,
+                            cursorWidth: 1,
+                            autofocus: true,
+                            autocorrect: true,
+                            onSubmitted: (String value) async {
+                              await collection.playlistAdd(new Playlist(playlistName: value));
+                              this._textFieldController.clear();
+                              this._refresh(new Playlist());
+                            },
+                            decoration: InputDecoration(
+                              labelText: Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL,
+                              hintText: Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT,
+                              labelStyle: TextStyle(color: Theme.of(context).accentColor),
+                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1)),
+                              border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1)),
+                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1)),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 56,
+                          width: 56,
+                          alignment: Alignment.center,
+                          child: IconButton(
+                            onPressed: () async {
+                              await collection.playlistAdd(new Playlist(playlistName: this._textFieldController.text));
+                              this._textFieldController.clear();
+                              this._refresh(new Playlist());
+                            },
+                            icon: Icon(
+                              Icons.check,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            iconSize: 24,
+                            splashRadius: 20,
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ] + playlistChildren,
+            ),
+          ),
+        )
+      ],
+    );
+    
+    this.setState(() {});
+  }
+
   void _refresh(dynamic musicCollectionCurrentTab) {
     this.refreshAlbums();
     this.refreshTracks();
     this.refreshArtists();
+    this.refreshPlaylists();
     this.setState(() {
       if (musicCollectionCurrentTab is Album) this.children = this.albumChildren;
       else if (musicCollectionCurrentTab is Track) this.children = this.trackChildren;
       else if (musicCollectionCurrentTab is Artist) this.children = this.artistChildren;
+      else if (musicCollectionCurrentTab is Playlist) this.children = this.playlistChildren;
     });
   }
 
@@ -631,7 +792,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
     super.initState();
     AppState.musicCollectionRefresh = this._refresh;
     AppState.musicCollectionCurrentTab = new Album();
-    this._tabController = TabController(initialIndex: 0, length: 3, vsync: this);
+    this._tabController = TabController(initialIndex: 0, length: 4, vsync: this);
   }
 
   @override
@@ -642,6 +803,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
       this.refreshAlbums();
       this.refreshTracks();
       this.refreshArtists();
+      this.refreshPlaylists();
       this.children = this.albumChildren;
     }
     this._init = false;
@@ -651,14 +813,12 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   void dispose() {
     AppState.musicCollectionRefresh = null;
     AppState.musicCollectionCurrentTab = null;
-    this._scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      controller: this._scrollController,
       slivers: [
         SliverAppBar(
           forceElevated: true,
@@ -711,7 +871,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
             isScrollable: true,
             onTap: (int index) {
               this._tabController.animateTo(index);
-              AppState.musicCollectionCurrentTab = <dynamic>[new Album(), new Track(), new Artist()][this._tabController.index];
+              AppState.musicCollectionCurrentTab = <dynamic>[new Album(), new Track(), new Artist(), new Playlist()][this._tabController.index];
               if (AppState.musicCollectionRefresh != null) AppState.musicCollectionRefresh(AppState.musicCollectionCurrentTab);
             },
             tabs: [
@@ -732,6 +892,13 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
               Tab(
                 child: Text(
                   Constants.STRING_ARTIST.toUpperCase(), style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                  )
+                ),
+              ),
+              Tab(
+                child: Text(
+                  Constants.STRING_PLAYLIST.toUpperCase(), style: TextStyle(
                     color: Theme.of(context).accentColor,
                   )
                 ),
