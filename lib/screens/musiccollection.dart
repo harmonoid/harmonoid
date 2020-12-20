@@ -143,7 +143,7 @@ class MusicCollectionSearchState extends State<MusicCollectionSearch> {
               children: this._albumResults,
             ),
           ),
-          this.noTracks() ? Container(): SubHeader(Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER),
+          this.noTracks() ? Container(): SubHeader(Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER),
         ] + (this.noTracks() ? [Container()]: this._trackResults),
       ),
     );
@@ -156,10 +156,8 @@ class MusicCollectionHome extends StatefulWidget {
   MusicCollectionHomeState createState() => MusicCollectionHomeState();
 }
 
-class MusicCollectionHomeState extends State<MusicCollectionHome> with TickerProviderStateMixin {
+class MusicCollectionHomeState extends State<MusicCollectionHome> with SingleTickerProviderStateMixin {
   int _elementsPerRow = 2;
-  Animation<double> _opacity;
-  AnimationController _controller;
   TabController _tabController;
   ScrollController _scrollController = new ScrollController();
   List<Widget> children = <Widget>[Center(child: CircularProgressIndicator())];
@@ -634,24 +632,6 @@ class MusicCollectionHomeState extends State<MusicCollectionHome> with TickerPro
     AppState.musicCollectionRefresh = this._refresh;
     AppState.musicCollectionCurrentTab = new Album();
     this._tabController = TabController(initialIndex: 0, length: 3, vsync: this);
-    this._controller = new AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-      reverseDuration: Duration(milliseconds: 200),
-    );
-    this._opacity = new Tween<double>(begin: 1.0, end: 0.0).animate(new CurvedAnimation(
-      parent: this._controller,
-      curve: Curves.easeInOutCubic,
-      reverseCurve: Curves.easeInOutCubic,
-    ));
-    this._scrollController.addListener(() {
-      if (this._scrollController.position.userScrollDirection == ScrollDirection.reverse && this._controller.isDismissed) {
-        this._controller.forward();
-      }
-      else if (this._scrollController.position.userScrollDirection == ScrollDirection.forward  && this._controller.isCompleted) {
-        this._controller.reverse();
-      }
-    });
   }
 
   @override
@@ -684,7 +664,7 @@ class MusicCollectionHomeState extends State<MusicCollectionHome> with TickerPro
           forceElevated: true,
           pinned: true,
           floating: true,
-          snap: true,
+          snap: false,
           leading: IconButton(
             icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
             iconSize: Theme.of(context).iconTheme.size,
@@ -729,45 +709,38 @@ class MusicCollectionHomeState extends State<MusicCollectionHome> with TickerPro
             ),
           ],
           expandedHeight: 56.0 + 48.0,
-          flexibleSpace: Container(
-            margin: EdgeInsets.only(top: 56 + MediaQuery.of(context).padding.top, left: 56),
-            height: 48,
-            child: FadeTransition(
-              opacity: this._opacity,
-              child: TabBar(
-                controller: this._tabController,
-                indicatorColor: Theme.of(context).accentColor,
-                isScrollable: true,
-                onTap: (int index) {
-                  this._tabController.animateTo(index);
-                  AppState.musicCollectionCurrentTab = <dynamic>[new Album(), new Track(), new Artist()][this._tabController.index];
-                  if (AppState.musicCollectionRefresh != null) AppState.musicCollectionRefresh(AppState.musicCollectionCurrentTab);
-                },
-                tabs: [
-                  Tab(
-                    child: Text(
-                      Constants.STRING_ALBUM.toUpperCase(), style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                      )
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      Constants.STRING_TRACK.toUpperCase(), style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                      )
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      Constants.STRING_ARTIST.toUpperCase(), style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                      )
-                    ),
-                  ),
-                ],
+          bottom: TabBar(
+            controller: this._tabController,
+            indicatorColor: Theme.of(context).accentColor,
+            isScrollable: true,
+            onTap: (int index) {
+              this._tabController.animateTo(index);
+              AppState.musicCollectionCurrentTab = <dynamic>[new Album(), new Track(), new Artist()][this._tabController.index];
+              if (AppState.musicCollectionRefresh != null) AppState.musicCollectionRefresh(AppState.musicCollectionCurrentTab);
+            },
+            tabs: [
+              Tab(
+                child: Text(
+                  Constants.STRING_ALBUM.toUpperCase(), style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                  )
+                ),
               ),
-            ),
+              Tab(
+                child: Text(
+                  Constants.STRING_TRACK.toUpperCase(), style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                  )
+                ),
+              ),
+              Tab(
+                child: Text(
+                  Constants.STRING_ARTIST.toUpperCase(), style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                  )
+                ),
+              ),
+            ],
           ),
         ),
         SliverList(
