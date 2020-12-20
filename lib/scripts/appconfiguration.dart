@@ -22,6 +22,7 @@ class AppConfiguration {
   Map<dynamic, dynamic> configurationMap;
 
   AppConfiguration(Directory cacheDirectory) {
+    if (!cacheDirectory.existsSync()) cacheDirectory.createSync(recursive: true);
     this.configurationFile = File(path.join(cacheDirectory.path, 'appConfiguration.json'));
   }
 

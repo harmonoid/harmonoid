@@ -188,7 +188,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.file(
-                  collection.getAlbumArt(collection.albums.last.albumArtId),
+                  collection.getAlbumArt(collection.albums.first.albumArtId),
                   fit: BoxFit.fill,
                   filterQuality: FilterQuality.low,
                   height: 156,
@@ -202,21 +202,21 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        collection.albums.last.albumName,
+                        collection.albums.first.albumName,
                         style: Theme.of(context).textTheme.headline1,
                         textAlign: TextAlign.start,
                         maxLines: 2,
                       ),
                       Text(
-                        collection.albums.last.artistNames.length < 2 ? 
-                        collection.albums.last.artistNames.join(', ') : 
-                        collection.albums.last.artistNames.sublist(0, 2).join(', '),
+                        collection.albums.first.artistNames.length < 2 ? 
+                        collection.albums.first.artistNames.join(', ') : 
+                        collection.albums.first.artistNames.sublist(0, 2).join(', '),
                         style: Theme.of(context).textTheme.headline3,
                         textAlign: TextAlign.start,
                         maxLines: 1,
                       ),
                       Text(
-                        '(${collection.albums.last.year})',
+                        '(${collection.albums.first.year})',
                         style: Theme.of(context).textTheme.headline4,
                         textAlign: TextAlign.start,
                         maxLines: 1,
@@ -228,7 +228,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
             ),
           ),
           openBuilder: (_, __) => CollectionAlbum(
-            album: collection.albums.last,
+            album: collection.albums.first,
           ),
         ),
       ),
@@ -315,7 +315,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                 alignment: Alignment.center,
                 child: ClipOval(
                   child: Image.file(
-                    collection.getAlbumArt(collection.artists.last.tracks.last.albumArtId),
+                    collection.getAlbumArt(collection.artists.first.tracks.first.albumArtId),
                     fit: BoxFit.fill,
                     filterQuality: FilterQuality.low,
                     height: 132,
@@ -333,7 +333,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      collection.artists.last.artistName,
+                      collection.artists.first.artistName,
                       style: Theme.of(context).textTheme.headline1,
                       textAlign: TextAlign.start,
                       maxLines: 1,
@@ -366,7 +366,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   alignment: Alignment.center,
                   child: ClipOval(
                     child: Image.file(
-                      collection.getAlbumArt(collection.artists[index].tracks.last.albumArtId),
+                      collection.getAlbumArt(collection.artists[index].tracks.first.albumArtId),
                       fit: BoxFit.fill,
                       filterQuality: FilterQuality.low,
                       height: 132,
@@ -444,7 +444,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     alignment: Alignment.center,
                     child: ClipOval(
                       child: Image.file(
-                        collection.getAlbumArt(collection.artists[index].tracks.last.albumArtId),
+                        collection.getAlbumArt(collection.artists[index].tracks.first.albumArtId),
                         fit: BoxFit.fill,
                         filterQuality: FilterQuality.low,
                         height: 132,
@@ -526,7 +526,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.file(
-                collection.getAlbumArt(collection.tracks.last.albumArtId),
+                collection.getAlbumArt(collection.tracks.first.albumArtId),
                 fit: BoxFit.fitWidth,
                 filterQuality: FilterQuality.low,
                 alignment: Alignment.topCenter,
@@ -541,7 +541,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     width: 64,
                     alignment: Alignment.center,
                     child: CircleAvatar(
-                      child: Text(collection.tracks.last.trackNumber),
+                      child: Text(collection.tracks.first.trackNumber),
                     ),
                   ),
                   Container(
@@ -558,7 +558,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                         Container(
                           height: 20,
                           child: Text(
-                            collection.tracks.last.trackName,
+                            collection.tracks.first.trackName,
                             style: Theme.of(context).textTheme.headline1,
                             textAlign: TextAlign.start,
                             maxLines: 1,
@@ -569,7 +569,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                           height: 2,
                         ),
                         Text(
-                          collection.tracks.last.albumName,
+                          collection.tracks.first.albumName,
                           style: Theme.of(context).textTheme.headline2,
                           textAlign: TextAlign.start,
                           maxLines: 1,
@@ -579,15 +579,15 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                           height: 4,
                         ),
                         Text(
-                          collection.tracks.last.artistNames.length < 2 ? 
-                          collection.tracks.last.artistNames.join(', ') : 
-                          collection.tracks.last.artistNames.sublist(0, 2).join(', '),
+                          collection.tracks.first.artistNames.length < 2 ? 
+                          collection.tracks.first.artistNames.join(', ') : 
+                          collection.tracks.first.artistNames.sublist(0, 2).join(', '),
                           style: Theme.of(context).textTheme.headline4,
                           maxLines: 1,
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          '(${collection.tracks.last.year})',
+                          '(${collection.tracks.first.year})',
                           style: Theme.of(context).textTheme.headline4,
                           maxLines: 1,
                           textAlign: TextAlign.center,
@@ -662,7 +662,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
             ),
           ),
           leading: playlist.tracks.length != 0 ? CircleAvatar(
-            backgroundImage: FileImage(collection.getAlbumArt(playlist.tracks.last.albumArtId)),
+            backgroundImage: FileImage(collection.getAlbumArt(playlist.tracks.first.albumArtId)),
           ) : Icon(
             Icons.queue_music,
             size: Theme.of(context).iconTheme.size,
@@ -775,9 +775,37 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   }
 
   void _refresh(dynamic musicCollectionCurrentTab) {
-    this.refreshAlbums();
-    this.refreshTracks();
-    this.refreshArtists();
+    if (collection.albums.length != 0 && collection.tracks.length != 0 && collection.artists.length != 0) {
+      this.refreshAlbums();
+      this.refreshTracks();
+      this.refreshArtists();
+    }
+    else {
+      Widget emptyMusicCollection = Center(
+        child: Container(
+          height: 128,
+          margin: EdgeInsets.only(top: 192),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(
+                Icons.library_music, 
+                size: 64,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              Text(
+                Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline4,
+              )
+            ],
+          ),
+        ),
+      );
+      this.albumChildren.add(emptyMusicCollection);
+      this.trackChildren.add(emptyMusicCollection);
+      this.artistChildren.add(emptyMusicCollection);
+    }
     this.refreshPlaylists();
     this.setState(() {
       if (musicCollectionCurrentTab is Album) this.children = this.albumChildren;
@@ -800,11 +828,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
     super.didChangeDependencies();
     if (this._init) {
       this._elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
-      this.refreshAlbums();
-      this.refreshTracks();
-      this.refreshArtists();
-      this.refreshPlaylists();
-      this.children = this.albumChildren;
+      this._refresh(new Album());
     }
     this._init = false;
   }

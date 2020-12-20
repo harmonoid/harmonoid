@@ -255,7 +255,7 @@ void main() async {
     cacheDirectory: Directory('/home/alex/Documents/cache'),
   );
   await collection.getFromCache();
-  await ConstantsUpdater.update(LanguageRegion.enUs);
+  await ConstantsUpdater.update(await appConfiguration.getConfiguration(Configuration.languageRegion));
 
   print('Time Elapsed : ${stopwatch.elapsedMilliseconds}ms');
   stopwatch.stop();

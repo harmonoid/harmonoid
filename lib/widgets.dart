@@ -11,7 +11,7 @@ class SubHeader extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.headline5,
+        style: Theme.of(context).textTheme.headline4,
       ),
     );
   }
