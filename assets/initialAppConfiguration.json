@@ -5,5 +5,7 @@
     "accent": 0,
     "homeUri": "harmonoid.github.io",
     "collectionStartTab": 0,
-    "collectionDirectoryType": 0
+    "collectionDirectoryType": 0,
+    "collectionSearchRecents": [],
+    "discoverSearchRecents": []
 }
