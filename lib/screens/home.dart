@@ -13,8 +13,29 @@ class Home extends StatefulWidget {
 }
 
 
-class HomeState extends State<Home> with TickerProviderStateMixin {
+class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindingObserver {
   int _index = 1;
+  GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<bool> didPopRoute() async {
+    if (this.navigatorKey.currentState.canPop()) {
+      this.navigatorKey.currentState.pop();
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +45,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         child: Text('Coming Soon...')
       ),
       Navigator(
+        key: this.navigatorKey,
         initialRoute: 'collectionMusic',
         onGenerateRoute: (RouteSettings routeSettings) {
           Route<dynamic> route;
@@ -54,7 +76,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           Expanded(
             child: screens[this._index],
           ),
-          NowPlaying(),
+          NowPlayingTile(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

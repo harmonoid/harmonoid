@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart' as path;
+import 'package:audio_service/audio_service.dart';
 
 import 'package:harmonoid/screens/home.dart';
 import 'package:harmonoid/scripts/collection.dart';
-import 'package:harmonoid/scripts/appstate.dart';
-import 'package:harmonoid/scripts/appconfiguration.dart';
+import 'package:harmonoid/scripts/states.dart';
+import 'package:harmonoid/scripts/configuration.dart';
+import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/constants/constantsupdater.dart';
 
 
@@ -27,7 +30,7 @@ class HarmonoidState extends State<Harmonoid> {
   @override
   void initState() {
     super.initState();
-    AppState.switchTheme = this.switchTheme;
+    States.switchTheme = this.switchTheme;
   }
 
   @override
@@ -46,6 +49,7 @@ class HarmonoidState extends State<Harmonoid> {
         accentColor: Colors.deepPurpleAccent[400],
         textSelectionHandleColor: Colors.deepPurpleAccent[400],
         cardColor: Colors.white,
+        dividerColor: Colors.black12,
         appBarTheme: AppBarTheme(
           color: Colors.white,
           brightness: Brightness.light,
@@ -144,6 +148,7 @@ class HarmonoidState extends State<Harmonoid> {
         accentColor: Colors.deepPurpleAccent[100],
         textSelectionHandleColor: Colors.deepPurpleAccent[100],
         cardColor: Colors.white.withOpacity(0.10),
+        dividerColor: Colors.white12,
         appBarTheme: AppBarTheme(
           color: Color.fromRGBO(42, 42, 42, 1),
           brightness: Brightness.dark,
@@ -242,24 +247,23 @@ class HarmonoidState extends State<Harmonoid> {
 
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
-
-  Stopwatch stopwatch = new Stopwatch()..start();
-  
-  await AppConfiguration.init(
-    cacheDirectory: Directory('/home/alex/Documents/cache'),
+  await Configuration.init(
+    cacheDirectory: await path.getExternalStorageDirectory(),
   );
   await Collection.init(
-    collectionDirectory: Directory('/home/alex/Music'),
-    cacheDirectory: Directory('/home/alex/Documents/cache'),
+    collectionDirectory: Directory('/storage/emulated/0/Music'),
+    cacheDirectory: await path.getExternalStorageDirectory(),
   );
   await collection.getFromCache();
-  await ConstantsUpdater.update(await appConfiguration.getConfiguration(Configuration.languageRegion));
+  await ConstantsUpdater.update(await appConfiguration.getConfiguration(Configurations.languageRegion));
+  runApp(
+    new AudioServiceWidget(
+      child: new Harmonoid(),
+    ),
+  );
+}
 
-  print('Time Elapsed : ${stopwatch.elapsedMilliseconds}ms');
-  stopwatch.stop();
-
-
-  runApp(new Harmonoid());
+void backgroundTaskEntryPoint() {
+  AudioServiceBackground.run(() => BackgroundTask());
 }
