@@ -4,10 +4,10 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart' show rootBundle;
 
 
-AppConfiguration appConfiguration;
+Configuration appConfiguration;
 
 
-class Configuration {
+class Configurations {
   static const String version                    = 'version';
   static const String languageRegion             = 'languageRegion';
   static const String theme                      = 'theme';
@@ -17,17 +17,17 @@ class Configuration {
   static const String collectionDirectoryType    = 'version';
 }
 
-class AppConfiguration {
+class Configuration {
   File configurationFile;
   Map<dynamic, dynamic> configurationMap;
 
-  AppConfiguration(Directory cacheDirectory) {
+  Configuration(Directory cacheDirectory) {
     if (!cacheDirectory.existsSync()) cacheDirectory.createSync(recursive: true);
     this.configurationFile = File(path.join(cacheDirectory.path, 'appConfiguration.json'));
   }
 
   static Future<void> init({Directory cacheDirectory}) async {
-    appConfiguration = new AppConfiguration(cacheDirectory);
+    appConfiguration = new Configuration(cacheDirectory);
     if (!await appConfiguration.configurationFile.exists()) {
       await appConfiguration.configurationFile.writeAsString(await rootBundle.loadString('assets/initialAppConfiguration.json'));
     }
