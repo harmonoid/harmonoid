@@ -408,6 +408,7 @@ class Collection {
             artistNames: artistNames,
             trackName: trackName,
             trackNumber: trackNumber,
+            albumArtId: this._foundAlbums.indexOf(albumName),
             filePath: filePath,
           ),
         ),
