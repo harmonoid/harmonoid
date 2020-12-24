@@ -18,7 +18,7 @@ jobs:
     
     - uses: subosito/flutter-action@v1
       with:
-        channel: 'master'
+        channel: 'stable'
     
     - run: flutter pub get
         
