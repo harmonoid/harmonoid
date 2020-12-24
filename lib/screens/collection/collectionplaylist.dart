@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:harmonoid/constants/constants.dart';
+
 import 'package:harmonoid/scripts/collection.dart';
+import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/widgets.dart';
+import 'package:harmonoid/constants/constants.dart';
 
 
 class CollectionPlaylist extends StatefulWidget {
@@ -31,7 +33,11 @@ class CollectionPlaylistState extends State<CollectionPlaylist> {
     for (Track track in this.playlist.tracks) {
       this._tracks.add(
         new ListTile(
-          onTap: () {},
+          onTap: () => Playback.play(
+            index: this.playlist.tracks.indexOf(track),
+            tracks: this.playlist.tracks,
+          ),
+          isThreeLine: true,
           leading: CircleAvatar(
             child: Text(track.trackNumber),
             backgroundImage: FileImage(collection.getAlbumArt(track.albumArtId)),

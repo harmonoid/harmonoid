@@ -3,7 +3,8 @@ import 'package:animations/animations.dart';
 
 import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/scripts/collection.dart';
-import 'package:harmonoid/scripts/appstate.dart';
+import 'package:harmonoid/scripts/states.dart';
+import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/constants/constants.dart';
 
 
@@ -18,7 +19,7 @@ class CollectionAlbumTile extends StatelessWidget {
       closedColor: Theme.of(context).cardColor,
       openColor: Theme.of(context).scaffoldBackgroundColor,
       closedBuilder: (_, __) => Container(
-        height: 246,
+        height: 236,
         width: 156,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -92,8 +93,6 @@ class CollectionAlbum extends StatefulWidget {
 class CollectionAlbumState extends State<CollectionAlbum> {
   Album album;
   List<Widget> children = new List<Widget>();
-  double _flexibleSpaceBarTitlePosition = 16.0;
-  ScrollController _scrollController = new ScrollController();
   bool _init = true;
 
   @override
@@ -103,18 +102,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
       this.album = widget.album;
       this.refresh();
     }
-    this._scrollController.addListener(() {
-      if (16.0 + this._scrollController.offset * (72.0 - 16.0) / MediaQuery.of(context).size.width < 62.0) {
-        this.setState(() => this._flexibleSpaceBarTitlePosition = 16.0 + this._scrollController.offset * (72.0 - 16.0) / MediaQuery.of(context).size.width);
-      }
-    });
     this._init = false;
-  }
-
-  @override
-  void dispose() {
-    this._scrollController.dispose();
-    super.dispose();
   }
 
   void refresh() {
@@ -123,8 +111,11 @@ class CollectionAlbumState extends State<CollectionAlbum> {
       Track track = this.album.tracks[index];
       this.children.add(
         new ListTile(
-          onTap: () {
-            AppState.setNowPlaying(this.album.tracks, index);
+          onTap: () async {
+            await Playback.play(
+              index: index,
+              tracks: this.album.tracks
+            );
           },
           title: Text(track.trackName),
           subtitle: Text(track.artistNames.join(', ')),
@@ -133,7 +124,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
             backgroundImage: FileImage(collection.getAlbumArt(widget.album.albumArtId)),
           ),
           trailing: PopupMenuButton(
-            color: Theme.of(context).cardColor,
+            color: Theme.of(context).appBarTheme.color,
             elevation: 2,
             onSelected: (index) {
               switch(index) {
@@ -158,8 +149,8 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                             Navigator.of(subContext).pop();
                             if (this.album.tracks.length == 0) {
                               Navigator.of(context).pop();
-                              if (AppState.musicCollectionSearchRefresh != null) AppState.musicCollectionSearchRefresh();
-                              if (AppState.musicCollectionRefresh != null) AppState.musicCollectionRefresh(AppState.musicCollectionCurrentTab);
+                              if (States.musicCollectionSearchRefresh != null) States.musicCollectionSearchRefresh();
+                              if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
                             }
                           },
                           child: Text(Constants.STRING_YES),
@@ -274,7 +265,6 @@ class CollectionAlbumState extends State<CollectionAlbum> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
-        controller: this._scrollController,
         slivers: [
           SliverAppBar(
             brightness: Brightness.dark,
@@ -309,8 +299,8 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                           Navigator.of(subContext).pop();
                           await collection.delete(widget.album);
                           Navigator.of(context).pop();
-                          if (AppState.musicCollectionSearchRefresh != null) AppState.musicCollectionSearchRefresh();
-                          if (AppState.musicCollectionRefresh != null) AppState.musicCollectionRefresh(AppState.musicCollectionCurrentTab);
+                          if (States.musicCollectionSearchRefresh != null) States.musicCollectionSearchRefresh();
+                          if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
                         },
                         child: Text(Constants.STRING_YES),
                       ),
@@ -325,23 +315,17 @@ class CollectionAlbumState extends State<CollectionAlbum> {
               ),
             ],
             expandedHeight: MediaQuery.of(context).size.width,
-            flexibleSpace: TweenAnimationBuilder(
-              tween: Tween<double>(begin: 72.0, end: this._flexibleSpaceBarTitlePosition),
-              child: Image.file(
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                this.album.albumName.split('(')[0].split('[')[0].split('-')[0],
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              background: Image.file(
                 collection.getAlbumArt(widget.album.albumArtId),
                 fit: BoxFit.fill,
                 filterQuality: FilterQuality.low,
-              ),
-              duration: Duration.zero,
-              builder: (_, value, child) => FlexibleSpaceBar(
-                titlePadding: EdgeInsetsDirectional.only(start: value, bottom: 16.0),
-                title: Text(
-                  this.album.albumName.split('(')[0].split('[')[0].split('-')[0],
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                background: child,
               ),
             ),
           ),

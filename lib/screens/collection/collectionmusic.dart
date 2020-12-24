@@ -7,7 +7,8 @@ import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/screens/collection/collectionalbum.dart';
 import 'package:harmonoid/screens/collection/collectiontrack.dart';
 import 'package:harmonoid/screens/collection/collectionplaylist.dart';
-import 'package:harmonoid/scripts/appstate.dart';
+import 'package:harmonoid/scripts/playback.dart';
+import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/constants/constants.dart';
 
@@ -64,12 +65,12 @@ class CollectionMusicSearchState extends State<CollectionMusicSearch> {
       }
       this.setState(() {});
     });
-    AppState.musicCollectionSearchRefresh = this._refresh;
+    States.musicCollectionSearchRefresh = this._refresh;
   }
 
   @override
   void dispose() {
-    AppState.musicCollectionSearchRefresh = null;
+    States.musicCollectionSearchRefresh = null;
     super.dispose();
   }
 
@@ -247,7 +248,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
       if (rowIndex > this._elementsPerRow - 1) {
         this.albumChildren.add(
           new Container(
-            height: 246.0 + 16.0,
+            height: 236.0 + 16.0,
             margin: EdgeInsets.only(left: 16, right: 16),
             alignment: Alignment.topCenter,
             child: Row(
@@ -274,14 +275,14 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
       for (int index = 0; index < this._elementsPerRow - (collection.albums.length % this._elementsPerRow); index++) {
         rowChildren.add(
           Container(
-            height: 246,
+            height: 236,
             width: 156,
           ),
         );
       }
       this.albumChildren.add(
         new Container(
-          height: 246.0 + 16.0,
+          height: 236.0 + 16.0,
           margin: EdgeInsets.only(left: 16, right: 16),
           alignment: Alignment.topCenter,
           child: Row(
@@ -670,7 +671,10 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
           ),
           title: Text(playlist.playlistName),
           trailing: IconButton(
-            onPressed: () {},
+            onPressed: () => Playback.play(
+              index: 0,
+              tracks: playlist.tracks,
+            ),
             icon: Icon(
               Icons.play_arrow,
               color: Theme.of(context).iconTheme.color,
@@ -703,7 +707,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   ),
                 ),
                 ExpansionTile(
-                  maintainState: true,
+                  maintainState: false,
                   childrenPadding: EdgeInsets.only(top: 12, bottom: 12, left: 16, right: 16),
                   leading: Icon(
                     Icons.queue_music,
@@ -728,9 +732,12 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                             autofocus: true,
                             autocorrect: true,
                             onSubmitted: (String value) async {
-                              await collection.playlistAdd(new Playlist(playlistName: value));
-                              this._textFieldController.clear();
-                              this._refresh(new Playlist());
+                              if (value != '') {
+                                FocusScope.of(context).unfocus();
+                                await collection.playlistAdd(new Playlist(playlistName: value));
+                                this._textFieldController.clear();
+                                this._refresh(new Playlist());
+                              }
                             },
                             decoration: InputDecoration(
                               labelText: Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL,
@@ -748,9 +755,12 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                           alignment: Alignment.center,
                           child: IconButton(
                             onPressed: () async {
-                              await collection.playlistAdd(new Playlist(playlistName: this._textFieldController.text));
-                              this._textFieldController.clear();
-                              this._refresh(new Playlist());
+                              if (this._textFieldController.text != '') {
+                                FocusScope.of(context).unfocus();
+                                await collection.playlistAdd(new Playlist(playlistName: this._textFieldController.text));
+                                this._textFieldController.clear();
+                                this._refresh(new Playlist());
+                              }
                             },
                             icon: Icon(
                               Icons.check,
@@ -818,8 +828,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   @override
   void initState() {
     super.initState();
-    AppState.musicCollectionRefresh = this._refresh;
-    AppState.musicCollectionCurrentTab = new Album();
+    States.musicCollectionRefresh = this._refresh;
+    States.musicCollectionCurrentTab = new Album();
     this._tabController = TabController(initialIndex: 0, length: 4, vsync: this);
   }
 
@@ -835,8 +845,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
 
   @override
   void dispose() {
-    AppState.musicCollectionRefresh = null;
-    AppState.musicCollectionCurrentTab = null;
+    States.musicCollectionRefresh = null;
+    States.musicCollectionCurrentTab = null;
     super.dispose();
   }
 
@@ -874,9 +884,9 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
               tooltip: Constants.STRING_SWITCH_THEME,
               onPressed: () {
                 this._themeIcon = this._themeIcon == Icons.brightness_medium ? Icons.brightness_high : Icons.brightness_medium;
-                AppState.switchTheme();
+                States.switchTheme();
                 Timer(Duration(milliseconds: 400), () {
-                  if (AppState.musicCollectionRefresh != null) AppState.musicCollectionRefresh(AppState.musicCollectionCurrentTab);
+                  if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
                 });
               },
             ),
@@ -895,8 +905,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
             isScrollable: true,
             onTap: (int index) {
               this._tabController.animateTo(index);
-              AppState.musicCollectionCurrentTab = <dynamic>[new Album(), new Track(), new Artist(), new Playlist()][this._tabController.index];
-              if (AppState.musicCollectionRefresh != null) AppState.musicCollectionRefresh(AppState.musicCollectionCurrentTab);
+              States.musicCollectionCurrentTab = <dynamic>[new Album(), new Track(), new Artist(), new Playlist()][this._tabController.index];
+              if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
             },
             tabs: [
               Tab(
@@ -922,7 +932,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
               ),
               Tab(
                 child: Text(
-                  Constants.STRING_PLAYLIST.toUpperCase(), style: TextStyle(
+                  Constants.STRING_PLAYLISTS.toUpperCase(), style: TextStyle(
                     color: Theme.of(context).accentColor,
                   )
                 ),

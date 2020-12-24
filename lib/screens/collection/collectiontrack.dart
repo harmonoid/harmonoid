@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/scripts/collection.dart';
-import 'package:harmonoid/scripts/appstate.dart';
+import 'package:harmonoid/scripts/playback.dart';
+import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/constants/constants.dart';
 
 
@@ -11,7 +12,10 @@ class CollectionTrackTile extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {},
+      onTap: () => Playback.play(
+        index: collection.tracks.indexOf(track),
+        tracks: collection.tracks,
+      ),
       dense: false,
       isThreeLine: true,
       leading: CircleAvatar(
@@ -27,7 +31,7 @@ class CollectionTrackTile extends StatelessWidget {
       ),
       trailing: PopupMenuButton(
         elevation: 2,
-        color: Theme.of(context).cardColor,
+        color: Theme.of(context).appBarTheme.color,
         onSelected: (index) {
           switch(index) {
             case 0: {
@@ -47,8 +51,8 @@ class CollectionTrackTile extends StatelessWidget {
                       textColor: Theme.of(context).primaryColor,
                       onPressed: () async {
                         await collection.delete(this.track);
-                        if (AppState.musicCollectionSearchRefresh != null) AppState.musicCollectionSearchRefresh();
-                        if (AppState.musicCollectionRefresh != null) AppState.musicCollectionRefresh(AppState.musicCollectionCurrentTab);
+                        if (States.musicCollectionSearchRefresh != null) States.musicCollectionSearchRefresh();
+                        if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
                         Navigator.of(subContext).pop();
                       },
                       child: Text(Constants.STRING_YES),
