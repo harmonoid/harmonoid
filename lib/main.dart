@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:animations/animations.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:audio_service/audio_service.dart';
 
@@ -8,6 +9,7 @@ import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/scripts/playback.dart';
+import 'package:harmonoid/screens/nowplaying.dart';
 import 'package:harmonoid/constants/constantsupdater.dart';
 
 
@@ -50,6 +52,10 @@ class HarmonoidState extends State<Harmonoid> {
         textSelectionHandleColor: Colors.deepPurpleAccent[400],
         cardColor: Colors.white,
         dividerColor: Colors.black12,
+        tabBarTheme: TabBarTheme(
+          labelColor: Colors.deepPurpleAccent[700],
+          unselectedLabelColor: Colors.black54,
+        ),
         appBarTheme: AppBarTheme(
           color: Colors.white,
           brightness: Brightness.light,
@@ -149,6 +155,10 @@ class HarmonoidState extends State<Harmonoid> {
         textSelectionHandleColor: Colors.deepPurpleAccent[100],
         cardColor: Colors.white.withOpacity(0.10),
         dividerColor: Colors.white12,
+        tabBarTheme: TabBarTheme(
+          labelColor: Colors.deepPurpleAccent[100],
+          unselectedLabelColor: Colors.white.withOpacity(0.54),
+        ),
         appBarTheme: AppBarTheme(
           color: Color.fromRGBO(42, 42, 42, 1),
           brightness: Brightness.dark,
@@ -237,9 +247,22 @@ class HarmonoidState extends State<Harmonoid> {
         ),
       ),
       themeMode: this._themeMode,
-      initialRoute: 'home',
-      routes: {
-        'home': (BuildContext context) => new Home(),
+      home: Home(),
+      onGenerateRoute: (RouteSettings routeSettings) {
+        PageRoute route;
+        if (routeSettings.name == 'nowPlaying') {
+          route = new PageRouteBuilder(
+            transitionDuration: Duration(milliseconds: 400),
+            reverseTransitionDuration: Duration(milliseconds: 400),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeThroughTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              child: child,
+            ),
+            pageBuilder: (context, animation, secondaryAnimation) => NowPlaying(),
+          );
+        }
+        return route;
       },
     );
   }

@@ -4,6 +4,7 @@ import 'package:animations/animations.dart';
 
 import 'package:harmonoid/screens/collection/collectionmusic.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
+import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/constants/constants.dart';
 
 
@@ -17,9 +18,14 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
   int _index = 1;
   GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
+  void showNowPlaying() {
+    Navigator.of(context).pushNamed('nowPlaying');
+  }
+
   @override
   void initState() {
     super.initState();
+    States.showNowPlaying = this.showNowPlaying;
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -39,10 +45,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
 
   @override
   Widget build(BuildContext context) {
-
     final List<Widget> screens = <Widget>[
       Center(
-        child: Text('Coming Soon...')
+        child: NowPlaying(),
       ),
       Navigator(
         key: this.navigatorKey,
@@ -67,8 +72,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
           return route;
         },
       ),
+      Center(
+        child: Text('Coming Soon...')
+      ),
     ];
-
     return Scaffold(
       body: Column(
         mainAxisSize: MainAxisSize.max,
@@ -90,6 +97,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
           BottomNavigationBarItem(
             icon: Icon(Icons.library_music),
             label: Constants.STRING_COLLECTION,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: Constants.STRING_SETTING,
           ),
         ],
       ),

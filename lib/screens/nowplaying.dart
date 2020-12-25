@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
 import 'package:audio_service/audio_service.dart';
 
 import 'package:harmonoid/scripts/collection.dart';
+import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/constants/constants.dart';
 
 
@@ -40,78 +40,79 @@ class NowPlayingTileState extends State<NowPlayingTile> {
 
   @override
   Widget build(BuildContext context) {
-    return OpenContainer(
-      transitionDuration: Duration(milliseconds: 400),
-      closedColor: Theme.of(context).cardColor,
-      closedElevation: 0,
-      closedBuilder: (_, __) => Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.only(left: 8, right: 8),
-        height: 56,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: 56,
-              width: 56,
-              padding: EdgeInsets.all(8.0),
-              child: this._track['albumArtId'] != null ? CircleAvatar(
-                backgroundImage: FileImage(collection.getAlbumArt(this._track['albumArtId'])),
-                child: Text('${this._track['trackNumber']}'),
-              ) : CircleAvatar(
-                child: Icon(Icons.music_note),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(top: 0, left: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      this._track['trackName'] ?? Constants.STRING_NOW_PLAYING_NOT_PLAYING_TITLE,
-                      style: Theme.of(context).textTheme.headline2,
-                      maxLines: 1,
-                    ),
-                    Text(
-                      this._track['artistNames'] == null ? Constants.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE : this._track['artistNames'].join(', '),
-                      style: Theme.of(context).textTheme.headline4,
-                      maxLines: 1,
-                    ),
-                  ],
+    return GestureDetector(
+      onTap: States.showNowPlaying,
+      child: Card(
+        shape: RoundedRectangleBorder(),
+        margin: EdgeInsets.zero,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(left: 8, right: 8),
+          height: 56,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                height: 56,
+                width: 56,
+                padding: EdgeInsets.all(8.0),
+                child: this._track['albumArtId'] != null ? CircleAvatar(
+                  backgroundImage: FileImage(collection.getAlbumArt(this._track['albumArtId'])),
+                  child: Text('${this._track['trackNumber']}'),
+                ) : CircleAvatar(
+                  child: Icon(Icons.music_note),
                 ),
               ),
-            ),
-            Container(
-              height: 56,
-              width: 56,
-              padding: EdgeInsets.all(0.0),
-              child: Material(
-                color: Colors.transparent,
-                child: IconButton(
-                  tooltip: this._isPlaying ? Constants.STRING_PAUSE : Constants.STRING_PLAY,
-                  padding: EdgeInsets.all(0.0),
-                  icon: Icon(this._isPlaying ? Icons.pause : Icons.play_arrow),
-                  onPressed: () {
-                    if (this._isPlaying) {
-                      AudioService.pause();
-                    }
-                    else {
-                      AudioService.play();
-                    }
-                  },
-                  iconSize: Theme.of(context).iconTheme.size,
-                  color: Theme.of(context).iconTheme.color,
-                  splashRadius: Theme.of(context).iconTheme.size - 4,
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 0, left: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        this._track['trackName'] ?? Constants.STRING_NOW_PLAYING_NOT_PLAYING_TITLE,
+                        style: Theme.of(context).textTheme.headline2,
+                        maxLines: 1,
+                      ),
+                      Text(
+                        this._track['artistNames'] == null ? Constants.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE : this._track['artistNames'].join(', '),
+                        style: Theme.of(context).textTheme.headline4,
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+              Container(
+                height: 56,
+                width: 56,
+                padding: EdgeInsets.all(0.0),
+                child: Material(
+                  color: Colors.transparent,
+                  child: IconButton(
+                    tooltip: this._isPlaying ? Constants.STRING_PAUSE : Constants.STRING_PLAY,
+                    padding: EdgeInsets.all(0.0),
+                    icon: Icon(this._isPlaying ? Icons.pause : Icons.play_arrow),
+                    onPressed: () {
+                      if (this._isPlaying) {
+                        AudioService.pause();
+                      }
+                      else {
+                        AudioService.play();
+                      }
+                    },
+                    iconSize: Theme.of(context).iconTheme.size,
+                    color: Theme.of(context).iconTheme.color,
+                    splashRadius: Theme.of(context).iconTheme.size - 4,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      openBuilder: (_, __) => NowPlaying(),
     );
   }
 }
@@ -141,7 +142,6 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   List<Widget> _playlist = [Container()];
   Widget _playlistList = Container();
   StreamSubscription _currentMediaItemStreamSubscription;
-  StreamSubscription _currentTrackDurationStreamSubscription;
   StreamSubscription _playingStreamSubscription;
   AnimationController _animationController;
   Animation<double> _animationCurved;
@@ -172,34 +172,6 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
         if (event[0] == 'playing') {
           this.setState(() => this._isPlaying = event[1]);
         }
-      });
-      this._currentMediaItemStreamSubscription = AudioService.currentMediaItemStream.listen((state) {
-        this.setState(() {
-          try {
-            this._albumArt = collection.getAlbumArt(state.extras['albumArtId']);
-            this._trackName = state.title;
-            this._albumName = state.album;
-            this._trackArtist = state.artist;
-            this._trackNumber= state.extras['trackNumber'].toString();
-            this._year = state.extras['year'].toString();
-          }
-          catch(error) {
-            this._animationController1 = new AnimationController(
-              vsync: this,
-              duration: Duration(milliseconds: 400),
-              reverseDuration: Duration(milliseconds: 400),
-            );
-            this._animationCurved1 = Tween<double>(begin: 0, end: 0).animate(
-              new CurvedAnimation(
-                curve: Curves.easeOutCubic,
-                reverseCurve: Curves.easeInCubic,
-                parent: this._animationController1,
-              )
-            );
-          }
-        });
-      });
-      this._currentTrackDurationStreamSubscription = AudioService.customEventStream.listen((event) {
         if (event[0] == 'currentTrackDuration') {
           this.setState(() {
             this._duration = this.trackDuration(event[1]);
@@ -267,6 +239,32 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
           });
         }
       });
+      this._currentMediaItemStreamSubscription = AudioService.currentMediaItemStream.listen((state) {
+        this.setState(() {
+          try {
+            this._albumArt = collection.getAlbumArt(state.extras['albumArtId']);
+            this._trackName = state.title;
+            this._albumName = state.album;
+            this._trackArtist = state.artist;
+            this._trackNumber= state.extras['trackNumber'].toString();
+            this._year = state.extras['year'].toString();
+          }
+          catch(error) {
+            this._animationController1 = new AnimationController(
+              vsync: this,
+              duration: Duration(milliseconds: 400),
+              reverseDuration: Duration(milliseconds: 400),
+            );
+            this._animationCurved1 = Tween<double>(begin: 0, end: 0).animate(
+              new CurvedAnimation(
+                curve: Curves.easeOutCubic,
+                reverseCurve: Curves.easeInCubic,
+                parent: this._animationController1,
+              )
+            );
+          }
+        });
+      });
       AudioService.customAction('currentTrackDuration', []);
       AudioService.customAction('playingTrackDuration', []);
       AudioService.customAction('currentTrackQueue', []);
@@ -308,7 +306,6 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   void dispose() {
     this._playingStreamSubscription.cancel();
     this._currentMediaItemStreamSubscription.cancel();
-    this._currentTrackDurationStreamSubscription.cancel();
     super.dispose();
   }
 

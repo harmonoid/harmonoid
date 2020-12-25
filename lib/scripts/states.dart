@@ -6,5 +6,6 @@ class States {
   static void Function(dynamic musicCollectionCurrentTab) musicCollectionRefresh;
   static void Function() musicCollectionSearchRefresh;
   static ThemeMode Function() switchTheme;
+  static void Function() showNowPlaying;
   static Future<void> Function(Map<String, dynamic> track) setNowPlaying;
 }
