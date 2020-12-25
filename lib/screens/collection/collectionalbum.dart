@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:share/share.dart';
 
 import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/scripts/collection.dart';
@@ -9,8 +10,10 @@ import 'package:harmonoid/constants/constants.dart';
 
 
 class CollectionAlbumTile extends StatelessWidget {
+  final double height;
+  final double width;
   final Album album;
-  CollectionAlbumTile({Key key, @required this.album}) : super(key: key);
+  CollectionAlbumTile({Key key, @required this.album, @required this.height, @required this.width}) : super(key: key);
 
   Widget build(BuildContext context) {
     return OpenContainer(
@@ -19,8 +22,8 @@ class CollectionAlbumTile extends StatelessWidget {
       closedColor: Theme.of(context).cardColor,
       openColor: Theme.of(context).scaffoldBackgroundColor,
       closedBuilder: (_, __) => Container(
-        height: 236,
-        width: 156,
+        height: this.height,
+        width: this.width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,8 +32,8 @@ class CollectionAlbumTile extends StatelessWidget {
               collection.getAlbumArt(this.album.albumArtId),
               fit: BoxFit.fill,
               filterQuality: FilterQuality.low,
-              height: 156,
-              width: 156,
+              height: this.width,
+              width: this.width,
             ),
             Container(
               margin: EdgeInsets.only(left: 2, right: 2),
@@ -64,11 +67,6 @@ class CollectionAlbumTile extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline4,
                     maxLines: 1,
                     textAlign: TextAlign.center,
-                  ),
-                  Divider(
-                    color: Colors.transparent,
-                    height: 4,
-                    thickness: 4,
                   ),
                 ],
               ),
@@ -165,6 +163,13 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                   );
                 }
                 break;
+                case 1: {
+                  Share.shareFiles(
+                    [track.filePath],
+                    subject: '${track.trackName} - ${track.albumName}. Shared using Harmonoid!',
+                  );
+                }
+                break;
                 case 2: {
                   showDialog(
                     context: context,
@@ -194,8 +199,8 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                               width: 280,
                               decoration: BoxDecoration(
                                 border: Border(
-                                  top: BorderSide(color: Theme.of(context).iconTheme.color, width: 0.5),
-                                  bottom: BorderSide(color: Theme.of(context).iconTheme.color, width: 0.5),
+                                  top: BorderSide(color: Theme.of(context).dividerColor, width: 1),
+                                  bottom: BorderSide(color: Theme.of(context).dividerColor, width: 1),
                                 )
                               ),
                               child: ListView.builder(

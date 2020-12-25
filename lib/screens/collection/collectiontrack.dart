@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/playback.dart';
@@ -8,13 +9,17 @@ import 'package:harmonoid/constants/constants.dart';
 
 class CollectionTrackTile extends StatelessWidget {
   final Track track;
-  CollectionTrackTile({Key key, @required this.track});
+  final int index;
+  CollectionTrackTile({Key key, @required this.track, this.index});
 
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () => Playback.play(
-        index: collection.tracks.indexOf(track),
+      onTap: () => this.index != null ? Playback.play(
+        index: this.index,
         tracks: collection.tracks,
+      ) : Playback.play(
+        index: this.index,
+        tracks: <Track>[this.track],
       ),
       dense: false,
       isThreeLine: true,
@@ -67,6 +72,13 @@ class CollectionTrackTile extends StatelessWidget {
               );
             }
             break;
+            case 1: {
+              Share.shareFiles(
+                [track.filePath],
+                subject: '${track.trackName} - ${track.albumName}. Shared using Harmonoid!',
+              );
+            }
+            break;
             case 2: {
               showDialog(
                 context: context,
@@ -96,8 +108,8 @@ class CollectionTrackTile extends StatelessWidget {
                           width: 280,
                           decoration: BoxDecoration(
                             border: Border(
-                              top: BorderSide(color: Theme.of(context).iconTheme.color, width: 0.5),
-                              bottom: BorderSide(color: Theme.of(context).iconTheme.color, width: 0.5),
+                              top: BorderSide(color: Theme.of(context).dividerColor, width: 1),
+                              bottom: BorderSide(color: Theme.of(context).dividerColor, width: 1),
                             )
                           ),
                           child: ListView.builder(

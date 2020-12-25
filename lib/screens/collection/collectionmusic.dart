@@ -20,6 +20,10 @@ class CollectionMusicSearch extends StatefulWidget {
 
 
 class CollectionMusicSearchState extends State<CollectionMusicSearch> {
+  int _elementsPerRow = 2;
+  bool _init = true;
+  double albumTileWidth;
+  double albumTileHeight;
   List<Widget> _albumResults = new List<Widget>();
   List<Widget> _trackResults = new List<Widget>();
   List<Widget> _artistResults = new List<Widget>();
@@ -37,35 +41,42 @@ class CollectionMusicSearchState extends State<CollectionMusicSearch> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    this._textFieldController.addListener(() async {
-      this._albumResults = [];
-      this._trackResults = [];
-      this._artistResults = [];
-      List<dynamic> resultCollection = await collection.search(this._textFieldController.text);
-      for (dynamic collectionItem in resultCollection) {
-        if (collectionItem is Album) {
-          this._albumResults.add(
-            Container(
-              margin: EdgeInsets.only(top: 6.0, bottom: 6.0, left: 16.0, right: 16.0),
-              child: CollectionAlbumTile(
-                album: collectionItem,
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (this._init) {
+      this.albumTileWidth = (MediaQuery.of(context).size.width - 16 - (this._elementsPerRow - 1) * 8) / this._elementsPerRow;
+      this.albumTileHeight = this.albumTileWidth * 224 / 156;
+      this._textFieldController.addListener(() async {
+        this._albumResults = [];
+        this._trackResults = [];
+        this._artistResults = [];
+        List<dynamic> resultCollection = await collection.search(this._textFieldController.text);
+        for (dynamic collectionItem in resultCollection) {
+          if (collectionItem is Album) {
+            this._albumResults.add(
+              Container(
+                margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
+                child: CollectionAlbumTile(
+                  height: this.albumTileHeight,
+                  width: this.albumTileWidth,
+                  album: collectionItem,
+                ),
               ),
-            ),
-          );
+            );
+          }
+          else if (collectionItem is Track) {
+            this._trackResults.add(
+              CollectionTrackTile(
+                track: collectionItem,
+              ),
+            );
+          }
         }
-        else if (collectionItem is Track) {
-          this._trackResults.add(
-            CollectionTrackTile(
-              track: collectionItem,
-            ),
-          );
-        }
-      }
-      this.setState(() {});
-    });
-    States.musicCollectionSearchRefresh = this._refresh;
+        this.setState(() {});
+      });
+      States.musicCollectionSearchRefresh = this._refresh;
+    }
+    this._init = false;
   }
 
   @override
@@ -138,7 +149,8 @@ class CollectionMusicSearchState extends State<CollectionMusicSearch> {
           ) : Container(),
           this.noAlbums() ? Container(): SubHeader(Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER),
           this.noAlbums() ? Container(): Container(
-            height: 258,
+            margin: EdgeInsets.only(left: 8.0),
+            height: this.albumTileHeight + 8.0,
             width: MediaQuery.of(context).size.width,
             child: ListView(
               scrollDirection: Axis.horizontal,
@@ -158,6 +170,7 @@ class CollectionMusic extends StatefulWidget {
   CollectionMusicState createState() => CollectionMusicState();
 }
 
+
 class CollectionMusicState extends State<CollectionMusic> with SingleTickerProviderStateMixin {
   int _elementsPerRow = 2;
   TabController _tabController;
@@ -171,19 +184,21 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   bool _init = true;
 
   void refreshAlbums() {
+    double albumTileWidth = (MediaQuery.of(context).size.width - 16 - (this._elementsPerRow - 1) * 8) / this._elementsPerRow;
+    double albumTileHeight = albumTileWidth * 224 / 156;
     this.albumChildren = <Widget>[];
     this.albumChildren.addAll([
       SubHeader(Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM),
       Container(
-        margin: EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 0),
+        margin: EdgeInsets.only(top: 0, left: 8, right: 8, bottom: 0),
         child: OpenContainer(
           transitionDuration: Duration(milliseconds: 400),
           closedElevation: 2,
           closedColor: Theme.of(context).cardColor,
           openColor: Theme.of(context).scaffoldBackgroundColor,
           closedBuilder: (_, __) => Container(
-            height: 156,
-            width: MediaQuery.of(context).size.width - 32,
+            height: albumTileWidth,
+            width: MediaQuery.of(context).size.width - 16,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -192,12 +207,12 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   collection.getAlbumArt(collection.albums.first.albumArtId),
                   fit: BoxFit.fill,
                   filterQuality: FilterQuality.low,
-                  height: 156,
-                  width: 156,
+                  height: albumTileWidth,
+                  width: albumTileWidth,
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 8, right: 8),
-                  width: MediaQuery.of(context).size.width - 48 - 156,
+                  width: MediaQuery.of(context).size.width - 32 - albumTileWidth,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -241,6 +256,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
     for (int index = 0; index < collection.albums.length; index++) {
       rowChildren.add(
         CollectionAlbumTile(
+          height: albumTileHeight,
+          width: albumTileWidth,
           album: collection.albums[index],
         ),
       );
@@ -248,8 +265,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
       if (rowIndex > this._elementsPerRow - 1) {
         this.albumChildren.add(
           new Container(
-            height: 236.0 + 16.0,
-            margin: EdgeInsets.only(left: 16, right: 16),
+            height: albumTileHeight + 8.0,
+            margin: EdgeInsets.only(left: 8, right: 8),
             alignment: Alignment.topCenter,
             child: Row(
               mainAxisSize: MainAxisSize.max,
@@ -268,6 +285,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
       for (int index = collection.albums.length - (collection.albums.length % this._elementsPerRow); index < collection.albums.length; index++) {
         rowChildren.add(
           CollectionAlbumTile(
+            height: albumTileHeight,
+            width: albumTileWidth,
             album: collection.albums[index],
           ),
         );
@@ -275,15 +294,15 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
       for (int index = 0; index < this._elementsPerRow - (collection.albums.length % this._elementsPerRow); index++) {
         rowChildren.add(
           Container(
-            height: 236,
-            width: 156,
+            height: albumTileHeight,
+            width: albumTileWidth,
           ),
         );
       }
       this.albumChildren.add(
         new Container(
-          height: 236.0 + 16.0,
-          margin: EdgeInsets.only(left: 16, right: 16),
+          height: albumTileHeight + 8.0,
+          margin: EdgeInsets.only(left: 8, right: 8),
           alignment: Alignment.topCenter,
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -298,6 +317,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   }
 
   void refreshArtists() {
+    /* 😅
     this.artistChildren = <Widget>[];
     this.artistChildren.addAll([
       SubHeader(Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST),
@@ -509,6 +529,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
       );
     }
     this.setState(() {});
+    */
   }
 
   void refreshTracks() {
@@ -542,12 +563,16 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     width: 64,
                     alignment: Alignment.center,
                     child: CircleAvatar(
-                      child: Text(collection.tracks.first.trackNumber),
+                      child: Text(collection.tracks.first.trackNumber,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 8, right: 8),
-                    width: MediaQuery.of(context).size.width - 32 - 64 - 16,
+                    width: MediaQuery.of(context).size.width - 32 - 64 - 16 - 72,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -600,18 +625,31 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                       ],
                     ),
                   ),
+                  Container(
+                    width: 72,
+                    alignment: Alignment.center,
+                    child: FloatingActionButton(
+                      onPressed: () async => await Playback.play(
+                        index: 0,
+                        tracks: collection.tracks
+                      ),
+                      mini: true,
+                      child: Icon(Icons.play_arrow, color: Colors.white),
+                    )
+                  ),
                 ],
               ),
             ],
           ),
         ),
       ),
-      SubHeader(Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER)
+      SubHeader(Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK)
     ]);
     for (int index = 0; index < collection.tracks.length; index++) {
       this.trackChildren.add(
         CollectionTrackTile(
           track: collection.tracks[index],
+          index: index,
         ),
       );
     }
@@ -898,7 +936,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
               onPressed: () {},
             ),
           ],
-          expandedHeight: 56.0 + 48.0,
+          expandedHeight: 56.0 + 52.0,
           bottom: TabBar(
             controller: this._tabController,
             indicatorColor: Theme.of(context).accentColor,
@@ -911,31 +949,23 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
             tabs: [
               Tab(
                 child: Text(
-                  Constants.STRING_ALBUM.toUpperCase(), style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                  )
+                  Constants.STRING_ALBUM.toUpperCase(),
                 ),
               ),
               Tab(
                 child: Text(
-                  Constants.STRING_TRACK.toUpperCase(), style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                  )
+                  Constants.STRING_TRACK.toUpperCase(),
                 ),
               ),
               Tab(
                 child: Text(
-                  Constants.STRING_ARTIST.toUpperCase(), style: TextStyle(
-                    color: Theme.of(context).accentColor,
+                  Constants.STRING_ARTIST.toUpperCase(),
                   )
-                ),
               ),
               Tab(
                 child: Text(
-                  Constants.STRING_PLAYLISTS.toUpperCase(), style: TextStyle(
-                    color: Theme.of(context).accentColor,
+                  Constants.STRING_PLAYLISTS.toUpperCase(),
                   )
-                ),
               ),
             ],
           ),
