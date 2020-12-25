@@ -3,7 +3,7 @@ import 'package:harmonoid/constants/constants.dart';
 
 class LanguageRegion {
 
-  static const int enUs = 0; /* Credits: https://github.com/alexmercerind/           */
+  static const int enUs = 0;
 
   static const int ruRu = 1; /* Credits: https://github.com/raitonoberu/             */
   
@@ -76,12 +76,12 @@ class ConstantsUpdater {
         Constants.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Here are the tracks from this album';
         Constants.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Some insights of the album';
         Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Search & save some music to see it here.\nSpin the refresh to see new stuff.';
-        Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Here is the latest album saved by you';
-        Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Here are your other albums';
-        Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Here is the latest track saved by you';
-        Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Here are your other tracks';
-        Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Here is the latest artist saved by you';
-        Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are your other albums';
+        Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Latest album';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Other albums';
+        Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Latest track';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Other tracks';
+        Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Latest artist';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Other artists';
         Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Here are the tracks you saved';
         Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Some insights of the album';
         Constants.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Are you sure?';
