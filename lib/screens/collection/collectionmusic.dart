@@ -224,9 +224,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                         maxLines: 2,
                       ),
                       Text(
-                        collection.albums.first.artistNames.length < 2 ? 
-                        collection.albums.first.artistNames.join(', ') : 
-                        collection.albums.first.artistNames.sublist(0, 2).join(', '),
+                        collection.albums.first.albumArtistName,
                         style: Theme.of(context).textTheme.headline3,
                         textAlign: TextAlign.start,
                         maxLines: 1,
@@ -605,9 +603,9 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                           height: 4,
                         ),
                         Text(
-                          collection.tracks.first.artistNames.length < 2 ? 
-                          collection.tracks.first.artistNames.join(', ') : 
-                          collection.tracks.first.artistNames.sublist(0, 2).join(', '),
+                          collection.tracks.first.trackArtistNames.length < 2 ? 
+                          collection.tracks.first.trackArtistNames.join(', ') : 
+                          collection.tracks.first.trackArtistNames.sublist(0, 2).join(', '),
                           style: Theme.of(context).textTheme.headline4,
                           maxLines: 1,
                           textAlign: TextAlign.center,

@@ -54,9 +54,7 @@ class CollectionAlbumTile extends StatelessWidget {
                     height: 2,
                   ),
                   Text(
-                    this.album.artistNames.length < 2 ? 
-                    this.album.artistNames.join(', ') : 
-                    this.album.artistNames.sublist(0, 2).join(', '),
+                    this.album.albumArtistName,
                     style: Theme.of(context).textTheme.headline4,
                     maxLines: 1,
                     textAlign: TextAlign.center,
@@ -115,7 +113,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
             );
           },
           title: Text(track.trackName),
-          subtitle: Text(track.artistNames.join(', ')),
+          subtitle: Text(track.trackArtistNames.join(', ')),
           leading: CircleAvatar(
             child: Text(track.trackNumber),
             backgroundImage: FileImage(collection.getAlbumArt(widget.album.albumArtId)),
@@ -370,7 +368,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                               height: 2,
                             ),
                             Text(
-                              this.album.artistNames.join(', '),
+                              this.album.albumArtistName,
                               style: Theme.of(context).textTheme.headline4,
                               maxLines: 2,
                               textAlign: TextAlign.start,

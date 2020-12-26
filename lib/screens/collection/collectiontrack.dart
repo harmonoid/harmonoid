@@ -30,9 +30,9 @@ class CollectionTrackTile extends StatelessWidget {
       title: Text(this.track.trackName),
       subtitle: Text(
         this.track.albumName + '\n' + 
-        (this.track.artistNames.length < 2 ? 
-        this.track.artistNames.join(', ') : 
-        this.track.artistNames.sublist(0, 2).join(', ')),
+        (this.track.trackArtistNames.length < 2 ? 
+        this.track.trackArtistNames.join(', ') : 
+        this.track.trackArtistNames.sublist(0, 2).join(', ')),
       ),
       trailing: PopupMenuButton(
         elevation: 2,

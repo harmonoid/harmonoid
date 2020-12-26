@@ -45,9 +45,9 @@ class CollectionPlaylistState extends State<CollectionPlaylist> {
           title: Text(track.trackName),
           subtitle: Text(
             track.albumName + '\n' + 
-            (track.artistNames.length < 2 ? 
-            track.artistNames.join(', ') : 
-            track.artistNames.sublist(0, 2).join(', ')),
+            (track.trackArtistNames.length < 2 ? 
+            track.trackArtistNames.join(', ') : 
+            track.trackArtistNames.sublist(0, 2).join(', ')),
           ),
           trailing: IconButton(
             onPressed: () {

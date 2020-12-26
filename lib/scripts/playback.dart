@@ -22,7 +22,7 @@ class Playback {
           id: track.filePath,
           title: track.trackName,
           album: track.albumName,
-          artist: track.artistNames.join(', '),
+          artist: track.trackArtistNames.join(', '),
           artUri: 'file://${collection.getAlbumArt(track.albumArtId).path}',
           extras: track.toDictionary(),
         ),
