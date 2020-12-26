@@ -41,7 +41,7 @@ class CollectionAlbumTile extends StatelessWidget {
                 children: [
                   Divider(
                     color: Colors.transparent,
-                    height: 4,
+                    height: 2,
                   ),
                   Text(
                     this.album.albumName,
@@ -51,8 +51,7 @@ class CollectionAlbumTile extends StatelessWidget {
                   ),
                   Divider(
                     color: Colors.transparent,
-                    height: 4,
-                    thickness: 4,
+                    height: 2,
                   ),
                   Text(
                     this.album.artistNames.length < 2 ? 

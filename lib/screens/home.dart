@@ -91,7 +91,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         onTap: (int index) => this.setState(() => this._index = index),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.image_search),
+            icon: Icon(Icons.album),
             label: Constants.STRING_DISCOVER,
           ),
           BottomNavigationBarItem(

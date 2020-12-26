@@ -45,7 +45,7 @@ class CollectionMusicSearchState extends State<CollectionMusicSearch> {
     super.didChangeDependencies();
     if (this._init) {
       this.albumTileWidth = (MediaQuery.of(context).size.width - 16 - (this._elementsPerRow - 1) * 8) / this._elementsPerRow;
-      this.albumTileHeight = this.albumTileWidth * 224 / 156;
+      this.albumTileHeight = this.albumTileWidth * 242 / 156;
       this._textFieldController.addListener(() async {
         this._albumResults = [];
         this._trackResults = [];
@@ -185,7 +185,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
 
   void refreshAlbums() {
     double albumTileWidth = (MediaQuery.of(context).size.width - 16 - (this._elementsPerRow - 1) * 8) / this._elementsPerRow;
-    double albumTileHeight = albumTileWidth * 224 / 156;
+    double albumTileHeight = albumTileWidth * 242 / 156;
     this.albumChildren = <Widget>[];
     this.albumChildren.addAll([
       SubHeader(Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM),
@@ -890,90 +890,148 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          forceElevated: true,
-          pinned: true,
-          floating: true,
-          snap: false,
-          leading: IconButton(
-            icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
-            iconSize: Theme.of(context).iconTheme.size,
-            splashRadius: Theme.of(context).iconTheme.size - 4,
-            onPressed: () {},
-            tooltip: Constants.STRING_MENU,
-          ),
-          title: Text('Harmonoid', style: Theme.of(context).textTheme.headline6),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
-              iconSize: Theme.of(context).iconTheme.size,
-              splashRadius: Theme.of(context).iconTheme.size - 4,
-              tooltip: Constants.STRING_SEARCH_COLLECTION,
-              onPressed: () {
-                Navigator.of(context).pushNamed('collectionMusicSearch');
-              },
+    return DefaultTabController(
+      length: 4,
+      child: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return <Widget>[
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: SliverAppBar(
+                forceElevated: true,
+                pinned: true,
+                floating: true,
+                snap: true,
+                leading: IconButton(
+                  icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
+                  iconSize: Theme.of(context).iconTheme.size,
+                  splashRadius: Theme.of(context).iconTheme.size - 4,
+                  onPressed: () {},
+                  tooltip: Constants.STRING_MENU,
+                ),
+                title: Text('Harmonoid', style: Theme.of(context).textTheme.headline6),
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
+                    iconSize: Theme.of(context).iconTheme.size,
+                    splashRadius: Theme.of(context).iconTheme.size - 4,
+                    tooltip: Constants.STRING_SEARCH_COLLECTION,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('collectionMusicSearch');
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(this._themeIcon, color: Theme.of(context).iconTheme.color),
+                    iconSize: Theme.of(context).iconTheme.size,
+                    splashRadius: Theme.of(context).iconTheme.size - 4,
+                    tooltip: Constants.STRING_SWITCH_THEME,
+                    onPressed: () {
+                      this._themeIcon = this._themeIcon == Icons.brightness_medium ? Icons.brightness_high : Icons.brightness_medium;
+                      States.switchTheme();
+                      Timer(Duration(milliseconds: 400), () {
+                        if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
+                      });
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.more_vert, color: Theme.of(context).iconTheme.color),
+                    iconSize: Theme.of(context).iconTheme.size,
+                    splashRadius: Theme.of(context).iconTheme.size - 4,
+                    tooltip: Constants.STRING_OPTIONS,
+                    onPressed: () {},
+                  ),
+                ],
+                expandedHeight: 56.0 + 52.0,
+                bottom: TabBar(
+                  controller: this._tabController,
+                  indicatorColor: Theme.of(context).accentColor,
+                  isScrollable: true,
+                  onTap: (int index) {
+                    this._tabController.animateTo(index);
+                    States.musicCollectionCurrentTab = <dynamic>[new Album(), new Track(), new Artist(), new Playlist()][this._tabController.index];
+                    if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
+                  },
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        Constants.STRING_ALBUM.toUpperCase(),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        Constants.STRING_TRACK.toUpperCase(),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        Constants.STRING_ARTIST.toUpperCase(),
+                        )
+                    ),
+                    Tab(
+                      child: Text(
+                        Constants.STRING_PLAYLISTS.toUpperCase(),
+                        )
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ];
+        },
+        body: TabBarView(
+          controller: this._tabController,
+          children: <Widget>[
+            Builder(
+              builder: (context) {
+                return CustomScrollView(
+                  slivers: [
+                    SliverOverlapInjector(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    ),
+                    SliverList(delegate: SliverChildListDelegate(this.albumChildren)),
+                  ],
+                );
+              }
             ),
-            IconButton(
-              icon: Icon(this._themeIcon, color: Theme.of(context).iconTheme.color),
-              iconSize: Theme.of(context).iconTheme.size,
-              splashRadius: Theme.of(context).iconTheme.size - 4,
-              tooltip: Constants.STRING_SWITCH_THEME,
-              onPressed: () {
-                this._themeIcon = this._themeIcon == Icons.brightness_medium ? Icons.brightness_high : Icons.brightness_medium;
-                States.switchTheme();
-                Timer(Duration(milliseconds: 400), () {
-                  if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
-                });
-              },
+            Builder(
+              builder: (context) {
+                return CustomScrollView(
+                  slivers: [
+                    SliverOverlapInjector(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    ),
+                    SliverList(delegate: SliverChildListDelegate(this.trackChildren)),
+                  ],
+                );
+              }
             ),
-            IconButton(
-              icon: Icon(Icons.more_vert, color: Theme.of(context).iconTheme.color),
-              iconSize: Theme.of(context).iconTheme.size,
-              splashRadius: Theme.of(context).iconTheme.size - 4,
-              tooltip: Constants.STRING_OPTIONS,
-              onPressed: () {},
+            Builder(
+              builder: (context) {
+                return CustomScrollView(
+                  slivers: [
+                    SliverOverlapInjector(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    ),
+                    SliverList(delegate: SliverChildListDelegate(this.artistChildren)),
+                  ],
+                );
+              }
+            ),
+            Builder(
+              builder: (context) {
+                return CustomScrollView(
+                  slivers: [
+                    SliverOverlapInjector(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    ),
+                    SliverList(delegate: SliverChildListDelegate(this.playlistChildren)),
+                  ],
+                );
+              }
             ),
           ],
-          expandedHeight: 56.0 + 52.0,
-          bottom: TabBar(
-            controller: this._tabController,
-            indicatorColor: Theme.of(context).accentColor,
-            isScrollable: true,
-            onTap: (int index) {
-              this._tabController.animateTo(index);
-              States.musicCollectionCurrentTab = <dynamic>[new Album(), new Track(), new Artist(), new Playlist()][this._tabController.index];
-              if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
-            },
-            tabs: [
-              Tab(
-                child: Text(
-                  Constants.STRING_ALBUM.toUpperCase(),
-                ),
-              ),
-              Tab(
-                child: Text(
-                  Constants.STRING_TRACK.toUpperCase(),
-                ),
-              ),
-              Tab(
-                child: Text(
-                  Constants.STRING_ARTIST.toUpperCase(),
-                  )
-              ),
-              Tab(
-                child: Text(
-                  Constants.STRING_PLAYLISTS.toUpperCase(),
-                  )
-              ),
-            ],
-          ),
         ),
-        SliverList(
-          delegate: SliverChildListDelegate(this.children),
-        ),
-      ],
+      ),
     );
   }
 }
