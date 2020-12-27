@@ -172,3 +172,117 @@ class CollectionTrackTile extends StatelessWidget {
     );
   }
 }
+
+
+class LeadingCollectionTrackTile extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 0),
+      child: Container(
+        height: 256,
+        width: MediaQuery.of(context).size.width - 32 + 56,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.file(
+              collection.getAlbumArt(collection.tracks.first.albumArtId),
+              fit: BoxFit.fitWidth,
+              filterQuality: FilterQuality.low,
+              alignment: Alignment.topCenter,
+              height: 156,
+              width: MediaQuery.of(context).size.width - 32,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 64,
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                    child: Text(collection.tracks.first.trackNumber,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 8, right: 8),
+                  width: MediaQuery.of(context).size.width - 32 - 64 - 16 - 72,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Divider(
+                        color: Colors.transparent,
+                        height: 12,
+                      ),
+                      Container(
+                        height: 20,
+                        child: Text(
+                          collection.tracks.first.trackName,
+                          style: Theme.of(context).textTheme.headline1,
+                          textAlign: TextAlign.start,
+                          maxLines: 1,
+                        ),
+                      ),
+                      Divider(
+                        color: Colors.transparent,
+                        height: 2,
+                      ),
+                      Text(
+                        collection.tracks.first.albumName,
+                        style: Theme.of(context).textTheme.headline2,
+                        textAlign: TextAlign.start,
+                        maxLines: 1,
+                      ),
+                      Divider(
+                        color: Colors.transparent,
+                        height: 4,
+                      ),
+                      Text(
+                        collection.tracks.first.trackArtistNames.length < 2 ? 
+                        collection.tracks.first.trackArtistNames.join(', ') : 
+                        collection.tracks.first.trackArtistNames.sublist(0, 2).join(', '),
+                        style: Theme.of(context).textTheme.headline4,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        '(${collection.tracks.first.year})',
+                        style: Theme.of(context).textTheme.headline4,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                      ),
+                      Divider(
+                        color: Colors.transparent,
+                        height: 4,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 72,
+                  alignment: Alignment.center,
+                  child: FloatingActionButton(
+                    onPressed: () async => await Playback.play(
+                      index: 0,
+                      tracks: collection.tracks
+                    ),
+                    mini: true,
+                    child: Icon(Icons.play_arrow, color: Colors.white),
+                  )
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

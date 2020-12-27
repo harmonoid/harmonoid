@@ -150,7 +150,7 @@ class CollectionMusicSearchState extends State<CollectionMusicSearch> {
           this.noAlbums() ? Container(): SubHeader(Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER),
           this.noAlbums() ? Container(): Container(
             margin: EdgeInsets.only(left: 8.0),
-            height: this.albumTileHeight + 8.0,
+            height: this.albumTileHeight + 16.0,
             width: MediaQuery.of(context).size.width,
             child: ListView(
               scrollDirection: Axis.horizontal,
@@ -189,62 +189,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
     this.albumChildren = <Widget>[];
     this.albumChildren.addAll([
       SubHeader(Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM),
-      Container(
-        margin: EdgeInsets.only(top: 0, left: 8, right: 8, bottom: 0),
-        child: OpenContainer(
-          transitionDuration: Duration(milliseconds: 400),
-          closedElevation: 2,
-          closedColor: Theme.of(context).cardColor,
-          openColor: Theme.of(context).scaffoldBackgroundColor,
-          closedBuilder: (_, __) => Container(
-            height: albumTileWidth,
-            width: MediaQuery.of(context).size.width - 16,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.file(
-                  collection.getAlbumArt(collection.albums.first.albumArtId),
-                  fit: BoxFit.fill,
-                  filterQuality: FilterQuality.low,
-                  height: albumTileWidth,
-                  width: albumTileWidth,
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 8, right: 8),
-                  width: MediaQuery.of(context).size.width - 32 - albumTileWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        collection.albums.first.albumName,
-                        style: Theme.of(context).textTheme.headline1,
-                        textAlign: TextAlign.start,
-                        maxLines: 2,
-                      ),
-                      Text(
-                        collection.albums.first.albumArtistName,
-                        style: Theme.of(context).textTheme.headline3,
-                        textAlign: TextAlign.start,
-                        maxLines: 1,
-                      ),
-                      Text(
-                        '(${collection.albums.first.year})',
-                        style: Theme.of(context).textTheme.headline4,
-                        textAlign: TextAlign.start,
-                        maxLines: 1,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          openBuilder: (_, __) => CollectionAlbum(
-            album: collection.albums.first,
-          ),
-        ),
+      LeadingCollectionALbumTile(
+        height: albumTileWidth,
       ),
       SubHeader(Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM),
     ]);
@@ -534,113 +480,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
     this.trackChildren = <Widget>[];
     this.trackChildren.addAll([
       SubHeader(Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK),
-      Card(
-        elevation: 2,
-        clipBehavior: Clip.antiAlias,
-        margin: EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 0),
-        child: Container(
-          height: 256,
-          width: MediaQuery.of(context).size.width - 32 + 56,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.file(
-                collection.getAlbumArt(collection.tracks.first.albumArtId),
-                fit: BoxFit.fitWidth,
-                filterQuality: FilterQuality.low,
-                alignment: Alignment.topCenter,
-                height: 156,
-                width: MediaQuery.of(context).size.width - 32,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 64,
-                    alignment: Alignment.center,
-                    child: CircleAvatar(
-                      child: Text(collection.tracks.first.trackNumber,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 8, right: 8),
-                    width: MediaQuery.of(context).size.width - 32 - 64 - 16 - 72,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Divider(
-                          color: Colors.transparent,
-                          height: 12,
-                        ),
-                        Container(
-                          height: 20,
-                          child: Text(
-                            collection.tracks.first.trackName,
-                            style: Theme.of(context).textTheme.headline1,
-                            textAlign: TextAlign.start,
-                            maxLines: 1,
-                          ),
-                        ),
-                        Divider(
-                          color: Colors.transparent,
-                          height: 2,
-                        ),
-                        Text(
-                          collection.tracks.first.albumName,
-                          style: Theme.of(context).textTheme.headline2,
-                          textAlign: TextAlign.start,
-                          maxLines: 1,
-                        ),
-                        Divider(
-                          color: Colors.transparent,
-                          height: 4,
-                        ),
-                        Text(
-                          collection.tracks.first.trackArtistNames.length < 2 ? 
-                          collection.tracks.first.trackArtistNames.join(', ') : 
-                          collection.tracks.first.trackArtistNames.sublist(0, 2).join(', '),
-                          style: Theme.of(context).textTheme.headline4,
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          '(${collection.tracks.first.year})',
-                          style: Theme.of(context).textTheme.headline4,
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                        ),
-                        Divider(
-                          color: Colors.transparent,
-                          height: 4,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: 72,
-                    alignment: Alignment.center,
-                    child: FloatingActionButton(
-                      onPressed: () async => await Playback.play(
-                        index: 0,
-                        tracks: collection.tracks
-                      ),
-                      mini: true,
-                      child: Icon(Icons.play_arrow, color: Colors.white),
-                    )
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+      LeadingCollectionTrackTile(),
       SubHeader(Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK)
     ]);
     for (int index = 0; index < collection.tracks.length; index++) {
@@ -830,7 +670,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
       Widget emptyMusicCollection = Center(
         child: Container(
           height: 128,
-          margin: EdgeInsets.only(top: 192),
+          margin: EdgeInsets.only(top: 156),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -939,7 +779,6 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     onPressed: () {},
                   ),
                 ],
-                expandedHeight: 56.0 + 52.0,
                 bottom: TabBar(
                   controller: this._tabController,
                   indicatorColor: Theme.of(context).accentColor,

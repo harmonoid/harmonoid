@@ -36,18 +36,22 @@ class CollectionAlbumTile extends StatelessWidget {
               width: this.width,
             ),
             Container(
-              margin: EdgeInsets.only(left: 2, right: 2),
+              margin: EdgeInsets.only(left: 8, right: 8),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Divider(
                     color: Colors.transparent,
-                    height: 2,
+                    height: 4,
                   ),
-                  Text(
-                    this.album.albumName,
-                    style: Theme.of(context).textTheme.headline2,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
+                  Container(
+                    height: 38 * MediaQuery.of(context).devicePixelRatio,
+                    child: Text(
+                      this.album.albumName,
+                      style: Theme.of(context).textTheme.headline2,
+                      textAlign: TextAlign.left,
+                      maxLines: 2,
+                    ),
                   ),
                   Divider(
                     color: Colors.transparent,
@@ -57,13 +61,13 @@ class CollectionAlbumTile extends StatelessWidget {
                     this.album.albumArtistName,
                     style: Theme.of(context).textTheme.headline4,
                     maxLines: 1,
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                   ),
                   Text(
                     '(${this.album.year})',
                     style: Theme.of(context).textTheme.headline4,
                     maxLines: 1,
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                   ),
                 ],
               ),
@@ -73,6 +77,73 @@ class CollectionAlbumTile extends StatelessWidget {
       ),
       openBuilder: (_, __) => CollectionAlbum(
         album: this.album,
+      ),
+    );
+  }
+}
+
+
+class LeadingCollectionALbumTile extends StatelessWidget {
+  final double height;
+  LeadingCollectionALbumTile({Key key, @required this.height}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 8, right: 8),
+      child: OpenContainer(
+        transitionDuration: Duration(milliseconds: 400),
+        closedElevation: 2,
+        closedColor: Theme.of(context).cardColor,
+        openColor: Theme.of(context).scaffoldBackgroundColor,
+        closedBuilder: (_, __) => Container(
+          height: this.height,
+          width: MediaQuery.of(context).size.width - 16,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.file(
+                collection.getAlbumArt(collection.albums.first.albumArtId),
+                fit: BoxFit.fill,
+                filterQuality: FilterQuality.low,
+                height: this.height,
+                width: this.height,
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 8, right: 8),
+                width: MediaQuery.of(context).size.width - 32 - this.height,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      collection.albums.first.albumName,
+                      style: Theme.of(context).textTheme.headline1,
+                      textAlign: TextAlign.start,
+                      maxLines: 2,
+                    ),
+                    Text(
+                      collection.albums.first.albumArtistName,
+                      style: Theme.of(context).textTheme.headline3,
+                      textAlign: TextAlign.start,
+                      maxLines: 1,
+                    ),
+                    Text(
+                      '(${collection.albums.first.year})',
+                      style: Theme.of(context).textTheme.headline4,
+                      textAlign: TextAlign.start,
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        openBuilder: (_, __) => CollectionAlbum(
+          album: collection.albums.first,
+        ),
       ),
     );
   }
