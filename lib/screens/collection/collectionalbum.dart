@@ -407,6 +407,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
               SubHeader(Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER),
               Card(
                 elevation: 2,
+                clipBehavior: Clip.antiAlias,
                 color: Theme.of(context).cardColor,
                 margin: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
                 child: Container(
