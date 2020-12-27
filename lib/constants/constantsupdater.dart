@@ -153,6 +153,7 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
+        Constants.STRING_TRANSFERS                                       = 'Transfers';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -287,6 +288,7 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
+        Constants.STRING_TRANSFERS                                       = 'Transfers';
       }
       break;
       case LanguageRegion.slSi: {
@@ -421,6 +423,7 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
+        Constants.STRING_TRANSFERS                                       = 'Transfers';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -555,6 +558,7 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
+        Constants.STRING_TRANSFERS                                       = 'Transfers';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -689,6 +693,7 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
+        Constants.STRING_TRANSFERS                                       = 'Transfers';
       }
       break;
       case LanguageRegion.deDe: {
@@ -823,6 +828,7 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
+        Constants.STRING_TRANSFERS                                       = 'Transfers';
       }
     }
   }

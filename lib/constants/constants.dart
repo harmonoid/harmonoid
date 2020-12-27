@@ -129,4 +129,5 @@ class Constants {
   static String STRING_PLAYLIST_ADD_DIALOG_TITLE;
   static String STRING_PLAYLIST_ADD_DIALOG_BODY;
   static String STRING_PLAYLIST_TRACKS_SUBHEADER;
+  static String STRING_TRANSFERS;
 }
