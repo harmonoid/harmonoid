@@ -209,12 +209,11 @@ class Collection {
   File getAlbumArt(int albumArtId) => new File(path.join(this.cacheDirectory.path, 'albumArt$albumArtId.png'));
 
   Future<void> add({File trackFile}) async {
-    if (trackFile != null) {
+    if (trackFile.path.split('.').last.toUpperCase() == 'MP3') {
       List<Tag> fileTags = await TagProcessor().getTagsFromByteArray(
         trackFile.readAsBytes(),
         [TagType.id3v2]
       );
-
       String year = fileTags[0].tags['TDRC'] ?? fileTags[0].tags['year'] ?? 'Unknown Year';
       String albumArtistName = fileTags[0].tags['TPE2'] ?? 'Unknown Artist';
       List<String> trackArtistNames = fileTags[0].tags['artist'] == null ? ['Unknown Artist'] : fileTags[0].tags['artist'].split('/');
@@ -222,7 +221,6 @@ class Collection {
       String albumName = fileTags[0].tags['album'] ?? 'Unknown Album';
       String trackName = fileTags[0].tags['title'];
       String filePath = trackFile.path;
-
       void albumArtMethod() async {
         if (fileTags[0].tags['picture'] == null) {
           this._albumArts.add(null);
@@ -236,10 +234,10 @@ class Collection {
 
       await this._arrange(trackName, albumName, year, trackNumber, albumArtistName, trackArtistNames, albumArtMethod, filePath);
     }
+    await this.saveToCache();
   }
 
   Future<void> delete(Object object) async {
-
     if (object is Track) {
       for (int index = 0; index < this.tracks.length; index++) {
         if (object.trackName == this.tracks[index].trackName && object.trackNumber == this.tracks[index].trackNumber) {
@@ -290,9 +288,9 @@ class Collection {
           }
         }
       }
-
-      await File(object.filePath).delete();
-
+      if (await File(object.filePath).exists()) {
+        await File(object.filePath).delete();
+      }
     }
     else if (object is Album) {
       for (int index = 0; index < this.albums.length; index++) {
@@ -337,13 +335,12 @@ class Collection {
           }
         }
       }
-
       for (Track track in object.tracks) {
-        await File(track.filePath).delete();
+        if (await File(track.filePath).exists()) {
+          await File(track.filePath).delete();
+        }
       }
-      
     }
-
     this.saveToCache();
   }
 
@@ -355,21 +352,17 @@ class Collection {
     await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).writeAsString(encoder.convert({'tracks': tracks}));
   }
 
-  Future<Collection> getFromCache() async {
-
-    this.albums.clear();
-    this.tracks.clear();
-    this.artists.clear();
-
-    this._foundAlbums.clear();
-    this._foundArtists.clear();
-
+  Future<void> getFromCache() async {
+    this.albums = <Album>[];
+    this.tracks = <Track>[];
+    this.artists = <Artist>[];
+    this._foundAlbums = <List<String>>[];
+    this._foundArtists = <String>[];
     if (!await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).exists()) {
       await this.refresh();
     }
     else {
       Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).readAsString());
-
       for (Map<String, dynamic> track in collection['tracks']) {
         String year = track['year'];
         String albumArtistName = track['albumArtistName'] ?? 'Unknown Artist';
@@ -378,22 +371,35 @@ class Collection {
         String albumName = track['albumName'];
         String trackName = track['trackName'];
         String filePath = track['filePath'];
-
         void albumArtMethod() async {
           this._albumArts.add(
             File(path.join(this.cacheDirectory.path, 'albumArt${track['albumArtId']}.png')),
           );
         }
-
         await this._arrange(trackName, albumName, year, trackNumber, albumArtistName, trackArtistNames, albumArtMethod, filePath);
+      }
+      List<FileSystemEntity> collectionDirectoryContent = this.collectionDirectory.listSync();
+      if (collectionDirectoryContent.length != this.tracks.length) {
+        for (FileSystemEntity file in collectionDirectoryContent) {
+          bool isTrackAdded = false;
+          for (Track track in this.tracks) {
+            if (track.filePath == file.path) {
+              isTrackAdded = true;
+              break;
+            }
+          }
+          if (!isTrackAdded) {
+            await this.add(
+              trackFile: file as File,
+            );
+          }
+        }
       }
     }
     await this.playlistsGetFromCache();
-    return this;
   }
 
   Future<void> _arrange(String trackName, String albumName, String year, String trackNumber, String albumArtistName, List<dynamic> trackArtistNames, Function albumArtMethod, String filePath) async {
-    
     if (!binaryContains(this._foundAlbums, [albumName, albumArtistName])) {
       this._foundAlbums.add([albumName, albumArtistName]);
       await albumArtMethod();
@@ -420,7 +426,6 @@ class Collection {
     }
 
     else if (binaryContains(this._foundAlbums, [albumName, albumArtistName])) {
-      print('Hello World!');
       this.albums[binaryIndexOf(this._foundAlbums, [albumName, albumArtistName])].tracks.add(
         new Track(
           albumName: albumName,
