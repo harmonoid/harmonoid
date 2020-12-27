@@ -158,6 +158,22 @@ class BackgroundTask extends BackgroundAudioTask {
 
   @override
   Future<void> onSeekTo(Duration duration) async {
+    await AudioServiceBackground.setState(
+      playing: true,
+      processingState: AudioProcessingState.completed,
+      androidCompactActions: [0, 1, 2],
+      controls: [
+        MediaControl.skipToPrevious,
+        MediaControl.pause,
+        MediaControl.skipToNext
+      ],
+      systemActions: [
+        MediaAction.seekTo,
+        MediaAction.seekForward,
+        MediaAction.seekBackward,
+      ],
+      position: this._audioPlayer.position,
+    );
     this._audioPlayer.seek(duration);
   }
   
