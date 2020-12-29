@@ -378,7 +378,12 @@ class Collection {
         }
         await this._arrange(trackName, albumName, year, trackNumber, albumArtistName, trackArtistNames, albumArtMethod, filePath);
       }
-      List<FileSystemEntity> collectionDirectoryContent = this.collectionDirectory.listSync();
+      List<File> collectionDirectoryContent = <File>[];
+      for (FileSystemEntity object in this.collectionDirectory.listSync()) {
+        if (object is File && object.path.split('.').last.toUpperCase() == 'MP3') {
+          collectionDirectoryContent.add(object);
+        }
+      }
       if (collectionDirectoryContent.length != this.tracks.length) {
         for (FileSystemEntity file in collectionDirectoryContent) {
           bool isTrackAdded = false;
@@ -393,6 +398,11 @@ class Collection {
               trackFile: file as File,
             );
           }
+        }
+      }
+      for (Track track in this.tracks) {
+        if (!await File(track.filePath).exists()) {
+          await File(track.filePath).delete();
         }
       }
     }
