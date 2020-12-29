@@ -41,7 +41,7 @@ class NowPlayingTileState extends State<NowPlayingTile> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: States.showNowPlaying,
+      onTap: () {},
       child: Card(
         shape: RoundedRectangleBorder(),
         margin: EdgeInsets.zero,

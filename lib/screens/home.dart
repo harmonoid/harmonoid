@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:animations/animations.dart';
 
 import 'package:harmonoid/screens/collection/collectionmusic.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
+import 'package:harmonoid/screens/settings.dart';
 import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/constants/constants.dart';
 
@@ -18,14 +18,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
   int _index = 2;
   GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
-  void showNowPlaying() {
-    Navigator.of(context).pushNamed('nowPlaying');
-  }
-
   @override
   void initState() {
     super.initState();
-    States.showNowPlaying = this.showNowPlaying;
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -78,9 +73,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
       Center(
         child: NowPlaying(),
       ),
-      Center(
-        child: Text('Coming Soon...')
-      ),
+      Settings(),
     ];
     return Scaffold(
       body: PageTransitionSwitcher(
