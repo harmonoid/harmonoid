@@ -15,8 +15,9 @@ class Constants {
   static String STRING_TOP_TRACKS;
   static String STRING_ARTIST;
   static String STRING_SAVED;
-  static String STRING_LIGHT;
-  static String STRING_DARK;
+  static String STRING_APP_THEME_LIGHT;
+  static String STRING_APP_THEME_DARK;
+  static String STRING_APP_THEME_SYSTEM;
   static String STRING_OPTIONS;
   static String STRING_FOLLOWERS;
   static String STRING_PLAYS;

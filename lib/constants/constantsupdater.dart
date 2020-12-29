@@ -1,27 +1,11 @@
+import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/constants/constants.dart';
 
 
-class LanguageRegion {
-
-  static const int enUs = 0;
-
-  static const int ruRu = 1; /* Credits: https://github.com/raitonoberu/             */
-  
-  static const int slSi = 2; /* Credits: https://github.com/mytja/                   */
-
-  static const int ptBr = 3; /* Credits: https://github.com/bdlukaa/                 */
-
-  static const int hiIn = 4; /* Credits: https://github.com/alexmercerind/           */
-  
-  static const int deDe = 5; /* Credits: https://github.com/MickLesk/                */
-}
-
-
 class ConstantsUpdater {
-  
   static Future<void> update(int languageRegion) async {
     switch(languageRegion) {
-      case LanguageRegion.enUs: {
+      case 0: {
         Constants.STRING_INTERNET_ERROR                                  = 'Check your internet connection...';
         Constants.STRING_SEARCH_HEADER                                   = 'Search Music';
         Constants.STRING_SEARCH_MODE_SUBHEADER                           = 'What are you looking for?';
@@ -36,8 +20,8 @@ class ConstantsUpdater {
         Constants.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
         Constants.STRING_ARTIST                                          = 'Artists';
         Constants.STRING_SAVED                                           = 'Saved';
-        Constants.STRING_LIGHT                                           = 'Light';
-        Constants.STRING_DARK                                            = 'Dark';
+        Constants.STRING_APP_THEME_LIGHT                                = 'Light';
+        Constants.STRING_APP_THEME_DARK                                 = 'Dark';
         Constants.STRING_OPTIONS                                         = 'Options';
         Constants.STRING_FOLLOWERS                                       = 'followers';
         Constants.STRING_PLAYS                                           = 'plays';
@@ -77,11 +61,11 @@ class ConstantsUpdater {
         Constants.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Some insights of the album';
         Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Search & save some music to see it here.\nSpin the refresh to see new stuff.';
         Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Latest album';
-        Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Other albums';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'More albums';
         Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Latest track';
-        Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Other tracks';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'More tracks';
         Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Latest artist';
-        Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Other artists';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'More artists';
         Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Here are the tracks you saved';
         Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Some insights of the album';
         Constants.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Are you sure?';
@@ -117,7 +101,7 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
         Constants.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
         Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
-        Constants.STRING_SETTING_THEME_TITLE                             = 'App Mode';
+        Constants.STRING_SETTING_THEME_TITLE                             = 'App Theme';
         Constants.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
         Constants.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
         Constants.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
@@ -139,7 +123,7 @@ class ConstantsUpdater {
         Constants.STRING_DELETE                                          = 'Delete';
         Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
-        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something to search in your collection';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
         Constants.STRING_PLAYLIST                                        = 'Playlist';
         Constants.STRING_PLAYLISTS                                       = 'Playlists';
@@ -154,9 +138,10 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
+        Constants.STRING_APP_THEME_SYSTEM                               = 'Follow system theme';
       }
       break;
-      case LanguageRegion.ruRu: {
+      case 1: {
         Constants.STRING_INTERNET_ERROR                                  = 'Проверьте интернет-соединение.';
         Constants.STRING_SEARCH_HEADER                                   = 'Поиск музыки';
         Constants.STRING_SEARCH_MODE_SUBHEADER                           = 'Что вы ищете?';
@@ -171,8 +156,8 @@ class ConstantsUpdater {
         Constants.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
         Constants.STRING_ARTIST                                          = 'Исполнители';
         Constants.STRING_SAVED                                           = 'Сохранено';
-        Constants.STRING_LIGHT                                           = 'День';
-        Constants.STRING_DARK                                            = 'Ночь';
+        Constants.STRING_APP_THEME_LIGHT                                = 'День';
+        Constants.STRING_APP_THEME_DARK                                 = 'Ночь';
         Constants.STRING_OPTIONS                                         = 'Параметры';
         Constants.STRING_FOLLOWERS                                       = 'followers';
         Constants.STRING_PLAYS                                           = 'plays';
@@ -274,7 +259,7 @@ class ConstantsUpdater {
         Constants.STRING_DELETE                                          = 'Delete';
         Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
-        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something to search in your collection';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
         Constants.STRING_PLAYLIST                                        = 'Playlist';
         Constants.STRING_PLAYLISTS                                       = 'Playlists';
@@ -289,9 +274,10 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
+        Constants.STRING_APP_THEME_SYSTEM                               = 'Follow system theme';
       }
       break;
-      case LanguageRegion.slSi: {
+      case 2: {
         Constants.STRING_INTERNET_ERROR                                  = 'Prosimo, preverite vašo internetno povezavo';
         Constants.STRING_SEARCH_HEADER                                   = 'Preišči glasbo';
         Constants.STRING_SEARCH_MODE_SUBHEADER                           = 'Kaj pa iščeš?';
@@ -306,8 +292,8 @@ class ConstantsUpdater {
         Constants.STRING_TOP_TRACKS                                      = 'NAJBOLJŠE PESMI';
         Constants.STRING_ARTIST                                          = 'Skladatelji';
         Constants.STRING_SAVED                                           = 'Shranjeno';
-        Constants.STRING_LIGHT                                           = 'Svetli';
-        Constants.STRING_DARK                                            = 'Temni';
+        Constants.STRING_APP_THEME_LIGHT                                = 'Svetli';
+        Constants.STRING_APP_THEME_DARK                                 = 'Temni';
         Constants.STRING_OPTIONS                                         = 'Opcije';
         Constants.STRING_FOLLOWERS                                       = 'sledilci';
         Constants.STRING_PLAYS                                           = 'se predvaja';
@@ -409,7 +395,7 @@ class ConstantsUpdater {
         Constants.STRING_DELETE                                          = 'Delete';
         Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
-        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something to search in your collection';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
         Constants.STRING_PLAYLIST                                        = 'Playlist';
         Constants.STRING_PLAYLISTS                                       = 'Playlists';
@@ -424,9 +410,10 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
+        Constants.STRING_APP_THEME_SYSTEM                               = 'Follow system theme';
       }
       break;
-      case LanguageRegion.ptBr: {
+      case 3: {
         Constants.STRING_INTERNET_ERROR                                  = 'Verifique sua conexão com a internet...';
         Constants.STRING_SEARCH_HEADER                                   = 'Procurar uma música';
         Constants.STRING_SEARCH_MODE_SUBHEADER                           = 'O que você está procurando?';
@@ -441,8 +428,8 @@ class ConstantsUpdater {
         Constants.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
         Constants.STRING_ARTIST                                          = 'Artistas';
         Constants.STRING_SAVED                                           = 'Saved';
-        Constants.STRING_LIGHT                                           = 'Light';
-        Constants.STRING_DARK                                            = 'Dark';
+        Constants.STRING_APP_THEME_LIGHT                                = 'Light';
+        Constants.STRING_APP_THEME_DARK                                 = 'Dark';
         Constants.STRING_OPTIONS                                         = 'Options';
         Constants.STRING_FOLLOWERS                                       = 'followers';
         Constants.STRING_PLAYS                                           = 'plays';
@@ -544,7 +531,7 @@ class ConstantsUpdater {
         Constants.STRING_DELETE                                          = 'Delete';
         Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
-        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something to search in your collection';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
         Constants.STRING_PLAYLIST                                        = 'Playlist';
         Constants.STRING_PLAYLISTS                                       = 'Playlists';
@@ -559,9 +546,10 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
+        Constants.STRING_APP_THEME_SYSTEM                               = 'Follow system theme';
       }
       break;
-      case LanguageRegion.hiIn: {
+      case 4: {
         Constants.STRING_INTERNET_ERROR                                  = 'अपना इंटरनेट कनेक्शन चेक करें...';
         Constants.STRING_SEARCH_HEADER                                   = 'गाना खोजें';
         Constants.STRING_SEARCH_MODE_SUBHEADER                           = 'आप किस तरह से गाना खोजेंगे?';
@@ -576,8 +564,8 @@ class ConstantsUpdater {
         Constants.STRING_TOP_TRACKS                                      = 'टॉप गाने';
         Constants.STRING_ARTIST                                          = 'कलाकार';
         Constants.STRING_SAVED                                           = 'सेव्ड';
-        Constants.STRING_LIGHT                                           = 'लाइट';
-        Constants.STRING_DARK                                            = 'डार्क';
+        Constants.STRING_APP_THEME_LIGHT                                = 'लाइट';
+        Constants.STRING_APP_THEME_DARK                                 = 'डार्क';
         Constants.STRING_OPTIONS                                         = 'विकल्प';
         Constants.STRING_FOLLOWERS                                       = 'फॉलोवर्स';
         Constants.STRING_PLAYS                                           = 'बार सुना गया';
@@ -679,7 +667,7 @@ class ConstantsUpdater {
         Constants.STRING_DELETE                                          = 'Delete';
         Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
-        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something to search in your collection';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
         Constants.STRING_PLAYLIST                                        = 'Playlist';
         Constants.STRING_PLAYLISTS                                       = 'Playlists';
@@ -694,9 +682,10 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
+        Constants.STRING_APP_THEME_SYSTEM                               = 'Follow system theme';
       }
       break;
-      case LanguageRegion.deDe: {
+      case 5: {
         Constants.STRING_INTERNET_ERROR                                  = 'Überprüfen Sie Ihre Internetverbindung...';
         Constants.STRING_SEARCH_HEADER                                   = 'Musik suchen';
         Constants.STRING_SEARCH_MODE_SUBHEADER                           = 'Wonach suchen Sie?';
@@ -711,8 +700,8 @@ class ConstantsUpdater {
         Constants.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
         Constants.STRING_ARTIST                                          = 'Künstler';
         Constants.STRING_SAVED                                           = 'gespeichert';
-        Constants.STRING_LIGHT                                           = 'Light';
-        Constants.STRING_DARK                                            = 'Dark';
+        Constants.STRING_APP_THEME_LIGHT                                = 'Light';
+        Constants.STRING_APP_THEME_DARK                                 = 'Dark';
         Constants.STRING_OPTIONS                                         = 'Optionen';
         Constants.STRING_FOLLOWERS                                       = 'followers';
         Constants.STRING_PLAYS                                           = 'plays';
@@ -767,7 +756,7 @@ class ConstantsUpdater {
         Constants.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'VORHERIGER';
         Constants.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Es wird aktuell nichts gespielt...';
         Constants.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Aus Ihrer Sammlung abspielen';
-        Constants.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = '';
+        Constants.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = ', ';
         Constants.STRING_SETTING_GITHUB                                  = 'GITHUB';
         Constants.STRING_SETTING_STAR_GITHUB                             = 'Projekt mit "Star" versehen (GitHub)';
         Constants.STRING_SETTING_STARGAZERS_TITLE                        = 'Projekt "Star"-Geber (GitHub)';
@@ -792,7 +781,7 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Vielen Dank für die Unterstützung!';
         Constants.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Akzentfarbe';
         Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Ändern der Akzentfarbe der App';
-        Constants.STRING_SETTING_THEME_TITLE                             = 'App Mode';
+        Constants.STRING_SETTING_THEME_TITLE                             = 'App Theme';
         Constants.STRING_SETTING_THEME_SUBTITLE                          = 'Ändern Sie die App im Light-Mode oder Dark-Mode';
         Constants.STRING_NO_DOWNLOAD_UPDATE                              = 'Ihre App ist bereits aktuell.';
         Constants.STRING_DOWNLOAD_UPDATE                                 = 'UPDATE DOWNLOADEN';
@@ -814,7 +803,7 @@ class ConstantsUpdater {
         Constants.STRING_DELETE                                          = 'Delete';
         Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
-        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something for us to look in your collection';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something to search in your collection';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
         Constants.STRING_PLAYLIST                                        = 'Playlist';
         Constants.STRING_PLAYLISTS                                       = 'Playlists';
@@ -829,6 +818,7 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
+        Constants.STRING_APP_THEME_SYSTEM                               = 'Follow system theme';
       }
     }
   }
