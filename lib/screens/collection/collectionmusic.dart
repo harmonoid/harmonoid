@@ -44,6 +44,9 @@ class CollectionMusicSearchState extends State<CollectionMusicSearch> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (this._init) {
+      this._elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
+      this.tileWidth = (MediaQuery.of(context).size.width - 16 - (this._elementsPerRow - 1) * 8) / this._elementsPerRow;
+      this.tileHeight = this.tileWidth * 242 / 156;
       this._textFieldController.addListener(() async {
         this._albumResults = [];
         this._trackResults = [];
@@ -72,14 +75,14 @@ class CollectionMusicSearchState extends State<CollectionMusicSearch> {
         }
         this.setState(() {});
       });
-      States.musicCollectionSearchRefresh = this._refresh;
+      States.refreshMusicSearch = this._refresh;
     }
     this._init = false;
   }
 
   @override
   void dispose() {
-    States.musicCollectionSearchRefresh = null;
+    States.refreshMusicSearch = () {};
     super.dispose();
   }
 
@@ -676,7 +679,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   @override
   void initState() {
     super.initState();
-    States.musicCollectionRefresh = this._refresh;
+    States.refreshMusicCollection = this._refresh;
     States.musicCollectionCurrentTab = new Album();
     this._tabController = TabController(initialIndex: 0, length: 4, vsync: this);
   }
@@ -695,8 +698,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
 
   @override
   void dispose() {
-    States.musicCollectionRefresh = null;
-    States.musicCollectionCurrentTab = null;
+    States.refreshMusicCollection = (dynamic musicCollectionCurrentTab) {};
+    States.musicCollectionCurrentTab = new Album();
     super.dispose();
   }
 
@@ -710,6 +713,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
             SliverOverlapAbsorber(
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               sliver: SliverAppBar(
+                elevation: innerBoxIsScrolled ? 4.0 : 1.0,
                 forceElevated: true,
                 pinned: true,
                 floating: true,
@@ -738,11 +742,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     splashRadius: Theme.of(context).iconTheme.size - 4,
                     tooltip: Constants.STRING_SWITCH_THEME,
                     onPressed: () {
-                      this._themeIcon = this._themeIcon == Icons.brightness_medium ? Icons.brightness_high : Icons.brightness_medium;
-                      States.switchTheme();
-                      Timer(Duration(milliseconds: 400), () {
-                        if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
-                      });
+                      States.refreshMusicCollection(States.musicCollectionCurrentTab);
+                      States.refreshMusicSearch();
                     },
                   ),
                   IconButton(
@@ -757,16 +758,10 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   controller: this._tabController,
                   indicatorColor: Theme.of(context).accentColor,
                   isScrollable: true,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  indicator: MD2Indicator(
-                    indicatorSize: MD2IndicatorSize.full,
-                    indicatorHeight: 4.0,
-                    indicatorColor: Theme.of(context).accentColor,
-                  ),
                   onTap: (int index) {
                     this._tabController.animateTo(index);
                     States.musicCollectionCurrentTab = <dynamic>[new Album(), new Track(), new Artist(), new Playlist()][this._tabController.index];
-                    if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
+                    States.refreshMusicCollection(States.musicCollectionCurrentTab);
                   },
                   tabs: [
                     Tab(

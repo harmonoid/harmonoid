@@ -36,16 +36,15 @@ class CollectionAlbumTile extends StatelessWidget {
               width: this.width,
             ),
             Container(
-              margin: EdgeInsets.only(left: 8, right: 8),
+              padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
+              height: this.height - this.width,
+              width: this.width,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Divider(
-                    color: Colors.transparent,
-                    height: 4,
-                  ),
-                  Container(
-                    height: 38 * MediaQuery.of(context).devicePixelRatio,
+                  Padding(
+                    padding: EdgeInsets.only(top: 4),
                     child: Text(
                       this.album.albumName,
                       style: Theme.of(context).textTheme.headline2,
@@ -53,21 +52,14 @@ class CollectionAlbumTile extends StatelessWidget {
                       maxLines: 2,
                     ),
                   ),
-                  Divider(
-                    color: Colors.transparent,
-                    height: 2,
-                  ),
-                  Text(
-                    this.album.albumArtistName,
-                    style: Theme.of(context).textTheme.headline4,
-                    maxLines: 1,
-                    textAlign: TextAlign.left,
-                  ),
-                  Text(
-                    '(${this.album.year})',
-                    style: Theme.of(context).textTheme.headline4,
-                    maxLines: 1,
-                    textAlign: TextAlign.left,
+                  Padding(
+                    padding: EdgeInsets.only(top: 2),
+                    child: Text(
+                      '${this.album.albumArtistName}\n(${this.album.year})',
+                      style: Theme.of(context).textTheme.headline4,
+                      maxLines: 2,
+                      textAlign: TextAlign.left,
+                    ),
                   ),
                 ],
               ),
@@ -215,8 +207,8 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                             Navigator.of(subContext).pop();
                             if (this.album.tracks.length == 0) {
                               Navigator.of(context).pop();
-                              if (States.musicCollectionSearchRefresh != null) States.musicCollectionSearchRefresh();
-                              if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
+                              States.refreshMusicCollection(States.musicCollectionCurrentTab);
+                              States.refreshMusicSearch();
                             }
                           },
                           child: Text(Constants.STRING_YES),
@@ -372,8 +364,8 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                           Navigator.of(subContext).pop();
                           await collection.delete(widget.album);
                           Navigator.of(context).pop();
-                          if (States.musicCollectionSearchRefresh != null) States.musicCollectionSearchRefresh();
-                          if (States.musicCollectionRefresh != null) States.musicCollectionRefresh(States.musicCollectionCurrentTab);
+                          States.refreshMusicCollection(States.musicCollectionCurrentTab);
+                          States.refreshMusicSearch();
                         },
                         child: Text(Constants.STRING_YES),
                       ),
