@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:audio_service/audio_service.dart';
 
@@ -10,7 +11,35 @@ import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
-import 'package:harmonoid/constants/constantsupdater.dart';
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Stopwatch stopwatch = new Stopwatch()..start();
+  await Configuration.init(
+    cacheDirectory: await path.getExternalStorageDirectory(),
+  );
+  await Collection.init(
+    collectionDirectory: Directory('/storage/emulated/0/Music'),
+    cacheDirectory: await path.getExternalStorageDirectory(),
+  );
+  await collection.getFromCache();
+  States.refreshLanguage(LanguageRegion.values[await configuration.getConfiguration(ConfigurationType.languageRegion)]);
+  States.refreshAppTheme(AppTheme.values[await configuration.getConfiguration(ConfigurationType.appTheme)]);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  print('Time Elapsed: ${stopwatch.elapsedMilliseconds}ms.');
+  stopwatch.reset();
+  runApp(
+    new AudioServiceWidget(
+      child: new Harmonoid(),
+    ),
+  );
+}
+
+
+void backgroundTaskEntryPoint() {
+  AudioServiceBackground.run(() => BackgroundTask());
+}
 
 
 class Harmonoid extends StatefulWidget {
@@ -20,19 +49,30 @@ class Harmonoid extends StatefulWidget {
 
 
 class HarmonoidState extends State<Harmonoid> {
-  ThemeMode _themeMode = ThemeMode.light;
 
-  ThemeMode switchTheme() {
+  void refreshAppTheme(AppTheme appTheme) {
     this.setState(() {
-      this._themeMode = this._themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+      switch(appTheme) {
+        case AppTheme.system: {
+          States.appTheme = ThemeMode.system;
+        }
+        break;
+        case AppTheme.light: {
+          States.appTheme = ThemeMode.light;
+        }
+        break;
+        case AppTheme.dark: {
+          States.appTheme = ThemeMode.dark;
+        }
+        break;
+        }
     });
-    return this._themeMode;
   }
 
   @override
   void initState() {
     super.initState();
-    States.switchTheme = this.switchTheme;
+    States.refreshAppTheme = this.refreshAppTheme;
   }
 
   @override
@@ -50,6 +90,7 @@ class HarmonoidState extends State<Harmonoid> {
         cursorColor: Colors.deepPurpleAccent[700],
         accentColor: Colors.deepPurpleAccent[400],
         textSelectionHandleColor: Colors.deepPurpleAccent[400],
+        toggleableActiveColor: Colors.deepPurpleAccent[400],
         cardColor: Colors.white,
         dividerColor: Colors.black12,
         tabBarTheme: TabBarTheme(
@@ -153,7 +194,8 @@ class HarmonoidState extends State<Harmonoid> {
         cursorColor: Colors.deepPurpleAccent[100],
         accentColor: Colors.deepPurpleAccent[100],
         textSelectionHandleColor: Colors.deepPurpleAccent[100],
-        cardColor: Colors.white.withOpacity(0.10),
+        toggleableActiveColor: Colors.deepPurpleAccent[100],
+        cardColor: Colors.white.withOpacity(0.14),
         dividerColor: Colors.white12,
         tabBarTheme: TabBarTheme(
           labelColor: Colors.deepPurpleAccent[100],
@@ -246,7 +288,7 @@ class HarmonoidState extends State<Harmonoid> {
           ),
         ),
       ),
-      themeMode: this._themeMode,
+      themeMode: States.appTheme,
       home: Home(),
       onGenerateRoute: (RouteSettings routeSettings) {
         PageRoute route;
@@ -266,27 +308,4 @@ class HarmonoidState extends State<Harmonoid> {
       },
     );
   }
-}
-
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Configuration.init(
-    cacheDirectory: await path.getExternalStorageDirectory(),
-  );
-  await Collection.init(
-    collectionDirectory: Directory('/storage/emulated/0/Music'),
-    cacheDirectory: await path.getExternalStorageDirectory(),
-  );
-  await collection.getFromCache();
-  await ConstantsUpdater.update(await appConfiguration.getConfiguration(Configurations.languageRegion));
-  runApp(
-    new AudioServiceWidget(
-      child: new Harmonoid(),
-    ),
-  );
-}
-
-void backgroundTaskEntryPoint() {
-  AudioServiceBackground.run(() => BackgroundTask());
 }
