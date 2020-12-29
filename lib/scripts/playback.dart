@@ -158,6 +158,7 @@ class BackgroundTask extends BackgroundAudioTask {
 
   @override
   Future<void> onSeekTo(Duration duration) async {
+    await this._audioPlayer.seek(duration);
     await AudioServiceBackground.setState(
       playing: true,
       processingState: AudioProcessingState.completed,
@@ -174,7 +175,6 @@ class BackgroundTask extends BackgroundAudioTask {
       ],
       position: this._audioPlayer.position,
     );
-    this._audioPlayer.seek(duration);
   }
   
   @override
