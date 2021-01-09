@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/constants/constants.dart';
-import 'package:harmonoid/constants/constantsupdater.dart';
+import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/scripts/states.dart';
 
@@ -10,7 +10,8 @@ class SettingsTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final Widget child;
-  SettingsTile({Key key, @required this.title, @required this.subtitle, @required this.child}) : super(key: key);
+  final List<Widget> actions;
+  SettingsTile({Key key, @required this.title, @required this.subtitle, @required this.child, this.actions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +36,15 @@ class SettingsTile extends StatelessWidget {
                 ),
                 Divider(
                   color: Colors.transparent,
-                  height: 2.0,
+                  height: 4.0,
                 ),
                 Text(
                   this.subtitle,
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
                 Divider(
                   color: Colors.transparent,
-                  height: 16.0,
+                  height: 8.0,
                 ),
                 Divider(
                   color: Theme.of(context).dividerColor,
@@ -58,6 +59,18 @@ class SettingsTile extends StatelessWidget {
             color: Colors.transparent,
             height: 8.0,
           ),
+          (this.actions != null) ? Divider(
+            color: Theme.of(context).dividerColor,
+            thickness: 1.0,
+            indent: 16.0,
+            endIndent: 16.0,
+            height: 1.0,
+          ) : Container(),
+          (this.actions != null) ? ButtonBar(
+            alignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            children: this.actions,
+          ) : Container(),
         ],
       ),
     );
@@ -72,13 +85,14 @@ class Settings extends StatefulWidget {
 
 
 class SettingsState extends State<Settings> {
-  AppTheme _appTheme;
+  ThemeMode _ThemeMode;
   LanguageRegion _languageRegion;
+  List<int> _refreshLinearProgressIndicatorValues;
 
-  Future<void> _setAppTheme(AppTheme value) async {
-    await configuration.setConfiguration(ConfigurationType.appTheme, value.index);
-    States.refreshAppTheme(value);
-    this.setState(() => this._appTheme = value);
+  Future<void> _setThemeMode(ThemeMode value) async {
+    await configuration.setConfiguration(ConfigurationType.themeMode, value.index);
+    States.refreshThemeMode(value);
+    this.setState(() => this._ThemeMode = value);
   }
 
   Future<void> _setLanguageRegion(LanguageRegion value) async {
@@ -87,7 +101,7 @@ class SettingsState extends State<Settings> {
   }
 
   Future<void> _refresh() async {
-    this._appTheme = AppTheme.values[await configuration.getConfiguration(ConfigurationType.appTheme)];
+    this._ThemeMode = ThemeMode.values[await configuration.getConfiguration(ConfigurationType.themeMode)];
     this._languageRegion = LanguageRegion.values[await configuration.getConfiguration(ConfigurationType.languageRegion)];
     this.setState(() {});
   }
@@ -110,7 +124,7 @@ class SettingsState extends State<Settings> {
           onPressed: () {},
           tooltip: Constants.STRING_MENU,
         ),
-        title: Text('Settings'),
+        title: Text(Constants.STRING_SETTING),
       ),
       body: ListView(
         children: [
@@ -120,22 +134,22 @@ class SettingsState extends State<Settings> {
             child: Column(
               children: [
                 RadioListTile(
-                  value: AppTheme.system,
-                  title: Text(AppTheme.system.data),
-                  groupValue: this._appTheme,
-                  onChanged: (Object object) => this._setAppTheme(object),
+                  value: ThemeMode.system,
+                  title: Text(ThemeMode.system.data),
+                  groupValue: this._ThemeMode,
+                  onChanged: (Object object) => this._setThemeMode(object),
                 ),
                 RadioListTile(
-                  value: AppTheme.light,
-                  title: Text(AppTheme.light.data),
-                  groupValue: this._appTheme,
-                  onChanged: (Object object) => this._setAppTheme(object),
+                  value: ThemeMode.light,
+                  title: Text(ThemeMode.light.data),
+                  groupValue: this._ThemeMode,
+                  onChanged: (Object object) => this._setThemeMode(object),
                 ),
                 RadioListTile(
-                  value: AppTheme.dark,
-                  title: Text(AppTheme.dark.data),
-                  groupValue: this._appTheme,
-                  onChanged: (Object object) => this._setAppTheme(object),
+                  value: ThemeMode.dark,
+                  title: Text(ThemeMode.dark.data),
+                  groupValue: this._ThemeMode,
+                  onChanged: (Object object) => this._setThemeMode(object),
                 ),
               ],
             )
@@ -189,6 +203,82 @@ class SettingsState extends State<Settings> {
                 ),
               ],
             )
+          ),
+          SettingsTile(
+            title: Constants.STRING_SETTING_INDEXING_TITLE,
+            subtitle: Constants.STRING_SETTING_INDEXING_SUBTITLE,
+            child: Container(
+              margin: EdgeInsets.only(left: 16, right: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 56.0,
+                    alignment: Alignment.topLeft,
+                    child: this._refreshLinearProgressIndicatorValues != null ? TweenAnimationBuilder(
+                      tween: Tween<double>(begin: 0, end: this._refreshLinearProgressIndicatorValues[0]/this._refreshLinearProgressIndicatorValues[1]),
+                      duration: Duration(milliseconds: 400),
+                      child: Text(
+                        (
+                          Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
+                          .replaceAll('NUMBER_STRING', this._refreshLinearProgressIndicatorValues[0].toString())
+                        ).replaceAll('TOTAL_STRING', this._refreshLinearProgressIndicatorValues[1].toString()),
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                      builder: (_, value, child) => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          child,
+                          Container(
+                            margin: EdgeInsets.only(top: 6.0),
+                            height: 4.0,
+                            width: MediaQuery.of(context).size.width - 32.0,
+                            child: LinearProgressIndicator(
+                              value: value,
+                            ),
+                          ),
+                        ],
+                      )
+                    ): Container(
+                      child: Chip(
+                        backgroundColor: Theme.of(context).accentColor,
+                        avatar: Icon(
+                          Icons.check_circle,
+                          color: Colors.white,
+                        ),
+                        label: Text(
+                          'Your music collection is indexed',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    ),
+                  ),
+                  Text('Do not interrupt the process',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              MaterialButton(
+                onPressed: () async {
+                  await collection.refresh(callback: (completed, total, isCompleted) {
+                    this.setState(() {
+                      this._refreshLinearProgressIndicatorValues = [completed, total];
+                    });
+                  });
+                  this._refreshLinearProgressIndicatorValues = null;
+                },
+                child: Text(
+                  'REFRESH',
+                  style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+              ),
+            ],
           ),
           SettingsTile(
             title: Constants.STRING_SETTING_ACCENT_COLOR_TITLE,
