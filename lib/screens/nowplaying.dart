@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
 
 import 'package:harmonoid/scripts/collection.dart';
-import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/constants/constants.dart';
 
 
@@ -17,7 +16,7 @@ class NowPlayingTile extends StatefulWidget {
 class NowPlayingTileState extends State<NowPlayingTile> {
   StreamSubscription _playingStreamSubscription;
   bool _isPlaying = false;
-  Map<String, dynamic> _track = new Track().toDictionary();
+  Map<String, dynamic> _track = new Track().toMap();
 
   @override
   void initState() {

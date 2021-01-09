@@ -2,9 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:path/path.dart' as path;
-import 'package:dart_tags/dart_tags.dart';
+import 'package:media_metadata_retriever/media_metadata_retriever.dart';
+
+
+const List<String> SUPPORTED_FILE_TYPES = ['OGG', 'OGA', 'AAC', 'M4A', 'MP3', 'WMA', 'OPUS'];
+
 
 Collection collection;
+
 
 class Track {
   final String trackName;
@@ -16,7 +21,7 @@ class Track {
   final String filePath;
   final int albumArtId;
 
-  Map<String, dynamic> toDictionary() {
+  Map<String, dynamic> toMap() {
     return {
       'type': 'Track',
       'trackName': this.trackName,
@@ -42,10 +47,10 @@ class Album {
   final int albumArtId;
   List<Track> tracks = <Track>[];
 
-  Map<String, dynamic> toDictionary() {
+  Map<String, dynamic> toMap() {
     List<dynamic> tracks = <dynamic>[];    
     for (Track track in this.tracks) {
-      tracks.add(track.toDictionary());
+      tracks.add(track.toMap());
     }
     return {
       'type': 'Album',
@@ -67,14 +72,14 @@ class Artist {
   List<Album> albums = <Album>[];
   List<Track> tracks = <Track>[];
 
-  Map<String, dynamic> toDictionary() {
+  Map<String, dynamic> toMap() {
     List<dynamic> tracks = <dynamic>[];    
     for (Track track in this.tracks) {
-      tracks.add(track.toDictionary());
+      tracks.add(track.toMap());
     }
     List<dynamic> albums = <dynamic>[];    
     for (Album album in this.albums) {
-      albums.add(album.toDictionary());
+      albums.add(album.toMap());
     }
     return {
       'type': 'Artist',
@@ -93,10 +98,10 @@ class Playlist {
   final int playlistId;
   List<Track> tracks = <Track>[];
 
-  Map<String, dynamic> toDictionary() {
+  Map<String, dynamic> toMap() {
     List<dynamic> tracks = <dynamic>[];
     for (Track track in this.tracks) {
-      tracks.add(track.toDictionary());
+      tracks.add(track.toMap());
     }
     return {
       'type': 'Playlist',
@@ -127,44 +132,42 @@ class Collection {
   List<Artist> artists = <Artist>[];
   List<Playlist> playlists = <Playlist>[];
 
-  Future<Collection> refresh() async {
+  Future<Collection> refresh({void Function(int completed, int total, bool isCompleted) callback}) async {
     if (await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).exists()) {
       await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).delete();
     }
     this.albums.clear();
     this.tracks.clear();
     this.artists.clear();
-
     this._foundAlbums.clear();
     this._foundArtists.clear();
-
-    for (FileSystemEntity object in this.collectionDirectory.listSync()) {
-      if (object is File && object.path.split('.').last.toUpperCase() == 'MP3') {
-        List<Tag> fileTags = await TagProcessor().getTagsFromByteArray(
-          object.readAsBytes(),
-          [TagType.id3v2]
-        );
-        String year = fileTags[0].tags['TDRC'] ?? fileTags[0].tags['year'] ?? 'Unknown Year';
-        List<String> trackArtistNames = fileTags[0].tags['artist'] == null ? ['Unknown Artist'] : fileTags[0].tags['artist'].split('/');
-        String albumArtistName = fileTags[0].tags['TPE2'] ?? 'Unknown Artist';
-        String trackNumber = fileTags[0].tags['track'] == null ? '1' : fileTags[0].tags['track'].split('/')[0];
-        String albumName = fileTags[0].tags['album'] ?? 'Unknown Album';
-        String trackName = fileTags[0].tags['title'];
+    List<FileSystemEntity> directory = this.collectionDirectory.listSync();
+    for (int index = 0; index < directory.length; index++) {
+      FileSystemEntity object = directory[index];
+      if (isSupported(object)) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        await retriever.setFile(object);
+        Metadata metadata = await retriever.metadata;
+        String trackName = metadata.trackName ?? 'Unknown Track';
+        String albumName = metadata.albumName ?? 'Unknown Album';
+        List<dynamic> trackArtistNames = metadata.trackArtistNames ?? <dynamic>['Unknown Artist'];
+        String albumArtistName = metadata.albumArtistName ?? 'Unknown Artist';
+        String trackNumber = metadata.trackNumber != null ? metadata.trackNumber.toString() : '1';
+        String year = metadata.year != null ? metadata.year.toString() : 'Unknown Year';
         String filePath = object.path;
-
         void albumArtMethod() async {
-          if (fileTags[0].tags['picture'] == null) {
+          if (retriever.albumArt == null) {
             this._albumArts.add(null);
           }
           else {
             File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${binaryIndexOf(this._foundAlbums, [albumName, albumArtistName])}.png'));
-            await albumArtFile.writeAsBytes(fileTags[0].tags['picture'][fileTags[0].tags['picture'].keys.first].imageData);
+            await albumArtFile.writeAsBytes(retriever.albumArt);
             this._albumArts.add(albumArtFile);
           }
         }
-
         await this._arrange(trackName, albumName, year, trackNumber, albumArtistName, trackArtistNames, albumArtMethod, filePath);
       }
+      if (callback != null) callback(index + 1, directory.length, false);
     }
 
     for (Album album in this.albums) {
@@ -175,6 +178,7 @@ class Collection {
       }
     }
     await this.saveToCache();
+    if (callback != null) callback(directory.length, directory.length, true);
     return this;
   }
 
@@ -209,29 +213,28 @@ class Collection {
   File getAlbumArt(int albumArtId) => new File(path.join(this.cacheDirectory.path, 'albumArt$albumArtId.png'));
 
   Future<void> add({File trackFile}) async {
-    if (trackFile.path.split('.').last.toUpperCase() == 'MP3') {
-      List<Tag> fileTags = await TagProcessor().getTagsFromByteArray(
-        trackFile.readAsBytes(),
-        [TagType.id3v2]
-      );
-      String year = fileTags[0].tags['TDRC'] ?? fileTags[0].tags['year'] ?? 'Unknown Year';
-      String albumArtistName = fileTags[0].tags['TPE2'] ?? 'Unknown Artist';
-      List<String> trackArtistNames = fileTags[0].tags['artist'] == null ? ['Unknown Artist'] : fileTags[0].tags['artist'].split('/');
-      String trackNumber = fileTags[0].tags['track'] == null ? '1' : fileTags[0].tags['track'].split('/')[0];
-      String albumName = fileTags[0].tags['album'] ?? 'Unknown Album';
-      String trackName = fileTags[0].tags['title'];
+    if (isSupported(trackFile)) {
+      MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+      await retriever.setFile(trackFile);
+      Metadata metadata = await retriever.metadata;
+      String trackName = metadata.trackName ?? 'Unknown Track';
+      String albumName = metadata.albumName ?? 'Unknown Album';
+      List<dynamic> trackArtistNames = metadata.trackArtistNames ?? <dynamic>['Unknown Artist'];
+      String albumArtistName = metadata.albumArtistName ?? 'Unknown Artist';
+      String trackNumber = metadata.trackNumber != null ? metadata.trackNumber.toString() : '1';
+      String year = metadata.year != null ? metadata.year.toString() : 'Unknown Year';
       String filePath = trackFile.path;
+
       void albumArtMethod() async {
-        if (fileTags[0].tags['picture'] == null) {
+        if (retriever.albumArt == null) {
           this._albumArts.add(null);
         }
         else {
           File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${binaryIndexOf(this._foundAlbums, [albumName, albumArtistName])}.png'));
-          await albumArtFile.writeAsBytes(fileTags[0].tags['picture'][fileTags[0].tags['picture'].keys.first].imageData);
+          await albumArtFile.writeAsBytes(retriever.albumArt);
           this._albumArts.add(albumArtFile);
         }
       }
-
       await this._arrange(trackName, albumName, year, trackNumber, albumArtistName, trackArtistNames, albumArtMethod, filePath);
     }
     await this.saveToCache();
@@ -347,7 +350,7 @@ class Collection {
   Future<void> saveToCache() async {
    JsonEncoder encoder = JsonEncoder.withIndent('    ');
     List<Map<String, dynamic>> tracks = <Map<String, dynamic>>[];
-    collection.tracks.forEach((element) => tracks.add(element.toDictionary()));
+    collection.tracks.forEach((element) => tracks.add(element.toMap()));
 
     await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).writeAsString(encoder.convert({'tracks': tracks}));
   }
@@ -380,7 +383,7 @@ class Collection {
       }
       List<File> collectionDirectoryContent = <File>[];
       for (FileSystemEntity object in this.collectionDirectory.listSync()) {
-        if (object is File && object.path.split('.').last.toUpperCase() == 'MP3') {
+        if (isSupported(object)) {
           collectionDirectoryContent.add(object);
         }
       }
@@ -553,7 +556,7 @@ class Collection {
   Future<void> playlistsSaveToCache() async {
     List<Map<String, dynamic>> playlists = <Map<String, dynamic>>[];
     for (Playlist playlist in this.playlists) {
-      playlists.add(playlist.toDictionary());
+      playlists.add(playlist.toMap());
     }
     File playlistFile = File(path.join(this.cacheDirectory.path, 'collectionPlaylists.json'));
     await playlistFile.writeAsString(JsonEncoder.withIndent('    ').convert({'playlists': playlists}));
@@ -599,6 +602,15 @@ int binaryIndexOf(List<List<String>> collectionList, List<String> keywordList) {
     }
   }
   return indexOfKeywordList;
+}
+
+bool isSupported(FileSystemEntity file) {
+  if (file is File && SUPPORTED_FILE_TYPES.contains(file.path.split('.').last.toUpperCase())) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 bool binaryContains(List<List<String>> collectionList, List<String> keywordList) => binaryIndexOf(collectionList, keywordList) != -1 ? true : false;
