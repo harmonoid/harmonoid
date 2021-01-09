@@ -1,7 +1,7 @@
 {
     "version": "0.0.3+1",
     "languageRegion": 0,
-    "appTheme": 0,
+    "themeMode": 0,
     "accentColor": 0,
     "homeUri": "harmonoid.github.io",
     "collectionStartTab": 0,
