@@ -15,9 +15,9 @@ class Constants {
   static String STRING_TOP_TRACKS;
   static String STRING_ARTIST;
   static String STRING_SAVED;
-  static String STRING_APP_THEME_LIGHT;
-  static String STRING_APP_THEME_DARK;
-  static String STRING_APP_THEME_SYSTEM;
+  static String STRING_THEME_MODE_LIGHT;
+  static String STRING_THEME_MODE_DARK;
+  static String STRING_THEME_MODE_SYSTEM;
   static String STRING_OPTIONS;
   static String STRING_FOLLOWERS;
   static String STRING_PLAYS;
@@ -131,4 +131,10 @@ class Constants {
   static String STRING_PLAYLIST_ADD_DIALOG_BODY;
   static String STRING_PLAYLIST_TRACKS_SUBHEADER;
   static String STRING_TRANSFERS;
+  static String STRING_SETTING_INDEXING_TITLE;
+  static String STRING_SETTING_INDEXING_SUBTITLE;
+  static String STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR;
+  static String STRING_SETTING_INDEXING_DONE;
+  static String STRING_SETTING_INDEXING_WARNING;
+  static String STRING_REFRESH;
 }

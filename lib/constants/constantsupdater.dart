@@ -1,4 +1,3 @@
-import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/constants/constants.dart';
 
 
@@ -20,8 +19,8 @@ class ConstantsUpdater {
         Constants.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
         Constants.STRING_ARTIST                                          = 'Artists';
         Constants.STRING_SAVED                                           = 'Saved';
-        Constants.STRING_APP_THEME_LIGHT                                = 'Light';
-        Constants.STRING_APP_THEME_DARK                                 = 'Dark';
+        Constants.STRING_THEME_MODE_LIGHT                                = 'Light';
+        Constants.STRING_THEME_MODE_DARK                                 = 'Dark';
         Constants.STRING_OPTIONS                                         = 'Options';
         Constants.STRING_FOLLOWERS                                       = 'followers';
         Constants.STRING_PLAYS                                           = 'plays';
@@ -99,13 +98,13 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Changing server for the app...';
         Constants.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
         Constants.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
-        Constants.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent Color';
+        Constants.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent';
         Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
-        Constants.STRING_SETTING_THEME_TITLE                             = 'App Theme';
+        Constants.STRING_SETTING_THEME_TITLE                             = 'Theme';
         Constants.STRING_SETTING_THEME_SUBTITLE                          = 'Change the app to light or dark mode';
         Constants.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
         Constants.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
-        Constants.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
+        Constants.STRING_SETTING_APP_VERSION_TITLE                       = 'Version';
         Constants.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
         Constants.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version';
         Constants.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version';
@@ -138,7 +137,13 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
-        Constants.STRING_APP_THEME_SYSTEM                               = 'Follow system theme';
+        Constants.STRING_THEME_MODE_SYSTEM                               = 'Follow system theme';
+        Constants.STRING_SETTING_INDEXING_TITLE                          = 'Indexing';
+        Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
+        Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
+        Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
+        Constants.STRING_REFRESH                                         = 'REFRESH';
       }
       break;
       case 1: {
@@ -156,8 +161,8 @@ class ConstantsUpdater {
         Constants.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
         Constants.STRING_ARTIST                                          = 'Исполнители';
         Constants.STRING_SAVED                                           = 'Сохранено';
-        Constants.STRING_APP_THEME_LIGHT                                = 'День';
-        Constants.STRING_APP_THEME_DARK                                 = 'Ночь';
+        Constants.STRING_THEME_MODE_LIGHT                                = 'День';
+        Constants.STRING_THEME_MODE_DARK                                 = 'Ночь';
         Constants.STRING_OPTIONS                                         = 'Параметры';
         Constants.STRING_FOLLOWERS                                       = 'followers';
         Constants.STRING_PLAYS                                           = 'plays';
@@ -274,7 +279,13 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
-        Constants.STRING_APP_THEME_SYSTEM                               = 'Follow system theme';
+        Constants.STRING_THEME_MODE_SYSTEM                               = 'Follow system theme';
+        Constants.STRING_SETTING_INDEXING_TITLE                          = 'Indexing';
+        Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
+        Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
+        Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
+        Constants.STRING_REFRESH                                         = 'REFRESH';
       }
       break;
       case 2: {
@@ -292,8 +303,8 @@ class ConstantsUpdater {
         Constants.STRING_TOP_TRACKS                                      = 'NAJBOLJŠE PESMI';
         Constants.STRING_ARTIST                                          = 'Skladatelji';
         Constants.STRING_SAVED                                           = 'Shranjeno';
-        Constants.STRING_APP_THEME_LIGHT                                = 'Svetli';
-        Constants.STRING_APP_THEME_DARK                                 = 'Temni';
+        Constants.STRING_THEME_MODE_LIGHT                                = 'Svetli';
+        Constants.STRING_THEME_MODE_DARK                                 = 'Temni';
         Constants.STRING_OPTIONS                                         = 'Opcije';
         Constants.STRING_FOLLOWERS                                       = 'sledilci';
         Constants.STRING_PLAYS                                           = 'se predvaja';
@@ -410,7 +421,13 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
-        Constants.STRING_APP_THEME_SYSTEM                               = 'Follow system theme';
+        Constants.STRING_THEME_MODE_SYSTEM                               = 'Follow system theme';
+        Constants.STRING_SETTING_INDEXING_TITLE                          = 'Indexing';
+        Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
+        Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
+        Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
+        Constants.STRING_REFRESH                                         = 'REFRESH';
       }
       break;
       case 3: {
@@ -428,8 +445,8 @@ class ConstantsUpdater {
         Constants.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
         Constants.STRING_ARTIST                                          = 'Artistas';
         Constants.STRING_SAVED                                           = 'Saved';
-        Constants.STRING_APP_THEME_LIGHT                                = 'Light';
-        Constants.STRING_APP_THEME_DARK                                 = 'Dark';
+        Constants.STRING_THEME_MODE_LIGHT                                = 'Light';
+        Constants.STRING_THEME_MODE_DARK                                 = 'Dark';
         Constants.STRING_OPTIONS                                         = 'Options';
         Constants.STRING_FOLLOWERS                                       = 'followers';
         Constants.STRING_PLAYS                                           = 'plays';
@@ -513,7 +530,7 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_THEME_SUBTITLE                          = 'Mude o tema do aplicativo para claro ou escuro';
         Constants.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
         Constants.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
-        Constants.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
+        Constants.STRING_SETTING_APP_VERSION_TITLE                       = 'Version';
         Constants.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
         Constants.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version';
         Constants.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version';
@@ -546,7 +563,13 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
-        Constants.STRING_APP_THEME_SYSTEM                               = 'Follow system theme';
+        Constants.STRING_THEME_MODE_SYSTEM                               = 'Follow system theme';
+        Constants.STRING_SETTING_INDEXING_TITLE                          = 'Indexing';
+        Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
+        Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
+        Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
+        Constants.STRING_REFRESH                                         = 'REFRESH';
       }
       break;
       case 4: {
@@ -564,8 +587,8 @@ class ConstantsUpdater {
         Constants.STRING_TOP_TRACKS                                      = 'टॉप गाने';
         Constants.STRING_ARTIST                                          = 'कलाकार';
         Constants.STRING_SAVED                                           = 'सेव्ड';
-        Constants.STRING_APP_THEME_LIGHT                                = 'लाइट';
-        Constants.STRING_APP_THEME_DARK                                 = 'डार्क';
+        Constants.STRING_THEME_MODE_LIGHT                                = 'लाइट';
+        Constants.STRING_THEME_MODE_DARK                                 = 'डार्क';
         Constants.STRING_OPTIONS                                         = 'विकल्प';
         Constants.STRING_FOLLOWERS                                       = 'फॉलोवर्स';
         Constants.STRING_PLAYS                                           = 'बार सुना गया';
@@ -682,7 +705,13 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
-        Constants.STRING_APP_THEME_SYSTEM                               = 'Follow system theme';
+        Constants.STRING_THEME_MODE_SYSTEM                               = 'Follow system theme';
+        Constants.STRING_SETTING_INDEXING_TITLE                          = 'Indexing';
+        Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
+        Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
+        Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
+        Constants.STRING_REFRESH                                         = 'REFRESH';
       }
       break;
       case 5: {
@@ -700,8 +729,8 @@ class ConstantsUpdater {
         Constants.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
         Constants.STRING_ARTIST                                          = 'Künstler';
         Constants.STRING_SAVED                                           = 'gespeichert';
-        Constants.STRING_APP_THEME_LIGHT                                = 'Light';
-        Constants.STRING_APP_THEME_DARK                                 = 'Dark';
+        Constants.STRING_THEME_MODE_LIGHT                                = 'Light';
+        Constants.STRING_THEME_MODE_DARK                                 = 'Dark';
         Constants.STRING_OPTIONS                                         = 'Optionen';
         Constants.STRING_FOLLOWERS                                       = 'followers';
         Constants.STRING_PLAYS                                           = 'plays';
@@ -781,11 +810,11 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Vielen Dank für die Unterstützung!';
         Constants.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Akzentfarbe';
         Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Ändern der Akzentfarbe der App';
-        Constants.STRING_SETTING_THEME_TITLE                             = 'App Theme';
+        Constants.STRING_SETTING_THEME_TITLE                             = 'Theme';
         Constants.STRING_SETTING_THEME_SUBTITLE                          = 'Ändern Sie die App im Light-Mode oder Dark-Mode';
         Constants.STRING_NO_DOWNLOAD_UPDATE                              = 'Ihre App ist bereits aktuell.';
         Constants.STRING_DOWNLOAD_UPDATE                                 = 'UPDATE DOWNLOADEN';
-        Constants.STRING_SETTING_APP_VERSION_TITLE                       = 'App Version';
+        Constants.STRING_SETTING_APP_VERSION_TITLE                       = 'Version';
         Constants.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Informationen über die aktuelle App-Version';
         Constants.STRING_SETTING_APP_VERSION_INSTALLED                   = 'installierte Version';
         Constants.STRING_SETTING_APP_VERSION_LATEST                      = 'letzte Version';
@@ -818,7 +847,13 @@ class ConstantsUpdater {
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
         Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
-        Constants.STRING_APP_THEME_SYSTEM                               = 'Follow system theme';
+        Constants.STRING_THEME_MODE_SYSTEM                               = 'Follow system theme';
+        Constants.STRING_SETTING_INDEXING_TITLE                          = 'Indexing';
+        Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
+        Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
+        Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
+        Constants.STRING_REFRESH                                         = 'REFRESH';
       }
     }
   }
