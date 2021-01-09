@@ -56,7 +56,7 @@ class CollectionAlbumTile extends StatelessWidget {
                     padding: EdgeInsets.only(top: 2),
                     child: Text(
                       '${this.album.albumArtistName}\n(${this.album.year})',
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.headline5,
                       maxLines: 2,
                       textAlign: TextAlign.left,
                     ),
@@ -123,7 +123,7 @@ class LeadingCollectionALbumTile extends StatelessWidget {
                     ),
                     Text(
                       '(${collection.albums.first.year})',
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.headline5,
                       textAlign: TextAlign.start,
                       maxLines: 1,
                     ),
@@ -196,7 +196,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                       ),
                       content: Text(
                         Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
-                        style: Theme.of(subContext).textTheme.headline4,
+                        style: Theme.of(subContext).textTheme.headline5,
                       ),
                       actions: [
                         MaterialButton(
@@ -251,7 +251,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                               padding: EdgeInsets.only(left: 24, top: 8, bottom: 16),
                               child: Text(
                                 Constants.STRING_PLAYLIST_ADD_DIALOG_BODY,
-                                style: Theme.of(subContext).textTheme.headline4,
+                                style: Theme.of(subContext).textTheme.headline5,
                               ),
                             ),
                             Container(
@@ -355,7 +355,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                     ),
                     content: Text(
                       Constants.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY,
-                      style: Theme.of(subContext).textTheme.headline4,
+                      style: Theme.of(subContext).textTheme.headline5,
                     ),
                     actions: [
                       MaterialButton(
@@ -433,7 +433,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                             ),
                             Text(
                               this.album.albumArtistName,
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headline5,
                               maxLines: 2,
                               textAlign: TextAlign.start,
                             ),
@@ -443,7 +443,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                             ),
                             Text(
                               '${this.album.year}',
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headline5,
                               maxLines: 1,
                               textAlign: TextAlign.start,
                             ),
@@ -453,7 +453,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                             ),
                             Text(
                               '${this.album.tracks.length}' + ' '+ Constants.STRING_TRACK.toLowerCase(),
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headline5,
                               maxLines: 1,
                               textAlign: TextAlign.start,
                             ),

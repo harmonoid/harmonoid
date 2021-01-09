@@ -51,7 +51,7 @@ class CollectionTrackTile extends StatelessWidget {
                     ),
                     content: Text(
                       Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
-                      style: Theme.of(subContext).textTheme.headline4,
+                      style: Theme.of(subContext).textTheme.headline5,
                     ),
                     actions: [
                       MaterialButton(
@@ -102,7 +102,7 @@ class CollectionTrackTile extends StatelessWidget {
                             padding: EdgeInsets.only(left: 24, top: 8, bottom: 16),
                             child: Text(
                               Constants.STRING_PLAYLIST_ADD_DIALOG_BODY,
-                              style: Theme.of(subContext).textTheme.headline4,
+                              style: Theme.of(subContext).textTheme.headline5,
                             ),
                           ),
                           Container(
@@ -252,13 +252,13 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                         collection.tracks.first.trackArtistNames.length < 2 ? 
                         collection.tracks.first.trackArtistNames.join(', ') : 
                         collection.tracks.first.trackArtistNames.sublist(0, 2).join(', '),
-                        style: Theme.of(context).textTheme.headline4,
+                        style: Theme.of(context).textTheme.headline5,
                         maxLines: 1,
                         textAlign: TextAlign.center,
                       ),
                       Text(
                         '(${collection.tracks.first.year})',
-                        style: Theme.of(context).textTheme.headline4,
+                        style: Theme.of(context).textTheme.headline5,
                         maxLines: 1,
                         textAlign: TextAlign.center,
                       ),

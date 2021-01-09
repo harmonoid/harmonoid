@@ -126,7 +126,7 @@ class CollectionMusicSearchState extends State<CollectionMusicSearch> {
                 ),
                 Text(
                   Constants.STRING_LOCAL_SEARCH_WELCOME,
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headline5,
                 )
               ],
             ),
@@ -143,7 +143,7 @@ class CollectionMusicSearchState extends State<CollectionMusicSearch> {
                 ),
                 Text(
                   Constants.STRING_LOCAL_SEARCH_NO_RESULTS,
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headline5,
                 )
               ],
             ),
@@ -493,7 +493,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
               ),
               content: Text(
                 Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY,
-                style: Theme.of(subContext).textTheme.headline4,
+                style: Theme.of(subContext).textTheme.headline5,
               ),
               actions: [
                 MaterialButton(
@@ -553,7 +553,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(Constants.STRING_PLAYLISTS, style: Theme.of(context).textTheme.headline1),
-                      Text(Constants.STRING_PLAYLISTS_SUBHEADER, style: Theme.of(context).textTheme.headline4),
+                      Text(Constants.STRING_PLAYLISTS_SUBHEADER, style: Theme.of(context).textTheme.headline5),
                     ],
                   ),
                 ),
@@ -642,30 +642,32 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
       this.refreshArtists();
     }
     else {
-      Widget emptyMusicCollection = Center(
-        child: Container(
-          height: 128,
-          margin: EdgeInsets.only(top: 156),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Icon(
-                Icons.library_music, 
-                size: 64,
-                color: Theme.of(context).iconTheme.color,
-              ),
-              Text(
-                Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline4,
-              )
-            ],
+      if (this._init) {
+        Widget emptyMusicCollection = Center(
+          child: Container(
+            height: 128,
+            margin: EdgeInsets.only(top: 156),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Icon(
+                  Icons.library_music, 
+                  size: 64,
+                  color: Theme.of(context).disabledColor,
+                ),
+                Text(
+                  Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline5,
+                )
+              ],
+            ),
           ),
-        ),
-      );
-      this.albumChildren.add(emptyMusicCollection);
-      this.trackChildren.add(emptyMusicCollection);
-      this.artistChildren.add(emptyMusicCollection);
+        );
+        this.albumChildren.add(emptyMusicCollection);
+        this.trackChildren.add(emptyMusicCollection);
+        this.artistChildren.add(emptyMusicCollection);
+      }
     }
     this.refreshPlaylists();
     this.setState(() {
@@ -734,16 +736,6 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     tooltip: Constants.STRING_SEARCH_COLLECTION,
                     onPressed: () {
                       Navigator.of(context).pushNamed('collectionMusicSearch');
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(this._themeIcon, color: Theme.of(context).iconTheme.color),
-                    iconSize: Theme.of(context).iconTheme.size,
-                    splashRadius: Theme.of(context).iconTheme.size - 4,
-                    tooltip: Constants.STRING_SWITCH_THEME,
-                    onPressed: () {
-                      States.refreshMusicCollection(States.musicCollectionCurrentTab);
-                      States.refreshMusicSearch();
                     },
                   ),
                   IconButton(
