@@ -1,25 +1,19 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:harmonoid/constants/constants.dart';
 
 
-enum AppTheme {
-  system,
-  light,
-  dark,
-}
-
-
-extension AppThemeExtension on AppTheme {
+extension AppThemeExtension on ThemeMode {
   String get data {
     String data;
     switch(this) {
-      case AppTheme.system: data = Constants.STRING_APP_THEME_SYSTEM ; break;
-      case AppTheme.light:  data = Constants.STRING_APP_THEME_LIGHT  ; break;
-      case AppTheme.dark:   data = Constants.STRING_APP_THEME_DARK   ; break;
+      case ThemeMode.system: data = Constants.STRING_THEME_MODE_SYSTEM ; break;
+      case ThemeMode.light:  data = Constants.STRING_THEME_MODE_LIGHT  ; break;
+      case ThemeMode.dark:   data = Constants.STRING_THEME_MODE_DARK   ; break;
     }
     return data;
   }
@@ -58,7 +52,7 @@ Configuration configuration;
 enum ConfigurationType {
   version,
   languageRegion,
-  appTheme,
+  themeMode,
   accentColor,
   homeUri,
   collectionStartTab,

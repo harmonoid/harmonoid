@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/constants/constantsupdater.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:audio_service/audio_service.dart';
 
@@ -25,7 +26,7 @@ void main() async {
   );
   await collection.getFromCache();
   States.refreshLanguage(LanguageRegion.values[await configuration.getConfiguration(ConfigurationType.languageRegion)]);
-  States.refreshAppTheme(AppTheme.values[await configuration.getConfiguration(ConfigurationType.appTheme)]);
+  States.refreshThemeMode(ThemeMode.values[await configuration.getConfiguration(ConfigurationType.themeMode)]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   print('Time Elapsed: ${stopwatch.elapsedMilliseconds}ms.');
   stopwatch.reset();
@@ -50,29 +51,20 @@ class Harmonoid extends StatefulWidget {
 
 class HarmonoidState extends State<Harmonoid> {
 
-  void refreshAppTheme(AppTheme appTheme) {
+  void refreshThemeMode(ThemeMode themeMode) {
     this.setState(() {
-      switch(appTheme) {
-        case AppTheme.system: {
-          States.appTheme = ThemeMode.system;
-        }
-        break;
-        case AppTheme.light: {
-          States.appTheme = ThemeMode.light;
-        }
-        break;
-        case AppTheme.dark: {
-          States.appTheme = ThemeMode.dark;
-        }
-        break;
-        }
+      States.themeMode = themeMode;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    States.refreshAppTheme = this.refreshAppTheme;
+    States.refreshThemeMode = this.refreshThemeMode;
+    States.refreshLanguage = (LanguageRegion languageRegion) {
+      ConstantsUpdater.update(languageRegion.index);
+      this.setState(() {});
+    };
   }
 
   @override
@@ -82,6 +74,7 @@ class HarmonoidState extends State<Harmonoid> {
       title: 'harmonoid',
       theme: new ThemeData(
         splashFactory: InkRipple.splashFactory,
+        highlightColor: Colors.transparent,
         brightness: Brightness.light,
         primaryColorLight: Colors.deepPurpleAccent,
         primaryColor: Colors.deepPurpleAccent[400],
@@ -92,7 +85,9 @@ class HarmonoidState extends State<Harmonoid> {
         textSelectionHandleColor: Colors.deepPurpleAccent[400],
         toggleableActiveColor: Colors.deepPurpleAccent[400],
         cardColor: Colors.white,
+        backgroundColor: Colors.deepPurpleAccent[100],
         dividerColor: Colors.black12,
+        disabledColor: Colors.black38,
         tabBarTheme: TabBarTheme(
           labelColor: Colors.deepPurpleAccent[700],
           unselectedLabelColor: Colors.black54,
@@ -137,13 +132,13 @@ class HarmonoidState extends State<Harmonoid> {
           ),
           headline4: TextStyle(
             fontWeight: FontWeight.normal,
-            color: Colors.black54,
+            color: Colors.black87,
             fontSize: 14,
           ),
           headline5: TextStyle(
             fontWeight: FontWeight.normal,
             color: Colors.black54,
-            fontSize: 12,
+            fontSize: 14,
           ),
           headline6: TextStyle(
             fontWeight: FontWeight.normal,
@@ -169,13 +164,13 @@ class HarmonoidState extends State<Harmonoid> {
           ),
           headline4: TextStyle(
             fontWeight: FontWeight.normal,
-            color: Colors.black54,
+            color: Colors.black87,
             fontSize: 14,
           ),
           headline5: TextStyle(
             fontWeight: FontWeight.normal,
             color: Colors.black54,
-            fontSize: 12,
+            fontSize: 14,
           ),
           headline6: TextStyle(
             fontWeight: FontWeight.normal,
@@ -186,6 +181,7 @@ class HarmonoidState extends State<Harmonoid> {
       ),
       darkTheme: new ThemeData(
         splashFactory: InkRipple.splashFactory,
+        highlightColor: Colors.transparent,
         brightness: Brightness.dark,
         primaryColorLight: Colors.deepPurpleAccent[100],
         primaryColor: Colors.deepPurpleAccent[100],
@@ -196,7 +192,9 @@ class HarmonoidState extends State<Harmonoid> {
         textSelectionHandleColor: Colors.deepPurpleAccent[100],
         toggleableActiveColor: Colors.deepPurpleAccent[100],
         cardColor: Colors.white.withOpacity(0.14),
+        backgroundColor: Colors.deepPurple[100],
         dividerColor: Colors.white12,
+        disabledColor: Colors.white38,
         tabBarTheme: TabBarTheme(
           labelColor: Colors.deepPurpleAccent[100],
           unselectedLabelColor: Colors.white.withOpacity(0.54),
@@ -241,13 +239,13 @@ class HarmonoidState extends State<Harmonoid> {
           ),
           headline4: TextStyle(
             fontWeight: FontWeight.normal,
-            color: Colors.white.withOpacity(0.54),
+            color: Colors.white.withOpacity(0.87),
             fontSize: 14,
           ),
           headline5: TextStyle(
             fontWeight: FontWeight.normal,
             color: Colors.white.withOpacity(0.54),
-            fontSize: 12,
+            fontSize: 14,
           ),
           headline6: TextStyle(
             fontWeight: FontWeight.normal,
@@ -273,13 +271,13 @@ class HarmonoidState extends State<Harmonoid> {
           ),
           headline4: TextStyle(
             fontWeight: FontWeight.normal,
-            color: Colors.white.withOpacity(0.54),
+            color: Colors.white.withOpacity(0.87),
             fontSize: 14,
           ),
           headline5: TextStyle(
             fontWeight: FontWeight.normal,
             color: Colors.white.withOpacity(0.54),
-            fontSize: 12,
+            fontSize: 14,
           ),
           headline6: TextStyle(
             fontWeight: FontWeight.normal,
@@ -288,7 +286,7 @@ class HarmonoidState extends State<Harmonoid> {
           ),
         ),
       ),
-      themeMode: States.appTheme,
+      themeMode: States.themeMode,
       home: Home(),
       onGenerateRoute: (RouteSettings routeSettings) {
         PageRoute route;
