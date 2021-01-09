@@ -27,10 +27,10 @@ dependencies:
   http: ^0.12.2
   path: ^1.7.0
   path_provider: ^1.6.11
+  media_metadata_retriever: ^0.0.1+4
   just_audio: ^0.3.2
   audio_service: ^0.13.0
   url_launcher: ^5.5.0
-  dart_tags: ^0.3.1
   permission_handler: ^5.0.1+1
   share: ^0.6.5+4
 
