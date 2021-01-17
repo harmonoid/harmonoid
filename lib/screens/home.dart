@@ -1,10 +1,15 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'package:harmonoid/main.dart';
+import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/screens/collection/collectionmusic.dart';
+import 'package:harmonoid/screens/collection/collectionsearch.dart';
+import 'package:harmonoid/screens/discover/discovermusic.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
 import 'package:harmonoid/screens/settings.dart';
-import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/constants/constants.dart';
 
 
@@ -44,9 +49,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
       Center(
         child: Text('Coming Soon...')
       ),
-      Center(
-        child: Text('Coming Soon...')
-      ),
+      DiscoverMusic(),
       Navigator(
         key: this.navigatorKey,
         initialRoute: 'collectionMusic',
@@ -55,7 +58,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
           if (routeSettings.name == 'collectionMusic') {
             route = new MaterialPageRoute(builder: (BuildContext context) => CollectionMusic());
           }
-          if (routeSettings.name == 'collectionMusicSearch') {
+          if (routeSettings.name == 'collectionSearch') {
             route = new PageRouteBuilder(
               transitionDuration: Duration(milliseconds: 400),
               reverseTransitionDuration: Duration(milliseconds: 400),
@@ -64,7 +67,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
                 secondaryAnimation: secondaryAnimation,
                 child: child,
               ),
-              pageBuilder: (context, animation, secondaryAnimation) => CollectionMusicSearch(),
+              pageBuilder: (context, animation, secondaryAnimation) => CollectionSearch(),
             );
           }
           return route;

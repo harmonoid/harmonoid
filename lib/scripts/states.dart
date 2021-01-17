@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/scripts/collection.dart';
-import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/constants/constantsupdater.dart';
 
 

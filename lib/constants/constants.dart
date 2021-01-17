@@ -137,4 +137,5 @@ class Constants {
   static String STRING_SETTING_INDEXING_DONE;
   static String STRING_SETTING_INDEXING_WARNING;
   static String STRING_REFRESH;
+  static String STRING_SEARCH_NO_RECENT_SEARCHES;
 }

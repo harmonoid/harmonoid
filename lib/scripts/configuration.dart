@@ -20,43 +20,20 @@ extension AppThemeExtension on ThemeMode {
 }
 
 
-enum LanguageRegion {
-  enUs,
-  ruRu, /* Credits: https://github.com/raitonoberu/             */
-  slSi, /* Credits: https://github.com/mytja/                   */
-  ptBr, /* Credits: https://github.com/bdlukaa/                 */
-  hiIn, /* Credits: https://github.com/alexmercerind/           */
-  deDe, /* Credits: https://github.com/MickLesk/                */
-}
-
-
-extension LanguageRegionExtension on LanguageRegion {
-  List<String> get data {
-    List<String> data;
-    switch(this) {
-      case LanguageRegion.enUs: data = ['English'        , 'United States'    ]; break;
-      case LanguageRegion.ruRu: data = ['Русский'        , 'Россия'           ]; break;
-      case LanguageRegion.slSi: data = ['Slovenija'      , 'Slovenščina'      ]; break;
-      case LanguageRegion.ptBr: data = ['Português'      , 'Brasil'           ]; break;
-      case LanguageRegion.hiIn: data = ['हिंदी'            , 'भारत'              ]; break;
-      case LanguageRegion.deDe: data = ['Deutsche'       , 'Deutschland'      ]; break;
-    }
-    return data;
-  }
-}
-
-
 Configuration configuration;
 
 
-enum ConfigurationType {
+enum Configurations {
   version,
   languageRegion,
   themeMode,
   accentColor,
-  homeUri,
+  homeAddress,
   collectionStartTab,
   collectionDirectoryType,
+  collectionSearchRecents,
+  discoverSearchRecents,
+  discoverRecentID,
 }
 
 
@@ -76,7 +53,7 @@ class Configuration {
     }
   }
 
-  Future<dynamic> getConfiguration(ConfigurationType configurationType, {bool refresh = true}) async {
+  Future<dynamic> getConfiguration(Configurations configurationType, {bool refresh = true}) async {
     if (refresh || this.configurationMap == null) {
       this.configurationMap = jsonDecode(await this.configurationFile.readAsString());
     }
@@ -86,7 +63,7 @@ class Configuration {
     return this.configurationMap[configurationType.toString().split('.').last];
   }
 
-  Future<void> setConfiguration(ConfigurationType configurationType, dynamic value, {bool save = true}) async {
+  Future<void> setConfiguration(Configurations configurationType, dynamic value, {bool save = true}) async {
     this.configurationMap[configurationType.toString().split('.').last] = value;
     if (save) {
       await this.configurationFile.writeAsString(JsonEncoder.withIndent('    ').convert(this.configurationMap));

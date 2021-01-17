@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:harmonoid/constants/constants.dart';
 import 'package:harmonoid/scripts/collection.dart';
-import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/scripts/states.dart';
+import 'package:harmonoid/scripts/configuration.dart';
+import 'package:harmonoid/constants/constantsupdater.dart';
 
 
 class SettingsTile extends StatelessWidget {
@@ -85,24 +86,24 @@ class Settings extends StatefulWidget {
 
 
 class SettingsState extends State<Settings> {
-  ThemeMode _ThemeMode;
+  ThemeMode _themeMode;
   LanguageRegion _languageRegion;
   List<int> _refreshLinearProgressIndicatorValues;
 
   Future<void> _setThemeMode(ThemeMode value) async {
-    await configuration.setConfiguration(ConfigurationType.themeMode, value.index);
+    await configuration.setConfiguration(Configurations.themeMode, value.index);
     States.refreshThemeMode(value);
-    this.setState(() => this._ThemeMode = value);
+    this.setState(() => this._themeMode = value);
   }
 
   Future<void> _setLanguageRegion(LanguageRegion value) async {
-    await configuration.setConfiguration(ConfigurationType.languageRegion, value.index);
+    await configuration.setConfiguration(Configurations.languageRegion, value.index);
     this.setState(() => this._languageRegion = value);
   }
 
   Future<void> _refresh() async {
-    this._ThemeMode = ThemeMode.values[await configuration.getConfiguration(ConfigurationType.themeMode)];
-    this._languageRegion = LanguageRegion.values[await configuration.getConfiguration(ConfigurationType.languageRegion)];
+    this._themeMode = ThemeMode.values[await configuration.getConfiguration(Configurations.themeMode)];
+    this._languageRegion = LanguageRegion.values[await configuration.getConfiguration(Configurations.languageRegion)];
     this.setState(() {});
   }
 
@@ -120,7 +121,7 @@ class SettingsState extends State<Settings> {
         leading: IconButton(
           icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
           iconSize: Theme.of(context).iconTheme.size,
-          splashRadius: Theme.of(context).iconTheme.size - 4,
+          splashRadius: Theme.of(context).iconTheme.size - 8,
           onPressed: () {},
           tooltip: Constants.STRING_MENU,
         ),
@@ -136,19 +137,19 @@ class SettingsState extends State<Settings> {
                 RadioListTile(
                   value: ThemeMode.system,
                   title: Text(ThemeMode.system.data),
-                  groupValue: this._ThemeMode,
+                  groupValue: this._themeMode,
                   onChanged: (Object object) => this._setThemeMode(object),
                 ),
                 RadioListTile(
                   value: ThemeMode.light,
                   title: Text(ThemeMode.light.data),
-                  groupValue: this._ThemeMode,
+                  groupValue: this._themeMode,
                   onChanged: (Object object) => this._setThemeMode(object),
                 ),
                 RadioListTile(
                   value: ThemeMode.dark,
                   title: Text(ThemeMode.dark.data),
-                  groupValue: this._ThemeMode,
+                  groupValue: this._themeMode,
                   onChanged: (Object object) => this._setThemeMode(object),
                 ),
               ],
@@ -247,7 +248,7 @@ class SettingsState extends State<Settings> {
                           color: Colors.white,
                         ),
                         label: Text(
-                          'Your music collection is indexed',
+                          Constants.STRING_SETTING_INDEXING_DONE,
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -255,7 +256,7 @@ class SettingsState extends State<Settings> {
                       )
                     ),
                   ),
-                  Text('Do not interrupt the process',
+                  Text(Constants.STRING_SETTING_INDEXING_WARNING,
                     style: Theme.of(context).textTheme.headline5,
                   ),
                 ],
@@ -272,7 +273,7 @@ class SettingsState extends State<Settings> {
                   this._refreshLinearProgressIndicatorValues = null;
                 },
                 child: Text(
-                  'REFRESH',
+                  Constants.STRING_REFRESH,
                   style: TextStyle(
                     color: Theme.of(context).accentColor,
                   ),

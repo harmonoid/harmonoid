@@ -1,6 +1,32 @@
 import 'package:harmonoid/constants/constants.dart';
 
 
+enum LanguageRegion {
+  enUs,
+  ruRu, /* Credits: https://github.com/raitonoberu/             */
+  slSi, /* Credits: https://github.com/mytja/                   */
+  ptBr, /* Credits: https://github.com/bdlukaa/                 */
+  hiIn, /* Credits: https://github.com/alexmercerind/           */
+  deDe, /* Credits: https://github.com/MickLesk/                */
+}
+
+
+extension LanguageRegionExtension on LanguageRegion {
+  List<String> get data {
+    List<String> data;
+    switch(this) {
+      case LanguageRegion.enUs: data = ['English'        , 'United States'    ]; break;
+      case LanguageRegion.ruRu: data = ['Русский'        , 'Россия'           ]; break;
+      case LanguageRegion.slSi: data = ['Slovenija'      , 'Slovenščina'      ]; break;
+      case LanguageRegion.ptBr: data = ['Português'      , 'Brasil'           ]; break;
+      case LanguageRegion.hiIn: data = ['हिंदी'            , 'भारत'              ]; break;
+      case LanguageRegion.deDe: data = ['Deutsche'       , 'Deutschland'      ]; break;
+    }
+    return data;
+  }
+}
+
+
 class ConstantsUpdater {
   static Future<void> update(int languageRegion) async {
     switch(languageRegion) {
@@ -144,6 +170,7 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
         Constants.STRING_REFRESH                                         = 'REFRESH';
+        Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
       }
       break;
       case 1: {
@@ -286,6 +313,7 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
         Constants.STRING_REFRESH                                         = 'REFRESH';
+        Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
       }
       break;
       case 2: {
@@ -428,6 +456,7 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
         Constants.STRING_REFRESH                                         = 'REFRESH';
+        Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
       }
       break;
       case 3: {
@@ -570,6 +599,7 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
         Constants.STRING_REFRESH                                         = 'REFRESH';
+        Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
       }
       break;
       case 4: {
@@ -712,6 +742,7 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
         Constants.STRING_REFRESH                                         = 'REFRESH';
+        Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
       }
       break;
       case 5: {
@@ -854,6 +885,7 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
         Constants.STRING_REFRESH                                         = 'REFRESH';
+        Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
       }
     }
   }
