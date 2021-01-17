@@ -55,7 +55,7 @@ class CollectionAlbumTile extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 2),
                     child: Text(
-                      '${this.album.albumArtistName}\n(${this.album.year})',
+                      '${this.album.albumArtistName}\n(${this.album.year  ?? 'Unknown Year'})',
                       style: Theme.of(context).textTheme.headline5,
                       maxLines: 2,
                       textAlign: TextAlign.left,
@@ -122,7 +122,7 @@ class LeadingCollectionALbumTile extends StatelessWidget {
                       maxLines: 1,
                     ),
                     Text(
-                      '(${collection.albums.first.year})',
+                      '(${collection.albums.first.year  ?? 'Unknown Year'})',
                       style: Theme.of(context).textTheme.headline5,
                       textAlign: TextAlign.start,
                       maxLines: 1,
@@ -178,7 +178,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
           title: Text(track.trackName),
           subtitle: Text(track.trackArtistNames.join(', ')),
           leading: CircleAvatar(
-            child: Text(track.trackNumber),
+            child: Text('${track.trackNumber ?? 1}'),
             backgroundImage: FileImage(collection.getAlbumArt(widget.album.albumArtId)),
           ),
           trailing: PopupMenuButton(
@@ -336,7 +336,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
             leading: IconButton(
               icon: Icon(Icons.close, color: Colors.white),
               iconSize: Theme.of(context).iconTheme.size,
-              splashRadius: Theme.of(context).iconTheme.size - 4,
+              splashRadius: Theme.of(context).iconTheme.size - 8,
               onPressed: Navigator.of(context).pop,
             ),
             backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
@@ -345,7 +345,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
               IconButton(
                 icon: Icon(Icons.delete, color: Colors.white),
                 iconSize: Theme.of(context).iconTheme.size,
-                splashRadius: Theme.of(context).iconTheme.size - 4,
+                splashRadius: Theme.of(context).iconTheme.size - 8,
                 onPressed: () => showDialog(
                   context: context,
                   builder: (subContext) => AlertDialog(
@@ -442,7 +442,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                               height: 2,
                             ),
                             Text(
-                              '${this.album.year}',
+                              '${this.album.year  ?? 'Unknown Year'}',
                               style: Theme.of(context).textTheme.headline5,
                               maxLines: 1,
                               textAlign: TextAlign.start,

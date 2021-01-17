@@ -39,7 +39,7 @@ class CollectionPlaylistState extends State<CollectionPlaylist> {
           ),
           isThreeLine: true,
           leading: CircleAvatar(
-            child: Text(track.trackNumber),
+            child: Text('${track.trackNumber ?? 1}'),
             backgroundImage: FileImage(collection.getAlbumArt(track.albumArtId)),
           ),
           title: Text(track.trackName),
@@ -59,7 +59,7 @@ class CollectionPlaylistState extends State<CollectionPlaylist> {
               color: Theme.of(context).iconTheme.color,
             ),
             iconSize: Theme.of(context).iconTheme.size,
-            splashRadius: Theme.of(context).iconTheme.size - 4,
+            splashRadius: Theme.of(context).iconTheme.size - 8,
           ),
         )
       );
@@ -74,7 +74,7 @@ class CollectionPlaylistState extends State<CollectionPlaylist> {
         leading: IconButton(
           icon: Icon(Icons.close),
           iconSize: Theme.of(context).iconTheme.size,
-          splashRadius: Theme.of(context).iconTheme.size - 4,
+          splashRadius: Theme.of(context).iconTheme.size - 8,
           onPressed: Navigator.of(context).pop,
         ),
         title: Text(widget.playlist.playlistName),

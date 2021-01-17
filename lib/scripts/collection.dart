@@ -14,8 +14,8 @@ Collection collection;
 class Track {
   final String trackName;
   final String albumName;
-  final String trackNumber;
-  final String year;
+  final int trackNumber;
+  final int year;
   final String albumArtistName;
   final List<dynamic> trackArtistNames;
   final String filePath;
@@ -34,6 +34,17 @@ class Track {
       'albumArtId': this.albumArtId,
     };
   }
+  
+  static Track fromMap(Map<String, dynamic> trackMap) {
+    return new Track(
+      trackName: trackMap['trackName'],
+      albumName: trackMap['albumName'],
+      trackNumber: trackMap['trackNumber'],
+      year: trackMap['year'],
+      albumArtistName: trackMap['albumArtistName'],
+      trackArtistNames: trackMap['trackArtistNames'],
+    );
+  }
 
   Track({this.trackName, this.albumName, this.trackNumber, this.year, this.albumArtistName, this.trackArtistNames, this.albumArtId, this.filePath});
 }
@@ -41,7 +52,7 @@ class Track {
 
 class Album {
   final String albumName;
-  final String year;
+  final int year;
   final String albumArtistName;
   final List<dynamic> trackArtistNames;
   final int albumArtId;
@@ -61,6 +72,15 @@ class Album {
       'albumArtId': this.albumArtId,
       'tracks': tracks,
     };
+  }
+
+  static Album fromMap(Map<String, dynamic> albumMap) {
+    return new Album(
+      albumName: albumMap['albumName'],
+      year: albumMap['year'],
+      albumArtistName: albumMap['albumArtistName'],
+      trackArtistNames: albumMap['trackArtistNames'],
+    );
   }
 
   Album({this.albumName, this.year, this.albumArtistName, this.trackArtistNames, this.albumArtId});
@@ -87,6 +107,12 @@ class Artist {
       'albums': albums,
       'tracks': tracks,
     };
+  }
+
+  static Artist fromMap(Map<String, dynamic> artistMap) {
+    return new Artist(
+      artistName: artistMap['artistName'],
+    );
   }
 
   Artist({this.artistName});
@@ -152,8 +178,8 @@ class Collection {
         String albumName = metadata.albumName ?? 'Unknown Album';
         List<dynamic> trackArtistNames = metadata.trackArtistNames ?? <dynamic>['Unknown Artist'];
         String albumArtistName = metadata.albumArtistName ?? 'Unknown Artist';
-        String trackNumber = metadata.trackNumber != null ? metadata.trackNumber.toString() : '1';
-        String year = metadata.year != null ? metadata.year.toString() : 'Unknown Year';
+        int trackNumber = metadata.trackNumber;
+        int year = metadata.year;
         String filePath = object.path;
         void albumArtMethod() async {
           if (retriever.albumArt == null) {
@@ -221,8 +247,8 @@ class Collection {
       String albumName = metadata.albumName ?? 'Unknown Album';
       List<dynamic> trackArtistNames = metadata.trackArtistNames ?? <dynamic>['Unknown Artist'];
       String albumArtistName = metadata.albumArtistName ?? 'Unknown Artist';
-      String trackNumber = metadata.trackNumber != null ? metadata.trackNumber.toString() : '1';
-      String year = metadata.year != null ? metadata.year.toString() : 'Unknown Year';
+      int trackNumber = metadata.trackNumber;
+      int year = metadata.year;
       String filePath = trackFile.path;
 
       void albumArtMethod() async {
@@ -367,10 +393,10 @@ class Collection {
     else {
       Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).readAsString());
       for (Map<String, dynamic> track in collection['tracks']) {
-        String year = track['year'];
+        int trackNumber = track['trackNumber'];
+        int year = track['year'];
         String albumArtistName = track['albumArtistName'] ?? 'Unknown Artist';
         List<dynamic> trackArtistNames = track['trackArtistNames'];
-        String trackNumber = track['trackNumber'];
         String albumName = track['albumName'];
         String trackName = track['trackName'];
         String filePath = track['filePath'];
@@ -412,7 +438,7 @@ class Collection {
     await this.playlistsGetFromCache();
   }
 
-  Future<void> _arrange(String trackName, String albumName, String year, String trackNumber, String albumArtistName, List<dynamic> trackArtistNames, Function albumArtMethod, String filePath) async {
+  Future<void> _arrange(String trackName, String albumName, int year, int trackNumber, String albumArtistName, List<dynamic> trackArtistNames, Function albumArtMethod, String filePath) async {
     if (!binaryContains(this._foundAlbums, [albumName, albumArtistName])) {
       this._foundAlbums.add([albumName, albumArtistName]);
       await albumArtMethod();

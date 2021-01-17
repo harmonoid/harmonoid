@@ -26,7 +26,7 @@ class CollectionTrackTile extends StatelessWidget {
         dense: false,
         isThreeLine: true,
         leading: CircleAvatar(
-          child: Text(this.track.trackNumber),
+          child: Text('${this.track.trackNumber ?? 1}'),
           backgroundImage: FileImage(collection.getAlbumArt(this.track.albumArtId)),
         ),
         title: Text(this.track.trackName),
@@ -207,7 +207,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                   width: 64,
                   alignment: Alignment.center,
                   child: CircleAvatar(
-                    child: Text(collection.tracks.first.trackNumber,
+                    child: Text('${collection.tracks.first.trackNumber ?? 1}',
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -257,7 +257,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        '(${collection.tracks.first.year})',
+                        '(${collection.tracks.first.year ?? 'Unknown Year'})',
                         style: Theme.of(context).textTheme.headline5,
                         maxLines: 1,
                         textAlign: TextAlign.center,
@@ -270,14 +270,14 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  width: 72,
+                  width: 56,
+                  margin: EdgeInsets.only(right: 16),
                   alignment: Alignment.center,
                   child: FloatingActionButton(
                     onPressed: () async => await Playback.play(
                       index: 0,
                       tracks: collection.tracks
                     ),
-                    mini: true,
                     child: Icon(Icons.play_arrow, color: Colors.white),
                   )
                 ),
