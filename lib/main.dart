@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/constants/constantsupdater.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:harmonoid/scripts/discover.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:audio_service/audio_service.dart';
 
@@ -12,11 +13,12 @@ import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
+import 'package:harmonoid/constants/constantsupdater.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Stopwatch stopwatch = new Stopwatch()..start();
+  await notification.initialize(notificationSettings);
   await Configuration.init(
     cacheDirectory: await path.getExternalStorageDirectory(),
   );
@@ -24,12 +26,12 @@ void main() async {
     collectionDirectory: Directory('/storage/emulated/0/Music'),
     cacheDirectory: await path.getExternalStorageDirectory(),
   );
+  await Discover.init(
+    homeAddress: await configuration.getConfiguration(Configurations.homeAddress),
+  );
   await collection.getFromCache();
-  States.refreshLanguage(LanguageRegion.values[await configuration.getConfiguration(ConfigurationType.languageRegion)]);
-  States.refreshThemeMode(ThemeMode.values[await configuration.getConfiguration(ConfigurationType.themeMode)]);
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  print('Time Elapsed: ${stopwatch.elapsedMilliseconds}ms.');
-  stopwatch.reset();
+  States.refreshLanguage(LanguageRegion.values[await configuration.getConfiguration(Configurations.languageRegion)]);
+  States.refreshThemeMode(ThemeMode.values[await configuration.getConfiguration(Configurations.themeMode)]);
   runApp(
     new AudioServiceWidget(
       child: new Harmonoid(),
@@ -143,7 +145,7 @@ class HarmonoidState extends State<Harmonoid> {
           headline6: TextStyle(
             fontWeight: FontWeight.normal,
             color: Colors.black87,
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
         textTheme: new TextTheme(
@@ -175,7 +177,7 @@ class HarmonoidState extends State<Harmonoid> {
           headline6: TextStyle(
             fontWeight: FontWeight.normal,
             color: Colors.black87,
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
       ),
@@ -250,7 +252,7 @@ class HarmonoidState extends State<Harmonoid> {
           headline6: TextStyle(
             fontWeight: FontWeight.normal,
             color: Colors.white.withOpacity(0.87),
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
         textTheme: new TextTheme(
@@ -282,7 +284,7 @@ class HarmonoidState extends State<Harmonoid> {
           headline6: TextStyle(
             fontWeight: FontWeight.normal,
             color: Colors.white.withOpacity(0.87),
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
       ),
@@ -307,3 +309,8 @@ class HarmonoidState extends State<Harmonoid> {
     );
   }
 }
+
+final FlutterLocalNotificationsPlugin notification = FlutterLocalNotificationsPlugin();
+final InitializationSettings notificationSettings = InitializationSettings(
+  android: AndroidInitializationSettings('mipmap/ic_launcher'),
+);
