@@ -3,9 +3,10 @@
     "languageRegion": 0,
     "themeMode": 0,
     "accentColor": 0,
-    "homeUri": "harmonoid.github.io",
+    "homeAddress": "harmonoid.vercel.app",
     "collectionStartTab": 0,
     "collectionDirectoryType": 0,
     "collectionSearchRecents": [],
-    "discoverSearchRecents": []
+    "discoverSearchRecents": [],
+    "discoverRecentID": null
 }
