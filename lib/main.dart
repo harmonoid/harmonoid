@@ -18,6 +18,7 @@ import 'package:harmonoid/constants/constantsupdater.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   await notification.initialize(notificationSettings);
   await Configuration.init(
     cacheDirectory: await path.getExternalStorageDirectory(),
@@ -27,11 +28,11 @@ void main() async {
     cacheDirectory: await path.getExternalStorageDirectory(),
   );
   await Discover.init(
-    homeAddress: await configuration.getConfiguration(Configurations.homeAddress),
+    homeAddress: await configuration.get(Configurations.homeAddress),
   );
   await collection.getFromCache();
-  States.refreshLanguage(LanguageRegion.values[await configuration.getConfiguration(Configurations.languageRegion)]);
-  States.refreshThemeMode(ThemeMode.values[await configuration.getConfiguration(Configurations.themeMode)]);
+  States.refreshLanguage(LanguageRegion.values[await configuration.get(Configurations.languageRegion)]);
+  States.refreshThemeMode(ThemeMode.values[await configuration.get(Configurations.themeMode)]);
   runApp(
     new AudioServiceWidget(
       child: new Harmonoid(),

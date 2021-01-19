@@ -53,17 +53,17 @@ class Configuration {
     }
   }
 
-  Future<dynamic> getConfiguration(Configurations configurationType, {bool refresh = true}) async {
+  Future<dynamic> get(Configurations configurationType, {bool refresh = true}) async {
     if (refresh || this.configurationMap == null) {
       this.configurationMap = jsonDecode(await this.configurationFile.readAsString());
     }
     if (!this.configurationMap.containsKey(configurationType.toString().split('.').last)) {
-      await this.setConfiguration(configurationType, jsonDecode(await rootBundle.loadString('assets/initialAppConfiguration.json'))[configuration.toString().split('.').last]);
+      await this.set(configurationType, jsonDecode(await rootBundle.loadString('assets/initialAppConfiguration.json'))[configuration.toString().split('.').last]);
     }
     return this.configurationMap[configurationType.toString().split('.').last];
   }
 
-  Future<void> setConfiguration(Configurations configurationType, dynamic value, {bool save = true}) async {
+  Future<void> set(Configurations configurationType, dynamic value, {bool save = true}) async {
     this.configurationMap[configurationType.toString().split('.').last] = value;
     if (save) {
       await this.configurationFile.writeAsString(JsonEncoder.withIndent('    ').convert(this.configurationMap));

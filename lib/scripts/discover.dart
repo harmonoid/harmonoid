@@ -38,11 +38,11 @@ class Discover {
         if (mode is Artist) result.add(Artist.fromMap(objectMap));
       });
     }
-    List<dynamic> searchRecents = await configuration.getConfiguration(Configurations.discoverSearchRecents);
+    List<dynamic> searchRecents = await configuration.get(Configurations.discoverSearchRecents);
     if (searchRecents.length > 5) searchRecents.removeLast();
     searchRecents.insert(0, [keyword, modeParam]);
     print(searchRecents);
-    await configuration.setConfiguration(Configurations.discoverSearchRecents, searchRecents);
+    await configuration.set(Configurations.discoverSearchRecents, searchRecents);
     return result;
   }
 }

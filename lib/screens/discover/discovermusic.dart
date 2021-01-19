@@ -96,7 +96,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
       }
       this._changeSearchMode(0);
       this._init = false;
-      this._recentSearches = await configuration.getConfiguration(Configurations.discoverSearchRecents);
+      this._recentSearches = await configuration.get(Configurations.discoverSearchRecents);
       this.setState(() {});
     }
   }
@@ -136,187 +136,189 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: [
-        SlideTransition(
-          position: this._offset,
-          child: Container(
-            margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0),
-            child: Card(
-              elevation: 2.0,
-              clipBehavior: Clip.antiAlias,
-              child: AnimatedBuilder(
-                animation: this._searchBarHeight,
-                child: Material(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 56,
-                            width: 56,
-                            child: IconButton(
-                              icon: AnimatedIcon(
-                              progress: this._menuButtonAnimationController,
-                                icon: AnimatedIcons.menu_arrow,
-                                size: Theme.of(context).iconTheme.size,
-                                color: Theme.of(context).iconTheme.color,
+    return Scaffold(
+      body: ListView(
+        shrinkWrap: true,
+        children: [
+          SlideTransition(
+            position: this._offset,
+            child: Container(
+              margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0),
+              child: Card(
+                elevation: 2.0,
+                clipBehavior: Clip.antiAlias,
+                child: AnimatedBuilder(
+                  animation: this._searchBarHeight,
+                  child: Material(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 56,
+                              width: 56,
+                              child: IconButton(
+                                icon: AnimatedIcon(
+                                progress: this._menuButtonAnimationController,
+                                  icon: AnimatedIcons.menu_arrow,
+                                  size: Theme.of(context).iconTheme.size,
+                                  color: Theme.of(context).iconTheme.color,
+                                ),
+                                splashRadius: Theme.of(context).iconTheme.size - 8,
+                                onPressed: () {
+                                  if (!this._isBackButtonShowing) {
+                                    this._animationController.reverse();
+                                    if (this._menuButtonAnimationController.isDismissed) this._menuButtonAnimationController.forward();
+                                    if (this._menuButtonAnimationController.isCompleted) this._menuButtonAnimationController.reverse();
+                                    this.setState(() => _isBackButtonShowing = true);
+                                  }
+                                },
                               ),
-                              splashRadius: Theme.of(context).iconTheme.size - 8,
-                              onPressed: () {
-                                if (!this._isBackButtonShowing) {
-                                  this._animationController.reverse();
+                              margin: EdgeInsets.only(right: 16.0),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  this._animationController.forward();
                                   if (this._menuButtonAnimationController.isDismissed) this._menuButtonAnimationController.forward();
                                   if (this._menuButtonAnimationController.isCompleted) this._menuButtonAnimationController.reverse();
-                                  this.setState(() => _isBackButtonShowing = true);
-                                }
-                              },
-                            ),
-                            margin: EdgeInsets.only(right: 16.0),
-                          ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                this._animationController.forward();
-                                if (this._menuButtonAnimationController.isDismissed) this._menuButtonAnimationController.forward();
-                                if (this._menuButtonAnimationController.isCompleted) this._menuButtonAnimationController.reverse();
-                                this.setState(() => _isBackButtonShowing = false);
-                              },
-                              child: this._isBackButtonShowing ? Text(
-                                Constants.STRING_SEARCH_HEADER,
-                                style: Theme.of(context).textTheme.headline3
-                              ) : TextField(
-                                autofocus: true,
-                                controller: this._textFieldController,
-                                cursorWidth: 1.0,
-                                onEditingComplete: () => this._search(),
-                                decoration: InputDecoration.collapsed(hintText: Constants.STRING_SEARCH_HEADER),
+                                  this.setState(() => _isBackButtonShowing = false);
+                                },
+                                child: this._isBackButtonShowing ? Text(
+                                  Constants.STRING_SEARCH_HEADER,
+                                  style: Theme.of(context).textTheme.headline3
+                                ) : TextField(
+                                  autofocus: true,
+                                  controller: this._textFieldController,
+                                  cursorWidth: 1.0,
+                                  onEditingComplete: () => this._search(),
+                                  decoration: InputDecoration.collapsed(hintText: Constants.STRING_SEARCH_HEADER),
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            height: 56,
-                            width: 56,
-                            child: IconButton(
-                              icon: Icon(Icons.search),
-                              splashRadius: Theme.of(context).iconTheme.size - 8,
-                              onPressed: () => this._search(),
+                            Container(
+                              height: 56,
+                              width: 56,
+                              child: IconButton(
+                                icon: Icon(Icons.search),
+                                splashRadius: Theme.of(context).iconTheme.size - 8,
+                                onPressed: () => this._search(),
+                              ),
+                            ),
+                          ],
+                        ),
+                        this._isBackButtonShowing ? Container(): Divider(
+                          height: 2.0,
+                          thickness: 1.0,
+                          color: Theme.of(context).dividerColor,
+                        ),
+                        this._isBackButtonShowing ? Container(): ListTile(
+                          leading: ScaleTransition(
+                            scale: this._searchModeAnimationScaleController[0],
+                            child: AnimatedBuilder(
+                              animation: this._searchModeAnimationColor[0],
+                              builder: (BuildContext context, _) => Icon(Icons.album, color: this._searchModeAnimationColor[0].value),
                             ),
                           ),
-                        ],
-                      ),
-                      this._isBackButtonShowing ? Container(): Divider(
-                        height: 2.0,
-                        thickness: 1.0,
-                        color: Theme.of(context).dividerColor,
-                      ),
-                      this._isBackButtonShowing ? Container(): ListTile(
-                        leading: ScaleTransition(
-                          scale: this._searchModeAnimationScaleController[0],
-                          child: AnimatedBuilder(
-                            animation: this._searchModeAnimationColor[0],
-                            builder: (BuildContext context, _) => Icon(Icons.album, color: this._searchModeAnimationColor[0].value),
+                          title: Text(Constants.STRING_ALBUM,
+                            style: Theme.of(context).textTheme.headline4,
                           ),
+                          onTap: () => _changeSearchMode(0),
                         ),
-                        title: Text(Constants.STRING_ALBUM,
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                        onTap: () => _changeSearchMode(0),
-                      ),
-                      this._isBackButtonShowing ? Container(): ListTile(
-                        leading: ScaleTransition(
-                          scale: this._searchModeAnimationScaleController[1],
-                          child: AnimatedBuilder(
-                            animation: this._searchModeAnimationColor[1],
-                            builder: (BuildContext context, _) => Icon(Icons.music_note, color: this._searchModeAnimationColor[1].value),
+                        this._isBackButtonShowing ? Container(): ListTile(
+                          leading: ScaleTransition(
+                            scale: this._searchModeAnimationScaleController[1],
+                            child: AnimatedBuilder(
+                              animation: this._searchModeAnimationColor[1],
+                              builder: (BuildContext context, _) => Icon(Icons.music_note, color: this._searchModeAnimationColor[1].value),
+                            ),
                           ),
-                        ),
-                        title: Text(Constants.STRING_TRACK,
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                        onTap: () => _changeSearchMode(1),
-                      ),
-                      this._isBackButtonShowing ? Container(): ListTile(
-                        leading: ScaleTransition(
-                          scale: this._searchModeAnimationScaleController[2],
-                          child: AnimatedBuilder(
-                            animation: this._searchModeAnimationColor[2],
-                            builder: (BuildContext context, _) => Icon(Icons.person, color: this._searchModeAnimationColor[2].value),
+                          title: Text(Constants.STRING_TRACK,
+                            style: Theme.of(context).textTheme.headline4,
                           ),
+                          onTap: () => _changeSearchMode(1),
                         ),
-                        title: Text(Constants.STRING_ARTIST,
-                          style: Theme.of(context).textTheme.headline4,
+                        this._isBackButtonShowing ? Container(): ListTile(
+                          leading: ScaleTransition(
+                            scale: this._searchModeAnimationScaleController[2],
+                            child: AnimatedBuilder(
+                              animation: this._searchModeAnimationColor[2],
+                              builder: (BuildContext context, _) => Icon(Icons.person, color: this._searchModeAnimationColor[2].value),
+                            ),
+                          ),
+                          title: Text(Constants.STRING_ARTIST,
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                          onTap: () => _changeSearchMode(2),
                         ),
-                        onTap: () => _changeSearchMode(2),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  builder: (BuildContext context, Widget child) {
+                    return Container(
+                      height: this._searchBarHeight.value,
+                      width: MediaQuery.of(context).size.width - 16.0,
+                      color: Theme.of(context).cardColor,
+                      child: child,
+                    );
+                  },
                 ),
-                builder: (BuildContext context, Widget child) {
-                  return Container(
-                    height: this._searchBarHeight.value,
-                    width: MediaQuery.of(context).size.width - 16.0,
-                    color: Theme.of(context).cardColor,
-                    child: child,
-                  );
-                },
               ),
             ),
           ),
-        ),
-        this._recentSearches == null ? Container(): (
-          this._recentSearches == [] ? Container(): Container(
-            margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-            child: Card(
-              elevation: 2.0,
-              clipBehavior: Clip.antiAlias,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    leading: Icon(Icons.history),
-                    title: Text(
-                      Constants.STRING_SEARCH_NO_RECENT_SEARCHES,
-                      style: Theme.of(context).textTheme.headline5,
+          this._recentSearches == null ? Container(): (
+            this._recentSearches == [] ? Container(): Container(
+              margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+              child: Card(
+                elevation: 2.0,
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.history),
+                      title: Text(
+                        Constants.STRING_SEARCH_NO_RECENT_SEARCHES,
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ),
-          )
-        ),
-        this._recentSearches == null ? Container(): (
-          this._recentSearches == [] ? Container(): Container(
-            margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-            child: Card(
-              elevation: 2.0,
-              clipBehavior: Clip.antiAlias,
-              child: ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: this._recentSearches.length,
-                itemBuilder: (BuildContext context, int index) => ListTile(
-                  leading: Icon(Icons.history),
-                  title: Text(this._recentSearches[index][0],
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
-                  onTap: () => this._search(
-                    keyword: this._recentSearches[index][0],
-                    mode: {
-                      'album': new Album(),
-                      'track': new Track(),
-                      'artist': new Artist(),
-                    }[this._recentSearches[index][1]],
-                  ),
-                ),
+                  ],
+                )
               ),
             )
-          )
-        ),
-      ],
+          ),
+          this._recentSearches == null ? Container(): (
+            this._recentSearches == [] ? Container(): Container(
+              margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+              child: Card(
+                elevation: 2.0,
+                clipBehavior: Clip.antiAlias,
+                child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: this._recentSearches.length,
+                  itemBuilder: (BuildContext context, int index) => ListTile(
+                    leading: Icon(Icons.history),
+                    title: Text(this._recentSearches[index][0],
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                    onTap: () => this._search(
+                      keyword: this._recentSearches[index][0],
+                      mode: {
+                        'album': new Album(),
+                        'track': new Track(),
+                        'artist': new Artist(),
+                      }[this._recentSearches[index][1]],
+                    ),
+                  ),
+                ),
+              )
+            )
+          ),
+        ],
+      ),
     );
   }
 }

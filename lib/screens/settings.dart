@@ -91,19 +91,19 @@ class SettingsState extends State<Settings> {
   List<int> _refreshLinearProgressIndicatorValues;
 
   Future<void> _setThemeMode(ThemeMode value) async {
-    await configuration.setConfiguration(Configurations.themeMode, value.index);
+    await configuration.set(Configurations.themeMode, value.index);
     States.refreshThemeMode(value);
     this.setState(() => this._themeMode = value);
   }
 
   Future<void> _setLanguageRegion(LanguageRegion value) async {
-    await configuration.setConfiguration(Configurations.languageRegion, value.index);
+    await configuration.set(Configurations.languageRegion, value.index);
     this.setState(() => this._languageRegion = value);
   }
 
   Future<void> _refresh() async {
-    this._themeMode = ThemeMode.values[await configuration.getConfiguration(Configurations.themeMode)];
-    this._languageRegion = LanguageRegion.values[await configuration.getConfiguration(Configurations.languageRegion)];
+    this._themeMode = ThemeMode.values[await configuration.get(Configurations.themeMode)];
+    this._languageRegion = LanguageRegion.values[await configuration.get(Configurations.languageRegion)];
     this.setState(() {});
   }
 
