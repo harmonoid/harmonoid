@@ -209,7 +209,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                       style: Theme.of(context).textTheme.headline2,
                     ),
                     subtitle: Text(
-                      mediaItem.album,
+                      mediaItem.artist,
                       style: Theme.of(context).textTheme.headline4,
                     ),
                   ),
@@ -246,7 +246,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
             this._albumName = state.album;
             this._trackArtist = state.artist;
             this._trackNumber= state.extras['trackNumber'].toString();
-            this._year = state.extras['year'].toString();
+            this._year = state.extras['year'] != null ? state.extras['year'].toString() : 'Unknown Year';
           }
           catch(error) {
             this._animationController1 = new AnimationController(
