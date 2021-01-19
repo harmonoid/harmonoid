@@ -54,7 +54,6 @@ class Album {
   final String albumName;
   final int year;
   final String albumArtistName;
-  final List<dynamic> trackArtistNames;
   final int albumArtId;
   List<Track> tracks = <Track>[];
 
@@ -68,7 +67,6 @@ class Album {
       'albumName': this.albumName,
       'year': this.year,
       'albumArtistName': this.albumArtistName,
-      'trackArtistNames': this.trackArtistNames,
       'albumArtId': this.albumArtId,
       'tracks': tracks,
     };
@@ -79,11 +77,10 @@ class Album {
       albumName: albumMap['albumName'],
       year: albumMap['year'],
       albumArtistName: albumMap['albumArtistName'],
-      trackArtistNames: albumMap['trackArtistNames'],
     );
   }
 
-  Album({this.albumName, this.year, this.albumArtistName, this.trackArtistNames, this.albumArtId});
+  Album({this.albumName, this.year, this.albumArtistName, this.albumArtId});
 }
 
 
@@ -195,7 +192,7 @@ class Collection {
       }
       if (callback != null) callback(index + 1, directory.length, false);
     }
-
+    /* TODO: Fix List<Album> in Artists after deprecating trackArtistNames field in Album.
     for (Album album in this.albums) {
       for (String artist in album.trackArtistNames)  {
         if (this.artists[this._foundArtists.indexOf(artist)].albums == null)
@@ -203,6 +200,7 @@ class Collection {
         this.artists[this._foundArtists.indexOf(artist)].albums.add(album);
       }
     }
+    */
     await this.saveToCache();
     if (callback != null) callback(directory.length, directory.length, true);
     return this;
@@ -337,6 +335,7 @@ class Collection {
         }
         this.tracks = updatedTracks;
       }
+      /* TODO: Fix delete method to remove Album from Artist.
       for (String artistName in object.trackArtistNames) {
         for (Artist artist in this.artists) {
           if (artistName == artist.artistName) {
@@ -364,6 +363,7 @@ class Collection {
           }
         }
       }
+      */
       for (Track track in object.tracks) {
         if (await File(track.filePath).exists()) {
           await File(track.filePath).delete();
@@ -448,7 +448,6 @@ class Collection {
           albumArtId: binaryIndexOf(this._foundAlbums, [albumName, albumArtistName]),
           year: year,
           albumArtistName: albumArtistName,
-          trackArtistNames: trackArtistNames,
         )..tracks.add(
           new Track(
             albumName: albumName,
@@ -477,11 +476,6 @@ class Collection {
           filePath: filePath,
         ),
       );
-      for (String artistName in trackArtistNames) {
-        if (!this.albums[binaryIndexOf(this._foundAlbums, [albumName, albumArtistName])].trackArtistNames.contains(artistName)) {
-          this.albums[binaryIndexOf(this._foundAlbums, [albumName, albumArtistName])].trackArtistNames.add(artistName);
-        }
-      }
     }
 
     for (String artistName in trackArtistNames) {

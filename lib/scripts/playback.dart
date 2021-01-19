@@ -37,7 +37,7 @@ class Playback {
 class BackgroundTask extends BackgroundAudioTask {
   AudioPlayer _audioPlayer;
   List<MediaItem> _audioPlayerQueue = new List<MediaItem>();
-  List<String> _albumTrackNumbers = new List<String>();
+  List<int> _albumTrackNumbers = new List<int>();
   int _currentTrackIndex;
   
   @override
@@ -119,7 +119,7 @@ class BackgroundTask extends BackgroundAudioTask {
 
   @override
   Future<void> onPlayFromMediaId(String mediaId) async {
-    String currentTrackNumber;
+    int currentTrackNumber;
     for (MediaItem mediaItem in this._audioPlayerQueue) {
       this._albumTrackNumbers.add(
         mediaItem.extras['trackNumber'],
@@ -152,7 +152,7 @@ class BackgroundTask extends BackgroundAudioTask {
 
   @override
   Future<void> onUpdateQueue(List<MediaItem> mediaItems) async {
-    this._albumTrackNumbers = new List<String>();
+    this._albumTrackNumbers = new List<int>();
     this._audioPlayerQueue = mediaItems;
   }
 
