@@ -7,7 +7,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:harmonoid/constants/constants.dart';
 
 
-extension AppThemeExtension on ThemeMode {
+extension ThemeModeExtension on ThemeMode {
   String get data {
     String data;
     switch(this) {

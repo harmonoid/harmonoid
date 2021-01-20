@@ -280,7 +280,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                 Text(
                   Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headline4,
                 )
               ],
             ),

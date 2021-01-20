@@ -47,7 +47,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
   Widget build(BuildContext context) {
     final List<Widget> screens = <Widget>[
       Center(
-        child: Text('Coming Soon...')
+        child: Text('[WIP]')
       ),
       DiscoverMusic(),
       Navigator(

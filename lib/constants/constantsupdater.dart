@@ -57,9 +57,9 @@ class ConstantsUpdater {
         Constants.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Search music from your favorite artists';
         Constants.STRING_SEARCH_HISTORY_SUBHEADER                        = 'Your recent searches';
         Constants.STRING_SEARCH_RESULT_LOADER_LABEL                      = 'Getting your music...';
-        Constants.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Here is the most close album from your request';
-        Constants.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK               = 'Here is the most close track from your request';
-        Constants.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST              = 'Here is the artist of your request';
+        Constants.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Closest album from the result';
+        Constants.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK               = 'Closest track from the result';
+        Constants.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST              = 'Closest artist from the result';
         Constants.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'SAVE ALBUM';
         Constants.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'SAVE TRACK';
         Constants.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'SAVE ARTIST';

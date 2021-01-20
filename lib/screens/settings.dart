@@ -11,8 +11,9 @@ class SettingsTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final Widget child;
+  final EdgeInsets margin;
   final List<Widget> actions;
-  SettingsTile({Key key, @required this.title, @required this.subtitle, @required this.child, this.actions}) : super(key: key);
+  SettingsTile({Key key, @required this.title, @required this.subtitle, @required this.child, this.actions, this.margin}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,10 @@ class SettingsTile extends StatelessWidget {
               ],
             ),
           ),
-          this.child ?? Container(),
+          Container(
+            margin: this.margin ?? EdgeInsets.zero,
+            child: this.child ?? Container(),
+          ),
           Divider(
             color: Colors.transparent,
             height: 8.0,
@@ -284,22 +288,26 @@ class SettingsState extends State<Settings> {
           SettingsTile(
             title: Constants.STRING_SETTING_ACCENT_COLOR_TITLE,
             subtitle: Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE,
-            child: null
+            child: Text('[WIP]'),
+            margin: EdgeInsets.all(16.0),
           ),
           SettingsTile(
             title: Constants.STRING_SETTING_SERVER_CHANGE_TITLE,
             subtitle: Constants.STRING_SETTING_SERVER_CHANGE_SUBTITLE,
-            child: null
+            child: Text('[WIP]'),
+            margin: EdgeInsets.all(16.0),
           ),
           SettingsTile(
             title: Constants.STRING_SETTING_APP_VERSION_TITLE,
             subtitle: Constants.STRING_SETTING_APP_VERSION_SUBTITLE,
-            child: null
+            child: Text('[WIP]'),
+            margin: EdgeInsets.all(16.0),
           ),
           SettingsTile(
             title: Constants.STRING_ABOUT_TITLE,
             subtitle: Constants.STRING_ABOUT_SUBTITLE,
-            child: null
+            child: Text('[WIP]'),
+            margin: EdgeInsets.all(16.0),
           ),
         ],
       ),
