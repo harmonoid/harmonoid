@@ -7,9 +7,9 @@ import 'package:harmonoid/screens/discover/discoversearch.dart';
 import 'package:harmonoid/constants/constants.dart';
 
 final List<dynamic> searchModes = <dynamic>[
-  new Album(),
-  new Track(),
-  new Artist(),
+  Constants.STRING_ALBUM,
+  Constants.STRING_TRACK,
+  Constants.STRING_ARTIST,
 ];
 
 
@@ -21,7 +21,7 @@ class DiscoverMusic extends StatefulWidget {
 class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMixin {
   bool _init = true;
   int _searchMode = 0;
-  List<dynamic> _recentSearches;
+  List<dynamic> _recentSearches = <dynamic>[];
   Animation<double> _menuButtonAnimation;
   AnimationController _menuButtonAnimationController;
   TextEditingController _textFieldController = new TextEditingController();
@@ -35,6 +35,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
   bool _isBackButtonShowing = true;
 
   void show() => this._searchBarAnimation.reverse();
+
   void hide() => this._searchBarAnimation.forward();
 
   @override
@@ -137,6 +138,12 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        brightness: Theme.of(context).brightness,
+        backgroundColor: Colors.transparent,
+        toolbarHeight: 0.0,
+        elevation: 0.0,
+      ),
       body: ListView(
         shrinkWrap: true,
         children: [
@@ -238,6 +245,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
                           title: Text(Constants.STRING_TRACK,
                             style: Theme.of(context).textTheme.headline4,
                           ),
+                          trailing: Text('[WIP]'),
                           onTap: () => _changeSearchMode(1),
                         ),
                         this._isBackButtonShowing ? Container(): ListTile(
@@ -251,6 +259,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
                           title: Text(Constants.STRING_ARTIST,
                             style: Theme.of(context).textTheme.headline4,
                           ),
+                          trailing: Text('[WIP]'),
                           onTap: () => _changeSearchMode(2),
                         ),
                       ],
@@ -268,54 +277,49 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
               ),
             ),
           ),
-          this._recentSearches == null ? Container(): (
-            this._recentSearches == [] ? Container(): Container(
-              margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-              child: Card(
-                elevation: 2.0,
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.history),
-                      title: Text(
-                        Constants.STRING_SEARCH_NO_RECENT_SEARCHES,
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                    ),
-                  ],
-                )
-              ),
-            )
-          ),
-          this._recentSearches == null ? Container(): (
-            this._recentSearches == [] ? Container(): Container(
-              margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-              child: Card(
-                elevation: 2.0,
-                clipBehavior: Clip.antiAlias,
-                child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: this._recentSearches.length,
-                  itemBuilder: (BuildContext context, int index) => ListTile(
-                    leading: Icon(Icons.history),
-                    title: Text(this._recentSearches[index][0],
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                    onTap: () => this._search(
-                      keyword: this._recentSearches[index][0],
-                      mode: {
-                        'album': new Album(),
-                        'track': new Track(),
-                        'artist': new Artist(),
-                      }[this._recentSearches[index][1]],
-                    ),
+          this._recentSearches.isNotEmpty ? Container(
+            margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+            child: Card(
+              elevation: 2.0,
+              clipBehavior: Clip.antiAlias,
+              child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: this._recentSearches.length,
+                itemBuilder: (BuildContext context, int index) => ListTile(
+                  leading: Icon(Icons.history),
+                  dense: true,
+                  title: Text(this._recentSearches[index][0],
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                  subtitle: Text(this._recentSearches[index][1],
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  onTap: () => this._search(
+                    keyword: this._recentSearches[index][0],
+                    mode: this._recentSearches[index][1],
                   ),
                 ),
-              )
+              ),
             )
+          ) : Container(
+            margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+            child: Card(
+              elevation: 2.0,
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.history),
+                    title: Text(
+                      Constants.STRING_SEARCH_NO_RECENT_SEARCHES,
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                  ),
+                ],
+              )
+            ),
           ),
         ],
       ),

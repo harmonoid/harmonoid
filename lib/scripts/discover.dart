@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+import 'package:harmonoid/constants/constants.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:harmonoid/scripts/collection.dart';
@@ -17,12 +18,9 @@ class Discover {
     discover = new Discover(homeAddress);
   }
 
-  Future<List<dynamic>> search(String keyword, dynamic mode) async {
+  Future<List<dynamic>> search(String keyword, String mode) async {
     List<dynamic> result = <dynamic>[];
-    String modeParam;
-    if (mode is Album) modeParam = 'album';
-    if (mode is Track) modeParam = 'track';
-    if (mode is Artist) modeParam = 'artist';
+    String modeParam = mode.substring(0, mode.length - 1).toLowerCase();
     Uri uri = Uri.https(
       this.homeAddress,
       '/search', {
@@ -30,19 +28,23 @@ class Discover {
         'mode': modeParam,
       },
     );
-    http.Response response = await http.get(uri);
-    if (response.statusCode == 200) {
-      (convert.jsonDecode(response.body)[modeParam + 's'] as List).forEach((objectMap) {
-        if (mode is Album) result.add(Album.fromMap(objectMap));
-        if (mode is Track) result.add(Track.fromMap(objectMap));
-        if (mode is Artist) result.add(Artist.fromMap(objectMap));
-      });
+    try {
+      http.Response response = await http.get(uri);
+      if (response.statusCode == 200) {
+        (convert.jsonDecode(response.body)[modeParam + 's'] as List).forEach((objectMap) {
+          if (mode == Constants.STRING_ALBUM) result.add(Album.fromMap(objectMap));
+          if (mode == Constants.STRING_TRACK) result.add(Track.fromMap(objectMap));
+          if (mode == Constants.STRING_ARTIST) result.add(Artist.fromMap(objectMap));
+        });
+      }
+      List<dynamic> searchRecents = await configuration.get(Configurations.discoverSearchRecents);
+      if (searchRecents.length > 5) searchRecents.removeLast();
+      if (!searchRecents.contains([keyword, mode])) searchRecents.insert(0, [keyword, mode]);
+      await configuration.set(Configurations.discoverSearchRecents, searchRecents);
+      return result;
     }
-    List<dynamic> searchRecents = await configuration.get(Configurations.discoverSearchRecents);
-    if (searchRecents.length > 5) searchRecents.removeLast();
-    searchRecents.insert(0, [keyword, modeParam]);
-    print(searchRecents);
-    await configuration.set(Configurations.discoverSearchRecents, searchRecents);
-    return result;
+    catch(exception) {
+      throw 'Please check your internet connection';
+    }
   }
 }
