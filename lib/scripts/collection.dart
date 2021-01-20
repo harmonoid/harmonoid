@@ -20,18 +20,23 @@ class Track {
   final List<dynamic> trackArtistNames;
   final String filePath;
   final int albumArtId;
+  final String albumArtHigh;
+  final String albumArtMedium;
+  final String albumArtLow;
 
   Map<String, dynamic> toMap() {
     return {
-      'type': 'Track',
       'trackName': this.trackName,
       'albumName': this.albumName,
       'trackNumber': this.trackNumber,
       'year': this.year,
       'albumArtistName': this.albumArtistName,
-      'trackArtistNames': this.trackArtistNames,
+      'trackArtistNames': this.trackArtistNames ?? <dynamic>[],
       'filePath' : this.filePath,
       'albumArtId': this.albumArtId,
+      'albumArtHigh': this.albumArtHigh,
+      'albumArtMedium': this.albumArtHigh,
+      'albumArtLow': this.albumArtHigh,
     };
   }
   
@@ -42,11 +47,16 @@ class Track {
       trackNumber: trackMap['trackNumber'],
       year: trackMap['year'],
       albumArtistName: trackMap['albumArtistName'],
-      trackArtistNames: trackMap['trackArtistNames'],
+      trackArtistNames: trackMap['trackArtistNames'] ?? <dynamic>[],
+      filePath: trackMap['filePath'],
+      albumArtId: trackMap['albumArtId'],
+      albumArtHigh: trackMap['albumArtHigh'],
+      albumArtMedium: trackMap['albumArtMedium'],
+      albumArtLow: trackMap['albumArtLow'],
     );
   }
 
-  Track({this.trackName, this.albumName, this.trackNumber, this.year, this.albumArtistName, this.trackArtistNames, this.albumArtId, this.filePath});
+  Track({this.trackName, this.albumName, this.trackNumber, this.year, this.albumArtistName, this.trackArtistNames, this.albumArtId, this.filePath, this.albumArtHigh, this.albumArtMedium, this.albumArtLow});
 }
 
 
@@ -56,6 +66,9 @@ class Album {
   final String albumArtistName;
   final int albumArtId;
   List<Track> tracks = <Track>[];
+  final String albumArtHigh;
+  final String albumArtMedium;
+  final String albumArtLow;
 
   Map<String, dynamic> toMap() {
     List<dynamic> tracks = <dynamic>[];    
@@ -63,12 +76,14 @@ class Album {
       tracks.add(track.toMap());
     }
     return {
-      'type': 'Album',
       'albumName': this.albumName,
       'year': this.year,
       'albumArtistName': this.albumArtistName,
       'albumArtId': this.albumArtId,
-      'tracks': tracks,
+      'tracks': this.tracks,
+      'albumArtHigh': this.albumArtHigh,
+      'albumArtMedium': this.albumArtHigh,
+      'albumArtLow': this.albumArtHigh,
     };
   }
 
@@ -77,13 +92,17 @@ class Album {
       albumName: albumMap['albumName'],
       year: albumMap['year'],
       albumArtistName: albumMap['albumArtistName'],
+      albumArtId: albumMap['albumArtId'],
+      albumArtHigh: albumMap['albumArtHigh'],
+      albumArtMedium: albumMap['albumArtMedium'],
+      albumArtLow: albumMap['albumArtLow'],
     );
   }
 
-  Album({this.albumName, this.year, this.albumArtistName, this.albumArtId});
+  Album({this.albumName, this.year, this.albumArtistName, this.albumArtId, this.albumArtHigh, this.albumArtMedium, this.albumArtLow});
 }
 
-
+/* TODO: Update Artist according to new specs. */
 class Artist {
   final String artistName;
   List<Album> albums = <Album>[];
@@ -99,7 +118,6 @@ class Artist {
       albums.add(album.toMap());
     }
     return {
-      'type': 'Artist',
       'trackArtistNames': this.artistName,
       'albums': albums,
       'tracks': tracks,
@@ -248,7 +266,6 @@ class Collection {
       int trackNumber = metadata.trackNumber;
       int year = metadata.year;
       String filePath = trackFile.path;
-
       void albumArtMethod() async {
         if (retriever.albumArt == null) {
           this._albumArts.add(null);
@@ -377,7 +394,6 @@ class Collection {
    JsonEncoder encoder = JsonEncoder.withIndent('    ');
     List<Map<String, dynamic>> tracks = <Map<String, dynamic>>[];
     collection.tracks.forEach((element) => tracks.add(element.toMap()));
-
     await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).writeAsString(encoder.convert({'tracks': tracks}));
   }
 
@@ -462,7 +478,6 @@ class Collection {
         ),
       );
     }
-
     else if (binaryContains(this._foundAlbums, [albumName, albumArtistName])) {
       this.albums[binaryIndexOf(this._foundAlbums, [albumName, albumArtistName])].tracks.add(
         new Track(
@@ -477,7 +492,6 @@ class Collection {
         ),
       );
     }
-
     for (String artistName in trackArtistNames) {
       if (!this._foundArtists.contains(artistName)) {
         this._foundArtists.add(artistName);
@@ -513,7 +527,6 @@ class Collection {
         );
       }
     }
-
     this.tracks.add(
       new Track(
         albumName: albumName,
@@ -612,6 +625,7 @@ class Collection {
   List<String> _foundArtists = <String>[];
 }
 
+
 int binaryIndexOf(List<List<String>> collectionList, List<String> keywordList) {
   int indexOfKeywordList = -1;
   for (int index = 0; index < collectionList.length; index++) {
@@ -624,6 +638,10 @@ int binaryIndexOf(List<List<String>> collectionList, List<String> keywordList) {
   return indexOfKeywordList;
 }
 
+
+bool binaryContains(List<List<String>> collectionList, List<String> keywordList) => binaryIndexOf(collectionList, keywordList) != -1 ? true : false;
+
+
 bool isSupported(FileSystemEntity file) {
   if (file is File && SUPPORTED_FILE_TYPES.contains(file.path.split('.').last.toUpperCase())) {
     return true;
@@ -632,5 +650,3 @@ bool isSupported(FileSystemEntity file) {
     return false;
   }
 }
-
-bool binaryContains(List<List<String>> collectionList, List<String> keywordList) => binaryIndexOf(collectionList, keywordList) != -1 ? true : false;
