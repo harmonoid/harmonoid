@@ -86,7 +86,7 @@ List<Widget> tileGridListWidgets({@required double tileHeight, @required double 
 
 class FadeFutureBuilder extends StatefulWidget {
   final Future<Object> Function() future;
-  final Widget Function(BuildContext context, Object object) initialWidgetBuilder;
+  final Widget Function(BuildContext context) initialWidgetBuilder;
   final Widget Function(BuildContext context, Object object) finalWidgetBuilder;
   final Widget Function(BuildContext context, Object object) errorWidgetBuilder;
   final Duration transitionDuration;
@@ -95,17 +95,24 @@ class FadeFutureBuilder extends StatefulWidget {
 }
 
 
-class FadeFutureBuilderState extends State<FadeFutureBuilder> with TickerProviderStateMixin {
+class FadeFutureBuilderState extends State<FadeFutureBuilder> with SingleTickerProviderStateMixin {
   bool _init = true;
-  Widget _currentWidget;
+  Widget _currentWidget = Container();
   AnimationController _widgetOpacityController;
   Animation<double> _widgetOpacity;
+  Object _futureResolve;
 
   @override
-  void didChangeDependencies() { 
+  void initState() {
+    super.initState();
+    this._currentWidget = widget.initialWidgetBuilder(context);
+  }
+
+  @override
+  void didChangeDependencies() async { 
     super.didChangeDependencies();
     if (this._init) {
-      this._currentWidget = widget.initialWidgetBuilder(context, null);
+      this._currentWidget = widget.initialWidgetBuilder(context);
       this._widgetOpacityController = new AnimationController(
         vsync: this,
         duration: widget.transitionDuration,
@@ -121,75 +128,78 @@ class FadeFutureBuilderState extends State<FadeFutureBuilder> with TickerProvide
           reverseCurve: Curves.easeInOutCubic,
         )
       );
+      try {
+        this._futureResolve = await widget.future();
+        this._widgetOpacityController.forward();
+        Future.delayed(widget.transitionDuration, () {
+          this.setState(() {
+            this._currentWidget = widget.finalWidgetBuilder(context, this._futureResolve);
+          });
+          this._widgetOpacityController.reverse();
+        });
+      }
+      catch(exception) {
+        this._widgetOpacityController.forward();
+        Future.delayed(widget.transitionDuration, () {
+          this.setState(() {
+            this._currentWidget = widget.errorWidgetBuilder(context, exception);
+          });
+          this._widgetOpacityController.reverse();
+        });
+      }
+      this._init = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: widget.future(),
-      builder: (BuildContext context, AsyncSnapshot<Object> snapshot) {
-        if (this._init) {
-          if (snapshot.hasData) {
-            this._widgetOpacityController.forward();
-            Future.delayed(Duration(milliseconds: 200), () {
-              this.setState(() => this._currentWidget = widget.finalWidgetBuilder(context, snapshot.data));
-              this._widgetOpacityController.reverse();
-              this._init = false;
-            });
-          }
-          else if (snapshot.hasError) {
-            this._widgetOpacityController.forward();
-            Future.delayed(Duration(milliseconds: 200), () {
-              this.setState(() => this._currentWidget = widget.errorWidgetBuilder(context, snapshot.error));
-              this._widgetOpacityController.reverse();
-              this._init = false;
-            });
-          }
-        }
-        return FadeTransition(
-          opacity: this._widgetOpacity,
-          child: this._currentWidget,
-        );
-      },
+    return Container(
+      child: FadeTransition(
+        opacity: this._widgetOpacity,
+        child: this._currentWidget,
+      ),
     );
   }
 }
 
 
 class FakeLinearProgressIndicator extends StatelessWidget {
-  final String message;
+  final String label;
   final Duration duration;
   final double width;
-  FakeLinearProgressIndicator({Key key, @required this.message, @required this.duration, this.width}) : super(key: key);
+  final EdgeInsets margin;
+  FakeLinearProgressIndicator({Key key, @required this.label, @required this.duration, this.width, this.margin}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0.0, end: 1.0),
       duration: this.duration,
-      child: Text(this.message),
+      child: Text(this.label),
       curve: Curves.linear,
-      builder: (BuildContext context, double value, Widget child) => Container(
-        alignment: Alignment.center,
-        width: this.width ?? 148,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            LinearProgressIndicator(
-              value: value,
-            ),
-            Divider(
-              height: 8.0,
-              color: Colors.transparent,
-            ),
-            Text(
-              this.message,
-              style: Theme.of(context).textTheme.headline4,
-            )
-          ],
+      builder: (BuildContext context, double value, Widget child) => Center(
+        child: Container(
+          margin: this.margin ?? EdgeInsets.zero,
+          alignment: Alignment.center,
+          width: this.width ?? 148.0,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                this.label,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+              Divider(
+                height: 12.0,
+                color: Colors.transparent,
+              ),
+              LinearProgressIndicator(
+                value: value,
+              ),
+            ],
+          ),
         ),
       ),
     );
