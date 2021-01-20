@@ -163,6 +163,40 @@ class FadeFutureBuilderState extends State<FadeFutureBuilder> with SingleTickerP
 }
 
 
+class NetworkExceptionWidget extends StatelessWidget {
+  final dynamic exception;
+  final EdgeInsets margin;
+  NetworkExceptionWidget({Key key, @required this.exception, @required this.margin}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(
+        child: Container(
+          height: 128,
+          margin: this.margin,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(
+                Icons.signal_cellular_connected_no_internet_4_bar, 
+                size: 64,
+                color: Theme.of(context).disabledColor,
+              ),
+              Text(
+                '$exception',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline4,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 class FakeLinearProgressIndicator extends StatelessWidget {
   final String label;
   final Duration duration;
