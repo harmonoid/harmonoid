@@ -13,31 +13,41 @@ import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
+import 'package:harmonoid/screens/exception.dart';
 import 'package:harmonoid/constants/constantsupdater.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  await notification.initialize(notificationSettings);
-  await Configuration.init(
-    cacheDirectory: await path.getExternalStorageDirectory(),
-  );
-  await Collection.init(
-    collectionDirectory: Directory('/storage/emulated/0/Music'),
-    cacheDirectory: await path.getExternalStorageDirectory(),
-  );
-  await Discover.init(
-    homeAddress: await configuration.get(Configurations.homeAddress),
-  );
-  await collection.getFromCache();
-  States.refreshLanguage(LanguageRegion.values[await configuration.get(Configurations.languageRegion)]);
-  States.refreshThemeMode(ThemeMode.values[await configuration.get(Configurations.themeMode)]);
-  runApp(
-    new AudioServiceWidget(
-      child: new Harmonoid(),
-    ),
-  );
+  try {
+    await notification.initialize(notificationSettings);
+    await Configuration.init(
+      cacheDirectory: await path.getExternalStorageDirectory(),
+    );
+    await Collection.init(
+      collectionDirectory: Directory('/storage/emulated/0/Music'),
+      cacheDirectory: await path.getExternalStorageDirectory(),
+    );
+    await Discover.init(
+      homeAddress: await configuration.get(Configurations.homeAddress),
+    );
+    await collection.getFromCache();
+    States.refreshLanguage(LanguageRegion.values[await configuration.get(Configurations.languageRegion)]);
+    States.refreshThemeMode(ThemeMode.values[await configuration.get(Configurations.themeMode)]);
+    runApp(
+      new AudioServiceWidget(
+        child: new Harmonoid(),
+      ),
+    );
+  }
+  catch(exception) {
+    runApp(
+      new ExceptionMaterialApp(
+        exception: exception,
+      ),
+    );
+  }
 }
 
 
@@ -98,7 +108,7 @@ class HarmonoidState extends State<Harmonoid> {
         appBarTheme: AppBarTheme(
           color: Colors.white,
           brightness: Brightness.light,
-          elevation: 2,
+          elevation: 4.0,
           iconTheme: IconThemeData(
             color: Colors.black54,
             size: 24,
@@ -205,7 +215,7 @@ class HarmonoidState extends State<Harmonoid> {
         appBarTheme: AppBarTheme(
           color: Color.fromRGBO(42, 42, 42, 1),
           brightness: Brightness.dark,
-          elevation: 2,
+          elevation: 4.0,
           iconTheme: IconThemeData(
             color: Colors.black54,
             size: 24,
