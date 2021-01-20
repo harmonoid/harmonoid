@@ -23,6 +23,9 @@ class Track {
   final String albumArtHigh;
   final String albumArtMedium;
   final String albumArtLow;
+  final int trackDuration;
+  final String trackId;
+  final String albumId;
 
   Map<String, dynamic> toMap() {
     return {
@@ -37,6 +40,9 @@ class Track {
       'albumArtHigh': this.albumArtHigh,
       'albumArtMedium': this.albumArtHigh,
       'albumArtLow': this.albumArtHigh,
+      'trackDuration': this.trackDuration,
+      'trackId': this.trackId,
+      'albumId': this.albumId,
     };
   }
   
@@ -53,10 +59,13 @@ class Track {
       albumArtHigh: trackMap['albumArtHigh'],
       albumArtMedium: trackMap['albumArtMedium'],
       albumArtLow: trackMap['albumArtLow'],
+      trackDuration: trackMap['trackDuration'],
+      trackId: trackMap['trackId'],
+      albumId: trackMap['albumId'],
     );
   }
 
-  Track({this.trackName, this.albumName, this.trackNumber, this.year, this.albumArtistName, this.trackArtistNames, this.albumArtId, this.filePath, this.albumArtHigh, this.albumArtMedium, this.albumArtLow});
+  Track({this.trackName, this.albumName, this.trackNumber, this.year, this.albumArtistName, this.trackArtistNames, this.albumArtId, this.filePath, this.albumArtHigh, this.albumArtMedium, this.albumArtLow, this.trackDuration, this.trackId, this.albumId});
 }
 
 
@@ -69,6 +78,7 @@ class Album {
   final String albumArtHigh;
   final String albumArtMedium;
   final String albumArtLow;
+  final String albumId;
 
   Map<String, dynamic> toMap() {
     List<dynamic> tracks = <dynamic>[];    
@@ -84,6 +94,7 @@ class Album {
       'albumArtHigh': this.albumArtHigh,
       'albumArtMedium': this.albumArtHigh,
       'albumArtLow': this.albumArtHigh,
+      'albumId': this.albumId,
     };
   }
 
@@ -96,10 +107,11 @@ class Album {
       albumArtHigh: albumMap['albumArtHigh'],
       albumArtMedium: albumMap['albumArtMedium'],
       albumArtLow: albumMap['albumArtLow'],
+      albumId: albumMap['albumId']
     );
   }
 
-  Album({this.albumName, this.year, this.albumArtistName, this.albumArtId, this.albumArtHigh, this.albumArtMedium, this.albumArtLow});
+  Album({this.albumName, this.year, this.albumArtistName, this.albumArtId, this.albumArtHigh, this.albumArtMedium, this.albumArtLow, this.albumId});
 }
 
 /* TODO: Update Artist according to new specs. */

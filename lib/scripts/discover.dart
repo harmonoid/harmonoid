@@ -47,4 +47,26 @@ class Discover {
       throw 'Please check your internet connection';
     }
   }
+
+  Future<List<Track>> albumInfo(Album album) async {
+    List<Track> result = <Track>[];
+    Uri uri = Uri.https(
+      this.homeAddress,
+      '/albumInfo', {
+        'albumId': album.albumId,
+      },
+    );
+    try {
+      http.Response response = await http.get(uri);
+      if (response.statusCode == 200) {
+        (convert.jsonDecode(response.body)['tracks'] as List).forEach((objectMap) {
+          result.add(Track.fromMap(objectMap));
+        });
+      }
+      return result;
+    }
+    catch(exception) {
+      throw 'Please check your internet connection';
+    }
+  }
 }
