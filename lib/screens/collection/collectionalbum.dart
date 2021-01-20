@@ -158,12 +158,12 @@ class CollectionAlbumState extends State<CollectionAlbum> {
     super.didChangeDependencies();
     if (this._init) {
       this.album = widget.album;
-      this.refresh();
+      this._refresh();
     }
     this._init = false;
   }
 
-  void refresh() {
+  void _refresh() {
     this.children = <Widget>[];
     for (int index = 0; index < this.album.tracks.length; index++) {
       Track track = this.album.tracks[index];
@@ -203,7 +203,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                           textColor: Theme.of(context).primaryColor,
                           onPressed: () async {
                             await collection.delete(track);
-                            this.refresh();
+                            this._refresh();
                             Navigator.of(subContext).pop();
                             if (this.album.tracks.length == 0) {
                               Navigator.of(context).pop();

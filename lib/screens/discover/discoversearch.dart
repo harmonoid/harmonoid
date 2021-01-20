@@ -73,9 +73,7 @@ class DiscoverSearchState extends State<DiscoverSearch> {
                     width: 156.0,
                     margin: EdgeInsets.only(top: 196.0),
                   ),
-                  finalWidgetBuilder: (BuildContext context, Object data) => ListView(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
+                  finalWidgetBuilder: (BuildContext context, Object data) => Column(
                     children: tileGridListWidgets(
                       context: context,
                       tileHeight: this._tileHeight,
@@ -95,26 +93,9 @@ class DiscoverSearchState extends State<DiscoverSearch> {
                       )
                     ),
                   ),
-                  errorWidgetBuilder: (_, Object exception) => Center(
-                    child: Container(
-                      height: 128,
-                      margin: EdgeInsets.only(top: 156),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(
-                            Icons.signal_cellular_connected_no_internet_4_bar, 
-                            size: 64,
-                            color: Theme.of(context).disabledColor,
-                          ),
-                          Text(
-                            '$exception',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline4,
-                          )
-                        ],
-                      ),
-                    ),
+                  errorWidgetBuilder: (_, Object exception) => NetworkExceptionWidget(
+                    exception: exception,
+                    margin: EdgeInsets.only(top: 156.0),
                   ),
                   transitionDuration: Duration(milliseconds: 400),
                 ),
