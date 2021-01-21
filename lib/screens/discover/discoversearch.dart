@@ -93,9 +93,12 @@ class DiscoverSearchState extends State<DiscoverSearch> {
                       )
                     ),
                   ),
-                  errorWidgetBuilder: (_, Object exception) => NetworkExceptionWidget(
-                    exception: exception,
-                    margin: EdgeInsets.only(top: 156.0),
+                  errorWidgetBuilder: (_, Object exception) => ExceptionWidget(
+                    margin: EdgeInsets.only(top: 8.0),
+                    height: 156.0,
+                    assetImage: 'assets/images/exception.jpg',
+                    title: Constants.STRING_NO_INTERNET_TITLE,
+                    subtitle: Constants.STRING_NO_INTERNET_SUBTITLE,
                   ),
                   transitionDuration: Duration(milliseconds: 400),
                 ),

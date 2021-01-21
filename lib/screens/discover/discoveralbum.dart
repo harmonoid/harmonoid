@@ -270,9 +270,12 @@ class DiscoverAlbumState extends State<DiscoverAlbum> {
                   ));
                   return Column(children: trackWidgets);
                 },
-                errorWidgetBuilder: (_, exception) => NetworkExceptionWidget(
-                  exception: exception,
+                errorWidgetBuilder: (_, exception) => ExceptionWidget(
                   margin: EdgeInsets.only(top: 8.0),
+                  height: 156.0,
+                  assetImage: 'assets/images/exception.jpg',
+                  title: Constants.STRING_NO_INTERNET_TITLE,
+                  subtitle: Constants.STRING_NO_INTERNET_SUBTITLE,
                 ),
                 transitionDuration: Duration(milliseconds: 200),
               )

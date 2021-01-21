@@ -163,35 +163,72 @@ class FadeFutureBuilderState extends State<FadeFutureBuilder> with SingleTickerP
 }
 
 
-class NetworkExceptionWidget extends StatelessWidget {
-  final dynamic exception;
+class ExceptionWidget extends StatelessWidget {
   final EdgeInsets margin;
-  NetworkExceptionWidget({Key key, @required this.exception, @required this.margin}) : super(key: key);
+  final double height;
+  final Icon icon;
+  final String title;
+  final String subtitle;
+  final String assetImage;
+  ExceptionWidget({Key key, this.assetImage,  this.icon, @required this.margin, @required this.height, @required this.title, @required this.subtitle}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Container(
-          height: 128,
-          margin: this.margin,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Icon(
-                Icons.signal_cellular_connected_no_internet_4_bar, 
-                size: 64,
-                color: Theme.of(context).disabledColor,
+    return Card(
+      elevation: 2.0,
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.only(top: 72.0, left: 8.0, right: 8.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width - 16,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            this.assetImage != null ? Image.asset(
+              this.assetImage,
+              height: this.height,
+              width: this.height,
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+            ): Container(
+              height: this.height,
+              width: this.height,
+              alignment: Alignment.center,
+              color: Theme.of(context).dividerColor,
+              child: Icon(
+                Icons.library_music,
+                size: 56.0,
               ),
-              Text(
-                '$exception',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline4,
-              )
-            ],
-          ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 8, right: 8),
+              width: MediaQuery.of(context).size.width - 32 - this.height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    this.title,
+                    style: Theme.of(context).textTheme.headline1,
+                    textAlign: TextAlign.start,
+                    maxLines: 2,
+                  ),
+                  Divider(
+                    color: Colors.transparent,
+                    height: 4.0,
+                  ),
+                  Text(
+                    this.subtitle,
+                    style: Theme.of(context).textTheme.headline5,
+                    textAlign: TextAlign.start,
+                    maxLines: 2,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ),
+      )
     );
   }
 }

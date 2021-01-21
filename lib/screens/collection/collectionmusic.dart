@@ -265,26 +265,12 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
     }
     else {
       if (this._init) {
-        Widget emptyMusicCollection = Center(
-          child: Container(
-            height: 128,
-            margin: EdgeInsets.only(top: 156),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(
-                  Icons.library_music, 
-                  size: 64,
-                  color: Theme.of(context).disabledColor,
-                ),
-                Text(
-                  Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline4,
-                )
-              ],
-            ),
-          ),
+        Widget emptyMusicCollection = ExceptionWidget(
+          margin: EdgeInsets.only(top: 96.0),
+          height: this._tileWidth,
+          assetImage: 'assets/images/albums.jpg',
+          title: Constants.STRING_NO_COLLECTION_TITLE,
+          subtitle: Constants.STRING_NO_COLLECTION_SUBTITLE,
         );
         this.albumChildren.add(emptyMusicCollection);
         this.trackChildren.add(emptyMusicCollection);
