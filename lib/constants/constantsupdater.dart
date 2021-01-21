@@ -171,6 +171,10 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
+        Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
+        Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
       }
       break;
       case 1: {
@@ -314,6 +318,10 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
+        Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
+        Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
       }
       break;
       case 2: {
@@ -457,6 +465,10 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
+        Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
+        Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
       }
       break;
       case 3: {
@@ -600,6 +612,10 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
+        Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
+        Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
       }
       break;
       case 4: {
@@ -743,6 +759,10 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
+        Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
+        Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
       }
       break;
       case 5: {
@@ -886,6 +906,10 @@ class ConstantsUpdater {
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
+        Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
+        Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
       }
     }
   }
