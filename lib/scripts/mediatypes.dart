@@ -5,7 +5,7 @@ class Track {
   final int year;
   final String albumArtistName;
   final List<dynamic> trackArtistNames;
-  final String filePath;
+  String filePath;
   final int albumArtId;
   final String albumArtHigh;
   final String albumArtMedium;
@@ -22,7 +22,7 @@ class Track {
       'trackNumber': this.trackNumber,
       'year': this.year,
       'albumArtistName': this.albumArtistName,
-      'trackArtistNames': this.trackArtistNames ?? <dynamic>[],
+      'trackArtistNames': this.trackArtistNames ?? <dynamic>['Unknown Artist'],
       'filePath' : this.filePath,
       'albumArtId': this.albumArtId,
       'albumArtHigh': this.albumArtHigh,
@@ -37,12 +37,12 @@ class Track {
   
   static Track fromMap(Map<String, dynamic> trackMap) {
     return new Track(
-      trackName: trackMap['trackName'],
-      albumName: trackMap['albumName'],
+      trackName: trackMap['trackName'] ?? 'Unknown Track',
+      albumName: trackMap['albumName'] ?? 'Unknown Album',
       trackNumber: trackMap['trackNumber'],
       year: trackMap['year'],
-      albumArtistName: trackMap['albumArtistName'],
-      trackArtistNames: trackMap['trackArtistNames'] ?? <dynamic>[],
+      albumArtistName: trackMap['albumArtistName'] ?? 'Unknown Artist',
+      trackArtistNames: trackMap['trackArtistNames'] ?? <dynamic>['Unknown Artist'],
       filePath: trackMap['filePath'],
       albumArtId: trackMap['albumArtId'],
       albumArtHigh: trackMap['albumArtHigh'],
@@ -91,9 +91,9 @@ class Album {
 
   static Album fromMap(Map<String, dynamic> albumMap) {
     return new Album(
-      albumName: albumMap['albumName'],
+      albumName: albumMap['albumName'] ?? 'Unknown Album',
       year: albumMap['year'],
-      albumArtistName: albumMap['albumArtistName'],
+      albumArtistName: albumMap['albumArtistName'] ?? 'Unknown Artist',
       albumArtId: albumMap['albumArtId'],
       albumArtHigh: albumMap['albumArtHigh'],
       albumArtMedium: albumMap['albumArtMedium'],

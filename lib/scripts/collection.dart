@@ -8,6 +8,9 @@ import 'package:harmonoid/scripts/mediatypes.dart';
 export 'package:harmonoid/scripts/mediatypes.dart';
 
 
+/* TODO: BUG:     Album arts & metadata from cache gets mismatched once an album is deleted. Reindexing fixes it. */
+/* TODO: FEATURE: Add dealing for tracks having no metadata or album art. */
+
 const List<String> SUPPORTED_FILE_TYPES = ['OGG', 'OGA', 'AAC', 'M4A', 'MP3', 'WMA', 'OPUS'];
 
 
@@ -46,25 +49,19 @@ class Collection {
       if (isSupported(object)) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         await retriever.setFile(object);
-        Metadata metadata = await retriever.metadata;
-        String trackName = metadata.trackName ?? 'Unknown Track';
-        String albumName = metadata.albumName ?? 'Unknown Album';
-        List<dynamic> trackArtistNames = metadata.trackArtistNames ?? <dynamic>['Unknown Artist'];
-        String albumArtistName = metadata.albumArtistName ?? 'Unknown Artist';
-        int trackNumber = metadata.trackNumber;
-        int year = metadata.year;
-        String filePath = object.path;
-        void albumArtMethod() async {
+        Track track = Track.fromMap((await retriever.metadata).toMap());
+        track.filePath = object.path;
+        Future<void> albumArtMethod() async {
           if (retriever.albumArt == null) {
             this._albumArts.add(null);
           }
           else {
-            File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${binaryIndexOf(this._foundAlbums, [albumName, albumArtistName])}.png'));
+            File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName])}.png'));
             await albumArtFile.writeAsBytes(retriever.albumArt);
             this._albumArts.add(albumArtFile);
           }
         }
-        await this._arrange(trackName, albumName, year, trackNumber, albumArtistName, trackArtistNames, albumArtMethod, filePath);
+        await this._arrange(track, albumArtMethod);
       }
       if (callback != null) callback(index + 1, directory.length, false);
     }
@@ -116,25 +113,19 @@ class Collection {
     if (isSupported(trackFile)) {
       MediaMetadataRetriever retriever = new MediaMetadataRetriever();
       await retriever.setFile(trackFile);
-      Metadata metadata = await retriever.metadata;
-      String trackName = metadata.trackName ?? 'Unknown Track';
-      String albumName = metadata.albumName ?? 'Unknown Album';
-      List<dynamic> trackArtistNames = metadata.trackArtistNames ?? <dynamic>['Unknown Artist'];
-      String albumArtistName = metadata.albumArtistName ?? 'Unknown Artist';
-      int trackNumber = metadata.trackNumber;
-      int year = metadata.year;
-      String filePath = trackFile.path;
-      void albumArtMethod() async {
+      Track track = Track.fromMap((await retriever.metadata).toMap());
+      track.filePath = trackFile.path;
+      Future<void> albumArtMethod() async {
         if (retriever.albumArt == null) {
           this._albumArts.add(null);
         }
         else {
-          File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${binaryIndexOf(this._foundAlbums, [albumName, albumArtistName])}.png'));
+          File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName])}.png'));
           await albumArtFile.writeAsBytes(retriever.albumArt);
           this._albumArts.add(albumArtFile);
         }
       }
-      await this._arrange(trackName, albumName, year, trackNumber, albumArtistName, trackArtistNames, albumArtMethod, filePath);
+      await this._arrange(track, albumArtMethod);
     }
     await this.saveToCache();
   }
@@ -266,20 +257,14 @@ class Collection {
     }
     else {
       Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'collection.json')).readAsString());
-      for (Map<String, dynamic> track in collection['tracks']) {
-        int trackNumber = track['trackNumber'];
-        int year = track['year'];
-        String albumArtistName = track['albumArtistName'] ?? 'Unknown Artist';
-        List<dynamic> trackArtistNames = track['trackArtistNames'];
-        String albumName = track['albumName'];
-        String trackName = track['trackName'];
-        String filePath = track['filePath'];
-        void albumArtMethod() async {
+      for (Map<String, dynamic> trackMap in collection['tracks']) {
+        Track track = Track.fromMap(trackMap);
+        Future<void> albumArtMethod() async {
           this._albumArts.add(
-            File(path.join(this.cacheDirectory.path, 'albumArt${track['albumArtId']}.png')),
+            File(path.join(this.cacheDirectory.path, 'albumArt${track.albumArtId}.png')),
           );
         }
-        await this._arrange(trackName, albumName, year, trackNumber, albumArtistName, trackArtistNames, albumArtMethod, filePath);
+        await this._arrange(track, albumArtMethod);
       }
       List<File> collectionDirectoryContent = <File>[];
       for (FileSystemEntity object in this.collectionDirectory.listSync()) {
@@ -303,54 +288,49 @@ class Collection {
           }
         }
       }
-      for (Track track in this.tracks) {
-        if (!await File(track.filePath).exists()) {
-          await File(track.filePath).delete();
-        }
-      }
     }
     await this.playlistsGetFromCache();
   }
 
-  Future<void> _arrange(String trackName, String albumName, int year, int trackNumber, String albumArtistName, List<dynamic> trackArtistNames, Function albumArtMethod, String filePath) async {
-    if (!binaryContains(this._foundAlbums, [albumName, albumArtistName])) {
-      this._foundAlbums.add([albumName, albumArtistName]);
+  Future<void> _arrange(Track track, Future<void> Function() albumArtMethod) async {
+    if (!binaryContains(this._foundAlbums, [track.albumName, track.albumArtistName])) {
+      this._foundAlbums.add([track.albumName, track.albumArtistName]);
       await albumArtMethod();
       this.albums.add(
         new Album(
-          albumName: albumName,
-          albumArtId: binaryIndexOf(this._foundAlbums, [albumName, albumArtistName]),
-          year: year,
-          albumArtistName: albumArtistName,
+          albumName: track.albumName,
+          albumArtId: binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
+          year: track.year,
+          albumArtistName: track.albumArtistName,
         )..tracks.add(
           new Track(
-            albumName: albumName,
-            year: year,
-            albumArtistName: albumArtistName,
-            trackArtistNames: trackArtistNames,
-            trackName: trackName,
-            trackNumber: trackNumber,
-            albumArtId: binaryIndexOf(this._foundAlbums, [albumName, albumArtistName]),
-            filePath: filePath,
+            albumName: track.albumName,
+            year: track.year,
+            albumArtistName: track.albumArtistName,
+            trackArtistNames: track.trackArtistNames,
+            trackName: track.trackName,
+            trackNumber: track.trackNumber,
+            albumArtId: binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
+            filePath: track.filePath,
           ),
         ),
       );
     }
-    else if (binaryContains(this._foundAlbums, [albumName, albumArtistName])) {
-      this.albums[binaryIndexOf(this._foundAlbums, [albumName, albumArtistName])].tracks.add(
+    else if (binaryContains(this._foundAlbums, [track.albumName, track.albumArtistName])) {
+      this.albums[binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName])].tracks.add(
         new Track(
-          albumName: albumName,
-          albumArtId: binaryIndexOf(this._foundAlbums, [albumName, albumArtistName]),
-          year: year,
-          albumArtistName: albumArtistName,
-          trackArtistNames: trackArtistNames,
-          trackName: trackName,
-          trackNumber: trackNumber,
-          filePath: filePath,
+          albumName: track.albumName,
+          albumArtId: binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
+          year: track.year,
+          albumArtistName: track.albumArtistName,
+          trackArtistNames: track.trackArtistNames,
+          trackName: track.trackName,
+          trackNumber: track.trackNumber,
+          filePath: track.filePath,
         ),
       );
     }
-    for (String artistName in trackArtistNames) {
+    for (String artistName in track.trackArtistNames) {
       if (!this._foundArtists.contains(artistName)) {
         this._foundArtists.add(artistName);
         this.artists.add(
@@ -358,14 +338,14 @@ class Collection {
             artistName: artistName,
           )..tracks.add(
             new Track(
-              albumName: albumName,
-              albumArtId: binaryIndexOf(this._foundAlbums, [albumName, albumArtistName]),
-              year: year,
-              albumArtistName: albumArtistName,
-              trackArtistNames: trackArtistNames,
-              trackName: trackName,
-              trackNumber: trackNumber,
-              filePath: filePath,
+              albumName: track.albumName,
+              albumArtId: binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
+              year: track.year,
+              albumArtistName: track.albumArtistName,
+              trackArtistNames: track.trackArtistNames,
+              trackName: track.trackName,
+              trackNumber: track.trackNumber,
+              filePath: track.filePath,
             ),
           ),
         );
@@ -373,28 +353,28 @@ class Collection {
       else if (this._foundArtists.contains(artistName)) {
         this.artists[this._foundArtists.indexOf(artistName)].tracks.add(
           new Track(
-            albumName: albumName,
-            albumArtId: binaryIndexOf(this._foundAlbums, [albumName, albumArtistName]),
-            year: year,
-            albumArtistName: albumArtistName,
-            trackArtistNames: trackArtistNames,
-            trackName: trackName,
-            trackNumber: trackNumber,
-            filePath: filePath,
+            albumName: track.albumName,
+            albumArtId: binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
+            year: track.year,
+            albumArtistName: track.albumArtistName,
+            trackArtistNames: track.trackArtistNames,
+            trackName: track.trackName,
+            trackNumber: track.trackNumber,
+            filePath: track.filePath,
           ),
         );
       }
     }
     this.tracks.add(
       new Track(
-        albumName: albumName,
-        albumArtId: binaryIndexOf(this._foundAlbums, [albumName, albumArtistName]),
-        year: year,
-        albumArtistName: albumArtistName,
-        trackArtistNames: trackArtistNames,
-        trackName: trackName,
-        trackNumber: trackNumber,
-        filePath: filePath,
+        albumName: track.albumName,
+        albumArtId: binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
+        year: track.year,
+        albumArtistName: track.albumArtistName,
+        trackArtistNames: track.trackArtistNames,
+        trackName: track.trackName,
+        trackNumber: track.trackNumber,
+        filePath: track.filePath,
       ),
     );
   }
