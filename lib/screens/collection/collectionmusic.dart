@@ -350,8 +350,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   indicatorColor: Theme.of(context).accentColor,
                   isScrollable: true,
                   onTap: (int index) {
-                    States.refreshCollectionMusic?.call();
-                    States.refreshCollectionSearch?.call();
+                    /* TODO: Make this._refresh method efficient to re render only the focused tab. */
                   },
                   tabs: [
                     Tab(
