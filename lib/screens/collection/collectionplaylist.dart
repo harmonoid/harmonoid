@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/widgets.dart';
-import 'package:harmonoid/constants/constants.dart';
+import 'package:harmonoid/language/constants.dart';
 
 
 class CollectionPlaylist extends StatefulWidget {

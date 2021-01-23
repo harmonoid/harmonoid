@@ -9,7 +9,7 @@ import 'package:harmonoid/screens/collection/collectionartist.dart';
 import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/widgets.dart';
-import 'package:harmonoid/constants/constants.dart';
+import 'package:harmonoid/language/constants.dart';
 
 
 class CollectionMusic extends StatefulWidget {
@@ -23,7 +23,6 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   double _tileWidth;
   double _tileHeight;
   TabController _tabController;
-  List<Widget> children = <Widget>[Center(child: CircularProgressIndicator())];
   List<Widget> trackChildren = new List<Widget>();
   List<Widget> albumChildren = new List<Widget>();
   List<Widget> artistChildren = new List<Widget>();
@@ -123,7 +122,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   onPressed: () async {
                     await collection.playlistRemove(playlist);
                     Navigator.of(subContext).pop();
-                    this._refresh(new Playlist());
+                    this._refresh();
                   },
                   child: Text(Constants.STRING_YES),
                 ),
@@ -209,7 +208,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                                 FocusScope.of(context).unfocus();
                                 await collection.playlistAdd(new Playlist(playlistName: value));
                                 this._textFieldController.clear();
-                                this._refresh(new Playlist());
+                                this._refresh();
                               }
                             },
                             decoration: InputDecoration(
@@ -232,7 +231,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                                 FocusScope.of(context).unfocus();
                                 await collection.playlistAdd(new Playlist(playlistName: this._textFieldController.text));
                                 this._textFieldController.clear();
-                                this._refresh(new Playlist());
+                                this._refresh();
                               }
                             },
                             icon: Icon(
@@ -257,7 +256,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
     this.setState(() {});
   }
 
-  void _refresh(dynamic musicCollectionCurrentTab) {
+  void _refresh() {
     if (collection.albums.length != 0 && collection.tracks.length != 0 && collection.artists.length != 0) {
       this.refreshAlbums();
       this.refreshTracks();
@@ -278,19 +277,12 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
       }
     }
     this.refreshPlaylists();
-    this.setState(() {
-      if (musicCollectionCurrentTab is Album) this.children = this.albumChildren;
-      else if (musicCollectionCurrentTab is Track) this.children = this.trackChildren;
-      else if (musicCollectionCurrentTab is Artist) this.children = this.artistChildren;
-      else if (musicCollectionCurrentTab is Playlist) this.children = this.playlistChildren;
-    });
   }
 
   @override
   void initState() {
     super.initState();
-    States.refreshMusicCollection = this._refresh;
-    States.musicCollectionCurrentTab = new Album();
+    States.refreshCollectionMusic = this._refresh;
     this._tabController = TabController(initialIndex: 0, length: 4, vsync: this);
   }
 
@@ -301,15 +293,14 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
       this._elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
       this._tileWidth = (MediaQuery.of(context).size.width - 16 - (this._elementsPerRow - 1) * 8) / this._elementsPerRow;
       this._tileHeight = this._tileWidth * 242 / 156;
-      this._refresh(new Album());
+      this._refresh();
     }
     this._init = false;
   }
 
   @override
   void dispose() {
-    States.refreshMusicCollection = (dynamic musicCollectionCurrentTab) {};
-    States.musicCollectionCurrentTab = new Album();
+    States.refreshCollectionMusic = null;
     super.dispose();
   }
 
@@ -359,8 +350,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   indicatorColor: Theme.of(context).accentColor,
                   isScrollable: true,
                   onTap: (int index) {
-                    States.musicCollectionCurrentTab = <dynamic>[new Album(), new Track(), new Artist(), new Playlist()][this._tabController.index];
-                    States.refreshMusicCollection(States.musicCollectionCurrentTab);
+                    States.refreshCollectionMusic?.call();
+                    States.refreshCollectionSearch?.call();
                   },
                   tabs: [
                     Tab(

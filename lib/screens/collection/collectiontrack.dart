@@ -4,7 +4,7 @@ import 'package:share/share.dart';
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/scripts/states.dart';
-import 'package:harmonoid/constants/constants.dart';
+import 'package:harmonoid/language/constants.dart';
 
 
 class CollectionTrackTile extends StatelessWidget {
@@ -58,8 +58,8 @@ class CollectionTrackTile extends StatelessWidget {
                         textColor: Theme.of(context).primaryColor,
                         onPressed: () async {
                           await collection.delete(this.track);
-                          States.refreshMusicCollection(States.musicCollectionCurrentTab);
-                          States.refreshMusicSearch();
+                          States.refreshCollectionMusic?.call();
+                          States.refreshCollectionSearch?.call();
                           Navigator.of(subContext).pop();
                         },
                         child: Text(Constants.STRING_YES),

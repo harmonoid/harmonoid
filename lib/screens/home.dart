@@ -1,16 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import 'package:harmonoid/main.dart';
-import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/screens/collection/collectionmusic.dart';
 import 'package:harmonoid/screens/collection/collectionsearch.dart';
 import 'package:harmonoid/screens/discover/discovermusic.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
 import 'package:harmonoid/screens/settings.dart';
-import 'package:harmonoid/constants/constants.dart';
+import 'package:harmonoid/language/constants.dart';
 
 
 class Home extends StatefulWidget {

@@ -6,7 +6,7 @@ import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/scripts/playback.dart';
-import 'package:harmonoid/constants/constants.dart';
+import 'package:harmonoid/language/constants.dart';
 
 
 class CollectionAlbumTile extends StatelessWidget {
@@ -207,8 +207,8 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                             Navigator.of(subContext).pop();
                             if (this.album.tracks.length == 0) {
                               Navigator.of(context).pop();
-                              States.refreshMusicCollection(States.musicCollectionCurrentTab);
-                              States.refreshMusicSearch();
+                              States.refreshCollectionMusic?.call();
+                              States.refreshCollectionSearch?.call();
                             }
                           },
                           child: Text(Constants.STRING_YES),
@@ -364,8 +364,8 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                           Navigator.of(subContext).pop();
                           await collection.delete(widget.album);
                           Navigator.of(context).pop();
-                          States.refreshMusicCollection(States.musicCollectionCurrentTab);
-                          States.refreshMusicSearch();
+                          States.refreshCollectionMusic?.call();
+                          States.refreshCollectionSearch?.call();
                         },
                         child: Text(Constants.STRING_YES),
                       ),

@@ -3,25 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:harmonoid/language/language.dart';
 import 'package:harmonoid/scripts/discover.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:audio_service/audio_service.dart';
 
 import 'package:harmonoid/screens/home.dart';
 import 'package:harmonoid/scripts/collection.dart';
-import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
 import 'package:harmonoid/screens/exception.dart';
-import 'package:harmonoid/constants/constantsupdater.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   try {
-    await notification.initialize(notificationSettings);
     await Configuration.init(
       cacheDirectory: await path.getExternalStorageDirectory(),
     );
@@ -30,11 +28,11 @@ void main() async {
       cacheDirectory: await path.getExternalStorageDirectory(),
     );
     await Discover.init(
-      homeAddress: await configuration.get(Configurations.homeAddress),
+      homeAddress: configuration.homeAddress,
     );
-    await collection.getFromCache();
-    States.refreshLanguage(LanguageRegion.values[await configuration.get(Configurations.languageRegion)]);
-    States.refreshThemeMode(ThemeMode.values[await configuration.get(Configurations.themeMode)]);
+    await Language.init(
+      languageRegion: configuration.languageRegion,
+    );
     runApp(
       new AudioServiceWidget(
         child: new Harmonoid(),
@@ -64,20 +62,9 @@ class Harmonoid extends StatefulWidget {
 
 class HarmonoidState extends State<Harmonoid> {
 
-  void refreshThemeMode(ThemeMode themeMode) {
-    this.setState(() {
-      States.themeMode = themeMode;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    States.refreshThemeMode = this.refreshThemeMode;
-    States.refreshLanguage = (LanguageRegion languageRegion) {
-      ConstantsUpdater.update(languageRegion.index);
-      this.setState(() {});
-    };
   }
 
   @override
@@ -299,7 +286,7 @@ class HarmonoidState extends State<Harmonoid> {
           ),
         ),
       ),
-      themeMode: States.themeMode,
+      themeMode: configuration.themeMode,
       home: Home(),
       onGenerateRoute: (RouteSettings routeSettings) {
         PageRoute route;

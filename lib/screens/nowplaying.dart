@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
 
 import 'package:harmonoid/scripts/collection.dart';
-import 'package:harmonoid/constants/constants.dart';
+import 'package:harmonoid/language/constants.dart';
 
 
 class NowPlayingTile extends StatefulWidget {
@@ -14,6 +14,7 @@ class NowPlayingTile extends StatefulWidget {
 
 
 class NowPlayingTileState extends State<NowPlayingTile> {
+  // ignore: cancel_subscriptions
   StreamSubscription _playingStreamSubscription;
   bool _isPlaying = false;
   Map<String, dynamic> _track = new Track().toMap();
@@ -137,10 +138,11 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   int _positionSeconds = 0;
   bool _init = true;
   List<MediaItem> _currentTrackQueue = new List<MediaItem>();
-  int _currentTrackIndex = 0;
   List<Widget> _playlist = [Container()];
   Widget _playlistList = Container();
+  // ignore: cancel_subscriptions
   StreamSubscription _currentMediaItemStreamSubscription;
+  // ignore: cancel_subscriptions
   StreamSubscription _playingStreamSubscription;
   AnimationController _animationController;
   Animation<double> _animationCurved;
@@ -187,7 +189,6 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
           this.setState(() {
             this._playlist.clear();
             this._playlistList = Container();
-            this._currentTrackIndex = event[1][0];
             this._currentTrackQueue = event[1][1];
             for (int index = 0; index < this._currentTrackQueue.length; index++) {
               MediaItem mediaItem = this._currentTrackQueue[index];

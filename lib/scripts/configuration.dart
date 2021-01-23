@@ -1,72 +1,103 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/language/language.dart';
 import 'package:path/path.dart' as path;
-import 'package:flutter/services.dart' show rootBundle;
-
-import 'package:harmonoid/constants/constants.dart';
-
-
-extension ThemeModeExtension on ThemeMode {
-  String get data {
-    String data;
-    switch(this) {
-      case ThemeMode.system: data = Constants.STRING_THEME_MODE_SYSTEM ; break;
-      case ThemeMode.light:  data = Constants.STRING_THEME_MODE_LIGHT  ; break;
-      case ThemeMode.dark:   data = Constants.STRING_THEME_MODE_DARK   ; break;
-    }
-    return data;
-  }
-}
 
 
 Configuration configuration;
 
 
-enum Configurations {
-  version,
-  languageRegion,
-  themeMode,
-  accentColor,
-  homeAddress,
-  collectionStartTab,
-  collectionDirectoryType,
-  collectionSearchRecents,
-  discoverSearchRecents,
-  discoverRecentID,
-}
+const Map<String, dynamic> DEFAULT_CONFIGURATION = {
+  'version': '0.0.3+1',
+  'homeAddress': 'harmonoid.vercel.app',
+  'languageRegion': 0,
+  'themeMode': 0,
+  'accentColor': 0,
+  'collectionSearchRecent': [],
+  'discoverSearchRecent': [],
+  'discoverRecent': []
+};
 
 
+const JsonEncoder JSON_ENCODER = JsonEncoder.withIndent('    ');
+
+/* TODO: Implement accentColor */
 class Configuration {
-  File configurationFile;
-  Map<dynamic, dynamic> configurationMap;
+  String version;
+  String homeAddress;
+  LanguageRegion languageRegion;
+  ThemeMode themeMode;
+  Color accentColor;
+  List<dynamic> collectionSearchRecent;
+  List<dynamic> discoverSearchRecent;
+  List<dynamic> discoverRecent;
 
-  Configuration(Directory cacheDirectory) {
-    if (!cacheDirectory.existsSync()) cacheDirectory.createSync(recursive: true);
-    this.configurationFile = File(path.join(cacheDirectory.path, 'appConfiguration.json'));
-  }
+  File configurationFile;
 
   static Future<void> init({Directory cacheDirectory}) async {
-    configuration = new Configuration(cacheDirectory);
+    configuration = new Configuration();
+    configuration.configurationFile = File(path.join(cacheDirectory.path, 'configuration.json'));
     if (!await configuration.configurationFile.exists()) {
-      await configuration.configurationFile.writeAsString(await rootBundle.loadString('assets/initialAppConfiguration.json'));
+      await configuration.configurationFile.writeAsString(JSON_ENCODER.convert(DEFAULT_CONFIGURATION));
     }
+    await configuration._refresh();
   }
 
-  Future<dynamic> get(Configurations configurationType, {bool refresh = true}) async {
-    if (refresh || this.configurationMap == null) {
-      this.configurationMap = jsonDecode(await this.configurationFile.readAsString());
+  Future<void> save({
+    String version,
+    String homeAddress,
+    LanguageRegion languageRegion,
+    ThemeMode themeMode,
+    Color accentColor,
+    List<dynamic> collectionSearchRecent,
+    List<dynamic> discoverSearchRecent,
+    List<dynamic> discoverRecent,
+    }) async {
+    if (version != null) {
+      this.version = version;
     }
-    if (!this.configurationMap.containsKey(configurationType.toString().split('.').last)) {
-      await this.set(configurationType, jsonDecode(await rootBundle.loadString('assets/initialAppConfiguration.json'))[configuration.toString().split('.').last]);
+    if (homeAddress != null) {
+      this.homeAddress = homeAddress;
     }
-    return this.configurationMap[configurationType.toString().split('.').last];
+    if (languageRegion != null) {
+      this.languageRegion = languageRegion;
+    }
+    if (themeMode != null) {
+      this.themeMode = themeMode;
+    }
+    if (accentColor != null) {
+      this.accentColor = accentColor;
+    }
+    if (collectionSearchRecent != null) {
+      this.collectionSearchRecent = collectionSearchRecent;
+    }
+    if (discoverSearchRecent != null) {
+      this.discoverSearchRecent = discoverSearchRecent;
+    }
+    if (collectionSearchRecent != null) {
+      this.discoverRecent = discoverRecent;
+    }
+    await configuration.configurationFile.writeAsString(JSON_ENCODER.convert({
+      'version': this.version,
+      'homeAddress': this.homeAddress,
+      'languageRegion': this.languageRegion.index,
+      'themeMode': this.themeMode.index,
+      'accentColor': this.accentColor,
+      'collectionSearchRecent': this.collectionSearchRecent,
+      'discoverSearchRecent': this.discoverSearchRecent,
+      'discoverRecent': this.discoverRecent,
+    }));
   }
 
-  Future<void> set(Configurations configurationType, dynamic value, {bool save = true}) async {
-    this.configurationMap[configurationType.toString().split('.').last] = value;
-    if (save) {
-      await this.configurationFile.writeAsString(JsonEncoder.withIndent('    ').convert(this.configurationMap));
-    }
+  Future<dynamic> _refresh() async {
+    Map<String, dynamic> configurationMap = jsonDecode(await this.configurationFile.readAsString());
+    this.version = configurationMap['version'];
+    this.homeAddress = configurationMap['homeAddress'];
+    this.languageRegion = LanguageRegion.values[configurationMap['languageRegion']];
+    this.themeMode = ThemeMode.values[configurationMap['themeMode']];
+    this.collectionSearchRecent = configurationMap['collectionSearchRecent'];
+    this.discoverSearchRecent = configurationMap['discoverSearchRecent'];
+    this.discoverRecent = configurationMap['discoverRecent'];
   }
 }

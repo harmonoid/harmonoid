@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:harmonoid/scripts/collection.dart';
-import 'package:harmonoid/constants/constantsupdater.dart';
+typedef RefreshCollectionMusic = void Function();
+typedef RefreshCollectionSearch = void Function();
+typedef RefreshThemeMode = void Function(ThemeMode themeMode);
 
 
 class States {
-  static dynamic musicCollectionCurrentTab = new Album();
-  static ThemeMode themeMode = ThemeMode.system;
-  static void Function(dynamic musicCollectionCurrentTab) refreshMusicCollection = (dynamic musicCollectionCurrentTab) {};
-  static void Function() refreshMusicSearch = () {};
-  static void Function(ThemeMode themeMode) refreshThemeMode = (themeMode) {
-    States.themeMode = themeMode;
-  };
-  static void Function(LanguageRegion languageRegion) refreshLanguage = (LanguageRegion languageRegion) {
-    ConstantsUpdater.update(languageRegion.index);
-  };
+
+  static RefreshCollectionMusic refreshCollectionMusic;
+
+  static RefreshCollectionSearch refreshCollectionSearch;
+
 }

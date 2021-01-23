@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:harmonoid/constants/constants.dart';
+import 'package:harmonoid/language/constants.dart';
 import 'package:harmonoid/scripts/collection.dart';
-import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/scripts/configuration.dart';
-import 'package:harmonoid/constants/constantsupdater.dart';
+import 'package:harmonoid/language/language.dart';
 
 
 class SettingsTile extends StatelessWidget {
@@ -95,19 +94,18 @@ class SettingsState extends State<Settings> {
   List<int> _refreshLinearProgressIndicatorValues;
 
   Future<void> _setThemeMode(ThemeMode value) async {
-    await configuration.set(Configurations.themeMode, value.index);
-    States.refreshThemeMode(value);
+    await configuration.save(themeMode: value);
     this.setState(() => this._themeMode = value);
   }
 
   Future<void> _setLanguageRegion(LanguageRegion value) async {
-    await configuration.set(Configurations.languageRegion, value.index);
+    await configuration.save(languageRegion: value);
     this.setState(() => this._languageRegion = value);
   }
 
   Future<void> _refresh() async {
-    this._themeMode = ThemeMode.values[await configuration.get(Configurations.themeMode)];
-    this._languageRegion = LanguageRegion.values[await configuration.get(Configurations.languageRegion)];
+    this._themeMode = configuration.themeMode;
+    this._languageRegion = configuration.languageRegion;
     this.setState(() {});
   }
 
@@ -140,19 +138,19 @@ class SettingsState extends State<Settings> {
               children: [
                 RadioListTile(
                   value: ThemeMode.system,
-                  title: Text(ThemeMode.system.data),
+                  title: Text(Constants.STRING_THEME_MODE_SYSTEM),
                   groupValue: this._themeMode,
                   onChanged: (Object object) => this._setThemeMode(object),
                 ),
                 RadioListTile(
                   value: ThemeMode.light,
-                  title: Text(ThemeMode.light.data),
+                  title: Text(Constants.STRING_THEME_MODE_LIGHT),
                   groupValue: this._themeMode,
                   onChanged: (Object object) => this._setThemeMode(object),
                 ),
                 RadioListTile(
                   value: ThemeMode.dark,
-                  title: Text(ThemeMode.dark.data),
+                  title: Text(Constants.STRING_THEME_MODE_DARK),
                   groupValue: this._themeMode,
                   onChanged: (Object object) => this._setThemeMode(object),
                 ),

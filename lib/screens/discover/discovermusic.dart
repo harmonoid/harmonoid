@@ -4,12 +4,12 @@ import 'package:animations/animations.dart';
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/screens/discover/discoversearch.dart';
-import 'package:harmonoid/constants/constants.dart';
+import 'package:harmonoid/language/constants.dart';
 
 final List<dynamic> searchModes = <dynamic>[
-  Constants.STRING_ALBUM,
-  Constants.STRING_TRACK,
-  Constants.STRING_ARTIST,
+  new Album(),
+  new Track(),
+  new Artist(),
 ];
 
 
@@ -22,6 +22,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
   bool _init = true;
   int _searchMode = 0;
   List<dynamic> _recentSearches = <dynamic>[];
+  // ignore: unused_field
   Animation<double> _menuButtonAnimation;
   AnimationController _menuButtonAnimationController;
   TextEditingController _textFieldController = new TextEditingController();
@@ -39,7 +40,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
   void hide() => this._searchBarAnimation.forward();
 
   @override
-  Future<void> didChangeDependencies() async {
+  void didChangeDependencies() {
     super.didChangeDependencies();
     if (this._init) {
       this._menuButtonAnimationController = AnimationController(
@@ -97,7 +98,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
       }
       this._changeSearchMode(0);
       this._init = false;
-      this._recentSearches = await configuration.get(Configurations.discoverSearchRecents);
+      this._recentSearches = configuration.discoverSearchRecent;
       this.setState(() {});
     }
   }

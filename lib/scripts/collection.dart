@@ -4,169 +4,14 @@ import 'dart:convert' as convert;
 import 'package:path/path.dart' as path;
 import 'package:media_metadata_retriever/media_metadata_retriever.dart';
 
+import 'package:harmonoid/scripts/mediatypes.dart';
+export 'package:harmonoid/scripts/mediatypes.dart';
+
 
 const List<String> SUPPORTED_FILE_TYPES = ['OGG', 'OGA', 'AAC', 'M4A', 'MP3', 'WMA', 'OPUS'];
 
 
 Collection collection;
-
-
-class Track {
-  final String trackName;
-  final String albumName;
-  final int trackNumber;
-  final int year;
-  final String albumArtistName;
-  final List<dynamic> trackArtistNames;
-  final String filePath;
-  final int albumArtId;
-  final String albumArtHigh;
-  final String albumArtMedium;
-  final String albumArtLow;
-  final int trackDuration;
-  final String trackId;
-  final String albumId;
-
-  Map<String, dynamic> toMap() {
-    return {
-      'trackName': this.trackName,
-      'albumName': this.albumName,
-      'trackNumber': this.trackNumber,
-      'year': this.year,
-      'albumArtistName': this.albumArtistName,
-      'trackArtistNames': this.trackArtistNames ?? <dynamic>[],
-      'filePath' : this.filePath,
-      'albumArtId': this.albumArtId,
-      'albumArtHigh': this.albumArtHigh,
-      'albumArtMedium': this.albumArtHigh,
-      'albumArtLow': this.albumArtHigh,
-      'trackDuration': this.trackDuration,
-      'trackId': this.trackId,
-      'albumId': this.albumId,
-    };
-  }
-  
-  static Track fromMap(Map<String, dynamic> trackMap) {
-    return new Track(
-      trackName: trackMap['trackName'],
-      albumName: trackMap['albumName'],
-      trackNumber: trackMap['trackNumber'],
-      year: trackMap['year'],
-      albumArtistName: trackMap['albumArtistName'],
-      trackArtistNames: trackMap['trackArtistNames'] ?? <dynamic>[],
-      filePath: trackMap['filePath'],
-      albumArtId: trackMap['albumArtId'],
-      albumArtHigh: trackMap['albumArtHigh'],
-      albumArtMedium: trackMap['albumArtMedium'],
-      albumArtLow: trackMap['albumArtLow'],
-      trackDuration: trackMap['trackDuration'],
-      trackId: trackMap['trackId'],
-      albumId: trackMap['albumId'],
-    );
-  }
-
-  Track({this.trackName, this.albumName, this.trackNumber, this.year, this.albumArtistName, this.trackArtistNames, this.albumArtId, this.filePath, this.albumArtHigh, this.albumArtMedium, this.albumArtLow, this.trackDuration, this.trackId, this.albumId});
-}
-
-
-class Album {
-  final String albumName;
-  final int year;
-  final String albumArtistName;
-  final int albumArtId;
-  List<Track> tracks = <Track>[];
-  final String albumArtHigh;
-  final String albumArtMedium;
-  final String albumArtLow;
-  final String albumId;
-
-  Map<String, dynamic> toMap() {
-    List<dynamic> tracks = <dynamic>[];    
-    for (Track track in this.tracks) {
-      tracks.add(track.toMap());
-    }
-    return {
-      'albumName': this.albumName,
-      'year': this.year,
-      'albumArtistName': this.albumArtistName,
-      'albumArtId': this.albumArtId,
-      'tracks': this.tracks,
-      'albumArtHigh': this.albumArtHigh,
-      'albumArtMedium': this.albumArtHigh,
-      'albumArtLow': this.albumArtHigh,
-      'albumId': this.albumId,
-    };
-  }
-
-  static Album fromMap(Map<String, dynamic> albumMap) {
-    return new Album(
-      albumName: albumMap['albumName'],
-      year: albumMap['year'],
-      albumArtistName: albumMap['albumArtistName'],
-      albumArtId: albumMap['albumArtId'],
-      albumArtHigh: albumMap['albumArtHigh'],
-      albumArtMedium: albumMap['albumArtMedium'],
-      albumArtLow: albumMap['albumArtLow'],
-      albumId: albumMap['albumId']
-    );
-  }
-
-  Album({this.albumName, this.year, this.albumArtistName, this.albumArtId, this.albumArtHigh, this.albumArtMedium, this.albumArtLow, this.albumId});
-}
-
-/* TODO: Update Artist according to new specs. */
-class Artist {
-  final String artistName;
-  List<Album> albums = <Album>[];
-  List<Track> tracks = <Track>[];
-
-  Map<String, dynamic> toMap() {
-    List<dynamic> tracks = <dynamic>[];    
-    for (Track track in this.tracks) {
-      tracks.add(track.toMap());
-    }
-    List<dynamic> albums = <dynamic>[];    
-    for (Album album in this.albums) {
-      albums.add(album.toMap());
-    }
-    return {
-      'trackArtistNames': this.artistName,
-      'albums': albums,
-      'tracks': tracks,
-    };
-  }
-
-  static Artist fromMap(Map<String, dynamic> artistMap) {
-    return new Artist(
-      artistName: artistMap['artistName'],
-    );
-  }
-
-  Artist({this.artistName});
-}
-
-
-class Playlist {
-  final String playlistName;
-  final int playlistId;
-  List<Track> tracks = <Track>[];
-
-  Map<String, dynamic> toMap() {
-    List<dynamic> tracks = <dynamic>[];
-    for (Track track in this.tracks) {
-      tracks.add(track.toMap());
-    }
-    return {
-      'type': 'Playlist',
-      'playlistName': this.playlistName,
-      'playlistId': this.playlistId,
-      'tracks': tracks,
-    };
-  }
-
-  Playlist({this.playlistName, this.playlistId});
-}
-
 
 class Collection {
   final Directory collectionDirectory;
@@ -178,6 +23,7 @@ class Collection {
     collection = new Collection(collectionDirectory, cacheDirectory);
     if (!await collection.collectionDirectory.exists()) await collection.collectionDirectory.create(recursive: true);
     if (!await collection.cacheDirectory.exists()) await collection.cacheDirectory.create(recursive: true);
+    await collection.getFromCache();
   }
 
   List<Album> albums = <Album>[];
@@ -186,8 +32,8 @@ class Collection {
   List<Playlist> playlists = <Playlist>[];
 
   Future<Collection> refresh({void Function(int completed, int total, bool isCompleted) callback}) async {
-    if (await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).exists()) {
-      await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).delete();
+    if (await File(path.join(this.cacheDirectory.path, 'collection.json')).exists()) {
+      await File(path.join(this.cacheDirectory.path, 'collection.json')).delete();
     }
     this.albums.clear();
     this.tracks.clear();
@@ -406,7 +252,7 @@ class Collection {
    JsonEncoder encoder = JsonEncoder.withIndent('    ');
     List<Map<String, dynamic>> tracks = <Map<String, dynamic>>[];
     collection.tracks.forEach((element) => tracks.add(element.toMap()));
-    await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).writeAsString(encoder.convert({'tracks': tracks}));
+    await File(path.join(this.cacheDirectory.path, 'collection.json')).writeAsString(encoder.convert({'tracks': tracks}));
   }
 
   Future<void> getFromCache() async {
@@ -415,11 +261,11 @@ class Collection {
     this.artists = <Artist>[];
     this._foundAlbums = <List<String>>[];
     this._foundArtists = <String>[];
-    if (!await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).exists()) {
+    if (!await File(path.join(this.cacheDirectory.path, 'collection.json')).exists()) {
       await this.refresh();
     }
     else {
-      Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'collectionMusic.json')).readAsString());
+      Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'collection.json')).readAsString());
       for (Map<String, dynamic> track in collection['tracks']) {
         int trackNumber = track['trackNumber'];
         int year = track['year'];
@@ -603,12 +449,12 @@ class Collection {
     for (Playlist playlist in this.playlists) {
       playlists.add(playlist.toMap());
     }
-    File playlistFile = File(path.join(this.cacheDirectory.path, 'collectionPlaylists.json'));
+    File playlistFile = File(path.join(this.cacheDirectory.path, 'playlists.json'));
     await playlistFile.writeAsString(JsonEncoder.withIndent('    ').convert({'playlists': playlists}));
   }
 
   Future<void> playlistsGetFromCache() async {
-    File playlistFile = File(path.join(this.cacheDirectory.path, 'collectionPlaylists.json'));
+    File playlistFile = File(path.join(this.cacheDirectory.path, 'playlists.json'));
     if (!await playlistFile.exists()) await this.playlistsSaveToCache();
     else {
       List<dynamic> playlists = convert.jsonDecode(await playlistFile.readAsString())['playlists'];

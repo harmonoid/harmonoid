@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/screens/discover/discoveralbum.dart';
 import 'package:harmonoid/scripts/discover.dart';
 import 'package:harmonoid/widgets.dart';
-import 'package:harmonoid/constants/constants.dart';
+import 'package:harmonoid/language/constants.dart';
 
 
 class DiscoverSearch extends StatefulWidget {

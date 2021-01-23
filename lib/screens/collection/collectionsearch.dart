@@ -6,7 +6,7 @@ import 'package:harmonoid/screens/collection/collectionalbum.dart';
 import 'package:harmonoid/screens/collection/collectiontrack.dart';
 import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/widgets.dart';
-import 'package:harmonoid/constants/constants.dart';
+import 'package:harmonoid/language/constants.dart';
 
 
 class CollectionSearch extends StatefulWidget {
@@ -22,6 +22,8 @@ class CollectionSearchState extends State<CollectionSearch> {
   double _tileHeight;
   List<Widget> _albumResults = new List<Widget>();
   List<Widget> _trackResults = new List<Widget>();
+  /* TODO: Collection search to contain artists */
+  // ignore: unused_field
   List<Widget> _artistResults = new List<Widget>();
   TextEditingController _textFieldController = new TextEditingController();
 
@@ -71,14 +73,14 @@ class CollectionSearchState extends State<CollectionSearch> {
         }
         this.setState(() {});
       });
-      States.refreshMusicSearch = this._refresh;
+      States.refreshCollectionSearch = this._refresh;
     }
     this._init = false;
   }
 
   @override
   void dispose() {
-    States.refreshMusicSearch = () {};
+    States.refreshCollectionSearch = null;
     super.dispose();
   }
 
