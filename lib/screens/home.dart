@@ -8,6 +8,16 @@ import 'package:harmonoid/screens/discover/discovermusic.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
 import 'package:harmonoid/screens/settings.dart';
 import 'package:harmonoid/language/constants.dart';
+import 'package:harmonoid/scripts/fileintent.dart';
+
+
+enum Screen {
+  transfers,
+  discover,
+  collection,
+  nowPlaying,
+  settings,
+}
 
 
 class Home extends StatefulWidget {
@@ -17,12 +27,13 @@ class Home extends StatefulWidget {
 
 
 class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindingObserver {
-  int _index = 2;
+  int _index = fileIntent.startScreen.index;
   GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
   @override
   void initState() {
     super.initState();
+    if (fileIntent.startScreen == Screen.nowPlaying) fileIntent.play();
     WidgetsBinding.instance.addObserver(this);
   }
 

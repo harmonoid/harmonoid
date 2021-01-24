@@ -10,6 +10,7 @@ import 'package:audio_service/audio_service.dart';
 
 import 'package:harmonoid/screens/home.dart';
 import 'package:harmonoid/scripts/collection.dart';
+import 'package:harmonoid/scripts/fileintent.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
@@ -33,6 +34,7 @@ void main() async {
     await Language.init(
       languageRegion: configuration.languageRegion,
     );
+    await FileIntent.init();
     runApp(
       new AudioServiceWidget(
         child: new Harmonoid(),

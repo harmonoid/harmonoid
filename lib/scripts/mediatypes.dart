@@ -6,7 +6,8 @@ class Track {
   final String albumArtistName;
   final List<dynamic> trackArtistNames;
   String filePath;
-  final int albumArtId;
+  /* Made albumArtId mutable to deal with file intents. */
+  int albumArtId;
   final String albumArtHigh;
   final String albumArtMedium;
   final String albumArtLow;
