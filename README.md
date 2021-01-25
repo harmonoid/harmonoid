@@ -45,6 +45,7 @@
 - 🌈 **Personalization**
   - Change accent color & theme of the app.
 
+✒ Many features are missing in older version (v0.0.2+2) & next release (v0.0.3) is under development.
 
 ## 🎉 Contributions
 
@@ -86,3 +87,8 @@ Thanks to following people & organizations.
 |[path_provider](https://pub.dev/packages/path_provider)                             |[flutter](https://github.com/flutter)            |
 |[share](https://pub.dev/packages/share)                                             |[flutter](https://github.com/flutter)            |
 |[url_launcher](https://pub.dev/packages/url_launcher)                               |[flutter](https://github.com/flutter)            |
+
+## 📄 License
+
+<img src="https://www.gnu.org/graphics/gplv3-127x51.png" />
+GNU General Public License v3
