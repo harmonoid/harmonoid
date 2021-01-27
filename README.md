@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://discord.gg/mRxH9zYkGy/">Discord</a> | 
   <a href="https://github.com/alexmercerind/harmonoid/releases/">Download</a> | 
-  <a href="https://alexmercerind.github.io/harmonoid/">Website</a>
+  <a href="https://harmonoid.github.io/">Website</a>
 </p>
 
 <table>
