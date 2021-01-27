@@ -16,7 +16,7 @@
   </tr>
 </table>
 
-## ✒ Information
+## 📎 Information
 
 👋 Hello Everyone! As of November 6, 2020, I as the maintainer & main developer of project, has decided to rewrite this project & start from scratch, because current version of app has few issues in its core & code is less managable. Newer version of app (i.e. v3.0.0) will be a completely new app, with a lot more new features & control over your music. The project is alive & you can see the progress in the [development](https://github.com/alexmercerind/harmonoid/tree/development) branch of this repository. You can join Discord server of Harmonoid with above button, to get an early look at upcoming features and provide feedback or you may just talk to us about anything you want & chill. Thanks a lot for your love 💙!
 
@@ -79,21 +79,22 @@ For downloading music, a dedicated server is necessary which you can see [here](
 
 Thanks to following people & organizations.
 
-|Package                                                                             |Maintainer                                       |
-|------------------------------------------------------------------------------------|-------------------------------------------------|
-|[just_audio](https://github.com/ryanheise/just_audio)                               |[ryanheise](https://github.com/ryanheise)        |
-|[audio_service](https://github.com/ryanheise/audio_service)                         |[ryanheise](https://github.com/ryanheise)        |
-|[media_metadata_retriever](https://pub.dev/alexmercerind/media_metadata_retriever)  |[alexmercerind](https://github.com/alexmercerind)|
-|[flutter_local_notifications](https://github.com/MaikuB/flutter_local_notifications)|[MaikuB](https://github.com/MaikuB)              |
-|[permission_handler](https://github.com/Baseflow/flutter-permission-handler)        |[Baseflow](https://github.com/Baseflow)          |
-|[animations](https://pub.dev/packages/animations)                                   |[flutter](https://github.com/flutter)            |
-|[http](https://pub.dev/packages/http)                                               |[flutter](https://github.com/flutter)            |
-|[path](https://pub.dev/packages/path)                                               |[flutter](https://github.com/flutter)            |
-|[path_provider](https://pub.dev/packages/path_provider)                             |[flutter](https://github.com/flutter)            |
-|[share](https://pub.dev/packages/share)                                             |[flutter](https://github.com/flutter)            |
-|[url_launcher](https://pub.dev/packages/url_launcher)                               |[flutter](https://github.com/flutter)            |
+|Package                                                                              |Maintainer                                       |
+|-------------------------------------------------------------------------------------|-------------------------------------------------|
+|[just_audio](https://github.com/ryanheise/just_audio)                                |[ryanheise](https://github.com/ryanheise)        |
+|[audio_service](https://github.com/ryanheise/audio_service)                          |[ryanheise](https://github.com/ryanheise)        |
+|[media_metadata_retriever](https://github.com/alexmercerind/media_metadata_retriever)|[alexmercerind](https://github.com/alexmercerind)|
+|[flutter_local_notifications](https://github.com/MaikuB/flutter_local_notifications) |[MaikuB](https://github.com/MaikuB)              |
+|[permission_handler](https://github.com/Baseflow/flutter-permission-handler)         |[Baseflow](https://github.com/Baseflow)          |
+|[animations](https://pub.dev/packages/animations)                                    |[flutter](https://github.com/flutter)            |
+|[http](https://pub.dev/packages/http)                                                |[flutter](https://github.com/flutter)            |
+|[path](https://pub.dev/packages/path)                                                |[flutter](https://github.com/flutter)            |
+|[path_provider](https://pub.dev/packages/path_provider)                              |[flutter](https://github.com/flutter)            |
+|[share](https://pub.dev/packages/share)                                              |[flutter](https://github.com/flutter)            |
+|[url_launcher](https://pub.dev/packages/url_launcher)                                |[flutter](https://github.com/flutter)            |
 
 ## 📄 License
 
 <img src="https://www.gnu.org/graphics/gplv3-127x51.png" />
+
 GNU General Public License v3
