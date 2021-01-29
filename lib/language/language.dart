@@ -8,6 +8,7 @@ enum LanguageRegion {
   ptBr, /* Credits: https://github.com/bdlukaa/                 */
   hiIn, /* Credits: https://github.com/alexmercerind/           */
   deDe, /* Credits: https://github.com/MickLesk/                */
+  nlNl, /* Credits: https://github.com/kebabinjeneus/		*/
 }
 
 
@@ -21,6 +22,7 @@ extension LanguageRegionExtension on LanguageRegion {
       case LanguageRegion.ptBr: data = ['Português'      , 'Brasil'           ]; break;
       case LanguageRegion.hiIn: data = ['हिंदी'            , 'भारत'              ]; break;
       case LanguageRegion.deDe: data = ['Deutsche'       , 'Deutschland'      ]; break;
+      case LanguageRegion.nlNl: data = ['Nederlands'     , 'Nederland'      ]; break;
     }
     return data;
   }
@@ -910,7 +912,155 @@ class Language {
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+      } 
+      break;
+      case LanguageRegion.nlNl: {
+        Constants.STRING_INTERNET_ERROR                                  = 'Controleer uw internet verbinding...';
+        Constants.STRING_SEARCH_HEADER                                   = 'Zoek Muziek';
+        Constants.STRING_SEARCH_MODE_SUBHEADER                           = 'Waar zoekt u naar?';
+        Constants.STRING_COLLECTION                                      = 'Collectie';
+        Constants.STRING_NOW_PLAYING                                     = 'Speelt nu';
+        Constants.STRING_SETTING                                         = 'Instellingen';
+        Constants.STRING_OK                                              = 'OKÉ';
+        Constants.STRING_YES                                             = 'JA';
+        Constants.STRING_NO                                              = 'NEE';
+        Constants.STRING_ALBUM                                           = 'Albums';
+        Constants.STRING_TRACK                                           = 'Nummers';
+        Constants.STRING_TOP_TRACKS                                      = 'TOP NUMMERS';
+        Constants.STRING_ARTIST                                          = 'Artiesten';
+        Constants.STRING_SAVED                                           = 'Opgeslagen';
+        Constants.STRING_THEME_MODE_LIGHT                                = 'Licht';
+        Constants.STRING_THEME_MODE_DARK                                 = 'Donker';
+        Constants.STRING_OPTIONS                                         = 'Opties';
+        Constants.STRING_FOLLOWERS                                       = 'volgers';
+        Constants.STRING_PLAYS                                           = 'speelt';
+        Constants.STRING_EXPORT_TRACK                                    = 'Exporteer nummer';
+        Constants.STRING_DELETE_TRACK                                    = 'Verwijder nummer';
+        Constants.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Zoek muziek uit je favoriete albums';
+        Constants.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Zoek naar je favoriete nummers';
+        Constants.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Zoek muziek van je favoriete artiesten';
+        Constants.STRING_SEARCH_HISTORY_SUBHEADER                        = 'Uw recente zoekopdrachten';
+        Constants.STRING_SEARCH_RESULT_LOADER_LABEL                      = 'Uw muziek verkrijgen...';
+        Constants.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Dichtstbijzijnde album in het resultaat';
+        Constants.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK               = 'Dichtstbijzijnde nummer in het resultaat';
+        Constants.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST              = 'Dichtstbijzijnde artiest in het resultaat';
+        Constants.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'ALBUM OPSLAAN';
+        Constants.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'NUMMER OPSLAAN';
+        Constants.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'ARTIEST OPSLAAN';
+        Constants.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM          = 'TOON ALBUM';
+        Constants.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK          = 'TOON NUMMER';
+        Constants.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST         = 'TOON ARTIEST';
+        Constants.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'Meer albums uit het resultaat';
+        Constants.STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'Meer nummers uit het resultaat';
+        Constants.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'Meer vergelijkbare artiesten';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE                  = 'U kunt niet terug';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE               = 'Een of meer nummers worden offline opgeslagen. Wacht alstublieft tot alle nummers zijn opgeslagen.';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Het nummer kon niet opgeslagen wordenThe track could not be saved';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'We raden u sterk aan uw internet verbinding te controleren en het over een tijdje nogmaals te proberen.';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'We hebben allemaal slechte dagen';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We zijn tegen een fout aan gelopen tijdens het opslaan van uw muziek. Dit betekent over het algemeen dat ons IP adres is geblokkeerd vanwege een groot aantal verzoeken in een bepaalde tijd. U kunt de server URL veranderen in de instellingen en proberen of het werkt. Desondanks kan dit ook betekenen dat de afhankelijkheden van de server niet up to date zijn. Deze fout heeft niks met u te maken. U kunt de eigenaar van het project informeren door een issue op Github of op Twitter te maken en een fix te verwachten binnen een uur, als hij in dezelfde tijdszone woont als u. Vermaakt u zich met gedownloade muziek in de tussentijd. Heel erg bedankt voor uw steun!';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'We konden dit nummer niet opslaan';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Dit specifieke nummer kon niet worden opgeslagen. We proberen nogsteeds uit te vogelen wat deze fout veroorzaakt heeft. Download alstublieft wat andere muziek in de tussentijd. Heel erg bedankt voor uw steun.';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Wacht';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Dit nummer wordt al gedownload.';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Dit nummer is al opgeslagen.';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Wilt u dit nummer nogmaals downloaden?';
+        Constants.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Verkrijgt nummers...';
+        Constants.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Hier zijn de nummers uit dit album';
+        Constants.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Een aantal inzichten in het album';
+        Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Zoek- en sla muziek op om het hier te zien. Klik op vernieuwen om nieuwe dingen te zien.';
+        Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Laatste album';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Meer albums';
+        Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Laatste nummer';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Meer nummers';
+        Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Laatste artiest';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Meer artiesten';
+        Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Hier zijn de nummers die u opgeslagen heeft';
+        Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Enkele inzichten in het album';
+        Constants.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Weet u dat zeker?';
+        Constants.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'Wilt u dit album van uw apparaat verwijderen?';
+        Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Weet u dat zeker?';
+        Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Wilt u dit album van uw apparaat verwijderen?';
+        Constants.STRING_NOW_PLAYING_NEXT_TRACK                          = 'VOLGENDE';
+        Constants.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'VORIGE';
+        Constants.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Niks wordt afgespeeld...';
+        Constants.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Speel uit uw collectie.';
+        Constants.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = "We zijn helemaal klaar...";
+        Constants.STRING_SETTING_GITHUB                                  = 'GITHUB';
+        Constants.STRING_SETTING_STAR_GITHUB                             = 'STAR THE PROJECT';
+        Constants.STRING_SETTING_STARGAZERS_TITLE                        = 'Project Stargazers';
+        Constants.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Heel erg bedankt voor uw steun!';
+        Constants.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'We kunnen onze laatste informatie niet ophalen, u bent waarschijnlijk offline.';
+        Constants.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'We konden geen informatie ophalen over de laatste stargazers.';
+        Constants.STRING_SETTING_LANGUAGE_TITLE                          = 'Taal';
+        Constants.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Verander de taal van de app';
+        Constants.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App herstart vereist';
+        Constants.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Wilt u de app nu opnieuw starten?';
+        Constants.STRING_ABOUT_TITLE                                     = 'Over';
+        Constants.STRING_ABOUT_SUBTITLE                                  = 'Informatie over de app en zijn ontwikkelaars';
+        Constants.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Server';
+	Constants.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Verander waar de app zijn inhoud vandaan haalt';
+        Constants.STRING_SETTING_SERVER_CHANGE_SERVER_HINT               = 'Vul een server URL in';
+        Constants.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL              = 'Server URL';
+        Constants.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID             = 'Het is geen geldige server URL voor de app.';
+        Constants.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Gelieve uw internetverbinding te controleren.';
+        Constants.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Server succesvol veranderd.';
+        Constants.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Verandert de server voor de app...';
+        Constants.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Vertalers';
+        Constants.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Heel erg bedankt voor uw steun voor de app';
+        Constants.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent';
+        Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Verander de accentkleur van de app';
+        Constants.STRING_SETTING_THEME_TITLE                             = 'Thema';
+        Constants.STRING_SETTING_THEME_SUBTITLE                          = 'Verander de app naar lichte of donkere modus';
+        Constants.STRING_NO_DOWNLOAD_UPDATE                              = 'Uw app is al geupdate';
+        Constants.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
+        Constants.STRING_SETTING_APP_VERSION_TITLE                       = 'Versie';
+        Constants.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Informatie over de huidige versie van de app';
+        Constants.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Geinstalleerde versie';
+        Constants.STRING_SETTING_APP_VERSION_LATEST                      = 'Laatste versie';
+        Constants.STRING_MENU                                            = 'Menu';
+        Constants.STRING_SEARCH_COLLECTION                               = 'Zoek Collectie';
+        Constants.STRING_SWITCH_THEME                                    = 'Wissel Thema';
+        Constants.STRING_DISCOVER                                        = 'Ontdek';
+        Constants.STRING_PLAY                                            = 'Speel';
+        Constants.STRING_PAUSE                                           = 'Pauze';
+        Constants.STRING_DELETE                                          = 'Verwijder';
+        Constants.STRING_SHARE                                           = 'Deel';
+        Constants.STRING_ADD_TO_PLAYLIST                                 = 'Voeg toe aan afspeellijst';
+        Constants.STRING_SAVE_TO_DOWNLOADS                               = 'Sla op in downloads';
+        Constants.STRING_DELETE                                          = 'Verwijder';
+        Constants.STRING_DELETE                                          = 'Verwijder';
+        Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Hier zijn de opgeslagen albums voor die vraag';
+        Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Hier zijn de opgeslagen nummers voor die vraag';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Voer iets in om uw collectie te doorzoeken';
+        Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Dat kon niet in uw collectie gevonden worden';
+        Constants.STRING_PLAYLIST                                        = 'Afspeellijst';
+        Constants.STRING_PLAYLISTS                                       = 'Afspeellijsten';
+        Constants.STRING_PLAYLISTS_SUBHEADER                             = 'Jouw afspeellijsten';
+        Constants.STRING_PLAYLISTS_CREATE                                = 'Maak een nieuwe afspeellijst';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Naam afspeellijst';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Naam voor uw nieuwe afspeellijst';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Weet u het zeker?';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Wilt u deze afspeellijst van uw apparaat verwijderen?';
+        Constants.STRING_CANCEL                                          = 'ANNULEER';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Voeg toe aan afspeellijst';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Selecteer een afspeellijst en voeg dit nummer toe';
+        Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Hier zijn de nummers in deze afspeellijst';
+        Constants.STRING_TRANSFERS                                       = 'Overdrachten';
+        Constants.STRING_THEME_MODE_SYSTEM                               = 'Volg systeem thema';
+        Constants.STRING_SETTING_INDEXING_TITLE                          = 'Indexeren';
+        Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Herindexeer uw muziek collectie';
+        Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'NUMBER_STRING / TOTAL_STRING nummers geindexeerd...';
+        Constants.STRING_SETTING_INDEXING_DONE                           = 'Uw muziek collectie is geindexeerd';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Onderbreek het proces niet';
+        Constants.STRING_REFRESH                                         = 'HERLAAD';
+        Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Uw recente zoekopdrachten zullen hier getoond worden';
+        Constants.STRING_NO_INTERNET_TITLE                               = 'Geen Internet';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Controleer uw verbinding';
+        Constants.STRING_NO_COLLECTION_TITLE                             = 'Lege Collectie';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'Geen muziek gevonden\nSla wat muziek op';
       }
+      break;
     }
   }
 }
