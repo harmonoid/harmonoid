@@ -12,8 +12,6 @@ class Track extends MediaType {
   String albumArtistName;
   List<dynamic> trackArtistNames;
   String filePath;
-  /* Made albumArtId mutable to deal with file intents. */
-  int albumArtId;
   String albumArtHigh;
   String albumArtMedium;
   String albumArtLow;
@@ -32,7 +30,6 @@ class Track extends MediaType {
       'albumArtistName': this.albumArtistName,
       'trackArtistNames': this.trackArtistNames ?? <dynamic>['Unknown Artist'],
       'filePath' : this.filePath,
-      'albumArtId': this.albumArtId,
       'albumArtHigh': this.albumArtHigh,
       'albumArtMedium': this.albumArtHigh,
       'albumArtLow': this.albumArtHigh,
@@ -52,7 +49,6 @@ class Track extends MediaType {
       albumArtistName: trackMap['albumArtistName'] ?? 'Unknown Artist',
       trackArtistNames: trackMap['trackArtistNames'] ?? <dynamic>['Unknown Artist'],
       filePath: trackMap['filePath'],
-      albumArtId: trackMap['albumArtId'],
       albumArtHigh: trackMap['albumArtHigh'],
       albumArtMedium: trackMap['albumArtMedium'],
       albumArtLow: trackMap['albumArtLow'],
@@ -62,7 +58,7 @@ class Track extends MediaType {
     );
   }
 
-  Track({this.trackName, this.albumName, this.trackNumber, this.year, this.albumArtistName, this.trackArtistNames, this.albumArtId, this.filePath, this.albumArtHigh, this.albumArtMedium, this.albumArtLow, this.trackDuration, this.trackId, this.albumId});
+  Track({this.trackName, this.albumName, this.trackNumber, this.year, this.albumArtistName, this.trackArtistNames, this.filePath, this.albumArtHigh, this.albumArtMedium, this.albumArtLow, this.trackDuration, this.trackId, this.albumId});
 }
 
 
@@ -70,7 +66,6 @@ class Album extends MediaType {
   String albumName;
   int year;
   String albumArtistName;
-  int albumArtId;
   List<Track> tracks = <Track>[];
   String albumArtHigh;
   String albumArtMedium;
@@ -88,7 +83,6 @@ class Album extends MediaType {
       'albumName': this.albumName,
       'year': this.year,
       'albumArtistName': this.albumArtistName,
-      'albumArtId': this.albumArtId,
       'tracks': this.tracks,
       'albumArtHigh': this.albumArtHigh,
       'albumArtMedium': this.albumArtHigh,
@@ -103,7 +97,6 @@ class Album extends MediaType {
       albumName: albumMap['albumName'] ?? 'Unknown Album',
       year: albumMap['year'],
       albumArtistName: albumMap['albumArtistName'] ?? 'Unknown Artist',
-      albumArtId: albumMap['albumArtId'],
       albumArtHigh: albumMap['albumArtHigh'],
       albumArtMedium: albumMap['albumArtMedium'],
       albumArtLow: albumMap['albumArtLow'],
@@ -111,7 +104,7 @@ class Album extends MediaType {
     );
   }
 
-  Album({this.albumName, this.year, this.albumArtistName, this.albumArtId, this.albumArtHigh, this.albumArtMedium, this.albumArtLow, this.albumId});
+  Album({this.albumName, this.year, this.albumArtistName, this.albumArtHigh, this.albumArtMedium, this.albumArtLow, this.albumId});
 }
 
 /* TODO: Update Artist according to new specs. */

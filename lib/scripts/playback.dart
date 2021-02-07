@@ -23,7 +23,7 @@ class Playback {
           title: track.trackName,
           album: track.albumName,
           artist: track.trackArtistNames.join(', '),
-          artUri: 'file://${collection.getAlbumArt(track.albumArtId).path}',
+          artUri: 'file://${collection.getAlbumArt(track).path}',
           extras: track.toMap(),
         ),
       );

@@ -38,13 +38,15 @@ class _DiscoverTrackTileState extends State<DiscoverTrackTile> {
       /* If file wasn't downloaded during this runtime, them check for file's existence. */
       if (!inDownloadQueue) {
         File locationFile = File(
-          path.join(MUSIC_DIRECTORY, '${widget.track.trackArtistNames.join(', ')} - ${widget.track.trackName}.OGG'),
-        );
+          path.join(
+            MUSIC_DIRECTORY,
+            '${widget.track.trackArtistNames.join(', ')}_${widget.track.trackName}'.replaceAll(new RegExp(r'[^\s\w]'),'') + '.OGG',
+        ));
         if (await locationFile.exists()) {
           this.setState(() => this._exists = true);
         }
       }
-      this._taskStream = download.taskStream.listen((DownloadTask task) {
+      this._taskStream = download.taskStream?.listen((DownloadTask task) {
         if (task.extras.trackId == widget.track.trackId) {
           try {
             this.setState(() {

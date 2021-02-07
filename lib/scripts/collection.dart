@@ -9,7 +9,6 @@ import 'package:harmonoid/scripts/mediatype.dart';
 export 'package:harmonoid/scripts/mediatype.dart';
 
 
-/* TODO: BUG:     Album arts & metadata from cache gets mismatched once an album is deleted. Reindexing fixes it. */
 /* TODO: FEATURE: Add dealing for tracks having no metadata or album art. */
 
 const List<String> SUPPORTED_FILE_TYPES = ['OGG', 'OGA', 'AAC', 'M4A', 'MP3', 'WMA', 'OPUS'];
@@ -27,6 +26,7 @@ class Collection {
     collection = new Collection(collectionDirectory, cacheDirectory);
     if (!await collection.collectionDirectory.exists()) await collection.collectionDirectory.create(recursive: true);
     if (!await collection.cacheDirectory.exists()) await collection.cacheDirectory.create(recursive: true);
+    if (!await Directory(path.join(collection.cacheDirectory.path, 'albumArts')).exists()) await Directory(path.join(collection.cacheDirectory.path, 'albumArts')).create(recursive: true);
     await collection.getFromCache();
   }
 
@@ -36,8 +36,8 @@ class Collection {
   List<Playlist> playlists = <Playlist>[];
 
   Future<Collection> refresh({void Function(int completed, int total, bool isCompleted) callback}) async {
-    if (await File(path.join(this.cacheDirectory.path, 'collection.json')).exists()) {
-      await File(path.join(this.cacheDirectory.path, 'collection.json')).delete();
+    if (await File(path.join(this.cacheDirectory.path, 'collection.JSON')).exists()) {
+      await File(path.join(this.cacheDirectory.path, 'collection.JSON')).delete();
     }
     this.albums.clear();
     this.tracks.clear();
@@ -57,7 +57,7 @@ class Collection {
             this._albumArts.add(null);
           }
           else {
-            File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName])}.png'));
+            File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArts', '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
             await albumArtFile.writeAsBytes(retriever.albumArt);
             this._albumArts.add(albumArtFile);
           }
@@ -108,7 +108,12 @@ class Collection {
     return result;
   }
 
-  File getAlbumArt(int albumArtId) => new File(path.join(this.cacheDirectory.path, 'albumArt$albumArtId.png'));
+  File getAlbumArt(MediaType media) {
+    if (media is Track)
+      return new File(path.join(this.cacheDirectory.path, 'albumArts', '${media.albumArtistName}_${media.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
+    if (media is Album)
+      return new File(path.join(this.cacheDirectory.path, 'albumArts', '${media.albumArtistName}_${media.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
+  }
 
   Future<void> add({File trackFile}) async {
     bool isAlreadyPresent = false;
@@ -128,7 +133,7 @@ class Collection {
           this._albumArts.add(null);
         }
         else {
-          File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName])}.png'));
+          File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArts', '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
           await albumArtFile.writeAsBytes(retriever.albumArt);
           this._albumArts.add(albumArtFile);
         }
@@ -251,7 +256,7 @@ class Collection {
    JsonEncoder encoder = JsonEncoder.withIndent('    ');
     List<Map<String, dynamic>> tracks = <Map<String, dynamic>>[];
     collection.tracks.forEach((element) => tracks.add(element.toMap()));
-    await File(path.join(this.cacheDirectory.path, 'collection.json')).writeAsString(encoder.convert({'tracks': tracks}));
+    await File(path.join(this.cacheDirectory.path, 'collection.JSON')).writeAsString(encoder.convert({'tracks': tracks}));
   }
 
   Future<void> getFromCache() async {
@@ -260,18 +265,14 @@ class Collection {
     this.artists = <Artist>[];
     this._foundAlbums = <List<String>>[];
     this._foundArtists = <String>[];
-    if (!await File(path.join(this.cacheDirectory.path, 'collection.json')).exists()) {
+    if (!await File(path.join(this.cacheDirectory.path, 'collection.JSON')).exists()) {
       await this.refresh();
     }
     else {
-      Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'collection.json')).readAsString());
+      Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'collection.JSON')).readAsString());
       for (Map<String, dynamic> trackMap in collection['tracks']) {
         Track track = Track.fromMap(trackMap);
-        Future<void> albumArtMethod() async {
-          this._albumArts.add(
-            File(path.join(this.cacheDirectory.path, 'albumArt${track.albumArtId}.png')),
-          );
-        }
+        Future<void> albumArtMethod() async {}
         await this._arrange(track, albumArtMethod);
       }
       List<File> collectionDirectoryContent = <File>[];
@@ -307,7 +308,6 @@ class Collection {
       this.albums.add(
         new Album(
           albumName: track.albumName,
-          albumArtId: Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
           year: track.year,
           albumArtistName: track.albumArtistName,
         )..tracks.add(
@@ -318,7 +318,6 @@ class Collection {
             trackArtistNames: track.trackArtistNames,
             trackName: track.trackName,
             trackNumber: track.trackNumber,
-            albumArtId: Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
             filePath: track.filePath,
           ),
         ),
@@ -328,7 +327,6 @@ class Collection {
       this.albums[Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName])].tracks.add(
         new Track(
           albumName: track.albumName,
-          albumArtId: Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
           year: track.year,
           albumArtistName: track.albumArtistName,
           trackArtistNames: track.trackArtistNames,
@@ -347,7 +345,6 @@ class Collection {
           )..tracks.add(
             new Track(
               albumName: track.albumName,
-              albumArtId: Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
               year: track.year,
               albumArtistName: track.albumArtistName,
               trackArtistNames: track.trackArtistNames,
@@ -362,7 +359,6 @@ class Collection {
         this.artists[this._foundArtists.indexOf(artistName)].tracks.add(
           new Track(
             albumName: track.albumName,
-            albumArtId: Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
             year: track.year,
             albumArtistName: track.albumArtistName,
             trackArtistNames: track.trackArtistNames,
@@ -376,7 +372,6 @@ class Collection {
     this.tracks.add(
       new Track(
         albumName: track.albumName,
-        albumArtId: Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
         year: track.year,
         albumArtistName: track.albumArtistName,
         trackArtistNames: track.trackArtistNames,
@@ -437,12 +432,12 @@ class Collection {
     for (Playlist playlist in this.playlists) {
       playlists.add(playlist.toMap());
     }
-    File playlistFile = File(path.join(this.cacheDirectory.path, 'playlists.json'));
+    File playlistFile = File(path.join(this.cacheDirectory.path, 'playlists.JSON'));
     await playlistFile.writeAsString(JsonEncoder.withIndent('    ').convert({'playlists': playlists}));
   }
 
   Future<void> playlistsGetFromCache() async {
-    File playlistFile = File(path.join(this.cacheDirectory.path, 'playlists.json'));
+    File playlistFile = File(path.join(this.cacheDirectory.path, 'playlists.JSON'));
     if (!await playlistFile.exists()) await this.playlistsSaveToCache();
     else {
       List<dynamic> playlists = convert.jsonDecode(await playlistFile.readAsString())['playlists'];
@@ -458,7 +453,6 @@ class Collection {
             trackNumber: track['trackNumber'],
             year: track['year'],
             trackArtistNames: track['trackArtistNames'],
-            albumArtId: track['albumArtId'],
             filePath: track['filePath'],
           ));
         }

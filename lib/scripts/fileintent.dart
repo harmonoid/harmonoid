@@ -55,8 +55,13 @@ class FileIntent {
     await retriever.setFile(this.openedFile);
     Track track = Track.fromMap((await retriever.metadata).toMap());
     track.filePath = this.openedFile.path;
-    track.albumArtId = -1;
-    File albumArtFile = new File(path.join((await path.getExternalStorageDirectory()).path, 'albumArt${track.albumArtId}.png'));
+    File albumArtFile = new File(
+      path.join((
+        await path.getExternalStorageDirectory()).path,
+        'albumArts',
+        '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG',
+      ),
+    );
     await albumArtFile.writeAsBytes(retriever.albumArt);
     await AudioService.start(
       backgroundTaskEntrypoint: backgroundTaskEntryPoint,
