@@ -63,6 +63,7 @@ class Download {
   List<DownloadTask> tasks = <DownloadTask>[];
   DownloadTask currentTask;
   Stream<DownloadTask> taskStream;
+  bool isUnderProgress = false;
 
   String _toMegaBytes(int size) {
     return (size / (1024 * 1024)).toStringAsFixed(2);
@@ -104,14 +105,14 @@ class Download {
   }
 
   void addTask(DownloadTask task, {bool start: true}) {
-    this.start();
+    if (!this.isUnderProgress) this.start();
     this._isBatchModified = true;
     task.downloadId = this.tasks.length + 1;
     this.tasks.add(task);
   }
 
   void addTasks(List<DownloadTask> tasks, {bool start: true}) {
-    this.start();
+    if (!this.isUnderProgress) this.start();
     this._isBatchModified = true;
     tasks.map((DownloadTask task) {
       task.downloadId = this.tasks.length + 1;
@@ -121,6 +122,7 @@ class Download {
 
   Stream<DownloadTask> _streamCurrentDownloadItem() async* {
     this._isBatchModified = false;
+    this.isUnderProgress = true;
     for (DownloadTask task in this.tasks) {
       if (!task.isCompleted) {
         await for (DownloadTask progressedDownloadTask in task.start()) {
@@ -130,6 +132,7 @@ class Download {
           );
           yield this.currentTask;
         }
+        this.isUnderProgress = false;
         Future.delayed(Duration(seconds: 1), () async {
           this.currentTask.isCompleted = true;
           await this._showDownloadNotification(

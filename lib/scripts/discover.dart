@@ -85,8 +85,10 @@ class Discover {
 
   Future<void> trackDownload(Track track, {void Function() onCompleted, void Function(double progress) onProgress}) async {
     File trackDestination = File(
-      path.join(MUSIC_DIRECTORY, '${track.trackArtistNames.join(', ')} - ${track.trackName}.OGG'),
-    );
+      path.join(
+        MUSIC_DIRECTORY,
+        '${track.trackArtistNames.join(', ')}_${track.trackName}'.replaceAll(new RegExp(r'[^\s\w]'),'') + '.OGG',
+    ));
     download.addTask(
       new DownloadTask(
         fileUri: Uri.https(
@@ -99,14 +101,15 @@ class Discover {
         saveLocation: trackDestination,
         onProgress: onProgress,
         onCompleted: () {
-          collection.add(
-            trackFile: trackDestination
-          );
-          onCompleted?.call();
+          try {
+            collection.add(
+              trackFile: trackDestination
+            );
+            onCompleted?.call();
+          } catch(exception) {}
         },
         extras: track,
       ),
     );
-    download.start();
   }
 }
