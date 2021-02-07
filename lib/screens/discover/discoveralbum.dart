@@ -83,7 +83,7 @@ class LeadingDiscoverAlbumTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 8, right: 8),
+      margin: EdgeInsets.only(left: 8, right: 8, bottom: 8),
       child: OpenContainer(
         transitionDuration: Duration(milliseconds: 400),
         closedElevation: 2,
@@ -188,7 +188,7 @@ class DiscoverAlbumState extends State<DiscoverAlbum> {
                 elevation: 2,
                 clipBehavior: Clip.antiAlias,
                 color: Theme.of(context).cardColor,
-                margin: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 0),
+                margin: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 4.0),
                 child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
