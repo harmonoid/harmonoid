@@ -1,21 +1,28 @@
-class Track {
-  final String trackName;
-  final String albumName;
-  final int trackNumber;
-  final int year;
-  final String albumArtistName;
-  final List<dynamic> trackArtistNames;
+abstract class MediaType {
+  String type;
+  Map<String, dynamic> toMap();
+}
+
+
+class Track extends MediaType {
+  String trackName;
+  String albumName;
+  int trackNumber;
+  int year;
+  String albumArtistName;
+  List<dynamic> trackArtistNames;
   String filePath;
   /* Made albumArtId mutable to deal with file intents. */
   int albumArtId;
-  final String albumArtHigh;
-  final String albumArtMedium;
-  final String albumArtLow;
-  final int trackDuration;
-  final String trackId;
-  final String albumId;
-  final String type = 'Track';
+  String albumArtHigh;
+  String albumArtMedium;
+  String albumArtLow;
+  int trackDuration;
+  String trackId;
+  String albumId;
+  String type = 'Track';
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'trackName': this.trackName,
@@ -59,18 +66,19 @@ class Track {
 }
 
 
-class Album {
-  final String albumName;
-  final int year;
-  final String albumArtistName;
-  final int albumArtId;
+class Album extends MediaType {
+  String albumName;
+  int year;
+  String albumArtistName;
+  int albumArtId;
   List<Track> tracks = <Track>[];
-  final String albumArtHigh;
-  final String albumArtMedium;
-  final String albumArtLow;
-  final String albumId;
-  final String type = 'Album';
+  String albumArtHigh;
+  String albumArtMedium;
+  String albumArtLow;
+  String albumId;
+  String type = 'Album';
 
+  @override
   Map<String, dynamic> toMap() {
     List<dynamic> tracks = <dynamic>[];    
     for (Track track in this.tracks) {
@@ -107,12 +115,13 @@ class Album {
 }
 
 /* TODO: Update Artist according to new specs. */
-class Artist {
-  final String artistName;
+class Artist extends MediaType {
+  String artistName;
   List<Album> albums = <Album>[];
   List<Track> tracks = <Track>[];
-  final String type = 'Artist';
+  String type = 'Artist';
 
+  @override
   Map<String, dynamic> toMap() {
     List<dynamic> tracks = <dynamic>[];    
     for (Track track in this.tracks) {
@@ -140,12 +149,13 @@ class Artist {
 }
 
 
-class Playlist {
-  final String playlistName;
-  final int playlistId;
+class Playlist extends MediaType {
+  String playlistName;
+  int playlistId;
   List<Track> tracks = <Track>[];
-  final String type = 'Playlist';
+  String type = 'Playlist';
 
+  @override
   Map<String, dynamic> toMap() {
     List<dynamic> tracks = <dynamic>[];
     for (Track track in this.tracks) {
@@ -161,3 +171,11 @@ class Playlist {
 
   Playlist({this.playlistName, this.playlistId});
 }
+
+
+List<MediaType> mediaTypes = <MediaType>[
+  new Album(),
+  new Track(),
+  new Artist(),
+];
+
