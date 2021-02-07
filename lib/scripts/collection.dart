@@ -3,9 +3,10 @@ import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:path/path.dart' as path;
 import 'package:media_metadata_retriever/media_metadata_retriever.dart';
+import 'package:harmonoid/scripts/methods.dart';
 
-import 'package:harmonoid/scripts/mediatypes.dart';
-export 'package:harmonoid/scripts/mediatypes.dart';
+import 'package:harmonoid/scripts/mediatype.dart';
+export 'package:harmonoid/scripts/mediatype.dart';
 
 
 /* TODO: BUG:     Album arts & metadata from cache gets mismatched once an album is deleted. Reindexing fixes it. */
@@ -46,7 +47,7 @@ class Collection {
     List<FileSystemEntity> directory = this.collectionDirectory.listSync();
     for (int index = 0; index < directory.length; index++) {
       FileSystemEntity object = directory[index];
-      if (isSupported(object)) {
+      if (Methods.isFileSupported(object)) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         await retriever.setFile(object);
         Track track = Track.fromMap((await retriever.metadata).toMap());
@@ -56,7 +57,7 @@ class Collection {
             this._albumArts.add(null);
           }
           else {
-            File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName])}.png'));
+            File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName])}.png'));
             await albumArtFile.writeAsBytes(retriever.albumArt);
             this._albumArts.add(albumArtFile);
           }
@@ -110,7 +111,14 @@ class Collection {
   File getAlbumArt(int albumArtId) => new File(path.join(this.cacheDirectory.path, 'albumArt$albumArtId.png'));
 
   Future<void> add({File trackFile}) async {
-    if (isSupported(trackFile)) {
+    bool isAlreadyPresent = false;
+    for (Track track in this.tracks) {
+      if (track.filePath == trackFile.path) {
+        isAlreadyPresent = true;
+        break;
+      }
+    }
+    if (Methods.isFileSupported(trackFile) && !isAlreadyPresent) {
       MediaMetadataRetriever retriever = new MediaMetadataRetriever();
       await retriever.setFile(trackFile);
       Track track = Track.fromMap((await retriever.metadata).toMap());
@@ -120,7 +128,7 @@ class Collection {
           this._albumArts.add(null);
         }
         else {
-          File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName])}.png'));
+          File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArt${Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName])}.png'));
           await albumArtFile.writeAsBytes(retriever.albumArt);
           this._albumArts.add(albumArtFile);
         }
@@ -268,7 +276,7 @@ class Collection {
       }
       List<File> collectionDirectoryContent = <File>[];
       for (FileSystemEntity object in this.collectionDirectory.listSync()) {
-        if (isSupported(object)) {
+        if (Methods.isFileSupported(object)) {
           collectionDirectoryContent.add(object);
         }
       }
@@ -293,13 +301,13 @@ class Collection {
   }
 
   Future<void> _arrange(Track track, Future<void> Function() albumArtMethod) async {
-    if (!binaryContains(this._foundAlbums, [track.albumName, track.albumArtistName])) {
+    if (!Methods.binaryContains(this._foundAlbums, [track.albumName, track.albumArtistName])) {
       this._foundAlbums.add([track.albumName, track.albumArtistName]);
       await albumArtMethod();
       this.albums.add(
         new Album(
           albumName: track.albumName,
-          albumArtId: binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
+          albumArtId: Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
           year: track.year,
           albumArtistName: track.albumArtistName,
         )..tracks.add(
@@ -310,17 +318,17 @@ class Collection {
             trackArtistNames: track.trackArtistNames,
             trackName: track.trackName,
             trackNumber: track.trackNumber,
-            albumArtId: binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
+            albumArtId: Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
             filePath: track.filePath,
           ),
         ),
       );
     }
-    else if (binaryContains(this._foundAlbums, [track.albumName, track.albumArtistName])) {
-      this.albums[binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName])].tracks.add(
+    else if (Methods.binaryContains(this._foundAlbums, [track.albumName, track.albumArtistName])) {
+      this.albums[Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName])].tracks.add(
         new Track(
           albumName: track.albumName,
-          albumArtId: binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
+          albumArtId: Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
           year: track.year,
           albumArtistName: track.albumArtistName,
           trackArtistNames: track.trackArtistNames,
@@ -339,7 +347,7 @@ class Collection {
           )..tracks.add(
             new Track(
               albumName: track.albumName,
-              albumArtId: binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
+              albumArtId: Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
               year: track.year,
               albumArtistName: track.albumArtistName,
               trackArtistNames: track.trackArtistNames,
@@ -354,7 +362,7 @@ class Collection {
         this.artists[this._foundArtists.indexOf(artistName)].tracks.add(
           new Track(
             albumName: track.albumName,
-            albumArtId: binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
+            albumArtId: Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
             year: track.year,
             albumArtistName: track.albumArtistName,
             trackArtistNames: track.trackArtistNames,
@@ -368,7 +376,7 @@ class Collection {
     this.tracks.add(
       new Track(
         albumName: track.albumName,
-        albumArtId: binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
+        albumArtId: Methods.binaryIndexOf(this._foundAlbums, [track.albumName, track.albumArtistName]),
         year: track.year,
         albumArtistName: track.albumArtistName,
         trackArtistNames: track.trackArtistNames,
@@ -461,30 +469,4 @@ class Collection {
   List<File> _albumArts = <File>[];
   List<List<String>> _foundAlbums = <List<String>>[];
   List<String> _foundArtists = <String>[];
-}
-
-
-int binaryIndexOf(List<List<String>> collectionList, List<String> keywordList) {
-  int indexOfKeywordList = -1;
-  for (int index = 0; index < collectionList.length; index++) {
-    List<String> object = collectionList[index];
-    if (object[0] == keywordList[0] && object[1] == keywordList[1]) {
-      indexOfKeywordList = index;
-      break;
-    }
-  }
-  return indexOfKeywordList;
-}
-
-
-bool binaryContains(List<List<String>> collectionList, List<String> keywordList) => binaryIndexOf(collectionList, keywordList) != -1 ? true : false;
-
-
-bool isSupported(FileSystemEntity file) {
-  if (file is File && SUPPORTED_FILE_TYPES.contains(file.path.split('.').last.toUpperCase())) {
-    return true;
-  }
-  else {
-    return false;
-  }
 }

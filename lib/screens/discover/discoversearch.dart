@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
-import 'package:harmonoid/screens/discover/discoveralbum.dart';
+import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/discover.dart';
+import 'package:harmonoid/screens/discover/discoveralbum.dart';
+import 'package:harmonoid/scripts/methods.dart';
 import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/language/constants.dart';
 
 
 class DiscoverSearch extends StatefulWidget {
   final String keyword;
-  final String mode;
+  final MediaType mode;
   DiscoverSearch({Key key, @required this.keyword, @required this.mode}) : super(key: key);
   DiscoverSearchState createState() => DiscoverSearchState();
 }
@@ -49,13 +51,13 @@ class DiscoverSearchState extends State<DiscoverSearch> {
             brightness: Brightness.dark,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                widget.mode,
+                Methods.mediaTypeToLanguage(widget.mode),
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
               background: Image.asset(
-                'assets/images/${widget.mode.toLowerCase()}.jpg',
+                'assets/images/${widget.mode.type.toLowerCase()}s.jpg',
                 fit: BoxFit.fitWidth,
                 alignment: Alignment.bottomCenter,
               ),
@@ -94,7 +96,7 @@ class DiscoverSearchState extends State<DiscoverSearch> {
                     ),
                   ),
                   errorWidgetBuilder: (_, Object exception) => ExceptionWidget(
-                    margin: EdgeInsets.only(top: 8.0),
+                    margin: EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                     height: 156.0,
                     assetImage: 'assets/images/exception.jpg',
                     title: Constants.STRING_NO_INTERNET_TITLE,
