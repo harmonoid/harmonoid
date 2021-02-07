@@ -8,7 +8,7 @@ enum LanguageRegion {
   ptBr, /* Credits: https://github.com/bdlukaa/                 */
   hiIn, /* Credits: https://github.com/alexmercerind/           */
   deDe, /* Credits: https://github.com/MickLesk/                */
-  nlNl, /* Credits: https://github.com/kebabinjeneus/		*/
+  nlNl, /* Credits: https://github.com/kebabinjeneus/	         	*/
 }
 
 
@@ -22,7 +22,7 @@ extension LanguageRegionExtension on LanguageRegion {
       case LanguageRegion.ptBr: data = ['Português'      , 'Brasil'           ]; break;
       case LanguageRegion.hiIn: data = ['हिंदी'            , 'भारत'              ]; break;
       case LanguageRegion.deDe: data = ['Deutsche'       , 'Deutschland'      ]; break;
-      case LanguageRegion.nlNl: data = ['Nederlands'     , 'Nederland'      ]; break;
+      case LanguageRegion.nlNl: data = ['Nederlands'     , 'Nederland'        ]; break;
     }
     return data;
   }

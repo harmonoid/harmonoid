@@ -204,6 +204,13 @@ class SettingsState extends State<Settings> {
                   groupValue: this._languageRegion,
                   onChanged: (Object object) => this._setLanguageRegion(object),
                 ),
+                RadioListTile(
+                  value: LanguageRegion.nlNl,
+                  title: Text(LanguageRegion.nlNl.data[0]),
+                  subtitle: Text(LanguageRegion.nlNl.data[1]),
+                  groupValue: this._languageRegion,
+                  onChanged: (Object object) => this._setLanguageRegion(object),
+                ),
               ],
             )
           ),
