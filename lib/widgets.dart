@@ -9,7 +9,8 @@ class SubHeader extends StatelessWidget {
     return Container(
       alignment: Alignment.centerLeft,
       height: 48,
-      margin: EdgeInsets.fromLTRB(16, 0, 0, 0),
+      padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Text(
         text,
         style: Theme.of(context).textTheme.headline5,
