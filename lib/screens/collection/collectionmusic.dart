@@ -135,7 +135,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
             ),
           ),
           leading: playlist.tracks.length != 0 ? CircleAvatar(
-            backgroundImage: FileImage(collection.getAlbumArt(playlist.tracks.first.albumArtId)),
+            backgroundImage: FileImage(collection.getAlbumArt(playlist.tracks.first)),
           ) : Icon(
             Icons.queue_music,
             size: Theme.of(context).iconTheme.size,

@@ -27,7 +27,7 @@ class CollectionTrackTile extends StatelessWidget {
         isThreeLine: true,
         leading: CircleAvatar(
           child: Text('${this.track.trackNumber ?? 1}'),
-          backgroundImage: FileImage(collection.getAlbumArt(this.track.albumArtId)),
+          backgroundImage: FileImage(collection.getAlbumArt(this.track)),
         ),
         title: Text(this.track.trackName),
         subtitle: Text(
@@ -183,7 +183,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
     return Card(
       elevation: 2,
       clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 0),
+      margin: EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 8.0),
       child: Container(
         height: 256,
         width: MediaQuery.of(context).size.width - 32 + 56,
@@ -192,7 +192,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.file(
-              collection.getAlbumArt(collection.tracks.first.albumArtId),
+              collection.getAlbumArt(collection.tracks.last),
               fit: BoxFit.fitWidth,
               filterQuality: FilterQuality.low,
               alignment: Alignment.topCenter,
@@ -207,7 +207,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                   width: 64,
                   alignment: Alignment.center,
                   child: CircleAvatar(
-                    child: Text('${collection.tracks.first.trackNumber ?? 1}',
+                    child: Text('${collection.tracks.last.trackNumber ?? 1}',
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -228,7 +228,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                       Container(
                         height: 20,
                         child: Text(
-                          collection.tracks.first.trackName,
+                          collection.tracks.last.trackName,
                           style: Theme.of(context).textTheme.headline1,
                           textAlign: TextAlign.start,
                           maxLines: 1,
@@ -239,7 +239,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                         height: 2,
                       ),
                       Text(
-                        collection.tracks.first.albumName,
+                        collection.tracks.last.albumName,
                         style: Theme.of(context).textTheme.headline2,
                         textAlign: TextAlign.start,
                         maxLines: 1,
@@ -249,15 +249,15 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                         height: 4,
                       ),
                       Text(
-                        collection.tracks.first.trackArtistNames.length < 2 ? 
-                        collection.tracks.first.trackArtistNames.join(', ') : 
-                        collection.tracks.first.trackArtistNames.sublist(0, 2).join(', '),
+                        collection.tracks.last.trackArtistNames.length < 2 ? 
+                        collection.tracks.last.trackArtistNames.join(', ') : 
+                        collection.tracks.last.trackArtistNames.sublist(0, 2).join(', '),
                         style: Theme.of(context).textTheme.headline5,
                         maxLines: 1,
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        '(${collection.tracks.first.year ?? 'Unknown Year'})',
+                        '(${collection.tracks.last.year ?? 'Unknown Year'})',
                         style: Theme.of(context).textTheme.headline5,
                         maxLines: 1,
                         textAlign: TextAlign.center,

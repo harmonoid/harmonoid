@@ -40,7 +40,7 @@ class CollectionPlaylistState extends State<CollectionPlaylist> {
           isThreeLine: true,
           leading: CircleAvatar(
             child: Text('${track.trackNumber ?? 1}'),
-            backgroundImage: FileImage(collection.getAlbumArt(track.albumArtId)),
+            backgroundImage: FileImage(collection.getAlbumArt(track)),
           ),
           title: Text(track.trackName),
           subtitle: Text(

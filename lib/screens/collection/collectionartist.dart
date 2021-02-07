@@ -13,7 +13,7 @@ class LeadingCollectionArtistTile extends StatelessWidget {
     return Card(
       elevation: 2,
       clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.only(top: 0, left: 8, right: 8, bottom: 0),
+      margin: EdgeInsets.only(top: 0, left: 8, right: 8, bottom: 8.0),
       child: Container(
         height: this.height,
         width: MediaQuery.of(context).size.width - 16,
@@ -25,7 +25,7 @@ class LeadingCollectionArtistTile extends StatelessWidget {
               alignment: Alignment.center,
               child: ClipOval(
                 child: Image.file(
-                  collection.getAlbumArt(collection.artists.first.tracks.first.albumArtId),
+                  collection.getAlbumArt(collection.artists.first.tracks.last),
                   fit: BoxFit.fill,
                   filterQuality: FilterQuality.low,
                   height: this.height - 24,
@@ -81,7 +81,7 @@ class CollectionArtistTile extends StatelessWidget {
               alignment: Alignment.center,
               child: ClipOval(
                 child: Image.file(
-                  collection.getAlbumArt(this.artist.tracks.first.albumArtId),
+                  collection.getAlbumArt(this.artist.tracks.last),
                   fit: BoxFit.fill,
                   filterQuality: FilterQuality.low,
                   height: this.width - 24,
