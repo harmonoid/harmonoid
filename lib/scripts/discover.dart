@@ -1,6 +1,9 @@
+import 'dart:io';
+import 'package:harmonoid/scripts/download.dart';
+import 'package:harmonoid/scripts/vars.dart';
 import 'dart:convert' as convert;
-import 'package:harmonoid/language/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/configuration.dart';
@@ -18,25 +21,35 @@ class Discover {
     discover = new Discover(homeAddress);
   }
 
-  Future<List<dynamic>> search(String keyword, String mode) async {
+  Future<List<dynamic>> search(String keyword, MediaType mode) async {
     List<dynamic> result = <dynamic>[];
+    String modeString = mode.type.toLowerCase();
     Uri uri = Uri.https(
       this.homeAddress,
       '/search', {
         'keyword': keyword,
-        'mode': mode,
+        'mode': modeString,
       },
     );
     try {
       http.Response response = await http.get(uri);
       if (response.statusCode == 200) {
-        (convert.jsonDecode(response.body)[mode] as List).forEach((objectMap) {
-          if (mode == Constants.STRING_ALBUM) result.add(Album.fromMap(objectMap));
-          if (mode == Constants.STRING_TRACK) result.add(Track.fromMap(objectMap));
-          if (mode == Constants.STRING_ARTIST) result.add(Artist.fromMap(objectMap));
+        (convert.jsonDecode(response.body)['result'] as List).forEach((objectMap) {
+          if (mode is Album) result.add(Album.fromMap(objectMap));
+          if (mode is Track) result.add(Track.fromMap(objectMap));
+          if (mode is Artist) result.add(Artist.fromMap(objectMap));
         });
       }
       List<dynamic> searchRecents = configuration.discoverSearchRecent;
+      String searchKeyword = '';
+      for (String element in keyword.split(' ')) {
+        if (element.length > 1)
+          searchKeyword = searchKeyword + element[0].toUpperCase() + element.substring(1, element.length) + ' ';
+      }
+      searchRecents.insert(
+        0,
+        [searchKeyword, mode.type],
+      );
       if (searchRecents.length > 5) searchRecents.removeLast();
       await configuration.save(discoverSearchRecent: searchRecents);
       return result;
@@ -58,6 +71,8 @@ class Discover {
       http.Response response = await http.get(uri);
       if (response.statusCode == 200) {
         (convert.jsonDecode(response.body)['tracks'] as List).forEach((objectMap) {
+          objectMap['albumName'] = album.albumName;
+          objectMap['albumId'] = album.albumId;
           result.add(Track.fromMap(objectMap));
         });
       }
@@ -66,5 +81,32 @@ class Discover {
     catch(exception) {
       throw 'Please check your internet connection';
     }
+  }
+
+  Future<void> trackDownload(Track track, {void Function() onCompleted, void Function(double progress) onProgress}) async {
+    File trackDestination = File(
+      path.join(MUSIC_DIRECTORY, '${track.trackArtistNames.join(', ')} - ${track.trackName}.OGG'),
+    );
+    download.addTask(
+      new DownloadTask(
+        fileUri: Uri.https(
+          this.homeAddress,
+          '/trackDownload', {
+            'trackId': track.trackId,
+            'albumId': track.albumId,
+          }
+        ),
+        saveLocation: trackDestination,
+        onProgress: onProgress,
+        onCompleted: () {
+          collection.add(
+            trackFile: trackDestination
+          );
+          onCompleted?.call();
+        },
+        extras: track,
+      ),
+    );
+    download.start();
   }
 }
