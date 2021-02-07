@@ -61,6 +61,7 @@
 |Portuguese     |@bdlukaa       |
 |Hindi          |@alexmercerind |
 |German         |@MickLesk      |
+|Dutch          |@kebabinjeneus |
 
 You can see the app running in your own language by providing me translations.
 
