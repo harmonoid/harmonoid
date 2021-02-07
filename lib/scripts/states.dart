@@ -5,7 +5,7 @@ typedef RefreshCollectionSearch = void Function();
 typedef RefreshThemeMode = void Function(ThemeMode themeMode);
 
 
-class States {
+abstract class States {
 
   static RefreshCollectionMusic refreshCollectionMusic;
 
