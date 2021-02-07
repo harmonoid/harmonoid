@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:harmonoid/language/language.dart';
 import 'package:harmonoid/scripts/discover.dart';
+import 'package:harmonoid/scripts/download.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:audio_service/audio_service.dart';
 
@@ -15,6 +16,7 @@ import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
 import 'package:harmonoid/screens/exception.dart';
+import 'package:harmonoid/scripts/vars.dart';
 
 
 void main() async {
@@ -25,7 +27,7 @@ void main() async {
       cacheDirectory: await path.getExternalStorageDirectory(),
     );
     await Collection.init(
-      collectionDirectory: Directory('/storage/emulated/0/Music'),
+      collectionDirectory: Directory(MUSIC_DIRECTORY),
       cacheDirectory: await path.getExternalStorageDirectory(),
     );
     await Discover.init(
@@ -35,6 +37,7 @@ void main() async {
       languageRegion: configuration.languageRegion,
     );
     await FileIntent.init();
+    await Download.init();
     runApp(
       new AudioServiceWidget(
         child: new Harmonoid(),

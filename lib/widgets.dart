@@ -177,7 +177,7 @@ class ExceptionWidget extends StatelessWidget {
     return Card(
       elevation: 2.0,
       clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.only(top: 72.0, left: 8.0, right: 8.0),
+      margin: this.margin,
       child: Container(
         width: MediaQuery.of(context).size.width - 16,
         child: Row(
