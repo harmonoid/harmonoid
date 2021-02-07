@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:harmonoid/screens/discover/discovertrack.dart';
 
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/discover.dart';
+import 'package:harmonoid/scripts/download.dart';
 import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/language/constants.dart';
 
@@ -149,12 +151,6 @@ class DiscoverAlbum extends StatefulWidget {
 class DiscoverAlbumState extends State<DiscoverAlbum> {
   Album album;
 
-  String _getDurationString(int durationSeconds) {
-    int minutes = durationSeconds ~/ 60;
-    String seconds = durationSeconds - (minutes * 60) > 9 ? '${durationSeconds - (minutes * 60)}' : '0${durationSeconds - (minutes * 60)}';
-    return '$minutes:$seconds';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -248,30 +244,18 @@ class DiscoverAlbumState extends State<DiscoverAlbum> {
               SubHeader(Constants.STRING_ALBUM_VIEW_TRACKS_SUBHEADER),
               FadeFutureBuilder(
                 future: () async => await discover.albumInfo(widget.album),
-                initialWidgetBuilder: (BuildContext context) => FakeLinearProgressIndicator(
-                  label: '',
-                  duration: Duration(seconds: 10),
-                  width: 96.0,
-                  margin: EdgeInsets.only(top: 0.0),
+                initialWidgetBuilder: (BuildContext context) => Center(
+                  child: CircularProgressIndicator(),
                 ),
                 finalWidgetBuilder: (BuildContext context, Object object) {
                   List<Widget> trackWidgets = <Widget>[];
                   (object as List<Track>).forEach((Track track) => trackWidgets.add(
-                    ListTile(
-                      onTap: () {},
-                      title: Text(track.trackName),
-                      subtitle: Text(track.trackArtistNames.join(', ')),
-                      leading: CircleAvatar(
-                        child: Text('${track.trackNumber ?? 1}'),
-                        backgroundImage: NetworkImage(widget.album.albumArtLow),
-                      ),
-                      trailing: Text(this._getDurationString(track.trackDuration)),
-                    ),
+                    DiscoverTrackTile(track: track),
                   ));
                   return Column(children: trackWidgets);
                 },
                 errorWidgetBuilder: (_, exception) => ExceptionWidget(
-                  margin: EdgeInsets.only(top: 8.0),
+                  margin: EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
                   height: 156.0,
                   assetImage: 'assets/images/exception.jpg',
                   title: Constants.STRING_NO_INTERNET_TITLE,

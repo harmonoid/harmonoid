@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 
-import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/configuration.dart';
+import 'package:harmonoid/scripts/mediatype.dart';
 import 'package:harmonoid/screens/discover/discoversearch.dart';
 import 'package:harmonoid/language/constants.dart';
-
-final List<dynamic> searchModes = <dynamic>[
-  new Album(),
-  new Track(),
-  new Artist(),
-];
 
 
 class DiscoverMusic extends StatefulWidget {
@@ -28,9 +22,9 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
   TextEditingController _textFieldController = new TextEditingController();
   AnimationController _searchBarAnimation;
   AnimationController _animationController;
-  List<AnimationController> _searchModeAnimationScaleController = new List<AnimationController>(searchModes.length);
-  List<Animation<Color>> _searchModeAnimationColor = new List<Animation<Color>>(searchModes.length);
-  List<AnimationController> _searchModeAnimationColorController = new List<AnimationController>(searchModes.length);
+  List<AnimationController> _searchModeAnimationScaleController = new List<AnimationController>(mediaTypes.length);
+  List<Animation<Color>> _searchModeAnimationColor = new List<Animation<Color>>(mediaTypes.length);
+  List<AnimationController> _searchModeAnimationColorController = new List<AnimationController>(mediaTypes.length);
   Animation<double> _searchBarHeight;
   Animation<Offset> _offset;
   bool _isBackButtonShowing = true;
@@ -78,7 +72,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
         curve: Curves.easeInOutCubic,
         reverseCurve: Curves.easeInOutCubic,
       ));
-      for (int index = 0; index < searchModes.length; index++) {
+      for (int index = 0; index < mediaTypes.length; index++) {
         this._searchModeAnimationScaleController[index] = new AnimationController(
           vsync: this,
           duration: Duration(milliseconds: 200),
@@ -105,7 +99,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
 
   void _changeSearchMode(int selectedIndex) {
     this._searchMode = selectedIndex;
-    for (int index = 0; index < searchModes.length; index++) {
+    for (int index = 0; index < mediaTypes.length; index++) {
       if (index == selectedIndex) {
         this._searchModeAnimationScaleController[index].forward();
         this._searchModeAnimationColorController[index].forward();
@@ -117,7 +111,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
     }
   }
 
-  void _search({String keyword, dynamic mode}) {
+  void _search({String keyword, MediaType mode}) {
     if (this._textFieldController.text != '' || (keyword != null && mode != null)) {
       Navigator.of(context).push(new PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 400),
@@ -129,7 +123,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
         ),
         pageBuilder: (context, animation, secondaryAnimation) => DiscoverSearch(
           keyword: keyword ?? this._textFieldController.text,
-          mode: mode ?? searchModes[this._searchMode],
+          mode: mode ?? mediaTypes[this._searchMode],
         ),
       ));
     }
@@ -298,7 +292,11 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
                   ),
                   onTap: () => this._search(
                     keyword: this._recentSearches[index][0],
-                    mode: this._recentSearches[index][1],
+                    mode: {
+                      'Album': new Album(),
+                      'Track': new Track(),
+                      'Artist': new Artist(),
+                    }[this._recentSearches[index][1]],
                   ),
                 ),
               ),

@@ -265,7 +265,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
     else {
       if (this._init) {
         Widget emptyMusicCollection = ExceptionWidget(
-          margin: EdgeInsets.only(top: 96.0),
+          margin: EdgeInsets.only(top: 96.0, left: 8.0, right: 8.0),
           height: this._tileWidth,
           assetImage: 'assets/images/albums.jpg',
           title: Constants.STRING_NO_COLLECTION_TITLE,
