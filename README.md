@@ -3,7 +3,7 @@
 <h3 align="center">🎵 The music app, you always dreamt</h3>
 
 <p align="center">
-  <a href="https://discord.gg/mRxH9zYkGy/">Discord</a> | 
+  <a href="https://discord.gg/ZG7Pj9SREG/">Discord</a> | 
   <a href="https://github.com/alexmercerind/harmonoid/releases/">Download</a> | 
   <a href="https://harmonoid.github.io/">Website</a>
 </p>
