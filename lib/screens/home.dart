@@ -12,7 +12,6 @@ import 'package:harmonoid/scripts/fileintent.dart';
 
 
 enum Screen {
-  transfers,
   discover,
   collection,
   nowPlaying,
@@ -54,9 +53,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
   @override
   Widget build(BuildContext context) {
     final List<Widget> screens = <Widget>[
-      Center(
-        child: Text('[WIP]')
-      ),
       DiscoverMusic(),
       Navigator(
         key: this.navigatorKey,
@@ -101,11 +97,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         currentIndex: this._index,
         onTap: (int index) => this.setState(() => this._index = index),
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.arrow_downward),
-            label: Constants.STRING_TRANSFERS,
-            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.album),
             label: Constants.STRING_DISCOVER,

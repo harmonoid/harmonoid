@@ -10,10 +10,11 @@ Configuration configuration;
 
 const Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'version': '0.0.3+1',
-  'homeAddress': 'harmonoid.vercel.app',
+  'homeAddress': 'harmonoid2.herokuapp.com',
   'languageRegion': 0,
   'themeMode': 0,
   'accentColor': 0,
+  'showOutOfBoxExperience': true,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
   'discoverRecent': []
@@ -29,6 +30,7 @@ class Configuration {
   LanguageRegion languageRegion;
   ThemeMode themeMode;
   Color accentColor;
+  bool showOutOfBoxExperience;
   List<dynamic> collectionSearchRecent;
   List<dynamic> discoverSearchRecent;
   List<dynamic> discoverRecent;
@@ -50,6 +52,7 @@ class Configuration {
     LanguageRegion languageRegion,
     ThemeMode themeMode,
     Color accentColor,
+    bool showOutOfBoxExperience,
     List<dynamic> collectionSearchRecent,
     List<dynamic> discoverSearchRecent,
     List<dynamic> discoverRecent,
@@ -69,6 +72,9 @@ class Configuration {
     if (accentColor != null) {
       this.accentColor = accentColor;
     }
+    if (showOutOfBoxExperience != null) {
+      this.showOutOfBoxExperience = showOutOfBoxExperience;
+    }
     if (collectionSearchRecent != null) {
       this.collectionSearchRecent = collectionSearchRecent;
     }
@@ -84,6 +90,7 @@ class Configuration {
       'languageRegion': this.languageRegion.index,
       'themeMode': this.themeMode.index,
       'accentColor': this.accentColor,
+      'showOutOfBoxExperience': this.showOutOfBoxExperience,
       'collectionSearchRecent': this.collectionSearchRecent,
       'discoverSearchRecent': this.discoverSearchRecent,
       'discoverRecent': this.discoverRecent,
@@ -96,6 +103,7 @@ class Configuration {
     this.homeAddress = configurationMap['homeAddress'];
     this.languageRegion = LanguageRegion.values[configurationMap['languageRegion']];
     this.themeMode = ThemeMode.values[configurationMap['themeMode']];
+    this.showOutOfBoxExperience = configurationMap['showOutOfBoxExperience'];
     this.collectionSearchRecent = configurationMap['collectionSearchRecent'];
     this.discoverSearchRecent = configurationMap['discoverSearchRecent'];
     this.discoverRecent = configurationMap['discoverRecent'];
