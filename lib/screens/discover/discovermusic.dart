@@ -23,8 +23,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
   AnimationController _searchBarAnimation;
   AnimationController _animationController;
   List<AnimationController> _searchModeAnimationScaleController = new List<AnimationController>(mediaTypes.length);
-  List<Animation<Color>> _searchModeAnimationColor = new List<Animation<Color>>(mediaTypes.length);
-  List<AnimationController> _searchModeAnimationColorController = new List<AnimationController>(mediaTypes.length);
+  List<Color> _searchModeColor = new List<Color>(3);
   Animation<double> _searchBarHeight;
   Animation<Offset> _offset;
   bool _isBackButtonShowing = true;
@@ -80,15 +79,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
           lowerBound: 1.0,
           upperBound: 1.4,
         );
-        this._searchModeAnimationColorController[index] = new AnimationController(
-          vsync: this,
-          duration: Duration(milliseconds: 200),
-          reverseDuration: Duration(milliseconds: 200),
-        );
-        this._searchModeAnimationColor[index] = new Tween<Color>(
-          begin: Theme.of(context).iconTheme.color,
-          end: Theme.of(context).primaryColor,
-        ).animate(this._searchModeAnimationColorController[index]);
+        this._searchModeColor[index] = Theme.of(context).iconTheme.color;
       }
       this._changeSearchMode(0);
       this._init = false;
@@ -102,13 +93,14 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
     for (int index = 0; index < mediaTypes.length; index++) {
       if (index == selectedIndex) {
         this._searchModeAnimationScaleController[index].forward();
-        this._searchModeAnimationColorController[index].forward();
+        this._searchModeColor[index] = Theme.of(context).accentColor;
       }
       else {
         this._searchModeAnimationScaleController[index].reverse();
-        this._searchModeAnimationColorController[index].reverse();
+        this._searchModeColor[index] = Theme.of(context).iconTheme.color;
       }
     }
+    this.setState(() {});
   }
 
   void _search({String keyword, MediaType mode}) {
@@ -219,10 +211,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
                         this._isBackButtonShowing ? Container(): ListTile(
                           leading: ScaleTransition(
                             scale: this._searchModeAnimationScaleController[0],
-                            child: AnimatedBuilder(
-                              animation: this._searchModeAnimationColor[0],
-                              builder: (BuildContext context, _) => Icon(Icons.album, color: this._searchModeAnimationColor[0].value),
-                            ),
+                            child: Icon(Icons.album, color: this._searchModeColor[0]),
                           ),
                           title: Text(Constants.STRING_ALBUM,
                             style: Theme.of(context).textTheme.headline4,
@@ -232,10 +221,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
                         this._isBackButtonShowing ? Container(): ListTile(
                           leading: ScaleTransition(
                             scale: this._searchModeAnimationScaleController[1],
-                            child: AnimatedBuilder(
-                              animation: this._searchModeAnimationColor[1],
-                              builder: (BuildContext context, _) => Icon(Icons.music_note, color: this._searchModeAnimationColor[1].value),
-                            ),
+                            child: Icon(Icons.music_note, color: this._searchModeColor[1]),
                           ),
                           title: Text(Constants.STRING_TRACK,
                             style: Theme.of(context).textTheme.headline4,
@@ -246,10 +232,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
                         this._isBackButtonShowing ? Container(): ListTile(
                           leading: ScaleTransition(
                             scale: this._searchModeAnimationScaleController[2],
-                            child: AnimatedBuilder(
-                              animation: this._searchModeAnimationColor[2],
-                              builder: (BuildContext context, _) => Icon(Icons.person, color: this._searchModeAnimationColor[2].value),
-                            ),
+                            child: Icon(Icons.person, color: this._searchModeColor[2]),
                           ),
                           title: Text(Constants.STRING_ARTIST,
                             style: Theme.of(context).textTheme.headline4,
