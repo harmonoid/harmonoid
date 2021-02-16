@@ -58,7 +58,7 @@ class NowPlayingTileState extends State<NowPlayingTile> {
                 width: 56,
                 padding: EdgeInsets.all(8.0),
                 child: this._track['albumArtId'] != null ? CircleAvatar(
-                  backgroundImage: FileImage(collection.getAlbumArt(this._track['albumArtId'])),
+                  backgroundImage: FileImage(collection.getAlbumArt(Track.fromMap(this._track))),
                   child: Text('${this._track['trackNumber']}'),
                 ) : CircleAvatar(
                   child: Icon(Icons.music_note),
@@ -202,7 +202,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                     leading: CircleAvatar(
                       child: Text(mediaItem.extras['trackNumber'].toString()),
                       backgroundImage: FileImage(
-                        collection.getAlbumArt(mediaItem.extras['albumArtId'])
+                        collection.getAlbumArt(Track.fromMap(mediaItem.extras))
                       ),
                     ),
                     title: Text(
@@ -242,7 +242,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
       this._currentMediaItemStreamSubscription = AudioService.currentMediaItemStream.listen((state) {
         this.setState(() {
           try {
-            this._albumArt = collection.getAlbumArt(state.extras['albumArtId']);
+            this._albumArt = collection.getAlbumArt(Track.fromMap(state.extras));
             this._trackName = state.title;
             this._albumName = state.album;
             this._trackArtist = state.artist;
