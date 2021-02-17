@@ -1,121 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:audio_service/audio_service.dart';
+import 'package:assets_audio_player/assets_audio_player.dart' as AudioPlayer;
 
 import 'package:harmonoid/scripts/collection.dart';
+import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/language/constants.dart';
 
-
-class NowPlayingTile extends StatefulWidget {
-  NowPlayingTile({Key key}) : super(key: key);
-  NowPlayingTileState createState() => NowPlayingTileState();
-}
-
-
-class NowPlayingTileState extends State<NowPlayingTile> {
-  // ignore: cancel_subscriptions
-  StreamSubscription _playingStreamSubscription;
-  bool _isPlaying = false;
-  Map<String, dynamic> _track = new Track().toMap();
-
-  @override
-  void initState() {
-    super.initState();
-    this._playingStreamSubscription = AudioService.customEventStream.listen((event) {
-      if (event[0] == 'currentTrackQueue') {
-        this.setState(() => this._track = event[1][1][event[1][0]].extras);
-      }
-      if (event[0] == 'playing') {
-        this.setState(() => this._isPlaying = event[1]);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    this._playingStreamSubscription.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Card(
-        shape: RoundedRectangleBorder(),
-        margin: EdgeInsets.zero,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.only(left: 8, right: 8),
-          height: 56,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                height: 56,
-                width: 56,
-                padding: EdgeInsets.all(8.0),
-                child: this._track['albumArtId'] != null ? CircleAvatar(
-                  backgroundImage: FileImage(collection.getAlbumArt(Track.fromMap(this._track))),
-                  child: Text('${this._track['trackNumber']}'),
-                ) : CircleAvatar(
-                  child: Icon(Icons.music_note),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 0, left: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        this._track['trackName'] ?? Constants.STRING_NOW_PLAYING_NOT_PLAYING_TITLE,
-                        style: Theme.of(context).textTheme.headline2,
-                        maxLines: 1,
-                      ),
-                      Text(
-                        this._track['artistNames'] == null ? Constants.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE : this._track['artistNames'].join(', '),
-                        style: Theme.of(context).textTheme.headline4,
-                        maxLines: 1,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                height: 56,
-                width: 56,
-                padding: EdgeInsets.all(0.0),
-                child: Material(
-                  color: Colors.transparent,
-                  child: IconButton(
-                    tooltip: this._isPlaying ? Constants.STRING_PAUSE : Constants.STRING_PLAY,
-                    padding: EdgeInsets.all(0.0),
-                    icon: Icon(this._isPlaying ? Icons.pause : Icons.play_arrow),
-                    onPressed: () {
-                      if (this._isPlaying) {
-                        AudioService.pause();
-                      }
-                      else {
-                        AudioService.play();
-                      }
-                    },
-                    iconSize: Theme.of(context).iconTheme.size,
-                    color: Theme.of(context).iconTheme.color,
-                    splashRadius: Theme.of(context).iconTheme.size - 4,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class NowPlaying extends StatefulWidget {
   NowPlaying({Key key}) : super(key : key);
@@ -124,12 +14,7 @@ class NowPlaying extends StatefulWidget {
 
 
 class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
-  File _albumArt;
-  String _trackName;
-  String _albumName;
-  String _trackArtist;
-  String _trackNumber;
-  String _year;
+  Track _track;
   String _duration = '';
   String _position = '';
   bool _isPlaying = true;
@@ -137,137 +22,98 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   int _durationSeconds = 0;
   int _positionSeconds = 0;
   bool _init = true;
-  List<MediaItem> _currentTrackQueue = new List<MediaItem>();
-  List<Widget> _playlist = [Container()];
-  Widget _playlistList = Container();
-  // ignore: cancel_subscriptions
-  StreamSubscription _currentMediaItemStreamSubscription;
-  // ignore: cancel_subscriptions
-  StreamSubscription _playingStreamSubscription;
+  List<AudioPlayer.Audio> _currentTrackQueue = new List<AudioPlayer.Audio>();
   AnimationController _animationController;
   Animation<double> _animationCurved;
   AnimationController _animationController1;
   Animation<double> _animationCurved1;
-
+  List<StreamSubscription> _streamSubscriptions = new List<StreamSubscription>(5);
+  List<Widget> _playlist = [Container()];
+  Widget _playlistList = Container();
   double _playlistEnd;
 
-  String trackDuration(Duration duration) {
-    String trackDurationLabel;
-    int durationSeconds = duration.inMilliseconds ~/ 1000;
+  String _getDurationString(int durationSeconds) {
     int minutes = durationSeconds ~/ 60;
-    int seconds = durationSeconds - minutes * 60;
-    if (seconds.toString().length == 2) {
-      trackDurationLabel = minutes.toString() + ":" + seconds.toString();
-    }
-    else {
-      trackDurationLabel = minutes.toString() + ":0" + seconds.toString();
-    }
-    return trackDurationLabel;
+    String seconds = durationSeconds - (minutes * 60) > 9 ? '${durationSeconds - (minutes * 60)}' : '0${durationSeconds - (minutes * 60)}';
+    return '$minutes:$seconds';
+  }
+
+  @override
+  void initState() { 
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    this._streamSubscriptions.forEach((StreamSubscription subscription) {
+      subscription?.cancel();
+    });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (this._init) {
-      this._playingStreamSubscription = AudioService.customEventStream.listen((event) {
-        if (event[0] == 'playing') {
-          this.setState(() => this._isPlaying = event[1]);
-        }
-        if (event[0] == 'currentTrackDuration') {
-          this.setState(() {
-            this._duration = this.trackDuration(event[1]);
-            this._durationSeconds = event[1].inSeconds;
-          });
-        }
-        if (event[0] == 'playingTrackDuration') {
-          this.setState(() {
-            this._position = this.trackDuration(event[1]);
-            this._positionSeconds = event[1].inSeconds;
-          });
-        }
-        if (event[0] == 'currentTrackQueue') {
-          this.setState(() {
-            this._playlist.clear();
-            this._playlistList = Container();
-            this._currentTrackQueue = event[1][1];
-            for (int index = 0; index < this._currentTrackQueue.length; index++) {
-              MediaItem mediaItem = this._currentTrackQueue[index];
-              this._playlist.add(
-                Container(
-                  height: 72,
-                  child: ListTile(
-                    onTap: () {
-                      AudioService.customAction('currentTrackIndexSwitch', index);
-                    },
-                    leading: CircleAvatar(
-                      child: Text(mediaItem.extras['trackNumber'].toString()),
-                      backgroundImage: FileImage(
-                        collection.getAlbumArt(Track.fromMap(mediaItem.extras))
-                      ),
+      this._streamSubscriptions[0] = audioPlayer.currentPosition.listen((Duration duration) {
+        this.setState(() {
+          this._positionSeconds = duration.inSeconds;
+          this._position = this._getDurationString(this._positionSeconds);
+        });
+      });
+      this._streamSubscriptions[1] = audioPlayer.current.listen((AudioPlayer.Playing playing) {
+        this.setState(() {
+          this._track = Track.fromMap(playing.audio.audio.metas.extra);
+          this._durationSeconds = playing.audio.duration.inSeconds;
+          this._duration = this._getDurationString(this._durationSeconds);
+          this._playlist = <Widget>[];
+          this._playlistEnd = playing.playlist.audios.length * 72.0;
+          playing.playlist.audios.asMap().forEach((int index, AudioPlayer.Audio audio) {
+            this._playlist.add(
+              new ListTile(
+                leading: CircleAvatar(
+                  child: Text(
+                    '${audio.metas.extra['trackNumber']}',
+                    style: TextStyle(
+                      color: Colors.white,
                     ),
-                    title: Text(
-                      mediaItem.title,
-                      style: Theme.of(context).textTheme.headline2,
-                    ),
-                    subtitle: Text(
-                      mediaItem.artist,
-                      style: Theme.of(context).textTheme.headline4,
+                  ),
+                  backgroundImage: FileImage(
+                    collection.getAlbumArt(
+                      Track.fromMap(audio.metas.extra),
                     ),
                   ),
                 ),
-              );
-            }
-            this._playlistList = Column(
-              children: this._playlist,
+                title: Text(audio.metas.title),
+                subtitle: Text(audio.metas.artist),
+                trailing: this._track.trackName == audio.metas.title ? Icon(
+                  Icons.music_note,
+                  color: Theme.of(context).accentColor,
+                ) : null,
+                onTap: () {
+                  audioPlayer.playlistPlayAtIndex(index);
+                },
+              ),
             );
-            this._playlistEnd = (this._playlist.length * 72).toDouble() == null ? 0.0 : (this._playlist.length * 72).toDouble();
-
-            if (this._isInfoShowing) {
-              this._animationController1 = new AnimationController(
-                vsync: this,
-                duration: Duration(milliseconds: 400),
-                reverseDuration: Duration(milliseconds: 400),
-              );
-              this._animationCurved1 = Tween<double>(begin: 0, end: this._playlistEnd).animate(
-                new CurvedAnimation(
-                  curve: Curves.easeOutCubic,
-                  reverseCurve: Curves.easeInCubic,
-                  parent: this._animationController1,
-                )
-              );
-            }
           });
-        }
-      });
-      this._currentMediaItemStreamSubscription = AudioService.currentMediaItemStream.listen((state) {
-        this.setState(() {
-          try {
-            this._albumArt = collection.getAlbumArt(Track.fromMap(state.extras));
-            this._trackName = state.title;
-            this._albumName = state.album;
-            this._trackArtist = state.artist;
-            this._trackNumber= state.extras['trackNumber'].toString();
-            this._year = state.extras['year'] != null ? state.extras['year'].toString() : 'Unknown Year';
-          }
-          catch(error) {
-            this._animationController1 = new AnimationController(
-              vsync: this,
-              duration: Duration(milliseconds: 400),
-              reverseDuration: Duration(milliseconds: 400),
-            );
-            this._animationCurved1 = Tween<double>(begin: 0, end: 0).animate(
-              new CurvedAnimation(
-                curve: Curves.easeOutCubic,
-                reverseCurve: Curves.easeInCubic,
-                parent: this._animationController1,
-              )
-            );
-          }
+          this._playlistList = Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: this._playlist,
+          );
+          this._animationCurved1 = Tween<double>(begin: 0, end: this._playlistEnd).animate(
+            new CurvedAnimation(
+              curve: Curves.easeOutCubic,
+              reverseCurve: Curves.easeInCubic,
+              parent: this._animationController1,
+            )
+          );
         });
       });
-      AudioService.customAction('currentTrackDuration', []);
-      AudioService.customAction('playingTrackDuration', []);
-      AudioService.customAction('currentTrackQueue', []);
+      this._streamSubscriptions[2] = audioPlayer.isPlaying.listen(
+        (bool isPlaying) => this.setState(
+          () => this._isPlaying = isPlaying,
+        ),
+      );
       this._animationController = new AnimationController(
         vsync: this,
         duration: Duration(milliseconds: 400),
@@ -280,7 +126,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
           parent: this._animationController,
         )
       );
-      if (this._trackName == null) {
+      if (this._track == null) {
         this._animationController1 = new AnimationController(
           vsync: this,
           duration: Duration(milliseconds: 400),
@@ -301,13 +147,6 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
     }
     this._init = false;
   }
-  
-  @override
-  void dispose() {
-    this._playingStreamSubscription.cancel();
-    this._currentMediaItemStreamSubscription.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -316,7 +155,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
       color: Theme.of(context).scaffoldBackgroundColor,
       child: ListView(
         children: [
-          this._trackName == null ?
+          this._track == null ?
           Card(
             elevation: 2,
             clipBehavior: Clip.antiAlias,
@@ -429,7 +268,11 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           max: 1,
                           value: 0,
                           onChanged: (double value) {
-                            AudioService.seekTo(Duration(seconds: value.toInt()));
+                            audioPlayer.seek(
+                              Duration(
+                                seconds: value.toInt(),
+                              ),
+                            );
                           },
                         ),
                         data: SliderThemeData(
@@ -533,7 +376,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                         alignment: Alignment.bottomRight,
                         children: [
                           Image.file(
-                            this._albumArt,
+                            collection.getAlbumArt(this._track),
                             height: MediaQuery.of(context).size.width - 32,
                             width: MediaQuery.of(context).size.width - 32,
                             fit: BoxFit.fitWidth,
@@ -542,12 +385,11 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                             padding: EdgeInsets.all(10),
                             child: FloatingActionButton(
                               onPressed: () {
-                                this._isPlaying = !this._isPlaying;
                                 if (this._isPlaying) {
-                                  AudioService.play();
+                                  audioPlayer.pause();
                                 }
                                 else {
-                                  AudioService.pause();
+                                  audioPlayer.play();
                                 }
                               },
                               child: Icon(
@@ -571,19 +413,19 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           margin: EdgeInsets.only(left: 16, right: 16),
                           child: CircleAvatar(
                             child: Text(
-                              this._trackNumber.toString(),
+                              this._track.trackNumber.toString(),
                               style: TextStyle(
                                 color: Colors.white,
                               ),
                             ),
-                            backgroundImage: FileImage(this._albumArt),
+                            backgroundImage: FileImage(collection.getAlbumArt(this._track)),
                           ),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              this._trackName,
+                              this._track.trackName,
                               maxLines: 1,
                               style: Theme.of(context).textTheme.headline1,
                             ),
@@ -592,7 +434,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               height: 4,
                             ),
                             Text(
-                              this._albumName,
+                              this._track.trackName,
                               maxLines: 1,
                               style: Theme.of(context).textTheme.headline4,
                             ),
@@ -604,7 +446,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                   Container(
                     margin: EdgeInsets.only(left: 72, bottom: 16),
                     child: Text(
-                      this._trackArtist + ' ' + '(' + this._year + ')',
+                      this._track.albumArtistName + ' ' + '(${this._track.year})',
                       style: Theme.of(context).textTheme.headline4,
                     ),
                   ),
@@ -635,7 +477,11 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               max: this._durationSeconds.toDouble(),
                               value: value,
                               onChanged: (double value) {
-                                AudioService.seekTo(Duration(seconds: value.toInt()));
+                                audioPlayer.seek(
+                                  Duration(
+                                    seconds: value.toInt(),
+                                  ),
+                                );
                               },
                             ),
                             data: SliderThemeData(
@@ -700,14 +546,14 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             MaterialButton(
-                              onPressed: () => AudioService.skipToPrevious(),
+                              onPressed: () => audioPlayer.previous(),
                               child: Text(
                                 Constants.STRING_NOW_PLAYING_PREVIOUS_TRACK,
                                 style: TextStyle(color: Theme.of(context).primaryColor),
                               ),
                             ),
                             MaterialButton(
-                              onPressed: () => AudioService.skipToNext(),
+                              onPressed: () => audioPlayer.next(),
                               child: Text(
                                 Constants.STRING_NOW_PLAYING_NEXT_TRACK,
                                 style: TextStyle(color: Theme.of(context).primaryColor),
