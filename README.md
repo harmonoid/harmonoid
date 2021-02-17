@@ -70,7 +70,7 @@ You can translate this, even if you have little to no knowledge of Dart.
 
 ## 📖 Workings
 
-Majority of functioning code in app is [here](https://github.com/alexmercerind/harmonoid/tree/master/lib/scripts) in the repository.
+Majority of functioning & logical code in this app, is [here](https://github.com/alexmercerind/harmonoid/tree/master/lib/scripts) in the repository.
 
 For downloading music, a dedicated server is necessary which you can see [here](https://github.com/harmonoid/harmonoid-service). It is managed by me, [@raitonoberu](https://github.com/raitonoberu) & [@mytja](https://github.com/mytja).
 
@@ -78,15 +78,14 @@ For downloading music, a dedicated server is necessary which you can see [here](
 
 [Flutter](https://flutter.dev) made this project possible.
 
-Thanks to following people & organizations.
+Thanks to following people & organizations for their indirect contribution.
 
 |Package                                                                              |Maintainer                                       |
 |-------------------------------------------------------------------------------------|-------------------------------------------------|
-|[just_audio](https://github.com/ryanheise/just_audio)                                |[ryanheise](https://github.com/ryanheise)        |
-|[audio_service](https://github.com/ryanheise/audio_service)                          |[ryanheise](https://github.com/ryanheise)        |
-|[media_metadata_retriever](https://github.com/alexmercerind/media_metadata_retriever)|[alexmercerind](https://github.com/alexmercerind)|
-|[flutter_local_notifications](https://github.com/MaikuB/flutter_local_notifications) |[MaikuB](https://github.com/MaikuB)              |
-|[permission_handler](https://github.com/Baseflow/flutter-permission-handler)         |[Baseflow](https://github.com/Baseflow)          |
+|[assets_audio_player](https://github.com/florent37/Flutter-AssetsAudioPlayer)        |[florent37](https://github.com/ryanheise)          |
+|[media_metadata_retriever](https://github.com/alexmercerind/media_metadata_retriever)|[alexmercerind](https://github.com/alexmercerind)      |
+|[flutter_local_notifications](https://github.com/MaikuB/flutter_local_notifications) |[MaikuB](https://github.com/MaikuB)             |
+|[permission_handler](https://github.com/Baseflow/flutter-permission-handler)         |[Baseflow](https://github.com/Baseflow)           |
 |[animations](https://pub.dev/packages/animations)                                    |[flutter](https://github.com/flutter)            |
 |[http](https://pub.dev/packages/http)                                                |[flutter](https://github.com/flutter)            |
 |[path](https://pub.dev/packages/path)                                                |[flutter](https://github.com/flutter)            |
