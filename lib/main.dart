@@ -4,13 +4,11 @@ import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:path_provider/path_provider.dart' as path;
-import 'package:audio_service/audio_service.dart';
 
 import 'package:harmonoid/screens/home.dart';
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/fileintent.dart';
 import 'package:harmonoid/scripts/configuration.dart';
-import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
 import 'package:harmonoid/screens/exception.dart';
 import 'package:harmonoid/language/language.dart';
@@ -41,9 +39,7 @@ void main() async {
     await FileIntent.init();
     await Download.init();
     runApp(
-      new AudioServiceWidget(
-        child: new Harmonoid(),
-      ),
+      new Harmonoid(),
     );
   }
   catch(exception) {
@@ -53,11 +49,6 @@ void main() async {
       ),
     );
   }
-}
-
-
-void backgroundTaskEntryPoint() {
-  AudioServiceBackground.run(() => BackgroundTask());
 }
 
 
