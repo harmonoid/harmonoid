@@ -29,8 +29,7 @@ dependencies:
   path_provider: ^1.6.11
   media_metadata_retriever: ^0.0.1+4
   flutter_local_notifications: ^3.0.3
-  just_audio: ^0.3.2
-  audio_service: ^0.13.0
+  assets_audio_player: ^2.0.13+6
   url_launcher: ^5.5.0
   permission_handler: ^5.0.1+1
   share: ^0.6.5+4
