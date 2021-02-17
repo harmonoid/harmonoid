@@ -1,6 +1,6 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid/">Harmonoid</a></h1>
 
-<h3 align="center">🎵 The music app, you always dreamt</h3>
+<h3 align="center">A 🎵 music app, that can download music for free & has no ads.</h3>
 
 <p align="center">
   <a href="https://discord.gg/ZG7Pj9SREG">Discord</a> | 
