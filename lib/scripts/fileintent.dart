@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/scripts/playback.dart';
 import 'package:media_metadata_retriever/media_metadata_retriever.dart';
-import 'package:audio_service/audio_service.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:path/path.dart' as path;
 
 import 'package:harmonoid/scripts/collection.dart';
-import 'package:harmonoid/main.dart';
 import 'package:harmonoid/screens/home.dart';
 
 
@@ -63,25 +62,9 @@ class FileIntent {
       ),
     );
     await albumArtFile.writeAsBytes(retriever.albumArt);
-    await AudioService.start(
-      backgroundTaskEntrypoint: backgroundTaskEntryPoint,
-      androidNotificationChannelName: 'Harmonoid',
-      androidNotificationColor: 0xFFFFFFFF,
-      androidNotificationIcon: 'mipmap/ic_launcher',
-      androidStopForegroundOnPause: true,
-      androidNotificationChannelDescription: 'Harmonoid' 
+    Playback.play(
+      tracks: <Track>[track],
+      index: 0,
     );
-    List<MediaItem> queue = <MediaItem>[
-      MediaItem(
-        id: track.filePath,
-        title: track.trackName,
-        album: track.albumName,
-        artist: track.trackArtistNames.join(', '),
-        artUri: 'file://${albumArtFile.path}',
-        extras: track.toMap(),
-      ),
-    ];
-    AudioService.updateQueue(queue);
-    AudioService.playFromMediaId(queue[0].id);
   }
 }
