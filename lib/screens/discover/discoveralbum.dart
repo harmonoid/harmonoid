@@ -169,7 +169,7 @@ class DiscoverAlbumState extends State<DiscoverAlbum> {
             expandedHeight: MediaQuery.of(context).size.width,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                widget.album.albumName.split('(')[0].split('[')[0].split('-')[0],
+                widget.album.albumName.split('(')[0].split('[')[0].split('-')[0].split(':')[0],
                 style: TextStyle(
                   color: Colors.white,
                 ),
