@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/language/constants.dart';
+import 'package:harmonoid/screens/settings/accent.dart';
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/language/language.dart';
@@ -163,7 +164,7 @@ class SettingsState extends State<Settings> {
           SettingsTile(
             title: Constants.STRING_SETTING_ACCENT_COLOR_TITLE,
             subtitle: Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE,
-            child: AccentSelector(),
+            child: Accent(),
             margin: EdgeInsets.all(16.0),
           ),
           SettingsTile(

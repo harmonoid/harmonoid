@@ -6,7 +6,7 @@ import 'package:harmonoid/screens/collection/collectionmusic.dart';
 import 'package:harmonoid/screens/collection/collectionsearch.dart';
 import 'package:harmonoid/screens/discover/discovermusic.dart';
 import 'package:harmonoid/screens/nowplaying.dart';
-import 'package:harmonoid/screens/settings.dart';
+import 'package:harmonoid/screens/settings/settings.dart';
 import 'package:harmonoid/language/constants.dart';
 import 'package:harmonoid/scripts/fileintent.dart';
 
