@@ -446,7 +446,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                   Container(
                     margin: EdgeInsets.only(left: 72, bottom: 16),
                     child: Text(
-                      this._track.albumArtistName + ' ' + '(${this._track.year})',
+                      this._track.albumArtistName + ' ' + '(${this._track.year ?? 'Unknown Year'})',
                       style: Theme.of(context).textTheme.headline4,
                     ),
                   ),
