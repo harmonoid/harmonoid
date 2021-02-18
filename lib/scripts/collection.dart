@@ -2,14 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:path/path.dart' as path;
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:media_metadata_retriever/media_metadata_retriever.dart';
-import 'package:harmonoid/scripts/methods.dart';
 
 import 'package:harmonoid/scripts/mediatype.dart';
 export 'package:harmonoid/scripts/mediatype.dart';
+import 'package:harmonoid/scripts/methods.dart';
 
-
-/* TODO: FEATURE: Add dealing for tracks having no metadata or album art. */
 
 const List<String> SUPPORTED_FILE_TYPES = ['OGG', 'OGA', 'AAC', 'M4A', 'MP3', 'WMA', 'OPUS'];
 
@@ -25,8 +24,12 @@ class Collection {
   static Future<void> init({collectionDirectory, cacheDirectory}) async {
     collection = new Collection(collectionDirectory, cacheDirectory);
     if (!await collection.collectionDirectory.exists()) await collection.collectionDirectory.create(recursive: true);
-    if (!await collection.cacheDirectory.exists()) await collection.cacheDirectory.create(recursive: true);
-    if (!await Directory(path.join(collection.cacheDirectory.path, 'albumArts')).exists()) await Directory(path.join(collection.cacheDirectory.path, 'albumArts')).create(recursive: true);
+    if (!await Directory(path.join(collection.cacheDirectory.path, 'albumArts')).exists()) {
+      await Directory(path.join(collection.cacheDirectory.path, 'albumArts')).create(recursive: true);
+      await new File(
+        path.join(cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG'),
+      ).writeAsBytes((await rootBundle.load('assets/images/collection/album.jpg')).buffer.asUint8List());
+    }
     await collection.getFromCache();
   }
 
@@ -51,10 +54,19 @@ class Collection {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         await retriever.setFile(object);
         Track track = Track.fromMap((await retriever.metadata).toMap());
+        if (track.trackName == null) {
+          track.trackName = path.basename(object.path).split('.').first;
+        }
         track.filePath = object.path;
         Future<void> albumArtMethod() async {
           if (retriever.albumArt == null) {
-            this._albumArts.add(null);
+            this._albumArts.add(
+              new File(
+                path.join(
+                  this.cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG',
+                ),
+              ),
+            );
           }
           else {
             File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArts', '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
