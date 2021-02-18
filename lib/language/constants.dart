@@ -142,4 +142,5 @@ class Constants {
   static String STRING_NO_INTERNET_SUBTITLE;
   static String STRING_NO_COLLECTION_TITLE;
   static String STRING_NO_COLLECTION_SUBTITLE;
+  static String STRING_DOWNLOAD_COMPLETED;
 }

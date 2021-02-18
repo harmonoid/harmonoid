@@ -8,7 +8,7 @@ enum LanguageRegion {
   ptBr, /* Credits: https://github.com/bdlukaa/                 */
   hiIn, /* Credits: https://github.com/alexmercerind/           */
   deDe, /* Credits: https://github.com/MickLesk/                */
-  nlNl, /* Credits: https://github.com/kebabinjeneus/	         	*/
+  nlNl, /* Credits: https://github.com/kebabinjeneus/           */
 }
 
 
@@ -20,7 +20,7 @@ extension LanguageRegionExtension on LanguageRegion {
       case LanguageRegion.ruRu: data = ['Русский'        , 'Россия'           ]; break;
       case LanguageRegion.slSi: data = ['Slovenija'      , 'Slovenščina'      ]; break;
       case LanguageRegion.ptBr: data = ['Português'      , 'Brasil'           ]; break;
-      case LanguageRegion.hiIn: data = ['हिंदी'            , 'भारत'              ]; break;
+      case LanguageRegion.hiIn: data = ['हिंदी'            , 'भारत'             ]; break;
       case LanguageRegion.deDe: data = ['Deutsche'       , 'Deutschland'      ]; break;
       case LanguageRegion.nlNl: data = ['Nederlands'     , 'Nederland'        ]; break;
     }
@@ -170,13 +170,14 @@ class Language {
         Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
         Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
-        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process.';
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+        Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -317,13 +318,14 @@ class Language {
         Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
         Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
-        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process.';
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+        Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       }
       break;
       case LanguageRegion.slSi: {
@@ -464,13 +466,14 @@ class Language {
         Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
         Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
-        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process.';
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+        Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -611,13 +614,14 @@ class Language {
         Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
         Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
-        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process.';
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+        Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -758,13 +762,14 @@ class Language {
         Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
         Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
-        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process.';
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+        Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       }
       break;
       case LanguageRegion.deDe: {
@@ -905,13 +910,14 @@ class Language {
         Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
         Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
-        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process.';
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+        Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -999,7 +1005,7 @@ class Language {
         Constants.STRING_ABOUT_TITLE                                     = 'Over';
         Constants.STRING_ABOUT_SUBTITLE                                  = 'Informatie over de app en zijn ontwikkelaars';
         Constants.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Server';
-	Constants.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Verander waar de app zijn inhoud vandaan haalt';
+      	Constants.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Verander waar de app zijn inhoud vandaan haalt';
         Constants.STRING_SETTING_SERVER_CHANGE_SERVER_HINT               = 'Vul een server URL in';
         Constants.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL              = 'Server URL';
         Constants.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID             = 'Het is geen geldige server URL voor de app.';
@@ -1059,6 +1065,7 @@ class Language {
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Controleer uw verbinding';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Lege Collectie';
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'Geen muziek gevonden\nSla wat muziek op';
+        Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       }
       break;
     }
