@@ -76,13 +76,11 @@ For downloading music, a dedicated server is necessary which you can see [here](
 
 ## 💙 Acknowledgements
 
-[Flutter](https://flutter.dev) made this project possible.
-
 Thanks to following people & organizations for their indirect contribution.
 
 |Package                                                                              |Maintainer                                       |
 |-------------------------------------------------------------------------------------|-------------------------------------------------|
-|[assets_audio_player](https://github.com/florent37/Flutter-AssetsAudioPlayer)        |[florent37](https://github.com/ryanheise)          |
+|[assets_audio_player](https://github.com/florent37/Flutter-AssetsAudioPlayer)        |[florent37](https://github.com/florent37)          |
 |[media_metadata_retriever](https://github.com/alexmercerind/media_metadata_retriever)|[alexmercerind](https://github.com/alexmercerind)      |
 |[flutter_local_notifications](https://github.com/MaikuB/flutter_local_notifications) |[MaikuB](https://github.com/MaikuB)             |
 |[permission_handler](https://github.com/Baseflow/flutter-permission-handler)         |[Baseflow](https://github.com/Baseflow)           |
