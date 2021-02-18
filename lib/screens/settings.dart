@@ -4,6 +4,8 @@ import 'package:harmonoid/language/constants.dart';
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/language/language.dart';
+import 'package:harmonoid/scripts/states.dart';
+import 'package:harmonoid/widgets.dart';
 
 
 class SettingsTile extends StatelessWidget {
@@ -96,6 +98,7 @@ class SettingsState extends State<Settings> {
   Future<void> _setThemeMode(ThemeMode value) async {
     await configuration.save(themeMode: value);
     this.setState(() => this._themeMode = value);
+    States?.refreshThemeData();
   }
 
   Future<void> _setLanguageRegion(LanguageRegion value) async {
@@ -156,6 +159,12 @@ class SettingsState extends State<Settings> {
                 ),
               ],
             )
+          ),
+          SettingsTile(
+            title: Constants.STRING_SETTING_ACCENT_COLOR_TITLE,
+            subtitle: Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE,
+            child: AccentSelector(),
+            margin: EdgeInsets.all(16.0),
           ),
           SettingsTile(
             title: Constants.STRING_SETTING_LANGUAGE_TITLE,
@@ -289,12 +298,6 @@ class SettingsState extends State<Settings> {
                 ),
               ),
             ],
-          ),
-          SettingsTile(
-            title: Constants.STRING_SETTING_ACCENT_COLOR_TITLE,
-            subtitle: Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE,
-            child: Text('[WIP]'),
-            margin: EdgeInsets.all(16.0),
           ),
           SettingsTile(
             title: Constants.STRING_SETTING_SERVER_CHANGE_TITLE,

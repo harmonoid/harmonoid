@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:harmonoid/scripts/states.dart';
 import 'package:path_provider/path_provider.dart' as path;
 
 import 'package:harmonoid/screens/home.dart';
@@ -59,10 +60,18 @@ class Harmonoid extends StatefulWidget {
 
 
 class HarmonoidState extends State<Harmonoid> {
+  ThemeMode _themeMode;
 
   @override
   void initState() {
     super.initState();
+    States.refreshThemeData = () => this.setState(() {});
+  }
+
+  @override
+  void dispose() {
+    States.refreshThemeData = null;
+    super.dispose();
   }
 
   @override
@@ -71,11 +80,11 @@ class HarmonoidState extends State<Harmonoid> {
       debugShowCheckedModeBanner: false,
       title: 'harmonoid',
       theme: Methods.getThemeData(
-        color: Colors.deepPurpleAccent[700],
+        color: ACCENT_COLORS[configuration.accentColor][0],
         themeMode: ThemeMode.light,
       ),
       darkTheme: Methods.getThemeData(
-        color: Colors.deepPurpleAccent[100],
+        color: ACCENT_COLORS[configuration.accentColor][1],
         themeMode: ThemeMode.dark,
       ),
       themeMode: configuration.themeMode,

@@ -23,13 +23,13 @@ const Map<String, dynamic> DEFAULT_CONFIGURATION = {
 
 const JsonEncoder JSON_ENCODER = JsonEncoder.withIndent('    ');
 
-/* TODO: Implement accentColor */
+
 class Configuration {
   String version;
   String homeAddress;
   LanguageRegion languageRegion;
   ThemeMode themeMode;
-  Color accentColor;
+  int accentColor;
   bool showOutOfBoxExperience;
   List<dynamic> collectionSearchRecent;
   List<dynamic> discoverSearchRecent;
@@ -39,7 +39,7 @@ class Configuration {
 
   static Future<void> init({Directory cacheDirectory}) async {
     configuration = new Configuration();
-    configuration.configurationFile = File(path.join(cacheDirectory.path, 'configuration.json'));
+    configuration.configurationFile = File(path.join(cacheDirectory.path, 'configuration.JSON'));
     if (!await configuration.configurationFile.exists()) {
       await configuration.configurationFile.writeAsString(JSON_ENCODER.convert(DEFAULT_CONFIGURATION));
     }
@@ -51,7 +51,7 @@ class Configuration {
     String homeAddress,
     LanguageRegion languageRegion,
     ThemeMode themeMode,
-    Color accentColor,
+    int accentColor,
     bool showOutOfBoxExperience,
     List<dynamic> collectionSearchRecent,
     List<dynamic> discoverSearchRecent,
@@ -103,6 +103,7 @@ class Configuration {
     this.homeAddress = configurationMap['homeAddress'];
     this.languageRegion = LanguageRegion.values[configurationMap['languageRegion']];
     this.themeMode = ThemeMode.values[configurationMap['themeMode']];
+    this.accentColor = configurationMap['accentColor'];
     this.showOutOfBoxExperience = configurationMap['showOutOfBoxExperience'];
     this.collectionSearchRecent = configurationMap['collectionSearchRecent'];
     this.discoverSearchRecent = configurationMap['discoverSearchRecent'];

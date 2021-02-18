@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-
 typedef RefreshCollectionMusic = void Function();
 typedef RefreshCollectionSearch = void Function();
-typedef RefreshThemeMode = void Function(ThemeMode themeMode);
+typedef RefreshThemeData = void Function();
 
 
 abstract class States {
@@ -11,4 +9,5 @@ abstract class States {
 
   static RefreshCollectionSearch refreshCollectionSearch;
 
+  static RefreshThemeData refreshThemeData;
 }
