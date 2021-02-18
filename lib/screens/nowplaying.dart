@@ -425,7 +425,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              this._track.trackName,
+                              this._track.trackName.split('(')[0].split('[')[0].split('-')[0].split(':')[0],
                               maxLines: 1,
                               style: Theme.of(context).textTheme.headline1,
                             ),
@@ -434,7 +434,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               height: 4,
                             ),
                             Text(
-                              this._track.trackName,
+                              this._track.albumName.split('(')[0].split('[')[0].split('-')[0].split(':')[0],
                               maxLines: 1,
                               style: Theme.of(context).textTheme.headline4,
                             ),

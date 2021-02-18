@@ -59,7 +59,9 @@ class AccentState extends State<Accent> with TickerProviderStateMixin {
                       configuration.save(
                         accentColor: accentColorIndex,
                       );
-                      States?.refreshThemeData();
+                      Future.delayed(Duration(milliseconds: 200), () {
+                        States?.refreshThemeData();
+                      });
                     },
                     child: ScaleTransition(
                       scale: this._animations[accentColorIndex],

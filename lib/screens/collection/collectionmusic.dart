@@ -283,7 +283,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   void initState() {
     super.initState();
     States.refreshCollectionMusic = this._refresh;
-    this._tabController = TabController(initialIndex: 0, length: 4, vsync: this);
+    this._tabController = TabController(initialIndex: 0, length: 3, vsync: this);
   }
 
   @override
@@ -358,6 +358,14 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                         Constants.STRING_ALBUM.toUpperCase(),
                       ),
                     ),
+                    /* TODO: Implement artists tab. */
+                    /*
+                    Tab(
+                      child: Text(
+                        Constants.STRING_ARTIST.toUpperCase(),
+                      ),
+                    ),
+                    */
                     Tab(
                       child: Text(
                         Constants.STRING_TRACK.toUpperCase(),
@@ -365,13 +373,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     ),
                     Tab(
                       child: Text(
-                        Constants.STRING_ARTIST.toUpperCase(),
-                        )
-                    ),
-                    Tab(
-                      child: Text(
                         Constants.STRING_PLAYLISTS.toUpperCase(),
-                        )
+                      ),
                     ),
                   ],
                 ),
@@ -406,6 +409,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                 );
               }
             ),
+            /* TODO: Implement artists tab. */
+            /*
             Builder(
               builder: (context) {
                 return CustomScrollView(
@@ -418,6 +423,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                 );
               }
             ),
+            */
             Builder(
               builder: (context) {
                 return CustomScrollView(
