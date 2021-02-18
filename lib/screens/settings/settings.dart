@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/scripts/vars.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/language/constants.dart';
 import 'package:harmonoid/screens/settings/accent.dart';
@@ -7,7 +11,6 @@ import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/language/language.dart';
 import 'package:harmonoid/scripts/states.dart';
-import 'package:harmonoid/widgets.dart';
 
 
 class SettingsTile extends StatelessWidget {
@@ -67,14 +70,14 @@ class SettingsTile extends StatelessWidget {
             color: Colors.transparent,
             height: 8.0,
           ),
-          (this.actions != null) ? Divider(
+          this.actions != null ? Divider(
             color: Theme.of(context).dividerColor,
             thickness: 1.0,
             indent: 16.0,
             endIndent: 16.0,
             height: 1.0,
           ) : Container(),
-          (this.actions != null) ? ButtonBar(
+          this.actions != null ? ButtonBar(
             alignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.max,
             children: this.actions,
@@ -96,6 +99,8 @@ class SettingsState extends State<Settings> {
   ThemeMode _themeMode;
   LanguageRegion _languageRegion;
   List<int> _refreshLinearProgressIndicatorValues;
+  String _version = Constants.STRING_NO_INTERNET_TITLE;
+  String _updateUri;
 
   Future<void> _setThemeMode(ThemeMode value) async {
     await configuration.save(themeMode: value);
@@ -118,6 +123,14 @@ class SettingsState extends State<Settings> {
   void initState() {
     super.initState();
     this._refresh();
+    http.get(RELEASES_URI)
+    .then((http.Response response) {
+      this.setState(() {
+        var json = jsonDecode(response.body);
+        this._version = json.first['tag_name'];
+        this._updateUri = json.first['assets'][0]['browser_download_url'];
+      });
+    });
   }
   
   @override
@@ -310,8 +323,38 @@ class SettingsState extends State<Settings> {
           SettingsTile(
             title: Constants.STRING_SETTING_APP_VERSION_TITLE,
             subtitle: Constants.STRING_SETTING_APP_VERSION_SUBTITLE,
-            child: Text('[WIP]'),
+            child: Column(
+              children: [
+                Table(
+                  children: [
+                    TableRow(
+                      children: [
+                        Text(Constants.STRING_SETTING_APP_VERSION_INSTALLED),
+                        Text(configuration.version),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        Text(Constants.STRING_SETTING_APP_VERSION_LATEST),
+                        Text(this._version),
+                      ]
+                    ),
+                  ],
+                ),
+              ],
+            ),
             margin: EdgeInsets.all(16.0),
+            actions: this._version == configuration.version ? [] : [
+              MaterialButton(
+                onPressed: () => launch(this._updateUri),
+                child: Text(
+                  Constants.STRING_DOWNLOAD_UPDATE,
+                  style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+              ),
+            ],
           ),
           SettingsTile(
             title: Constants.STRING_ABOUT_TITLE,

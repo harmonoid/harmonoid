@@ -165,10 +165,6 @@ class CollectionTrackTile extends StatelessWidget {
               value: 2,
               child: Text(Constants.STRING_ADD_TO_PLAYLIST),
             ),
-            PopupMenuItem(
-              value: 3,
-              child: Text(Constants.STRING_SAVE_TO_DOWNLOADS),
-            ),
           ],
         ),
       ),

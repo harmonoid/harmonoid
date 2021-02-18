@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:harmonoid/main.dart';
-
+import 'package:harmonoid/language/constants.dart';
 
 Download download;
 
@@ -90,7 +90,7 @@ class Download {
     await notification.show(
       task.downloadId,
       task.extras.trackName,
-      task.isCompleted ? 'Download Completed. ' : '' + '${this._toMegaBytes(task.downloadedSize)}/${this._toMegaBytes(task.fileSize)} MB',
+      task.isCompleted ? '${Constants.STRING_DOWNLOAD_COMPLETED}. ' : '' + '${this._toMegaBytes(task.downloadedSize)}/${this._toMegaBytes(task.fileSize)} MB',
       details,
       payload: '',
     );

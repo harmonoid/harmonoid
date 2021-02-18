@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 
 String MUSIC_DIRECTORY = '/storage/emulated/0/Music';
+
+String RELEASES_URI = 'https://api.github.com/repos/alexmercerind/harmonoid/releases';
+
 List<List<Color>> ACCENT_COLORS = [
   [Color(0xFF651FFF), Color(0xFFB388FF)],
   [Color(0xFF4285F4), Color(0xFF82B1FF)],
