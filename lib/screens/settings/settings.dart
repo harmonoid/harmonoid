@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:harmonoid/language/constants.dart';
 import 'package:harmonoid/screens/settings/accent.dart';
+import 'package:harmonoid/screens/settings/server.dart';
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/language/language.dart';
@@ -303,8 +304,8 @@ class SettingsState extends State<Settings> {
           SettingsTile(
             title: Constants.STRING_SETTING_SERVER_CHANGE_TITLE,
             subtitle: Constants.STRING_SETTING_SERVER_CHANGE_SUBTITLE,
-            child: Text('[WIP]'),
-            margin: EdgeInsets.all(16.0),
+            child: Server(),
+            margin: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
           ),
           SettingsTile(
             title: Constants.STRING_SETTING_APP_VERSION_TITLE,
