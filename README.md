@@ -16,6 +16,8 @@
   </tr>
 </table>
 
+#### Enjoying the app? Consider ⭐ starring the repository to support development.
+
 ## 📎 Information
 
 👋 Hello Everyone! As of November 6, 2020, I as the maintainer & main developer of project, has decided to rewrite this project & start from scratch, because current version of app has few issues in its core & code is less managable. Newer version of app (i.e. v3.0.0) will be a completely new app, with a lot more new features & control over your music. The project is alive & you can see the progress in the [master](https://github.com/alexmercerind/harmonoid/tree/master) branch of this repository. You can join Discord server of Harmonoid with above button, to get an early look at upcoming features and provide feedback or you may just talk to us about anything you want & chill. Thanks a lot for your love 💙!
@@ -32,11 +34,11 @@
 - 💾 **Free Music Download**
   - Download the music of your choice for free.
 
-- ✨ **Stunning User Interface**
+- ✨ **Beautiful User Interface**
   - Every element on screen beautifully animated giving a sense of motion & very strictly follows [material.io](https://material.io) guidelines. 
 
 - 💜 **Ads Free Forever**
-  - No advertisements! I have literally no profit associated with this project, I'll appreciate if you ⭐ drop a star.
+  - No advertisements! No profits associated with the project.
 
 - 🎹 **Lyrics**
   - Fetch lyrics for your saved or downloaded music.
