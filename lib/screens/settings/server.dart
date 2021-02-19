@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:harmonoid/screens/settings/settings.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:harmonoid/language/constants.dart';
@@ -122,15 +123,15 @@ extension ServerChangeStateExtension on ServerChangeState {
 }
 
 
-class Server extends StatefulWidget {
-  Server({Key key}) : super(key: key);
+class ServerSetting extends StatefulWidget {
+  ServerSetting({Key key}) : super(key: key);
 
   @override
   ServerState createState() => ServerState();
 }
 
 
-class ServerState extends State<Server> {
+class ServerState extends State<ServerSetting> {
   ServerChangeState _serverChangeState = ServerChangeState.initial;
   TextEditingController _textFieldController = new TextEditingController(text: configuration.homeAddress);
 
@@ -141,8 +142,11 @@ class ServerState extends State<Server> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-       child: Column(
+    return SettingsTile(
+      title: Constants.STRING_SETTING_SERVER_CHANGE_TITLE,
+      subtitle: Constants.STRING_SETTING_SERVER_CHANGE_SUBTITLE,
+      child: Container(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -220,7 +224,9 @@ class ServerState extends State<Server> {
             ),
             _serverChangeState.indicator(context: context),
           ],
-       ),
+        ),
+      ),
+      margin: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
     );
   }
 }

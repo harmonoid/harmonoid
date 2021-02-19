@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
+import 'package:harmonoid/screens/settings/settings.dart';
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/scripts/states.dart';
+import 'package:harmonoid/language/constants.dart';
 import 'package:harmonoid/scripts/vars.dart';
 
 
-class Accent extends StatefulWidget {
-  Accent({Key key}) : super(key: key);
+class AccentSetting extends StatefulWidget {
+  AccentSetting({Key key}) : super(key: key);
   AccentState createState() => AccentState();
 }
 
-class AccentState extends State<Accent> with TickerProviderStateMixin {
+
+class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
   bool _init = true;
   Widget _widget = Container();
   List<AnimationController> _animationControllers = new List<AnimationController>(ACCENT_COLORS.length); 
@@ -46,7 +49,20 @@ class AccentState extends State<Accent> with TickerProviderStateMixin {
                 Container(
                   height: 56.0,
                   width: 56.0,
-                  color: accentColor[0],
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        accentColor[0],
+                        accentColor[1],
+                      ],
+                      stops: [
+                        0.2,
+                        1.0,
+                      ]
+                    )
+                  ),
                 ),
                 Material(
                   color: Colors.transparent,
@@ -93,6 +109,11 @@ class AccentState extends State<Accent> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return this._widget;
+    return SettingsTile(
+      title: Constants.STRING_SETTING_ACCENT_COLOR_TITLE,
+      subtitle: Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE,
+      child: this._widget,
+      margin: EdgeInsets.all(16.0),
+    );
   }
 }
