@@ -83,8 +83,8 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-                title: Text(audio.metas.title),
-                subtitle: Text(audio.metas.artist),
+                title: Text(audio.metas.title.split('(')[0].split('[')[0].split('-')[0].split(':')[0]),
+                subtitle: Text(audio.metas.artist.split('(')[0].split('[')[0].split('-')[0].split(':')[0]),
                 trailing: this._track.trackName == audio.metas.title ? Icon(
                   Icons.music_note,
                   color: Theme.of(context).accentColor,
