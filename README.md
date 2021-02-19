@@ -8,19 +8,23 @@
   <a href="https://harmonoid.github.io/">Website</a>
 </p>
 
+<h4 align="center">Consider ⭐ starring the repository to support development.</h4>
+
 <table>
   <tr align="center">
-    <td><img src="https://github.com/alexmercerind/harmonoid/blob/assets/screenshots/collection-album-tab.png?raw=true" /></td>
-    <td><img src="https://github.com/alexmercerind/harmonoid/blob/assets/screenshots/now-playing.png?raw=true" /></td>
-    <td><img src="https://github.com/alexmercerind/harmonoid/blob/assets/screenshots/nested-scroll-view.png?raw=true" /></td>
+    <td><img src="https://github.com/alexmercerind/harmonoid/blob/assets/collection-album-tab.png?raw=true" /></td>
+    <td><img src="https://github.com/alexmercerind/harmonoid/blob/assets/now-playing.png?raw=true" /></td>
   </tr>
 </table>
 
-#### Enjoying the app? Consider ⭐ starring the repository to support development.
+## 🏂 Animations
 
-## 📎 Information
-
-👋 Hello Everyone! As of November 6, 2020, I as the maintainer & main developer of project, has decided to rewrite this project & start from scratch, because current version of app has few issues in its core & code is less managable. Newer version of app (i.e. v3.0.0) will be a completely new app, with a lot more new features & control over your music. The project is alive & you can see the progress in the [master](https://github.com/alexmercerind/harmonoid/tree/master) branch of this repository. You can join Discord server of Harmonoid with above button, to get an early look at upcoming features and provide feedback or you may just talk to us about anything you want & chill. Thanks a lot for your love 💙!
+<table>
+  <tr align="center">
+    <td><img height="280" src="https://github.com/alexmercerind/harmonoid/blob/assets/collection.gif?raw=true" /></td>
+    <td><img height="280" src="https://github.com/alexmercerind/harmonoid/blob/assets/now-playing.gif?raw=true" /></td>
+  </tr>
+</table>
 
 
 ## ✅ Features
@@ -51,8 +55,6 @@
 
 - 🌈 **Personalization**
   - Change accent color & theme of the app.
-
-✒ Many features are missing in older version (v0.0.2+2) & next release (v0.0.3) is under development.
 
 ## 🎉 Contributions
 
@@ -94,7 +96,5 @@ Thanks to following people & organizations for their indirect contribution.
 |[url_launcher](https://pub.dev/packages/url_launcher)                                |[flutter](https://github.com/flutter)            |
 
 ## 📄 License
-
-<img src="https://www.gnu.org/graphics/gplv3-127x51.png" />
 
 GNU General Public License v3
