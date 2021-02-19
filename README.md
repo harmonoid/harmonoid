@@ -4,8 +4,7 @@
 
 <p align="center">
   <a href="https://discord.gg/ZG7Pj9SREG">Discord</a> | 
-  <a href="https://github.com/alexmercerind/harmonoid/releases/">Download</a> | 
-  <a href="https://harmonoid.github.io/">Website</a>
+  <a href="https://github.com/alexmercerind/harmonoid/releases/">Download</a>
 </p>
 
 <h4 align="center">Consider ⭐ starring the repository to support development.</h4>
@@ -14,6 +13,7 @@
   <tr align="center">
     <td><img src="https://github.com/alexmercerind/harmonoid/blob/assets/collection-album-tab.png?raw=true" /></td>
     <td><img src="https://github.com/alexmercerind/harmonoid/blob/assets/now-playing.png?raw=true" /></td>
+    <td><img src="https://github.com/alexmercerind/harmonoid/blob/assets/nested-scroll-view.png?raw=true" /></td>
   </tr>
 </table>
 
