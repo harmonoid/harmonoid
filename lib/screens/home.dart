@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:flutter/services.dart';
 
 import 'package:harmonoid/screens/collection/collectionmusic.dart';
 import 'package:harmonoid/screens/collection/collectionsearch.dart';
@@ -26,8 +27,13 @@ class Home extends StatefulWidget {
 
 
 class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindingObserver {
-  int _index = fileIntent.startScreen.index;
-  GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+  int index = fileIntent.startScreen.index;
+  List<GlobalKey<NavigatorState>> navigatorKeys = <GlobalKey<NavigatorState>>[
+    new GlobalKey<NavigatorState>(),
+    new GlobalKey<NavigatorState>(),
+    new GlobalKey<NavigatorState>(),
+    new GlobalKey<NavigatorState>(),
+  ];
 
   @override
   void initState() {
@@ -44,8 +50,35 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
 
   @override
   Future<bool> didPopRoute() async {
-    if (this.navigatorKey.currentState.canPop()) {
-      this.navigatorKey.currentState.pop();
+    if (this.navigatorKeys[this.index].currentState.canPop()) {
+      this.navigatorKeys[this.index].currentState.pop();
+    }
+    else {
+      showDialog(
+        context: context,
+        builder: (subContext) => AlertDialog(
+          title: Text(
+            'Exit',
+            style: Theme.of(subContext).textTheme.headline1,
+          ),
+          content: Text(
+            'Do you want to exit Harmonoid?',
+            style: Theme.of(subContext).textTheme.headline5,
+          ),
+          actions: [
+            MaterialButton(
+              textColor: Theme.of(context).primaryColor,
+              onPressed: SystemNavigator.pop,
+              child: Text(Constants.STRING_YES),
+            ),
+            MaterialButton(
+              textColor: Theme.of(context).primaryColor,
+              onPressed: Navigator.of(subContext).pop,
+              child: Text(Constants.STRING_NO),
+            ),
+          ],
+        ),
+      );
     }
     return true;
   }
@@ -53,9 +86,21 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
   @override
   Widget build(BuildContext context) {
     final List<Widget> screens = <Widget>[
-      DiscoverMusic(),
       Navigator(
-        key: this.navigatorKey,
+        key: this.navigatorKeys[0],
+        initialRoute: 'discoverMusic',
+        onGenerateRoute: (RouteSettings routeSettings) {
+          Route route;
+          if (routeSettings.name == 'discoverMusic') {
+            route = MaterialPageRoute(
+              builder: (BuildContext context) => DiscoverMusic(),
+            );
+          }
+          return route;
+        },
+      ),
+      Navigator(
+        key: this.navigatorKeys[1],
         initialRoute: 'collectionMusic',
         onGenerateRoute: (RouteSettings routeSettings) {
           Route<dynamic> route;
@@ -77,14 +122,36 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
           return route;
         },
       ),
-      Center(
-        child: NowPlaying(),
+      Navigator(
+        key: this.navigatorKeys[2],
+        initialRoute: 'nowPlaying',
+        onGenerateRoute: (RouteSettings routeSettings) {
+          Route route;
+          if (routeSettings.name == 'nowPlaying') {
+            route = MaterialPageRoute(
+              builder: (BuildContext context) => NowPlaying(),
+            );
+          }
+          return route;
+        },
       ),
-      Settings(),
+      Navigator(
+        key: this.navigatorKeys[3],
+        initialRoute: 'settings',
+        onGenerateRoute: (RouteSettings routeSettings) {
+          Route route;
+          if (routeSettings.name == 'settings') {
+            route = MaterialPageRoute(
+              builder: (BuildContext context) => Settings(),
+            );
+          }
+          return route;
+        },
+      ),
     ];
     return Scaffold(
       body: PageTransitionSwitcher(
-        child: screens[this._index],
+        child: screens[this.index],
         duration: Duration(milliseconds: 400),
         transitionBuilder: (child, animation, secondaryAnimation) => FadeThroughTransition(
           animation: animation,
@@ -94,8 +161,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: this._index,
-        onTap: (int index) => this.setState(() => this._index = index),
+        currentIndex: this.index,
+        onTap: (int index) => this.setState(() => this.index = index),
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.album),

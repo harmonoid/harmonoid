@@ -171,7 +171,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
       this.children.add(
         new Container(
           color: Theme.of(context).scaffoldBackgroundColor,
-          child:   new Material(
+          child: new Material(
             color: Colors.transparent,
             child: new ListTile(
               onTap: () async {
