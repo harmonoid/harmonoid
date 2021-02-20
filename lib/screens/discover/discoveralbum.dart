@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:flutter/services.dart';
 import 'package:harmonoid/screens/discover/discovertrack.dart';
 
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/scripts/discover.dart';
-import 'package:harmonoid/scripts/download.dart';
 import 'package:harmonoid/widgets.dart';
 import 'package:harmonoid/language/constants.dart';
 
@@ -154,122 +154,134 @@ class DiscoverAlbumState extends State<DiscoverAlbum> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            brightness: Brightness.dark,
-            leading: IconButton(
-              icon: Icon(Icons.close, color: Colors.white),
-              iconSize: Theme.of(context).iconTheme.size,
-              splashRadius: Theme.of(context).iconTheme.size - 8,
-              onPressed: Navigator.of(context).pop,
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,                
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            Image.network(
+              widget.album.albumArtHigh,
+              fit: BoxFit.fill,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.width,
+              filterQuality: FilterQuality.low,
             ),
-            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-            pinned: true,
-            expandedHeight: MediaQuery.of(context).size.width,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                widget.album.albumName.split('(')[0].split('[')[0].split('-')[0].split(':')[0],
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              background: Image.network(
-                widget.album.albumArtHigh,
-                fit: BoxFit.fill,
-                filterQuality: FilterQuality.low,
-              ),
-            ),
-          ),
-          SliverList(delegate: SliverChildListDelegate(
-            <Widget>[
-              SubHeader(Constants.STRING_ALBUM_VIEW_INFO_SUBHEADER),
-              Card(
-                elevation: 2,
-                clipBehavior: Clip.antiAlias,
-                color: Theme.of(context).cardColor,
-                margin: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 4.0),
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.network(
-                        widget.album.albumArtHigh,
-                        height: 128,
-                        width: 128,
-                        fit: BoxFit.fill,
-                        filterQuality: FilterQuality.low,
+            ListView(
+              children: [
+                Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [
+                            0.3,
+                            0.9,
+                          ],
+                          colors: [
+                            Colors.transparent,
+                            Theme.of(context).scaffoldBackgroundColor,
+                          ]
+                        ),
                       ),
-                      Container(
-                        padding: EdgeInsets.only(left: 18),
-                        width: MediaQuery.of(context).size.width - 16 - 16 - 128,
-                        child: Column(
+                    ),
+                    Card(
+                      elevation: 2,
+                      clipBehavior: Clip.antiAlias,
+                      color: Theme.of(context).cardColor,
+                      margin: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 8.0),
+                      child: Container(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              widget.album.albumName,
-                              style: Theme.of(context).textTheme.headline2,
-                              maxLines: 2,
-                              textAlign: TextAlign.start,
+                            Image.network(
+                              widget.album.albumArtHigh,
+                              height: 140,
+                              width: 140,
+                              fit: BoxFit.fill,
+                              filterQuality: FilterQuality.low,
                             ),
-                            Divider(
-                              color: Colors.transparent,
-                              height: 2,
-                            ),
-                            Text(
-                              widget.album.albumArtistName,
-                              style: Theme.of(context).textTheme.headline5,
-                              maxLines: 2,
-                              textAlign: TextAlign.start,
-                            ),
-                            Divider(
-                              color: Colors.transparent,
-                              height: 2,
-                            ),
-                            Text(
-                              '${widget.album.year  ?? 'Unknown Year'}',
-                              style: Theme.of(context).textTheme.headline5,
-                              maxLines: 1,
-                              textAlign: TextAlign.start,
+                            Container(
+                              padding: EdgeInsets.only(left: 18),
+                              width: MediaQuery.of(context).size.width - 16 - 16 - 140,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.album.albumName,
+                                    style: Theme.of(context).textTheme.headline2,
+                                    maxLines: 2,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  Divider(
+                                    color: Colors.transparent,
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    widget.album.albumArtistName,
+                                    style: Theme.of(context).textTheme.headline5,
+                                    maxLines: 2,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  Divider(
+                                    color: Colors.transparent,
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    '${widget.album.year  ?? 'Unknown Year'}',
+                                    style: Theme.of(context).textTheme.headline5,
+                                    maxLines: 1,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  Divider(
+                                    color: Colors.transparent,
+                                    height: 2,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+                SubHeader(Constants.STRING_ALBUM_VIEW_TRACKS_SUBHEADER),
+                FadeFutureBuilder(
+                  future: () async => await discover.albumInfo(widget.album),
+                  initialWidgetBuilder: (BuildContext context) => Center(
+                    child: CircularProgressIndicator(),
                   ),
+                  finalWidgetBuilder: (BuildContext context, Object object) {
+                    List<Widget> trackWidgets = <Widget>[];
+                    (object as List<Track>).forEach((Track track) {
+                      track.albumArtLow = widget.album.albumArtLow;
+                      trackWidgets.add(
+                        DiscoverTrackTile(track: track),
+                      );
+                    });
+                    return Column(children: trackWidgets);
+                  },
+                  errorWidgetBuilder: (_, exception) => ExceptionWidget(
+                    margin: EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+                    height: 156.0,
+                    assetImage: 'assets/images/exception.jpg',
+                    title: Constants.STRING_NO_INTERNET_TITLE,
+                    subtitle: Constants.STRING_NO_INTERNET_SUBTITLE,
+                  ),
+                  transitionDuration: Duration(milliseconds: 200),
                 ),
-              ),
-              SubHeader(Constants.STRING_ALBUM_VIEW_TRACKS_SUBHEADER),
-              FadeFutureBuilder(
-                future: () async => await discover.albumInfo(widget.album),
-                initialWidgetBuilder: (BuildContext context) => Center(
-                  child: CircularProgressIndicator(),
-                ),
-                finalWidgetBuilder: (BuildContext context, Object object) {
-                  List<Widget> trackWidgets = <Widget>[];
-                  (object as List<Track>).forEach((Track track) {
-                    track.albumArtLow = widget.album.albumArtLow;
-                    trackWidgets.add(
-                      DiscoverTrackTile(track: track),
-                    );
-                  });
-                  return Column(children: trackWidgets);
-                },
-                errorWidgetBuilder: (_, exception) => ExceptionWidget(
-                  margin: EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
-                  height: 156.0,
-                  assetImage: 'assets/images/exception.jpg',
-                  title: Constants.STRING_NO_INTERNET_TITLE,
-                  subtitle: Constants.STRING_NO_INTERNET_SUBTITLE,
-                ),
-                transitionDuration: Duration(milliseconds: 200),
-              )
-            ],
-          )),
-        ],
-      ),
+              ],
+            ),
+          ],
+        ),
+      )
     );
   }
 }

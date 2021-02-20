@@ -40,7 +40,7 @@ class DiscoverSearchState extends State<DiscoverSearch> {
         slivers: [
           SliverAppBar(
             snap: false,
-            pinned: true,
+            pinned: false,
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.white),
               iconSize: Theme.of(context).iconTheme.size,

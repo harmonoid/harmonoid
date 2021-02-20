@@ -74,98 +74,104 @@ class _DiscoverTrackTileState extends State<DiscoverTrackTile> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () {
-        if (this._isDownloading || !this._exists) {
-          this.setState(() => this._isDownloading = true);
-          discover.trackDownload(
-            widget.track,
-            onCompleted: () => this.setState(() {
-              this._isDownloading = false;
-              this._exists = true;
-            }),
-            onException: (DownloadException exception) {
-              if (exception.type == DownloadExceptionType.connection) {
-                showDialog(
-                  context: context,
-                  builder: (subContext) => AlertDialog(
-                    title: Text(
-                      Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE,
-                      style: Theme.of(subContext).textTheme.headline1,
-                    ),
-                    content: Text(
-                      Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE,
-                      style: Theme.of(subContext).textTheme.headline5,
-                    ),
-                    actions: [
-                      MaterialButton(
-                        textColor: Theme.of(context).primaryColor,
-                        onPressed: Navigator.of(subContext).pop,
-                        child: Text(Constants.STRING_OK),
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+        child: Material(
+        color: Colors.transparent,
+        child: ListTile(
+          onTap: () {
+            if (this._isDownloading || !this._exists) {
+              this.setState(() => this._isDownloading = true);
+              discover.trackDownload(
+                widget.track,
+                onCompleted: () => this.setState(() {
+                  this._isDownloading = false;
+                  this._exists = true;
+                }),
+                onException: (DownloadException exception) {
+                  if (exception.type == DownloadExceptionType.connection) {
+                    showDialog(
+                      context: context,
+                      builder: (subContext) => AlertDialog(
+                        title: Text(
+                          Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE,
+                          style: Theme.of(subContext).textTheme.headline1,
+                        ),
+                        content: Text(
+                          Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE,
+                          style: Theme.of(subContext).textTheme.headline5,
+                        ),
+                        actions: [
+                          MaterialButton(
+                            textColor: Theme.of(context).primaryColor,
+                            onPressed: Navigator.of(subContext).pop,
+                            child: Text(Constants.STRING_OK),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              }
-              else {
-                showDialog(
-                  context: context,
-                  builder: (subContext) => AlertDialog(
-                    title: Text(
-                      Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE,
-                      style: Theme.of(subContext).textTheme.headline1,
-                    ),
-                    content: Text(
-                      Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE,
-                      style: Theme.of(subContext).textTheme.headline5,
-                    ),
-                    actions: [
-                      MaterialButton(
-                        textColor: Theme.of(context).primaryColor,
-                        onPressed: Navigator.of(subContext).pop,
-                        child: Text(Constants.STRING_OK),
+                    );
+                  }
+                  else {
+                    showDialog(
+                      context: context,
+                      builder: (subContext) => AlertDialog(
+                        title: Text(
+                          Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE,
+                          style: Theme.of(subContext).textTheme.headline1,
+                        ),
+                        content: Text(
+                          Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE,
+                          style: Theme.of(subContext).textTheme.headline5,
+                        ),
+                        actions: [
+                          MaterialButton(
+                            textColor: Theme.of(context).primaryColor,
+                            onPressed: Navigator.of(subContext).pop,
+                            child: Text(Constants.STRING_OK),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              }
-              this.setState(() {
-                this._isDownloading = false;
-              });
-            },
-            onProgress: (double progress) {
-              try {
-                this.setState(() => this._progress = progress);
-              }
-              catch (exception) {}
-            },
-          );
-        }
-      },
-      enabled: !this._isDownloading,
-      title: Text(widget.track.trackName),
-      subtitle: Text(widget.track.trackArtistNames.join(', ')),
-      leading: this._isDownloading ? CircularProgressIndicator(
-        value: this._progress,
-        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
-      ): CircleAvatar(
-        child: this._exists ? Icon(Icons.check) : Text('${widget.track.trackNumber ?? 1}'),
-        backgroundImage: NetworkImage(widget.track.albumArtLow),
-        foregroundColor: Colors.white,
-      ),
-      trailing: this._exists ? Chip(
-        avatar: Icon(
-          Icons.check_circle,
-          color: Colors.white,
-        ),
-        label: Text(
-          Constants.STRING_SAVED,
-          style: TextStyle(
-            color: Colors.white
+                    );
+                  }
+                  this.setState(() {
+                    this._isDownloading = false;
+                  });
+                },
+                onProgress: (double progress) {
+                  try {
+                    this.setState(() => this._progress = progress);
+                  }
+                  catch (exception) {}
+                },
+              );
+            }
+          },
+          enabled: !this._isDownloading,
+          title: Text(widget.track.trackName),
+          subtitle: Text(widget.track.trackArtistNames.join(', ')),
+          leading: this._isDownloading ? CircularProgressIndicator(
+            value: this._progress,
+            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+          ): CircleAvatar(
+            child: this._exists ? Icon(Icons.check) : Text('${widget.track.trackNumber ?? 1}'),
+            backgroundImage: NetworkImage(widget.track.albumArtLow),
+            foregroundColor: Colors.white,
           ),
+          trailing: this._exists ? Chip(
+            avatar: Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            label: Text(
+              Constants.STRING_SAVED,
+              style: TextStyle(
+                color: Colors.white
+              ),
+            ),
+            backgroundColor: Theme.of(context).accentColor,
+            ) :Text(this._getDurationString(widget.track.trackDuration)),
         ),
-        backgroundColor: Theme.of(context).accentColor,
-        ) :Text(this._getDurationString(widget.track.trackDuration)),
+      ),
     );
   }
 }
