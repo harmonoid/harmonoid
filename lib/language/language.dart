@@ -33,7 +33,7 @@ class Language {
   static Future<void> init({LanguageRegion languageRegion}) async {
     switch(languageRegion) {
       case LanguageRegion.enUs: {
-        Constants.STRING_INTERNET_ERROR                                  = 'Check your internet connection...';
+        Constants.STRING_INTERNET_ERROR                                  = 'Check your internet connection.';
         Constants.STRING_SEARCH_HEADER                                   = 'Search Music';
         Constants.STRING_SEARCH_MODE_SUBHEADER                           = 'What are you looking for?';
         Constants.STRING_COLLECTION                                      = 'Collection';
@@ -76,7 +76,7 @@ class Language {
         Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'The track could not be saved';
         Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'We strongly recommend you to check your internet connection & try again in a while.';
         Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'We all have bad days';
-        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving your music. This generally means that our IP address is blocked due to large number of requests in a given time. You can change server URL in settings and try if it works. Although, this can also mean that the dependencies of the server are not up to date. This error has nothing to do with you. You can inform the owner of the project, by opening an issue on Github or on Twitter & expect a fix within an hour, if he lives in the same time zone as you. Enjoy your downloaded music in the mean time. Thanks a lot for your support.';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving your music. This generally means that our IP address is blocked due to large number of requests in a given time.\nYou can change server URL in settings and try if it works.\nAlthough, this can also mean that the dependencies of the server are not up to date. This error has nothing to do with you.\nYou can inform the owner of the project, by opening an issue on Github or on Twitter & expect a fix within an hour, if he lives in the same time zone as you.\nEnjoy your downloaded music in the mean time. Thanks a lot for your support.';
         Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'We could not save this track';
         Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'This track specifically could not be saved. We are still trying to figure out, what causes this error. Please download some other music in the mean time. Thanks a lot for your kind support.';
         Constants.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Wait';
@@ -93,7 +93,7 @@ class Language {
         Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'More tracks';
         Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Latest artist';
         Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'More artists';
-        Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Here are the tracks you saved';
+        Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Tracks from the album';
         Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Some insights of the album';
         Constants.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Are you sure?';
         Constants.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'Do you want to remove this album saved on your device?';
@@ -176,7 +176,7 @@ class Language {
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       }
       break;
@@ -324,7 +324,7 @@ class Language {
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       }
       break;
@@ -472,7 +472,7 @@ class Language {
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       }
       break;
@@ -620,7 +620,7 @@ class Language {
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       }
       break;
@@ -768,7 +768,7 @@ class Language {
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       }
       break;
@@ -916,7 +916,7 @@ class Language {
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found\nSave Some Music';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
       } 
       break;
