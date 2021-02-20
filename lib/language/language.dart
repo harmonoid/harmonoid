@@ -125,7 +125,7 @@ class Language {
         Constants.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Server changed successfully.';
         Constants.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Changing server for the app...';
         Constants.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Translation Providers';
-        Constants.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app';
+        Constants.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Thanks a lot for your support to the app.';
         Constants.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent';
         Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Change the accent coloring of the app';
         Constants.STRING_SETTING_THEME_TITLE                             = 'Theme';
@@ -179,6 +179,7 @@ class Language {
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
+        Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -328,6 +329,7 @@ class Language {
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
+        Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
       }
       break;
       case LanguageRegion.slSi: {
@@ -476,6 +478,7 @@ class Language {
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'Nič glasbe ni najdene';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Prenos končan.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Prenos ni uspel.';
+        Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -625,6 +628,7 @@ class Language {
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
+        Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -774,6 +778,7 @@ class Language {
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
+        Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
       }
       break;
       case LanguageRegion.deDe: {
@@ -923,6 +928,7 @@ class Language {
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
+        Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1069,9 +1075,10 @@ class Language {
         Constants.STRING_NO_INTERNET_TITLE                               = 'Geen Internet';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Controleer uw verbinding';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Lege Collectie';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'Geen muziek gevonden\nSla wat muziek op';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'Geen muziek gevonden';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
+        Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
       }
       break;
     }
