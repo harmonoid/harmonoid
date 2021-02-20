@@ -28,12 +28,12 @@ class Settings extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          AboutSetting(),
           ThemeSetting(),
           AccentSetting(),
           IndexingSetting(),
           ServerSetting(),
           LanguageSetting(),
-          AboutSetting(),
           VersionSetting(),
           Divider(
             color: Colors.transparent,
@@ -65,7 +65,7 @@ class SettingsTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 16.0, left: 16.0, bottom: 8.0),
+            margin: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -73,7 +73,7 @@ class SettingsTile extends StatelessWidget {
               children: [
                 Text(
                   this.title,
-                  style: Theme.of(context).textTheme.headline1,
+                  style: Theme.of(context).textTheme.headline2,
                 ),
                 Divider(
                   color: Colors.transparent,
