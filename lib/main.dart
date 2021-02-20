@@ -22,10 +22,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   try {
+    await Methods.askStoragePermission();
     await Configuration.init(
       cacheDirectory: Directory(CACHE_DIRECTORY),
     );
-    await Methods.askStoragePermission();
     await Collection.init(
       collectionDirectory: Directory(MUSIC_DIRECTORY),
       cacheDirectory: Directory(CACHE_DIRECTORY),
