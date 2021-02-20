@@ -57,7 +57,7 @@ class DiscoverSearchState extends State<DiscoverSearch> {
                 ),
               ),
               background: Image.asset(
-                'assets/images/${widget.mode.type.toLowerCase()}s.jpg',
+                'assets/images/discover-${widget.mode.type.toLowerCase()}s.jpg',
                 fit: BoxFit.fitWidth,
                 alignment: Alignment.bottomCenter,
               ),

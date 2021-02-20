@@ -52,7 +52,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
       );
       this._searchBarHeight = Tween<double>(
         begin: 56.0,
-        end: 56.0 + 3 * 56.0 + 2.0,
+        end: 56.0 + 2 * 56.0 + 2.0,
       ).animate(new CurvedAnimation(
         parent: this._animationController,
         curve: Curves.easeOutCubic,
@@ -229,6 +229,8 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
                           trailing: Text('[WIP]'),
                           onTap: () => _changeSearchMode(1),
                         ),
+                        /* TODO: Implement Artist search. */
+                        /*
                         this._isBackButtonShowing ? Container(): ListTile(
                           leading: ScaleTransition(
                             scale: this._searchModeAnimationScaleController[2],
@@ -240,6 +242,7 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
                           trailing: Text('[WIP]'),
                           onTap: () => _changeSearchMode(2),
                         ),
+                        */
                       ],
                     ),
                   ),

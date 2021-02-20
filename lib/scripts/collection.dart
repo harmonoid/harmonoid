@@ -28,7 +28,7 @@ class Collection {
       await Directory(path.join(collection.cacheDirectory.path, 'albumArts')).create(recursive: true);
       await new File(
         path.join(cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG'),
-      ).writeAsBytes((await rootBundle.load('assets/images/collection/album.jpg')).buffer.asUint8List());
+      ).writeAsBytes((await rootBundle.load('assets/images/collection-album.jpg')).buffer.asUint8List());
     }
     await collection.getFromCache();
   }
