@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:harmonoid/scripts/download.dart';
+import 'package:harmonoid/scripts/methods.dart';
 import 'package:harmonoid/scripts/vars.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
@@ -46,15 +47,18 @@ class Discover {
         if (element.length > 1)
           searchKeyword = searchKeyword + element[0].toUpperCase() + element.substring(1, element.length) + ' ';
       }
-      searchRecents.insert(
-        0,
-        [searchKeyword, mode.type],
-      );
+      if (!Methods.binaryContains(searchRecents, [searchKeyword, mode.type])) {
+        searchRecents.insert(
+          0,
+          [searchKeyword, mode.type],
+        );
+      }
       if (searchRecents.length > 5) searchRecents.removeLast();
       await configuration.save(discoverSearchRecent: searchRecents);
       return result;
     }
     catch(exception) {
+      print(exception);
       throw 'Please check your internet connection';
     }
   }
@@ -83,7 +87,7 @@ class Discover {
     }
   }
 
-  Future<void> trackDownload(Track track, {void Function() onCompleted, void Function(double progress) onProgress}) async {
+  Future<void> trackDownload(Track track, {void Function() onCompleted, void Function(double progress) onProgress, void Function(DownloadException exception) onException}) async {
     File trackDestination = File(
       path.join(
         MUSIC_DIRECTORY,
@@ -106,6 +110,11 @@ class Discover {
               trackFile: trackDestination
             );
             onCompleted?.call();
+          } catch(exception) {}
+        },
+        onException: (DownloadException exception) {
+          try {
+            onException?.call(exception);
           } catch(exception) {}
         },
         extras: track,
