@@ -56,16 +56,16 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/albums.jpg
-    - assets/images/tracks.jpg
-    - assets/images/artists.jpg
+    - assets/images/about-header.jpg
+    - assets/images/collection-album.jpg
+    - assets/images/credits-albums.jpg
+    - assets/images/credits-tracks.jpg
+    - assets/images/credits-artists.jpg
+    - assets/images/credits-exception.jpg
+    - assets/images/discover-albums.jpg
+    - assets/images/discover-tracks.jpg
+    - assets/images/discover-artists.jpg
     - assets/images/exception.jpg
-    - assets/images/collection/album.jpg
-    - assets/images/about/header.jpg
-    - assets/images/about/credits/albums.jpg
-    - assets/images/about/credits/tracks.jpg
-    - assets/images/about/credits/artists.jpg
-    - assets/images/about/credits/exception.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
