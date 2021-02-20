@@ -10,10 +10,10 @@ import 'package:harmonoid/scripts/collection.dart';
 
 abstract class Methods {
 
-  static int binaryIndexOf(List<dynamic> collectionList, List<String> keywordList) {
+  static int binaryIndexOf(List<dynamic> collectionList, List<dynamic> keywordList) {
     int indexOfKeywordList = -1;
     for (int index = 0; index < collectionList.length; index++) {
-      List<String> object = collectionList[index];
+      List<dynamic> object = collectionList[index];
       if (object[0] == keywordList[0] && object[1] == keywordList[1]) {
         indexOfKeywordList = index;
         break;
@@ -22,7 +22,7 @@ abstract class Methods {
     return indexOfKeywordList;
   }
 
-  static bool binaryContains(List<dynamic> collectionList, List<String> keywordList) => binaryIndexOf(collectionList, keywordList) != -1 ? true : false;
+  static bool binaryContains(List<dynamic> collectionList, List<dynamic> keywordList) => binaryIndexOf(collectionList, keywordList) != -1 ? true : false;
 
   static bool isFileSupported(FileSystemEntity file) {
     if (file is File && SUPPORTED_FILE_TYPES.contains(file.path.split('.').last.toUpperCase())) {
