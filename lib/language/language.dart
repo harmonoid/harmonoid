@@ -174,10 +174,11 @@ class Language {
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
-        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check your connection.';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
+        Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -322,10 +323,11 @@ class Language {
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
-        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check your connection.';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
+        Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
       }
       break;
       case LanguageRegion.slSi: {
@@ -473,6 +475,7 @@ class Language {
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Prazna kolekcija';
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'Nič glasbe ni najdene';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Prenos končan.';
+        Constants.STRING_DOWNLOAD_FAILED                                 = 'Prenos ni uspel.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -617,10 +620,11 @@ class Language {
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
-        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check your connection.';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
+        Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -765,10 +769,11 @@ class Language {
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
-        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check your connection.';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
+        Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
       }
       break;
       case LanguageRegion.deDe: {
@@ -913,10 +918,11 @@ class Language {
         Constants.STRING_REFRESH                                         = 'REFRESH';
         Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
         Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
-        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check Your Connection';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check your connection.';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No Music Found';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
+        Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1065,6 +1071,7 @@ class Language {
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Lege Collectie';
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'Geen muziek gevonden\nSla wat muziek op';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
+        Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
       }
       break;
     }
