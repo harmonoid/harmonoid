@@ -41,6 +41,7 @@ class Configuration {
     configuration = new Configuration();
     configuration.configurationFile = File(path.join(cacheDirectory.path, 'configuration.JSON'));
     if (!await configuration.configurationFile.exists()) {
+      await configuration.configurationFile.create(recursive: true);
       await configuration.configurationFile.writeAsString(JSON_ENCODER.convert(DEFAULT_CONFIGURATION));
     }
     await configuration._refresh();
