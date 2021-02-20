@@ -321,28 +321,28 @@ class AboutState extends State<AboutSetting> {
                           ListTile(
                             onTap: () => launcher.launch('https://unsplash.com/photos/7x4ngEfelyE'),
                             leading: CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/albums.jpg'),
+                              backgroundImage: AssetImage('assets/images/about/credits/albums.jpg'),
                             ),
                             title: Text('Oleg Ivanov'),
                           ),
                           ListTile(
                             onTap: () => launcher.launch('https://unsplash.com/photos/HRyjETL87Gg'),
                             leading: CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/tracks.jpg'),
+                              backgroundImage: AssetImage('assets/images/about/credits/tracks.jpg'),
                             ),
                             title: Text('Mink Mingle'),
                           ),
                           ListTile(
                             onTap: () => launcher.launch('https://unsplash.com/photos/hgO1wFPXl3I'),
                             leading: CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/artists.jpg'),
+                              backgroundImage: AssetImage('assets/images/about/credits/artists.jpg'),
                             ),
                             title: Text('Austin Neill'),
                           ),
                           ListTile(
                             onTap: () => launcher.launch('https://unsplash.com/photos/52jRtc2S_VE'),
                             leading: CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/exception.jpg'),
+                              backgroundImage: AssetImage('assets/images/about/credits/exception.jpg'),
                             ),
                             title: Text('Sarah Kilian'),
                           ),
