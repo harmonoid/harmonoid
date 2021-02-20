@@ -206,6 +206,14 @@ class Collection {
           }
         }
       }
+      for (Playlist playlist in this.playlists) {
+        for (Track track in playlist.tracks) {
+          if (object.trackName == track.trackName && object.trackNumber == track.trackNumber) {
+            this.playlistRemoveTrack(playlist, track);
+            break;
+          }
+        }
+      }
       if (await File(object.filePath).exists()) {
         await File(object.filePath).delete();
       }
