@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:harmonoid/scripts/download.dart';
 import 'package:harmonoid/scripts/methods.dart';
+import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/scripts/vars.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
@@ -104,11 +105,13 @@ class Discover {
         ),
         saveLocation: trackDestination,
         onProgress: onProgress,
-        onCompleted: () {
+        onCompleted: () async {
           try {
-            collection.add(
+            await collection.add(
               trackFile: trackDestination
             );
+            States.refreshCollectionMusic?.call();
+            States.refreshCollectionSearch?.call();
             onCompleted?.call();
           } catch(exception) {}
         },
