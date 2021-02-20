@@ -7,7 +7,23 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/language/constants.dart';
 
+
 Download download;
+
+
+enum DownloadExceptionType {
+  connection,
+  statusCode,
+}
+
+
+class DownloadException {
+  final int statusCode;
+  final String message;
+  final DownloadExceptionType type;
+
+  DownloadException({this.statusCode, this.message, this.type});
+}
 
 
 class DownloadTask {
@@ -15,7 +31,9 @@ class DownloadTask {
   final File saveLocation;
   final void Function(double progress) onProgress;
   final void Function() onCompleted;
+  final void Function(DownloadException exception) onException;
   final dynamic extras;
+  DownloadException exception;
   int downloadId;
   bool isStarted = false;
   bool isCompleted = false;
@@ -25,36 +43,58 @@ class DownloadTask {
   bool isSuccess = true;
   http.StreamedResponse _responseStream;
 
-  DownloadTask({@required this.fileUri, @required this.saveLocation, this.downloadId, this.fileSize, this.extras, this.onProgress, this.onCompleted});
+  DownloadTask({@required this.fileUri, @required this.saveLocation, this.downloadId, this.fileSize, this.extras, this.onProgress, this.onCompleted, this.onException});
 
   Stream<DownloadTask> start() async* {
     http.Client httpClient = new http.Client();
     var streamConsumer = this.saveLocation.openWrite();
-    this._responseStream = await httpClient.send(
-      new http.Request('GET', this.fileUri),
-    );
-    this.fileSize = this._responseStream.contentLength;
-    await for (List<int> responseChunk in this._responseStream.stream) {
-      this.downloadedSize += responseChunk.length;
-      if (this._responseStream.statusCode >= 200 && this._responseStream.statusCode < 300) {
-        streamConsumer.add(responseChunk);
-        this.progress = this.downloadedSize / this.fileSize;
-        this.onProgress?.call(this.progress);
-        yield this;
+    try {
+      this._responseStream = await httpClient.send(
+        new http.Request('GET', this.fileUri),
+      );
+      this.fileSize = this._responseStream.contentLength;
+      await for (List<int> responseChunk in this._responseStream.stream) {
+        this.downloadedSize += responseChunk.length;
+        if (this._responseStream.statusCode >= 200 && this._responseStream.statusCode < 300) {
+          streamConsumer.add(responseChunk);
+          this.progress = this.downloadedSize / this.fileSize;
+          this.onProgress?.call(this.progress);
+          yield this;
+        }
+        else {
+          this.exception = DownloadException(
+            statusCode: this._responseStream.statusCode,
+            message: 'EXCEPTION: Invalid status code: ${this._responseStream.statusCode}.',
+            type: DownloadExceptionType.statusCode,
+          );
+          throw this.exception;
+        }
       }
-      else {
-        this.isSuccess = false;
-        httpClient.close();
-        if (await this.saveLocation.exists()) this.saveLocation.delete();
-        throw 'Invalid status code: ${this._responseStream.statusCode}';
-      }
-    }
-    if (this.isSuccess) {
+      this.isSuccess = true;
+      httpClient.close();
       streamConsumer.close();
       this.isCompleted = true;
       this.onCompleted?.call();
+      yield this;
     }
-    yield this;
+    catch(exception) {
+      this.isSuccess = false;
+      httpClient.close();
+      streamConsumer.close();
+      this.isCompleted = true;
+      if (await this.saveLocation.exists()) this.saveLocation.delete();
+      if (exception is DownloadException) {
+        throw this.exception;
+      }
+      else {
+        this.exception = DownloadException(
+          statusCode: null,
+          message: 'EXCEPTION: Could not connect to the host.',
+          type: DownloadExceptionType.connection,
+        );
+        throw this.exception;
+      }
+    }
   }
 }
 
@@ -63,10 +103,10 @@ class Download {
   List<DownloadTask> tasks = <DownloadTask>[];
   DownloadTask currentTask;
   Stream<DownloadTask> taskStream;
-  bool isUnderProgress = false;
+  bool _isUnderProgress = false;
 
   String _toMegaBytes(int size) {
-    return (size / (1024 * 1024)).toStringAsFixed(2);
+    return ((size ?? 0.0) / (1024 * 1024)).toStringAsFixed(2);
   }
 
   Future<void> _showDownloadNotification({DownloadTask task}) async {
@@ -90,7 +130,7 @@ class Download {
     await notification.show(
       task.downloadId,
       task.extras.trackName,
-      task.isCompleted ? '${Constants.STRING_DOWNLOAD_COMPLETED}. ' : '' + '${this._toMegaBytes(task.downloadedSize)}/${this._toMegaBytes(task.fileSize)} MB',
+      task.isCompleted ? '${task.isSuccess ? Constants.STRING_DOWNLOAD_COMPLETED : Constants.STRING_DOWNLOAD_FAILED} ' : '' + '${this._toMegaBytes(task.downloadedSize)}/${this._toMegaBytes(task.fileSize)} MB',
       details,
       payload: '',
     );
@@ -105,40 +145,62 @@ class Download {
   }
 
   void addTask(DownloadTask task, {bool start: true}) {
-    if (!this.isUnderProgress) this.start();
+    if (!this._isUnderProgress) this.start();
     this._isBatchModified = true;
     task.downloadId = this.tasks.length + 1;
-    this.tasks.add(task);
+    this._updatedTasks.add(task);
   }
 
   void addTasks(List<DownloadTask> tasks, {bool start: true}) {
-    if (!this.isUnderProgress) this.start();
+    if (!this._isUnderProgress) this.start();
     this._isBatchModified = true;
     tasks.map((DownloadTask task) {
       task.downloadId = this.tasks.length + 1;
-      this.tasks.add(task);
+      this._updatedTasks.add(task);
     });
   }
 
   Stream<DownloadTask> _streamCurrentDownloadItem() async* {
+    this.tasks = this._updatedTasks;
     this._isBatchModified = false;
-    this.isUnderProgress = true;
+    this._isUnderProgress = true;
     for (DownloadTask task in this.tasks) {
       if (!task.isCompleted) {
-        await for (DownloadTask progressedDownloadTask in task.start()) {
-          this.currentTask = progressedDownloadTask;
-          await this._showDownloadNotification(
-            task: this.currentTask,
-          );
-          yield this.currentTask;
+        try {
+          this.currentTask = task;
+          await for (DownloadTask progressedDownloadTask in task.start()) {
+            this.currentTask = progressedDownloadTask;
+            await this._showDownloadNotification(
+              task: this.currentTask,
+            );
+            yield this.currentTask;
+          }
+          this._isUnderProgress = false;
+          Future.delayed(Duration(seconds: 1), () async {
+            this.currentTask.isCompleted = true;
+            await this._showDownloadNotification(
+              task: this.currentTask,
+            );
+          });
         }
-        this.isUnderProgress = false;
-        Future.delayed(Duration(seconds: 1), () async {
-          this.currentTask.isCompleted = true;
-          await this._showDownloadNotification(
-            task: this.currentTask,
-          );
-        });
+        catch(exception) {
+          Future.delayed(Duration(seconds: 1), () async {
+            for (DownloadTask task in this._updatedTasks) {
+              task.isSuccess = false;
+              await this._showDownloadNotification(
+                task: task,
+              );
+              task.onException?.call(exception);
+            }
+            this.tasks?.clear();
+            this.currentTask = null;
+            this.taskStream = null;
+            this._isUnderProgress = false;
+            this._isBatchModified = false;
+            this._updatedTasks?.clear();
+          });
+          break;
+        }
       }
       else {
         await this._showDownloadNotification(
@@ -147,10 +209,12 @@ class Download {
         yield task;
       }
       if (this._isBatchModified) {
-        this.taskStream = this._streamCurrentDownloadItem().asBroadcastStream();
+        this.taskStream = this._streamCurrentDownloadItem().asBroadcastStream()..listen((task) {});
+        break;
       }
     }
   }
 
   bool _isBatchModified = false;
+  List<DownloadTask> _updatedTasks = <DownloadTask>[];
 }
