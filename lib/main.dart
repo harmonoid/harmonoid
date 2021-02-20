@@ -4,7 +4,6 @@ import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:harmonoid/scripts/states.dart';
-import 'package:path_provider/path_provider.dart' as path;
 
 import 'package:harmonoid/screens/home.dart';
 import 'package:harmonoid/scripts/collection.dart';
@@ -24,12 +23,12 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   try {
     await Configuration.init(
-      cacheDirectory: await path.getExternalStorageDirectory(),
+      cacheDirectory: Directory(CACHE_DIRECTORY),
     );
     await Methods.askStoragePermission();
     await Collection.init(
       collectionDirectory: Directory(MUSIC_DIRECTORY),
-      cacheDirectory: await path.getExternalStorageDirectory(),
+      cacheDirectory: Directory(CACHE_DIRECTORY),
     );
     await Discover.init(
       homeAddress: configuration.homeAddress,
