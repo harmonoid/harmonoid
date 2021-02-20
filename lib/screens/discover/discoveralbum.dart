@@ -249,9 +249,12 @@ class DiscoverAlbumState extends State<DiscoverAlbum> {
                 ),
                 finalWidgetBuilder: (BuildContext context, Object object) {
                   List<Widget> trackWidgets = <Widget>[];
-                  (object as List<Track>).forEach((Track track) => trackWidgets.add(
-                    DiscoverTrackTile(track: track),
-                  ));
+                  (object as List<Track>).forEach((Track track) {
+                    track.albumArtLow = widget.album.albumArtLow;
+                    trackWidgets.add(
+                      DiscoverTrackTile(track: track),
+                    );
+                  });
                   return Column(children: trackWidgets);
                 },
                 errorWidgetBuilder: (_, exception) => ExceptionWidget(
