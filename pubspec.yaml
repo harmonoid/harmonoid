@@ -62,6 +62,10 @@ flutter:
     - assets/images/exception.jpg
     - assets/images/collection/album.jpg
     - assets/images/about/header.jpg
+    - assets/images/about/credits/albums.jpg
+    - assets/images/about/credits/tracks.jpg
+    - assets/images/about/credits/artists.jpg
+    - assets/images/about/credits/exception.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
