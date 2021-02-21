@@ -33,6 +33,7 @@ dependencies:
   url_launcher: ^5.5.0
   permission_handler: ^5.0.1+1
   share: ^0.6.5+4
+  palette_generator: ^0.2.3
 
 
   # The following adds the Cupertino Icons font to your application.

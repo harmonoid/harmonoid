@@ -473,6 +473,11 @@ class AboutState extends State<AboutSetting> {
                             title: Text('url_launcher'),
                             subtitle: Text('flutter'),
                           ),
+                          ListTile(
+                            onTap: () => launcher.launch('https://github.com/flutter/packages/blob/master/LICENSE'),
+                            title: Text('palette_generator'),
+                            subtitle: Text('flutter'),
+                          ),
                         ],
                       ),
                     ),
