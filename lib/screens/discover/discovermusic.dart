@@ -226,7 +226,6 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
                           title: Text(Constants.STRING_TRACK,
                             style: Theme.of(context).textTheme.headline4,
                           ),
-                          trailing: Text('[WIP]'),
                           onTap: () => _changeSearchMode(1),
                         ),
                         /* TODO: Implement Artist search. */
