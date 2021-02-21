@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:harmonoid/scripts/states.dart';
+import 'package:palette_generator/palette_generator.dart';
 
 import 'package:harmonoid/screens/home.dart';
 import 'package:harmonoid/scripts/collection.dart';
@@ -16,6 +16,7 @@ import 'package:harmonoid/scripts/discover.dart';
 import 'package:harmonoid/scripts/download.dart';
 import 'package:harmonoid/scripts/methods.dart';
 import 'package:harmonoid/scripts/vars.dart';
+import 'package:harmonoid/scripts/states.dart';
 
 
 void main() async {
@@ -59,17 +60,26 @@ class Harmonoid extends StatefulWidget {
 
 
 class HarmonoidState extends State<Harmonoid> {
-  ThemeMode _themeMode;
+  Color _automaticAccentColor;
 
   @override
   void initState() {
     super.initState();
     States.refreshThemeData = () => this.setState(() {});
+    States.setAccentColor = (Track track) async {
+      PaletteGenerator pallete = await PaletteGenerator.fromImageProvider(
+        FileImage(collection.getAlbumArt(track))
+      );
+      this.setState(() {
+        this._automaticAccentColor = pallete?.darkVibrantColor?.color;
+      });
+    };
   }
 
   @override
   void dispose() {
     States.refreshThemeData = null;
+    States.setAccentColor = null;
     super.dispose();
   }
 
@@ -79,11 +89,11 @@ class HarmonoidState extends State<Harmonoid> {
       debugShowCheckedModeBanner: false,
       title: 'harmonoid',
       theme: Methods.getThemeData(
-        color: ACCENT_COLORS[configuration.accentColor][0],
+        color: this._automaticAccentColor ?? ACCENT_COLORS[configuration.accentColor][0],
         themeMode: ThemeMode.light,
       ),
       darkTheme: Methods.getThemeData(
-        color: ACCENT_COLORS[configuration.accentColor][1],
+        color: this._automaticAccentColor ?? ACCENT_COLORS[configuration.accentColor][1],
         themeMode: ThemeMode.dark,
       ),
       themeMode: configuration.themeMode,
