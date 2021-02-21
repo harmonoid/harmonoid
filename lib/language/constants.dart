@@ -147,4 +147,6 @@ class Constants {
   static String STRING_DISCORD;
   static String STRING_EXIT_TITLE;
   static String STRING_EXIT_SUBTITLE;
+  static String STRING_A_TO_Z;
+  static String STRING_DATE_ADDED;
 }

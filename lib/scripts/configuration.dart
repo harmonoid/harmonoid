@@ -11,7 +11,7 @@ Configuration configuration;
 
 const Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'version': 'v0.0.3+1',
-  'homeAddress': 'harmonoid2.herokuapp.com',
+  'homeAddress': 'harmonoid.herokuapp.com',
   'languageRegion': 0,
   'themeMode': 0,
   'accentColor': 0,

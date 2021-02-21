@@ -85,7 +85,7 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.network(
-              'https://lh3.googleusercontent.com/fyfca39b6OXF-CpPJqI9ykwo9djxZROQcbAMfnO-oE7Yr4PLxpWZazQjW49qpW2I293WC6_ddDQyHe4=w544-h544-l90-rj',
+              widget.track.albumArtHigh,
               fit: BoxFit.fitWidth,
               filterQuality: FilterQuality.low,
               alignment: Alignment.topCenter,
@@ -310,7 +310,7 @@ class _DiscoverTrackTileState extends State<DiscoverTrackTile> {
         color: Colors.transparent,
         child: ListTile(
           onTap: () {
-            if (this._isDownloading || this._exists) {
+            if (!(this._isDownloading || this._exists)) {
               this.setState(() => this._isDownloading = true);
               discover.trackDownload(
                 widget.track,
