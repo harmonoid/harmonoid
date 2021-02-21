@@ -180,6 +180,8 @@ class Language {
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
+        Constants.STRING_EXIT_TITLE                                      = 'Exit';
+        Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -330,6 +332,8 @@ class Language {
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
+        Constants.STRING_EXIT_TITLE                                      = 'Exit';
+        Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
       }
       break;
       case LanguageRegion.slSi: {
@@ -479,6 +483,8 @@ class Language {
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Prenos končan.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Prenos ni uspel.';
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
+        Constants.STRING_EXIT_TITLE                                      = 'Exit';
+        Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -629,6 +635,8 @@ class Language {
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
+        Constants.STRING_EXIT_TITLE                                      = 'Exit';
+        Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -779,6 +787,8 @@ class Language {
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
+        Constants.STRING_EXIT_TITLE                                      = 'Exit';
+        Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
       }
       break;
       case LanguageRegion.deDe: {
@@ -929,6 +939,8 @@ class Language {
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
+        Constants.STRING_EXIT_TITLE                                      = 'Exit';
+        Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1079,6 +1091,8 @@ class Language {
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
+        Constants.STRING_EXIT_TITLE                                      = 'Exit';
+        Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
       }
       break;
     }

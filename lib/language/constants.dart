@@ -145,4 +145,6 @@ class Constants {
   static String STRING_DOWNLOAD_COMPLETED;
   static String STRING_DOWNLOAD_FAILED;
   static String STRING_DISCORD;
+  static String STRING_EXIT_TITLE;
+  static String STRING_EXIT_SUBTITLE;
 }
