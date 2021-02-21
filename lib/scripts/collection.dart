@@ -60,30 +60,33 @@ class Collection {
     for (int index = 0; index < directory.length; index++) {
       FileSystemEntity object = directory[index];
       if (Methods.isFileSupported(object)) {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        await retriever.setFile(object);
-        Track track = Track.fromMap((await retriever.metadata).toMap());
-        if (track.trackName == null) {
-          track.trackName = path.basename(object.path).split('.').first;
-        }
-        track.filePath = object.path;
-        Future<void> albumArtMethod() async {
-          if (retriever.albumArt == null) {
-            this._albumArts.add(
-              new File(
-                path.join(
-                  this.cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG',
+        try {
+          MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+          await retriever.setFile(object);
+          Track track = Track.fromMap((await retriever.metadata).toMap());
+          if (track.trackName == null) {
+            track.trackName = path.basename(object.path).split('.').first;
+          }
+          track.filePath = object.path;
+          Future<void> albumArtMethod() async {
+            if (retriever.albumArt == null) {
+              this._albumArts.add(
+                new File(
+                  path.join(
+                    this.cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG',
+                  ),
                 ),
-              ),
-            );
+              );
+            }
+            else {
+              File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArts', '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
+              await albumArtFile.writeAsBytes(retriever.albumArt);
+              this._albumArts.add(albumArtFile);
+            }
           }
-          else {
-            File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArts', '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
-            await albumArtFile.writeAsBytes(retriever.albumArt);
-            this._albumArts.add(albumArtFile);
-          }
+          await this._arrange(track, albumArtMethod);
         }
-        await this._arrange(track, albumArtMethod);
+        catch (exception) {}
       }
       callback?.call(index + 1, directory.length, false);
     }
@@ -150,21 +153,24 @@ class Collection {
       }
     }
     if (Methods.isFileSupported(trackFile) && !isAlreadyPresent) {
-      MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-      await retriever.setFile(trackFile);
-      Track track = Track.fromMap((await retriever.metadata).toMap());
-      track.filePath = trackFile.path;
-      Future<void> albumArtMethod() async {
-        if (retriever.albumArt == null) {
-          this._albumArts.add(null);
+      try {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        await retriever.setFile(trackFile);
+        Track track = Track.fromMap((await retriever.metadata).toMap());
+        track.filePath = trackFile.path;
+        Future<void> albumArtMethod() async {
+          if (retriever.albumArt == null) {
+            this._albumArts.add(null);
+          }
+          else {
+            File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArts', '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
+            await albumArtFile.writeAsBytes(retriever.albumArt);
+            this._albumArts.add(albumArtFile);
+          }
         }
-        else {
-          File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArts', '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
-          await albumArtFile.writeAsBytes(retriever.albumArt);
-          this._albumArts.add(albumArtFile);
-        }
+        await this._arrange(track, albumArtMethod);
       }
-      await this._arrange(track, albumArtMethod);
+      catch (exception) {}
     }
     if (this.tracks.isNotEmpty) {
       this.lastAlbum = this.albums.last;
