@@ -180,6 +180,8 @@ class Language {
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
         Constants.STRING_EXIT_TITLE                                      = 'Exit';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
+        Constants.STRING_A_TO_Z                                          = 'A to Z';
+        Constants.STRING_DATE_ADDED                                      = 'Date Added';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -330,6 +332,8 @@ class Language {
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
         Constants.STRING_EXIT_TITLE                                      = 'Exit';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
+        Constants.STRING_A_TO_Z                                          = 'A to Z';
+        Constants.STRING_DATE_ADDED                                      = 'Date Added';
       }
       break;
       case LanguageRegion.slSi: {
@@ -481,6 +485,8 @@ class Language {
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
         Constants.STRING_EXIT_TITLE                                      = 'Exit';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
+        Constants.STRING_A_TO_Z                                          = 'A to Z';
+        Constants.STRING_DATE_ADDED                                      = 'Date Added';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -631,6 +637,8 @@ class Language {
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
         Constants.STRING_EXIT_TITLE                                      = 'Exit';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
+        Constants.STRING_A_TO_Z                                          = 'A to Z';
+        Constants.STRING_DATE_ADDED                                      = 'Date Added';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -781,6 +789,8 @@ class Language {
         Constants.STRING_DISCORD                                         = 'डिस्कॉर्ड सर्वर';
         Constants.STRING_EXIT_TITLE                                      = 'बंद';
         Constants.STRING_EXIT_SUBTITLE                                   = 'क्या आप Harmonoid को छोड़ना चाहते हैं?';
+        Constants.STRING_A_TO_Z                                          = 'A से Z';
+        Constants.STRING_DATE_ADDED                                      = 'तिथि';
       }
       break;
       case LanguageRegion.deDe: {
@@ -931,6 +941,8 @@ class Language {
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
         Constants.STRING_EXIT_TITLE                                      = 'Exit';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
+        Constants.STRING_A_TO_Z                                          = 'A to Z';
+        Constants.STRING_DATE_ADDED                                      = 'Date Added';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1081,6 +1093,8 @@ class Language {
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
         Constants.STRING_EXIT_TITLE                                      = 'Exit';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
+        Constants.STRING_A_TO_Z                                          = 'A to Z';
+        Constants.STRING_DATE_ADDED                                      = 'Date Added';
       }
       break;
     }
