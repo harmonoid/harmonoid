@@ -120,7 +120,7 @@ class Download {
         showProgress: !task.isCompleted,
         progress: (task.progress * 100).toInt(),
         maxProgress: 100,
-        ongoing: !task.isCompleted,
+        ongoing: !(task.isCompleted || task.progress == 1.0),
         showWhen: false,
         onlyAlertOnce: true,
         playSound: false,
