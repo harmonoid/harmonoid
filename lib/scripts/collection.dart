@@ -64,7 +64,7 @@ class Collection {
           MediaMetadataRetriever retriever = new MediaMetadataRetriever();
           await retriever.setFile(object);
           Track track = Track.fromMap((await retriever.metadata).toMap());
-          if (track.trackName == null) {
+          if (track.trackName == 'Unknown Track') {
             track.trackName = path.basename(object.path).split('.').first;
           }
           track.filePath = object.path;
@@ -137,11 +137,12 @@ class Collection {
     return result;
   }
 
-  File getAlbumArt(MediaType media) {
-    if (media is Track)
-      return new File(path.join(this.cacheDirectory.path, 'albumArts', '${media.albumArtistName}_${media.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
-    if (media is Album)
-      return new File(path.join(this.cacheDirectory.path, 'albumArts', '${media.albumArtistName}_${media.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
+  File getAlbumArt(dynamic media) {
+    File albumArtFile = File(path.join(this.cacheDirectory.path, 'albumArts', '${media.albumArtistName}_${media.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
+    if (albumArtFile.existsSync())
+      return albumArtFile;
+    else
+      return new File(path.join(this.cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG'));
   }
 
   Future<void> add({File trackFile}) async {
@@ -158,6 +159,9 @@ class Collection {
         await retriever.setFile(trackFile);
         Track track = Track.fromMap((await retriever.metadata).toMap());
         track.filePath = trackFile.path;
+        if (track.trackName == 'Unknown Track') {
+          track.trackName = path.basename(trackFile.path).split('.').first;
+        }
         Future<void> albumArtMethod() async {
           if (retriever.albumArt == null) {
             this._albumArts.add(null);

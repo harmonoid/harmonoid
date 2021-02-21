@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/scripts/playback.dart';
+import 'package:harmonoid/scripts/vars.dart';
 import 'package:media_metadata_retriever/media_metadata_retriever.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:path/path.dart' as path;
@@ -44,7 +45,6 @@ class FileIntent {
         fileUri.split(':').last,
       ),
     );
-    print(file.path);
     if (await file.exists()) return file;
     else throw 'ERROR: No file openened.';
   }
@@ -54,14 +54,16 @@ class FileIntent {
     await retriever.setFile(this.openedFile);
     Track track = Track.fromMap((await retriever.metadata).toMap());
     track.filePath = this.openedFile.path;
-    File albumArtFile = new File(
-      path.join((
-        await path.getExternalStorageDirectory()).path,
-        'albumArts',
-        '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG',
-      ),
-    );
-    await albumArtFile.writeAsBytes(retriever.albumArt);
+    if (retriever.albumArt != null) {
+      File albumArtFile = new File(
+        path.join(
+          CACHE_DIRECTORY,
+          'albumArts',
+          '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG',
+        ),
+      );
+      await albumArtFile.writeAsBytes(retriever.albumArt);
+    }
     Playback.play(
       tracks: <Track>[track],
       index: 0,
