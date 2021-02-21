@@ -187,7 +187,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.file(
-              collection.getAlbumArt(collection.tracks.last),
+              collection.getAlbumArt(collection.lastTrack),
               fit: BoxFit.fitWidth,
               filterQuality: FilterQuality.low,
               alignment: Alignment.topCenter,
@@ -211,12 +211,12 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                         margin: EdgeInsets.only(left: 16.0, right: 16.0),
                         alignment: Alignment.center,
                         child: CircleAvatar(
-                          child: Text('${collection.tracks.last.trackNumber ?? 1}',
+                          child: Text('${collection.lastTrack.trackNumber ?? 1}',
                             style: TextStyle(
                               color: Colors.white,
                             ),
                           ),
-                          backgroundImage: FileImage(collection.getAlbumArt(collection.tracks.last)),
+                          backgroundImage: FileImage(collection.getAlbumArt(collection.lastTrack)),
                         ),
                       ),
                       Expanded(
@@ -229,21 +229,21 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                               height: 8.0,
                             ),
                             Text(
-                              collection.tracks.last.trackName,
+                              collection.lastTrack.trackName,
                               style: Theme.of(context).textTheme.headline1,
                               textAlign: TextAlign.start,
                               maxLines: 1,
                             ),
                             Text(
-                              collection.tracks.last.albumName,
+                              collection.lastTrack.albumName,
                               style: Theme.of(context).textTheme.headline5,
                               textAlign: TextAlign.start,
                               maxLines: 1,
                             ),
                             Text(
-                              collection.tracks.last.trackArtistNames.length < 2 ? 
-                              collection.tracks.last.trackArtistNames.join(', ') : 
-                              collection.tracks.last.trackArtistNames.sublist(0, 2).join(', '),
+                              collection.lastTrack.trackArtistNames.length < 2 ? 
+                              collection.lastTrack.trackArtistNames.join(', ') : 
+                              collection.lastTrack.trackArtistNames.sublist(0, 2).join(', '),
                               style: Theme.of(context).textTheme.headline5,
                               maxLines: 1,
                               textAlign: TextAlign.center,

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:harmonoid/screens/collection/collectionsearch.dart';
 
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/screens/collection/collectionalbum.dart';
 import 'package:harmonoid/screens/collection/collectiontrack.dart';
 import 'package:harmonoid/screens/collection/collectionplaylist.dart';
 import 'package:harmonoid/screens/collection/collectionartist.dart';
+import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/scripts/playback.dart';
 import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/widgets.dart';
@@ -256,8 +258,11 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
     this.setState(() {});
   }
 
-  void _refresh() {
+  void _refresh() async {
     if (collection.albums.length != 0 && collection.tracks.length != 0 && collection.artists.length != 0) {
+      await collection.sort(
+        type: configuration.collectionSortType,
+      );
       this.refreshAlbums();
       this.refreshTracks();
       this.refreshArtists();
@@ -342,7 +347,34 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     iconSize: Theme.of(context).iconTheme.size,
                     splashRadius: Theme.of(context).iconTheme.size - 8,
                     tooltip: Constants.STRING_OPTIONS,
-                    onPressed: () {},
+                    onPressed: () async {
+                      CollectionSort collectionSortType = await showMenu<CollectionSort>(
+                        context: context,
+                        position: RelativeRect.fromLTRB(
+                          MediaQuery.of(context).size.width,
+                          MediaQuery.of(context).padding.top + 48.0,
+                          0.0,
+                          0.0,
+                        ),
+                        items: <PopupMenuEntry<CollectionSort>>[
+                          CheckedPopupMenuItem<CollectionSort>(
+                            checked: CollectionSort.aToZ == configuration.collectionSortType,
+                            value: CollectionSort.aToZ,
+                            child: Text('A to Z'),
+                          ),
+                          CheckedPopupMenuItem<CollectionSort>(
+                            checked: CollectionSort.dateAdded == configuration.collectionSortType,
+                            value: CollectionSort.dateAdded,
+                            child: Text('Date Added'),
+                          ),
+                        ],
+                        elevation: 2.0,
+                      );
+                      await configuration.save(
+                        collectionSortType: collectionSortType,
+                      );
+                      this._refresh();
+                    }
                   ),
                 ],
                 bottom: TabBar(

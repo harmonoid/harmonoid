@@ -97,7 +97,7 @@ class LeadingCollectionALbumTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.file(
-                collection.getAlbumArt(collection.albums.last),
+                collection.getAlbumArt(collection.lastAlbum),
                 fit: BoxFit.fill,
                 filterQuality: FilterQuality.low,
                 height: this.height,
@@ -111,19 +111,19 @@ class LeadingCollectionALbumTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      collection.albums.last.albumName,
+                      collection.lastAlbum.albumName,
                       style: Theme.of(context).textTheme.headline1,
                       textAlign: TextAlign.start,
                       maxLines: 2,
                     ),
                     Text(
-                      collection.albums.last.albumArtistName,
+                      collection.lastAlbum.albumArtistName,
                       style: Theme.of(context).textTheme.headline3,
                       textAlign: TextAlign.start,
                       maxLines: 1,
                     ),
                     Text(
-                      '(${collection.albums.last.year  ?? 'Unknown Year'})',
+                      '(${collection.lastAlbum.year  ?? 'Unknown Year'})',
                       style: Theme.of(context).textTheme.headline5,
                       textAlign: TextAlign.start,
                       maxLines: 1,
@@ -135,7 +135,7 @@ class LeadingCollectionALbumTile extends StatelessWidget {
           ),
         ),
         openBuilder: (_, __) => CollectionAlbum(
-          album: collection.albums.last,
+          album: collection.lastAlbum,
         ),
       ),
     );
