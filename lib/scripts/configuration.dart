@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/language/language.dart';
+import 'package:harmonoid/scripts/collection.dart';
 import 'package:path/path.dart' as path;
 
 
@@ -15,6 +16,7 @@ const Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'themeMode': 0,
   'accentColor': 0,
   'showOutOfBoxExperience': true,
+  'collectionSortType': 0,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
   'discoverRecent': []
@@ -31,6 +33,7 @@ class Configuration {
   ThemeMode themeMode;
   int accentColor;
   bool showOutOfBoxExperience;
+  CollectionSort collectionSortType;
   List<dynamic> collectionSearchRecent;
   List<dynamic> discoverSearchRecent;
   List<dynamic> discoverRecent;
@@ -54,6 +57,7 @@ class Configuration {
     ThemeMode themeMode,
     int accentColor,
     bool showOutOfBoxExperience,
+    CollectionSort collectionSortType,
     List<dynamic> collectionSearchRecent,
     List<dynamic> discoverSearchRecent,
     List<dynamic> discoverRecent,
@@ -76,6 +80,9 @@ class Configuration {
     if (showOutOfBoxExperience != null) {
       this.showOutOfBoxExperience = showOutOfBoxExperience;
     }
+    if (collectionSortType != null) {
+      this.collectionSortType = collectionSortType;
+    }
     if (collectionSearchRecent != null) {
       this.collectionSearchRecent = collectionSearchRecent;
     }
@@ -92,6 +99,7 @@ class Configuration {
       'themeMode': this.themeMode.index,
       'accentColor': this.accentColor,
       'showOutOfBoxExperience': this.showOutOfBoxExperience,
+      'collectionSortType': this.collectionSortType.index,
       'collectionSearchRecent': this.collectionSearchRecent,
       'discoverSearchRecent': this.discoverSearchRecent,
       'discoverRecent': this.discoverRecent,
@@ -106,6 +114,7 @@ class Configuration {
     this.themeMode = ThemeMode.values[configurationMap['themeMode']];
     this.accentColor = configurationMap['accentColor'];
     this.showOutOfBoxExperience = configurationMap['showOutOfBoxExperience'];
+    this.collectionSortType = CollectionSort.values[configurationMap['collectionSortType']];
     this.collectionSearchRecent = configurationMap['collectionSearchRecent'];
     this.discoverSearchRecent = configurationMap['discoverSearchRecent'];
     this.discoverRecent = configurationMap['discoverRecent'];
