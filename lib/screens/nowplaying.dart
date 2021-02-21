@@ -74,7 +74,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
               new ListTile(
                 leading: CircleAvatar(
                   child: Text(
-                    '${audio.metas.extra['trackNumber']}',
+                    '${audio.metas.extra['trackNumber'] ?? 1}',
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -419,7 +419,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                             margin: EdgeInsets.only(left: 16, right: 16),
                             child: CircleAvatar(
                               child: Text(
-                                this._track.trackNumber.toString(),
+                                '${this._track.trackNumber ?? 1}',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
