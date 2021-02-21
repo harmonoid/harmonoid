@@ -19,7 +19,8 @@ const Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'collectionSortType': 0,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
-  'discoverRecent': []
+  'discoverRecent': [],
+  'automaticAccent': false,
 };
 
 
@@ -37,6 +38,7 @@ class Configuration {
   List<dynamic> collectionSearchRecent;
   List<dynamic> discoverSearchRecent;
   List<dynamic> discoverRecent;
+  bool automaticAccent;
 
   File configurationFile;
 
@@ -61,6 +63,7 @@ class Configuration {
     List<dynamic> collectionSearchRecent,
     List<dynamic> discoverSearchRecent,
     List<dynamic> discoverRecent,
+    bool automaticAccent,
     }) async {
     if (version != null) {
       this.version = version;
@@ -92,6 +95,9 @@ class Configuration {
     if (collectionSearchRecent != null) {
       this.discoverRecent = discoverRecent;
     }
+    if (automaticAccent != null) {
+      this.automaticAccent = automaticAccent;
+    }
     await configuration.configurationFile.writeAsString(JSON_ENCODER.convert({
       'version': this.version,
       'homeAddress': this.homeAddress,
@@ -103,6 +109,7 @@ class Configuration {
       'collectionSearchRecent': this.collectionSearchRecent,
       'discoverSearchRecent': this.discoverSearchRecent,
       'discoverRecent': this.discoverRecent,
+      'automaticAccent': this.automaticAccent,
     }));
   }
 
@@ -118,5 +125,6 @@ class Configuration {
     this.collectionSearchRecent = configurationMap['collectionSearchRecent'];
     this.discoverSearchRecent = configurationMap['discoverSearchRecent'];
     this.discoverRecent = configurationMap['discoverRecent'];
+    this.automaticAccent = configurationMap['automaticAccent'];
   }
 }
