@@ -180,8 +180,6 @@ class Language {
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
         Constants.STRING_EXIT_TITLE                                      = 'Exit';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
-        Constants.STRING_A_TO_Z                                          = 'A to Z';
-        Constants.STRING_DATE_ADDED                                      = 'Date Added';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -332,8 +330,6 @@ class Language {
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
         Constants.STRING_EXIT_TITLE                                      = 'Exit';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
-        Constants.STRING_A_TO_Z                                          = 'A to Z';
-        Constants.STRING_DATE_ADDED                                      = 'Date Added';
       }
       break;
       case LanguageRegion.slSi: {
@@ -485,8 +481,6 @@ class Language {
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
         Constants.STRING_EXIT_TITLE                                      = 'Exit';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
-        Constants.STRING_A_TO_Z                                          = 'A to Z';
-        Constants.STRING_DATE_ADDED                                      = 'Date Added';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -501,16 +495,16 @@ class Language {
         Constants.STRING_NO                                              = 'NÃO';
         Constants.STRING_ALBUM                                           = 'Álbuns';
         Constants.STRING_TRACK                                           = 'Músicas';
-        Constants.STRING_TOP_TRACKS                                      = 'TOP TRACKS';
+        Constants.STRING_TOP_TRACKS                                      = 'TOP MÚSICAS';
         Constants.STRING_ARTIST                                          = 'Artistas';
-        Constants.STRING_SAVED                                           = 'Saved';
-        Constants.STRING_THEME_MODE_LIGHT                                = 'Light';
-        Constants.STRING_THEME_MODE_DARK                                 = 'Dark';
-        Constants.STRING_OPTIONS                                         = 'Options';
-        Constants.STRING_FOLLOWERS                                       = 'followers';
-        Constants.STRING_PLAYS                                           = 'plays';
-        Constants.STRING_EXPORT_TRACK                                    = 'Export track';
-        Constants.STRING_DELETE_TRACK                                    = 'Delete track';
+        Constants.STRING_SAVED                                           = 'Salvo';
+        Constants.STRING_THEME_MODE_LIGHT                                = 'Claro';
+        Constants.STRING_THEME_MODE_DARK                                 = 'Escuro';
+        Constants.STRING_OPTIONS                                         = 'Opções';
+        Constants.STRING_FOLLOWERS                                       = 'seguidores';
+        Constants.STRING_PLAYS                                           = 'tocadas';
+        Constants.STRING_EXPORT_TRACK                                    = 'Exportar música';
+        Constants.STRING_DELETE_TRACK                                    = 'Deletar música';
         Constants.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Procurar músicas do seu álbum favorito';
         Constants.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Procurar suas músicas preferidas';
         Constants.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Procurar músicas do seu artistas preferidos';
@@ -538,8 +532,8 @@ class Language {
         Constants.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Essa música não pode ser salva. Nós ainda estamos tentando descobrir a causa do erro. Por favor baixe outra música enquanto isso. Muito obrigado pela sua compreensão e espera. :)';
         Constants.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Aguarde';
         Constants.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Essa música já está sendo baixada.';
-        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
-        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Do you want to download this track once again?';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Essa música já está salva';
+        Constants.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Você quer baixar essa música novamente?';
         Constants.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Buscando músicas...';
         Constants.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Aqui estão as músicas desse álbum';
         Constants.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Alguns insights do álbum';
@@ -569,8 +563,8 @@ class Language {
         Constants.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Nós não conseguimos pegar as últimas informações sobre stargazers.';
         Constants.STRING_SETTING_LANGUAGE_TITLE                          = 'Idioma';
         Constants.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Mude o jeito que você enxerga o aplicativo';
-        Constants.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
-        Constants.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Do you want to restart the app now?';
+        Constants.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Reinicialização necessária';
+        Constants.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Você quer reiniciar o aplicativo agora?';
         Constants.STRING_ABOUT_TITLE                                     = 'Sobre';
         Constants.STRING_ABOUT_SUBTITLE                                  = 'Informações sobre o projeto e seus desenvolvedores';
         Constants.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Servidor';
@@ -587,58 +581,56 @@ class Language {
         Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Mude a cor de destaque do aplicativo';
         Constants.STRING_SETTING_THEME_TITLE                             = 'Tema';
         Constants.STRING_SETTING_THEME_SUBTITLE                          = 'Mude o tema do aplicativo para claro ou escuro';
-        Constants.STRING_NO_DOWNLOAD_UPDATE                              = 'Your app is already updated';
-        Constants.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
-        Constants.STRING_SETTING_APP_VERSION_TITLE                       = 'Version';
-        Constants.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-        Constants.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version';
-        Constants.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version';
+        Constants.STRING_NO_DOWNLOAD_UPDATE                              = 'Seu aplicativo já está atualizado';
+        Constants.STRING_DOWNLOAD_UPDATE                                 = 'BAIXAR ATUALIZAÇÃO';
+        Constants.STRING_SETTING_APP_VERSION_TITLE                       = 'Versão';
+        Constants.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Informações sobre a ver~soa atual do aplicativo';
+        Constants.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Versão instalada';
+        Constants.STRING_SETTING_APP_VERSION_LATEST                      = 'Última versão';
         Constants.STRING_MENU                                            = 'Menu';
-        Constants.STRING_SEARCH_COLLECTION                               = 'Search Collection';
-        Constants.STRING_SWITCH_THEME                                    = 'Switch Theme';
-        Constants.STRING_DISCOVER                                        = 'Discover';
-        Constants.STRING_PLAY                                            = 'Play';
-        Constants.STRING_PAUSE                                           = 'Pause';
-        Constants.STRING_DELETE                                          = 'Delete';
-        Constants.STRING_SHARE                                           = 'Share';
-        Constants.STRING_ADD_TO_PLAYLIST                                 = 'Add to playlist';
-        Constants.STRING_SAVE_TO_DOWNLOADS                               = 'Save to downloads';
-        Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
-        Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
-        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something to search in your collection';
-        Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
+        Constants.STRING_SEARCH_COLLECTION                               = 'Procurar Coleção';
+        Constants.STRING_SWITCH_THEME                                    = 'Trocar tema';
+        Constants.STRING_DISCOVER                                        = 'Descobrir';
+        Constants.STRING_PLAY                                            = 'Tocar';
+        Constants.STRING_PAUSE                                           = 'Pausar';
+        Constants.STRING_DELETE                                          = 'Deletar';
+        Constants.STRING_SHARE                                           = 'Compartilhar';
+        Constants.STRING_ADD_TO_PLAYLIST                                 = 'Adicionar à playlist';
+        Constants.STRING_SAVE_TO_DOWNLOADS                               = 'Salvar nos downloads';
+        Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Aqui estão os álbuns salvos para essa pesquisa';
+        Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Aqui estão as músicas salvas para essa pesquisa';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Adicione algo para pesquisar na sua coleção';
+        Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nada parecido pôde ser encontrado em sua coleção';
         Constants.STRING_PLAYLIST                                        = 'Playlist';
         Constants.STRING_PLAYLISTS                                       = 'Playlists';
-        Constants.STRING_PLAYLISTS_SUBHEADER                             = 'Playlists created by you';
-        Constants.STRING_PLAYLISTS_CREATE                                = 'Create a new playlist';
-        Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Playlist Name';
-        Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Name for your new playlist';
-        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Are you sure?';
-        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Do you want to remove this playlist saved on your device?';
-        Constants.STRING_CANCEL                                          = 'CANCEL';
-        Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Add to playlist';
-        Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Select a playlist to add this track';
-        Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
+        Constants.STRING_PLAYLISTS_SUBHEADER                             = 'Playlists criadas por você';
+        Constants.STRING_PLAYLISTS_CREATE                                = 'Criar uma nova playlist';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Nome da Playlist';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Name para sua nova playlist';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Tem certeza?';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Você quer remover essa playlist salva no seu dispositivo?';
+        Constants.STRING_CANCEL                                          = 'CANCELAR';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Adicionar à playlist';
+        Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Selecione uma playlist para adicionar essa música';
+        Constants.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Aqui estão algumas músicas nessa playlist';
         Constants.STRING_TRANSFERS                                       = 'Transfers';
-        Constants.STRING_THEME_MODE_SYSTEM                               = 'Follow system theme';
-        Constants.STRING_SETTING_INDEXING_TITLE                          = 'Indexing';
-        Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
-        Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
-        Constants.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
-        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process.';
-        Constants.STRING_REFRESH                                         = 'REFRESH';
-        Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
-        Constants.STRING_NO_INTERNET_TITLE                               = 'No Internet';
-        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Check your connection.';
-        Constants.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.';
-        Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
-        Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
-        Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
-        Constants.STRING_EXIT_TITLE                                      = 'Exit';
-        Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
-        Constants.STRING_A_TO_Z                                          = 'A to Z';
-        Constants.STRING_DATE_ADDED                                      = 'Date Added';
+        Constants.STRING_THEME_MODE_SYSTEM                               = 'Seguir tema do sistema';
+        Constants.STRING_SETTING_INDEXING_TITLE                          = 'Indexando';
+        Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindexando sua coleção de múscias';
+        Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexando NUMBER_STRING de TOTAL_STRING músicas...';
+        Constants.STRING_SETTING_INDEXING_DONE                           = 'Sua coleção de músicas foi indexada.';
+        Constants.STRING_SETTING_INDEXING_WARNING                        = 'Não interrupa o processo.';
+        Constants.STRING_REFRESH                                         = 'ATUALIZAR';
+        Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Suas pesquisas recentes aparecerão aqui';
+        Constants.STRING_NO_INTERNET_TITLE                               = 'Sem internet';
+        Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Verifique sua conexão.';
+        Constants.STRING_NO_COLLECTION_TITLE                             = 'Coleção vazia';
+        Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'Nenhuma música encontrada.';
+        Constants.STRING_DOWNLOAD_COMPLETED                              = 'Download Completo.';
+        Constants.STRING_DOWNLOAD_FAILED                                 = 'Download Falhou.';
+        Constants.STRING_DISCORD                                         = 'SERVIDOR DO DISCORD';
+        Constants.STRING_EXIT_TITLE                                      = 'Sair';
+        Constants.STRING_EXIT_SUBTITLE                                   = 'Você quer nos deixar?';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -789,8 +781,6 @@ class Language {
         Constants.STRING_DISCORD                                         = 'डिस्कॉर्ड सर्वर';
         Constants.STRING_EXIT_TITLE                                      = 'बंद';
         Constants.STRING_EXIT_SUBTITLE                                   = 'क्या आप Harmonoid को छोड़ना चाहते हैं?';
-        Constants.STRING_A_TO_Z                                          = 'A से Z';
-        Constants.STRING_DATE_ADDED                                      = 'तिथि';
       }
       break;
       case LanguageRegion.deDe: {
@@ -941,8 +931,6 @@ class Language {
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
         Constants.STRING_EXIT_TITLE                                      = 'Exit';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
-        Constants.STRING_A_TO_Z                                          = 'A to Z';
-        Constants.STRING_DATE_ADDED                                      = 'Date Added';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1093,8 +1081,6 @@ class Language {
         Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
         Constants.STRING_EXIT_TITLE                                      = 'Exit';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
-        Constants.STRING_A_TO_Z                                          = 'A to Z';
-        Constants.STRING_DATE_ADDED                                      = 'Date Added';
       }
       break;
     }
