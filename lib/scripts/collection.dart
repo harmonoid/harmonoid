@@ -10,6 +10,12 @@ export 'package:harmonoid/scripts/mediatype.dart';
 import 'package:harmonoid/scripts/methods.dart';
 
 
+enum CollectionSort {
+  dateAdded,
+  aToZ,
+}
+
+
 const List<String> SUPPORTED_FILE_TYPES = ['OGG', 'OGA', 'AAC', 'M4A', 'MP3', 'WMA', 'OPUS'];
 
 
@@ -37,6 +43,9 @@ class Collection {
   List<Track> tracks = <Track>[];
   List<Artist> artists = <Artist>[];
   List<Playlist> playlists = <Playlist>[];
+  Album lastAlbum;
+  Track lastTrack;
+  Artist lastArtist;
 
   Future<Collection> refresh({void Function(int completed, int total, bool isCompleted) callback}) async {
     if (await File(path.join(this.cacheDirectory.path, 'collection.JSON')).exists()) {
@@ -76,7 +85,7 @@ class Collection {
         }
         await this._arrange(track, albumArtMethod);
       }
-      if (callback != null) callback(index + 1, directory.length, false);
+      callback?.call(index + 1, directory.length, false);
     }
     /* TODO: Fix List<Album> in Artists after deprecating trackArtistNames field in Album.
     for (Album album in this.albums) {
@@ -87,8 +96,13 @@ class Collection {
       }
     }
     */
+    if (this.tracks.isNotEmpty) {
+      this.lastAlbum = this.albums.last;
+      this.lastTrack = this.tracks.last;
+      this.lastArtist = this.artists.last;
+    }
     await this.saveToCache();
-    if (callback != null) callback(directory.length, directory.length, true);
+    callback?.call(directory.length, directory.length, true);
     return this;
   }
 
@@ -151,6 +165,11 @@ class Collection {
         }
       }
       await this._arrange(track, albumArtMethod);
+    }
+    if (this.tracks.isNotEmpty) {
+      this.lastAlbum = this.albums.last;
+      this.lastTrack = this.tracks.last;
+      this.lastArtist = this.artists.last;
     }
     await this.saveToCache();
   }
@@ -269,6 +288,11 @@ class Collection {
         }
       }
     }
+    if (this.tracks.isNotEmpty) {
+      this.lastAlbum = this.albums.last;
+      this.lastTrack = this.tracks.last;
+      this.lastArtist = this.artists.last;
+    }
     this.saveToCache();
   }
 
@@ -318,7 +342,39 @@ class Collection {
         }
       }
     }
+    if (this.tracks.isNotEmpty) {
+      this.lastAlbum = this.albums.last;
+      this.lastTrack = this.tracks.last;
+      this.lastArtist = this.artists.last;
+    }
     await this.playlistsGetFromCache();
+  }
+
+  Future<void> sort({CollectionSort type: CollectionSort.dateAdded, void Function() callback}) async {
+    if (type == CollectionSort.aToZ) {
+      for (int index = 0; index < this.albums.length; index++) {
+        for (int subIndex = 0; subIndex < this.albums.length - index - 1; subIndex++) {
+          if (this.albums[subIndex].albumName.compareTo(this.albums[subIndex+1].albumName) > 0) {
+            Album swapAlbum = this.albums[subIndex];
+            this.albums[subIndex] = this.albums[subIndex+1];
+            this.albums[subIndex+1] = swapAlbum;
+          }
+        }
+      }
+      for (int index = 0; index <this. tracks.length; index++) {
+        for (int subIndex = 0; subIndex < this.tracks.length - index - 1; subIndex++) {
+          if (this.tracks[subIndex].trackName.compareTo(this.tracks[subIndex+1].trackName) > 0) {
+            Track swapTrack = this.tracks[subIndex];
+            this.tracks[subIndex] = this.tracks[subIndex+1];
+            this.tracks[subIndex+1] = swapTrack;
+          }
+        }
+      }
+    }
+    else if (type == CollectionSort.dateAdded) {
+      await this.getFromCache();
+    }
+    callback?.call();
   }
 
   Future<void> _arrange(Track track, Future<void> Function() albumArtMethod) async {
