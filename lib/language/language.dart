@@ -260,7 +260,7 @@ class Language {
         Constants.STRING_SETTING_STAR_GITHUB                             = 'Оценить проект';
         Constants.STRING_SETTING_STARGAZERS_TITLE                        = 'Оценили проект';
         Constants.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Спасибо за вашу поддержку';
-        Constants.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'Не удалось получить информацию. Скорее всего, вы оффлайн.';
+        Constants.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'Не удалось получить информацию. Скорее всего, вы не в сети.';
         Constants.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Не удалось получить информацию об оценивших проект.';
         Constants.STRING_SETTING_LANGUAGE_TITLE                          = 'Язык';
         Constants.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Изменить язык приложения';
@@ -289,7 +289,7 @@ class Language {
         Constants.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Текущая версия';
         Constants.STRING_SETTING_APP_VERSION_LATEST                      = 'Последняя версия';
         Constants.STRING_MENU                                            = 'Меню';
-        Constants.STRING_SEARCH_COLLECTION                               = 'Поиск коллекции';
+        Constants.STRING_SEARCH_COLLECTION                               = 'Поиск по коллекции';
         Constants.STRING_SWITCH_THEME                                    = 'Сменить тему';
         Constants.STRING_DISCOVER                                        = 'Поиск';
         Constants.STRING_PLAY                                            = 'Плей';
@@ -318,7 +318,7 @@ class Language {
         Constants.STRING_THEME_MODE_SYSTEM                               = 'Как в системе';
         Constants.STRING_SETTING_INDEXING_TITLE                          = 'Индексация';
         Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Переиндексируйте вашу коллекцию';
-        Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
+        Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Индексировано NUMBER_STRING треков из TOTAL_STRING...';
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Ваша коллекция индексирована';
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Не прерывайте процесс.';
         Constants.STRING_REFRESH                                         = 'ОБНОВИТЬ';
