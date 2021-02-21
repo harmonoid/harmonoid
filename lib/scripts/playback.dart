@@ -1,12 +1,14 @@
 import 'package:assets_audio_player/assets_audio_player.dart' as AudioPlayer;
 
 import 'package:harmonoid/scripts/collection.dart';
+import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/scripts/states.dart';
 
 
 final AudioPlayer.AssetsAudioPlayer audioPlayer = new AudioPlayer.AssetsAudioPlayer.withId('harmonoid')
 ..current.listen((AudioPlayer.Playing playing) {
-  States.setAccentColor?.call(Track.fromMap(playing.audio.audio.metas.extra));
+  if (configuration.automaticAccent)
+    States.setAccentColor?.call(Track.fromMap(playing.audio.audio.metas.extra));
 });
 
 
