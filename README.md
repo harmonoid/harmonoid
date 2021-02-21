@@ -3,8 +3,9 @@
 <h3 align="center">A 🎵 music app, that can download music for free & has no ads.</h3>
 
 <p align="center">
-  <a href="https://discord.gg/ZG7Pj9SREG">Discord</a> | 
-  <a href="https://github.com/alexmercerind/harmonoid/releases/">Download</a>
+  <a href="https://github.com/alexmercerind/harmonoid/releases/download/v0.0.3%2B1/harmonoid-v0.0.3.apk">Download APK</a>
+   | 
+  <a href="https://discord.gg/ZG7Pj9SREG">Join Discord</a>
 </p>
 
 <h4 align="center">Consider ⭐ starring the repository to support development.</h4>
