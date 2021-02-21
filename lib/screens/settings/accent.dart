@@ -94,14 +94,17 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
           ),
         );
       });
-      this._widget = new GridView.extent(
-        maxCrossAxisExtent: 56.0 + 8.0,
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        childAspectRatio: 1.0,
-        children: children,
-        crossAxisSpacing: 8.0,
-        mainAxisSpacing: 8.0,
+      this._widget = new Padding(
+        padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
+        child: GridView.extent(
+          maxCrossAxisExtent: 56.0 + 8.0,
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          childAspectRatio: 1.0,
+          children: children,
+          crossAxisSpacing: 8.0,
+          mainAxisSpacing: 8.0,
+        ),
       );
       this._init = false;
     }
@@ -112,8 +115,22 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
     return SettingsTile(
       title: Constants.STRING_SETTING_ACCENT_COLOR_TITLE,
       subtitle: Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE,
-      child: this._widget,
-      margin: EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          CheckboxListTile(
+            value: configuration.automaticAccent,
+            onChanged: (bool isChecked) async {
+              await configuration.save(
+                automaticAccent: isChecked,
+              );
+              this.setState(() {});
+            },
+            title: Text('Automatic Accent'),
+          ),
+          this._widget,
+        ],
+      ),
+      margin: EdgeInsets.only(bottom: 16.0),
     );
   }
 }
