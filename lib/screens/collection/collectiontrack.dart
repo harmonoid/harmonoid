@@ -179,10 +179,9 @@ class LeadingCollectionTrackTile extends StatelessWidget {
     return Card(
       elevation: 2,
       clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 8.0),
+      margin: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
       child: Container(
-        height: 256,
-        width: MediaQuery.of(context).size.width - 32 + 56,
+        width: MediaQuery.of(context).size.width - 16.0,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -192,93 +191,82 @@ class LeadingCollectionTrackTile extends StatelessWidget {
               fit: BoxFit.fitWidth,
               filterQuality: FilterQuality.low,
               alignment: Alignment.topCenter,
-              height: 156,
-              width: MediaQuery.of(context).size.width - 32,
+              height: 156.0,
+              width: MediaQuery.of(context).size.width - 16.0,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 64,
-                  alignment: Alignment.center,
-                  child: CircleAvatar(
-                    child: Text('${collection.tracks.last.trackNumber ?? 1}',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () async => await Playback.play(
+                  index: collection.tracks.length - 1,
+                  tracks: collection.tracks
                 ),
-                Container(
-                  margin: EdgeInsets.only(left: 8, right: 8),
-                  width: MediaQuery.of(context).size.width - 32 - 64 - 16 - 72,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 8.0, bottom: 12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Divider(
-                        color: Colors.transparent,
-                        height: 12,
-                      ),
                       Container(
-                        height: 20,
-                        child: Text(
-                          collection.tracks.last.trackName,
-                          style: Theme.of(context).textTheme.headline1,
-                          textAlign: TextAlign.start,
-                          maxLines: 1,
+                        margin: EdgeInsets.only(left: 16.0, right: 16.0),
+                        alignment: Alignment.center,
+                        child: CircleAvatar(
+                          child: Text('${collection.tracks.last.trackNumber ?? 1}',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          backgroundImage: FileImage(collection.getAlbumArt(collection.tracks.last)),
                         ),
                       ),
-                      Divider(
-                        color: Colors.transparent,
-                        height: 2,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Divider(
+                              color: Colors.transparent,
+                              height: 8.0,
+                            ),
+                            Text(
+                              collection.tracks.last.trackName,
+                              style: Theme.of(context).textTheme.headline1,
+                              textAlign: TextAlign.start,
+                              maxLines: 1,
+                            ),
+                            Text(
+                              collection.tracks.last.albumName,
+                              style: Theme.of(context).textTheme.headline5,
+                              textAlign: TextAlign.start,
+                              maxLines: 1,
+                            ),
+                            Text(
+                              collection.tracks.last.trackArtistNames.length < 2 ? 
+                              collection.tracks.last.trackArtistNames.join(', ') : 
+                              collection.tracks.last.trackArtistNames.sublist(0, 2).join(', '),
+                              style: Theme.of(context).textTheme.headline5,
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
-                      Text(
-                        collection.tracks.last.albumName,
-                        style: Theme.of(context).textTheme.headline2,
-                        textAlign: TextAlign.start,
-                        maxLines: 1,
-                      ),
-                      Divider(
-                        color: Colors.transparent,
-                        height: 4,
-                      ),
-                      Text(
-                        collection.tracks.last.trackArtistNames.length < 2 ? 
-                        collection.tracks.last.trackArtistNames.join(', ') : 
-                        collection.tracks.last.trackArtistNames.sublist(0, 2).join(', '),
-                        style: Theme.of(context).textTheme.headline5,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        '(${collection.tracks.last.year ?? 'Unknown Year'})',
-                        style: Theme.of(context).textTheme.headline5,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                      ),
-                      Divider(
-                        color: Colors.transparent,
-                        height: 4,
-                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 0.0, right: 16.0),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.play_arrow_outlined,
+                            color: Theme.of(context).accentColor,
+                            size: 28.0,
+                          ),
+                          onPressed: null
+                        ),
+                      )
                     ],
                   ),
                 ),
-                Container(
-                  width: 56,
-                  margin: EdgeInsets.only(right: 16),
-                  alignment: Alignment.center,
-                  child: FloatingActionButton(
-                    onPressed: () async => await Playback.play(
-                      index: 0,
-                      tracks: collection.tracks
-                    ),
-                    child: Icon(Icons.play_arrow, color: Colors.white),
-                  )
-                ),
-              ],
-            ),
+              ),
+            )
           ],
         ),
       ),
