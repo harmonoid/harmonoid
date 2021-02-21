@@ -53,6 +53,9 @@ class FileIntent {
     MediaMetadataRetriever retriever = new MediaMetadataRetriever();
     await retriever.setFile(this.openedFile);
     Track track = Track.fromMap((await retriever.metadata).toMap());
+    if (track.trackName == 'Unknown Track') {
+      track.trackName = path.basename(this.openedFile.path).split('.').first;
+    }
     track.filePath = this.openedFile.path;
     if (retriever.albumArt != null) {
       File albumArtFile = new File(
