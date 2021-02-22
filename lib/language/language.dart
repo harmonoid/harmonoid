@@ -559,12 +559,12 @@ class Language {
         Constants.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Aqui estão as músicas desse álbum';
         Constants.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Alguns insights do álbum';
         Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Procure & salve algumas músicas para vê-las aqui.\nGire para atualizar e ver as novidades.';
-        Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Aqui está o último álbum salvo por você';
-        Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Aqui estão alguns outros álbums';
-        Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Here is the latest track saved by you';
-        Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Here are your other tracks';
-        Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Here is the latest artist saved by you';
-        Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Here are the artists saved on your device.';
+        Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Aqui está o último álbum que você salvou';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Aqui estão alguns outros álbuns';
+        Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Aqui está a última música que você salvou';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Aqui estão suas outras músicas';
+        Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Aqui está o último artista que você salvou';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Aqui estão os artistas salvos no seu dispositivo.';
         Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Aqui estão algumas músicas salvas por você';
         Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Alguns insights do álbum';
         Constants.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Deletar esse álbum?';
@@ -573,9 +573,9 @@ class Language {
         Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Você quer apagar essa música do dispositivo?';
         Constants.STRING_NOW_PLAYING_NEXT_TRACK                          = 'PRÓXIMO';
         Constants.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'ANTERIOR';
-        Constants.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Nada está tocando...';
-        Constants.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Tocar da sua coleção.';
-        Constants.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = "Tudo pronto...";
+        Constants.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Nada tocando...';
+        Constants.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Tocar da sua coleção ';
+        Constants.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = "Estamos com tudo pronto...";
         Constants.STRING_SETTING_GITHUB                                  = 'GITHUB';
         Constants.STRING_SETTING_STAR_GITHUB                             = 'Avaliar o projeto';
         Constants.STRING_SETTING_STARGAZERS_TITLE                        = 'Projeto Stargazers';
@@ -605,7 +605,7 @@ class Language {
         Constants.STRING_NO_DOWNLOAD_UPDATE                              = 'Seu aplicativo já está atualizado';
         Constants.STRING_DOWNLOAD_UPDATE                                 = 'BAIXAR ATUALIZAÇÃO';
         Constants.STRING_SETTING_APP_VERSION_TITLE                       = 'Versão';
-        Constants.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Informações sobre a ver~soa atual do aplicativo';
+        Constants.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Informações sobre a versão atual do aplicativo';
         Constants.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Versão instalada';
         Constants.STRING_SETTING_APP_VERSION_LATEST                      = 'Última versão';
         Constants.STRING_MENU                                            = 'Menu';
@@ -627,7 +627,7 @@ class Language {
         Constants.STRING_PLAYLISTS_SUBHEADER                             = 'Playlists criadas por você';
         Constants.STRING_PLAYLISTS_CREATE                                = 'Criar uma nova playlist';
         Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Nome da Playlist';
-        Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Name para sua nova playlist';
+        Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Dê um nome para sua nova playlist';
         Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Tem certeza?';
         Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Você quer remover essa playlist salva no seu dispositivo?';
         Constants.STRING_CANCEL                                          = 'CANCELAR';
@@ -652,13 +652,13 @@ class Language {
         Constants.STRING_DISCORD                                         = 'SERVIDOR DO DISCORD';
         Constants.STRING_EXIT_TITLE                                      = 'Sair';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Você quer nos deixar?';
-        Constants.STRING_A_TO_Z                                          = 'A to Z';
-        Constants.STRING_DATE_ADDED                                      = 'Date Added';
-        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
-        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Miscellaneous';
-        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Other settings in the app';
-        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
-        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
+        Constants.STRING_A_TO_Z                                          = 'A à Z';
+        Constants.STRING_DATE_ADDED                                      = 'Data adicionada';
+        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Cor de destaque automatica';
+        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Outros';
+        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Outras configurações do aplicativo';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Ativar mecânicas do iOS';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Mudar plataforma para TargetPlatform.iOS';
       }
       break;
       case LanguageRegion.hiIn: {
