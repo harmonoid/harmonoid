@@ -270,7 +270,7 @@ class Language {
         Constants.STRING_ABOUT_TITLE                                     = 'О приложении';
         Constants.STRING_ABOUT_SUBTITLE                                  = 'Информация о проекте и его разработчиках.';
         Constants.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Сервер';
-        Constants.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Изменить источник получения данных';
+        Constants.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Изменить источник данных';
         Constants.STRING_SETTING_SERVER_CHANGE_SERVER_HINT               = 'Введите ссылку на сервер';
         Constants.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL              = 'Ссылка';
         Constants.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID             = 'Эта ссылка не подходит.';
@@ -301,7 +301,7 @@ class Language {
         Constants.STRING_SAVE_TO_DOWNLOADS                               = 'Сохранить в "Downloads"';
         Constants.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Сохранённые альбомы';
         Constants.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Сохранённые треки';
-        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Поиск по коллекции';
+        Constants.STRING_LOCAL_SEARCH_WELCOME                            = 'Поиск среди загруженных треков';
         Constants.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'В коллекции ничего не найдено';
         Constants.STRING_PLAYLIST                                        = 'Плейлист';
         Constants.STRING_PLAYLISTS                                       = 'Плейлисты';
@@ -310,7 +310,7 @@ class Language {
         Constants.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Название';
         Constants.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Назовите плейлист';
         Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Вы уверены?';
-        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Хотите удалить сохранённый плейлист?';
+        Constants.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Хотите удалить плейлист?';
         Constants.STRING_CANCEL                                          = 'ОТМЕНА';
         Constants.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Добавить в плейлист';
         Constants.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Выберите плейлист';
@@ -318,24 +318,24 @@ class Language {
         Constants.STRING_TRANSFERS                                       = 'Transfers';
         Constants.STRING_THEME_MODE_SYSTEM                               = 'Как в системе';
         Constants.STRING_SETTING_INDEXING_TITLE                          = 'Индексация';
-        Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Переиндексируйте вашу коллекцию';
+        Constants.STRING_SETTING_INDEXING_SUBTITLE                       = 'Поиск треков на устройстве';
         Constants.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Индексировано NUMBER_STRING треков из TOTAL_STRING...';
         Constants.STRING_SETTING_INDEXING_DONE                           = 'Ваша коллекция индексирована';
         Constants.STRING_SETTING_INDEXING_WARNING                        = 'Не прерывайте процесс.';
         Constants.STRING_REFRESH                                         = 'ОБНОВИТЬ';
-        Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Ваша история';
+        Constants.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Здесь появится история поиска';
         Constants.STRING_NO_INTERNET_TITLE                               = 'Нет доступа в Интернет';
         Constants.STRING_NO_INTERNET_SUBTITLE                            = 'Проверьте подключение.';
         Constants.STRING_NO_COLLECTION_TITLE                             = 'Пустая коллекция';
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'Ничего не найдено.';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Загрузка завершена.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Загрузка не удалась.';
-        Constants.STRING_DISCORD                                         = 'DISCORD СЕРВЕР';
+        Constants.STRING_DISCORD                                         = 'DISCORD';
         Constants.STRING_EXIT_TITLE                                      = 'Выход';
         Constants.STRING_EXIT_SUBTITLE                                   = 'Хотите выйти?';
         Constants.STRING_A_TO_Z                                          = 'По алфавиту';
         Constants.STRING_DATE_ADDED                                      = 'По дате добавления';
-        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
+        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Автоматически';
       }
       break;
       case LanguageRegion.slSi: {
