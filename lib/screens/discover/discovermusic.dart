@@ -141,9 +141,11 @@ class DiscoverMusicState extends State<DiscoverMusic> with TickerProviderStateMi
               child: Card(
                 elevation: 2.0,
                 clipBehavior: Clip.antiAlias,
+                color: Theme.of(context).cardColor,
                 child: AnimatedBuilder(
                   animation: this._searchBarHeight,
                   child: Material(
+                    color: Colors.transparent,
                     child: Column(
                       children: [
                         Row(

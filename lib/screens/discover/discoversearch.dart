@@ -96,7 +96,7 @@ class DiscoverSearchState extends State<DiscoverSearch> {
           ).toList(),
         ),
         errorWidgetBuilder: (_, Object exception) => ExceptionWidget(
-          margin: EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+          margin: EdgeInsets.only(top: 56.0, left: 8.0, right: 8.0),
           height: 156.0,
           assetImage: 'assets/images/exception.jpg',
           title: Constants.STRING_NO_INTERNET_TITLE,
@@ -115,12 +115,12 @@ class DiscoverSearchState extends State<DiscoverSearch> {
             snap: false,
             pinned: false,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
+              icon: Icon(Icons.close, color: Colors.white),
               iconSize: Theme.of(context).iconTheme.size,
               splashRadius: Theme.of(context).iconTheme.size - 8,
               onPressed: Navigator.of(context).pop,
             ),
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor: Theme.of(context).appBarTheme.color,
             brightness: Brightness.dark,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(

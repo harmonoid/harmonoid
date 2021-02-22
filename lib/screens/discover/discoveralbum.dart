@@ -159,12 +159,35 @@ class DiscoverAlbumState extends State<DiscoverAlbum> {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            Image.network(
-              widget.album.albumArtHigh,
-              fit: BoxFit.fill,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width,
-              filterQuality: FilterQuality.low,
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Image.network(
+                  widget.album.albumArtHigh,
+                  fit: BoxFit.fill,
+                  filterQuality: FilterQuality.low,
+                  height: MediaQuery.of(context).size.width,
+                  width: MediaQuery.of(context).size.width,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [
+                        0.4,
+                        1.0,
+                      ],
+                      colors: [
+                        Colors.transparent,
+                        Theme.of(context).scaffoldBackgroundColor,
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
             ListView(
               children: [

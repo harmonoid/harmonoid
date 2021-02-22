@@ -92,6 +92,14 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
               height: 156.0,
               width: MediaQuery.of(context).size.width - 16.0,
             ),
+            Container(
+              height: 4.0,
+              width: MediaQuery.of(context).size.width - 16.0,
+              child: this._isDownloading ? LinearProgressIndicator(
+                value: this._progress,
+                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+              ): Container(),
+            ),
             Material(
               color: Colors.transparent,
               child: InkWell(
@@ -161,7 +169,7 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
                   );
                 },
                 child: Padding(
-                  padding: EdgeInsets.only(top: 8.0, bottom: 12.0),
+                  padding: EdgeInsets.only(top: 4.0, bottom: 12.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -169,10 +177,7 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
                       Container(
                         margin: EdgeInsets.only(left: 16.0, right: 16.0),
                         alignment: Alignment.center,
-                        child: this._isDownloading ? CircularProgressIndicator(
-                          value: this._progress,
-                          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
-                        ): CircleAvatar(
+                        child: CircleAvatar(
                           child: this._exists ? Icon(Icons.check) : Text('${widget.track.trackNumber ?? 1}'),
                           backgroundImage: NetworkImage(widget.track.albumArtLow),
                           foregroundColor: Colors.white,
@@ -211,7 +216,7 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(right: 20.0),
+                        margin: EdgeInsets.only(left: 16.0, right: 20.0),
                         alignment: Alignment.center,
                         child: this._exists ? Chip(
                           avatar: Icon(

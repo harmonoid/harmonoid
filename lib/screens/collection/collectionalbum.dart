@@ -337,12 +337,35 @@ class CollectionAlbumState extends State<CollectionAlbum> {
          child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            Image.file(
-              collection.getAlbumArt(widget.album),
-              fit: BoxFit.fill,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width,
-              filterQuality: FilterQuality.low,
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Image.file(
+                  collection.getAlbumArt(widget.album),
+                  fit: BoxFit.fill,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.width,
+                  filterQuality: FilterQuality.low,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [
+                        0.4,
+                        1.0,
+                      ],
+                      colors: [
+                        Colors.transparent,
+                        Theme.of(context).scaffoldBackgroundColor,
+                      ]
+                    ),
+                  ),
+                ),
+              ],
             ),
             ListView(
               children: [
@@ -357,8 +380,8 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           stops: [
-                            0.3,
-                            0.9,
+                            0.4,
+                            1.0,
                           ],
                           colors: [
                             Colors.transparent,

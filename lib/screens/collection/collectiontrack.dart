@@ -38,7 +38,6 @@ class CollectionTrackTile extends StatelessWidget {
         ),
         trailing: PopupMenuButton(
           elevation: 2,
-          color: Theme.of(context).appBarTheme.color,
           onSelected: (index) {
             switch(index) {
               case 0: {

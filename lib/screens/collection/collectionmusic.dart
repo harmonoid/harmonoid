@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:harmonoid/screens/collection/collectionsearch.dart';
 
 import 'package:harmonoid/scripts/collection.dart';
 import 'package:harmonoid/screens/collection/collectionalbum.dart';
@@ -332,6 +331,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   tooltip: Constants.STRING_MENU,
                 ),
                 title: Text('Harmonoid'),
+                centerTitle: true,
                 actions: [
                   IconButton(
                     icon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
@@ -411,7 +411,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   ],
                 ),
               ),
-            )
+            ),
           ];
         },
         body: TabBarView(
