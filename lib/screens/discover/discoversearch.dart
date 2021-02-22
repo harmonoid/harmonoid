@@ -104,6 +104,7 @@ class DiscoverSearchState extends State<DiscoverSearch> {
         ),
         transitionDuration: Duration(milliseconds: 400),
       );
+    return SizedBox();
   }
 
   @override

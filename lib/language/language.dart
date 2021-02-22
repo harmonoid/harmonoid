@@ -13,6 +13,17 @@ enum LanguageRegion {
 
 
 extension LanguageRegionExtension on LanguageRegion {
+
+  String get name => this.toString().replaceAll('LanguageRegion.', '');
+
+  String get languageCode {
+    return name.substring(0, 2).toLowerCase();
+  }
+
+  String get countryCode {
+    return name.substring(2).toLowerCase();
+  }
+  
   List<String> get data {
     List<String> data;
     switch(this) {
