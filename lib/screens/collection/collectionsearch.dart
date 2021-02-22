@@ -45,34 +45,6 @@ class CollectionSearchState extends State<CollectionSearch> {
       this._elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
       this._tileWidth = (MediaQuery.of(context).size.width - 16 - (this._elementsPerRow - 1) * 8) / this._elementsPerRow;
       this._tileHeight = this._tileWidth * 242 / 156;
-      this._textFieldController.addListener(() async {
-        this._albumResults = [];
-        this._trackResults = [];
-        this._artistResults = [];
-        List<dynamic> resultCollection = await collection.search(this._textFieldController.text);
-        for (dynamic collectionItem in resultCollection) {
-          if (collectionItem is Album) {
-            this._albumResults.add(
-              Container(
-                margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
-                child: CollectionAlbumTile(
-                  height: this._tileHeight,
-                  width: this._tileWidth,
-                  album: collectionItem,
-                ),
-              ),
-            );
-          }
-          else if (collectionItem is Track) {
-            this._trackResults.add(
-              CollectionTrackTile(
-                track: collectionItem,
-              ),
-            );
-          }
-        }
-        this.setState(() {});
-      });
       States.refreshCollectionSearch = this._refresh;
     }
     this._init = false;
@@ -92,6 +64,34 @@ class CollectionSearchState extends State<CollectionSearch> {
           autofocus: true,
           controller: this._textFieldController,
           cursorWidth: 1.0,
+          onChanged: (String query) async {
+            this._albumResults.clear();
+            this._trackResults.clear();
+            this._artistResults.clear();
+            List<dynamic> resultCollection = await collection.search(this._textFieldController.text);
+            for (dynamic collectionItem in resultCollection) {
+              if (collectionItem is Album) {
+                this._albumResults.add(
+                  Container(
+                    margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
+                    child: CollectionAlbumTile(
+                      height: this._tileHeight,
+                      width: this._tileWidth,
+                      album: collectionItem,
+                    ),
+                  ),
+                );
+              }
+              else if (collectionItem is Track) {
+                this._trackResults.add(
+                  CollectionTrackTile(
+                    track: collectionItem,
+                  ),
+                );
+              }
+            }
+            this.setState(() {});
+          },
           decoration: InputDecoration.collapsed(hintText: Constants.STRING_SEARCH_COLLECTION),
         ),
         leading: IconButton(
