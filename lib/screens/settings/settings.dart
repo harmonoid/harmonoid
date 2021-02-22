@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/screens/settings/about.dart';
 import 'package:harmonoid/screens/settings/indexing.dart';
 import 'package:harmonoid/screens/settings/language.dart';
+import 'package:harmonoid/screens/settings/miscellaneous.dart';
 import 'package:harmonoid/screens/settings/theme.dart';
 import 'package:harmonoid/screens/settings/version.dart';
 
@@ -34,6 +35,7 @@ class Settings extends StatelessWidget {
           IndexingSetting(),
           ServerSetting(),
           LanguageSetting(),
+          MiscellaneousSetting(),
           VersionSetting(),
           Divider(
             color: Colors.transparent,

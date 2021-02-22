@@ -117,7 +117,7 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
       subtitle: Constants.STRING_SETTING_ACCENT_COLOR_SUBTITLE,
       child: Column(
         children: [
-          CheckboxListTile(
+          SwitchListTile(
             value: configuration.automaticAccent,
             onChanged: (bool isChecked) async {
               await configuration.save(
