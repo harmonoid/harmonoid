@@ -340,10 +340,10 @@ class Language {
         Constants.STRING_A_TO_Z                                          = 'По алфавиту';
         Constants.STRING_DATE_ADDED                                      = 'По дате добавления';
         Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Автоматически';
-        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Miscellaneous';
-        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Other settings in the app';
-        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
-        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
+        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Прочее';
+        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Другие настройки';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Включить механики iOS';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Задать платформу TargetPlatform.iOS';
       }
       break;
       case LanguageRegion.slSi: {
