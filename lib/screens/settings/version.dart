@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/screens/settings/settings.dart';
-import 'package:harmonoid/scripts/configuration.dart';
+import 'package:harmonoid/main.dart';
 import 'package:harmonoid/scripts/vars.dart';
 import 'package:harmonoid/language/constants.dart';
 
@@ -16,7 +16,7 @@ class VersionSetting extends StatefulWidget {
 
 
 class VersionState extends State<VersionSetting> {
-  String version;
+  String version = 'v' + VERSION;
   String updateUri;
 
   @override
@@ -31,7 +31,6 @@ class VersionState extends State<VersionSetting> {
       });
     })
     .catchError((exception) {
-
     });
   }
 
@@ -47,7 +46,7 @@ class VersionState extends State<VersionSetting> {
               TableRow(
                 children: [
                   Text(Constants.STRING_SETTING_APP_VERSION_INSTALLED),
-                  Text(configuration.version),
+                  Text('v' + VERSION),
                 ],
               ),
               TableRow(
@@ -60,8 +59,8 @@ class VersionState extends State<VersionSetting> {
           ),
         ],
       ),
-      margin: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 0.0),
-      actions: this.version == null ? [] : [
+      margin: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 16.0),
+      actions: this.version == 'v' + VERSION ? null : [
         MaterialButton(
           onPressed: () => launch(this.updateUri),
           child: Text(

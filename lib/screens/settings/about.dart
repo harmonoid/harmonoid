@@ -44,7 +44,7 @@ class AboutState extends State<AboutSetting> {
       closedElevation: 0.0,
       openElevation: 0.0,
       closedBuilder: (BuildContext context, _) => Card(
-        margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0, bottom: 4.0),
+        margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0, bottom: 4.0),
         color: Theme.of(context).cardColor,
         elevation: 2.0,
         child: ListTile(
