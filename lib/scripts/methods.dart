@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/scripts/configuration.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:harmonoid/language/constants.dart';
@@ -60,7 +61,7 @@ abstract class Methods {
   static ThemeData getThemeData({Color color, ThemeMode themeMode}) {
     bool isLightTheme = themeMode == ThemeMode.light;
     return new ThemeData(
-      platform: TargetPlatform.iOS,
+      platform: configuration.enableiOS ? TargetPlatform.iOS: TargetPlatform.android,
       splashFactory: InkRipple.splashFactory,
       highlightColor: Colors.transparent,
       brightness: isLightTheme ? Brightness.light : Brightness.dark,

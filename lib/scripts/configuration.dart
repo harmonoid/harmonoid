@@ -20,6 +20,7 @@ const Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'discoverSearchRecent': [],
   'discoverRecent': [],
   'automaticAccent': false,
+  'enableiOS': false,
 };
 
 
@@ -37,6 +38,7 @@ class Configuration {
   List<dynamic> discoverSearchRecent;
   List<dynamic> discoverRecent;
   bool automaticAccent;
+  bool enableiOS;
 
   File configurationFile;
 
@@ -62,6 +64,7 @@ class Configuration {
     List<dynamic> discoverSearchRecent,
     List<dynamic> discoverRecent,
     bool automaticAccent,
+    bool enableiOS,
     }) async {
     if (homeAddress != null) {
       this.homeAddress = homeAddress;
@@ -93,6 +96,9 @@ class Configuration {
     if (automaticAccent != null) {
       this.automaticAccent = automaticAccent;
     }
+    if (enableiOS != null) {
+      this.enableiOS = enableiOS;
+    }
     await configuration.configurationFile.writeAsString(JSON_ENCODER.convert({
       'homeAddress': this.homeAddress,
       'languageRegion': this.languageRegion.index,
@@ -104,6 +110,7 @@ class Configuration {
       'discoverSearchRecent': this.discoverSearchRecent,
       'discoverRecent': this.discoverRecent,
       'automaticAccent': this.automaticAccent,
+      'enableiOS': this.enableiOS,
     }));
   }
 
@@ -119,5 +126,6 @@ class Configuration {
     this.discoverSearchRecent = configurationMap['discoverSearchRecent'];
     this.discoverRecent = configurationMap['discoverRecent'];
     this.automaticAccent = configurationMap['automaticAccent'];
+    this.enableiOS = configurationMap['enableiOS'] ?? DEFAULT_CONFIGURATION['enableiOS'];
   }
 }

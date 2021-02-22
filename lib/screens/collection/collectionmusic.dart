@@ -331,7 +331,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   tooltip: Constants.STRING_MENU,
                 ),
                 title: Text('Harmonoid'),
-                centerTitle: true,
+                centerTitle: configuration.enableiOS,
                 actions: [
                   IconButton(
                     icon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
