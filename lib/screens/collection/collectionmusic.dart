@@ -360,12 +360,12 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                           CheckedPopupMenuItem<CollectionSort>(
                             checked: CollectionSort.aToZ == configuration.collectionSortType,
                             value: CollectionSort.aToZ,
-                            child: Text('A to Z'),
+                            child: Text(Constants.STRING_A_TO_Z),
                           ),
                           CheckedPopupMenuItem<CollectionSort>(
                             checked: CollectionSort.dateAdded == configuration.collectionSortType,
                             value: CollectionSort.dateAdded,
-                            child: Text('Date Added'),
+                            child: Text(Constants.STRING_DATE_ADDED),
                           ),
                         ],
                         elevation: 2.0,
