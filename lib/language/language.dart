@@ -183,6 +183,10 @@ class Language {
         Constants.STRING_A_TO_Z                                          = 'A to Z';
         Constants.STRING_DATE_ADDED                                      = 'Date Added';
         Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
+        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Miscellaneous';
+        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Other settings in the app';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -336,6 +340,10 @@ class Language {
         Constants.STRING_A_TO_Z                                          = 'По алфавиту';
         Constants.STRING_DATE_ADDED                                      = 'По дате добавления';
         Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Автоматически';
+        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Miscellaneous';
+        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Other settings in the app';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
       }
       break;
       case LanguageRegion.slSi: {
@@ -490,6 +498,10 @@ class Language {
         Constants.STRING_A_TO_Z                                          = 'A to Z';
         Constants.STRING_DATE_ADDED                                      = 'Date Added';
         Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
+        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Miscellaneous';
+        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Other settings in the app';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -643,6 +655,10 @@ class Language {
         Constants.STRING_A_TO_Z                                          = 'A to Z';
         Constants.STRING_DATE_ADDED                                      = 'Date Added';
         Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
+        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Miscellaneous';
+        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Other settings in the app';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -681,8 +697,8 @@ class Language {
         Constants.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM          = 'एल्बम दिखाएं';
         Constants.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK          = 'गाना दिखाएं';
         Constants.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST         = 'कलाकार दिखाएं';
-        Constants.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'बाकी एल्बम';
-        Constants.STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'बाकी गाने';
+        Constants.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'अन्य एल्बम';
+        Constants.STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'अन्य गाने';
         Constants.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'मिलते-जुलते अन्य कलाकार';
         Constants.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE                  = 'आप वापस नहीं जा सकते';
         Constants.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE               = 'अभी एक या अधिक गाने ऑफलाइन सेव हो रहे हैं। इंतज़ार करें।';
@@ -701,11 +717,11 @@ class Language {
         Constants.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'इस एल्बम के बारे में थोड़ी जानकारी';
         Constants.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'अपने पसंद के गानों को यहाँ सुनने के लिए, उन्हें ढूंढे व सेव करें।\nअपना कलेक्शन रिफ्रेश करने के लिए रिफ्रेश बटन दबायें।';
         Constants.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'नयी एल्बम';
-        Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'बाकी एल्बम';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'अन्य एल्बम';
         Constants.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'नया गाना';
-        Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'बाकी गाने';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'अन्य गाने';
         Constants.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'नया कलाकार';
-        Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'बाकी कलाकार';
+        Constants.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'अन्य कलाकार';
         Constants.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'एल्बम के गाने';
         Constants.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'एल्बम के बारे में थोड़ी जानकारी';
         Constants.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'डिलीट';
@@ -796,6 +812,10 @@ class Language {
         Constants.STRING_A_TO_Z                                          = 'A से Z';
         Constants.STRING_DATE_ADDED                                      = 'तिथि';
         Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'ऑटोमैटिक ऐप रंग';
+        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'अन्य सेटिंग';
+        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'ऐप में अन्य सेटिंग्स बदलें';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'iOS मोड';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'platform को TargetPlatform.iOS करें';
       }
       break;
       case LanguageRegion.deDe: {
@@ -949,6 +969,10 @@ class Language {
         Constants.STRING_A_TO_Z                                          = 'A to Z';
         Constants.STRING_DATE_ADDED                                      = 'Date Added';
         Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
+        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Miscellaneous';
+        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Other settings in the app';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1102,6 +1126,10 @@ class Language {
         Constants.STRING_A_TO_Z                                          = 'A to Z';
         Constants.STRING_DATE_ADDED                                      = 'Date Added';
         Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
+        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Miscellaneous';
+        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Other settings in the app';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
       }
       break;
     }
