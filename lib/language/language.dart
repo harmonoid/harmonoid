@@ -503,16 +503,16 @@ class Language {
         Constants.STRING_NO_COLLECTION_SUBTITLE                          = 'Nič glasbe ni najdene';
         Constants.STRING_DOWNLOAD_COMPLETED                              = 'Prenos končan.';
         Constants.STRING_DOWNLOAD_FAILED                                 = 'Prenos ni uspel.';
-        Constants.STRING_DISCORD                                         = 'DISCORD SERVER';
-        Constants.STRING_EXIT_TITLE                                      = 'Exit';
-        Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
-        Constants.STRING_A_TO_Z                                          = 'A to Z';
-        Constants.STRING_DATE_ADDED                                      = 'Date Added';
-        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
-        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Miscellaneous';
-        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Other settings in the app';
-        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
-        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
+        Constants.STRING_DISCORD                                         = 'DISCORD STREŽNIK';
+        Constants.STRING_EXIT_TITLE                                      = 'Izhod';
+        Constants.STRING_EXIT_SUBTITLE                                   = 'Ali res hočeš zapreti aplikacijo?';
+        Constants.STRING_A_TO_Z                                          = 'Od A do Z';
+        Constants.STRING_DATE_ADDED                                      = 'Po datumu prenosa';
+        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Avtomatska barvna shema';
+        Constants.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Ostalo';
+        Constants.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Ostale nastavitve aplikacije';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Vključi iOS uporabniški vmesnik';
+        Constants.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Nastavi platformo na TargetPlatform.iOS';
       }
       break;
       case LanguageRegion.ptBr: {

@@ -1,7 +1,7 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid/">Harmonoid</a></h1>
 
-<h3 align="center">A 🎵 music app, that can download music for free & has no ads.</h3>
-
+<h3 align="center">🎵 A music app with a beautiful UI to play all your music!</h3>
+<br></br>
 <p align="center">
   <a href="https://github.com/alexmercerind/harmonoid/releases/download/v0.0.3%2B2/harmonoid-v0.0.3+2.apk">Download APK</a>
    | 
@@ -16,10 +16,6 @@
   </tr>
 </table>
 
-#### ⭐ Consider dropping star to the repository, if you wanna appreciate the effort & support future development.
-#### ⚡ Android users can download APK from the [link](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.3%2B2/harmonoid-v0.0.3+2.apk) above.
-#### 💬 Talk on our [Discord Server](https://discord.gg/ZG7Pj9SREG).
-
 ## 🏂 Animations
 
 <table>
@@ -30,28 +26,30 @@
 </table>
 
 
+#### ⭐ Consider dropping star to the repository, if you wanna appreciate the effort & support future development.
+#### ⚡ Android users can download APK from the [link](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.3%2B2/harmonoid-v0.0.3+2.apk) above.
+#### 💬 Talk on our [Discord Server](https://discord.gg/ZG7Pj9SREG).
+
+
 ## ✅ Features
 
 - 🎵 **Powerful Library Management**
   - Music automatically gets arranged into albums, artists & tracks.
  
 - 📱 **Play Local Music**
-  - Play music already saved on your device.
+  - Play music saved on your device either from the collection in the app or using file browser.
 
-- 💾 **Free Music Download**
-  - Download the music of your choice for free.
+- 🎹 **Lyrics**
+  - Get time synced lyrics for your music.
 
 - ✨ **Beautiful User Interface**
-  - Every element on screen beautifully animated giving a sense of motion & very strictly follows [material.io](https://material.io) guidelines. 
+  - Every element on screen beautifully animated & very strictly follows [material.io](https://material.io) guidelines. 
 
 - 💜 **Ads Free Forever**
   - No advertisements! No profits associated with the project.
-
-- 🎹 **Lyrics**
-  - Fetch lyrics for your saved or downloaded music.
   
 - 📑 **Playlists**
-  - Make your own playlists & play your favorite music on the go.
+  - Make own playlists & play your favorite music on the go.
   
 - 🎄 **Freedom**
   - Share music from the app to other devices with a single tap.
@@ -59,11 +57,14 @@
 - 🌈 **Personalization**
   - Change accent color & theme of the app.
 
+- 💾 **Download Music**
+  - A personal dedicated server is required for downloading music. [NOT INCLUDED IN APP]
+
 ## 🎉 Contributions
 
 Contributions are open. Feel free to make a pull request, if you wanna see something to get changed.
 
-### ✒ Translation Contributors
+### 💙 Translation Contributors
 
 Thanks a lot for your contribution.
 
@@ -83,9 +84,7 @@ You can translate this, even if you have little to no knowledge of Dart.
 
 ## 📖 Workings
 
-Majority of functioning & logical code in this app, is [here](https://github.com/alexmercerind/harmonoid/tree/master/lib/scripts) in the repository.
-
-For downloading music, a dedicated server is necessary which you can see [here](https://github.com/harmonoid/harmonoid-service). It is managed by me, [@raitonoberu](https://github.com/raitonoberu) & [@mytja](https://github.com/mytja).
+The majority of the logical & functional code in this app is [here](https://github.com/alexmercerind/harmonoid/tree/master/lib/scripts) in the repository.
 
 ## 💙 Acknowledgements
 
