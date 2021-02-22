@@ -101,8 +101,8 @@ class Language {
         Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Do you want to remove this track saved on your device?';
         Constants.STRING_NOW_PLAYING_NEXT_TRACK                          = 'NEXT';
         Constants.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'PREVIOUS';
-        Constants.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Nothing is being played...';
-        Constants.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Play from your collection.';
+        Constants.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Nothing is being played';
+        Constants.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Play from your collection';
         Constants.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = "We're all set...";
         Constants.STRING_SETTING_GITHUB                                  = 'GITHUB';
         Constants.STRING_SETTING_STAR_GITHUB                             = 'STAR THE PROJECT';
@@ -182,6 +182,7 @@ class Language {
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
         Constants.STRING_A_TO_Z                                          = 'A to Z';
         Constants.STRING_DATE_ADDED                                      = 'Date Added';
+        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -334,6 +335,7 @@ class Language {
         Constants.STRING_EXIT_SUBTITLE                                   = 'Хотите выйти?';
         Constants.STRING_A_TO_Z                                          = 'По алфавиту';
         Constants.STRING_DATE_ADDED                                      = 'По дате добавления';
+        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
       }
       break;
       case LanguageRegion.slSi: {
@@ -405,8 +407,8 @@ class Language {
         Constants.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Ali res hočeš izbrisati to pesem?';
         Constants.STRING_NOW_PLAYING_NEXT_TRACK                          = 'NASLEDNJA';
         Constants.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'PREJŠNJA';
-        Constants.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Nič se trenutno ne predvaja...';
-        Constants.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Predvajaj iz zbirke.';
+        Constants.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Nič se trenutno ne predvaja';
+        Constants.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Predvajaj iz zbirke';
         Constants.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = "Pripravljeni smo...";
         Constants.STRING_SETTING_GITHUB                                  = 'GITHUB';
         Constants.STRING_SETTING_STAR_GITHUB                             = 'VŠEČKAJ PROJEKT';
@@ -487,6 +489,7 @@ class Language {
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
         Constants.STRING_A_TO_Z                                          = 'A to Z';
         Constants.STRING_DATE_ADDED                                      = 'Date Added';
+        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -639,6 +642,7 @@ class Language {
         Constants.STRING_EXIT_SUBTITLE                                   = 'Você quer nos deixar?';
         Constants.STRING_A_TO_Z                                          = 'A to Z';
         Constants.STRING_DATE_ADDED                                      = 'Date Added';
+        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -791,6 +795,7 @@ class Language {
         Constants.STRING_EXIT_SUBTITLE                                   = 'क्या आप Harmonoid को छोड़ना चाहते हैं?';
         Constants.STRING_A_TO_Z                                          = 'A से Z';
         Constants.STRING_DATE_ADDED                                      = 'तिथि';
+        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'ऑटोमैटिक ऐप रंग';
       }
       break;
       case LanguageRegion.deDe: {
@@ -943,6 +948,7 @@ class Language {
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
         Constants.STRING_A_TO_Z                                          = 'A to Z';
         Constants.STRING_DATE_ADDED                                      = 'Date Added';
+        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1095,6 +1101,7 @@ class Language {
         Constants.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
         Constants.STRING_A_TO_Z                                          = 'A to Z';
         Constants.STRING_DATE_ADDED                                      = 'Date Added';
+        Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
       }
       break;
     }

@@ -149,4 +149,5 @@ class Constants {
   static String STRING_EXIT_SUBTITLE;
   static String STRING_A_TO_Z;
   static String STRING_DATE_ADDED;
+  static String STRING_SETTING_ACCENT_COLOR_AUTOMATIC;
 }

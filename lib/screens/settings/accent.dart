@@ -125,7 +125,7 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
               );
               this.setState(() {});
             },
-            title: Text('Automatic Accent'),
+            title: Text(Constants.STRING_SETTING_ACCENT_COLOR_AUTOMATIC),
           ),
           this._widget,
         ],
