@@ -3,12 +3,10 @@
 <h3 align="center">A 🎵 music app, that can download music for free & has no ads.</h3>
 
 <p align="center">
-  <a href="https://github.com/alexmercerind/harmonoid/releases/download/v0.0.3%2B1/harmonoid-v0.0.3.apk">Download APK</a>
+  <a href="https://github.com/alexmercerind/harmonoid/releases/download/v0.0.3%2B2/harmonoid-v0.0.3+2.apk">Download APK</a>
    | 
   <a href="https://discord.gg/ZG7Pj9SREG">Join Discord</a>
 </p>
-
-<h4 align="center">Consider ⭐ starring the repository to support development.</h4>
 
 <table>
   <tr align="center">
@@ -17,6 +15,10 @@
     <td><img src="https://github.com/alexmercerind/harmonoid/blob/assets/nested-scroll-view.png?raw=true" /></td>
   </tr>
 </table>
+
+#### ⭐ Consider dropping star to the repository, if you wanna appreciate the effort & support future development.
+#### ⚡ Android users can download APK from the [link](https://github.com/alexmercerind/harmonoid/releases/download/v0.0.3%2B2/harmonoid-v0.0.3+2.apk) above.
+#### 💬 Talk on our [Discord Server](https://discord.gg/ZG7Pj9SREG).
 
 ## 🏂 Animations
 
@@ -58,6 +60,12 @@
   - Change accent color & theme of the app.
 
 ## 🎉 Contributions
+
+Contributions are open. Feel free to make a pull request, if you wanna see something to get changed.
+
+### ✒ Translation Contributors
+
+Thanks a lot for your contribution.
 
 |Language       |Provider       |
 |---------------|---------------|
