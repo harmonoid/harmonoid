@@ -60,6 +60,7 @@ abstract class Methods {
   static ThemeData getThemeData({Color color, ThemeMode themeMode}) {
     bool isLightTheme = themeMode == ThemeMode.light;
     return new ThemeData(
+      platform: TargetPlatform.iOS,
       splashFactory: InkRipple.splashFactory,
       highlightColor: Colors.transparent,
       brightness: isLightTheme ? Brightness.light : Brightness.dark,
@@ -71,7 +72,7 @@ abstract class Methods {
       accentColor: color,
       textSelectionHandleColor: color,
       toggleableActiveColor: color,
-      cardColor: isLightTheme ? Colors.white : Colors.white.withOpacity(0.08),
+      cardColor: isLightTheme ? Colors.white : Color(0xFF1C1C1C),
       backgroundColor: color.withOpacity(0.24),
       dividerColor: isLightTheme ? Colors.black12 : Colors.white24,
       disabledColor: isLightTheme ? Colors.black38 : Colors.white38,
@@ -79,26 +80,30 @@ abstract class Methods {
         labelColor: color,
         unselectedLabelColor: isLightTheme ? Colors.black54 : Colors.white.withOpacity(0.67),
       ),
+      popupMenuTheme: PopupMenuThemeData(
+        elevation: 2.0,
+        color: isLightTheme ? Colors.white : Color(0xFF242424),
+      ),
       appBarTheme: AppBarTheme(
-        color: isLightTheme ? Colors.white : Color.fromRGBO(42, 42, 42, 1),
+        color: isLightTheme ? Colors.white : Color(0xFF1C1C1C),
         brightness: isLightTheme ? Brightness.light : Brightness.dark,
         elevation: 4.0,
         iconTheme: IconThemeData(
-          color: isLightTheme ? Colors.black54 : Colors.white.withOpacity(1.0),
+          color: isLightTheme ? Colors.black54 : Colors.white.withOpacity(0.87),
           size: 24,
         ),
         actionsIconTheme: IconThemeData(
-          color: isLightTheme ? Colors.black54 : Colors.white.withOpacity(1.0),
+          color: isLightTheme ? Colors.black54 : Colors.white.withOpacity(0.87),
           size: 24,
         ),
       ),
       iconTheme: IconThemeData(
-        color: isLightTheme ? Colors.black54 : Colors.white.withOpacity(1.0),
+        color: isLightTheme ? Colors.black54 : Colors.white.withOpacity(0.87),
         size: 24,
       ),
       bottomNavigationBarTheme: new BottomNavigationBarThemeData(
-        backgroundColor: isLightTheme ? color : Color.fromRGBO(42, 42, 42, 1),
-        selectedItemColor: Colors.white,
+        backgroundColor: isLightTheme ? color : Color(0xFF1F1F1F),
+        selectedItemColor: Colors.white.withOpacity(0.87),
         unselectedItemColor: Colors.white54,
       ),
       primaryTextTheme: new TextTheme(
@@ -129,7 +134,7 @@ abstract class Methods {
         ),
         headline6: TextStyle(
           fontWeight: FontWeight.normal,
-          color: isLightTheme ? Colors.black87 : Colors.white.withOpacity(1.0),
+          color: isLightTheme ? Colors.black87 : Colors.white.withOpacity(0.87),
           fontSize: 18,
         ),
       ),
@@ -161,7 +166,7 @@ abstract class Methods {
         ),
         headline6: TextStyle(
           fontWeight: FontWeight.normal,
-          color: isLightTheme ? Colors.black87 : Colors.white.withOpacity(1.0),
+          color: isLightTheme ? Colors.black87 : Colors.white.withOpacity(0.87),
           fontSize: 18,
         ),
       ),
