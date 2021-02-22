@@ -58,11 +58,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         context: context,
         builder: (subContext) => AlertDialog(
           title: Text(
-            'Exit',
+            Constants.STRING_EXIT_TITLE,
             style: Theme.of(subContext).textTheme.headline1,
           ),
           content: Text(
-            'Do you want to exit Harmonoid?',
+            Constants.STRING_EXIT_SUBTITLE,
             style: Theme.of(subContext).textTheme.headline5,
           ),
           actions: [
