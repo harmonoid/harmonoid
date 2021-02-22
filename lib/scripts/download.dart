@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import 'package:harmonoid/main.dart';
+import 'package:harmonoid/screens/harmonoid.dart';
 import 'package:harmonoid/language/constants.dart';
 
 

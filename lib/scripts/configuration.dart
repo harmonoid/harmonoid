@@ -10,7 +10,6 @@ Configuration configuration;
 
 
 const Map<String, dynamic> DEFAULT_CONFIGURATION = {
-  'version': 'v0.0.3+1',
   'homeAddress': 'harmonoid.herokuapp.com',
   'languageRegion': 0,
   'themeMode': 0,
@@ -28,7 +27,6 @@ const JsonEncoder JSON_ENCODER = JsonEncoder.withIndent('    ');
 
 
 class Configuration {
-  String version;
   String homeAddress;
   LanguageRegion languageRegion;
   ThemeMode themeMode;
@@ -65,9 +63,6 @@ class Configuration {
     List<dynamic> discoverRecent,
     bool automaticAccent,
     }) async {
-    if (version != null) {
-      this.version = version;
-    }
     if (homeAddress != null) {
       this.homeAddress = homeAddress;
     }
@@ -99,7 +94,6 @@ class Configuration {
       this.automaticAccent = automaticAccent;
     }
     await configuration.configurationFile.writeAsString(JSON_ENCODER.convert({
-      'version': this.version,
       'homeAddress': this.homeAddress,
       'languageRegion': this.languageRegion.index,
       'themeMode': this.themeMode.index,
@@ -115,7 +109,6 @@ class Configuration {
 
   Future<dynamic> _refresh() async {
     Map<String, dynamic> configurationMap = jsonDecode(await this.configurationFile.readAsString());
-    this.version = configurationMap['version'];
     this.homeAddress = configurationMap['homeAddress'];
     this.languageRegion = LanguageRegion.values[configurationMap['languageRegion']];
     this.themeMode = ThemeMode.values[configurationMap['themeMode']];
