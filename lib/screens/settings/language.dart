@@ -42,21 +42,37 @@ class LanguageState extends State<LanguageSetting> {
             right: 16.0,
             bottom: 4.0,
           ),
-          title: Column(
+          title: (context, animation) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                Constants.STRING_SETTING_LANGUAGE_TITLE,
-                style: Theme.of(context).textTheme.headline2,
-              ),
-              Divider(color: Colors.transparent, height: 4.0),
-              Text(
-                Constants.STRING_SETTING_LANGUAGE_SUBTITLE,
-                style: Theme.of(context).textTheme.headline5,
-              ),
-              Divider(color: Colors.transparent, height: 8.0),
+              Row(children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        Constants.STRING_SETTING_LANGUAGE_TITLE,
+                        style: Theme.of(context).textTheme.headline2,
+                      ),
+                      Divider(color: Colors.transparent, height: 4.0),
+                      Text(
+                        Constants.STRING_SETTING_LANGUAGE_SUBTITLE,
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      Divider(color: Colors.transparent, height: 8.0),
+                    ],
+                  ),
+                ),
+                RotationTransition(
+                  turns: Tween<double>(
+                    begin: 0.0,
+                    end: 0.5,
+                  ).animate(animation),
+                  child: Icon(Icons.expand_more),
+                ),
+              ]),
               Divider(
                 color: Theme.of(context).dividerColor,
                 thickness: 1.0,
@@ -66,10 +82,7 @@ class LanguageState extends State<LanguageSetting> {
           ),
           fixedChild: AnimatedSwitcher(
             duration: Duration(milliseconds: 300),
-            child: _buildLanguageRegionTile(
-              languageRegion,
-              key: ValueKey<LanguageRegion>(languageRegion),
-            ),
+            child: _buildLanguageRegionTile(languageRegion),
           ),
           children: List.generate(regions.length, (index) {
             final region = regions[index];
@@ -106,7 +119,6 @@ class LanguageState extends State<LanguageSetting> {
 }
 
 // Expansion tile
-
 const Duration _kExpand = Duration(milliseconds: 200);
 
 class ExpansionTile extends StatefulWidget {
@@ -137,9 +149,7 @@ class ExpansionTile extends StatefulWidget {
         super(key: key);
 
   final Widget leading;
-
-  final Widget title;
-
+  final Widget Function(BuildContext child, Animation animation) title;
   final Widget subtitle;
 
   final ValueChanged<bool> onExpansionChanged;
@@ -159,9 +169,7 @@ class ExpansionTile extends StatefulWidget {
   final ShapeBorder tileShape;
 
   final Alignment expandedAlignment;
-
   final CrossAxisAlignment expandedCrossAxisAlignment;
-
   final EdgeInsetsGeometry childrenPadding;
 
   @override
@@ -174,8 +182,6 @@ class _ExpansionTileState extends State<ExpansionTile>
       CurveTween(curve: Curves.easeOut);
   static final Animatable<double> _easeInTween =
       CurveTween(curve: Curves.easeIn);
-  static final Animatable<double> _halfTween =
-      Tween<double>(begin: 0.0, end: 0.5);
 
   final ColorTween _borderColorTween = ColorTween();
   final ColorTween _headerColorTween = ColorTween();
@@ -183,9 +189,7 @@ class _ExpansionTileState extends State<ExpansionTile>
   final ColorTween _backgroundColorTween = ColorTween();
 
   AnimationController _controller;
-  Animation<double> _iconTurns;
   Animation<double> _heightFactor;
-  Animation<Color> _borderColor;
   Animation<Color> _headerColor;
   Animation<Color> _iconColor;
   Animation<Color> _backgroundColor;
@@ -197,8 +201,6 @@ class _ExpansionTileState extends State<ExpansionTile>
     super.initState();
     _controller = AnimationController(duration: _kExpand, vsync: this);
     _heightFactor = _controller.drive(_easeInTween);
-    _iconTurns = _controller.drive(_halfTween.chain(_easeInTween));
-    _borderColor = _controller.drive(_borderColorTween.chain(_easeOutTween));
     _headerColor = _controller.drive(_headerColorTween.chain(_easeInTween));
     _iconColor = _controller.drive(_iconColorTween.chain(_easeInTween));
     _backgroundColor =
@@ -247,9 +249,12 @@ class _ExpansionTileState extends State<ExpansionTile>
               onTap: _handleTap,
               contentPadding: widget.tilePadding,
               leading: widget.leading,
-              title: widget.title,
               subtitle: widget.subtitle,
               shape: widget.tileShape,
+              title: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, child) => widget.title(context, _controller),
+              ),
               // trailing: widget.trailing ??
               //     RotationTransition(
               //       turns: _iconTurns,

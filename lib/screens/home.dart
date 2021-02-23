@@ -92,9 +92,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         onGenerateRoute: (RouteSettings routeSettings) {
           Route route;
           if (routeSettings.name == 'discoverMusic') {
-            route = MaterialPageRoute(
-              builder: (BuildContext context) => DiscoverMusic(),
-            );
+            route = MaterialPageRoute(builder: (_) => DiscoverMusic());
           }
           return route;
         },
