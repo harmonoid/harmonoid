@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/language/constants.dart';
 
 class AboutSetting extends StatefulWidget {
-  AboutSetting({Key key}) : super(key: key);
+  const AboutSetting({Key key}) : super(key: key);
 
   @override
   AboutState createState() => AboutState();
@@ -29,8 +29,7 @@ class AboutState extends State<AboutSetting> {
         );
         this.repository = convert.jsonDecode(response.body);
         this.setState(() {});
-      }
-      catch (exception) {}
+      } catch (exception) {}
       this._init = false;
     }
   }
@@ -50,9 +49,13 @@ class AboutState extends State<AboutSetting> {
         child: ListTile(
           title: Text(Constants.STRING_ABOUT_TITLE),
           subtitle: Text(Constants.STRING_ABOUT_SUBTITLE),
-        )
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+          trailing: Icon(Icons.navigate_next),
+          // TODO(bdlukaa): add a press effect but still open the container
+          // onTap: () {},
+        ),
       ),
-      openBuilder: (BuildContext context, __) => Scaffold(
+      openBuilder: (context, _) => Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.close),
@@ -92,9 +95,11 @@ class AboutState extends State<AboutSetting> {
                           padding: EdgeInsets.only(left: 16.0, right: 16.0),
                           child: CircleAvatar(
                             backgroundColor: Theme.of(context).cardColor,
-                            backgroundImage: this.repository == null ? null: NetworkImage(
-                              this.repository['owner']['avatar_url'],
-                            ),
+                            backgroundImage: this.repository == null
+                                ? null
+                                : NetworkImage(
+                                    this.repository['owner']['avatar_url'],
+                                  ),
                           ),
                         ),
                         Column(
@@ -116,14 +121,16 @@ class AboutState extends State<AboutSetting> {
                   Padding(
                     padding: EdgeInsets.only(left: 16.0, right: 16.0),
                     child: Text(
-                      this.repository == null ? 'GNU General Public License v3.0': this.repository['license']['name'],
+                      this.repository == null
+                          ? 'GNU General Public License v3.0'
+                          : this.repository['license']['name'],
                       style: Theme.of(context).textTheme.headline5,
-                    )
+                    ),
                   ),
-                  this.repository == null ? Container(): Padding(
-                    padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                    child: Row(
-                      children: [
+                  if (this.repository != null)
+                    Padding(
+                      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+                      child: Row(children: [
                         Chip(
                           avatar: Icon(Icons.star_border, color: Colors.white),
                           label: Text(
@@ -134,9 +141,7 @@ class AboutState extends State<AboutSetting> {
                           ),
                           backgroundColor: Theme.of(context).accentColor,
                         ),
-                        Container(
-                          width: 8.0,
-                        ),
+                        Container(width: 8.0),
                         Chip(
                           avatar: Icon(Icons.restaurant, color: Colors.white),
                           label: Text(
@@ -147,18 +152,20 @@ class AboutState extends State<AboutSetting> {
                           ),
                           backgroundColor: Theme.of(context).accentColor,
                         ),
-                      ],
+                      ]),
                     ),
-                  ),
                   Padding(
-                    padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
-                    child: this.repository == null ? Text(
-                      '🎵 The music app you always dreamt.',
-                      style: Theme.of(context).textTheme.headline5,
-                    ): Text(
-                      this.repository['description'],
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
+                    padding:
+                        EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+                    child: this.repository == null
+                        ? Text(
+                            '🎵 The music app you always dreamt.',
+                            style: Theme.of(context).textTheme.headline5,
+                          )
+                        : Text(
+                            this.repository['description'],
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
                   ),
                   Divider(
                     color: Theme.of(context).dividerColor,
@@ -200,11 +207,13 @@ class AboutState extends State<AboutSetting> {
             ),
             SettingsTile(
               title: 'Collaborators',
-              subtitle: 'Thanks to these guys, irrespective of order, for contribution to the server of app & support.',
+              subtitle:
+                  'Thanks to these guys, irrespective of order, for contribution to the server of app & support.',
               child: Column(
                 children: [
                   ListTile(
-                    onTap: () => launcher.launch('https://github.com/raitonoberu'),
+                    onTap: () =>
+                        launcher.launch('https://github.com/raitonoberu'),
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(
                         'https://avatars.githubusercontent.com/u/64320078',
@@ -224,67 +233,69 @@ class AboutState extends State<AboutSetting> {
                 ],
               ),
             ),
+            // review(alex): make this more intuitive
             SettingsTile(
               title: Constants.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE,
               subtitle: Constants.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE,
-              child: Column(
-                children: [
-                  ListTile(
-                    onTap: () => launcher.launch('https://github.com/raitonoberu'),
-                    leading: CircleAvatar(
-                      child: Text('🇷🇺'),
-                      backgroundColor: Theme.of(context).cardColor,
-                    ),
-                    title: Text('raitonoberu'),
-                    subtitle: Text(LanguageRegion.ruRu.data[0]),
+              child: Column(children: [
+                ListTile(
+                  onTap: () =>
+                      launcher.launch('https://github.com/raitonoberu'),
+                  leading: CircleAvatar(
+                    child: Text('🇷🇺'),
+                    backgroundColor: Theme.of(context).cardColor,
                   ),
-                  ListTile(
-                    onTap: () => launcher.launch('https://github.com/mytja'),
-                    leading: CircleAvatar(
-                      child: Text('🇸🇮'),
-                      backgroundColor: Theme.of(context).cardColor,
-                    ),
-                    title: Text('mytja'),
-                    subtitle: Text(LanguageRegion.slSi.data[0]),
+                  title: Text('raitonoberu'),
+                  subtitle: Text(LanguageRegion.ruRu.data[0]),
+                ),
+                ListTile(
+                  onTap: () => launcher.launch('https://github.com/mytja'),
+                  leading: CircleAvatar(
+                    child: Text('🇸🇮'),
+                    backgroundColor: Theme.of(context).cardColor,
                   ),
-                  ListTile(
-                    onTap: () => launcher.launch('https://github.com/bdlukaa'),
-                    leading: CircleAvatar(
-                      child: Text('🇧🇷'),
-                      backgroundColor: Theme.of(context).cardColor,
-                    ),
-                    title: Text('bdlukaa'),
-                    subtitle: Text(LanguageRegion.ptBr.data[0]),
+                  title: Text('mytja'),
+                  subtitle: Text(LanguageRegion.slSi.data[0]),
+                ),
+                ListTile(
+                  onTap: () => launcher.launch('https://github.com/bdlukaa'),
+                  leading: CircleAvatar(
+                    child: Text('🇧🇷'),
+                    backgroundColor: Theme.of(context).cardColor,
                   ),
-                  ListTile(
-                    onTap: () => launcher.launch('https://github.com/alexmercerind'),
-                    leading: CircleAvatar(
-                      child: Text('🇮🇳'),
-                      backgroundColor: Theme.of(context).cardColor,
-                    ),
-                    title: Text('alexmercerind'),
-                    subtitle: Text(LanguageRegion.hiIn.data[0]),
+                  title: Text('bdlukaa'),
+                  subtitle: Text(LanguageRegion.ptBr.data[0]),
+                ),
+                ListTile(
+                  onTap: () =>
+                      launcher.launch('https://github.com/alexmercerind'),
+                  leading: CircleAvatar(
+                    child: Text('🇮🇳'),
+                    backgroundColor: Theme.of(context).cardColor,
                   ),
-                  ListTile(
-                    onTap: () => launcher.launch('https://github.com/MickLesk'),
-                    leading: CircleAvatar(
-                      child: Text('🇩🇪'),
-                      backgroundColor: Theme.of(context).cardColor,
-                    ),
-                    title: Text('MickLesk'),
-                    subtitle: Text(LanguageRegion.deDe.data[0]),
+                  title: Text('alexmercerind'),
+                  subtitle: Text(LanguageRegion.hiIn.data[0]),
+                ),
+                ListTile(
+                  onTap: () => launcher.launch('https://github.com/MickLesk'),
+                  leading: CircleAvatar(
+                    child: Text('🇩🇪'),
+                    backgroundColor: Theme.of(context).cardColor,
                   ),
-                  ListTile(
-                    onTap: () => launcher.launch('https://github.com/kebabinjeneus'),
-                    leading: CircleAvatar(
-                      child: Text('🇳🇱'),
-                      backgroundColor: Theme.of(context).cardColor,
-                    ),
-                    title: Text('kebabinjeneus'),
-                    subtitle: Text(LanguageRegion.nlNl.data[0]),
+                  title: Text('MickLesk'),
+                  subtitle: Text(LanguageRegion.deDe.data[0]),
+                ),
+                ListTile(
+                  onTap: () =>
+                      launcher.launch('https://github.com/kebabinjeneus'),
+                  leading: CircleAvatar(
+                    child: Text('🇳🇱'),
+                    backgroundColor: Theme.of(context).cardColor,
                   ),
-                ],
-              ),
+                  title: Text('kebabinjeneus'),
+                  subtitle: Text(LanguageRegion.nlNl.data[0]),
+                ),
+              ]),
             ),
             OpenContainer(
               transitionDuration: Duration(milliseconds: 400),
@@ -293,13 +304,15 @@ class AboutState extends State<AboutSetting> {
               closedElevation: 0.0,
               openElevation: 0.0,
               closedBuilder: (BuildContext context, _) => Card(
-                margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0, bottom: 4.0),
+                margin: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0),
                 color: Theme.of(context).cardColor,
                 elevation: 2.0,
                 child: ListTile(
                   title: Text('Third Party Credits'),
                   subtitle: Text('Thanks for your indirect contribution.'),
-                )
+                  // TODO(bdlukaa): add a press effect but still open the container
+                  // onTap: () {},
+                ),
               ),
               openBuilder: (BuildContext context, __) => Scaffold(
                 appBar: AppBar(
@@ -311,178 +324,207 @@ class AboutState extends State<AboutSetting> {
                   ),
                   title: Text('Third Party Credits'),
                 ),
-                body: ListView(
-                  children: [
-                    SettingsTile(
-                      title: 'Images',
-                      subtitle: 'Pictures & camera work credits. Thanks to following people for providing pleasant images.',
-                      child: Column(
-                        children: [
-                          ListTile(
-                            onTap: () => launcher.launch('https://unsplash.com/photos/7x4ngEfelyE'),
-                            leading: CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/credits-albums.jpg'),
-                            ),
-                            title: Text('Oleg Ivanov'),
+                body: ListView(children: [
+                  SettingsTile(
+                    title: 'Images',
+                    subtitle:
+                        'Pictures & camera work credits. Thanks to following people for providing pleasant images.',
+                    child: Column(
+                      children: [
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://unsplash.com/photos/7x4ngEfelyE'),
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/images/credits-albums.jpg'),
                           ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://unsplash.com/photos/HRyjETL87Gg'),
-                            leading: CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/credits-tracks.jpg'),
-                            ),
-                            title: Text('Mink Mingle'),
-                          ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://unsplash.com/photos/hgO1wFPXl3I'),
-                            leading: CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/credits-artists.jpg'),
-                            ),
-                            title: Text('Austin Neill'),
-                          ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://unsplash.com/photos/52jRtc2S_VE'),
-                            leading: CircleAvatar(
-                              backgroundImage: AssetImage('assets/images/credits-exception.jpg'),
-                            ),
-                            title: Text('Sarah Kilian'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SettingsTile(
-                      title: 'Album Arts',
-                      subtitle: 'The album arts showed in various screenshots of the project belong to NoCopyrightSounds.',
-                      child: Column(
-                        children: [
-                          ListTile(
-                            onTap: () => launcher.launch('https://www.youtube.com/watch?v=y07YAT1qdOQ'),
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage('https://lh3.googleusercontent.com/CsLz1eLJ7qBu9Ad-wO8Nypz6RUAvATsW0MUTxZI2giSW1TnFs5S6HWtutXr50T14oNmTn5Ka1FcYsno=w60-h60-l90-rj'),
-                            ),
-                            title: Text('Sunburst'),
-                            subtitle: Text('Tobu'),
-                          ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://www.youtube.com/watch?v=BmrSzhw3rGE'),
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage('https://lh3.googleusercontent.com/npz6DWheubb-oT57BWT9RGMFnq-dICZW-Y6fP9zsqr6hYZVdZ7lquE1jXcq-TDnWjOedNMiUFIuSttl7jQ=w60-h60-l90-rj'),
-                            ),
-                            title: Text('Hope'),
-                            subtitle: Text('Tobu'),
-                          ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://www.youtube.com/watch?v=Z1xRUgnT0-0'),
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage('https://lh3.googleusercontent.com/2je-mCKeSSzqvtlvtBT3NjkZ8jSoVwnk-CCAsFYpZHz1TgkDk-6-cDNvyNz9miLHZWN2m88n0_nEf_Mu=w60-h60-l90-rj'),
-                            ),
-                            title: Text('Safe And Sound'),
-                            subtitle: Text('DEAF KEV'),
-                          ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://www.youtube.com/watch?v=m3YZ0l0l1Q8'),
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage('https://lh3.googleusercontent.com/-5xRRnRbxiaPKOTOLI8Fb7JcNkh1aGMMRA6Do86bYgGXKG5AZvRTcXhSMlVaVKN5Wv6RrKrRaCl17TIa=w60-h60-l90-rj'),
-                            ),
-                            title: Text('NCS: Alpha'),
-                            subtitle: Text('Various Artists'),
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        MaterialButton(
-                          onPressed: () => launcher.launch(
-                            'https://www.youtube.com/user/NoCopyrightSounds',
-                          ),
-                          child: Text(
-                            'YOUTUBE',
-                            style: TextStyle(
-                              color: Theme.of(context).accentColor,
-                            ),
-                          ),
+                          title: Text('Oleg Ivanov'),
                         ),
-                        MaterialButton(
-                          onPressed: () => launcher.launch(
-                            'https://ncs.io/',
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://unsplash.com/photos/HRyjETL87Gg'),
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/images/credits-tracks.jpg'),
                           ),
-                          child: Text(
-                            'NOCOPYRIGHTSOUNDS',
-                            style: TextStyle(
-                              color: Theme.of(context).accentColor,
-                            ),
+                          title: Text('Mink Mingle'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://unsplash.com/photos/hgO1wFPXl3I'),
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/images/credits-artists.jpg'),
                           ),
+                          title: Text('Austin Neill'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://unsplash.com/photos/52jRtc2S_VE'),
+                          leading: CircleAvatar(
+                            backgroundImage: AssetImage(
+                                'assets/images/credits-exception.jpg'),
+                          ),
+                          title: Text('Sarah Kilian'),
                         ),
                       ],
                     ),
-                    SettingsTile(
-                      title: 'Third Party Licenses',
-                      subtitle: 'Open source libraries used. Following projects made this project possible.',
-                      child: Column(
-                        children: [
-                          ListTile(
-                            onTap: () => launcher.launch('https://github.com/florent37/Flutter-AssetsAudioPlayer/blob/master/LICENSE'),
-                            title: Text('assets_audio_player'),
-                            subtitle: Text('florent37'),
+                  ),
+                  SettingsTile(
+                    title: 'Album Arts',
+                    subtitle:
+                        'The album arts showed in various screenshots of the project belong to NoCopyrightSounds.',
+                    child: Column(
+                      children: [
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://www.youtube.com/watch?v=y07YAT1qdOQ'),
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                'https://lh3.googleusercontent.com/CsLz1eLJ7qBu9Ad-wO8Nypz6RUAvATsW0MUTxZI2giSW1TnFs5S6HWtutXr50T14oNmTn5Ka1FcYsno=w60-h60-l90-rj'),
                           ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://github.com/alexmercerind/media_metadata_retriever/blob/master/LICENSE'),
-                            title: Text('media_metadata_retriever'),
-                            subtitle: Text('alexmercerind'),
+                          title: Text('Sunburst'),
+                          subtitle: Text('Tobu'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://www.youtube.com/watch?v=BmrSzhw3rGE'),
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                'https://lh3.googleusercontent.com/npz6DWheubb-oT57BWT9RGMFnq-dICZW-Y6fP9zsqr6hYZVdZ7lquE1jXcq-TDnWjOedNMiUFIuSttl7jQ=w60-h60-l90-rj'),
                           ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://github.com/florent37/Flutter-AssetsAudioPlayer/blob/master/LICENSE'),
-                            title: Text('assets_audio_player'),
-                            subtitle: Text('florent37'),
+                          title: Text('Hope'),
+                          subtitle: Text('Tobu'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://www.youtube.com/watch?v=Z1xRUgnT0-0'),
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                'https://lh3.googleusercontent.com/2je-mCKeSSzqvtlvtBT3NjkZ8jSoVwnk-CCAsFYpZHz1TgkDk-6-cDNvyNz9miLHZWN2m88n0_nEf_Mu=w60-h60-l90-rj'),
                           ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://github.com/MaikuB/flutter_local_notifications/blob/master/LICENSE'),
-                            title: Text('flutter_local_notifications'),
-                            subtitle: Text('MaikuB'),
+                          title: Text('Safe And Sound'),
+                          subtitle: Text('DEAF KEV'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://www.youtube.com/watch?v=m3YZ0l0l1Q8'),
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                'https://lh3.googleusercontent.com/-5xRRnRbxiaPKOTOLI8Fb7JcNkh1aGMMRA6Do86bYgGXKG5AZvRTcXhSMlVaVKN5Wv6RrKrRaCl17TIa=w60-h60-l90-rj'),
                           ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://github.com/Baseflow/permission_handler/blob/master/LICENSE'),
-                            title: Text('permission_handler'),
-                            subtitle: Text('Baseflow'),
-                          ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://github.com/flutter/packages/blob/master/packages/animations/LICENSE'),
-                            title: Text('animations'),
-                            subtitle: Text('flutter'),
-                          ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://github.com/dart-lang/http/blob/master/LICENSE'),
-                            title: Text('http'),
-                            subtitle: Text('dart-lang'),
-                          ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://github.com/dart-lang/path/blob/master/LICENSE'),
-                            title: Text('path'),
-                            subtitle: Text('dart-lang'),
-                          ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://github.com/flutter/plugins/blob/master/packages/path_provider/path_provider/LICENSE'),
-                            title: Text('path_provider'),
-                            subtitle: Text('flutter'),
-                          ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://github.com/flutter/plugins/blob/master/packages/share/LICENSE'),
-                            title: Text('share'),
-                            subtitle: Text('flutter'),
-                          ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://github.com/flutter/plugins/blob/master/packages/url_launcher/url_launcher/LICENSE'),
-                            title: Text('url_launcher'),
-                            subtitle: Text('flutter'),
-                          ),
-                          ListTile(
-                            onTap: () => launcher.launch('https://github.com/flutter/packages/blob/master/LICENSE'),
-                            title: Text('palette_generator'),
-                            subtitle: Text('flutter'),
-                          ),
-                        ],
-                      ),
+                          title: Text('NCS: Alpha'),
+                          subtitle: Text('Various Artists'),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                    actions: [
+                      MaterialButton(
+                        onPressed: () => launcher.launch(
+                          'https://www.youtube.com/user/NoCopyrightSounds',
+                        ),
+                        child: Text(
+                          'YOUTUBE',
+                          style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                          ),
+                        ),
+                      ),
+                      MaterialButton(
+                        onPressed: () => launcher.launch(
+                          'https://ncs.io/',
+                        ),
+                        child: Text(
+                          'NOCOPYRIGHTSOUNDS',
+                          style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SettingsTile(
+                    title: 'Third Party Licenses',
+                    subtitle:
+                        'Open source libraries used. Following projects made this project possible.',
+                    child: Column(
+                      children: [
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://github.com/florent37/Flutter-AssetsAudioPlayer/blob/master/LICENSE'),
+                          title: Text('assets_audio_player'),
+                          subtitle: Text('florent37'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://github.com/alexmercerind/media_metadata_retriever/blob/master/LICENSE'),
+                          title: Text('media_metadata_retriever'),
+                          subtitle: Text('alexmercerind'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://github.com/florent37/Flutter-AssetsAudioPlayer/blob/master/LICENSE'),
+                          title: Text('assets_audio_player'),
+                          subtitle: Text('florent37'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://github.com/MaikuB/flutter_local_notifications/blob/master/LICENSE'),
+                          title: Text('flutter_local_notifications'),
+                          subtitle: Text('MaikuB'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://github.com/Baseflow/permission_handler/blob/master/LICENSE'),
+                          title: Text('permission_handler'),
+                          subtitle: Text('Baseflow'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://github.com/flutter/packages/blob/master/packages/animations/LICENSE'),
+                          title: Text('animations'),
+                          subtitle: Text('flutter'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://github.com/dart-lang/http/blob/master/LICENSE'),
+                          title: Text('http'),
+                          subtitle: Text('dart-lang'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://github.com/dart-lang/path/blob/master/LICENSE'),
+                          title: Text('path'),
+                          subtitle: Text('dart-lang'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://github.com/flutter/plugins/blob/master/packages/path_provider/path_provider/LICENSE'),
+                          title: Text('path_provider'),
+                          subtitle: Text('flutter'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://github.com/flutter/plugins/blob/master/packages/share/LICENSE'),
+                          title: Text('share'),
+                          subtitle: Text('flutter'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://github.com/flutter/plugins/blob/master/packages/url_launcher/url_launcher/LICENSE'),
+                          title: Text('url_launcher'),
+                          subtitle: Text('flutter'),
+                        ),
+                        ListTile(
+                          onTap: () => launcher.launch(
+                              'https://github.com/flutter/packages/blob/master/LICENSE'),
+                          title: Text('palette_generator'),
+                          subtitle: Text('flutter'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
               ),
             ),
           ],

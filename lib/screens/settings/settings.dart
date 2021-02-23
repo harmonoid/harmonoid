@@ -10,9 +10,7 @@ import 'package:harmonoid/screens/settings/accent.dart';
 import 'package:harmonoid/screens/settings/server.dart';
 import 'package:harmonoid/language/constants.dart';
 
-
 class Settings extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,14 +45,21 @@ class Settings extends StatelessWidget {
   }
 }
 
-
 class SettingsTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final Widget child;
   final EdgeInsets margin;
   final List<Widget> actions;
-  SettingsTile({Key key, @required this.title, @required this.subtitle, @required this.child, this.actions, this.margin}) : super(key: key);
+
+  const SettingsTile({
+    Key key,
+    @required this.title,
+    @required this.subtitle,
+    @required this.child,
+    this.actions,
+    this.margin,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +72,12 @@ class SettingsTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
+            margin: EdgeInsets.only(
+              top: 16.0,
+              left: 16.0,
+              right: 16.0,
+              bottom: 8.0,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -77,10 +87,7 @@ class SettingsTile extends StatelessWidget {
                   this.title,
                   style: Theme.of(context).textTheme.headline2,
                 ),
-                Divider(
-                  color: Colors.transparent,
-                  height: 4.0,
-                ),
+                Divider(color: Colors.transparent, height: 4.0),
                 Text(
                   this.subtitle,
                   style: Theme.of(context).textTheme.headline5,
@@ -105,18 +112,22 @@ class SettingsTile extends StatelessWidget {
             color: Colors.transparent,
             height: 8.0,
           ),
-          this.actions != null ? Divider(
-            color: Theme.of(context).dividerColor,
-            thickness: 1.0,
-            indent: 16.0,
-            endIndent: 16.0,
-            height: 1.0,
-          ) : Container(),
-          this.actions != null ? ButtonBar(
-            alignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
-            children: this.actions,
-          ) : Container(),
+          this.actions != null
+              ? Divider(
+                  color: Theme.of(context).dividerColor,
+                  thickness: 1.0,
+                  indent: 16.0,
+                  endIndent: 16.0,
+                  height: 1.0,
+                )
+              : Container(),
+          this.actions != null
+              ? ButtonBar(
+                  alignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.max,
+                  children: this.actions,
+                )
+              : Container(),
         ],
       ),
     );

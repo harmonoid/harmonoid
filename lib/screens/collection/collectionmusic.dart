@@ -14,7 +14,7 @@ import 'package:harmonoid/language/constants.dart';
 
 
 class CollectionMusic extends StatefulWidget {
-  CollectionMusic({Key key}) : super(key: key);
+  const CollectionMusic({Key key}) : super(key: key);
   CollectionMusicState createState() => CollectionMusicState();
 }
 

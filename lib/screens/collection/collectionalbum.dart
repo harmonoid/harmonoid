@@ -14,7 +14,13 @@ class CollectionAlbumTile extends StatelessWidget {
   final double height;
   final double width;
   final Album album;
-  CollectionAlbumTile({Key key, @required this.album, @required this.height, @required this.width}) : super(key: key);
+
+  const CollectionAlbumTile({
+    Key key, 
+    @required this.album, 
+    @required this.height, 
+    @required this.width,
+  }) : super(key: key);
 
   Widget build(BuildContext context) {
     return OpenContainer(
@@ -22,50 +28,54 @@ class CollectionAlbumTile extends StatelessWidget {
       closedElevation: 2,
       closedColor: Theme.of(context).cardColor,
       openColor: Theme.of(context).scaffoldBackgroundColor,
-      closedBuilder: (_, __) => Container(
-        height: this.height,
-        width: this.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.file(
-              collection.getAlbumArt(this.album),
-              fit: BoxFit.fill,
-              filterQuality: FilterQuality.low,
-              height: this.width,
-              width: this.width,
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-              height: this.height - this.width,
-              width: this.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 4),
-                    child: Text(
-                      this.album.albumName,
-                      style: Theme.of(context).textTheme.headline2,
-                      textAlign: TextAlign.left,
-                      maxLines: 2,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 2),
-                    child: Text(
-                      '${this.album.albumArtistName}\n(${this.album.year  ?? 'Unknown Year'})',
-                      style: Theme.of(context).textTheme.headline5,
-                      maxLines: 2,
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ],
+      closedBuilder: (_, __) => InkWell(
+        // TODO(bdlukaa): add a press effect but still open the container
+        // onTap: () {},
+        child: Container(
+          height: this.height,
+          width: this.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Ink.image(
+                image: FileImage(collection.getAlbumArt(this.album)),
+                fit: BoxFit.fill,
+                // filterQuality: FilterQuality.low,
+                height: this.width,
+                width: this.width,
               ),
-            ),
-          ],
+              Container(
+                padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                height: this.height - this.width,
+                width: this.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Text(
+                        this.album.albumName,
+                        style: Theme.of(context).textTheme.headline2,
+                        textAlign: TextAlign.left,
+                        maxLines: 2,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 2),
+                      child: Text(
+                        '${this.album.albumArtistName}\n(${this.album.year  ?? 'Unknown Year'})',
+                        style: Theme.of(context).textTheme.headline5,
+                        maxLines: 2,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       openBuilder: (_, __) => CollectionAlbum(
@@ -78,7 +88,8 @@ class CollectionAlbumTile extends StatelessWidget {
 
 class LeadingCollectionALbumTile extends StatelessWidget {
   final double height;
-  LeadingCollectionALbumTile({Key key, @required this.height}) : super(key: key);
+
+  const LeadingCollectionALbumTile({Key key, @required this.height}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -89,53 +100,57 @@ class LeadingCollectionALbumTile extends StatelessWidget {
         closedElevation: 2,
         closedColor: Theme.of(context).cardColor,
         openColor: Theme.of(context).scaffoldBackgroundColor,
-        closedBuilder: (_, __) => Container(
-          height: this.height,
-          width: MediaQuery.of(context).size.width - 16,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.file(
-                collection.getAlbumArt(collection.lastAlbum),
-                fit: BoxFit.fill,
-                filterQuality: FilterQuality.low,
-                height: this.height,
-                width: this.height,
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 8, right: 8),
-                width: MediaQuery.of(context).size.width - 32 - this.height,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      collection.lastAlbum.albumName,
-                      style: Theme.of(context).textTheme.headline1,
-                      textAlign: TextAlign.start,
-                      maxLines: 2,
-                    ),
-                    Text(
-                      collection.lastAlbum.albumArtistName,
-                      style: Theme.of(context).textTheme.headline3,
-                      textAlign: TextAlign.start,
-                      maxLines: 1,
-                    ),
-                    Text(
-                      '(${collection.lastAlbum.year  ?? 'Unknown Year'})',
-                      style: Theme.of(context).textTheme.headline5,
-                      textAlign: TextAlign.start,
-                      maxLines: 1,
-                    ),
-                  ],
+        closedBuilder: (_, __) => InkWell(
+          // TODO(bdlukaa): add a press effect but still open the container
+          // onTap: () {},
+          child: Container(
+            height: this.height,
+            width: MediaQuery.of(context).size.width - 16,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Ink.image(
+                  image: FileImage(collection.getAlbumArt(collection.lastAlbum)),
+                  fit: BoxFit.fill,
+                  // filterQuality: FilterQuality.low,
+                  height: this.height,
+                  width: this.height,
                 ),
-              ),
-            ],
+                Container(
+                  margin: EdgeInsets.only(left: 8, right: 8),
+                  width: MediaQuery.of(context).size.width - 32 - this.height,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        collection.lastAlbum.albumName,
+                        style: Theme.of(context).textTheme.headline1,
+                        textAlign: TextAlign.start,
+                        maxLines: 2,
+                      ),
+                      Text(
+                        collection.lastAlbum.albumArtistName,
+                        style: Theme.of(context).textTheme.headline3,
+                        textAlign: TextAlign.start,
+                        maxLines: 1,
+                      ),
+                      Text(
+                        '(${collection.lastAlbum.year  ?? 'Unknown Year'})',
+                        style: Theme.of(context).textTheme.headline5,
+                        textAlign: TextAlign.start,
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         openBuilder: (_, __) => CollectionAlbum(
-          album: collection.lastAlbum,
+          album: collection.lastAlbum
         ),
       ),
     );
@@ -145,7 +160,9 @@ class LeadingCollectionALbumTile extends StatelessWidget {
 
 class CollectionAlbum extends StatefulWidget {
   final Album album;
-  CollectionAlbum({Key key, @required this.album}) : super(key: key);
+
+  const CollectionAlbum({Key key, @required this.album}) : super(key: key);
+
   CollectionAlbumState createState() => CollectionAlbumState();
 }
 
@@ -231,6 +248,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                     case 1: {
                       Share.shareFiles(
                         [track.filePath],
+                        // TODO(alex): translate this
                         subject: '${track.trackName} - ${track.albumName}. Shared using Harmonoid!',
                       );
                     }
@@ -331,6 +349,10 @@ class CollectionAlbumState extends State<CollectionAlbum> {
 
   @override
   Widget build(BuildContext context) {
+    // review(alex): wouldn't it be better to split a lot of these widgets?
+    // review(alex): wouldn't it be better to use 
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    // instead of `AnnotatedRegion`?
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
          value: SystemUiOverlayStyle.light,                
@@ -356,7 +378,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                       end: Alignment.bottomCenter,
                       stops: [
                         0.4,
-                        1.0,
+                        1.0
                       ],
                       colors: [
                         Colors.transparent,
@@ -434,6 +456,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                                     color: Colors.transparent,
                                     height: 2,
                                   ),
+                                  // review(alex): wouldn't it be better to show an emptys string instead?
                                   Text(
                                     '${this.album.year  ?? 'Unknown Year'}',
                                     style: Theme.of(context).textTheme.headline5,

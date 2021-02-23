@@ -6,18 +6,18 @@ import 'package:harmonoid/scripts/states.dart';
 import 'package:harmonoid/language/constants.dart';
 import 'package:harmonoid/scripts/vars.dart';
 
-
 class AccentSetting extends StatefulWidget {
   AccentSetting({Key key}) : super(key: key);
   AccentState createState() => AccentState();
 }
 
-
 class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
   bool _init = true;
   Widget _widget = Container();
-  List<AnimationController> _animationControllers = new List<AnimationController>(ACCENT_COLORS.length); 
-  List<Animation<double>> _animations = new List<Animation<double>>(ACCENT_COLORS.length);
+  List<AnimationController> _animationControllers =
+      new List<AnimationController>(ACCENT_COLORS.length);
+  List<Animation<double>> _animations =
+      new List<Animation<double>>(ACCENT_COLORS.length);
 
   @override
   void didChangeDependencies() {
@@ -37,7 +37,8 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
           begin: 0.0,
           end: 1.0,
         ).animate(this._animationControllers[accentColorIndex]);
-        if (accentColorIndex == configuration.accentColor) this._animationControllers[accentColorIndex].forward();
+        if (accentColorIndex == configuration.accentColor)
+          this._animationControllers[accentColorIndex].forward();
         children.add(
           new ClipRRect(
             borderRadius: BorderRadius.all(
@@ -50,27 +51,29 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                   height: 56.0,
                   width: 56.0,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
                         accentColor[0],
                         accentColor[1],
                       ],
-                      stops: [
+                          stops: [
                         0.2,
                         1.0,
-                      ]
-                    )
-                  ),
+                      ])),
                 ),
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () async {
-                      this._animationControllers.asMap().forEach((int controllerIndex, AnimationController controller) {
-                        if (accentColorIndex == controllerIndex) this._animationControllers[controllerIndex].forward();
-                        else this._animationControllers[controllerIndex].reverse();
+                      this._animationControllers.asMap().forEach(
+                          (int controllerIndex,
+                              AnimationController controller) {
+                        if (accentColorIndex == controllerIndex)
+                          this._animationControllers[controllerIndex].forward();
+                        else
+                          this._animationControllers[controllerIndex].reverse();
                       });
                       configuration.save(
                         accentColor: accentColorIndex,
@@ -83,7 +86,8 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                       scale: this._animations[accentColorIndex],
                       alignment: Alignment.center,
                       child: Container(
-                        child: Icon(Icons.check, color: Colors.white, size: 28.0),
+                        child:
+                            Icon(Icons.check, color: Colors.white, size: 28.0),
                         alignment: Alignment.center,
                       ),
                     ),
