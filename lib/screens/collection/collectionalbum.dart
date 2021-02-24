@@ -28,12 +28,11 @@ class CollectionAlbumTile extends StatelessWidget {
       closedElevation: 2,
       closedColor: Theme.of(context).cardColor,
       openColor: Theme.of(context).scaffoldBackgroundColor,
-      closedBuilder: (_, __) => InkWell(
-        // TODO(bdlukaa): add a press effect but still open the container
-        // onTap: () {},
-        child: Container(
-          height: this.height,
-          width: this.width,
+      closedBuilder: (_, open) => Container(
+        height: this.height,
+        width: this.width,
+        child: InkWell(
+          onTap: open,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,7 +40,6 @@ class CollectionAlbumTile extends StatelessWidget {
               Ink.image(
                 image: FileImage(collection.getAlbumArt(this.album)),
                 fit: BoxFit.fill,
-                // filterQuality: FilterQuality.low,
                 height: this.width,
                 width: this.width,
               ),
@@ -100,9 +98,8 @@ class LeadingCollectionALbumTile extends StatelessWidget {
         closedElevation: 2,
         closedColor: Theme.of(context).cardColor,
         openColor: Theme.of(context).scaffoldBackgroundColor,
-        closedBuilder: (_, __) => InkWell(
-          // TODO(bdlukaa): add a press effect but still open the container
-          // onTap: () {},
+        closedBuilder: (_, open) => InkWell(
+          onTap: open,
           child: Container(
             height: this.height,
             width: MediaQuery.of(context).size.width - 16,
@@ -387,6 +384,22 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                     ),
                   ),
                 ),
+                // TODO(bdlukaa): Add a close button in the albums page
+                // Positioned(
+                //   left: 10,
+                //   top: 15,
+                //   child: Material(
+                //     type: MaterialType.transparency,
+                //     child: IconButton(
+                //       icon: Icon(Icons.close),
+                //       splashRadius: 18,
+                //       onPressed: () {
+                //         print('pressed');
+                //         Navigator.pop(context);
+                //       },
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             ListView(

@@ -1,42 +1,47 @@
 import 'package:harmonoid/language/constants.dart';
+import 'package:flutter/widgets.dart';
 
+class LanguageRegion {
 
-enum LanguageRegion {
-  enUs,
-  ruRu, /* Credits: https://github.com/raitonoberu/             */
-  slSi, /* Credits: https://github.com/mytja/                   */
-  ptBr, /* Credits: https://github.com/bdlukaa/                 */
-  hiIn, /* Credits: https://github.com/alexmercerind/           */
-  deDe, /* Credits: https://github.com/MickLesk/                */
-  nlNl, /* Credits: https://github.com/kebabinjeneus/           */
-}
+  final String code;
+  final String countryCode;
 
+  final String name;
+  final String country;
 
-extension LanguageRegionExtension on LanguageRegion {
+  final String translator;
+  final String githubUrl;
 
-  String get name => this.toString().replaceAll('LanguageRegion.', '');
+  const LanguageRegion({
+    @required this.code, 
+    @required this.countryCode,
+    @required this.name, 
+    @required this.country,
+    @required this.translator,
+    @required this.githubUrl,
+  }) : assert(code != null), 
+      assert(country != null);
 
-  String get languageCode {
-    return name.substring(0, 2).toLowerCase();
-  }
+  static const enUs = LanguageRegion(code: 'en', countryCode: 'us', name: 'English', country: 'United States', translator: 'alexmercerind', githubUrl: 'https://github.com/alexmercerind');
+  static const ruRu = LanguageRegion(code: 'ru', countryCode: 'ru', name: 'Русский', country: 'Россия', translator: 'raitonoberu', githubUrl: 'https://github.com/raitonoberu');
+  static const slSi = LanguageRegion(code: 'sl', countryCode: 'si', name: 'Slovenija', country: 'Slovenščina', translator: 'mytja', githubUrl: 'https://github.com/mytja');
+  static const ptBr = LanguageRegion(code: 'pt', countryCode: 'br', name: 'Português', country: 'Brasil', translator: 'bdlukaa', githubUrl: 'https://github.com/bdlukaa');
+  static const hiIn = LanguageRegion(code: 'hi', countryCode: 'In', name: 'हिंदी', country: 'भारत', translator: 'alexmercerind', githubUrl: 'https://github.com/alexmercerind');
+  static const deDe = LanguageRegion(code: 'de', countryCode: 'De', name: 'Deutsche', country: 'Deutschland', translator: 'MickLesk', githubUrl: 'https://github.com/MickLesk');
+  static const nlNl = LanguageRegion(code: 'nl', countryCode: 'Nl', name: 'Nederlands', country: 'Nederland', translator: 'kebabinjeneus', githubUrl: 'https://github.com/kebabinjeneus');
 
-  String get countryCode {
-    return name.substring(2).toLowerCase();
-  }
-  
-  List<String> get data {
-    List<String> data;
-    switch(this) {
-      case LanguageRegion.enUs: data = ['English'        , 'United States'    ]; break;
-      case LanguageRegion.ruRu: data = ['Русский'        , 'Россия'           ]; break;
-      case LanguageRegion.slSi: data = ['Slovenija'      , 'Slovenščina'      ]; break;
-      case LanguageRegion.ptBr: data = ['Português'      , 'Brasil'           ]; break;
-      case LanguageRegion.hiIn: data = ['हिंदी'            , 'भारत'             ]; break;
-      case LanguageRegion.deDe: data = ['Deutsche'       , 'Deutschland'      ]; break;
-      case LanguageRegion.nlNl: data = ['Nederlands'     , 'Nederland'        ]; break;
-    }
-    return data;
-  }
+  static const values = <LanguageRegion>[
+    enUs,
+    ruRu,
+    slSi,
+    ptBr,
+    hiIn,
+    deDe,
+    nlNl,
+  ];
+
+  int get index => values.indexOf(this);
+
 }
 
 
@@ -598,7 +603,7 @@ class Language {
         Constants.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Reinicialização necessária';
         Constants.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Você quer reiniciar o aplicativo agora?';
         Constants.STRING_ABOUT_TITLE                                     = 'Sobre';
-        Constants.STRING_ABOUT_SUBTITLE                                  = 'Informações sobre o projeto e seus desenvolvedores';
+        Constants.STRING_ABOUT_SUBTITLE                                  = 'Saiba mais sobre nós';
         Constants.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Servidor';
         Constants.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Alterar onde o aplicativo solicita seu conteudo';
         Constants.STRING_SETTING_SERVER_CHANGE_SERVER_HINT               = 'Insira uma URL do servidor';

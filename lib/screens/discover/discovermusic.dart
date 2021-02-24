@@ -133,149 +133,126 @@ class DiscoverMusicState extends State<DiscoverMusic>
         toolbarHeight: 0,
         elevation: 0.0,
       ),
-      body: ListView(
-        /// This will show the scroll glow only when it's bigger than the
-        /// avaible height
-        physics: ClampingScrollPhysics(parent: RangeMaintainingScrollPhysics()),
-        children: [
-          SlideTransition(
-            position: this._offset,
-            child: Container(
-              margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0),
-              child: Card(
-                elevation: 2.0,
-                clipBehavior: Clip.antiAlias,
-                color: Theme.of(context).cardColor,
-                child: AnimatedBuilder(
-                  animation: this._searchBarHeight,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Column(
+      body: ListView(children: [
+        SlideTransition(
+          position: this._offset,
+          child: Container(
+            margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 16.0),
+            child: Card(
+              elevation: 2.0,
+              clipBehavior: Clip.antiAlias,
+              color: Theme.of(context).cardColor,
+              child: AnimatedBuilder(
+                animation: this._searchBarHeight,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 56,
-                              width: 56,
-                              child: IconButton(
-                                icon: AnimatedIcon(
-                                  progress: this._menuButtonAnimationController,
-                                  icon: AnimatedIcons.menu_arrow,
-                                  size: Theme.of(context).iconTheme.size,
-                                  color: Theme.of(context).iconTheme.color,
-                                ),
-                                splashRadius:
-                                    Theme.of(context).iconTheme.size - 8,
-                                onPressed: () {
-                                  if (!this._isBackButtonShowing) {
-                                    this._animationController.reverse();
-                                    if (this
-                                        ._menuButtonAnimationController
-                                        .isDismissed)
-                                      this
-                                          ._menuButtonAnimationController
-                                          .forward();
-                                    if (this
-                                        ._menuButtonAnimationController
-                                        .isCompleted)
-                                      this
-                                          ._menuButtonAnimationController
-                                          .reverse();
-                                    this.setState(
-                                        () => _isBackButtonShowing = true);
-                                  }
-                                },
-                              ),
-                              margin: EdgeInsets.only(right: 16.0),
+                        Container(
+                          height: 56,
+                          width: 56,
+                          child: IconButton(
+                            icon: AnimatedIcon(
+                              progress: this._menuButtonAnimationController,
+                              icon: AnimatedIcons.menu_arrow,
+                              size: Theme.of(context).iconTheme.size,
+                              color: Theme.of(context).iconTheme.color,
                             ),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  this._animationController.forward();
-                                  if (this
-                                      ._menuButtonAnimationController
-                                      .isDismissed)
-                                    this
-                                        ._menuButtonAnimationController
-                                        .forward();
-                                  if (this
-                                      ._menuButtonAnimationController
-                                      .isCompleted)
-                                    this
-                                        ._menuButtonAnimationController
-                                        .reverse();
-                                  this.setState(
-                                      () => _isBackButtonShowing = false);
-                                },
-                                child: this._isBackButtonShowing
-                                    ? Text(Constants.STRING_SEARCH_HEADER,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline3)
-                                    : TextField(
-                                        autofocus: true,
-                                        controller: this._textFieldController,
-                                        cursorWidth: 1.0,
-                                        onEditingComplete: () => this._search(),
-                                        decoration: InputDecoration.collapsed(
-                                            hintText:
-                                                Constants.STRING_SEARCH_HEADER),
-                                      ),
-                              ),
-                            ),
-                            Container(
-                              height: 56,
-                              width: 56,
-                              child: IconButton(
-                                icon: Icon(Icons.search),
-                                splashRadius:
-                                    Theme.of(context).iconTheme.size - 8,
-                                onPressed: () => this._search(),
-                              ),
-                            ),
-                          ],
+                            splashRadius: Theme.of(context).iconTheme.size - 8,
+                            onPressed: () {
+                              if (!this._isBackButtonShowing) {
+                                this._animationController.reverse();
+                                if (this
+                                    ._menuButtonAnimationController
+                                    .isDismissed)
+                                  this._menuButtonAnimationController.forward();
+                                if (this
+                                    ._menuButtonAnimationController
+                                    .isCompleted)
+                                  this._menuButtonAnimationController.reverse();
+                                this.setState(
+                                    () => _isBackButtonShowing = true);
+                              }
+                            },
+                          ),
+                          margin: EdgeInsets.only(right: 16.0),
                         ),
-                        this._isBackButtonShowing
-                            ? Container()
-                            : Divider(
-                                height: 2.0,
-                                thickness: 1.0,
-                                color: Theme.of(context).dividerColor,
-                              ),
-                        this._isBackButtonShowing
-                            ? Container()
-                            : ListTile(
-                                leading: ScaleTransition(
-                                  scale: this
-                                      ._searchModeAnimationScaleController[0],
-                                  child: Icon(Icons.album,
-                                      color: this._searchModeColor[0]),
-                                ),
-                                title: Text(
-                                  Constants.STRING_ALBUM,
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
-                                onTap: () => _changeSearchMode(0),
-                              ),
-                        this._isBackButtonShowing
-                            ? Container()
-                            : ListTile(
-                                leading: ScaleTransition(
-                                  scale: this
-                                      ._searchModeAnimationScaleController[1],
-                                  child: Icon(Icons.music_note,
-                                      color: this._searchModeColor[1]),
-                                ),
-                                title: Text(
-                                  Constants.STRING_TRACK,
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
-                                onTap: () => _changeSearchMode(1),
-                              ),
-                        /* TODO: Implement Artist search. */
-                        /*
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              this._animationController.forward();
+                              if (this
+                                  ._menuButtonAnimationController
+                                  .isDismissed)
+                                this._menuButtonAnimationController.forward();
+                              if (this
+                                  ._menuButtonAnimationController
+                                  .isCompleted)
+                                this._menuButtonAnimationController.reverse();
+                              this.setState(() => _isBackButtonShowing = false);
+                            },
+                            child: this._isBackButtonShowing
+                                ? Text(Constants.STRING_SEARCH_HEADER,
+                                    style:
+                                        Theme.of(context).textTheme.headline3)
+                                : TextField(
+                                    autofocus: true,
+                                    controller: this._textFieldController,
+                                    cursorWidth: 1.0,
+                                    onEditingComplete: () => this._search(),
+                                    decoration: InputDecoration.collapsed(
+                                        hintText:
+                                            Constants.STRING_SEARCH_HEADER),
+                                  ),
+                          ),
+                        ),
+                        Container(
+                          height: 56,
+                          width: 56,
+                          child: IconButton(
+                            icon: Icon(Icons.search),
+                            splashRadius: Theme.of(context).iconTheme.size - 8,
+                            onPressed: () => this._search(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (!this._isBackButtonShowing) ...[
+                      Divider(
+                        height: 2.0,
+                        thickness: 1.0,
+                        color: Theme.of(context).dividerColor,
+                      ),
+                      ListTile(
+                        leading: ScaleTransition(
+                          scale: this._searchModeAnimationScaleController[0],
+                          child: Icon(Icons.album,
+                              color: this._searchModeColor[0]),
+                        ),
+                        title: Text(
+                          Constants.STRING_ALBUM,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                        onTap: () => _changeSearchMode(0),
+                      ),
+                      ListTile(
+                        leading: ScaleTransition(
+                          scale: this._searchModeAnimationScaleController[1],
+                          child: Icon(Icons.music_note,
+                              color: this._searchModeColor[1]),
+                        ),
+                        title: Text(
+                          Constants.STRING_TRACK,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                        onTap: () => _changeSearchMode(1),
+                      ),
+                    ],
+                    /* TODO: Implement Artist search. */
+                    /*
                         this._isBackButtonShowing ? Container(): ListTile(
                           leading: ScaleTransition(
                             scale: this._searchModeAnimationScaleController[2],
@@ -288,76 +265,74 @@ class DiscoverMusicState extends State<DiscoverMusic>
                           onTap: () => _changeSearchMode(2),
                         ),
                         */
-                      ],
-                    ),
-                  ),
-                  builder: (BuildContext context, Widget child) {
-                    return Container(
-                      height: this._searchBarHeight.value,
-                      width: MediaQuery.of(context).size.width - 16.0,
-                      color: Theme.of(context).cardColor,
-                      child: child,
-                    );
-                  },
+                  ]),
                 ),
+                builder: (BuildContext context, Widget child) {
+                  return Container(
+                    height: this._searchBarHeight.value,
+                    width: MediaQuery.of(context).size.width - 16.0,
+                    color: Theme.of(context).cardColor,
+                    child: child,
+                  );
+                },
               ),
             ),
           ),
-          if (this._recentSearches.isNotEmpty)
-            Container(
-              margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-              child: Card(
-                elevation: 2.0,
-                clipBehavior: Clip.antiAlias,
-                child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: this._recentSearches.length,
-                  itemBuilder: (BuildContext context, int index) => ListTile(
-                    leading: Icon(Icons.history),
-                    dense: true,
-                    title: Text(
-                      this._recentSearches[index][0],
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                    subtitle: Text(
-                      this._recentSearches[index][1],
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
-                    onTap: () => this._search(
-                      keyword: this._recentSearches[index][0],
-                      mode: {
-                        'Album': new Album(),
-                        'Track': new Track(),
-                        'Artist': new Artist(),
-                      }[this._recentSearches[index][1]],
-                    ),
+        ),
+        if (this._recentSearches.isNotEmpty)
+          Container(
+            margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+            child: Card(
+              elevation: 2.0,
+              clipBehavior: Clip.antiAlias,
+              child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: this._recentSearches.length,
+                itemBuilder: (BuildContext context, int index) => ListTile(
+                  leading: Icon(Icons.history),
+                  dense: true,
+                  title: Text(
+                    this._recentSearches[index][0],
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                  subtitle: Text(
+                    this._recentSearches[index][1],
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  onTap: () => this._search(
+                    keyword: this._recentSearches[index][0],
+                    mode: {
+                      'Album': new Album(),
+                      'Track': new Track(),
+                      'Artist': new Artist(),
+                    }[this._recentSearches[index][1]],
                   ),
                 ),
               ),
-            )
-          else
-            Container(
-              margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-              child: Card(
-                elevation: 2.0,
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.history),
-                      title: Text(
-                        Constants.STRING_SEARCH_NO_RECENT_SEARCHES,
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
+            ),
+          )
+        else
+          Container(
+            margin: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+            child: Card(
+              elevation: 2.0,
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.history),
+                    title: Text(
+                      Constants.STRING_SEARCH_NO_RECENT_SEARCHES,
+                      style: Theme.of(context).textTheme.headline5,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-        ],
-      ),
+          ),
+      ]),
     );
   }
 }

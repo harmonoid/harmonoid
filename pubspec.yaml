@@ -35,6 +35,7 @@ dependencies:
   share: ^0.6.5+4
   palette_generator: ^0.2.3
   flag: ^3.2.2
+  implicitly_animated_reorderable_list: ^0.3.2
 
 
   # The following adds the Cupertino Icons font to your application.
