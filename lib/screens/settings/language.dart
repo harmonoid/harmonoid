@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart' hide ExpansionTile;
 import 'package:flag/flag.dart';
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'package:implicitly_animated_reorderable_list/transitions.dart';
 
 import 'package:harmonoid/scripts/configuration.dart';
 import 'package:harmonoid/language/language.dart';
@@ -23,11 +25,11 @@ class LanguageState extends State<LanguageSetting> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO(bdlukaa): animate this list when a new language is selected
     final regions = LanguageRegion.values.toList()
-      ..removeWhere((r) => languageRegion == r);
+      ..removeWhere((r) => languageRegion == r)
+      ..insert(0, languageRegion);
     return Card(
-      margin: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
+      margin: EdgeInsets.zero,
       elevation: 2.0,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
@@ -84,10 +86,22 @@ class LanguageState extends State<LanguageSetting> {
             duration: Duration(milliseconds: 300),
             child: _buildLanguageRegionTile(languageRegion),
           ),
-          children: List.generate(regions.length, (index) {
-            final region = regions[index];
-            return _buildLanguageRegionTile(region);
-          }),
+          children: [
+            ImplicitlyAnimatedList<LanguageRegion>(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              areItemsTheSame: (a, b) => a == b,
+              items: regions,
+              itemBuilder: (context, animation, region, index) {
+                return SizeFadeTransition(
+                  sizeFraction: 0.7,
+                  curve: Curves.easeInOut,
+                  animation: animation,
+                  child: _buildLanguageRegionTile(region),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -97,12 +111,12 @@ class LanguageState extends State<LanguageSetting> {
     return RadioListTile<LanguageRegion>(
       key: key,
       value: languageRegion,
-      title: Text(languageRegion.data[0]),
-      subtitle: Text(languageRegion.data[1]),
+      title: Text(languageRegion.name),
+      subtitle: Text(languageRegion.country),
       groupValue: this.languageRegion,
       onChanged: (region) => setLanguageRegion(region),
       secondary: Container(
-        height: 25,
+        height: 20,
         decoration: BoxDecoration(
           border: Border.all(
             color: Theme.of(context).dividerColor,
@@ -262,7 +276,7 @@ class _ExpansionTileState extends State<ExpansionTile>
               //     ),
             ),
           ),
-          if (widget.fixedChild != null) widget.fixedChild,
+          if (widget.fixedChild != null && !_isExpanded) widget.fixedChild,
           ClipRect(
             child: Align(
               alignment: widget.expandedAlignment ?? Alignment.center,

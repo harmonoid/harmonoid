@@ -13,7 +13,7 @@ import 'package:harmonoid/screens/home.dart';
 
 
 class Harmonoid extends StatefulWidget {
-  Harmonoid({Key key}) : super(key: key);
+  const Harmonoid({Key key}) : super(key: key);
   HarmonoidState createState() => HarmonoidState();
 }
 

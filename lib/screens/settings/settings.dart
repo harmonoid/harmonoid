@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:harmonoid/screens/settings/about.dart';
+import 'package:harmonoid/screens/settings/collectiontabs.dart';
 import 'package:harmonoid/screens/settings/indexing.dart';
 import 'package:harmonoid/screens/settings/language.dart';
 import 'package:harmonoid/screens/settings/miscellaneous.dart';
@@ -26,6 +27,7 @@ class Settings extends StatelessWidget {
         title: Text(Constants.STRING_SETTING),
       ),
       body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 12.0),
         children: [
           AboutSetting(),
           ThemeSetting(),
@@ -33,13 +35,16 @@ class Settings extends StatelessWidget {
           IndexingSetting(),
           ServerSetting(),
           LanguageSetting(),
+          CollectionTabs(),
           MiscellaneousSetting(),
           VersionSetting(),
-          Divider(
-            color: Colors.transparent,
-            height: 12.0,
-          )
-        ],
+          Divider(color: Colors.transparent, height: 12.0)
+        ].map((child) {
+          return Padding(
+            padding: EdgeInsets.only(top: 16.0),
+            child: child,
+          );
+        }).toList(),
       ),
     );
   }
@@ -64,15 +69,16 @@ class SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
+      margin: EdgeInsets.zero,
+      // margin: EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
       elevation: 2.0,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(
+          Padding(
+            padding: EdgeInsets.only(
               top: 16.0,
               left: 16.0,
               right: 16.0,
@@ -92,10 +98,7 @@ class SettingsTile extends StatelessWidget {
                   this.subtitle,
                   style: Theme.of(context).textTheme.headline5,
                 ),
-                Divider(
-                  color: Colors.transparent,
-                  height: 8.0,
-                ),
+                Divider(color: Colors.transparent, height: 8.0),
                 Divider(
                   color: Theme.of(context).dividerColor,
                   thickness: 1.0,
@@ -108,26 +111,21 @@ class SettingsTile extends StatelessWidget {
             margin: this.margin ?? EdgeInsets.zero,
             child: this.child ?? Container(),
           ),
-          Divider(
-            color: Colors.transparent,
-            height: 8.0,
-          ),
-          this.actions != null
-              ? Divider(
-                  color: Theme.of(context).dividerColor,
-                  thickness: 1.0,
-                  indent: 16.0,
-                  endIndent: 16.0,
-                  height: 1.0,
-                )
-              : Container(),
-          this.actions != null
-              ? ButtonBar(
-                  alignment: MainAxisAlignment.end,
-                  mainAxisSize: MainAxisSize.max,
-                  children: this.actions,
-                )
-              : Container(),
+          Divider(color: Colors.transparent, height: 8.0),
+          if (this.actions != null) ...[
+            Divider(
+              color: Theme.of(context).dividerColor,
+              thickness: 1.0,
+              indent: 16.0,
+              endIndent: 16.0,
+              height: 1.0,
+            ),
+            ButtonBar(
+              alignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.max,
+              children: this.actions,
+            ),
+          ],
         ],
       ),
     );

@@ -59,7 +59,7 @@ class VersionState extends State<VersionSetting> {
           ),
         ],
       ),
-      margin: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 16.0),
+      margin: EdgeInsets.all(16.0),
       actions: this.version == 'v' + VERSION ? null : [
         MaterialButton(
           onPressed: () => launch(this.updateUri),

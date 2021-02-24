@@ -16,11 +16,10 @@ class NowPlaying extends StatefulWidget {
 class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   Track _track;
   String _duration = '0:00';
-  String _position = '0:00';
   bool _isPlaying = true;
   bool _isInfoShowing = true;
   int _durationSeconds = 0;
-  int _positionSeconds = 0;
+  Duration _position = Duration.zero;
   bool _init = true;
   List<AudioPlayer.Audio> _currentTrackQueue = [];
   AnimationController _playPauseController;
@@ -55,7 +54,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    this._streamSubscriptions.forEach((StreamSubscription subscription) {
+    this._streamSubscriptions.forEach((subscription) {
       subscription?.cancel();
     });
     super.dispose();
@@ -65,12 +64,8 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (this._init) {
-      this._streamSubscriptions[0] =
-          audioPlayer.currentPosition.listen((Duration duration) {
-        this.setState(() {
-          this._positionSeconds = duration.inSeconds;
-          this._position = this._getDurationString(this._positionSeconds);
-        });
+      _streamSubscriptions[0] = audioPlayer.currentPosition.listen((duration) {
+        setState(() => _position = duration);
       });
       this._streamSubscriptions[1] =
           audioPlayer.current.listen((AudioPlayer.Playing playing) {
@@ -307,48 +302,46 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               width: 48,
                               alignment: Alignment.center,
                               child: Text(
-                                this._position,
+                                _getDurationString(this._position.inSeconds),
                                 style: Theme.of(context).textTheme.headline4,
                               ),
                             ),
-                            TweenAnimationBuilder(
-                              curve: Curves.easeOutCubic,
-                              duration: animationDuration,
-                              tween: Tween<double>(
-                                  begin: 0,
-                                  end: this._positionSeconds.toDouble()),
-                              builder: (context, value, child) => Container(
-                                width: MediaQuery.of(context).size.width -
-                                    32 -
-                                    2 * 48,
-                                alignment: Alignment.center,
-                                // review(alex): slider not working due to duration error
-                                // this slider is sometimes not working because there's an
-                                // error with the duration (You can reproduce it by playing
-                                // the song DDU-DU DDU-DU by BLACKPICK). value >= min && value <= max
-                                child: SliderTheme(
-                                  child: Slider(
+                            Expanded(
+                              child: SliderTheme(
+                                child: TweenAnimationBuilder<double>(
+                                  duration: Duration(milliseconds: 1050),
+                                  tween: Tween<double>(
+                                    begin: _position.inSeconds.toDouble() - 1,
+                                    end: _position.inSeconds.toDouble(),
+                                  ),
+                                  builder: (context, value, child) => Slider(
                                     inactiveColor:
                                         Theme.of(context).iconTheme.color,
                                     min: 0,
-                                    max: this._durationSeconds.toDouble(),
+                                    max: _durationSeconds.toDouble(),
+                                    // value: _position.inSeconds.toDouble(),
                                     value: value,
-                                    onChanged: (value) {
-                                      audioPlayer.seek(
-                                        Duration(seconds: value.toInt()),
-                                      );
+                                    onChanged: (value) => setState(
+                                      () => _position = Duration(
+                                        seconds: value.toInt(),
+                                      ),
+                                    ),
+                                    onChangeEnd: (value) {
+                                      audioPlayer.seek(Duration(
+                                        seconds: value.toInt(),
+                                      ));
                                     },
                                   ),
-                                  data: SliderThemeData(
-                                    disabledInactiveTrackColor: Colors.white,
-                                    thumbColor: Theme.of(context).primaryColor,
-                                    activeTrackColor:
-                                        Theme.of(context).primaryColor,
-                                    thumbShape: RoundSliderThumbShape(
-                                      enabledThumbRadius: 8,
-                                    ),
-                                    trackHeight: 0.5,
+                                ),
+                                data: SliderThemeData(
+                                  disabledInactiveTrackColor: Colors.white,
+                                  thumbColor: Theme.of(context).primaryColor,
+                                  activeTrackColor:
+                                      Theme.of(context).primaryColor,
+                                  thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 8,
                                   ),
+                                  trackHeight: 0.5,
                                 ),
                               ),
                             ),
