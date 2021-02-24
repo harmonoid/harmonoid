@@ -312,3 +312,31 @@ class FakeLinearProgressIndicator extends StatelessWidget {
     );
   }
 }
+
+class ClosedTile extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  const ClosedTile({Key key, @required this.open, @required this.title, @required this.subtitle}) : super(key: key);
+
+  final Function open;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.only(
+        left: 8.0,
+        right: 8.0,
+        top: 4.0,
+        bottom: 4.0,
+      ),
+      color: Theme.of(context).cardColor,
+      elevation: 2.0,
+      child: ListTile(
+        title: Text(this.title),
+        subtitle: Text(this.subtitle),
+        trailing: Icon(Icons.navigate_next),
+        onTap: open,
+      ),
+    );
+  }
+}
