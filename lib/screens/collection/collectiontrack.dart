@@ -197,8 +197,8 @@ class LeadingCollectionTrackTile extends StatelessWidget {
       margin: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
       child: InkWell(
         onTap: () async => await Playback.play(
-          index: collection.tracks.length - 1,
-          tracks: collection.tracks,
+          index: 0,
+          tracks: [collection.lastTrack],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -207,7 +207,6 @@ class LeadingCollectionTrackTile extends StatelessWidget {
             Ink.image(
               image: FileImage(collection.getAlbumArt(collection.lastTrack)),
               fit: BoxFit.fitWidth,
-              // filterQuality: FilterQuality.low,
               alignment: Alignment.center,
               height: 156.0,
               width: MediaQuery.of(context).size.width - 16.0,
