@@ -27,7 +27,7 @@ class Settings extends StatelessWidget {
         title: Text(Constants.STRING_SETTING),
       ),
       body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 12.0),
+        padding: EdgeInsets.symmetric(vertical: 4.0),
         children: [
           AboutSetting(),
           ThemeSetting(),
@@ -38,13 +38,7 @@ class Settings extends StatelessWidget {
           CollectionTabs(),
           MiscellaneousSetting(),
           VersionSetting(),
-          Divider(color: Colors.transparent, height: 12.0)
-        ].map((child) {
-          return Padding(
-            padding: EdgeInsets.only(top: 16.0),
-            child: child,
-          );
-        }).toList(),
+        ],
       ),
     );
   }
@@ -69,9 +63,13 @@ class SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.zero,
-      // margin: EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
       elevation: 2.0,
+      margin: EdgeInsets.only(
+        left: 8.0,
+        right: 8.0,
+        bottom: 4.0,
+        top: 4.0,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,

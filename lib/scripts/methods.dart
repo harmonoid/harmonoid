@@ -63,6 +63,7 @@ abstract class Methods {
     return new ThemeData(
       platform: configuration.enableiOS ? TargetPlatform.iOS: TargetPlatform.android,
       splashFactory: InkRipple.splashFactory,
+      splashColor: Colors.black12,
       highlightColor: Colors.transparent,
       brightness: isLightTheme ? Brightness.light : Brightness.dark,
       primaryColorLight: color,

@@ -12,13 +12,7 @@ class CollectionTabs extends StatefulWidget {
 }
 
 class _CollectionTabsState extends State<CollectionTabs> {
-  List<String> names = ['Albums', 'Tracks', 'Playlist'];
-
-  @override
-  void initState() { 
-    super.initState();
-    names = [Constants.STRING_ALBUM, Constants.STRING_TRACK, Constants.STRING_PLAYLISTS];
-  }
+  List<String> names = [Constants.STRING_ALBUM, Constants.STRING_TRACK, Constants.STRING_PLAYLISTS];
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +23,11 @@ class _CollectionTabsState extends State<CollectionTabs> {
       subtitle: 'Choose your favorite order',
       child: ImplicitlyAnimatedReorderableList<String>(
         onReorderFinished: (item, from, to, values) {
-          setState(() => names = values);
+          setState(() => this.names = values);
         },
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        items: names,
+        items: this.names,
         areItemsTheSame: (a, b) => a == b,
         itemBuilder: (context, animation, item, index) {
           return Reorderable(
@@ -58,5 +52,4 @@ class _CollectionTabsState extends State<CollectionTabs> {
 
 }
 
-bool get isMaterial => [TargetPlatform.android, TargetPlatform.fuchsia]
-    .contains(defaultTargetPlatform);
+bool get isMaterial => [TargetPlatform.android, TargetPlatform.fuchsia].contains(defaultTargetPlatform);

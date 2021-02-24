@@ -29,7 +29,12 @@ class LanguageState extends State<LanguageSetting> {
       ..removeWhere((r) => languageRegion == r)
       ..insert(0, languageRegion);
     return Card(
-      margin: EdgeInsets.zero,
+      margin: EdgeInsets.only(
+        left: 8.0,
+        right: 8.0,
+        top: 4.0,
+        bottom: 4.0,
+      ),
       elevation: 2.0,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8.0),

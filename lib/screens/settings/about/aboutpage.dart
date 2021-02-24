@@ -1,14 +1,14 @@
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
-
-import 'package:harmonoid/language/language.dart';
-import 'package:harmonoid/screens/settings/settings.dart';
 import 'package:url_launcher/url_launcher.dart' as launcher;
 import 'package:animations/animations.dart';
 
+import 'package:harmonoid/widgets.dart';
+import 'package:harmonoid/screens/settings/settings.dart';
 import 'package:harmonoid/language/constants.dart';
+import 'package:harmonoid/screens/settings/about/thirdpartypage.dart';
+import 'package:harmonoid/language/language.dart';
 
-import 'thirdpartypage.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({
@@ -31,11 +31,15 @@ class AboutPage extends StatelessWidget {
         title: Text(Constants.STRING_ABOUT_TITLE),
       ),
       body: ListView(
-        padding: EdgeInsets.symmetric(vertical: 16.0),
+        padding: EdgeInsets.symmetric(vertical: 8.0),
         children: [
           Card(
             clipBehavior: Clip.antiAlias,
-            margin: EdgeInsets.symmetric(horizontal: 8.0),
+            margin: EdgeInsets.only(
+              left: 8.0,
+              right: 8.0,
+              bottom: 4.0,
+            ),
             elevation: 2.0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,17 +227,10 @@ class AboutPage extends StatelessWidget {
             openColor: Colors.transparent,
             closedElevation: 0.0,
             openElevation: 0.0,
-            closedBuilder: (context, open) => Card(
-              margin: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0),
-              color: Theme.of(context).cardColor,
-              elevation: 2.0,
-              // TODO(alex): translate this and the Third Party Page
-              child: ListTile(
-                title: Text('Third Party Credits'),
-                subtitle: Text('Thanks for your indirect contribution.'),
-                trailing: Icon(Icons.navigate_next),
-                onTap: open,
-              ),
+            closedBuilder: (_, open) => ClosedTile(
+              open: open,
+              title: 'Third Party Credits',
+              subtitle: 'Thanks for your indirect contribution.',
             ),
             openBuilder: (context, _) => ThirdPartyPage(),
           ),
