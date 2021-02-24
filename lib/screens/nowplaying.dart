@@ -45,7 +45,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _playPauseController = AnimationController(
+    this._playPauseController = AnimationController(
       vsync: this,
       duration: animationDuration,
     );
@@ -65,43 +65,38 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
     super.didChangeDependencies();
     if (this._init) {
       _streamSubscriptions[0] = audioPlayer.currentPosition.listen((duration) {
-        setState(() => _position = duration);
+        setState(() => this._position = duration);
       });
-      this._streamSubscriptions[1] =
-          audioPlayer.current.listen((AudioPlayer.Playing playing) {
+      this._streamSubscriptions[1] = audioPlayer.current.listen((AudioPlayer.Playing playing) {
         this.setState(() {
           this._track = Track.fromMap(playing.audio.audio.metas.extra);
           this._durationSeconds = playing.audio.duration.inSeconds;
           this._duration = this._getDurationString(this._durationSeconds);
           this._playlist = <Widget>[];
           this._playlistEnd = playing.playlist.audios.length * 72.0;
-          playing.playlist.audios
-              .asMap()
-              .forEach((int index, AudioPlayer.Audio audio) {
+          playing.playlist.audios.asMap().forEach((int index, AudioPlayer.Audio audio) {
             this._playlist.add(
-                  ListTile(
-                    leading: CircleAvatar(
-                      child: Text(
-                        '${audio.metas.extra['trackNumber'] ?? 1}',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      backgroundImage: FileImage(collection.getAlbumArt(
-                        Track.fromMap(audio.metas.extra),
-                      )),
-                    ),
-                    title: Text(audio.metas.title),
-                    subtitle: Text(audio.metas.artist),
-                    trailing: this._track.trackName == audio.metas.title
-                        ? Icon(
-                            Icons.music_note,
-                            color: Theme.of(context).accentColor,
-                          )
-                        : null,
-                    onTap: () {
-                      audioPlayer.playlistPlayAtIndex(index);
-                    },
+              ListTile(
+                leading: CircleAvatar(
+                  child: Text(
+                    '${audio.metas.extra['trackNumber'] ?? 1}',
+                    style: TextStyle(color: Colors.white),
                   ),
-                );
+                  backgroundImage: FileImage(
+                    collection.getAlbumArt(Track.fromMap(audio.metas.extra)),
+                  ),
+                ),
+                title: Text(audio.metas.title),
+                subtitle: Text(audio.metas.artist),
+                trailing: this._track.trackName == audio.metas.title ? Icon(
+                  Icons.music_note,
+                  color: Theme.of(context).accentColor,
+                  ): null,
+                onTap: () {
+                  audioPlayer.playlistPlayAtIndex(index);
+                },
+              ),
+            );
           });
           this._playlistList = Column(
             mainAxisSize: MainAxisSize.min,
@@ -122,17 +117,17 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
         (bool isPlaying) {
           this.setState(() => this._isPlaying = isPlaying);
           if (isPlaying)
-            _playPauseController.reverse();
+            this._playPauseController.reverse();
           else
-            _playPauseController.forward();
+            this._playPauseController.forward();
         },
       );
       this.albumArtHeight = MediaQuery.of(context).size.height -
-          MediaQuery.of(context).padding.top -
-          MediaQuery.of(context).padding.bottom -
-          2 * 8.0 -
-          56.0 -
-          210.0;
+      MediaQuery.of(context).padding.top
+      - MediaQuery.of(context).padding.bottom
+      - 2 * 8.0
+      - 56.0
+      - 210.0;
       if (this.albumArtHeight < 0.0) this.albumArtHeight = 0.0;
       this._animationController = AnimationController(
         vsync: this,
@@ -169,6 +164,26 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: this._isInfoShowing ? null: FloatingActionButton(
+        onPressed: this._track == null
+            ? null
+            : () {
+                if (this._isPlaying) {
+                  this._playPauseController.forward();
+                  audioPlayer.pause();
+                } else {
+                  this._playPauseController.reverse();
+                  audioPlayer.play();
+                }
+              },
+        child: AnimatedIcon(
+          icon: AnimatedIcons.pause_play,
+          progress: this._playPauseController,
+          color: Colors.white,
+          size: 28.0,
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: Theme.of(context).brightness == Brightness.dark
             ? SystemUiOverlayStyle.light
@@ -210,16 +225,16 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                   ? null
                                   : () {
                                       if (this._isPlaying) {
-                                        _playPauseController.forward();
+                                        this._playPauseController.forward();
                                         audioPlayer.pause();
                                       } else {
-                                        _playPauseController.reverse();
+                                        this._playPauseController.reverse();
                                         audioPlayer.play();
                                       }
                                     },
                               child: AnimatedIcon(
                                 icon: AnimatedIcons.pause_play,
-                                progress: _playPauseController,
+                                progress: this._playPauseController,
                                 color: Colors.white,
                                 size: _animationCurved.value *
                                     28 /
@@ -238,7 +253,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width - 16.0,
+                          width: MediaQuery.of(context).size.width,
                           padding: EdgeInsets.only(top: 16, bottom: 4),
                           child: Row(children: [
                             Container(
@@ -302,27 +317,27 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               width: 48,
                               alignment: Alignment.center,
                               child: Text(
-                                _getDurationString(this._position.inSeconds),
+                                this._getDurationString(this._position.inSeconds),
                                 style: Theme.of(context).textTheme.headline4,
                               ),
                             ),
                             Expanded(
                               child: SliderTheme(
+                                // TODO (Alex): TweenAnimationBuilder isn't the best bet to make Slider movement smooth.
                                 child: TweenAnimationBuilder<double>(
-                                  duration: Duration(milliseconds: 1050),
+                                  duration: Duration(milliseconds: 0),
                                   tween: Tween<double>(
-                                    begin: _position.inSeconds.toDouble() - 1,
-                                    end: _position.inSeconds.toDouble(),
+                                    begin: 0.0,
+                                    end: this._position.inSeconds.toDouble(),
                                   ),
                                   builder: (context, value, child) => Slider(
                                     inactiveColor:
                                         Theme.of(context).iconTheme.color,
-                                    min: 0,
-                                    max: _durationSeconds.toDouble(),
-                                    // value: _position.inSeconds.toDouble(),
+                                    min: 0.0,
+                                    max: this._durationSeconds.toDouble(),
                                     value: value,
                                     onChanged: (value) => setState(
-                                      () => _position = Duration(
+                                      () => this._position = Duration(
                                         seconds: value.toInt(),
                                       ),
                                     ),
@@ -379,7 +394,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                 ),
                               ),
                               splashRadius: 20,
-                              onPressed: () {
+                              onPressed: this._track == null ? null: () {
                                 this._isInfoShowing = !this._isInfoShowing;
                                 if (this._animationController.isCompleted) {
                                   this._animationController.reverse();
@@ -390,6 +405,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                   this._animationController.forward();
                                   this._animationController1.reverse();
                                 }
+                                this.setState(() {});
                               },
                             ),
                           ),
@@ -431,7 +447,6 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                       child: ClipRect(
                         child: Align(
                           alignment: Alignment.center,
-                          // heightFactor: _heightFactor.value,
                           heightFactor: _animationController1.value,
                           child: child,
                         ),
