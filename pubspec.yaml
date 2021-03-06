@@ -1,5 +1,5 @@
 name: harmonoid
-description: The music app, you always dreamt.
+description: A music app with a beautiful UI to play all your music!
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -24,23 +24,19 @@ dependencies:
   flutter:
     sdk: flutter
   animations: ^1.1.2
+  provider: ^4.3.3
+  assets_audio_player:
+    git: https://github.com/alexmercerind/Flutter-AssetsAudioPlayer
+  media_metadata_retriever: ^0.0.2+1
   http: ^0.12.2
   path: ^1.7.0
-  path_provider: ^1.6.11
-  media_metadata_retriever: ^0.0.2+1
+  path_provider: ^2.0.1
   flutter_local_notifications: ^3.0.3
-  assets_audio_player: ^2.0.13+6
   url_launcher: ^5.5.0
   permission_handler: ^5.0.1+1
   share: ^0.6.5+4
   palette_generator: ^0.2.3
-  flag: ^3.2.2
   implicitly_animated_reorderable_list: ^0.3.2
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.0
 
 dev_dependencies:
   flutter_test:
