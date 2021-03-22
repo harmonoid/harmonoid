@@ -120,6 +120,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0+1"
+  flutter_media_metadata:
+    dependency: "direct main"
+    description:
+      name: flutter_media_metadata
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3+2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -165,13 +172,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.10"
-  media_metadata_retriever:
-    dependency: "direct main"
-    description:
-      name: media_metadata_retriever
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.2+1"
   meta:
     dependency: transitive
     description:

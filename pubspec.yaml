@@ -27,7 +27,7 @@ dependencies:
   provider: ^4.3.3
   assets_audio_player:
     git: https://github.com/alexmercerind/Flutter-AssetsAudioPlayer
-  media_metadata_retriever: ^0.0.2+1
+  flutter_media_metadata: ^0.0.3+2
   http: ^0.12.2
   path: ^1.7.0
   path_provider: ^2.0.1
