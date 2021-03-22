@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:media_metadata_retriever/media_metadata_retriever.dart';
+import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:path/path.dart' as path;
 
 import 'package:harmonoid/core/collection.dart';
@@ -37,19 +37,14 @@ class FileIntent {
   }
 
   static Future<File> _getOpenFile() async {
-    dynamic fileUri = await _methodChannel.invokeMethod('getOpenFile');
-    File file = new File(
-      path.join(
-        '/storage/emulated/0/',
-        fileUri.split(':').last,
-      ),
-    );
+    String filePath = await _methodChannel.invokeMethod('getOpenFile');
+    File file = new File(filePath);
     if (await file.exists()) return file;
-    else throw 'ERROR: No file openened.';
+    else throw FileSystemException("File does not exists.");
   }
 
   Future<void> play() async {
-    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+    MetadataRetriever retriever = new MetadataRetriever();
     await retriever.setFile(this.openedFile);
     Track track = Track.fromMap((await retriever.metadata).toMap());
     if (track.trackName == 'Unknown Track') {
