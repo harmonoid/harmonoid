@@ -3,7 +3,7 @@ import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as path;
-import 'package:media_metadata_retriever/media_metadata_retriever.dart';
+import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
 import 'package:harmonoid/utils/methods.dart';
 import 'package:harmonoid/core/mediatype.dart';
@@ -104,7 +104,7 @@ class Collection extends ChangeNotifier {
     }
     if (Methods.isFileSupported(file) && !isAlreadyPresent) {
       try {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        MetadataRetriever retriever = new MetadataRetriever();
         await retriever.setFile(file);
         Track track = Track.fromMap((await retriever.metadata).toMap());
         track.filePath = file.path;
@@ -359,7 +359,7 @@ class Collection extends ChangeNotifier {
       FileSystemEntity object = directory[index];
       if (Methods.isFileSupported(object)) {
         try {
-          MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+          MetadataRetriever retriever = new MetadataRetriever();
           await retriever.setFile(object);
           Track track = Track.fromMap((await retriever.metadata).toMap());
           if (track.trackName == 'Unknown Track') {

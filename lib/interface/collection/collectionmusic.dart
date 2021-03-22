@@ -104,7 +104,6 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                 bottom: TabBar(
                   controller: this._tabController,
                   indicatorColor: Theme.of(context).accentColor,
-                  isScrollable: true,
                   tabs: [
                     Tab(
                       child: Text(
