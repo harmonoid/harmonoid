@@ -380,7 +380,10 @@ class CollectionAlbum extends StatelessWidget {
                                       onPressed: () async {
                                         Navigator.of(subContext).pop();
                                         await collection.delete(track);
-                                        if (album.tracks.isEmpty) Navigator.of(context).pop();
+                                        if (album.tracks.isEmpty) {
+                                          while (Navigator.of(context).canPop())
+                                            Navigator.of(context).pop();
+                                        }
                                       },
                                       child: Text(language.STRING_YES),
                                     ),
