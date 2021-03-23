@@ -126,7 +126,7 @@ class Album extends MediaType {
   Album({this.albumName, this.year, this.albumArtistName, this.albumArtHigh, this.albumArtMedium, this.albumArtLow, this.albumId});
 }
 
-/* TODO: Update Artist according to new specs. */
+
 class Artist extends MediaType {
   String artistName;
   List<Album> albums = <Album>[];

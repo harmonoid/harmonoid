@@ -122,6 +122,20 @@ class Collection extends ChangeNotifier {
           }
         }
         await this._arrange(track, albumArtMethod);
+        for (Album album in this.albums) {
+          List<String> allAlbumArtistNames = <String>[];
+          album.tracks.forEach((Track track) {
+            track.trackArtistNames.forEach((artistName) {
+              if (!allAlbumArtistNames.contains(artistName))
+                allAlbumArtistNames.add(artistName);
+            });
+          });
+          for (String artistName in allAlbumArtistNames)  {
+            if (this.artists[this._foundArtists.indexOf(artistName)].albums == null)
+              this.artists[this._foundArtists.indexOf(artistName)].albums = <Album>[];
+            this.artists[this._foundArtists.indexOf(artistName)].albums.add(album);
+          }
+        }
       }
       catch (exception) {}
     }
@@ -213,36 +227,21 @@ class Collection extends ChangeNotifier {
         }
         this.tracks = updatedTracks;
       }
-      // ignore: todo
-      /* TODO: Fix delete method to remove Album from Artist.
-      for (String artistName in object.trackArtistNames) {
-        for (Artist artist in this.artists) {
-          if (artistName == artist.artistName) {
-            List<Track> updatedTracks = <Track>[];
-            for (Track track in artist.tracks) {
-              if (object.albumName != track.albumName) {
-                updatedTracks.add(track);
-              }
-            }
-            artist.tracks = updatedTracks;
-            if (artist.tracks.length == 0) {
-              this.artists.remove(artist);
-              break;
-            }
-            else {
-              for (int index = 0; index < artist.albums.length; index++) {
-              if (object.albumName == artist.albums[index].albumName) {
-                artist.albums.removeAt(index);
-                if (artist.albums.length == 0) this.artists.remove(artist);
-                break;
-              }
-            }
-            }
+      for (Artist artist in this.artists) {
+        for (Track track in artist.tracks) {
+          List<Track> updatedTracks = <Track>[];
+          if (object.albumName != track.albumName && object.albumArtistName != track.albumArtistName) {
+            updatedTracks.add(track);
+          }
+          artist.tracks = updatedTracks;
+        }
+        for (Album album in artist.albums) {
+          if (object.albumName == album.albumName && object.albumArtistName == album.albumArtistName) {
+            artist.albums.remove(album);
             break;
           }
         }
       }
-      */
       for (Track track in object.tracks) {
         if (await File(track.filePath).exists()) {
           await File(track.filePath).delete();
@@ -306,6 +305,20 @@ class Collection extends ChangeNotifier {
         });
       }
       onProgress?.call(collectionDirectoryContent.length, collectionDirectoryContent.length, true);
+    }
+    for (Album album in this.albums) {
+      List<String> allAlbumArtistNames = <String>[];
+      album.tracks.forEach((Track track) {
+        track.trackArtistNames.forEach((artistName) {
+          if (!allAlbumArtistNames.contains(artistName))
+            allAlbumArtistNames.add(artistName);
+        });
+      });
+      for (String artistName in allAlbumArtistNames)  {
+        if (this.artists[this._foundArtists.indexOf(artistName)].albums == null)
+          this.artists[this._foundArtists.indexOf(artistName)].albums = <Album>[];
+        this.artists[this._foundArtists.indexOf(artistName)].albums.add(album);
+      }
     }
     if (this.tracks.isNotEmpty) {
       this.lastAlbum = this.albums.last;
@@ -388,15 +401,20 @@ class Collection extends ChangeNotifier {
       }
       onProgress?.call(index + 1, directory.length, true);
     }
-    /* TODO: Fix List<Album> in Artists after deprecating trackArtistNames field in Album.
     for (Album album in this.albums) {
-      for (String artist in album.trackArtistNames)  {
-        if (this.artists[this._foundArtists.indexOf(artist)].albums == null)
-          this.artists[this._foundArtists.indexOf(artist)].albums = <Album>[];
-        this.artists[this._foundArtists.indexOf(artist)].albums.add(album);
+      List<String> allAlbumArtistNames = <String>[];
+      album.tracks.forEach((Track track) {
+        track.trackArtistNames.forEach((artistName) {
+          if (!allAlbumArtistNames.contains(artistName))
+            allAlbumArtistNames.add(artistName);
+        });
+      });
+      for (String artistName in allAlbumArtistNames)  {
+        if (this.artists[this._foundArtists.indexOf(artistName)].albums == null)
+          this.artists[this._foundArtists.indexOf(artistName)].albums = <Album>[];
+        this.artists[this._foundArtists.indexOf(artistName)].albums.add(album);
       }
     }
-    */
     if (this.tracks.isNotEmpty) {
       this.lastAlbum = this.albums.last;
       this.lastTrack = this.tracks.last;
