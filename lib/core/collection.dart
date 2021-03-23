@@ -340,12 +340,21 @@ class Collection extends ChangeNotifier {
           }
         }
       }
-      for (int index = 0; index <this. tracks.length; index++) {
+      for (int index = 0; index <this.tracks.length; index++) {
         for (int subIndex = 0; subIndex < this.tracks.length - index - 1; subIndex++) {
           if (this.tracks[subIndex].trackName.compareTo(this.tracks[subIndex+1].trackName) > 0) {
             Track swapTrack = this.tracks[subIndex];
             this.tracks[subIndex] = this.tracks[subIndex+1];
             this.tracks[subIndex+1] = swapTrack;
+          }
+        }
+      }
+      for (int index = 0; index <this.artists.length; index++) {
+        for (int subIndex = 0; subIndex < this.artists.length - index - 1; subIndex++) {
+          if (this.artists[subIndex].artistName.compareTo(this.artists[subIndex+1].artistName) > 0) {
+            Artist swapArtist = this.artists[subIndex];
+            this.artists[subIndex] = this.artists[subIndex+1];
+            this.artists[subIndex+1] = swapArtist;
           }
         }
       }

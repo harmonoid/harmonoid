@@ -18,6 +18,7 @@ class Harmonoid extends StatelessWidget {
       ),
       builder: (context, _) => Consumer<Visuals>(
         builder: (context, visuals, _) => MaterialApp(
+          debugShowCheckedModeBanner: false,
           theme: visuals.theme,
           darkTheme: visuals.darkTheme,
           themeMode: visuals.themeMode,
