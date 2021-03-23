@@ -7,6 +7,7 @@ import 'package:harmonoid/core/visuals.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/collection/collectionalbum.dart';
 import 'package:harmonoid/interface/collection/collectiontrack.dart';
+import 'package:harmonoid/interface/collection/collectionartist.dart';
 import 'package:harmonoid/interface/collection/collectionplaylist.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -26,7 +27,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   @override
   void initState() {
     super.initState();
-    this._tabController = TabController(initialIndex: 0, length: 3, vsync: this);
+    this._tabController = TabController(initialIndex: 0, length: 4, vsync: this);
   }
 
   @override
@@ -104,6 +105,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                 bottom: TabBar(
                   controller: this._tabController,
                   indicatorColor: Theme.of(context).accentColor,
+                  isScrollable: true,
                   tabs: [
                     Tab(
                       child: Text(
@@ -113,6 +115,11 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     Tab(
                       child: Text(
                         language.STRING_TRACK.toUpperCase(),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        language.STRING_ARTIST.toUpperCase(),
                       ),
                     ),
                     Tab(
@@ -137,6 +144,10 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
               Builder(
                 key: PageStorageKey(new Track().type),
                 builder: (context) => CollectionTrackTab(),
+              ),
+              Builder(
+                key: PageStorageKey(new Artist().type),
+                builder: (context) => CollectionArtistTab(),
               ),
               Builder(
                 key: PageStorageKey(new Playlist().type),

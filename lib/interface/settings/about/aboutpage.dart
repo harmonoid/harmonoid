@@ -175,16 +175,6 @@ class AboutPage extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(
-                  onTap: () => launch('https://github.com/bdlukaa'),
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      'https://avatars.githubusercontent.com/u/45696119',
-                    ),
-                  ),
-                  title: Text('bdlukaa'),
-                  trailing: Icon(Icons.open_in_new),
-                ),
-                ListTile(
                   onTap: () => launch('https://github.com/raitonoberu'),
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(
@@ -202,6 +192,16 @@ class AboutPage extends StatelessWidget {
                     ),
                   ),
                   title: Text('mytja'),
+                  trailing: Icon(Icons.open_in_new),
+                ),
+                ListTile(
+                  onTap: () => launch('https://github.com/bdlukaa'),
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      'https://avatars.githubusercontent.com/u/45696119',
+                    ),
+                  ),
+                  title: Text('bdlukaa'),
                   trailing: Icon(Icons.open_in_new),
                 ),
               ],
