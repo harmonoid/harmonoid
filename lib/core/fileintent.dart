@@ -16,22 +16,22 @@ const _methodChannel = const MethodChannel('com.alexmercerind.harmonoid/openFile
 
 
 class FileIntent {
-  Screen startScreen;
+  int tabIndex;
   File openedFile;
 
-  FileIntent({this.startScreen, this.openedFile});
+  FileIntent({this.tabIndex, this.openedFile});
 
   static Future<void> init() async {
     try {
       File file = await FileIntent._getOpenFile();
       fileIntent = new FileIntent(
-        startScreen: Screen.nowPlaying,
+        tabIndex: 0,
         openedFile: file,
       );
     }
     catch(exception) {
       fileIntent = new FileIntent(
-        startScreen: Screen.collection,
+        tabIndex: 1,
       );
     }
   }

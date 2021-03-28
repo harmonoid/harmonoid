@@ -4,6 +4,19 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/methods.dart';
 
 
+class Server extends ChangeNotifier {
+  String homeAddress;
+  
+  Server({@required String homeAddress});
+
+  void update({@required String homeAddress}) {
+    this.homeAddress = homeAddress;
+    this.notifyListeners();
+    configuration.save(homeAddress: homeAddress);
+  }
+}
+
+
 class Visuals extends ChangeNotifier {
   Accent accent;
   ThemeMode themeMode;

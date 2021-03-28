@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/visuals.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/home.dart';
 
@@ -22,7 +22,14 @@ class Harmonoid extends StatelessWidget {
           theme: visuals.theme,
           darkTheme: visuals.darkTheme,
           themeMode: visuals.themeMode,
-          home: Home(),
+          home: ChangeNotifierProvider<Server>(
+            create: (context) => Server(
+              homeAddress: configuration.homeAddress,
+            ),
+            builder: (context, _) => Consumer<Server>(
+              builder: (context, _, __) => Home(),
+            ),
+          ),
         ),
       ),
     );

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:provider/provider.dart';
 
 
 const String VERIFICATION_STRING = 'harmonoid';
@@ -193,26 +195,31 @@ class ServerState extends State<ServerSetting> {
                     ),
                     splashRadius: 24.0,
                     onPressed: () {
-                      this.setState(() {
-                        this._serverChangeState = ServerChangeState.changing;
-                      });
-                      http.get(Uri.https(this._textFieldController.text, ''))
-                      .then((http.Response response) {
-                        if (response.body == VERIFICATION_STRING) {
-                          this._serverChangeState = ServerChangeState.done;
-                          configuration.save(
-                            homeAddress: this._textFieldController.text,
-                          );
-                        }
-                        else {
-                          this._serverChangeState = ServerChangeState.invalidException;
-                        }
-                        this.setState(() {});
-                      })
-                      .catchError((exception) {
-                        this._serverChangeState = ServerChangeState.networkException;
-                        this.setState(() {});
-                      });
+                      if (this._textFieldController.text == '') {
+                        Provider.of<Server>(context, listen: false).update(homeAddress: '');
+                        return;
+                      }
+                      else {
+                        this.setState(() {
+                          this._serverChangeState = ServerChangeState.changing;
+                        });
+                        http.get(Uri.https(this._textFieldController.text, ''))
+                        .then((http.Response response) {
+                          if (response.body == VERIFICATION_STRING) {
+                            this._serverChangeState = ServerChangeState.done;
+                            Provider.of<Server>(context, listen: false).update(homeAddress: this._textFieldController.text);
+                          }
+                          else {
+                            this._serverChangeState = ServerChangeState.invalidException;
+                          }
+                          this.setState(() {});
+                        })
+                        .catchError((exception) {
+                          this._serverChangeState = ServerChangeState.networkException;
+                          Provider.of<Server>(context, listen: false).update(homeAddress: configuration.homeAddress);
+                          this.setState(() {});
+                        });
+                      }
                     },
                   ),
                 ),

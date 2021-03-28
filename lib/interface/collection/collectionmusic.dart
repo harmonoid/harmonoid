@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/visuals.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/collection/collectionalbum.dart';
 import 'package:harmonoid/interface/collection/collectiontrack.dart';

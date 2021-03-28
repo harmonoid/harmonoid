@@ -5,7 +5,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path;
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/visuals.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/constants/language.dart';
 
 

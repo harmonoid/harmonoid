@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
+// import 'package:harmonoid/interface/discover/discovermusic.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
@@ -13,13 +16,6 @@ import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
 
-enum Screen {
-  nowPlaying,
-  collection,
-  settings,
-}
-
-
 class Home extends StatefulWidget {
   Home({Key key}) : super(key : key);
   HomeState createState() => HomeState();
@@ -27,8 +23,10 @@ class Home extends StatefulWidget {
 
 
 class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindingObserver {
-  int index = fileIntent.startScreen.index;
+  int index = fileIntent.tabIndex;
   List<GlobalKey<NavigatorState>> navigatorKeys = <GlobalKey<NavigatorState>>[
+    new GlobalKey<NavigatorState>(),
+    new GlobalKey<NavigatorState>(),
     new GlobalKey<NavigatorState>(),
     new GlobalKey<NavigatorState>(),
     new GlobalKey<NavigatorState>(),
@@ -37,7 +35,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
   @override
   void initState() {
     super.initState();
-    if (fileIntent.startScreen == Screen.nowPlaying) fileIntent.play();
+    if (fileIntent.tabIndex == 0) fileIntent.play();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -84,7 +82,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> screens = <Widget>[
+    final List<Navigator> screens = <Navigator>[
       Navigator(
         key: this.navigatorKeys[0],
         initialRoute: 'nowPlaying',
@@ -123,8 +121,25 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
           return route;
         },
       ),
+    ] + (
+      configuration.homeAddress != '' ? <Navigator>[
+        Navigator(
+          key: this.navigatorKeys[2],
+          initialRoute: 'discover',
+          onGenerateRoute: (RouteSettings routeSettings) {
+            Route route;
+            if (routeSettings.name == 'discover') {
+              route = MaterialPageRoute(
+                builder: (BuildContext context) => Settings(),
+              );
+            }
+            return route;
+          },
+        ),
+      ]: <Navigator>[]
+    ) + <Navigator>[
       Navigator(
-        key: this.navigatorKeys[2],
+        key: this.navigatorKeys[3],
         initialRoute: 'settings',
         onGenerateRoute: (RouteSettings routeSettings) {
           Route route;
@@ -137,6 +152,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         },
       ),
     ];
+    if (this.index >= screens.length) this.index = screens.length - 1;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<Collection>(create: (context) => Collection.get()),
@@ -158,7 +174,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
             type: BottomNavigationBarType.shifting,
             currentIndex: this.index,
             onTap: (int index) => this.setState(() => this.index = index),
-            items: [
+            items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.play_arrow),
                 label: language.STRING_NOW_PLAYING,
@@ -169,6 +185,15 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
                 label: language.STRING_COLLECTION,
                 backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
               ),
+            ] + (
+              configuration.homeAddress != '' ? <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.search),
+                  label: language.STRING_DISCOVER,
+                  backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                ),
+              ]: <BottomNavigationBarItem>[]
+            ) + <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
                 label: language.STRING_SETTING,
