@@ -24,9 +24,9 @@ class CollectionTrackTab extends StatelessWidget {
               collection.tracks.isNotEmpty ? () {
                 List<Widget> children = <Widget>[];
                 children.addAll([
-                  SubHeader(language.STRING_LOCAL_TOP_SUBHEADER_TRACK),
+                  SubHeader(language!.STRING_LOCAL_TOP_SUBHEADER_TRACK),
                   LeadingCollectionTrackTile(),
-                  SubHeader(language.STRING_LOCAL_OTHER_SUBHEADER_TRACK)
+                  SubHeader(language!.STRING_LOCAL_OTHER_SUBHEADER_TRACK)
                 ]);
                 collection.tracks.asMap().forEach((int index, _) {
                   children.add(
@@ -42,12 +42,12 @@ class CollectionTrackTab extends StatelessWidget {
                                 context: context,
                                 builder: (subContext) => AlertDialog(
                                   title: Text(
-                                    language
+                                    language!
                                         .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
                                     style: Theme.of(subContext).textTheme.headline1,
                                   ),
                                   content: Text(
-                                    language
+                                    language!
                                         .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
                                     style: Theme.of(subContext).textTheme.headline5,
                                   ),
@@ -58,12 +58,12 @@ class CollectionTrackTab extends StatelessWidget {
                                         await collection.delete(collection.tracks[index]);
                                         Navigator.of(subContext).pop();
                                       },
-                                      child: Text(language.STRING_YES),
+                                      child: Text(language!.STRING_YES),
                                     ),
                                     MaterialButton(
                                       textColor: Theme.of(context).primaryColor,
                                       onPressed: Navigator.of(subContext).pop,
-                                      child: Text(language.STRING_NO),
+                                      child: Text(language!.STRING_NO),
                                     ),
                                   ],
                                 ),
@@ -71,7 +71,7 @@ class CollectionTrackTab extends StatelessWidget {
                               break;
                             case 1:
                               Share.shareFiles(
-                                [collection.tracks[index].filePath],
+                                [collection.tracks[index].filePath!],
                                 subject:
                                     '${collection.tracks[index].trackName} - ${collection.tracks[index].albumName}. Shared using Harmonoid!',
                               );
@@ -83,7 +83,7 @@ class CollectionTrackTab extends StatelessWidget {
                                   contentPadding: EdgeInsets.zero,
                                   actionsPadding: EdgeInsets.zero,
                                   title: Text(
-                                    language.STRING_PLAYLIST_ADD_DIALOG_TITLE,
+                                    language!.STRING_PLAYLIST_ADD_DIALOG_TITLE,
                                     style: Theme.of(subContext).textTheme.headline1,
                                   ),
                                   content: Container(
@@ -96,7 +96,7 @@ class CollectionTrackTab extends StatelessWidget {
                                         Padding(
                                           padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
                                           child: Text(
-                                            language.STRING_PLAYLIST_ADD_DIALOG_BODY,
+                                            language!.STRING_PLAYLIST_ADD_DIALOG_BODY,
                                             style: Theme.of(subContext).textTheme.headline5,
                                           ),
                                         ),
@@ -118,7 +118,7 @@ class CollectionTrackTab extends StatelessWidget {
                                               return ListTile(
                                                 title: Text(
                                                   collection
-                                                      .playlists[playlistIndex].playlistName,
+                                                      .playlists[playlistIndex].playlistName!,
                                                   style:
                                                       Theme.of(context).textTheme.headline2,
                                                 ),
@@ -145,7 +145,7 @@ class CollectionTrackTab extends StatelessWidget {
                                     MaterialButton(
                                       textColor: Theme.of(context).primaryColor,
                                       onPressed: Navigator.of(subContext).pop,
-                                      child: Text(language.STRING_CANCEL),
+                                      child: Text(language!.STRING_CANCEL),
                                     ),
                                   ],
                                 ),
@@ -156,19 +156,19 @@ class CollectionTrackTab extends StatelessWidget {
                         icon: Icon(Icons.more_vert,
                             color: Theme.of(context).iconTheme.color,
                             size: Theme.of(context).iconTheme.size),
-                        tooltip: language.STRING_OPTIONS,
+                        tooltip: language!.STRING_OPTIONS,
                         itemBuilder: (_) => <PopupMenuEntry>[
                           PopupMenuItem(
                             value: 0,
-                            child: Text(language.STRING_DELETE),
+                            child: Text(language!.STRING_DELETE),
                           ),
                           PopupMenuItem(
                             value: 1,
-                            child: Text(language.STRING_SHARE),
+                            child: Text(language!.STRING_SHARE),
                           ),
                           PopupMenuItem(
                             value: 2,
-                            child: Text(language.STRING_ADD_TO_PLAYLIST),
+                            child: Text(language!.STRING_ADD_TO_PLAYLIST),
                           ),
                         ],
                       ),
@@ -181,8 +181,8 @@ class CollectionTrackTab extends StatelessWidget {
                   margin: EdgeInsets.only(top: 96.0, left: 8.0, right: 8.0),
                   height: tileWidth,
                   assetImage: 'assets/images/collection-album.jpg',
-                  title: language.STRING_NO_COLLECTION_TITLE,
-                  subtitle: language.STRING_NO_COLLECTION_SUBTITLE,
+                  title: language!.STRING_NO_COLLECTION_TITLE,
+                  subtitle: language!.STRING_NO_COLLECTION_SUBTITLE,
                 ),
               ],
             ),
@@ -196,9 +196,9 @@ class CollectionTrackTab extends StatelessWidget {
 
 class CollectionTrackTile extends StatelessWidget {
   final Track track;
-  final int index;
+  final int? index;
   final PopupMenuButton popupMenuButton;
-  const CollectionTrackTile({Key key, @required this.track, this.index, @required this.popupMenuButton});
+  const CollectionTrackTile({Key? key, required this.track, this.index, required this.popupMenuButton});
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +208,7 @@ class CollectionTrackTile extends StatelessWidget {
         child: ListTile(
           onTap: () => this.index != null
               ? Playback.play(
-                  index: this.index,
+                  index: this.index!,
                   tracks: collection.tracks,
                 )
               : Playback.play(
@@ -221,13 +221,13 @@ class CollectionTrackTile extends StatelessWidget {
             child: Text('${this.track.trackNumber ?? 1}'),
             backgroundImage: FileImage(this.track.albumArt),
           ),
-          title: Text(this.track.trackName),
+          title: Text(this.track.trackName!),
           subtitle: Text(
-            this.track.albumName +
+            this.track.albumName! +
                 '\n' +
-                (this.track.trackArtistNames.length < 2
-                    ? this.track.trackArtistNames.join(', ')
-                    : this.track.trackArtistNames.sublist(0, 2).join(', ')),
+                (this.track.trackArtistNames!.length < 2
+                    ? this.track.trackArtistNames!.join(', ')
+                    : this.track.trackArtistNames!.sublist(0, 2).join(', ')),
           ),
           trailing: popupMenuButton,
         ),
@@ -292,21 +292,21 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                             height: 8.0,
                           ),
                           Text(
-                            collection.lastTrack.trackName,
+                            collection.lastTrack.trackName!,
                             style: Theme.of(context).textTheme.headline1,
                             textAlign: TextAlign.start,
                             maxLines: 1,
                           ),
                           Text(
-                            collection.lastTrack.albumName,
+                            collection.lastTrack.albumName!,
                             style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.start,
                             maxLines: 1,
                           ),
                           Text(
-                            collection.lastTrack.trackArtistNames.length < 2
-                                ? collection.lastTrack.trackArtistNames.join(', ')
-                                : collection.lastTrack.trackArtistNames
+                            collection.lastTrack.trackArtistNames!.length < 2
+                                ? collection.lastTrack.trackArtistNames!.join(', ')
+                                : collection.lastTrack.trackArtistNames!
                                     .sublist(0, 2)
                                     .join(', '),
                             style: Theme.of(context).textTheme.headline5,

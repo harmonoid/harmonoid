@@ -9,22 +9,22 @@ import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/constants/language.dart';
 
 
-Configuration configuration;
+late Configuration configuration;
 
 
 abstract class ConfigurationKeys {
-  Directory collectionDirectory;
-  Directory cacheDirectory;
-  String homeAddress;
-  LanguageRegion languageRegion;
-  Accent accent;
-  ThemeMode themeMode;
-  CollectionSort collectionSortType;
-  bool automaticAccent;
-  TargetPlatform platform;
-  List<dynamic> collectionSearchRecent;
-  List<dynamic> discoverSearchRecent;
-  List<dynamic> discoverRecent;
+  Directory? collectionDirectory;
+  Directory? cacheDirectory;
+  String? homeAddress;
+  LanguageRegion? languageRegion;
+  Accent? accent;
+  ThemeMode? themeMode;
+  CollectionSort? collectionSortType;
+  bool? automaticAccent;
+  TargetPlatform? platform;
+  List<dynamic>? collectionSearchRecent;
+  List<dynamic>? discoverSearchRecent;
+  List<dynamic>? discoverRecent;
 }
 
 
@@ -46,13 +46,13 @@ const Map<String, dynamic> DEFAULT_CONFIGURATION = {
 
 class Configuration extends ConfigurationKeys {
   
-  File configurationFile;
+  late File configurationFile;
 
   static Future<void> init() async {
     configuration = new Configuration();
     configuration.configurationFile = File(
       path.join(
-        (await path.getExternalStorageDirectory()).path,
+        (await path.getExternalStorageDirectory())!.path,
         'configuration.JSON',
       ),
     );
@@ -64,19 +64,19 @@ class Configuration extends ConfigurationKeys {
   }
 
   Future<void> save({
-    Directory collectionDirectory,
-    Directory cacheDirectory,
-    String homeAddress,
-    LanguageRegion languageRegion,
-    Accent accent,
-    ThemeMode themeMode,
-    bool showOutOfBoxExperience,
-    CollectionSort collectionSortType,
-    bool automaticAccent,
-    TargetPlatform platform,
-    List<dynamic> collectionSearchRecent,
-    List<dynamic> discoverSearchRecent,
-    List<dynamic> discoverRecent,
+    Directory? collectionDirectory,
+    Directory? cacheDirectory,
+    String? homeAddress,
+    LanguageRegion? languageRegion,
+    Accent? accent,
+    ThemeMode? themeMode,
+    bool? showOutOfBoxExperience,
+    CollectionSort? collectionSortType,
+    bool? automaticAccent,
+    TargetPlatform? platform,
+    List<dynamic>? collectionSearchRecent,
+    List<dynamic>? discoverSearchRecent,
+    List<dynamic>? discoverRecent,
     }) async {
     if (collectionDirectory != null) {
       this.cacheDirectory = collectionDirectory;
@@ -115,15 +115,15 @@ class Configuration extends ConfigurationKeys {
       this.platform = platform;
     }
     await configuration.configurationFile.writeAsString(convert.jsonEncode({
-      'collectionDirectory': this.collectionDirectory.path,
-      'cacheDirectory': this.cacheDirectory.path,
+      'collectionDirectory': this.collectionDirectory!.path,
+      'cacheDirectory': this.cacheDirectory!.path,
       'homeAddress': this.homeAddress,
-      'languageRegion': this.languageRegion.index,
+      'languageRegion': this.languageRegion!.index,
       'accent': accents.indexOf(this.accent),
-      'themeMode': this.themeMode.index,
-      'collectionSortType': this.collectionSortType.index,
+      'themeMode': this.themeMode!.index,
+      'collectionSortType': this.collectionSortType!.index,
       'automaticAccent': this.automaticAccent,
-      'platform': this.platform.index,
+      'platform': this.platform!.index,
       'collectionSearchRecent': this.collectionSearchRecent,
       'discoverSearchRecent': this.discoverSearchRecent,
       'discoverRecent': this.discoverRecent,

@@ -20,8 +20,8 @@ enum ServerChangeState {
 
 
 extension ServerChangeStateExtension on ServerChangeState {
-  Widget indicator({@required BuildContext context}) {
-    Widget widget;
+  Widget? indicator({required BuildContext context}) {
+    Widget? widget;
     switch(this) {
       case ServerChangeState.initial: {
         widget = Container();
@@ -40,7 +40,7 @@ extension ServerChangeStateExtension on ServerChangeState {
               ),
             ),
             Text(
-              language.STRING_SETTING_SERVER_CHANGE_CHANGING,
+              language!.STRING_SETTING_SERVER_CHANGE_CHANGING,
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontSize: 12.0,
@@ -63,7 +63,7 @@ extension ServerChangeStateExtension on ServerChangeState {
               ),
             ),
             Text(
-              language.STRING_SETTING_SERVER_CHANGE_DONE,
+              language!.STRING_SETTING_SERVER_CHANGE_DONE,
               style: TextStyle(
                 color: Colors.greenAccent[700],
                 fontSize: 12.0,
@@ -86,7 +86,7 @@ extension ServerChangeStateExtension on ServerChangeState {
               ),
             ),
             Text(
-              language.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID,
+              language!.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID,
               style: TextStyle(
                 color: Colors.redAccent[400],
                 fontSize: 12.0,
@@ -109,7 +109,7 @@ extension ServerChangeStateExtension on ServerChangeState {
               ),
             ),
             Text(
-              language.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK,
+              language!.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK,
               style: TextStyle(
                 color: Colors.redAccent[400],
                 fontSize: 12.0,
@@ -126,7 +126,7 @@ extension ServerChangeStateExtension on ServerChangeState {
 
 
 class ServerSetting extends StatefulWidget {
-  ServerSetting({Key key}) : super(key: key);
+  ServerSetting({Key? key}) : super(key: key);
 
   @override
   ServerState createState() => ServerState();
@@ -145,8 +145,8 @@ class ServerState extends State<ServerSetting> {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
-      title: language.STRING_SETTING_SERVER_CHANGE_TITLE,
-      subtitle: language.STRING_SETTING_SERVER_CHANGE_SUBTITLE,
+      title: language!.STRING_SETTING_SERVER_CHANGE_TITLE,
+      subtitle: language!.STRING_SETTING_SERVER_CHANGE_SUBTITLE,
       child: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -179,8 +179,8 @@ class ServerState extends State<ServerSetting> {
                           width: 1.0,
                         ),
                       ),
-                      labelText: language.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL,
-                      hintText: language.STRING_SETTING_SERVER_CHANGE_SERVER_HINT,
+                      labelText: language!.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL,
+                      hintText: language!.STRING_SETTING_SERVER_CHANGE_SERVER_HINT,
                       labelStyle: TextStyle(color: Theme.of(context).primaryColor),
                       hintStyle: TextStyle(color: Theme.of(context).primaryColor),
                     ),
@@ -229,7 +229,7 @@ class ServerState extends State<ServerSetting> {
               height: 8.0,
               color: Colors.transparent,
             ),
-            _serverChangeState.indicator(context: context),
+            _serverChangeState.indicator(context: context)!,
           ],
         ),
       ),

@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:harmonoid/constants/language.dart';
 
 
-Download download;
+late Download download;
 
 
 enum DownloadExceptionType {
@@ -17,9 +16,9 @@ enum DownloadExceptionType {
 
 
 class DownloadException {
-  final int statusCode;
-  final String message;
-  final DownloadExceptionType type;
+  final int? statusCode;
+  final String? message;
+  final DownloadExceptionType? type;
 
   DownloadException({this.statusCode, this.message, this.type});
 }
@@ -28,21 +27,21 @@ class DownloadException {
 class DownloadTask {
   final Uri fileUri;
   final File saveLocation;
-  final void Function(double progress) onProgress;
-  final void Function() onCompleted;
-  final void Function(DownloadException exception) onException;
+  final void Function(double progress)? onProgress;
+  final void Function()? onCompleted;
+  final void Function(DownloadException exception)? onException;
   final dynamic extras;
-  DownloadException exception;
-  int downloadId;
+  DownloadException? exception;
+  int? downloadId;
   bool isStarted = false;
   bool isCompleted = false;
   int downloadedSize = 0;
-  int fileSize = 0;
+  int? fileSize = 0;
   double progress = 0.0;
   bool isSuccess = true;
-  http.StreamedResponse _responseStream;
+  late http.StreamedResponse _responseStream;
 
-  DownloadTask({@required this.fileUri, @required this.saveLocation, this.downloadId, this.fileSize, this.extras, this.onProgress, this.onCompleted, this.onException});
+  DownloadTask({required this.fileUri, required this.saveLocation, this.downloadId, this.fileSize, this.extras, this.onProgress, this.onCompleted, this.onException});
 
   Stream<DownloadTask> start() async* {
     http.Client httpClient = new http.Client();
@@ -56,7 +55,7 @@ class DownloadTask {
         this.downloadedSize += responseChunk.length;
         if (this._responseStream.statusCode >= 200 && this._responseStream.statusCode < 300) {
           streamConsumer.add(responseChunk);
-          this.progress = this.downloadedSize / this.fileSize;
+          this.progress = this.downloadedSize / this.fileSize!;
           this.onProgress?.call(this.progress);
           yield this;
         }
@@ -66,7 +65,7 @@ class DownloadTask {
             message: 'Exception: Invalid status code: ${this._responseStream.statusCode}.',
             type: DownloadExceptionType.statusCode,
           );
-          throw this.exception;
+          throw this.exception!;
         }
       }
       this.isSuccess = true;
@@ -83,7 +82,7 @@ class DownloadTask {
       this.isCompleted = true;
       if (await this.saveLocation.exists()) this.saveLocation.delete();
       if (exception is DownloadException) {
-        throw this.exception;
+        throw this.exception!;
       }
       else {
         this.exception = DownloadException(
@@ -91,7 +90,7 @@ class DownloadTask {
           message: 'Exception: Could not connect to the host.',
           type: DownloadExceptionType.connection,
         );
-        throw this.exception;
+        throw this.exception!;
       }
     }
   }
@@ -100,15 +99,15 @@ class DownloadTask {
 
 class Download {
   List<DownloadTask> tasks = <DownloadTask>[];
-  DownloadTask currentTask;
-  Stream<DownloadTask> taskStream;
+  DownloadTask? currentTask;
+  Stream<DownloadTask>? taskStream;
   bool _isUnderProgress = false;
 
-  String _toMegaBytes(int size) {
+  String _toMegaBytes(int? size) {
     return ((size ?? 0.0) / (1024 * 1024)).toStringAsFixed(2);
   }
 
-  Future<void> _showDownloadNotification({DownloadTask task}) async {
+  Future<void> _showDownloadNotification({required DownloadTask task}) async {
     NotificationDetails details = NotificationDetails(
       android: AndroidNotificationDetails(
         'com.alexmercerind.harmonoid',
@@ -127,9 +126,9 @@ class Download {
       ),
     );
     await notification.show(
-      task.downloadId,
+      task.downloadId!,
       task.extras.trackName,
-      task.isCompleted ? '${task.isSuccess ? language.STRING_DOWNLOAD_COMPLETED : language.STRING_DOWNLOAD_FAILED} ' : '' + '${this._toMegaBytes(task.downloadedSize)}/${this._toMegaBytes(task.fileSize)} MB',
+      task.isCompleted ? '${task.isSuccess ? language!.STRING_DOWNLOAD_COMPLETED : language!.STRING_DOWNLOAD_FAILED} ' : '' + '${this._toMegaBytes(task.downloadedSize)}/${this._toMegaBytes(task.fileSize)} MB',
       details,
       payload: '',
     );
@@ -170,19 +169,19 @@ class Download {
           await for (DownloadTask progressedDownloadTask in task.start()) {
             this.currentTask = progressedDownloadTask;
             await this._showDownloadNotification(
-              task: this.currentTask,
+              task: this.currentTask!,
             );
-            yield this.currentTask;
+            yield this.currentTask!;
           }
           this._isUnderProgress = false;
           Future.delayed(Duration(seconds: 1), () async {
-            this.currentTask.isCompleted = true;
+            this.currentTask!.isCompleted = true;
             await this._showDownloadNotification(
-              task: this.currentTask,
+              task: this.currentTask!,
             );
           });
         }
-        catch(exception) {
+        on DownloadException catch(exception) {
           Future.delayed(Duration(seconds: 1), () async {
             for (DownloadTask task in this._updatedTasks) {
               task.isSuccess = false;
@@ -191,19 +190,19 @@ class Download {
               );
               task.onException?.call(exception);
             }
-            this.tasks?.clear();
+            this.tasks.clear();
             this.currentTask = null;
             this.taskStream = null;
             this._isUnderProgress = false;
             this._isBatchModified = false;
-            this._updatedTasks?.clear();
+            this._updatedTasks.clear();
           });
           break;
         }
       }
       else {
         await this._showDownloadNotification(
-          task: this.currentTask,
+          task: this.currentTask!,
         );
         yield task;
       }

@@ -33,8 +33,8 @@ class CollectionPlaylistTab extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(language.STRING_PLAYLISTS, style: Theme.of(context).textTheme.headline1),
-                              Text(language.STRING_PLAYLISTS_SUBHEADER, style: Theme.of(context).textTheme.headline5),
+                              Text(language!.STRING_PLAYLISTS!, style: Theme.of(context).textTheme.headline1),
+                              Text(language!.STRING_PLAYLISTS_SUBHEADER, style: Theme.of(context).textTheme.headline5),
                             ],
                           ),
                         ),
@@ -58,7 +58,7 @@ class CollectionPlaylistTab extends StatelessWidget {
                               size: Theme.of(context).iconTheme.size,
                               color: Theme.of(context).iconTheme.color,
                             ),
-                            title: Text(language.STRING_PLAYLISTS_CREATE, style: Theme.of(context).textTheme.headline2),
+                            title: Text(language!.STRING_PLAYLISTS_CREATE, style: Theme.of(context).textTheme.headline2),
                             children: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -78,8 +78,8 @@ class CollectionPlaylistTab extends StatelessWidget {
                                         }
                                       },
                                       decoration: InputDecoration(
-                                        labelText: language.STRING_PLAYLISTS_TEXT_FIELD_LABEL,
-                                        hintText: language.STRING_PLAYLISTS_TEXT_FIELD_HINT,
+                                        labelText: language!.STRING_PLAYLISTS_TEXT_FIELD_LABEL,
+                                        hintText: language!.STRING_PLAYLISTS_TEXT_FIELD_HINT,
                                         labelStyle: TextStyle(color: Theme.of(context).accentColor),
                                         enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1)),
                                         border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1)),
@@ -131,11 +131,11 @@ class CollectionPlaylistTab extends StatelessWidget {
                     context: context,
                     builder: (subContext) => AlertDialog(
                       title: Text(
-                        language.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER,
+                        language!.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER,
                         style: Theme.of(subContext).textTheme.headline1,
                       ),
                       content: Text(
-                        language.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY,
+                        language!.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY,
                         style: Theme.of(subContext).textTheme.headline5,
                       ),
                       actions: [
@@ -145,12 +145,12 @@ class CollectionPlaylistTab extends StatelessWidget {
                             await collection.playlistRemove(playlist);
                             Navigator.of(subContext).pop();
                           },
-                          child: Text(language.STRING_YES),
+                          child: Text(language!.STRING_YES),
                         ),
                         MaterialButton(
                           textColor: Theme.of(context).primaryColor,
                           onPressed: Navigator.of(subContext).pop,
-                          child: Text(language.STRING_NO),
+                          child: Text(language!.STRING_NO),
                         ),
                       ],
                     ),
@@ -162,7 +162,7 @@ class CollectionPlaylistTab extends StatelessWidget {
                     size: Theme.of(context).iconTheme.size,
                     color: Theme.of(context).iconTheme.color,
                   ),
-                  title: Text(playlist.playlistName),
+                  title: Text(playlist.playlistName!),
                   trailing: IconButton(
                     onPressed: () => Playback.play(
                       index: 0,
@@ -172,8 +172,8 @@ class CollectionPlaylistTab extends StatelessWidget {
                       Icons.play_arrow,
                       color: Theme.of(context).iconTheme.color,
                     ),
-                    iconSize: Theme.of(context).iconTheme.size,
-                    splashRadius: Theme.of(context).iconTheme.size - 8,
+                    iconSize: Theme.of(context).iconTheme.size!,
+                    splashRadius: Theme.of(context).iconTheme.size! - 8,
                   ),
                 ),
               ).toList(),
@@ -188,7 +188,7 @@ class CollectionPlaylistTab extends StatelessWidget {
 
 class CollectionPlaylist extends StatelessWidget {
   final Playlist playlist;
-  CollectionPlaylist({Key key, @required this.playlist}) : super(key: key);
+  CollectionPlaylist({Key? key, required this.playlist}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -197,16 +197,16 @@ class CollectionPlaylist extends StatelessWidget {
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.close),
-            iconSize: Theme.of(context).iconTheme.size,
-            splashRadius: Theme.of(context).iconTheme.size - 8,
+            iconSize: Theme.of(context).iconTheme.size!,
+            splashRadius: Theme.of(context).iconTheme.size! - 8,
             onPressed: Navigator.of(context).pop,
           ),
-          title: Text(this.playlist.playlistName),
+          title: Text(this.playlist.playlistName!),
         ),
         body: ListView(
           children: <Widget>[
-            SubHeader(language.STRING_PLAYLIST_TRACKS_SUBHEADER),
-          ] + this.playlist.tracks.map((Track track) {
+            SubHeader(language!.STRING_PLAYLIST_TRACKS_SUBHEADER),
+          ] + (this.playlist.tracks.map((Track track) {
             ListTile(
               onTap: () => Playback.play(
                 index: this.playlist.tracks.indexOf(track),
@@ -217,12 +217,12 @@ class CollectionPlaylist extends StatelessWidget {
                 child: Text('${track.trackNumber ?? 1}'),
                 backgroundImage: FileImage(track.albumArt),
               ),
-              title: Text(track.trackName),
+              title: Text(track.trackName!),
               subtitle: Text(
-                track.albumName + '\n' + 
-                (track.trackArtistNames.length < 2 ? 
-                track.trackArtistNames.join(', ') : 
-                track.trackArtistNames.sublist(0, 2).join(', ')),
+                track.albumName! + '\n' + 
+                (track.trackArtistNames!.length < 2 ? 
+                track.trackArtistNames!.join(', ') : 
+                track.trackArtistNames!.sublist(0, 2).join(', ')),
               ),
               trailing: IconButton(
                 onPressed: () {
@@ -232,11 +232,11 @@ class CollectionPlaylist extends StatelessWidget {
                   Icons.remove,
                   color: Theme.of(context).iconTheme.color,
                 ),
-                iconSize: Theme.of(context).iconTheme.size,
-                splashRadius: Theme.of(context).iconTheme.size - 8,
+                iconSize: Theme.of(context).iconTheme.size!,
+                splashRadius: Theme.of(context).iconTheme.size! - 8,
               ),
             );
-          }).toList(),
+          }).toList() as List<Widget>),
         ),
       ),
     );

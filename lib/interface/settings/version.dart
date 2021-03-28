@@ -10,19 +10,19 @@ import 'package:harmonoid/constants/language.dart';
 
 
 class VersionSetting extends StatefulWidget {
-  VersionSetting({Key key}) : super(key: key);
+  VersionSetting({Key? key}) : super(key: key);
   VersionState createState() => VersionState();
 }
 
 
 class VersionState extends State<VersionSetting> {
-  String version = 'v' + VERSION;
-  String updateUri;
+  String? version = 'v' + VERSION;
+  String? updateUri;
 
   @override
   void initState() { 
     super.initState();
-    http.get('https://api.github.com/repos/alexmercerind/harmonoid/releases')
+    http.get(Uri.parse('https://api.github.com/repos/alexmercerind/harmonoid/releases'))
     .then((http.Response response) {
       this.setState(() {
         List<dynamic> json = convert.jsonDecode(response.body);
@@ -37,22 +37,22 @@ class VersionState extends State<VersionSetting> {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
-      title: language.STRING_SETTING_APP_VERSION_TITLE,
-      subtitle: language.STRING_SETTING_APP_VERSION_SUBTITLE,
+      title: language!.STRING_SETTING_APP_VERSION_TITLE,
+      subtitle: language!.STRING_SETTING_APP_VERSION_SUBTITLE,
       child: Column(
         children: [
           Table(
             children: [
               TableRow(
                 children: [
-                  Text(language.STRING_SETTING_APP_VERSION_INSTALLED),
+                  Text(language!.STRING_SETTING_APP_VERSION_INSTALLED),
                   Text('v' + VERSION),
                 ],
               ),
               TableRow(
                 children: [
-                  Text(language.STRING_SETTING_APP_VERSION_LATEST),
-                  Text(this.version ?? language.STRING_NO_INTERNET_TITLE),
+                  Text(language!.STRING_SETTING_APP_VERSION_LATEST),
+                  Text(this.version ?? language!.STRING_NO_INTERNET_TITLE!),
                 ]
               ),
             ],
@@ -62,9 +62,9 @@ class VersionState extends State<VersionSetting> {
       margin: EdgeInsets.all(16.0),
       actions: this.version == 'v' + VERSION ? null : [
         MaterialButton(
-          onPressed: () => launch(this.updateUri),
+          onPressed: () => launch(this.updateUri!),
           child: Text(
-            language.STRING_DOWNLOAD_UPDATE,
+            language!.STRING_DOWNLOAD_UPDATE,
             style: TextStyle(
               color: Theme.of(context).accentColor,
             ),

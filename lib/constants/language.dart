@@ -13,12 +13,12 @@ class LanguageRegion {
   final String github;
 
   const LanguageRegion({
-    @required this.code, 
-    @required this.countryCode,
-    @required this.name, 
-    @required this.country,
-    @required this.translator,
-    @required this.github,
+    required this.code, 
+    required this.countryCode,
+    required this.name, 
+    required this.country,
+    required this.translator,
+    required this.github,
   });
 
   static const enUs = LanguageRegion(
@@ -78,7 +78,7 @@ class LanguageRegion {
     github: 'https://github.com/kebabinjeneus',
   );
 
-  static const values = <LanguageRegion>[
+  static const values = <LanguageRegion?>[
     enUs,
     ruRu,
     slSi,
@@ -93,16 +93,16 @@ class LanguageRegion {
 
 
 class Language extends Strings with ChangeNotifier {
-  LanguageRegion current;
+  LanguageRegion? current;
 
-  static Language get() => language;
+  static Language? get() => language;
 
-  static Future<void> init({LanguageRegion languageRegion}) async {
+  static Future<void> init({LanguageRegion? languageRegion}) async {
     language = new Language();
-    await language.set(languageRegion: languageRegion);
+    await language!.set(languageRegion: languageRegion);
   }
 
-  Future<void> set({LanguageRegion languageRegion}) async {
+  Future<void> set({LanguageRegion? languageRegion}) async {
     switch(languageRegion) {
       case LanguageRegion.enUs: {
         this.STRING_INTERNET_ERROR                                  = 'Check your internet connection.';
@@ -1211,4 +1211,4 @@ class Language extends Strings with ChangeNotifier {
   }
 }
 
-Language language;
+Language? language;

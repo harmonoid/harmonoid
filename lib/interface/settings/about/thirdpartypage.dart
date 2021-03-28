@@ -5,7 +5,7 @@ import 'package:harmonoid/interface/settings/settings.dart';
 
 
 class ThirdPartyPage extends StatelessWidget {
-  const ThirdPartyPage({Key key}) : super(key: key);
+  const ThirdPartyPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +13,8 @@ class ThirdPartyPage extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.close),
-          iconSize: Theme.of(context).iconTheme.size,
-          splashRadius: Theme.of(context).iconTheme.size - 8,
+          iconSize: Theme.of(context).iconTheme.size!,
+          splashRadius: Theme.of(context).iconTheme.size! - 8,
           onPressed: Navigator.of(context).pop,
         ),
         title: Text('Third Party Credits'),
@@ -57,11 +57,11 @@ class ThirdPartyPage extends StatelessWidget {
                 return List.generate(credits.length, (index) {
                   final credit = credits[index];
                   final name = credit.keys.first;
-                  final value = credit[name];
+                  final value = credit[name]!;
                   return ListTile(
-                    onTap: () => launch(value['launch']),
+                    onTap: () => launch(value['launch']!),
                     leading: CircleAvatar(
-                      backgroundImage: AssetImage(value['asset']),
+                      backgroundImage: AssetImage(value['asset']!),
                     ),
                     trailing: Icon(Icons.open_in_new),
                     title: Text(name),

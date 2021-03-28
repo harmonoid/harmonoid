@@ -8,7 +8,7 @@ import 'package:harmonoid/constants/language.dart';
 
 
 class AccentSetting extends StatefulWidget {
-  AccentSetting({Key key}) : super(key: key);
+  AccentSetting({Key? key}) : super(key: key);
   AccentState createState() => AccentState();
 }
 
@@ -19,20 +19,20 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
-      title: language.STRING_SETTING_ACCENT_COLOR_TITLE,
-      subtitle: language.STRING_SETTING_ACCENT_COLOR_SUBTITLE,
+      title: language!.STRING_SETTING_ACCENT_COLOR_TITLE,
+      subtitle: language!.STRING_SETTING_ACCENT_COLOR_SUBTITLE,
       child: Consumer<Visuals>(
         builder: (context, visuals, _) => Column(
           children: [
             SwitchListTile(
-              value: configuration.automaticAccent,
+              value: configuration.automaticAccent!,
               onChanged: (bool isChecked) async {
                 await configuration.save(
                   automaticAccent: isChecked,
                 );
                 this.setState(() {});
               },
-              title: Text(language.STRING_SETTING_ACCENT_COLOR_AUTOMATIC),
+              title: Text(language!.STRING_SETTING_ACCENT_COLOR_AUTOMATIC),
             ),
             Padding(
               padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
@@ -69,7 +69,7 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  accent.light,
+                                  accent!.light,
                                   accent.dark,
                                 ],
                                 stops: [

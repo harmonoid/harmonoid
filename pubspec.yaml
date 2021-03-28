@@ -18,25 +18,25 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 0.0.3+2
 
 environment:
-  sdk: ">=2.8.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  animations: ^1.1.2
-  provider: ^4.3.3
-  assets_audio_player:
-    git: https://github.com/alexmercerind/Flutter-AssetsAudioPlayer
+  animations: ^2.0.0
+  provider: ^5.0.0
+  assets_audio_player: ^3.0.3+2
+    # git: https://github.com/alexmercerind/Flutter-AssetsAudioPlayer
   flutter_media_metadata: ^0.0.3+2
-  http: ^0.12.2
-  path: ^1.7.0
+  http: ^0.13.1
+  path: ^1.8.0
   path_provider: ^2.0.1
-  flutter_local_notifications: ^3.0.3
-  url_launcher: ^5.5.0
-  permission_handler: ^5.0.1+1
-  share: ^0.6.5+4
-  palette_generator: ^0.2.3
-  implicitly_animated_reorderable_list: ^0.3.2
+  flutter_local_notifications: ^5.0.0
+  url_launcher: ^6.0.3
+  permission_handler: ^6.1.1
+  share: ^2.0.1
+  palette_generator: ^0.3.0
+  implicitly_animated_reorderable_list: ^0.4.0-dev+4
 
 dev_dependencies:
   flutter_test:
