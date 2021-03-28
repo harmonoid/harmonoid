@@ -22,7 +22,7 @@ class CollectionPlaylistTab extends StatelessWidget {
             delegate: SliverChildListDelegate(
               <Widget>[
                 Container(
-                  margin: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+                  margin: EdgeInsets.all(8),
                   child: Card(
                     elevation: 2,
                     child: Column(
@@ -38,71 +38,79 @@ class CollectionPlaylistTab extends StatelessWidget {
                             ],
                           ),
                         ),
-                        ExpansionTile(
-                          maintainState: false,
-                          childrenPadding: EdgeInsets.only(top: 12, bottom: 12, left: 16, right: 16),
-                          leading: Icon(
-                            Icons.queue_music,
-                            size: Theme.of(context).iconTheme.size,
-                            color: Theme.of(context).iconTheme.color,
-                          ),
-                          trailing: Icon(
-                            Icons.add,
-                            size: Theme.of(context).iconTheme.size,
-                            color: Theme.of(context).iconTheme.color,
-                          ),
-                          title: Text(language.STRING_PLAYLISTS_CREATE, style: Theme.of(context).textTheme.headline2),
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: this._textFieldController,
-                                    cursorWidth: 1,
-                                    autofocus: true,
-                                    autocorrect: true,
-                                    onSubmitted: (String value) async {
-                                      if (value != '') {
-                                        FocusScope.of(context).unfocus();
-                                        await collection.playlistAdd(new Playlist(playlistName: value));
-                                        this._textFieldController.clear();
-                                      }
-                                    },
-                                    decoration: InputDecoration(
-                                      labelText: language.STRING_PLAYLISTS_TEXT_FIELD_LABEL,
-                                      hintText: language.STRING_PLAYLISTS_TEXT_FIELD_HINT,
-                                      labelStyle: TextStyle(color: Theme.of(context).accentColor),
-                                      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1)),
-                                      border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1)),
-                                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1)),
+                        // We add a PageStorage here because it seems there's an issue with ExpansionTile
+                        // It tries to cast PageStorage.of(context) as a bool but it's a double
+                        // 'PageStorage.of(context)?.readState(context) as bool?'
+                        // Remove this when a solution arrives
+                        PageStorage(
+                          bucket: PageStorageBucket(),
+                          child: ExpansionTile(
+                            maintainState: false,
+                            initiallyExpanded: false,
+                            childrenPadding: EdgeInsets.only(top: 12, bottom: 12, left: 16, right: 16),
+                            leading: Icon(
+                              Icons.queue_music,
+                              size: Theme.of(context).iconTheme.size,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                            trailing: Icon(
+                              Icons.add,
+                              size: Theme.of(context).iconTheme.size,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                            title: Text(language.STRING_PLAYLISTS_CREATE, style: Theme.of(context).textTheme.headline2),
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: this._textFieldController,
+                                      cursorWidth: 1,
+                                      autofocus: true,
+                                      autocorrect: true,
+                                      onSubmitted: (String value) async {
+                                        if (value != '') {
+                                          FocusScope.of(context).unfocus();
+                                          await collection.playlistAdd(new Playlist(playlistName: value));
+                                          this._textFieldController.clear();
+                                        }
+                                      },
+                                      decoration: InputDecoration(
+                                        labelText: language.STRING_PLAYLISTS_TEXT_FIELD_LABEL,
+                                        hintText: language.STRING_PLAYLISTS_TEXT_FIELD_HINT,
+                                        labelStyle: TextStyle(color: Theme.of(context).accentColor),
+                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1)),
+                                        border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1)),
+                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1)),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  height: 56,
-                                  width: 56,
-                                  alignment: Alignment.center,
-                                  child: IconButton(
-                                    onPressed: () async {
-                                      if (this._textFieldController.text != '') {
-                                        FocusScope.of(context).unfocus();
-                                        await collection.playlistAdd(new Playlist(playlistName: this._textFieldController.text));
-                                        this._textFieldController.clear();
-                                      }
-                                    },
-                                    icon: Icon(
-                                      Icons.check,
-                                      color: Theme.of(context).primaryColor,
+                                  Container(
+                                    height: 56,
+                                    width: 56,
+                                    alignment: Alignment.center,
+                                    child: IconButton(
+                                      onPressed: () async {
+                                        if (this._textFieldController.text != '') {
+                                          FocusScope.of(context).unfocus();
+                                          await collection.playlistAdd(new Playlist(playlistName: this._textFieldController.text));
+                                          this._textFieldController.clear();
+                                        }
+                                      },
+                                      icon: Icon(
+                                        Icons.check,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      iconSize: 24,
+                                      splashRadius: 20,
                                     ),
-                                    iconSize: 24,
-                                    splashRadius: 20,
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),
