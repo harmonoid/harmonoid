@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 import 'package:harmonoid/interface/settings/accent.dart';
 import 'package:harmonoid/interface/settings/server.dart';
 import 'package:harmonoid/interface/settings/about.dart';
