@@ -66,28 +66,6 @@ The plan of project is to bring the best, cross platform music experience for al
 - 💾 **Download Music**
   - A personal dedicated server is required for downloading music. [NOT INCLUDED IN APP]
 
-## 🎉 Contributions
-
-Contributions are open. Feel free to make a pull request, if you wanna see something to get changed.
-
-### 💙 Translation Contributors
-
-Thanks a lot for your contribution.
-
-|Language       |Provider       |
-|---------------|---------------|
-|Russian        |@raitonoberu   |
-|Slovenian      |@mytja         |
-|Portuguese     |@bdlukaa       |
-|Hindi          |@alexmercerind |
-|German         |@MickLesk      |
-|Dutch          |@kebabinjeneus |
-
-You can see the app running in your own language by providing me translations.
-
-For that purpose, you can add your changes to [this](https://github.com/alexmercerind/harmonoid/blob/master/lib/constants/language.dart) file on the repository.
-You can translate this, even if you have little to no knowledge of Dart.
-
 ## 📖 Workings
 
 The majority of the logical & core code of this app is [here](https://github.com/alexmercerind/harmonoid/tree/master/lib/core) in the repository.
@@ -110,11 +88,6 @@ Thanks to following people & organizations for their indirect contribution.
 |[share](https://pub.dev/packages/share)                                              |[flutter](https://github.com/flutter)                   |
 |[url_launcher](https://pub.dev/packages/url_launcher)                                |[flutter](https://github.com/flutter)                   |
 
-## 📄 License
-
-GNU General Public License v3
-
-
 ## 🔎 Project
 
 Glad you're interested in contributing to the project, here is the project structure for guiding you to this codebase.
@@ -122,6 +95,8 @@ Glad you're interested in contributing to the project, here is the project struc
 Labels marked with `*` have scope for improvement in future.
 
 ```
+harmonoid/lib
+│
 │   main.dart                     [Everyone knows this.]
 │
 ├───core                          [Internal application logic.]
@@ -138,14 +113,14 @@ Labels marked with `*` have scope for improvement in future.
 │   ├───collection                [Widgets & screens related to music collection.]
 │   │
 │   │───settings                  [Widgets & screens related to application settings.]
-|
-│   ├───discover                  [Widgets & screens related to music discovery.]
 │   │
-│   │   nowplaying.dart           [Now playing widgets & screen.]
-│   │   harmonoid.dart            [Root Widget of application.]
-│   │   home.dart                 [Child of Harmonoid widget, contains tabs for different screens.]
-│   │   exception.dart            [A minimal MaterialApp to replace Harmonoid in case of any exception.]
-│   │   changenotifiers.dart      [General ChangeNotifiers for state management.]
+│   └───discover                  [Widgets & screens related to music discovery.]
+│    
+│       nowplaying.dart           [Now playing widgets & screen.]
+│       harmonoid.dart            [Root Widget of application.]
+│       home.dart                 [Child of Harmonoid widget, contains tabs for different screens.]
+│       exception.dart            [A minimal MaterialApp to replace Harmonoid in case of any exception.]
+│       changenotifiers.dart      [General ChangeNotifiers for state management.]
 │
 │───utils
 │       methods.dart              [General utility methods used across the application.]
@@ -155,3 +130,26 @@ Labels marked with `*` have scope for improvement in future.
         language.dart
         strings.dart
 ```
+
+
+### 💙 Translation Contributors
+
+Thanks a lot for your contribution.
+
+|Language       |Provider       |
+|---------------|---------------|
+|Russian        |@raitonoberu   |
+|Slovenian      |@mytja         |
+|Portuguese     |@bdlukaa       |
+|Hindi          |@alexmercerind |
+|German         |@MickLesk      |
+|Dutch          |@kebabinjeneus |
+
+You can see the app running in your own language by providing me translations.
+
+For that purpose, you can add your changes to [this](https://github.com/alexmercerind/harmonoid/blob/master/lib/constants/language.dart) file on the repository.
+You can translate this, even if you have little to no knowledge of Dart.
+
+## 📄 License
+
+GNU General Public License v3
