@@ -14,7 +14,7 @@ class Playback {
         new AudioPlayer.Audio.file(
           track.filePath!,
           metas: new AudioPlayer.Metas(
-            id: track.trackId!,
+            id: track.trackId,
             image: new AudioPlayer.MetasImage.file(
               track.albumArt.path,
             ),
