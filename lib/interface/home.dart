@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
-// import 'package:harmonoid/interface/discover/discovermusic.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +9,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/fileintent.dart';
 import 'package:harmonoid/interface/collection/collectionmusic.dart';
 import 'package:harmonoid/interface/collection/collectionsearch.dart';
+import 'package:harmonoid/interface/discover/discovermusic.dart';
 import 'package:harmonoid/interface/nowplaying.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -129,7 +129,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
             Route? route;
             if (routeSettings.name == 'discover') {
               route = MaterialPageRoute(
-                builder: (BuildContext context) => Settings(),
+                builder: (BuildContext context) => DiscoverMusic(),
               );
             }
             return route;

@@ -90,10 +90,23 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
                   this.setState(() => this._isDownloading = true);
                   discover!.trackDownload(
                     widget.track,
-                    onCompleted: () => this.setState(() {
-                      this._isDownloading = false;
-                      this._exists = true;
-                    }),
+                    onCompleted: () {
+                      Provider.of<Collection>(context).add(
+                        file: File(
+                          path.join(
+                            Provider.of<Collection>(context, listen: false).collectionDirectory.path,
+                            '${widget.track.trackArtistNames!.join(', ')}_${widget.track.trackName}'.replaceAll(new RegExp(r'[^\s\w]'), '') + '.OGG',
+                          ),
+                        ),
+                      );
+                      try {
+                        this.setState(() {
+                          this._isDownloading = false;
+                          this._exists = true;
+                        });
+                      }
+                      catch(exception) {}
+                    },
                     onException: (DownloadException exception) {
                       if (exception.type == DownloadExceptionType.connection) {
                         showDialog(
