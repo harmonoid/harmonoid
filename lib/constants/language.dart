@@ -148,7 +148,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'The track could not be saved';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'We strongly recommend you to check your internet connection & try again in a while.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'We all have bad days';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving your music. This generally means that our IP address is blocked due to large number of requests in a given time.\nYou can change server URL in settings and try if it works.\nAlthough, this can also mean that the dependencies of the server are not up to date. This error has nothing to do with you.\nYou can inform the owner of the project, by opening an issue on Github or on Twitter & expect a fix within an hour, if he lives in the same time zone as you.\nEnjoy your downloaded music in the mean time. Thanks a lot for your support.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'We could not save this track';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'This track specifically could not be saved. We are still trying to figure out, what causes this error. Please download some other music in the mean time. Thanks a lot for your kind support.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Wait';
@@ -306,7 +306,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Трек не может быть сохранён';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Пожалуйста, проверьте интернет-соединение и попробуйте снова.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'У всех бывают плохие дни';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Произошла ошибка во время скачивания. Обычно это значит, что наш IP-адрес заблокирован из-за множества запросов в одно время. You can change server URL in settings and try if it works. Также это может значит, что зависимости на сервере устарели. Эта проблема никак не связана с Вами. Вы можете оповестить создателя проекта, открыв Issue на GitHub или написав в Twitter, и ждать решения в течение часа. А пока наслаждайтесь скачанной музыкой. Большое спасибо за поддержку.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'Не удалось сохранить трек';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Этот трек не был загружен. Мы пытаемся выяснить причину проблем. Пожалуйста, скачайте другую музыку. Спасибо за понимание.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Подождите';
@@ -464,7 +464,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Pesmi ni bilo mogoče shraniti';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Priporočamo, da preverite internetno povezavo in poskusite znova kasneje.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Vsi imamo slabe dni... :-(';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Prišlo je do napake pri prenosu. To pomeni, da je naš IP naslov blokiran zaradi prevelikih povpraševanj v tem trenutku. Lahko zamenjaš strežnik v nastavitvah. Lahko tudi pomeni, da koda strežnika ni posodobljena. Nisi kriv za napako. Lahko kontaktiraš lastnika repozitorija preko GitHuba ali Twitterja & pričakuj popravek v 1 uri, če živiš v istem časovnem pasu. Uživaj v prenešeni glasbi vmes. Najlepša hvala za tvojo podopro.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'Ne moremo shraniti te pesmi';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Ta specifična pesem se ne more shraniti. Še vedno ugotavljamo, zakaj je prišlo do napake. Prosimo, da preneseš druge pesmi medtem. Najlepša hvala za podporo.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Počakaj';
@@ -623,7 +623,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'A música não pode ser baixada';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Nós recomendamos que você verifique sua conexão com a internet & tente novamente em alguns minutos.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Todos nós temos dias ruins';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Nós encontramos um erro enquanto salvavamos sua música. Isso significa que seu IP está bloqueado devido à quantidade de pedidos ao mesmo tempo. You can change server URL in settings and try if it works. No entanto, isso também pode significar que as dependencias do servidor não estão atualizadas. Esse erro não é sua culpa. Você pode informar o dono do projeto, abrindo um issue no GitHub ou no Twitter & esperar uma solução entre uma hora, se ele possuir o mesmo fuso horário que você. Desfrutre de sua música enquanto isso. Muito obrigado pela sua compreensão.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'Nós não pudemos salvar essa música';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Essa música não pode ser salva. Nós ainda estamos tentando descobrir a causa do erro. Por favor baixe outra música enquanto isso. Muito obrigado pela sua compreensão e espera. :)';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Aguarde';
@@ -781,7 +781,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'हम इस गाने को सेव नहीं कर सके';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'हम आपको अपना इंटरनेट चेक करने की सलाह देते हैं। थोड़ी देर में दोबारा प्रयास करें।';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'हम सभी के ख़राब दिन आते हैं';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'हमें आपका गाने सेव करते हुए एक एरर प्राप्त हुआ है। इसका अक्सर यही मतलब होता है की हमारा आई.पी. एड्रेस, काम समय में बहुत अधिक उपयोग के कारण ब्लॉक किया जा चुका है। हलाकि, इसका यह मतलब भी हो सकता है की हमारे सर्वर की डेपेंडेन्सीज़ अप-टु-डेट नहीं हैं। इस एरर का आपसे कोई भी सम्बन्ध नहीं है। आप इस प्रोजेक्ट के मालिक को ट्विटर या गिटहब पर इशू खोलकर बता सकते हैं और एक घंटे के अन्दर फिक्स की उम्मीद कर सकते हैं, अगर वह आपके टाइम-जोन में रहता है। आप अभी अपने डौन्लोडेड गाने सुनें। आपके प्यार के लिए धन्यवाद।';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'हम इस गाने को सेव नहीं कर सके';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'यह गाना सेव नहीं किया जा सका। हम जानने का प्रयास कर रहे हैं की यह किस कारण से हो रहा है। आपके प्यार के लिए धन्यवाद।';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'रुको';
@@ -939,7 +939,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Der Song konnte nicht gespeichert werden';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Wir empfehlen Ihnen dringend, Ihre Internetverbindung zu überprüfen und es in einer Weile erneut zu versuchen';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Wir haben alle schlechte Tage';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Wir sind beim Speichern Ihrer Musik auf einen Fehler gestoßen. Dies bedeutet meist, dass unsere IP-Adresse aufgrund einer großen Anzahl von Anfragen in einer bestimmten Zeit blockiert wird. You can change server URL in settings and try if it works. Dies kann aber auch bedeuten, dass die Abhängigkeiten des Servers nicht auf dem neuesten Stand sind. Dieser Fehler hat nichts mit Ihnen zu tun. Sie können den Eigentümer des Projekts informieren, indem Sie ein Problem auf Github oder Twitter öffnen & innerhalb einer Stunde eine Behebung erwarten, wenn er in der gleichen Zeitzone wie Sie wohnt. Genießen Sie in der Zwischenzeit Ihre heruntergeladene Musik. Vielen Dank für Ihre Unterstützung';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'Wir konnten diesen Song nicht speichern';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Speziell dieser Song konnte nicht gespeichert werden. Wir versuchen immer noch herauszufinden, was diesen Fehler verursacht. Bitte laden Sie in der Zwischenzeit etwas andere Musik herunter. Vielen Dank für Ihre freundliche Unterstützung';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Warten';
@@ -1097,7 +1097,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Het nummer kon niet opgeslagen wordenThe track could not be saved';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'We raden u sterk aan uw internet verbinding te controleren en het over een tijdje nogmaals te proberen.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'We hebben allemaal slechte dagen';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We zijn tegen een fout aan gelopen tijdens het opslaan van uw muziek. Dit betekent over het algemeen dat ons IP adres is geblokkeerd vanwege een groot aantal verzoeken in een bepaalde tijd. U kunt de server URL veranderen in de instellingen en proberen of het werkt. Desondanks kan dit ook betekenen dat de afhankelijkheden van de server niet up to date zijn. Deze fout heeft niks met u te maken. U kunt de eigenaar van het project informeren door een issue op Github of op Twitter te maken en een fix te verwachten binnen een uur, als hij in dezelfde tijdszone woont als u. Vermaakt u zich met gedownloade muziek in de tussentijd. Heel erg bedankt voor uw steun!';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'We konden dit nummer niet opslaan';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Dit specifieke nummer kon niet worden opgeslagen. We proberen nogsteeds uit te vogelen wat deze fout veroorzaakt heeft. Download alstublieft wat andere muziek in de tussentijd. Heel erg bedankt voor uw steun.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Wacht';
