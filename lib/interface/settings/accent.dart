@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/interface/changenotifiers.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -24,16 +23,17 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
       child: Consumer<Visuals>(
         builder: (context, visuals, _) => Column(
           children: [
-            SwitchListTile(
-              value: configuration.automaticAccent!,
-              onChanged: (bool isChecked) async {
-                await configuration.save(
-                  automaticAccent: isChecked,
-                );
-                this.setState(() {});
-              },
-              title: Text(language!.STRING_SETTING_ACCENT_COLOR_AUTOMATIC),
-            ),
+            // TODO: Re-implement automatic accent colors using Provider.
+            // SwitchListTile(
+            //   value: configuration.automaticAccent!,
+            //   onChanged: (bool isChecked) async {
+            //     await configuration.save(
+            //       automaticAccent: isChecked,
+            //     );
+            //     this.setState(() {});
+            //   },
+            //   title: Text(language!.STRING_SETTING_ACCENT_COLOR_AUTOMATIC),
+            // ),
             Padding(
               padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
               child: GridView.extent(

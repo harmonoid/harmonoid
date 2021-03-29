@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/interface/settings/accent.dart';
 import 'package:harmonoid/interface/settings/server.dart';
 import 'package:harmonoid/interface/settings/about.dart';
-import 'package:harmonoid/interface/settings/collectiontabs.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
 import 'package:harmonoid/interface/settings/language.dart';
 import 'package:harmonoid/interface/settings/miscellaneous.dart';
@@ -36,7 +35,8 @@ class Settings extends StatelessWidget {
           IndexingSetting(),
           ServerSetting(),
           LanguageSetting(),
-          CollectionTabs(),
+          // TODO: Fix scrolling bug in CollectionTabs widget & implement saving configuration.
+          // CollectionTabs(),
           MiscellaneousSetting(),
           VersionSetting(),
         ],

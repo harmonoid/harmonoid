@@ -7,6 +7,8 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/constants/language.dart';
 
+// TODO: Implement lyrics visualizing & caching.
+
 
 class NowPlaying extends StatefulWidget {
   const NowPlaying({Key? key}) : super(key: key);
