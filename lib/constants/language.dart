@@ -146,11 +146,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE                  = 'You cannot go back';
         this.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE               = 'One or more tracks are being saved offline. Please wait until all the tracks are saved.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'The track could not be saved';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'We strongly recommend you to check your internet connection & try again in a while.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'It is strongly recommend to check your internet connection & try again in a while.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'We all have bad days';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'We could not save this track';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'This track specifically could not be saved. We are still trying to figure out, what causes this error. Please download some other music in the mean time. Thanks a lot for your kind support.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Exception is encountered while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Wait';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'This track is already being downloaded.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'This track is already saved';
@@ -180,8 +178,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_STAR_GITHUB                             = 'STAR THE PROJECT';
         this.STRING_SETTING_STARGAZERS_TITLE                        = 'Project Stargazers';
         this.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Thanks a lot for your support';
-        this.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'We are unable to get latest info about us, you are most likely offline.';
-        this.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'We could not retrieve the information about latest stargazers.';
         this.STRING_SETTING_LANGUAGE_TITLE                          = 'Language';
         this.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Change the language of the app';
         this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
@@ -307,8 +303,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Пожалуйста, проверьте интернет-соединение и попробуйте снова.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'У всех бывают плохие дни';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'Не удалось сохранить трек';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Этот трек не был загружен. Мы пытаемся выяснить причину проблем. Пожалуйста, скачайте другую музыку. Спасибо за понимание.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Подождите';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Этот трек уже скачивается.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Трек уже скачан';
@@ -338,8 +332,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_STAR_GITHUB                             = 'Оценить проект';
         this.STRING_SETTING_STARGAZERS_TITLE                        = 'Оценили проект';
         this.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Спасибо за вашу поддержку';
-        this.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'Не удалось получить информацию. Скорее всего, вы не в сети.';
-        this.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Не удалось получить информацию об оценивших проект.';
         this.STRING_SETTING_LANGUAGE_TITLE                          = 'Язык';
         this.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Изменить язык приложения';
         this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Необходимо перезапустить приложение';
@@ -465,8 +457,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Priporočamo, da preverite internetno povezavo in poskusite znova kasneje.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Vsi imamo slabe dni... :-(';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'Ne moremo shraniti te pesmi';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Ta specifična pesem se ne more shraniti. Še vedno ugotavljamo, zakaj je prišlo do napake. Prosimo, da preneseš druge pesmi medtem. Najlepša hvala za podporo.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Počakaj';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Ta pesem se že prenaša.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Pesem je že shranjena.';
@@ -496,8 +486,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_STAR_GITHUB                             = 'VŠEČKAJ PROJEKT';
         this.STRING_SETTING_STARGAZERS_TITLE                        = 'Všečkerji projekta';
         this.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Najlepša hvala za vašo podporo';
-        this.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'Ne moremo pridobiti najnovejših informacij o nas, najverjetneje nimaš dostopa do interneta.';
-        this.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Ne moremo pridobiti informacij o všečkerjih projekta.';
         this.STRING_SETTING_LANGUAGE_TITLE                          = 'Jezik';
         this.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Spremenite način prikaza aplikacije';
         this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Ponovni zagon aplikacije je potreben';
@@ -624,8 +612,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Nós recomendamos que você verifique sua conexão com a internet & tente novamente em alguns minutos.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Todos nós temos dias ruins';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'Nós não pudemos salvar essa música';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Essa música não pode ser salva. Nós ainda estamos tentando descobrir a causa do erro. Por favor baixe outra música enquanto isso. Muito obrigado pela sua compreensão e espera. :)';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Aguarde';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Essa música já está sendo baixada.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Essa música já está salva';
@@ -655,8 +641,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_STAR_GITHUB                             = 'Avaliar o projeto';
         this.STRING_SETTING_STARGAZERS_TITLE                        = 'Projeto Stargazers';
         this.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Muito obrigado pela sua compreensão';
-        this.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'Nós não conseguimos pegar as últimas informações sobre nós! Parece que você está offline.';
-        this.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Nós não conseguimos pegar as últimas informações sobre stargazers.';
         this.STRING_SETTING_LANGUAGE_TITLE                          = 'Idioma';
         this.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Mude o jeito que você enxerga o aplicativo';
         this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Reinicialização necessária';
@@ -782,8 +766,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'हम आपको अपना इंटरनेट चेक करने की सलाह देते हैं। थोड़ी देर में दोबारा प्रयास करें।';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'हम सभी के ख़राब दिन आते हैं';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'हम इस गाने को सेव नहीं कर सके';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'यह गाना सेव नहीं किया जा सका। हम जानने का प्रयास कर रहे हैं की यह किस कारण से हो रहा है। आपके प्यार के लिए धन्यवाद।';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'रुको';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'यह गाना डाउनलोड हो ही रहा है।';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'यह गाना पहले से सेव है';
@@ -813,8 +795,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_STAR_GITHUB                             = 'स्टार करें';
         this.STRING_SETTING_STARGAZERS_TITLE                        = 'प्रोजेक्ट स्टारगेज़र्स';
         this.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'आपके प्यार के लिए शुक्रिया';
-        this.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'हमारे बारे में नयी जानकारी की लिए इंटरनेट से कनेक्ट हों।';
-        this.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'हम अपने नए स्टारगेज़र्स के बारे में जानकारी नहीं प्राप्त कर सके।';
         this.STRING_SETTING_LANGUAGE_TITLE                          = 'भाषा';
         this.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'अपनी ऐप की भाषा बदलें';
         this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'ऐप रीस्टार्ट';
@@ -940,8 +920,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Wir empfehlen Ihnen dringend, Ihre Internetverbindung zu überprüfen und es in einer Weile erneut zu versuchen';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Wir haben alle schlechte Tage';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'Wir konnten diesen Song nicht speichern';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Speziell dieser Song konnte nicht gespeichert werden. Wir versuchen immer noch herauszufinden, was diesen Fehler verursacht. Bitte laden Sie in der Zwischenzeit etwas andere Musik herunter. Vielen Dank für Ihre freundliche Unterstützung';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Warten';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Dieser Song wird bereits heruntergeladen';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Dieser Song wurde bereits heruntergeladen.';
@@ -971,8 +949,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_STAR_GITHUB                             = 'Projekt mit "Star" versehen (GitHub)';
         this.STRING_SETTING_STARGAZERS_TITLE                        = 'Projekt "Star"-Geber (GitHub)';
         this.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Vielen Dank für Ihre Unterstützung';
-        this.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'Wir sind nicht in der Lage, aktuelle Informationen "Über uns" zu erhalten, Sie sind höchstwahrscheinlich offline.';
-        this.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'Wir konnten die Informationen über die neuesten "Star"-Geber (Github) nicht abrufen.';
         this.STRING_SETTING_LANGUAGE_TITLE                          = 'Sprachen';
         this.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Ändern Sie die Spracheinstellungen der App.';
         this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App restart required';
@@ -1098,8 +1074,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'We raden u sterk aan uw internet verbinding te controleren en het over een tijdje nogmaals te proberen.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'We hebben allemaal slechte dagen';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_TITLE          = 'We konden dit nummer niet opslaan';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_SAVING_SUBTITLE       = 'Dit specifieke nummer kon niet worden opgeslagen. We proberen nogsteeds uit te vogelen wat deze fout veroorzaakt heeft. Download alstublieft wat andere muziek in de tussentijd. Heel erg bedankt voor uw steun.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Wacht';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Dit nummer wordt al gedownload.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Dit nummer is al opgeslagen.';
@@ -1129,8 +1103,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_STAR_GITHUB                             = 'STAR THE PROJECT';
         this.STRING_SETTING_STARGAZERS_TITLE                        = 'Project Stargazers';
         this.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Heel erg bedankt voor uw steun!';
-        this.STRING_SETTING_REPOSITORY_INFORMATION_ERROR            = 'We kunnen onze laatste informatie niet ophalen, u bent waarschijnlijk offline.';
-        this.STRING_SETTING_STARGAZERS_INFORMATION_ERROR            = 'We konden geen informatie ophalen over de laatste stargazers.';
         this.STRING_SETTING_LANGUAGE_TITLE                          = 'Taal';
         this.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Verander de taal van de app';
         this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'App herstart vereist';

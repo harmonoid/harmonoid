@@ -109,6 +109,7 @@ class Discover {
         saveLocation: trackDestination,
         onProgress: onProgress,
         onCompleted: onCompleted,
+        onException: onException,
         extras: track,
       ),
     );

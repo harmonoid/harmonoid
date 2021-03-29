@@ -15,7 +15,7 @@ class DiscoverMusicState extends State<DiscoverMusic>
     with TickerProviderStateMixin {
   bool _init = true;
   int _searchMode = 0;
-  List<dynamic> _recentSearches = <dynamic>[];
+  List<dynamic> _recentSearches = <dynamic>[null, null, null];
   TextEditingController _textFieldController = new TextEditingController();
   // ignore: unused_field
   late Animation<double> _menuButtonAnimation;
@@ -24,8 +24,8 @@ class DiscoverMusicState extends State<DiscoverMusic>
   late AnimationController _animationController;
   late Animation<double> _searchBarHeight;
   late Animation<Offset> _offset;
-  List<AnimationController> _searchModeAnimationScaleController = <AnimationController>[];
-  List<Color> _searchModeColor = <Color>[];
+  List<AnimationController?> _searchModeAnimationScaleController = <AnimationController?>[null, null, null];
+  List<Color?> _searchModeColor = <Color?>[null, null, null];
   bool _isBackButtonShowing = true;
 
   void show() => this._searchBarAnimation.reverse();
@@ -93,10 +93,10 @@ class DiscoverMusicState extends State<DiscoverMusic>
     this._searchMode = selectedIndex;
     for (int index = 0; index < mediaTypes.length; index++) {
       if (index == selectedIndex) {
-        this._searchModeAnimationScaleController[index].forward();
+        this._searchModeAnimationScaleController[index]!.forward();
         this._searchModeColor[index] = Theme.of(context).accentColor;
       } else {
-        this._searchModeAnimationScaleController[index].reverse();
+        this._searchModeAnimationScaleController[index]!.reverse();
         this._searchModeColor[index] = Theme.of(context).iconTheme.color!;
       }
     }
@@ -227,7 +227,7 @@ class DiscoverMusicState extends State<DiscoverMusic>
                       ),
                       ListTile(
                         leading: ScaleTransition(
-                          scale: this._searchModeAnimationScaleController[0],
+                          scale: this._searchModeAnimationScaleController[0]!,
                           child: Icon(Icons.album,
                               color: this._searchModeColor[0]),
                         ),
@@ -239,7 +239,7 @@ class DiscoverMusicState extends State<DiscoverMusic>
                       ),
                       ListTile(
                         leading: ScaleTransition(
-                          scale: this._searchModeAnimationScaleController[1],
+                          scale: this._searchModeAnimationScaleController[1]!,
                           child: Icon(Icons.music_note,
                               color: this._searchModeColor[1]),
                         ),
