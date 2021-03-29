@@ -366,7 +366,7 @@ class Marquee extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      height: (style.fontSize! + 13.0) * MediaQuery.of(context).textScaleFactor,
+      height: (style.fontSize! + 4.0) * MediaQuery.of(context).textScaleFactor,
       child: AutoSizeText(
         text,
         minFontSize: style.fontSize!,

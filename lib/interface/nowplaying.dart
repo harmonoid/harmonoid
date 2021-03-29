@@ -5,6 +5,7 @@ import 'package:assets_audio_player/assets_audio_player.dart' as AudioPlayer;
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 
 // TODO: Implement lyrics visualizing & caching.
@@ -273,29 +274,35 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                       ),
                               ),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  this._track?.trackName ??
-                                      language!
-                                          .STRING_NOW_PLAYING_NOT_PLAYING_TITLE,
-                                  maxLines: 1,
-                                  style: Theme.of(context).textTheme.headline1,
-                                ),
-                                Divider(
-                                  color: Colors.transparent,
-                                  height: 4,
-                                ),
-                                Text(
-                                  this._track == null
-                                      ? language!
-                                          .STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE
-                                      : this._track!.albumName!,
-                                  maxLines: 1,
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
-                              ],
+                            Container(
+                              width: MediaQuery.of(context).size.width - 32.0 - 16.0 - 48.0,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Marquee(
+                                    text: this._track?.trackName  ??
+                                        language!
+                                            .STRING_NOW_PLAYING_NOT_PLAYING_TITLE,
+                                    style: Theme.of(context).textTheme.headline1!,
+                                    blankSpace: 100.0,
+                                    velocity: 20.0,
+                                    pauseAfterRound: Duration(seconds: 1),
+                                  ),
+                                  Divider(
+                                    color: Colors.transparent,
+                                    height: 1,
+                                  ),
+                                  Marquee(
+                                    text: this._track?.albumName ??
+                                        language!
+                                            .STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE,
+                                    style: Theme.of(context).textTheme.headline4!,
+                                    blankSpace: 100.0,
+                                    velocity: 20.0,
+                                    pauseAfterRound: Duration(seconds: 1),
+                                  ),
+                                ],
+                              ),
                             ),
                           ]),
                         ),
