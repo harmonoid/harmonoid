@@ -255,7 +255,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Ink.image(
-                image: FileImage(collection.lastTrack.albumArt),
+                image: FileImage(collection.lastTrack!.albumArt),
                 fit: BoxFit.fitWidth,
                 alignment: Alignment.center,
                 height: 156.0,
@@ -272,13 +272,13 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                       alignment: Alignment.center,
                       child: CircleAvatar(
                         child: Text(
-                          '${collection.lastTrack.trackNumber ?? 1}',
+                          '${collection.lastTrack!.trackNumber ?? 1}',
                           style: TextStyle(
                             color: Colors.white,
                           ),
                         ),
                         backgroundImage: FileImage(
-                          collection.lastTrack.albumArt,
+                          collection.lastTrack!.albumArt,
                         ),
                       ),
                     ),
@@ -292,21 +292,21 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                             height: 8.0,
                           ),
                           Text(
-                            collection.lastTrack.trackName!,
+                            collection.lastTrack!.trackName!,
                             style: Theme.of(context).textTheme.headline1,
                             textAlign: TextAlign.start,
                             maxLines: 1,
                           ),
                           Text(
-                            collection.lastTrack.albumName!,
+                            collection.lastTrack!.albumName!,
                             style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.start,
                             maxLines: 1,
                           ),
                           Text(
-                            collection.lastTrack.trackArtistNames!.length < 2
-                                ? collection.lastTrack.trackArtistNames!.join(', ')
-                                : collection.lastTrack.trackArtistNames!
+                            collection.lastTrack!.trackArtistNames!.length < 2
+                                ? collection.lastTrack!.trackArtistNames!.join(', ')
+                                : collection.lastTrack!.trackArtistNames!
                                     .sublist(0, 2)
                                     .join(', '),
                             style: Theme.of(context).textTheme.headline5,

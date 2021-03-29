@@ -58,7 +58,7 @@ class FileIntent {
           '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG',
         ),
       );
-      await albumArtFile.writeAsBytes(retriever.albumArt);
+      await albumArtFile.writeAsBytes(retriever.albumArt!);
     }
     Playback.play(
       tracks: <Track>[track],

@@ -36,33 +36,33 @@ class Collection extends ChangeNotifier {
 
   static Future<void> init({required Directory? collectionDirectory, required Directory? cacheDirectory}) async {
     _collection = new Collection();
-    await _collection!.setDirectories(
+    await _collection.setDirectories(
       collectionDirectory: collectionDirectory,
       cacheDirectory: cacheDirectory,
     );
   }
 
-  Directory? collectionDirectory;
-  Directory? cacheDirectory;
+  late Directory collectionDirectory;
+  late Directory cacheDirectory;
   List<Album> albums = <Album>[];
   List<Track> tracks = <Track>[];
   List<Artist> artists = <Artist>[];
   List<Playlist> playlists = <Playlist>[];
   Album? lastAlbum;
-  late Track lastTrack;
+  Track? lastTrack;
   Artist? lastArtist;
 
   Future<void> setDirectories({required Directory? collectionDirectory, required Directory? cacheDirectory, void Function(int, int, bool)? onProgress}) async {
-    _collection!.collectionDirectory = collectionDirectory;
-    _collection!.cacheDirectory = cacheDirectory;
-    if (!await _collection!.collectionDirectory!.exists()) await _collection!.collectionDirectory!.create(recursive: true);
-    if (!await Directory(path.join(_collection!.cacheDirectory!.path, 'albumArts')).exists()) {
-      await Directory(path.join(_collection!.cacheDirectory!.path, 'albumArts')).create(recursive: true);
+    _collection.collectionDirectory = collectionDirectory!;
+    _collection.cacheDirectory = cacheDirectory!;
+    if (!await _collection.collectionDirectory.exists()) await _collection.collectionDirectory.create(recursive: true);
+    if (!await Directory(path.join(_collection.cacheDirectory.path, 'albumArts')).exists()) {
+      await Directory(path.join(_collection.cacheDirectory.path, 'albumArts')).create(recursive: true);
       await new File(
-        path.join(cacheDirectory!.path, 'albumArts', 'defaultAlbumArt' + '.PNG'),
+        path.join(cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG'),
       ).writeAsBytes((await rootBundle.load('assets/images/collection-album.jpg')).buffer.asUint8List());
     }
-    await _collection!.refresh(onProgress: onProgress);
+    await _collection.refresh(onProgress: onProgress);
     this.notifyListeners();
   }
 
@@ -116,8 +116,8 @@ class Collection extends ChangeNotifier {
             this._albumArts.add(null);
           }
           else {
-            File albumArtFile = new File(path.join(this.cacheDirectory!.path, 'albumArts', '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
-            await albumArtFile.writeAsBytes(retriever.albumArt);
+            File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArts', '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
+            await albumArtFile.writeAsBytes(retriever.albumArt!);
             this._albumArts.add(albumArtFile);
           }
         }
@@ -259,7 +259,7 @@ class Collection extends ChangeNotifier {
     convert.JsonEncoder encoder = convert.JsonEncoder.withIndent('    ');
     List<Map<String, dynamic>> tracks = <Map<String, dynamic>>[];
     this.tracks.forEach((element) => tracks.add(element.toMap()));
-    await File(path.join(this.cacheDirectory!.path, 'collection.JSON')).writeAsString(encoder.convert({'tracks': tracks}));
+    await File(path.join(this.cacheDirectory.path, 'collection.JSON')).writeAsString(encoder.convert({'tracks': tracks}));
   }
 
   Future<void> refresh({void Function(int completed, int total, bool isCompleted)? onProgress}) async {
@@ -268,19 +268,19 @@ class Collection extends ChangeNotifier {
     this.artists = <Artist>[];
     this._foundAlbums = <List<String>>[];
     this._foundArtists = <String>[];
-    if (!await File(path.join(this.cacheDirectory!.path, 'collection.JSON')).exists()) {
+    if (!await File(path.join(this.cacheDirectory.path, 'collection.JSON')).exists()) {
       await this.index();
       onProgress?.call(0, 0, true);
     }
     else {
-      Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory!.path, 'collection.JSON')).readAsString());
+      Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'collection.JSON')).readAsString());
       for (Map<String, dynamic> trackMap in collection['tracks']) {
         Track track = Track.fromMap(trackMap)!;
         Future<void> albumArtMethod() async {}
         await this._arrange(track, albumArtMethod);
       }
       List<File> collectionDirectoryContent = <File>[];
-      for (FileSystemEntity object in this.collectionDirectory!.listSync(recursive: true)) {
+      for (FileSystemEntity object in this.collectionDirectory.listSync(recursive: true)) {
         if (Methods.isFileSupported(object) && object is File) {
           collectionDirectoryContent.add(object);
         }
@@ -363,8 +363,8 @@ class Collection extends ChangeNotifier {
   }
 
   Future<void> index({void Function(int completed, int total, bool isCompleted)? onProgress}) async {
-    if (await File(path.join(this.cacheDirectory!.path, 'collection.JSON')).exists()) {
-      await File(path.join(this.cacheDirectory!.path, 'collection.JSON')).delete();
+    if (await File(path.join(this.cacheDirectory.path, 'collection.JSON')).exists()) {
+      await File(path.join(this.cacheDirectory.path, 'collection.JSON')).delete();
     }
     this.albums = <Album>[];
     this.tracks = <Track>[];
@@ -372,7 +372,7 @@ class Collection extends ChangeNotifier {
     this.playlists = <Playlist>[];
     this._foundAlbums = <List<String>>[];
     this._foundArtists = <String>[];
-    List<FileSystemEntity> directory = this.collectionDirectory!.listSync(recursive: true);
+    List<FileSystemEntity> directory = this.collectionDirectory.listSync(recursive: true);
     for (int index = 0; index < directory.length; index++) {
       FileSystemEntity object = directory[index];
       if (Methods.isFileSupported(object)) {
@@ -389,14 +389,14 @@ class Collection extends ChangeNotifier {
               this._albumArts.add(
                 new File(
                   path.join(
-                    this.cacheDirectory!.path, 'albumArts', 'defaultAlbumArt' + '.PNG',
+                    this.cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG',
                   ),
                 ),
               );
             }
             else {
-              File albumArtFile = new File(path.join(this.cacheDirectory!.path, 'albumArts', '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
-              await albumArtFile.writeAsBytes(retriever.albumArt);
+              File albumArtFile = new File(path.join(this.cacheDirectory.path, 'albumArts', '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
+              await albumArtFile.writeAsBytes(retriever.albumArt!);
               this._albumArts.add(albumArtFile);
             }
           }
@@ -480,13 +480,13 @@ class Collection extends ChangeNotifier {
     for (Playlist playlist in this.playlists) {
       playlists.add(playlist.toMap());
     }
-    File playlistFile = File(path.join(this.cacheDirectory!.path, 'playlists.JSON'));
+    File playlistFile = File(path.join(this.cacheDirectory.path, 'playlists.JSON'));
     await playlistFile.writeAsString(convert.JsonEncoder.withIndent('    ').convert({'playlists': playlists}));
   }
 
   Future<void> playlistsGetFromCache() async {
     this.playlists = <Playlist>[];
-    File playlistFile = File(path.join(this.cacheDirectory!.path, 'playlists.JSON'));
+    File playlistFile = File(path.join(this.cacheDirectory.path, 'playlists.JSON'));
     if (!await playlistFile.exists()) await this.playlistsSaveToCache();
     else {
       List<dynamic> playlists = convert.jsonDecode(await playlistFile.readAsString())['playlists'];
@@ -512,7 +512,7 @@ class Collection extends ChangeNotifier {
   
   Future<void> _arrange(Track track, Future<void> Function() albumArtMethod) async {
     if (!Methods.binaryContains(this._foundAlbums, [track.albumName, track.albumArtistName])) {
-      this._foundAlbums.add([track.albumName, track.albumArtistName]);
+      this._foundAlbums.add([track.albumName!, track.albumArtistName!]);
       await albumArtMethod();
       this.albums.add(
         new Album(
@@ -592,9 +592,9 @@ class Collection extends ChangeNotifier {
   }
 
   List<File?> _albumArts = <File?>[];
-  List<List<String?>> _foundAlbums = <List<String>>[];
+  List<List<String>> _foundAlbums = <List<String>>[];
   List<String> _foundArtists = <String>[];
 }
 
 
-Collection? _collection;
+late Collection _collection;

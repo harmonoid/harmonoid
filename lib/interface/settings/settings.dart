@@ -25,7 +25,7 @@ class Settings extends StatelessWidget {
           onPressed: () {},
           tooltip: language!.STRING_MENU,
         ),
-        title: Text(language!.STRING_SETTING!),
+        title: Text(language!.STRING_SETTING),
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(vertical: 4.0),

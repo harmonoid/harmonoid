@@ -33,7 +33,7 @@ class CollectionPlaylistTab extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(language!.STRING_PLAYLISTS!, style: Theme.of(context).textTheme.headline1),
+                              Text(language!.STRING_PLAYLISTS, style: Theme.of(context).textTheme.headline1),
                               Text(language!.STRING_PLAYLISTS_SUBHEADER, style: Theme.of(context).textTheme.headline5),
                             ],
                           ),

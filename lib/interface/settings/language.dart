@@ -1,3 +1,4 @@
+import 'package:flag/flag.dart';
 import 'package:flutter/material.dart' hide ExpansionTile;
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
@@ -121,7 +122,10 @@ class LanguageSetting extends StatelessWidget {
             height: 12,
             child: AspectRatio(
               aspectRatio: 3 / 2,
-              child: Container(),
+              child: Flag(
+                languageRegion.countryCode,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
@@ -245,7 +249,7 @@ class _ExpansionTileState extends State<ExpansionTile>
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: (<Widget?>[
+        children: (<Widget>[
           ListTileTheme.merge(
             iconColor: _iconColor.value,
             textColor: _headerColor.value,
@@ -261,7 +265,7 @@ class _ExpansionTileState extends State<ExpansionTile>
               ),
             ),
           ),
-          if (widget.fixedChild != null && !_isExpanded) widget.fixedChild,
+          if (widget.fixedChild != null && !_isExpanded) widget.fixedChild!,
           ClipRect(
             child: Align(
               alignment: widget.expandedAlignment ?? Alignment.center,
@@ -269,7 +273,7 @@ class _ExpansionTileState extends State<ExpansionTile>
               child: child,
             ),
           ),
-        ]) as List<Widget>,
+        ]),
       ),
     );
   }

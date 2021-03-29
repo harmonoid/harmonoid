@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flag/flag.dart';
 
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/interface/settings/about/thirdpartypage.dart';
@@ -26,7 +27,7 @@ class AboutPage extends StatelessWidget {
           splashRadius: Theme.of(context).iconTheme.size! - 8,
           onPressed: Navigator.of(context).pop,
         ),
-        title: Text(language!.STRING_ABOUT_TITLE!),
+        title: Text(language!.STRING_ABOUT_TITLE),
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(vertical: 4.0),
@@ -58,7 +59,7 @@ class AboutPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
                         padding: EdgeInsets.only(left: 16.0, right: 16.0),
@@ -73,14 +74,11 @@ class AboutPage extends StatelessWidget {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             'Harmonoid',
                             style: Theme.of(context).textTheme.headline1,
-                          ),
-                          Text(
-                            'alexmercerind',
-                            style: Theme.of(context).textTheme.headline5,
                           ),
                         ],
                       ),
@@ -168,10 +166,84 @@ class AboutPage extends StatelessWidget {
               ],
             ),
           ),
+          Card(
+            margin: EdgeInsets.only(
+              left: 8.0,
+              right: 8.0,
+              top: 4.0,
+              bottom: 4.0,
+            ),
+            elevation: 2.0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Developer',
+                        style: Theme.of(context).textTheme.headline2,
+                      ),
+                      Divider(color: Colors.transparent, height: 4.0),
+                      Text(
+                        "It's me!",
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(color: Colors.transparent, height: 8.0),
+                Divider(
+                  color: Theme.of(context).dividerColor,
+                  thickness: 1.0,
+                  height: 1.0,
+                  indent: 16.0,
+                  endIndent: 16.0,
+                ),
+                Divider(color: Colors.transparent, height: 4.0),
+                ListTile(
+                  onTap: () => launch('https://github.com/alexmercerind'),
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      'https://avatars.githubusercontent.com/u/28951144',
+                    ),
+                  ),
+                  title: Text('alexmercerind'),
+                  trailing: Icon(Icons.open_in_new),
+                ),
+                ButtonBar(
+                  buttonPadding: EdgeInsets.only(left: 8.0, right: 8.0),
+                  alignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    MaterialButton(
+                      onPressed: () => launch('https://www.linkedin.com/in/hitesh-kumar-saini-78b4a3209'),
+                      child: Text(
+                        'LINKEDIN',
+                        style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
+                    ),
+                    MaterialButton(
+                      onPressed: () => launch('https://www.twitter.com/alexmercerind'),
+                      child: Text(
+                        'TWITTER',
+                        style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           SettingsTile(
             title: 'Collaborators',
-            subtitle:
-                'Thanks to these guys, irrespective of order, for their contribution to development of this project.',
+            subtitle: 'Thanks to these guys, irrespective of order, for their contribution to development of this project.',
             child: Column(
               children: [
                 ListTile(
@@ -215,16 +287,16 @@ class AboutPage extends StatelessWidget {
                 final region = LanguageRegion.values[index]!;
                 return ListTile(
                   onTap: () => launch(region.github),
-                  // trailing: SizedBox(
-                  //   height: 16,
-                  //   child: AspectRatio(
-                  //     aspectRatio: 3 / 2,
-                  //     child: Flag(
-                  //       region.countryCode,
-                  //       fit: BoxFit.cover,
-                  //     ),
-                  //   ),
-                  // ),
+                  trailing: SizedBox(
+                    height: 16,
+                    child: AspectRatio(
+                      aspectRatio: 3 / 2,
+                      child: Flag(
+                        region.countryCode,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                   title: Text(region.translator),
                   subtitle: Text(region.name),
                 );

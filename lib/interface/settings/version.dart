@@ -52,7 +52,7 @@ class VersionState extends State<VersionSetting> {
               TableRow(
                 children: [
                   Text(language!.STRING_SETTING_APP_VERSION_LATEST),
-                  Text(this.version ?? language!.STRING_NO_INTERNET_TITLE!),
+                  Text(this.version ?? language!.STRING_NO_INTERNET_TITLE),
                 ]
               ),
             ],

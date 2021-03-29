@@ -277,7 +277,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                 Text(
                                   this._track?.trackName ??
                                       language!
-                                          .STRING_NOW_PLAYING_NOT_PLAYING_TITLE!,
+                                          .STRING_NOW_PLAYING_NOT_PLAYING_TITLE,
                                   maxLines: 1,
                                   style: Theme.of(context).textTheme.headline1,
                                 ),
@@ -288,7 +288,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                 Text(
                                   this._track == null
                                       ? language!
-                                          .STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE!
+                                          .STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE
                                       : this._track!.albumName!,
                                   maxLines: 1,
                                   style: Theme.of(context).textTheme.headline4,
@@ -302,7 +302,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           child: Text(
                             this._track == null
                                 ? language!
-                                    .STRING_NOW_PLAYING_NOT_PLAYING_HEADER!
+                                    .STRING_NOW_PLAYING_NOT_PLAYING_HEADER
                                 : (this._track!.albumArtistName! +
                                     ' ' +
                                     '(${this._track!.year ?? 'Unknown Year'})'),

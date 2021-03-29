@@ -133,22 +133,22 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     tabs: [
                       Tab(
                         child: Text(
-                          language!.STRING_ALBUM!.toUpperCase(),
+                          language!.STRING_ALBUM.toUpperCase(),
                         ),
                       ),
                       Tab(
                         child: Text(
-                          language!.STRING_TRACK!.toUpperCase(),
+                          language!.STRING_TRACK.toUpperCase(),
                         ),
                       ),
                       Tab(
                         child: Text(
-                          language!.STRING_ARTIST!.toUpperCase(),
+                          language!.STRING_ARTIST.toUpperCase(),
                         ),
                       ),
                       Tab(
                         child: Text(
-                          language!.STRING_PLAYLISTS!.toUpperCase(),
+                          language!.STRING_PLAYLISTS.toUpperCase(),
                         ),
                       ),
                     ],

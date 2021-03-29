@@ -325,7 +325,7 @@ class CollectionAlbum extends StatelessWidget {
                                       height: 2,
                                     ),
                                     Text(
-                                      '${this.album!.tracks.length}' + ' '+ language!.STRING_TRACK!.toLowerCase(),
+                                      '${this.album!.tracks.length}' + ' '+ language!.STRING_TRACK.toLowerCase(),
                                       style: Theme.of(context).textTheme.headline5,
                                       maxLines: 1,
                                       textAlign: TextAlign.start,
