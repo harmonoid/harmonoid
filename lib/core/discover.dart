@@ -108,6 +108,7 @@ class Discover {
         ),
         saveLocation: trackDestination,
         onProgress: onProgress,
+        onCompleted: onCompleted,
         extras: track,
       ),
     );
