@@ -70,6 +70,8 @@ class LeadingCollectionArtistTile extends StatelessWidget {
         padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 2.0, bottom: 4.0),
         child: OpenContainer(
           closedElevation: 2,
+          closedColor: Theme.of(context).cardColor,
+          openColor: Theme.of(context).scaffoldBackgroundColor,
           closedBuilder: (_, open) => Container(
             height: this.height,
             width: MediaQuery.of(context).size.width - 16,
@@ -122,6 +124,8 @@ class CollectionArtistTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return OpenContainer(
       closedElevation: 2.0,
+      closedColor: Theme.of(context).cardColor,
+      openColor: Theme.of(context).scaffoldBackgroundColor,
       closedBuilder: (_, open) => Container(
         height: this.height,
         width: this.width,

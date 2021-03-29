@@ -40,8 +40,12 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
     super.build(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor: Theme.of(context).appBarTheme.color,
         child: TweenAnimationBuilder(
-          child: Icon(Icons.refresh),
+          child: Icon(
+            Icons.refresh,
+            color: Theme.of(context).brightness == Brightness.light ? Colors.white: Theme.of(context).accentColor
+          ),
           tween: this._refreshTween,
           duration: Duration(milliseconds: 800),
           builder: (_, dynamic value, child) => Transform.rotate(
