@@ -29,7 +29,7 @@
 
 As of now, the project contains **OVER 10K LINES OF CODE**.
 
-Recently, it is migrated to use [Provider](https://github.com/rrousselGit/provider) for its state management. At few, places `StatefulWidgets` are still present.
+Recently, it is migrated to use [Provider](https://github.com/rrousselGit/provider) for its state management. At few, places `StatefulWidget`s are still present.
 
 The project supports sorting of music based on media metadata tags & native playback directly from file explorer etc. The whole user interface strictly follows the material design guidelines.
 
@@ -102,11 +102,11 @@ harmonoid/lib
 ├───core                          [Internal application logic.]
 │       collection.dart           [For sorting, discovering, handling, updating, refreshing etc. of music.]
 │       fileintent.dart           [For dealing with intents to open audio files.]
-│       configuration.dart        [For saving application configuration.]*
+│       configuration.dart        [For saving application configuration.]* (Can be improved.)
 │       discover.dart             [For interacting with server.]
 │       download.dart             [For fetching content.]
 │       mediatype.dart            [Various media structures used within application.]
-│       playback.dart             [For playback using assets_audio_player or dart_vlc.]*
+│       playback.dart             [For playback using assets_audio_player or dart_vlc.]* (Yet to be done for desktop.)
 │
 ├───interface                     [Application user interface.]
 │   │
@@ -114,7 +114,7 @@ harmonoid/lib
 │   │
 │   │───settings                  [Widgets & screens related to application settings.]
 │   │
-│   └───discover                  [Widgets & screens related to music discovery.]
+│   └───discover                  [Widgets & screens related to music discovery.]* (Yet to be migrated to Provider.)
 │    
 │       nowplaying.dart           [Now playing widgets & screen.]
 │       harmonoid.dart            [Root Widget of application.]
@@ -126,7 +126,7 @@ harmonoid/lib
 │       methods.dart              [General utility methods used across the application.]
 │       widgets.dart              [Various Widgets that bring application to life.]
 │
-└───constants                     [General globalization related classes.]*
+└───constants                     [General globalization related classes.]* (Can be improved.)
         language.dart
         strings.dart
 ```
