@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:marquee/marquee.dart' as marquee;
 
 
 List<Widget> tileGridListWidgets({
@@ -337,6 +339,49 @@ class ClosedTile extends StatelessWidget {
         title: Text(this.title!),
         subtitle: Text(this.subtitle!),
         onTap: open as void Function()?,
+      ),
+    );
+  }
+}
+
+class Marquee extends StatelessWidget {
+  const Marquee({
+    Key? key,
+    required this.text,
+    required this.style,
+    this.velocity = 20.0,
+    this.blankSpace = 40.0,
+    this.startAfter = const Duration(seconds: 2),
+    this.pauseAfterRound = const Duration(seconds: 2),
+  }) : super(key: key);
+
+  final String text;
+  final TextStyle style;
+  final double velocity;
+  final double blankSpace;
+  final Duration startAfter;
+  final Duration pauseAfterRound;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      height: (style.fontSize! + 13.0) * MediaQuery.of(context).textScaleFactor,
+      child: AutoSizeText(
+        text,
+        minFontSize: style.fontSize!,
+        maxFontSize: style.fontSize!,
+        style: style,
+        overflowReplacement: marquee.Marquee(
+          text: text,
+          blankSpace: blankSpace,
+          accelerationCurve: Curves.easeOutCubic,
+          velocity: velocity,
+          startPadding: 2.0,
+          startAfter: startAfter,
+          pauseAfterRound: pauseAfterRound,
+          style: style,
+        ),
       ),
     );
   }

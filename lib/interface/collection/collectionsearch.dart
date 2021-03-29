@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:harmonoid/interface/collection/collectionartist.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:share/share.dart';
@@ -18,32 +19,28 @@ class CollectionSearch extends StatefulWidget {
 
 class CollectionSearchState extends State<CollectionSearch> {
   int elementsPerRow = 2;
-  double? tileWidth;
-  double? tileHeight;
+  double? tileWidthAlbum;
+  double? tileHeightAlbum;
+  double? tileWidthArtist;
+  double? tileHeightArtist;
   TextEditingController textFieldController = new TextEditingController();
   String query = '';
   bool get search => this._albums.length == 0 && this._tracks.length == 0 && this.textFieldController.text == '';
   bool get result => this._albums.length == 0 && this._tracks.length == 0 && this.textFieldController.text != '';
   bool get albums => this._albums.length == 0;
   bool get tracks => this._tracks.length == 0;
+  bool get artists => this._artists.length == 0;
   List<Widget> _albums = <Widget>[];
   List<Widget> _tracks =  <Widget>[];
   List<Widget> _artists =  <Widget>[];
 
   @override
   Widget build(BuildContext context) {
-    if (query == this.textFieldController.text) {
-      this._albums = <Widget>[];
-      this._tracks =  <Widget>[];
-      this._artists =  <Widget>[];
-      textFieldController.clear();
-    }
-    else {
-      this.query = this.textFieldController.text;
-    }
     this.elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
-    this.tileWidth = (MediaQuery.of(context).size.width - 16 - (this.elementsPerRow - 1) * 8) / this.elementsPerRow;
-    this.tileHeight = this.tileWidth! * 242 / 156;
+    this.tileWidthAlbum = (MediaQuery.of(context).size.width - 16 - (this.elementsPerRow - 1) * 8) / this.elementsPerRow;
+    this.tileHeightAlbum = this.tileWidthAlbum! * 242 / 156;
+    this.tileWidthArtist = (MediaQuery.of(context).size.width - 16 - (elementsPerRow - 1) * 8) / elementsPerRow;
+    this.tileHeightArtist = this.tileWidthArtist! + 36.0;
     return Consumer<Collection>(
       builder: (context, collection, _) => Scaffold(
         appBar: AppBar(
@@ -62,9 +59,21 @@ class CollectionSearchState extends State<CollectionSearch> {
                     Container(
                       margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
                       child: CollectionAlbumTile(
-                        height: this.tileHeight,
-                        width: this.tileWidth,
+                        height: this.tileHeightAlbum,
+                        width: this.tileWidthAlbum,
                         album: collectionItem,
+                      ),
+                    ),
+                  );
+                }
+                if (collectionItem is Artist) {
+                  this._artists.add(
+                    Container(
+                      margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
+                      child: CollectionArtistTile(
+                        height: this.tileHeightArtist!,
+                        width: this.tileWidthArtist!,
+                        artist: collectionItem,
                       ),
                     ),
                   );
@@ -111,9 +120,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                               break;
                             case 1:
                               Share.shareFiles(
-                                [collection.tracks[index].filePath!],
-                                subject:
-                                    '${collection.tracks[index].trackName} - ${collection.tracks[index].albumName}. Shared using Harmonoid!',
+                                [collection.tracks[index].filePath!]
                               );
                               break;
                             case 2:
@@ -237,6 +244,7 @@ class CollectionSearchState extends State<CollectionSearch> {
           ],
         ),
         body: ListView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           children: <Widget>[
             this.search ? Container(
               margin: EdgeInsets.only(top: 56),
@@ -272,17 +280,27 @@ class CollectionSearchState extends State<CollectionSearch> {
                 ],
               ),
             ) : Container(),
-            this.albums ? Container(): SubHeader(language!.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER),
+            this.albums ? Container(): SubHeader(language!.STRING_ALBUM),
             this.albums ? Container(): Container(
               margin: EdgeInsets.only(left: 8.0),
-              height: this.tileHeight! + 16.0,
+              height: this.tileHeightAlbum! + 16.0,
               width: MediaQuery.of(context).size.width,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: this._albums,
               ),
             ),
-            this.tracks ? Container(): SubHeader(language!.STRING_LOCAL_SEARCH_TRACK_SUBHEADER),
+            this.artists ? Container(): SubHeader(language!.STRING_ARTIST),
+            this.artists ? Container(): Container(
+              margin: EdgeInsets.only(left: 8.0),
+              height: this.tileHeightArtist! + 16.0,
+              width: MediaQuery.of(context).size.width,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: this._artists,
+              ),
+            ),
+            this.tracks ? Container(): SubHeader(language!.STRING_TRACK),
           ] + (this.tracks ? [Container()]: this._tracks),
         ),
       ),
