@@ -214,8 +214,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SHARE                                           = 'Share';
         this.STRING_ADD_TO_PLAYLIST                                 = 'Add to playlist';
         this.STRING_SAVE_TO_DOWNLOADS                               = 'Save to downloads';
-        this.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Albums';
-        this.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Tracks';
         this.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something to search in your collection';
         this.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
         this.STRING_PLAYLIST                                        = 'Playlist';
@@ -368,8 +366,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SHARE                                           = 'Поделиться';
         this.STRING_ADD_TO_PLAYLIST                                 = 'Добавить в плейлист';
         this.STRING_SAVE_TO_DOWNLOADS                               = 'Сохранить в "Downloads"';
-        this.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Сохранённые альбомы';
-        this.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Сохранённые треки';
         this.STRING_LOCAL_SEARCH_WELCOME                            = 'Поиск среди загруженных треков';
         this.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'В коллекции ничего не найдено';
         this.STRING_PLAYLIST                                        = 'Плейлист';
@@ -523,8 +519,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ADD_TO_PLAYLIST                                 = 'Dodaj na seznam predvajanja';
         this.STRING_SAVE_TO_DOWNLOADS                               = 'Shrani med prenose';
         this.STRING_DELETE                                          = 'Izbriši';
-        this.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Tukan so shranjeni albumi iz tvojega iskanja';
-        this.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Tukaj so shranjene pesmi iz tvojega iskanja';
         this.STRING_LOCAL_SEARCH_WELCOME                            = 'Vpiši nekaj za iskanje v tvoji kolekciji';
         this.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nič nisem našel v tvoji kolekciji';
         this.STRING_PLAYLIST                                        = 'Seznam predvajanja';
@@ -677,8 +671,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SHARE                                           = 'Compartilhar';
         this.STRING_ADD_TO_PLAYLIST                                 = 'Adicionar à playlist';
         this.STRING_SAVE_TO_DOWNLOADS                               = 'Salvar nos downloads';
-        this.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Aqui estão os álbuns salvos para essa pesquisa';
-        this.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Aqui estão as músicas salvas para essa pesquisa';
         this.STRING_LOCAL_SEARCH_WELCOME                            = 'Adicione algo para pesquisar na sua coleção';
         this.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nada parecido pôde ser encontrado em sua coleção';
         this.STRING_PLAYLIST                                        = 'Playlist';
@@ -831,8 +823,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SHARE                                           = 'शेयर';
         this.STRING_ADD_TO_PLAYLIST                                 = 'प्लेलिस्ट में जोड़ें';
         this.STRING_SAVE_TO_DOWNLOADS                               = 'डौन्लोडस में सेव करें';
-        this.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'एल्बम';
-        this.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'गाने';
         this.STRING_LOCAL_SEARCH_WELCOME                            = 'खोजने के लिए कुछ लिखें';
         this.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'ऐसा कुछ भी नहीं मिला';
         this.STRING_PLAYLIST                                        = 'प्लेलिस्ट';
@@ -985,8 +975,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SHARE                                           = 'Share';
         this.STRING_ADD_TO_PLAYLIST                                 = 'Add to playlist';
         this.STRING_SAVE_TO_DOWNLOADS                               = 'Save to downloads';
-        this.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Here are the saved albums for that query';
-        this.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Here are the saved tracks for that query';
         this.STRING_LOCAL_SEARCH_WELCOME                            = 'Enter something to search in your collection';
         this.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nothing like that could be found in your collection';
         this.STRING_PLAYLIST                                        = 'Playlist';
@@ -1139,8 +1127,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SHARE                                           = 'Deel';
         this.STRING_ADD_TO_PLAYLIST                                 = 'Voeg toe aan afspeellijst';
         this.STRING_SAVE_TO_DOWNLOADS                               = 'Sla op in downloads';
-        this.STRING_LOCAL_SEARCH_ALBUM_SUBHEADER                    = 'Hier zijn de opgeslagen albums voor die vraag';
-        this.STRING_LOCAL_SEARCH_TRACK_SUBHEADER                    = 'Hier zijn de opgeslagen nummers voor die vraag';
         this.STRING_LOCAL_SEARCH_WELCOME                            = 'Voer iets in om uw collectie te doorzoeken';
         this.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Dat kon niet in uw collectie gevonden worden';
         this.STRING_PLAYLIST                                        = 'Afspeellijst';
