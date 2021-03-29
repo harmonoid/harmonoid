@@ -309,17 +309,17 @@ class Collection extends ChangeNotifier {
         });
       }
       onProgress?.call(collectionDirectoryContent.length, collectionDirectoryContent.length, true);
-    }
-    for (Album album in this.albums) {
-      List<String> allAlbumArtistNames = <String>[];
-      album.tracks.forEach((Track track) {
-        track.trackArtistNames!.forEach((artistName) {
-          if (!allAlbumArtistNames.contains(artistName))
-            allAlbumArtistNames.add(artistName);
+      for (Album album in this.albums) {
+        List<String> allAlbumArtistNames = <String>[];
+        album.tracks.forEach((Track track) {
+          track.trackArtistNames!.forEach((artistName) {
+            if (!allAlbumArtistNames.contains(artistName))
+              allAlbumArtistNames.add(artistName);
+          });
         });
-      });
-      for (String artistName in allAlbumArtistNames)  {
-        this.artists[this._foundArtists.indexOf(artistName)].albums.add(album);
+        for (String artistName in allAlbumArtistNames)  {
+          this.artists[this._foundArtists.indexOf(artistName)].albums.add(album);
+        }
       }
     }
     if (this.tracks.isNotEmpty) {
