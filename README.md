@@ -8,13 +8,8 @@
   <a href="https://discord.gg/ZG7Pj9SREG">Join Discord</a>
 </p>
 
-<table>
-  <tr align="center">
-    <td><img src="https://github.com/alexmercerind/harmonoid/blob/assets/collection-album-tab.png?raw=true" /></td>
-    <td><img src="https://github.com/alexmercerind/harmonoid/blob/assets/now-playing.png?raw=true" /></td>
-    <td><img src="https://github.com/alexmercerind/harmonoid/blob/assets/nested-scroll-view.png?raw=true" /></td>
-  </tr>
-</table>
+<img src="https://github.com/alexmercerind/harmonoid/blob/assets/light.png?raw=true" />
+<img src="https://github.com/alexmercerind/harmonoid/blob/assets/dark.png?raw=true" />
 
 ## 🏂 Animations
 
