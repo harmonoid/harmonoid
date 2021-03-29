@@ -29,8 +29,8 @@ class CollectionAlbumTab extends StatelessWidget {
                 tileHeight: tileHeight,
                 tileWidth: tileWidth,
                 elementsPerRow: elementsPerRow,
-                subHeader: language.STRING_LOCAL_OTHER_SUBHEADER_ALBUM,
-                leadingSubHeader: language.STRING_LOCAL_TOP_SUBHEADER_ALBUM,
+                subHeader: language!.STRING_LOCAL_OTHER_SUBHEADER_ALBUM,
+                leadingSubHeader: language!.STRING_LOCAL_TOP_SUBHEADER_ALBUM,
                 widgetCount: collection.albums.length,
                 leadingWidget: LeadingCollectionALbumTile(
                   height: tileWidth,
@@ -45,8 +45,8 @@ class CollectionAlbumTab extends StatelessWidget {
                   margin: EdgeInsets.only(top: 96.0, left: 8.0, right: 8.0),
                   height: tileWidth,
                   assetImage: 'assets/images/collection-album.jpg',
-                  title: language.STRING_NO_COLLECTION_TITLE,
-                  subtitle: language.STRING_NO_COLLECTION_SUBTITLE,
+                  title: language!.STRING_NO_COLLECTION_TITLE,
+                  subtitle: language!.STRING_NO_COLLECTION_SUBTITLE,
                 ),
               ],
             ),
@@ -59,15 +59,15 @@ class CollectionAlbumTab extends StatelessWidget {
 
 
 class CollectionAlbumTile extends StatelessWidget {
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
   final Album album;
 
   const CollectionAlbumTile({
-    Key key, 
-    @required this.album, 
-    @required this.height, 
-    @required this.width,
+    Key? key, 
+    required this.album, 
+    required this.height, 
+    required this.width,
   }) : super(key: key);
 
   Widget build(BuildContext context) {
@@ -93,7 +93,7 @@ class CollectionAlbumTile extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                height: this.height - this.width,
+                height: this.height! - this.width!,
                 width: this.width,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +102,7 @@ class CollectionAlbumTile extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 4),
                       child: Text(
-                        this.album.albumName,
+                        this.album.albumName!,
                         style: Theme.of(context).textTheme.headline2,
                         textAlign: TextAlign.left,
                         maxLines: 2,
@@ -135,7 +135,7 @@ class CollectionAlbumTile extends StatelessWidget {
 class LeadingCollectionALbumTile extends StatelessWidget {
   final double height;
 
-  const LeadingCollectionALbumTile({Key key, @required this.height}) : super(key: key);
+  const LeadingCollectionALbumTile({Key? key, required this.height}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +156,7 @@ class LeadingCollectionALbumTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Ink.image(
-                  image: FileImage(Provider.of<Collection>(context, listen: false).lastAlbum.albumArt),
+                  image: FileImage(Provider.of<Collection>(context, listen: false).lastAlbum!.albumArt),
                   fit: BoxFit.fill,
                   // filterQuality: FilterQuality.low,
                   height: this.height,
@@ -170,19 +170,19 @@ class LeadingCollectionALbumTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        Provider.of<Collection>(context, listen: false).lastAlbum.albumName,
+                        Provider.of<Collection>(context, listen: false).lastAlbum!.albumName!,
                         style: Theme.of(context).textTheme.headline1,
                         textAlign: TextAlign.start,
                         maxLines: 2,
                       ),
                       Text(
-                        Provider.of<Collection>(context, listen: false).lastAlbum.albumArtistName,
+                        Provider.of<Collection>(context, listen: false).lastAlbum!.albumArtistName!,
                         style: Theme.of(context).textTheme.headline3,
                         textAlign: TextAlign.start,
                         maxLines: 1,
                       ),
                       Text(
-                        '(${Provider.of<Collection>(context, listen: false).lastAlbum.year  ?? 'Unknown Year'})',
+                        '(${Provider.of<Collection>(context, listen: false).lastAlbum!.year  ?? 'Unknown Year'})',
                         style: Theme.of(context).textTheme.headline5,
                         textAlign: TextAlign.start,
                         maxLines: 1,
@@ -204,8 +204,8 @@ class LeadingCollectionALbumTile extends StatelessWidget {
 
 
 class CollectionAlbum extends StatelessWidget {
-  final Album album;
-  const CollectionAlbum({Key key, @required this.album}) : super(key: key);
+  final Album? album;
+  const CollectionAlbum({Key? key, required this.album}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -214,7 +214,7 @@ class CollectionAlbum extends StatelessWidget {
         alignment: Alignment.bottomCenter,
         children: [
           Image.file(
-            this.album.albumArt,
+            this.album!.albumArt,
             fit: BoxFit.fill,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.width,
@@ -246,7 +246,7 @@ class CollectionAlbum extends StatelessWidget {
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
-              child,
+              child!,
               ListView(
                 children: [
                   Stack(
@@ -281,7 +281,7 @@ class CollectionAlbum extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Image.file(
-                                this.album.albumArt,
+                                this.album!.albumArt,
                                 height: 140,
                                 width: 140,
                                 fit: BoxFit.fill,
@@ -295,7 +295,7 @@ class CollectionAlbum extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      this.album.albumName,
+                                      this.album!.albumName!,
                                       style: Theme.of(context).textTheme.headline2,
                                       maxLines: 2,
                                       textAlign: TextAlign.start,
@@ -305,7 +305,7 @@ class CollectionAlbum extends StatelessWidget {
                                       height: 2,
                                     ),
                                     Text(
-                                      this.album.albumArtistName,
+                                      this.album!.albumArtistName!,
                                       style: Theme.of(context).textTheme.headline5,
                                       maxLines: 2,
                                       textAlign: TextAlign.start,
@@ -315,7 +315,7 @@ class CollectionAlbum extends StatelessWidget {
                                       height: 2,
                                     ),
                                     Text(
-                                      '${this.album.year  ?? 'Unknown Year'}',
+                                      '${this.album!.year  ?? 'Unknown Year'}',
                                       style: Theme.of(context).textTheme.headline5,
                                       maxLines: 1,
                                       textAlign: TextAlign.start,
@@ -325,7 +325,7 @@ class CollectionAlbum extends StatelessWidget {
                                       height: 2,
                                     ),
                                     Text(
-                                      '${this.album.tracks.length}' + ' '+ language.STRING_TRACK.toLowerCase(),
+                                      '${this.album!.tracks.length}' + ' '+ language!.STRING_TRACK!.toLowerCase(),
                                       style: Theme.of(context).textTheme.headline5,
                                       maxLines: 1,
                                       textAlign: TextAlign.start,
@@ -339,39 +339,39 @@ class CollectionAlbum extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SubHeader(language.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER),
-                ] + this.album.tracks.map((Track track) => Container(
+                  SubHeader(language!.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER),
+                ] + this.album!.tracks.map((Track track) => Container(
                   color: Theme.of(context).scaffoldBackgroundColor,
                   child: new Material(
                     color: Colors.transparent,
                     child: new ListTile(
                       onTap: () async {
                         await Playback.play(
-                          index: this.album.tracks.indexOf(track),
-                          tracks: this.album.tracks,
+                          index: this.album!.tracks.indexOf(track),
+                          tracks: this.album!.tracks,
                         );
                       },
-                      title: Text(track.trackName),
-                      subtitle: Text(track.trackArtistNames.join(', ')),
+                      title: Text(track.trackName!),
+                      subtitle: Text(track.trackArtistNames!.join(', ')),
                       leading: CircleAvatar(
                         child: Text('${track.trackNumber ?? 1}'),
-                        backgroundImage: FileImage(this.album.albumArt),
+                        backgroundImage: FileImage(this.album!.albumArt),
                       ),
                       trailing: PopupMenuButton(
                         color: Theme.of(context).appBarTheme.color,
                         elevation: 2,
-                        onSelected: (index) {
+                        onSelected: (dynamic index) {
                           switch(index) {
                             case 0: {
                               showDialog(
                                 context: context,
                                 builder: (subContext) => AlertDialog(
                                   title: Text(
-                                    language.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
+                                    language!.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
                                     style: Theme.of(subContext).textTheme.headline1,
                                   ),
                                   content: Text(
-                                    language.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
+                                    language!.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
                                     style: Theme.of(subContext).textTheme.headline5,
                                   ),
                                   actions: [
@@ -380,17 +380,17 @@ class CollectionAlbum extends StatelessWidget {
                                       onPressed: () async {
                                         Navigator.of(subContext).pop();
                                         await collection.delete(track);
-                                        if (album.tracks.isEmpty) {
+                                        if (album!.tracks.isEmpty) {
                                           while (Navigator.of(context).canPop())
                                             Navigator.of(context).pop();
                                         }
                                       },
-                                      child: Text(language.STRING_YES),
+                                      child: Text(language!.STRING_YES),
                                     ),
                                     MaterialButton(
                                       textColor: Theme.of(context).primaryColor,
                                       onPressed: Navigator.of(subContext).pop,
-                                      child: Text(language.STRING_NO),
+                                      child: Text(language!.STRING_NO),
                                     ),
                                   ],
                                 ),
@@ -399,7 +399,7 @@ class CollectionAlbum extends StatelessWidget {
                             break;
                             case 1: {
                               Share.shareFiles(
-                                [track.filePath],
+                                [track.filePath!],
                                 subject: '${track.trackName} - ${track.albumName}.',
                               );
                             }
@@ -411,7 +411,7 @@ class CollectionAlbum extends StatelessWidget {
                                   contentPadding: EdgeInsets.zero,
                                   actionsPadding: EdgeInsets.zero,
                                   title: Text(
-                                    language.STRING_PLAYLIST_ADD_DIALOG_TITLE,
+                                    language!.STRING_PLAYLIST_ADD_DIALOG_TITLE,
                                     style: Theme.of(subContext).textTheme.headline1,
                                   ),
                                   content: Container(
@@ -424,7 +424,7 @@ class CollectionAlbum extends StatelessWidget {
                                         Padding(
                                           padding: EdgeInsets.only(left: 24, top: 8, bottom: 16),
                                           child: Text(
-                                            language.STRING_PLAYLIST_ADD_DIALOG_BODY,
+                                            language!.STRING_PLAYLIST_ADD_DIALOG_BODY,
                                             style: Theme.of(subContext).textTheme.headline5,
                                           ),
                                         ),
@@ -441,7 +441,7 @@ class CollectionAlbum extends StatelessWidget {
                                             shrinkWrap: true,
                                             itemCount: collection.playlists.length,
                                             itemBuilder: (BuildContext context, int playlistIndex) => ListTile(
-                                              title: Text(collection.playlists[playlistIndex].playlistName, style: Theme.of(context).textTheme.headline2),
+                                              title: Text(collection.playlists[playlistIndex].playlistName!, style: Theme.of(context).textTheme.headline2),
                                               leading: Icon(
                                                 Icons.queue_music,
                                                 size: Theme.of(context).iconTheme.size,
@@ -464,7 +464,7 @@ class CollectionAlbum extends StatelessWidget {
                                     MaterialButton(
                                       textColor: Theme.of(context).primaryColor,
                                       onPressed: Navigator.of(subContext).pop,
-                                      child: Text(language.STRING_CANCEL),
+                                      child: Text(language!.STRING_CANCEL),
                                     ),
                                   ],
                                 ),
@@ -474,19 +474,19 @@ class CollectionAlbum extends StatelessWidget {
                           }
                         },
                         icon: Icon(Icons.more_vert, color: Theme.of(context).iconTheme.color, size: Theme.of(context).iconTheme.size),
-                        tooltip: language.STRING_OPTIONS,
+                        tooltip: language!.STRING_OPTIONS,
                         itemBuilder: (_) => <PopupMenuEntry>[
                           PopupMenuItem(
                             value: 0,
-                            child: Text(language.STRING_DELETE),
+                            child: Text(language!.STRING_DELETE),
                           ),
                           PopupMenuItem(
                             value: 1,
-                            child: Text(language.STRING_SHARE),
+                            child: Text(language!.STRING_SHARE),
                           ),
                           PopupMenuItem(
                             value: 2,
-                            child: Text(language.STRING_ADD_TO_PLAYLIST),
+                            child: Text(language!.STRING_ADD_TO_PLAYLIST),
                           ),
                         ],
                       ),

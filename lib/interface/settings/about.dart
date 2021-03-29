@@ -9,7 +9,7 @@ import 'package:harmonoid/constants/language.dart';
 
 
 class AboutSetting extends StatefulWidget {
-  const AboutSetting({Key key}) : super(key: key);
+  const AboutSetting({Key? key}) : super(key: key);
 
   @override
   AboutState createState() => AboutState();
@@ -17,7 +17,7 @@ class AboutSetting extends StatefulWidget {
 
 
 class AboutState extends State<AboutSetting> {
-  Map<String, dynamic> repository;
+  Map<String, dynamic>? repository;
   bool _init = true;
 
   @override
@@ -25,7 +25,7 @@ class AboutState extends State<AboutSetting> {
     super.didChangeDependencies();
     if (this._init) {
       try {
-        http.Response response = await http.get('https://api.github.com/repos/alexmercerind/harmonoid');
+        http.Response response = await http.get(Uri.parse('https://api.github.com/repos/alexmercerind/harmonoid'));
         this.repository = convert.jsonDecode(response.body);
         this.setState(() {});
       } catch (exception) {}
@@ -43,8 +43,8 @@ class AboutState extends State<AboutSetting> {
       openElevation: 0.0,
       closedBuilder: (context, open) => ClosedTile(
         open: open,
-        title: language.STRING_ABOUT_TITLE,
-        subtitle: language.STRING_ABOUT_SUBTITLE,
+        title: language!.STRING_ABOUT_TITLE,
+        subtitle: language!.STRING_ABOUT_SUBTITLE,
       ),
       openBuilder: (context, _) => AboutPage(repository: this.repository),
     );

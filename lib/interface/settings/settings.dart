@@ -20,12 +20,12 @@ class Settings extends StatelessWidget {
         elevation: 4.0,
         leading: IconButton(
           icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
-          iconSize: Theme.of(context).iconTheme.size,
-          splashRadius: Theme.of(context).iconTheme.size - 8,
+          iconSize: Theme.of(context).iconTheme.size!,
+          splashRadius: Theme.of(context).iconTheme.size! - 8,
           onPressed: () {},
-          tooltip: language.STRING_MENU,
+          tooltip: language!.STRING_MENU,
         ),
-        title: Text(language.STRING_SETTING),
+        title: Text(language!.STRING_SETTING!),
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(vertical: 4.0),
@@ -47,17 +47,17 @@ class Settings extends StatelessWidget {
 
 
 class SettingsTile extends StatelessWidget {
-  final String title;
-  final String subtitle;
+  final String? title;
+  final String? subtitle;
   final Widget child;
-  final EdgeInsets margin;
-  final List<Widget> actions;
+  final EdgeInsets? margin;
+  final List<Widget>? actions;
 
   const SettingsTile({
-    Key key,
-    @required this.title,
-    @required this.subtitle,
-    @required this.child,
+    Key? key,
+    required this.title,
+    required this.subtitle,
+    required this.child,
     this.actions,
     this.margin,
   }) : super(key: key);
@@ -90,12 +90,12 @@ class SettingsTile extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  this.title,
+                  this.title!,
                   style: Theme.of(context).textTheme.headline2,
                 ),
                 Divider(color: Colors.transparent, height: 4.0),
                 Text(
-                  this.subtitle,
+                  this.subtitle!,
                   style: Theme.of(context).textTheme.headline5,
                 ),
                 Divider(color: Colors.transparent, height: 8.0),
@@ -109,7 +109,7 @@ class SettingsTile extends StatelessWidget {
           ),
           Container(
             margin: this.margin ?? EdgeInsets.zero,
-            child: this.child ?? Container(),
+            child: this.child,
           ),
           Divider(color: Colors.transparent, height: 8.0),
           if (this.actions != null) ...[
@@ -123,7 +123,7 @@ class SettingsTile extends StatelessWidget {
             ButtonBar(
               alignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.max,
-              children: this.actions,
+              children: this.actions!,
             ),
           ],
         ],

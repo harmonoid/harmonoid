@@ -14,15 +14,15 @@ import 'package:harmonoid/constants/language.dart';
 
 
 class CollectionMusic extends StatefulWidget {
-  const CollectionMusic({Key key}) : super(key: key);
+  const CollectionMusic({Key? key}) : super(key: key);
   CollectionMusicState createState() => CollectionMusicState();
 }
 
 
 class CollectionMusicState extends State<CollectionMusic> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  double _refreshTurns;
-  Tween<double> _refreshTween;
-  TabController _tabController;
+  late double _refreshTurns;
+  late Tween<double> _refreshTween;
+  TabController? _tabController;
 
   @override
   bool get wantKeepAlive => true;
@@ -44,7 +44,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
           child: Icon(Icons.refresh),
           tween: this._refreshTween,
           duration: Duration(milliseconds: 800),
-          builder: (_, value, child) => Transform.rotate(
+          builder: (_, dynamic value, child) => Transform.rotate(
             alignment: Alignment.center,
             angle: value,
             child: child,
@@ -72,30 +72,30 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   snap: true,
                   leading: IconButton(
                     icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
-                    iconSize: Theme.of(context).iconTheme.size,
-                    splashRadius: Theme.of(context).iconTheme.size - 8,
+                    iconSize: Theme.of(context).iconTheme.size!,
+                    splashRadius: Theme.of(context).iconTheme.size! - 8,
                     onPressed: () {},
-                    tooltip: language.STRING_MENU,
+                    tooltip: language!.STRING_MENU,
                   ),
                   title: Text('Harmonoid'),
                   centerTitle: Provider.of<Visuals>(context, listen: false).platform == TargetPlatform.iOS,
                   actions: [
                     IconButton(
                       icon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
-                      iconSize: Theme.of(context).iconTheme.size,
-                      splashRadius: Theme.of(context).iconTheme.size - 8,
-                      tooltip: language.STRING_SEARCH_COLLECTION,
+                      iconSize: Theme.of(context).iconTheme.size!,
+                      splashRadius: Theme.of(context).iconTheme.size! - 8,
+                      tooltip: language!.STRING_SEARCH_COLLECTION,
                       onPressed: () {
                         Navigator.of(context).pushNamed('collectionSearch');
                       },
                     ),
                     IconButton(
                       icon: Icon(Icons.more_vert, color: Theme.of(context).iconTheme.color),
-                      iconSize: Theme.of(context).iconTheme.size,
-                      splashRadius: Theme.of(context).iconTheme.size - 8,
-                      tooltip: language.STRING_OPTIONS,
+                      iconSize: Theme.of(context).iconTheme.size!,
+                      splashRadius: Theme.of(context).iconTheme.size! - 8,
+                      tooltip: language!.STRING_OPTIONS,
                       onPressed: () async {
-                        CollectionSort collectionSortType = await showMenu<CollectionSort>(
+                        CollectionSort? collectionSortType = await showMenu<CollectionSort>(
                           context: context,
                           position: RelativeRect.fromLTRB(
                             MediaQuery.of(context).size.width,
@@ -107,12 +107,12 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                             CheckedPopupMenuItem<CollectionSort>(
                               checked: CollectionSort.aToZ == configuration.collectionSortType,
                               value: CollectionSort.aToZ,
-                              child: Text(language.STRING_A_TO_Z),
+                              child: Text(language!.STRING_A_TO_Z),
                             ),
                             CheckedPopupMenuItem<CollectionSort>(
                               checked: CollectionSort.dateAdded == configuration.collectionSortType,
                               value: CollectionSort.dateAdded,
-                              child: Text(language.STRING_DATE_ADDED),
+                              child: Text(language!.STRING_DATE_ADDED),
                             ),
                           ],
                           elevation: 2.0,
@@ -133,22 +133,22 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                     tabs: [
                       Tab(
                         child: Text(
-                          language.STRING_ALBUM.toUpperCase(),
+                          language!.STRING_ALBUM!.toUpperCase(),
                         ),
                       ),
                       Tab(
                         child: Text(
-                          language.STRING_TRACK.toUpperCase(),
+                          language!.STRING_TRACK!.toUpperCase(),
                         ),
                       ),
                       Tab(
                         child: Text(
-                          language.STRING_ARTIST.toUpperCase(),
+                          language!.STRING_ARTIST!.toUpperCase(),
                         ),
                       ),
                       Tab(
                         child: Text(
-                          language.STRING_PLAYLISTS.toUpperCase(),
+                          language!.STRING_PLAYLISTS!.toUpperCase(),
                         ),
                       ),
                     ],

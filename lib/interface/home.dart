@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
 // import 'package:harmonoid/interface/discover/discovermusic.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
@@ -17,13 +16,13 @@ import 'package:harmonoid/constants/language.dart';
 
 
 class Home extends StatefulWidget {
-  Home({Key key}) : super(key : key);
+  Home({Key? key}) : super(key : key);
   HomeState createState() => HomeState();
 }
 
 
 class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindingObserver {
-  int index = fileIntent.tabIndex;
+  int? index = fileIntent.tabIndex;
   List<GlobalKey<NavigatorState>> navigatorKeys = <GlobalKey<NavigatorState>>[
     new GlobalKey<NavigatorState>(),
     new GlobalKey<NavigatorState>(),
@@ -36,42 +35,42 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
   void initState() {
     super.initState();
     if (fileIntent.tabIndex == 0) fileIntent.play();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
   @override
   Future<bool> didPopRoute() async {
-    if (this.navigatorKeys[this.index].currentState.canPop()) {
-      this.navigatorKeys[this.index].currentState.pop();
+    if (this.navigatorKeys[this.index!].currentState!.canPop()) {
+      this.navigatorKeys[this.index!].currentState!.pop();
     }
     else {
       showDialog(
         context: context,
         builder: (subContext) => AlertDialog(
           title: Text(
-            language.STRING_EXIT_TITLE,
+            language!.STRING_EXIT_TITLE,
             style: Theme.of(subContext).textTheme.headline1,
           ),
           content: Text(
-            language.STRING_EXIT_SUBTITLE,
+            language!.STRING_EXIT_SUBTITLE,
             style: Theme.of(subContext).textTheme.headline5,
           ),
           actions: [
             MaterialButton(
               textColor: Theme.of(context).primaryColor,
               onPressed: SystemNavigator.pop,
-              child: Text(language.STRING_YES),
+              child: Text(language!.STRING_YES),
             ),
             MaterialButton(
               textColor: Theme.of(context).primaryColor,
               onPressed: Navigator.of(subContext).pop,
-              child: Text(language.STRING_NO),
+              child: Text(language!.STRING_NO),
             ),
           ],
         ),
@@ -87,7 +86,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         key: this.navigatorKeys[0],
         initialRoute: 'nowPlaying',
         onGenerateRoute: (RouteSettings routeSettings) {
-          Route route;
+          Route? route;
           if (routeSettings.name == 'nowPlaying') {
             route = MaterialPageRoute(
               builder: (BuildContext context) => NowPlaying(),
@@ -100,7 +99,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         key: this.navigatorKeys[1],
         initialRoute: 'collectionMusic',
         onGenerateRoute: (RouteSettings routeSettings) {
-          Route<dynamic> route;
+          Route<dynamic>? route;
           if (routeSettings.name == 'collectionMusic') {
             route = new MaterialPageRoute(builder: (BuildContext context) => CollectionMusic());
           }
@@ -127,7 +126,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
           key: this.navigatorKeys[2],
           initialRoute: 'discover',
           onGenerateRoute: (RouteSettings routeSettings) {
-            Route route;
+            Route? route;
             if (routeSettings.name == 'discover') {
               route = MaterialPageRoute(
                 builder: (BuildContext context) => Settings(),
@@ -142,7 +141,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         key: this.navigatorKeys[3],
         initialRoute: 'settings',
         onGenerateRoute: (RouteSettings routeSettings) {
-          Route route;
+          Route? route;
           if (routeSettings.name == 'settings') {
             route = MaterialPageRoute(
               builder: (BuildContext context) => Settings(),
@@ -152,16 +151,16 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         },
       ),
     ];
-    if (this.index >= screens.length) this.index = screens.length - 1;
+    if (this.index! >= screens.length) this.index = screens.length - 1;
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<Collection>(create: (context) => Collection.get()),
-        ChangeNotifierProvider<Language>(create: (context) => Language.get()),
+        ChangeNotifierProvider<Collection>(create: (context) => Collection.get()!),
+        ChangeNotifierProvider<Language>(create: (context) => Language.get()!),
       ],
       builder: (context, _) => Consumer<Language>(
         builder: (context, _, __) => Scaffold(
           body: PageTransitionSwitcher(
-            child: screens[this.index],
+            child: screens[this.index!],
             duration: Duration(milliseconds: 400),
             transitionBuilder: (child, animation, secondaryAnimation) => FadeThroughTransition(
               animation: animation,
@@ -172,31 +171,31 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
           ),
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.shifting,
-            currentIndex: this.index,
+            currentIndex: this.index!,
             onTap: (int index) => this.setState(() => this.index = index),
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.play_arrow),
-                label: language.STRING_NOW_PLAYING,
+                label: language!.STRING_NOW_PLAYING,
                 backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.library_music),
-                label: language.STRING_COLLECTION,
+                label: language!.STRING_COLLECTION,
                 backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
               ),
             ] + (
               configuration.homeAddress != '' ? <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: Icon(Icons.search),
-                  label: language.STRING_DISCOVER,
+                  label: language!.STRING_DISCOVER,
                   backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
                 ),
               ]: <BottomNavigationBarItem>[]
             ) + <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
-                label: language.STRING_SETTING,
+                label: language!.STRING_SETTING,
                 backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
               ),
             ],

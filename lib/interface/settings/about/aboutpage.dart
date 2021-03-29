@@ -10,11 +10,11 @@ import 'package:harmonoid/constants/language.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({
-    Key key,
-    @required this.repository,
+    Key? key,
+    required this.repository,
   }) : super(key: key);
 
-  final Map<String, dynamic> repository;
+  final Map<String, dynamic>? repository;
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +22,11 @@ class AboutPage extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.close),
-          iconSize: Theme.of(context).iconTheme.size,
-          splashRadius: Theme.of(context).iconTheme.size - 8,
+          iconSize: Theme.of(context).iconTheme.size!,
+          splashRadius: Theme.of(context).iconTheme.size! - 8,
           onPressed: Navigator.of(context).pop,
         ),
-        title: Text(language.STRING_ABOUT_TITLE),
+        title: Text(language!.STRING_ABOUT_TITLE!),
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(vertical: 4.0),
@@ -67,7 +67,7 @@ class AboutPage extends StatelessWidget {
                           backgroundImage: this.repository == null
                               ? null
                               : NetworkImage(
-                                  this.repository['owner']['avatar_url'],
+                                  this.repository!['owner']['avatar_url'],
                                 ),
                         ),
                       ),
@@ -92,7 +92,7 @@ class AboutPage extends StatelessWidget {
                   child: Text(
                     this.repository == null
                         ? 'GNU General Public License v3.0'
-                        : this.repository['license']['name'],
+                        : this.repository!['license']['name'],
                     style: Theme.of(context).textTheme.headline5,
                   ),
                 ),
@@ -103,7 +103,7 @@ class AboutPage extends StatelessWidget {
                       Chip(
                         avatar: Icon(Icons.star_border, color: Colors.white),
                         label: Text(
-                          '${this.repository['stargazers_count']} stars',
+                          '${this.repository!['stargazers_count']} stars',
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -114,7 +114,7 @@ class AboutPage extends StatelessWidget {
                       Chip(
                         avatar: Icon(Icons.restaurant, color: Colors.white),
                         label: Text(
-                          '${this.repository['forks']} forks',
+                          '${this.repository!['forks']} forks',
                           style: TextStyle(color: Colors.white),
                         ),
                         backgroundColor: Theme.of(context).accentColor,
@@ -130,7 +130,7 @@ class AboutPage extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline5,
                         )
                       : Text(
-                          this.repository['description'],
+                          this.repository!['description'],
                           style: Theme.of(context).textTheme.headline5,
                         ),
                 ),
@@ -150,7 +150,7 @@ class AboutPage extends StatelessWidget {
                         'https://discord.com/invite/ZG7Pj9SREG',
                       ),
                       child: Text(
-                        language.STRING_DISCORD,
+                        language!.STRING_DISCORD,
                         style: TextStyle(color: Theme.of(context).accentColor),
                       ),
                     ),
@@ -159,7 +159,7 @@ class AboutPage extends StatelessWidget {
                         'https://github.com/alexmercerind/harmonoid/blob/master/README.md',
                       ),
                       child: Text(
-                        language.STRING_SETTING_STAR_GITHUB,
+                        language!.STRING_SETTING_STAR_GITHUB,
                         style: TextStyle(color: Theme.of(context).accentColor),
                       ),
                     ),
@@ -208,11 +208,11 @@ class AboutPage extends StatelessWidget {
             ),
           ),
           SettingsTile(
-            title: language.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE,
-            subtitle: language.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE,
+            title: language!.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE,
+            subtitle: language!.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE,
             child: Column(
               children: List.generate(LanguageRegion.values.length, (index) {
-                final region = LanguageRegion.values[index];
+                final region = LanguageRegion.values[index]!;
                 return ListTile(
                   onTap: () => launch(region.github),
                   // trailing: SizedBox(

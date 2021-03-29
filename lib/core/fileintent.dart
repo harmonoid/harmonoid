@@ -6,18 +6,17 @@ import 'package:path/path.dart' as path;
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/interface/home.dart';
 
 
-FileIntent fileIntent;
+late FileIntent fileIntent;
 
 
 const _methodChannel = const MethodChannel('com.alexmercerind.harmonoid/openFile');
 
 
 class FileIntent {
-  int tabIndex;
-  File openedFile;
+  int? tabIndex;
+  File? openedFile;
 
   FileIntent({this.tabIndex, this.openedFile});
 
@@ -37,7 +36,7 @@ class FileIntent {
   }
 
   static Future<File> _getOpenFile() async {
-    String filePath = await _methodChannel.invokeMethod('getOpenFile');
+    String filePath = await (_methodChannel.invokeMethod('getOpenFile') as Future<String>);
     File file = new File(filePath);
     if (await file.exists()) return file;
     else throw FileSystemException("File does not exists.");
@@ -45,16 +44,16 @@ class FileIntent {
 
   Future<void> play() async {
     MetadataRetriever retriever = new MetadataRetriever();
-    await retriever.setFile(this.openedFile);
-    Track track = Track.fromMap((await retriever.metadata).toMap());
+    await retriever.setFile(this.openedFile!);
+    Track track = Track.fromMap((await retriever.metadata).toMap())!;
     if (track.trackName == 'Unknown Track') {
-      track.trackName = path.basename(this.openedFile.path).split('.').first;
+      track.trackName = path.basename(this.openedFile!.path).split('.').first;
     }
-    track.filePath = this.openedFile.path;
+    track.filePath = this.openedFile!.path;
     if (retriever.albumArt != null) {
       File albumArtFile = new File(
         path.join(
-          configuration.cacheDirectory.path,
+          configuration.cacheDirectory!.path,
           'albumArts',
           '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG',
         ),

@@ -9,29 +9,29 @@ import 'package:harmonoid/constants/language.dart';
 
 
 class NowPlaying extends StatefulWidget {
-  const NowPlaying({Key key}) : super(key: key);
+  const NowPlaying({Key? key}) : super(key: key);
 
   NowPlayingState createState() => NowPlayingState();
 }
 
 
 class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
-  Track _track;
+  Track? _track;
   String _duration = '0:00';
   bool _isPlaying = true;
   bool _isInfoShowing = true;
   int _durationSeconds = 0;
   Duration _position = Duration.zero;
   bool _init = true;
-  AnimationController _playPauseController;
-  AnimationController _animationController;
-  Animation<double> _animationCurved;
-  AnimationController _animationController1;
-  Animation<double> _animationCurved1;
-  List<StreamSubscription> _streamSubscriptions = <StreamSubscription>[null, null, null, null];
+  late AnimationController _playPauseController;
+  late AnimationController _animationController;
+  late Animation<double> _animationCurved;
+  late AnimationController _animationController1;
+  late Animation<double> _animationCurved1;
+  List<StreamSubscription?> _streamSubscriptions = <StreamSubscription?>[null, null, null, null];
   List<Widget> _playlist = [Container()];
   Widget _playlistList = Container();
-  double _playlistEnd;
+  double? _playlistEnd;
   double albumArtHeight = 0.0;
 
   Duration get animationDuration => Duration(milliseconds: 400);
@@ -68,7 +68,8 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
       _streamSubscriptions[0] = audioPlayer.currentPosition.listen((duration) {
         setState(() => this._position = duration);
       });
-      this._streamSubscriptions[1] = audioPlayer.current.listen((AudioPlayer.Playing playing) {
+      this._streamSubscriptions[1] = audioPlayer.current.listen((AudioPlayer.Playing? playing) {
+        if (playing == null) return;
         this.setState(() {
           this._track = Track.fromMap(playing.audio.audio.metas.extra);
           this._durationSeconds = playing.audio.duration.inSeconds;
@@ -80,16 +81,16 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
               ListTile(
                 leading: CircleAvatar(
                   child: Text(
-                    '${audio.metas.extra['trackNumber'] ?? 1}',
+                    '${audio.metas.extra?['trackNumber'] ?? 1}',
                     style: TextStyle(color: Colors.white),
                   ),
-                  backgroundImage: FileImage(
-                    Track.fromMap(audio.metas.extra).albumArt,
+                  backgroundImage: audio.metas.extra == null ? null : FileImage(
+                    Track.fromMap(audio.metas.extra!)!.albumArt,
                   ),
                 ),
-                title: Text(audio.metas.title),
-                subtitle: Text(audio.metas.artist),
-                trailing: this._track.trackName == audio.metas.title ? Icon(
+                title: Text(audio.metas.title ?? ''),
+                subtitle: audio.metas.artist == null ? null : Text(audio.metas.artist!),
+                trailing: this._track!.trackName == audio.metas.title ? Icon(
                   Icons.music_note,
                   color: Theme.of(context).accentColor,
                   ): null,
@@ -209,11 +210,11 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                         alignment: Alignment.bottomRight,
                         children: [
                           Image(
-                            image: this._track == null
+                            image: (this._track == null
                                 ? AssetImage(
                                     'assets/images/collection-album.jpg')
                                 : FileImage(
-                                    this._track.albumArt),
+                                    this._track!.albumArt)) as ImageProvider<Object>,
                             height: this.albumArtHeight,
                             width: MediaQuery.of(context).size.width - 16.0,
                             fit: BoxFit.cover,
@@ -266,7 +267,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                 backgroundImage: this._track == null
                                     ? null
                                     : FileImage(
-                                        this._track.albumArt,
+                                        this._track!.albumArt,
                                       ),
                               ),
                             ),
@@ -275,8 +276,8 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               children: [
                                 Text(
                                   this._track?.trackName ??
-                                      language
-                                          .STRING_NOW_PLAYING_NOT_PLAYING_TITLE,
+                                      language!
+                                          .STRING_NOW_PLAYING_NOT_PLAYING_TITLE!,
                                   maxLines: 1,
                                   style: Theme.of(context).textTheme.headline1,
                                 ),
@@ -286,9 +287,9 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                 ),
                                 Text(
                                   this._track == null
-                                      ? language
-                                          .STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE
-                                      : this._track.albumName,
+                                      ? language!
+                                          .STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE!
+                                      : this._track!.albumName!,
                                   maxLines: 1,
                                   style: Theme.of(context).textTheme.headline4,
                                 ),
@@ -300,11 +301,11 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           margin: EdgeInsets.only(left: 72, bottom: 16),
                           child: Text(
                             this._track == null
-                                ? language
-                                    .STRING_NOW_PLAYING_NOT_PLAYING_HEADER
-                                : (this._track.albumArtistName +
+                                ? language!
+                                    .STRING_NOW_PLAYING_NOT_PLAYING_HEADER!
+                                : (this._track!.albumArtistName! +
                                     ' ' +
-                                    '(${this._track.year ?? 'Unknown Year'})'),
+                                    '(${this._track!.year ?? 'Unknown Year'})'),
                             style: Theme.of(context).textTheme.headline4,
                           ),
                         ),
@@ -409,7 +410,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                 MaterialButton(
                                   onPressed: () => audioPlayer.previous(),
                                   child: Text(
-                                    language.STRING_NOW_PLAYING_PREVIOUS_TRACK,
+                                    language!.STRING_NOW_PLAYING_PREVIOUS_TRACK,
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                     ),
@@ -418,7 +419,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                 MaterialButton(
                                   onPressed: () => audioPlayer.next(),
                                   child: Text(
-                                    language.STRING_NOW_PLAYING_NEXT_TRACK,
+                                    language!.STRING_NOW_PLAYING_NEXT_TRACK,
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                     ),

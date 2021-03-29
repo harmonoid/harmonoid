@@ -7,7 +7,7 @@ import 'package:harmonoid/interface/settings/settings.dart';
 
 class ExceptionMaterialApp extends StatelessWidget {
   final dynamic exception;
-  ExceptionMaterialApp({Key key, @required this.exception}) : super(key: key);
+  ExceptionMaterialApp({Key? key, required this.exception}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

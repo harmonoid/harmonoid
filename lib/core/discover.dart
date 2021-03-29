@@ -9,23 +9,23 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/methods.dart';
 
 
-Discover discover;
+Discover? discover;
 
 
 class Discover {
-  String homeAddress;
+  String? homeAddress;
 
   Discover(this.homeAddress);
 
-  static Future<void> init({String homeAddress}) async {
+  static Future<void> init({String? homeAddress}) async {
     discover = new Discover(homeAddress);
   }
 
   Future<List<dynamic>> search(String keyword, MediaType mode) async {
     List<dynamic> result = <dynamic>[];
-    String modeString = mode.type.toLowerCase();
+    String modeString = mode.type!.toLowerCase();
     Uri uri = Uri.https(
-      this.homeAddress,
+      this.homeAddress!,
       '/search', {
         'keyword': keyword,
         'mode': modeString,
@@ -43,7 +43,7 @@ class Discover {
       else {
         throw 'Exception: Invalid status code.';
       }
-      List<dynamic> searchRecents = configuration.discoverSearchRecent;
+      List<dynamic> searchRecents = configuration.discoverSearchRecent!;
       String searchKeyword = '';
       for (String element in keyword.split(' ')) {
         if (element.length > 1)
@@ -67,7 +67,7 @@ class Discover {
   Future<List<Track>> albumInfo(Album album) async {
     List<Track> result = <Track>[];
     Uri uri = Uri.https(
-      this.homeAddress,
+      this.homeAddress!,
       '/albumInfo', {
         'albumId': album.albumId,
       },
@@ -78,7 +78,7 @@ class Discover {
         (convert.jsonDecode(response.body)['tracks'] as List).forEach((objectMap) {
           objectMap['albumName'] = album.albumName;
           objectMap['albumId'] = album.albumId;
-          result.add(Track.fromMap(objectMap));
+          result.add(Track.fromMap(objectMap)!);
         });
       }
       else {
@@ -91,16 +91,16 @@ class Discover {
     }
   }
 
-  Future<void> trackDownload(Track track, {void Function() onCompleted, void Function(double progress) onProgress, void Function(DownloadException exception) onException}) async {
+  Future<void> trackDownload(Track track, {void Function()? onCompleted, void Function(double progress)? onProgress, void Function(DownloadException exception)? onException}) async {
     File trackDestination = File(
       path.join(
-        configuration.collectionDirectory.path,
-        '${track.trackArtistNames.join(', ')}_${track.trackName}'.replaceAll(new RegExp(r'[^\s\w]'),'') + '.OGG',
+        configuration.collectionDirectory!.path,
+        '${track.trackArtistNames!.join(', ')}_${track.trackName}'.replaceAll(new RegExp(r'[^\s\w]'),'') + '.OGG',
     ));
     download.addTask(
       new DownloadTask(
         fileUri: Uri.https(
-          this.homeAddress,
+          this.homeAddress!,
           '/trackDownload', {
             'trackId': track.trackId,
             'albumId': track.albumId,

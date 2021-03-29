@@ -4,33 +4,33 @@ import 'package:path/path.dart' as path;
 import 'package:harmonoid/core/configuration.dart';
 
 abstract class MediaType {
-  String type;
+  String? type;
   Map<String, dynamic> toMap();
 }
 
 
 class Track extends MediaType {
-  String trackName;
-  String albumName;
-  int trackNumber;
-  int year;
-  String albumArtistName;
-  List<dynamic> trackArtistNames;
-  String filePath;
-  String albumArtHigh;
-  String albumArtMedium;
-  String albumArtLow;
-  int trackDuration;
-  String trackId;
-  String albumId;
+  String? trackName;
+  String? albumName;
+  int? trackNumber;
+  int? year;
+  String? albumArtistName;
+  List<String>? trackArtistNames;
+  String? filePath;
+  String? albumArtHigh;
+  String? albumArtMedium;
+  String? albumArtLow;
+  int? trackDuration;
+  String? trackId;
+  String? albumId;
   File get albumArt {
-    File albumArtFile = File(path.join(configuration.cacheDirectory.path, 'albumArts', '${this.albumArtistName}_${this.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
+    File albumArtFile = File(path.join(configuration.cacheDirectory!.path, 'albumArts', '${this.albumArtistName}_${this.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
     if (albumArtFile.existsSync())
       return albumArtFile;
     else
-      return new File(path.join(configuration.cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG'));
+      return new File(path.join(configuration.cacheDirectory!.path, 'albumArts', 'defaultAlbumArt' + '.PNG'));
   }
-  String type = 'Track';
+  String? type = 'Track';
 
   @override
   Map<String, dynamic> toMap() {
@@ -52,14 +52,15 @@ class Track extends MediaType {
     };
   }
   
-  static Track fromMap(Map<String, dynamic> trackMap) {
+  static Track? fromMap(Map<String, dynamic>? trackMap) {
+    if (trackMap == null) return null;
     return new Track(
       trackName: trackMap['trackName'] ?? 'Unknown Track',
       albumName: trackMap['albumName'] ?? 'Unknown Album',
       trackNumber: trackMap['trackNumber'],
       year: trackMap['year'],
       albumArtistName: trackMap['albumArtistName'] ?? 'Unknown Artist',
-      trackArtistNames: trackMap['trackArtistNames'] ?? <dynamic>['Unknown Artist'],
+      trackArtistNames: ((trackMap['trackArtistNames'] ?? <String>['Unknown Artist']) as List).cast<String>(),
       filePath: trackMap['filePath'],
       albumArtHigh: trackMap['albumArtHigh'],
       albumArtMedium: trackMap['albumArtMedium'],
@@ -75,22 +76,22 @@ class Track extends MediaType {
 
 
 class Album extends MediaType {
-  String albumName;
-  int year;
-  String albumArtistName;
+  String? albumName;
+  int? year;
+  String? albumArtistName;
   List<Track> tracks = <Track>[];
-  String albumArtHigh;
-  String albumArtMedium;
-  String albumArtLow;
-  String albumId;
+  String? albumArtHigh;
+  String? albumArtMedium;
+  String? albumArtLow;
+  String? albumId;
   File get albumArt {
-    File albumArtFile = File(path.join(configuration.cacheDirectory.path, 'albumArts', '${this.albumArtistName}_${this.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
+    File albumArtFile = File(path.join(configuration.cacheDirectory!.path, 'albumArts', '${this.albumArtistName}_${this.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
     if (albumArtFile.existsSync())
       return albumArtFile;
     else
-      return new File(path.join(configuration.cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG'));
+      return new File(path.join(configuration.cacheDirectory!.path, 'albumArts', 'defaultAlbumArt' + '.PNG'));
   }
-  String type = 'Album';
+  String? type = 'Album';
 
   @override
   Map<String, dynamic> toMap() {
@@ -128,10 +129,10 @@ class Album extends MediaType {
 
 
 class Artist extends MediaType {
-  String artistName;
+  String? artistName;
   List<Album> albums = <Album>[];
   List<Track> tracks = <Track>[];
-  String type = 'Artist';
+  String? type = 'Artist';
 
   @override
   Map<String, dynamic> toMap() {
@@ -162,10 +163,10 @@ class Artist extends MediaType {
 
 
 class Playlist extends MediaType {
-  String playlistName;
-  int playlistId;
+  String? playlistName;
+  int? playlistId;
   List<Track> tracks = <Track>[];
-  String type = 'Playlist';
+  String? type = 'Playlist';
 
   @override
   Map<String, dynamic> toMap() {

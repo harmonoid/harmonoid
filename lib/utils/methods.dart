@@ -24,7 +24,7 @@ abstract class Methods {
 
   static bool binaryContains(List<dynamic> collectionList, List<dynamic> keywordList) => binaryIndexOf(collectionList, keywordList) != -1 ? true : false;
 
-  static bool isFileSupported(FileSystemEntity file) {
+  static bool isFileSupported(FileSystemEntity? file) {
     if (file is File && SUPPORTED_FILE_TYPES.contains(file.path.split('.').last.toUpperCase())) {
       return true;
     }
@@ -33,22 +33,22 @@ abstract class Methods {
     }
   }
 
-  static String mediaTypeToLanguage(MediaType mediaType) {
+  static String? mediaTypeToLanguage(MediaType mediaType) {
     if (mediaType is Album)
-      return language.STRING_ALBUM;
+      return language!.STRING_ALBUM;
     else if (mediaType is Track)
-      return language.STRING_TRACK;
+      return language!.STRING_TRACK;
     else if (mediaType is Artist)
-      return language.STRING_ARTIST;
+      return language!.STRING_ARTIST;
     else if (mediaType is Playlist)
-      return language.STRING_PLAYLIST;
+      return language!.STRING_PLAYLIST;
     else
       return null;
   }
 
   static Future<void> askStoragePermission() async {
     if (Platform.isAndroid)
-      if (await Permission.storage.isUndetermined || await Permission.storage.isDenied) {
+      if (await Permission.storage.isDenied) {
         PermissionStatus storagePermissionState = await Permission.storage.request();
         if (!storagePermissionState.isGranted) {
           SystemNavigator.pop(
@@ -58,7 +58,7 @@ abstract class Methods {
       }
   }
 
-  static ThemeData getTheme({Color accentColor, ThemeMode themeMode, TargetPlatform platform}) {
+  static ThemeData getTheme({required Color accentColor, ThemeMode? themeMode, TargetPlatform? platform}) {
     bool isLight = themeMode == ThemeMode.light;
     return new ThemeData(
       platform: platform,
