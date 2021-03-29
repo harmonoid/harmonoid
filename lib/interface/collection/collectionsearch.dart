@@ -25,14 +25,15 @@ class CollectionSearchState extends State<CollectionSearch> {
   double? tileHeightArtist;
   TextEditingController textFieldController = new TextEditingController();
   String query = '';
-  bool get search => this._albums.length == 0 && this._tracks.length == 0 && this.textFieldController.text == '';
-  bool get result => this._albums.length == 0 && this._tracks.length == 0 && this.textFieldController.text != '';
+  bool get search => this._albums.length == 0 && this._tracks.length == 0 && query == '';
+  bool get result => this._albums.length == 0 && this._tracks.length == 0 && query != '';
   bool get albums => this._albums.length == 0;
   bool get tracks => this._tracks.length == 0;
   bool get artists => this._artists.length == 0;
   List<Widget> _albums = <Widget>[];
   List<Widget> _tracks =  <Widget>[];
   List<Widget> _artists =  <Widget>[];
+  int globalIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +50,15 @@ class CollectionSearchState extends State<CollectionSearch> {
             controller: this.textFieldController,
             cursorWidth: 1.0,
             onChanged: (String query) async {
-              this._albums.clear();
-              this._tracks.clear();
-              this._artists.clear();
+              int localIndex = globalIndex;
+              this.globalIndex++;
               List<dynamic> resultCollection = await collection.search(query);
+              List<Widget> albums = <Widget>[];
+              List<Widget> tracks =  <Widget>[];
+              List<Widget> artists =  <Widget>[];
               for (dynamic collectionItem in resultCollection) {
                 if (collectionItem is Album) {
-                  this._albums.add(
+                  albums.add(
                     Container(
                       margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
                       child: CollectionAlbumTile(
@@ -67,7 +70,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                   );
                 }
                 if (collectionItem is Artist) {
-                  this._artists.add(
+                  artists.add(
                     Container(
                       margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
                       child: CollectionArtistTile(
@@ -79,7 +82,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                   );
                 }
                 else if (collectionItem is Track) {
-                  this._tracks.add(
+                  tracks.add(
                     CollectionTrackTile(
                       track: collectionItem,
                       popupMenuButton: PopupMenuButton(
@@ -223,7 +226,12 @@ class CollectionSearchState extends State<CollectionSearch> {
                   );
                 }
               }
-              this.setState(() {});
+              if (localIndex == globalIndex - 1) {
+                this._albums = albums;
+                this._artists = artists;
+                this._tracks = tracks;
+                this.setState(() {});
+              }
             },
             decoration: InputDecoration.collapsed(hintText: language!.STRING_SEARCH_COLLECTION),
           ),

@@ -246,7 +246,6 @@ class ExceptionWidget extends StatelessWidget {
                       this.title!,
                       style: Theme.of(context).textTheme.headline1,
                       textAlign: TextAlign.start,
-                      maxLines: 2,
                     ),
                     Divider(
                       color: Colors.transparent,
@@ -256,7 +255,6 @@ class ExceptionWidget extends StatelessWidget {
                       this.subtitle!,
                       style: Theme.of(context).textTheme.headline5,
                       textAlign: TextAlign.start,
-                      maxLines: 2,
                     ),
                   ],
                 ),
