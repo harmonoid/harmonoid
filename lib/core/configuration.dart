@@ -30,7 +30,6 @@ abstract class ConfigurationKeys {
 
 const Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'collectionDirectory': '/storage/emulated/0/Music',
-  'cacheDirectory': '/storage/emulated/0/Music/.harmonoid',
   'homeAddress': '',
   'languageRegion': 0,
   'accent': 0,
@@ -61,11 +60,11 @@ class Configuration extends ConfigurationKeys {
       await configuration.configurationFile.writeAsString(convert.jsonEncode(DEFAULT_CONFIGURATION));
     }
     await configuration.read();
+    configuration.cacheDirectory = new Directory('/storage/emulated/0/Android/data/com.alexmercerind.harmonoid/files');
   }
 
   Future<void> save({
     Directory? collectionDirectory,
-    Directory? cacheDirectory,
     String? homeAddress,
     LanguageRegion? languageRegion,
     Accent? accent,
@@ -79,10 +78,7 @@ class Configuration extends ConfigurationKeys {
     List<dynamic>? discoverRecent,
     }) async {
     if (collectionDirectory != null) {
-      this.cacheDirectory = collectionDirectory;
-    }
-    if (cacheDirectory != null) {
-      this.cacheDirectory = cacheDirectory;
+      this.collectionDirectory = collectionDirectory;
     }
     if (homeAddress != null) {
       this.homeAddress = homeAddress;
@@ -116,7 +112,6 @@ class Configuration extends ConfigurationKeys {
     }
     await configuration.configurationFile.writeAsString(convert.jsonEncode({
       'collectionDirectory': this.collectionDirectory!.path,
-      'cacheDirectory': this.cacheDirectory!.path,
       'homeAddress': this.homeAddress,
       'languageRegion': this.languageRegion!.index,
       'accent': accents.indexOf(this.accent),
@@ -138,7 +133,6 @@ class Configuration extends ConfigurationKeys {
       }
     });
     this.collectionDirectory = Directory(currentConfiguration['collectionDirectory']);
-    this.cacheDirectory = Directory(currentConfiguration['cacheDirectory']);
     this.homeAddress = currentConfiguration['homeAddress'];
     this.languageRegion = LanguageRegion.values[currentConfiguration['languageRegion']];
     this.accent = accents[currentConfiguration['accent']];

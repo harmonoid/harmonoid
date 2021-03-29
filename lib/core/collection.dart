@@ -36,10 +36,16 @@ class Collection extends ChangeNotifier {
 
   static Future<void> init({required Directory? collectionDirectory, required Directory? cacheDirectory}) async {
     _collection = new Collection();
-    await _collection.setDirectories(
-      collectionDirectory: collectionDirectory,
-      cacheDirectory: cacheDirectory,
-    );
+    _collection.collectionDirectory = collectionDirectory!;
+    _collection.cacheDirectory = cacheDirectory!;
+    if (!await _collection.collectionDirectory.exists()) await _collection.collectionDirectory.create(recursive: true);
+    if (!await Directory(path.join(_collection.cacheDirectory.path, 'albumArts')).exists()) {
+      await Directory(path.join(_collection.cacheDirectory.path, 'albumArts')).create(recursive: true);
+      await new File(
+        path.join(cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG'),
+      ).writeAsBytes((await rootBundle.load('assets/images/collection-album.jpg')).buffer.asUint8List());
+    }
+    await _collection.refresh();
   }
 
   late Directory collectionDirectory;
@@ -62,7 +68,7 @@ class Collection extends ChangeNotifier {
         path.join(cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG'),
       ).writeAsBytes((await rootBundle.load('assets/images/collection-album.jpg')).buffer.asUint8List());
     }
-    await _collection.refresh(onProgress: onProgress);
+    await _collection.index(onProgress: onProgress);
     this.notifyListeners();
   }
 

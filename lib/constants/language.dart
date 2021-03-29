@@ -106,10 +106,10 @@ class Language extends Strings with ChangeNotifier {
     switch(languageRegion) {
       case LanguageRegion.enUs: {
         this.STRING_INTERNET_ERROR                                  = 'Check your internet connection.';
-        this.STRING_SEARCH_HEADER                                   = 'Search Music';
+        this.STRING_SEARCH_HEADER                                   = 'Search music';
         this.STRING_SEARCH_MODE_SUBHEADER                           = 'What are you looking for?';
         this.STRING_COLLECTION                                      = 'Collection';
-        this.STRING_NOW_PLAYING                                     = 'Now Playing';
+        this.STRING_NOW_PLAYING                                     = 'Now playing';
         this.STRING_SETTING                                         = 'Settings';
         this.STRING_OK                                              = 'OKAY';
         this.STRING_YES                                             = 'YES';
@@ -206,11 +206,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_DOWNLOAD_UPDATE                                 = 'DOWNLOAD UPDATE';
         this.STRING_SETTING_APP_VERSION_TITLE                       = 'Version';
         this.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information about current version of the app';
-        this.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed Version';
-        this.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest Version';
+        this.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installed version';
+        this.STRING_SETTING_APP_VERSION_LATEST                      = 'Latest version';
         this.STRING_MENU                                            = 'Menu';
-        this.STRING_SEARCH_COLLECTION                               = 'Search Collection';
-        this.STRING_SWITCH_THEME                                    = 'Switch Theme';
+        this.STRING_SEARCH_COLLECTION                               = 'Search collection';
+        this.STRING_SWITCH_THEME                                    = 'Switch theme';
         this.STRING_DISCOVER                                        = 'Discover';
         this.STRING_PLAY                                            = 'Play';
         this.STRING_PAUSE                                           = 'Pause';
@@ -226,7 +226,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_PLAYLISTS                                       = 'Playlists';
         this.STRING_PLAYLISTS_SUBHEADER                             = 'Your playlists';
         this.STRING_PLAYLISTS_CREATE                                = 'Create a new playlist';
-        this.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Playlist Name';
+        this.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Playlist name';
         this.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Name for your new playlist';
         this.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Are you sure?';
         this.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Do you want to delete this playlist?';
@@ -239,26 +239,27 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_INDEXING_TITLE                          = 'Indexing';
         this.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
         this.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
-        this.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
+        this.STRING_SETTING_INDEXING_DONE                           = 'Indexed';
         this.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process.';
         this.STRING_REFRESH                                         = 'REFRESH';
         this.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
-        this.STRING_NO_INTERNET_TITLE                               = 'No Internet';
+        this.STRING_NO_INTERNET_TITLE                               = 'No internet';
         this.STRING_NO_INTERNET_SUBTITLE                            = 'Check your connection.';
-        this.STRING_NO_COLLECTION_TITLE                             = 'Empty Collection';
-        this.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.';
-        this.STRING_DOWNLOAD_COMPLETED                              = 'Download Completed.';
-        this.STRING_DOWNLOAD_FAILED                                 = 'Download Failed.';
+        this.STRING_NO_COLLECTION_TITLE                             = 'Empty collection';
+        this.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.\nChange where to look for music from the settings.';
+        this.STRING_DOWNLOAD_COMPLETED                              = 'Download completed.';
+        this.STRING_DOWNLOAD_FAILED                                 = 'Download failed.';
         this.STRING_DISCORD                                         = 'DISCORD SERVER';
         this.STRING_EXIT_TITLE                                      = 'Exit';
         this.STRING_EXIT_SUBTITLE                                   = 'Do you want to exit Harmonoid?';
         this.STRING_A_TO_Z                                          = 'A to Z';
-        this.STRING_DATE_ADDED                                      = 'Date Added';
-        this.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic Accent';
+        this.STRING_DATE_ADDED                                      = 'Date added';
+        this.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatic accent';
         this.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Miscellaneous';
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Other settings in the app';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
+        this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -416,6 +417,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Другие настройки';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Включить механики iOS';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Задать платформу TargetPlatform.iOS';
+        this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
       }
       break;
       case LanguageRegion.slSi: {
@@ -574,6 +576,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Ostale nastavitve aplikacije';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Vključi iOS uporabniški vmesnik';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Nastavi platformo na TargetPlatform.iOS';
+        this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -731,6 +734,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Outras configurações do aplicativo';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Ativar mecânicas do iOS';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Mudar plataforma para TargetPlatform.iOS';
+        this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -888,6 +892,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'ऐप में अन्य सेटिंग्स बदलें';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'iOS मोड';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'platform को TargetPlatform.iOS करें';
+        this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
       }
       break;
       case LanguageRegion.deDe: {
@@ -1025,7 +1030,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_INDEXING_TITLE                          = 'Indexing';
         this.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
         this.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
-        this.STRING_SETTING_INDEXING_DONE                           = 'Your music collection is indexed';
+        this.STRING_SETTING_INDEXING_DONE                           = 'Indexed';
         this.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process.';
         this.STRING_REFRESH                                         = 'REFRESH';
         this.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Your recent searches will show here';
@@ -1045,6 +1050,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Other settings in the app';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
+        this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1202,6 +1208,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Other settings in the app';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
+        this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
       }
       break;
     }

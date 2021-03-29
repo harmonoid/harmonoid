@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
+import 'package:file_picker/file_picker.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
@@ -26,6 +29,14 @@ class IndexingState extends State<IndexingSetting> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Divider(color: Colors.transparent, height: 4.0),
+            Text(
+              language!.STRING_SELECTED_DIRECTORY,
+            ),
+            Text(
+              configuration.collectionDirectory!.path,
+            ),
+            Divider(color: Colors.transparent, height: 4.0),
             Container(
               height: 56.0,
               alignment: Alignment.topLeft,
@@ -70,7 +81,7 @@ class IndexingState extends State<IndexingSetting> {
               ),
             ),
             Text(language!.STRING_SETTING_INDEXING_WARNING,
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headline4,
             ),
           ],
         ),
@@ -78,14 +89,38 @@ class IndexingState extends State<IndexingSetting> {
       actions: [
         MaterialButton(
           onPressed: () async {
+            String? directoryPath = await FilePicker.platform.getDirectoryPath();
+            if (directoryPath != null) {
+              await Future.wait([
+                configuration.save(
+                  collectionDirectory: new Directory(directoryPath),
+                ),
+                Provider.of<Collection>(context, listen: false).setDirectories(
+                  collectionDirectory: configuration.collectionDirectory,
+                  cacheDirectory: configuration.cacheDirectory,
+                  onProgress: (completed, total, isCompleted) {
+                    this.setState(() => this.linearProgressIndicatorValues = [completed, total]);
+                  },
+                ),
+              ]);
+              this.setState(() => this.linearProgressIndicatorValues = null);
+            }
+          },
+          child: Text(
+            'CHANGE DIRECTORY',
+            style: TextStyle(
+              color: Theme.of(context).accentColor,
+            ),
+          ),
+        ),
+        MaterialButton(
+          onPressed: () async {
             await Provider.of<Collection>(context, listen: false).index(
               onProgress: (completed, total, isCompleted) {
-                this.setState(() {
-                  this.linearProgressIndicatorValues = [completed, total];
-                });
-              }
+                this.setState(() => this.linearProgressIndicatorValues = [completed, total]);
+              },
             );
-            this.linearProgressIndicatorValues = null;
+            this.setState(() => this.linearProgressIndicatorValues = null);
           },
           child: Text(
             language!.STRING_REFRESH,
