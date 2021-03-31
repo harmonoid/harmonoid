@@ -30,7 +30,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   @override
   void initState() {
     super.initState();
-    this._refreshTurns = 2 * math.pi;
+    this._refreshTurns = 0;
     this._tabController = TabController(initialIndex: 0, length: 4, vsync: this);
     this._refreshTween = Tween<double>(begin: 0, end: this._refreshTurns);
   }
