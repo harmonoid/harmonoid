@@ -32,7 +32,7 @@ class CollectionArtistTab extends StatelessWidget {
                 elementsPerRow: elementsPerRow,
                 subHeader: language!.STRING_LOCAL_OTHER_SUBHEADER_ARTIST,
                 leadingSubHeader: language!.STRING_LOCAL_TOP_SUBHEADER_ARTIST,
-                widgetCount: collection.albums.length,
+                widgetCount: collection.artists.length,
                 leadingWidget: LeadingCollectionArtistTile(
                   height: tileWidth,
                 ),
