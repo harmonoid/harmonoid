@@ -479,6 +479,7 @@ class Collection extends ChangeNotifier {
       }
     }
     await this.playlistsSaveToCache();
+    this.notifyListeners();
   }
   
   Future<void> playlistsSaveToCache() async {
