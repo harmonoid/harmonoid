@@ -204,7 +204,8 @@ class CollectionArtist extends StatelessWidget {
           ),
         ],
       ),
-      builder: (context, collection, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+      builder: (context, collection, child) => this.artist!.tracks.length == 0 ? Container() :
+        AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,
           child: Scaffold(
           body: Stack(
