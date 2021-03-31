@@ -247,7 +247,9 @@ class CollectionSearchState extends State<CollectionSearch> {
               iconSize: Theme.of(context).iconTheme.size!,
               splashRadius: Theme.of(context).iconTheme.size! - 8,
               tooltip: language!.STRING_OPTIONS,
-              onPressed: this.textFieldController.clear,
+              onPressed: this.textFieldController.text != ""
+               ? this.textFieldController.clear
+               : Navigator.of(context).pop,
             ),
           ],
         ),
