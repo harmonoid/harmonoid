@@ -1,4 +1,6 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid/">Harmonoid</a></h1>
+<h3 align="center">🎵 A music app with a beautiful UI to play all your music!</h3>
+
 <p align="center"><a href="https://github.com/harmonoid/harmonoid/releases/download/v0.0.4/harmonoid-v0.0.4.apk">Download APK</a></p>
 <br></br>
 
