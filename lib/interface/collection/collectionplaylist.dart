@@ -207,7 +207,7 @@ class CollectionPlaylist extends StatelessWidget {
           children: <Widget>[
             SubHeader(language!.STRING_PLAYLIST_TRACKS_SUBHEADER),
           ] + (this.playlist.tracks.map((Track track) {
-            ListTile(
+            return ListTile(
               onTap: () => Playback.play(
                 index: this.playlist.tracks.indexOf(track),
                 tracks: this.playlist.tracks,
@@ -236,7 +236,7 @@ class CollectionPlaylist extends StatelessWidget {
                 splashRadius: Theme.of(context).iconTheme.size! - 8,
               ),
             );
-          }).toList() as List<Widget>),
+          }).toList()),
         ),
       ),
     );
