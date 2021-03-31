@@ -1,12 +1,6 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid/">Harmonoid</a></h1>
-
-<h3 align="center">🎵 A music app with a beautiful UI to play all your music!</h3>
+<p align="center"><a href="https://github.com/harmonoid/harmonoid/releases/download/v0.0.4/harmonoid-v0.0.4.apk">Download APK</a></p>
 <br></br>
-<p align="center">
-  <a href="https://github.com/harmonoid/harmonoid/releases/download/v0.0.4/harmonoid-v0.0.4.apk">Download APK</a>
-   | 
-  <a href="https://discord.gg/ZG7Pj9SREG">Join Discord</a>
-</p>
 
 <img src="https://github.com/alexmercerind/harmonoid/blob/assets/light.png?raw=true" />
 <img src="https://github.com/alexmercerind/harmonoid/blob/assets/dark.png?raw=true" />
@@ -28,7 +22,7 @@ Recently, it is migrated to use [Provider](https://github.com/rrousselGit/provid
 
 The project supports sorting of music based on media metadata tags & native playback directly from file explorer etc. The whole user interface strictly follows the material design guidelines.
 
-Checkout [project structure](https://github.com/alexmercerind/harmonoid#-project) to get started. You may also join our [Discord Server](https://discord.gg/ZG7Pj9SREG). New Flutter developers are also welcomed.
+Checkout [project structure](https://github.com/alexmercerind/harmonoid#-project) to get started. You may talk about this in the Discussions section of repository.
 
 The plan of project is to bring the best, cross platform music experience for all users. If you decide to contribute, add yourself to the about page of the app.
 
@@ -126,6 +120,9 @@ harmonoid/lib
         strings.dart
 ```
 
+## 📄 License
+
+GNU General Public License v3
 
 ### 💙 Translation Contributors
 
@@ -144,7 +141,3 @@ You can see the app running in your own language by providing me translations.
 
 For that purpose, you can add your changes to [this](https://github.com/alexmercerind/harmonoid/blob/master/lib/constants/language.dart) file on the repository.
 You can translate this, even if you have little to no knowledge of Dart.
-
-## 📄 License
-
-GNU General Public License v3
