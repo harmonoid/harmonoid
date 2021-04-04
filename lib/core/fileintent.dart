@@ -21,17 +21,21 @@ class FileIntent {
   FileIntent({this.tabIndex, this.openedFile});
 
   static Future<void> init() async {
-    try {
-      File file = await FileIntent._getOpenFile();
-      fileIntent = new FileIntent(
-        tabIndex: 0,
-        openedFile: file,
-      );
-    }
-    catch(exception) {
-      fileIntent = new FileIntent(
-        tabIndex: 1,
-      );
+    if (Platform.isAndroid){
+      try {
+        File file = await FileIntent._getOpenFile();
+        fileIntent = new FileIntent(
+          tabIndex: 0,
+          openedFile: file,
+        );
+      }
+      catch(exception) {
+        fileIntent = new FileIntent(
+          tabIndex: 1,
+        );
+      }
+    } else {
+      fileIntent = new FileIntent(tabIndex: 1);
     }
   }
 

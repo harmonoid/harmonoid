@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,7 +27,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  try {
+  // try {
     await Methods.askStoragePermission();
     await Configuration.init();
     await Collection.init(
@@ -43,12 +45,12 @@ void main() async {
     runApp(
       new Harmonoid(),
     );
-  }
-  catch(exception) {
-    runApp(
-      new ExceptionMaterialApp(
-        exception: exception,
-      ),
-    );
-  }
+  // }
+  // catch(exception) {
+  //   runApp(
+  //     new ExceptionMaterialApp(
+  //       exception: exception,
+  //     ),
+  //   );
+  // }
 }

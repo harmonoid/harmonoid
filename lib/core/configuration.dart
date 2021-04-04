@@ -51,7 +51,13 @@ class Configuration extends ConfigurationKeys {
     configuration = new Configuration();
     configuration.configurationFile = File(
       path.join(
-        (await path.getExternalStorageDirectory())!.path,
+        (await () async {
+          if (Platform.isAndroid) {
+            return await path.getExternalStorageDirectory();
+          } else {
+            return path.getApplicationDocumentsDirectory();
+          }
+        }())!.path,
         'configuration.JSON',
       ),
     );
