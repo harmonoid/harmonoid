@@ -25,6 +25,7 @@ dependencies:
   flag: ^5.0.0-nullsafety
   marquee: ^2.0.0
   auto_size_text: ^3.0.0-nullsafety.0
+  bitsdojo_window: ^0.1.0
 
 dev_dependencies:
   flutter_test:

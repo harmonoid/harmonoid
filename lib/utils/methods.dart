@@ -1,5 +1,7 @@
 
 import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -9,6 +11,10 @@ import 'package:harmonoid/constants/language.dart';
 
 
 abstract class Methods {
+
+  static bool get isDesktop {
+    return Platform.isWindows || Platform.isLinux || Platform.isMacOS || kIsWeb;
+  }
 
   static int binaryIndexOf(List<dynamic> collectionList, List<dynamic> keywordList) {
     int indexOfKeywordList = -1;

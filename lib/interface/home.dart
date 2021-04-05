@@ -163,6 +163,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         builder: (context, _, __) => Row(children: [
           if (isMediumScreen)
             NavigationRail(
+              // extended: true,
+              labelType: NavigationRailLabelType.none,
+              minWidth: 56,
               destinations: [
                 NavigationRailDestination(
                   icon: Icon(Icons.play_arrow),

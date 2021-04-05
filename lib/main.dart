@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/discover.dart';
@@ -7,11 +11,9 @@ import 'package:harmonoid/core/download.dart';
 import 'package:harmonoid/core/fileintent.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
+import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/utils/methods.dart';
 import 'package:harmonoid/constants/language.dart';
-
-import 'interface/exception.dart';
-
 
 const String TITLE   = 'harmonoid';
 const String VERSION = '0.0.4';
@@ -51,5 +53,18 @@ void main() async {
         exception: exception,
       ),
     );
+  }
+    // Check if it's in desktop
+    // This should be changed in the future when Flutter Desktop get stable
+  if (Methods.isDesktop) {
+    doWhenWindowReady(() {
+      final win = appWindow;
+      final initialSize = const Size(350, 500);
+      win.minSize = initialSize;
+      win.size = const Size(600, 500);
+      win.alignment = Alignment.center;
+      win.title = "Harmonoid";
+      win.show();
+    });
   }
 }
