@@ -12,6 +12,10 @@ import 'package:harmonoid/constants/language.dart';
 
 abstract class Methods {
 
+  static bool isMediumScreen(BuildContext context) {
+    return MediaQuery.of(context).size.width > 640.0;
+  }
+
   static bool get isDesktop {
     return Platform.isWindows || Platform.isLinux || Platform.isMacOS || kIsWeb;
   }

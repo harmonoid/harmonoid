@@ -9,6 +9,7 @@ import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/methods.dart';
 
 
 class Settings extends StatelessWidget {
@@ -33,12 +34,21 @@ class Settings extends StatelessWidget {
           ThemeSetting(),
           AccentSetting(),
           IndexingSetting(),
-          ServerSetting(),
+          if (!Methods.isMediumScreen(context))
+            ServerSetting(),
           LanguageSetting(),
           // TODO: Fix scrolling bug in CollectionTabs widget & implement saving configuration.
           // CollectionTabs(),
-          MiscellaneousSetting(),
-          VersionSetting(),
+          if (Methods.isMediumScreen(context))
+            Row(children: [
+              Expanded(child: MiscellaneousSetting()),
+              Expanded(child: VersionSetting()),
+            ])
+          else
+            ...[
+              MiscellaneousSetting(),
+              VersionSetting(),
+            ],
         ],
       ),
     );

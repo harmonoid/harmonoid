@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/utils/methods.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
@@ -79,13 +80,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
     return true;
   }
 
-  bool isMediumScreen(BuildContext context) {
-    return MediaQuery.of(context).size.width > 640.0;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final isMediumScreen = this.isMediumScreen(context);
+    final isMediumScreen = Methods.isMediumScreen(context);
     final List<Navigator> screens = <Navigator>[
       Navigator(
         key: this.navigatorKeys[0],

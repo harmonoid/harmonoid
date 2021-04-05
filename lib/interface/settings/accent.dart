@@ -115,7 +115,7 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
           ],
         ),
       ),
-      margin: EdgeInsets.only(bottom: 16.0),
+      margin: EdgeInsets.only(bottom: 8.0),
     );
   }
 }
