@@ -20,8 +20,8 @@ enum ServerChangeState {
 
 
 extension ServerChangeStateExtension on ServerChangeState {
-  Widget? indicator({required BuildContext context}) {
-    Widget? widget;
+  Widget indicator({required BuildContext context}) {
+    late Widget widget;
     switch(this) {
       case ServerChangeState.initial: {
         widget = Container();
@@ -203,7 +203,7 @@ class ServerState extends State<ServerSetting> {
                         this.setState(() {
                           this._serverChangeState = ServerChangeState.changing;
                         });
-                        http.get(Uri.https(this._textFieldController.text, ''))
+                        http.get(Uri.parse(this._textFieldController.text))
                         .then((http.Response response) {
                           if (response.body == VERIFICATION_STRING) {
                             this._serverChangeState = ServerChangeState.done;
@@ -229,7 +229,7 @@ class ServerState extends State<ServerSetting> {
               height: 8.0,
               color: Colors.transparent,
             ),
-            _serverChangeState.indicator(context: context)!,
+            _serverChangeState.indicator(context: context),
           ],
         ),
       ),

@@ -237,7 +237,6 @@ class ExceptionWidget extends StatelessWidget {
                 ),
               Container(
                 margin: EdgeInsets.only(left: 8, right: 8),
-                width: MediaQuery.of(context).size.width - 32 - this.height,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,

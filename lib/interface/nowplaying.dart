@@ -219,7 +219,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                 : FileImage(
                                     this._track!.albumArt)) as ImageProvider<Object>,
                             height: this.albumArtHeight,
-                            width: MediaQuery.of(context).size.width - 16.0,
+                            width: double.infinity,
                             fit: BoxFit.cover,
                           ),
                           Padding(
@@ -257,7 +257,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width,
+                          width: double.infinity,
                           padding: EdgeInsets.only(top: 16, bottom: 4),
                           child: Row(children: [
                             Container(
@@ -274,8 +274,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                       ),
                               ),
                             ),
-                            Container(
-                              width: MediaQuery.of(context).size.width - 32.0 - 16.0 - 48.0,
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
