@@ -54,61 +54,57 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                     );
                     if (accent == visuals.accent)
                       this.animationControllers.last.forward();
-                    return new ClipRRect(
-                      borderRadius: BorderRadius.all(
-                        new Radius.circular(4.0),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: Stack(
-                        children: [
-                          Container(
-                            height: 56.0,
-                            width: 56.0,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  accent!.light,
-                                  accent.dark,
-                                ],
-                                stops: [
-                                  0.2,
-                                  1.0,
-                                ],
-                              ),
+                    return Stack(
+                      children: [
+                        Container(
+                          height: 56.0,
+                          width: 56.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.0),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                accent!.light,
+                                accent.dark,
+                              ],
+                              stops: [
+                                0.2,
+                                1.0,
+                              ],
                             ),
                           ),
-                          Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () async {
-                                this.animationControllers.asMap().forEach( 
-                                  (int controllerIndex, AnimationController controller) {
-                                    if (accents.indexOf(accent) == controllerIndex) {
-                                      this.animationControllers[controllerIndex].forward();
-                                      visuals.update(
-                                        accent: accent,
-                                      );
-                                    }
-                                    else
-                                      this.animationControllers[controllerIndex].reverse();
+                        ),
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(4.0),
+                            onTap: () async {
+                              this.animationControllers.asMap().forEach( 
+                                (int controllerIndex, AnimationController controller) {
+                                  if (accents.indexOf(accent) == controllerIndex) {
+                                    this.animationControllers[controllerIndex].forward();
+                                    visuals.update(
+                                      accent: accent,
+                                    );
                                   }
-                                );
-                              },
-                              child: ScaleTransition(
-                                scale: this.animationControllers.last,
+                                  else
+                                    this.animationControllers[controllerIndex].reverse();
+                                }
+                              );
+                            },
+                            child: ScaleTransition(
+                              scale: this.animationControllers.last,
+                              alignment: Alignment.center,
+                              child: Container(
+                                child:
+                                    Icon(Icons.check, color: Colors.white, size: 28.0),
                                 alignment: Alignment.center,
-                                child: Container(
-                                  child:
-                                      Icon(Icons.check, color: Colors.white, size: 28.0),
-                                  alignment: Alignment.center,
-                                ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     );
                   }
                 ).toList(),

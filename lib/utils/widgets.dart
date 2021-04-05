@@ -235,27 +235,29 @@ class ExceptionWidget extends StatelessWidget {
                     size: 56.0,
                   ),
                 ),
-              Container(
-                margin: EdgeInsets.only(left: 8, right: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      this.title!,
-                      style: Theme.of(context).textTheme.headline1,
-                      textAlign: TextAlign.start,
-                    ),
-                    Divider(
-                      color: Colors.transparent,
-                      height: 4.0,
-                    ),
-                    Text(
-                      this.subtitle!,
-                      style: Theme.of(context).textTheme.headline5,
-                      textAlign: TextAlign.start,
-                    ),
-                  ],
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(left: 8, right: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        this.title!,
+                        style: Theme.of(context).textTheme.headline1,
+                        textAlign: TextAlign.start,
+                      ),
+                      Divider(
+                        color: Colors.transparent,
+                        height: 4.0,
+                      ),
+                      Text(
+                        this.subtitle!,
+                        style: Theme.of(context).textTheme.headline5,
+                        textAlign: TextAlign.start,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
