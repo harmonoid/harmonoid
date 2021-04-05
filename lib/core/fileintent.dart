@@ -15,10 +15,10 @@ const _methodChannel = const MethodChannel('com.alexmercerind.harmonoid/openFile
 
 
 class FileIntent {
-  int? tabIndex;
-  File? openedFile;
+  final int? tabIndex;
+  final File? openedFile;
 
-  FileIntent({this.tabIndex, this.openedFile});
+  const FileIntent({this.tabIndex, this.openedFile});
 
   static Future<void> init() async {
     if (Platform.isAndroid){

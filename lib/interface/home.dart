@@ -79,8 +79,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
     return true;
   }
 
+  bool isMediumScreen(BuildContext context) {
+    return MediaQuery.of(context).size.width > 640.0;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isMediumScreen = this.isMediumScreen(context);
     final List<Navigator> screens = <Navigator>[
       Navigator(
         key: this.navigatorKeys[0],
@@ -120,8 +125,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
           return route;
         },
       ),
-    ] + (
-      configuration.homeAddress != '' ? <Navigator>[
+      if (configuration.homeAddress != '')
         Navigator(
           key: this.navigatorKeys[2],
           initialRoute: 'discover',
@@ -135,8 +139,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
             return route;
           },
         ),
-      ]: <Navigator>[]
-    ) + <Navigator>[
       Navigator(
         key: this.navigatorKeys[3],
         initialRoute: 'settings',
@@ -158,48 +160,89 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         ChangeNotifierProvider<Language>(create: (context) => Language.get()!),
       ],
       builder: (context, _) => Consumer<Language>(
-        builder: (context, _, __) => Scaffold(
-          body: PageTransitionSwitcher(
-            child: screens[this.index!],
-            duration: Duration(milliseconds: 400),
-            transitionBuilder: (child, animation, secondaryAnimation) => FadeThroughTransition(
-              animation: animation,
-              secondaryAnimation: secondaryAnimation,
-              fillColor: Theme.of(context).scaffoldBackgroundColor,
-              child: child,
-            ),
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.shifting,
-            currentIndex: this.index!,
-            onTap: (int index) => this.setState(() => this.index = index),
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.play_arrow),
-                label: language!.STRING_NOW_PLAYING,
-                backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.library_music),
-                label: language!.STRING_COLLECTION,
-                backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-              ),
-            ] + (
-              configuration.homeAddress != '' ? <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.search),
-                  label: language!.STRING_DISCOVER,
-                  backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        builder: (context, _, __) => Row(children: [
+          if (isMediumScreen)
+            NavigationRail(
+              destinations: [
+                NavigationRailDestination(
+                  icon: Icon(Icons.play_arrow),
+                  selectedIcon: Icon(Icons.play_arrow),
+                  label: Text(language!.STRING_NOW_PLAYING),
                 ),
-              ]: <BottomNavigationBarItem>[]
-            ) + <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: language!.STRING_SETTING,
-                backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                NavigationRailDestination(
+                  icon: Icon(Icons.library_music),
+                  selectedIcon: Icon(Icons.library_music),
+                  label: Text(language!.STRING_COLLECTION),
+                ),
+                if (configuration.homeAddress != '')
+                  NavigationRailDestination(
+                    icon: Icon(Icons.search),
+                    selectedIcon: Icon(Icons.search),
+                    label: Text(language!.STRING_DISCOVER),
+                  ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.settings),
+                  selectedIcon: Icon(Icons.settings),
+                  label: Text(language!.STRING_SETTING),
+                ),
+              ],
+              selectedIndex: this.index!,
+              onDestinationSelected: (int index) => this.setState(() => this.index = index),
+            ),
+          Expanded(
+            // Wrap in a ClipRect because Scaffold has a elevation, and it doesn't look good
+            // when using with NavigationRail. This shouldn't affect performance
+            child: ClipRect(
+              child: Scaffold(
+                body: PageTransitionSwitcher(
+                  child: screens[this.index!],
+                  duration: Duration(milliseconds: 400),
+                  transitionBuilder: (child, animation, secondaryAnimation) => FadeThroughTransition(
+                    animation: animation,
+                    secondaryAnimation: secondaryAnimation,
+                    fillColor: Theme.of(context).scaffoldBackgroundColor,
+                    child: child,
+                  ),
+                ),
+                bottomNavigationBar: () {
+                  if (isMediumScreen) {
+                    return null;
+                  }
+                  return BottomNavigationBar(
+                    type: BottomNavigationBarType.shifting,
+                    currentIndex: this.index!,
+                    onTap: (int index) => this.setState(() => this.index = index),
+                    items: <BottomNavigationBarItem>[
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.play_arrow),
+                        label: language!.STRING_NOW_PLAYING,
+                        backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.library_music),
+                        label: language!.STRING_COLLECTION,
+                        backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                      ),
+                    ] + (
+                      configuration.homeAddress != '' ? <BottomNavigationBarItem>[
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.search),
+                          label: language!.STRING_DISCOVER,
+                          backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                        ),
+                      ]: <BottomNavigationBarItem>[]
+                    ) + <BottomNavigationBarItem>[
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.settings),
+                        label: language!.STRING_SETTING,
+                        backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                      ),
+                    ],
+                  );
+                }(),
               ),
-            ],
-          ),
+            ),
+          )],
         ),
       ),
     );

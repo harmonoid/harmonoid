@@ -106,6 +106,18 @@ abstract class Methods {
         selectedItemColor: Colors.white.withOpacity(0.87),
         unselectedItemColor: Colors.white54,
       ),
+      navigationRailTheme: NavigationRailThemeData(
+        groupAlignment: 0,
+        backgroundColor: isLight ? accentColor : Color(0xFF1F1F1F),
+        selectedIconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        unselectedIconTheme: IconThemeData(
+          color: Colors.white70,
+        ),
+        selectedLabelTextStyle: TextStyle(color: Colors.white),
+        labelType: NavigationRailLabelType.selected,
+      ),
       primaryTextTheme: new TextTheme(
         headline1: TextStyle(
           fontWeight: FontWeight.normal,
