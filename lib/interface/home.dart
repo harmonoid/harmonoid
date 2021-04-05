@@ -166,6 +166,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
               // extended: true,
               labelType: NavigationRailLabelType.none,
               minWidth: 56,
+              backgroundColor: () {
+                if (Theme.of(context).brightness == Brightness.dark) {
+                  return Theme.of(context).appBarTheme.backgroundColor;
+                }
+              }(),
               destinations: [
                 NavigationRailDestination(
                   icon: Icon(Icons.play_arrow),

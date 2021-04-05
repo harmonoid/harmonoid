@@ -35,7 +35,13 @@ class Harmonoid extends StatelessWidget {
               return Column(children: [
                 WindowTitleBarBox(
                   child: Container(
-                    color: Theme.of(context).accentColor,
+                    color: () {
+                      if (Theme.of(context).brightness == Brightness.dark) {
+                        return Theme.of(context).appBarTheme.backgroundColor;
+                      } else {
+                        return Theme.of(context).navigationRailTheme.backgroundColor;
+                      }
+                    }(),
                     child: Row(children: [
                       Expanded(child: MoveWindow()),
                       WindowButtons(),
