@@ -10,6 +10,8 @@ import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/utils/methods.dart';
 import 'package:harmonoid/constants/language.dart';
 
+import 'interface/exception.dart';
+
 
 const String TITLE   = 'harmonoid';
 const String VERSION = '0.0.4';
@@ -24,7 +26,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  // try {
+  try {
     await Methods.askStoragePermission();
     await Configuration.init();
     await Collection.init(
@@ -42,12 +44,12 @@ void main() async {
     runApp(
       new Harmonoid(),
     );
-  // }
-  // catch(exception) {
-  //   runApp(
-  //     new ExceptionMaterialApp(
-  //       exception: exception,
-  //     ),
-  //   );
-  // }
+  }
+  catch(exception) {
+    runApp(
+      new ExceptionMaterialApp(
+        exception: exception,
+      ),
+    );
+  }
 }
