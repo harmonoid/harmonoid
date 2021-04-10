@@ -282,9 +282,11 @@ class Collection extends ChangeNotifier {
       Map<String, dynamic> collection = convert.jsonDecode(await File(path.join(this.cacheDirectory.path, 'collection.JSON')).readAsString());
       for (Map<String, dynamic> trackMap in collection['tracks']) {
         Track track = Track.fromMap(trackMap)!;
-        Future<void> albumArtMethod() async {}
-        await this._arrange(track, albumArtMethod);
+        if (await new File(track.filePath!).exists()) {
+          await this._arrange(track, () async {});
+        }
       }
+      await this.saveToCache();
       List<File> collectionDirectoryContent = <File>[];
       for (FileSystemEntity object in this.collectionDirectory.listSync(recursive: true)) {
         if (Methods.isFileSupported(object) && object is File) {
