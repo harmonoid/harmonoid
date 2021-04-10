@@ -269,6 +269,8 @@ class Collection extends ChangeNotifier {
   }
 
   Future<void> refresh({void Function(int completed, int total, bool isCompleted)? onProgress}) async {
+    if (! await this.cacheDirectory.exists()) await this.cacheDirectory.create(recursive: true);
+    if (! await this.collectionDirectory.exists()) await this.collectionDirectory.create(recursive: true);
     this.albums = <Album>[];
     this.tracks = <Track>[];
     this.artists = <Artist>[];
@@ -505,14 +507,7 @@ class Collection extends ChangeNotifier {
           playlistId: playlist['playlistId'],
         ));
         for (dynamic track in playlist['tracks']) {
-          this.playlists.last.tracks.add(new Track(
-            trackName: track['trackName'],
-            albumName: track['albumName'],
-            trackNumber: track['trackNumber'],
-            year: track['year'],
-            trackArtistNames: track['trackArtistNames'],
-            filePath: track['filePath'],
-          ));
+          this.playlists.last.tracks.add(Track.fromMap(track)!);
         }
       }
     }

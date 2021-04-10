@@ -8,8 +8,10 @@ final AudioPlayer.AssetsAudioPlayer audioPlayer = new AudioPlayer.AssetsAudioPla
 
 class Playback {
   static Future<void> play({required int index, required List<Track> tracks}) async {
+    List<Track> _tracks = tracks;
+    if (_tracks.length > 20) _tracks = tracks.sublist(index, index + 20);
     List<AudioPlayer.Audio> audios = <AudioPlayer.Audio>[];
-    tracks.forEach((Track track) {
+    _tracks.forEach((Track track) {
       audios.add(
         new AudioPlayer.Audio.file(
           track.filePath!,
