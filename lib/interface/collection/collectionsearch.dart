@@ -25,8 +25,8 @@ class CollectionSearchState extends State<CollectionSearch> {
   double? tileHeightArtist;
   TextEditingController textFieldController = new TextEditingController();
   String query = '';
-  bool get search => this._albums.length == 0 && this._tracks.length == 0 && query == '';
-  bool get result => this._albums.length == 0 && this._tracks.length == 0 && query != '';
+  bool get search => this._albums.length == 0 && this._tracks.length == 0 && this._artists.length == 0 && query == '';
+  bool get result => this._albums.length == 0 && this._tracks.length == 0 && this._artists.length == 0 && query != '';
   bool get albums => this._albums.length == 0;
   bool get tracks => this._tracks.length == 0;
   bool get artists => this._artists.length == 0;
