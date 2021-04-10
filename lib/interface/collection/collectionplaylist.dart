@@ -38,10 +38,6 @@ class CollectionPlaylistTab extends StatelessWidget {
                             ],
                           ),
                         ),
-                        // We add a PageStorage here because it seems there's an issue with ExpansionTile
-                        // It tries to cast PageStorage.of(context) as a bool but it's a double
-                        // 'PageStorage.of(context)?.readState(context) as bool?'
-                        // Remove this when a solution arrives
                         PageStorage(
                           bucket: PageStorageBucket(),
                           child: ExpansionTile(
@@ -112,71 +108,71 @@ class CollectionPlaylistTab extends StatelessWidget {
                             ],
                           ),
                         ),
-                      ],
+                      ] + collection.playlists.map(
+                        (Playlist playlist) =>ListTile(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => CollectionPlaylist(
+                                  playlist: playlist,
+                                ),
+                              ),
+                            );
+                          },
+                          onLongPress: () => showDialog(
+                            context: context,
+                            builder: (subContext) => AlertDialog(
+                              title: Text(
+                                language!.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER,
+                                style: Theme.of(subContext).textTheme.headline1,
+                              ),
+                              content: Text(
+                                language!.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY,
+                                style: Theme.of(subContext).textTheme.headline5,
+                              ),
+                              actions: [
+                                MaterialButton(
+                                  textColor: Theme.of(context).primaryColor,
+                                  onPressed: () async {
+                                    await collection.playlistRemove(playlist);
+                                    Navigator.of(subContext).pop();
+                                  },
+                                  child: Text(language!.STRING_YES),
+                                ),
+                                MaterialButton(
+                                  textColor: Theme.of(context).primaryColor,
+                                  onPressed: Navigator.of(subContext).pop,
+                                  child: Text(language!.STRING_NO),
+                                ),
+                              ],
+                            ),
+                          ),
+                          leading: playlist.tracks.length != 0 ? CircleAvatar(
+                            backgroundImage: FileImage(playlist.tracks.last.albumArt),
+                          ) : Icon(
+                            Icons.queue_music,
+                            size: Theme.of(context).iconTheme.size,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                          title: Text(playlist.playlistName!),
+                          trailing: IconButton(
+                            onPressed: () => Playback.play(
+                              index: 0,
+                              tracks: playlist.tracks,
+                            ),
+                            icon: Icon(
+                              Icons.play_arrow,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                            iconSize: Theme.of(context).iconTheme.size!,
+                            splashRadius: Theme.of(context).iconTheme.size! - 8,
+                          ),
+                        ),
+                      ).toList(),
                     ),
                   ),
                 )
-              ] + collection.playlists.map(
-                (Playlist playlist) =>ListTile(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => CollectionPlaylist(
-                          playlist: playlist,
-                        ),
-                      ),
-                    );
-                  },
-                  onLongPress: () => showDialog(
-                    context: context,
-                    builder: (subContext) => AlertDialog(
-                      title: Text(
-                        language!.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER,
-                        style: Theme.of(subContext).textTheme.headline1,
-                      ),
-                      content: Text(
-                        language!.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY,
-                        style: Theme.of(subContext).textTheme.headline5,
-                      ),
-                      actions: [
-                        MaterialButton(
-                          textColor: Theme.of(context).primaryColor,
-                          onPressed: () async {
-                            await collection.playlistRemove(playlist);
-                            Navigator.of(subContext).pop();
-                          },
-                          child: Text(language!.STRING_YES),
-                        ),
-                        MaterialButton(
-                          textColor: Theme.of(context).primaryColor,
-                          onPressed: Navigator.of(subContext).pop,
-                          child: Text(language!.STRING_NO),
-                        ),
-                      ],
-                    ),
-                  ),
-                  leading: playlist.tracks.length != 0 ? CircleAvatar(
-                    backgroundImage: FileImage(playlist.tracks.last.albumArt),
-                  ) : Icon(
-                    Icons.queue_music,
-                    size: Theme.of(context).iconTheme.size,
-                    color: Theme.of(context).iconTheme.color,
-                  ),
-                  title: Text(playlist.playlistName!),
-                  trailing: IconButton(
-                    onPressed: () => Playback.play(
-                      index: 0,
-                      tracks: playlist.tracks,
-                    ),
-                    icon: Icon(
-                      Icons.play_arrow,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
-                    iconSize: Theme.of(context).iconTheme.size!,
-                    splashRadius: Theme.of(context).iconTheme.size! - 8,
-                  ),
-                ),
-              ).toList(),
+              ]
             ),
           ),
         ],
