@@ -37,7 +37,7 @@ class DiscoverSearchState extends State<DiscoverSearch> {
   Widget get result {
     if (widget.mode is Album)
       return FadeFutureBuilder(
-        future: () async => await discover!.search(widget.keyword, widget.mode),
+        future: () async => await discover.search(widget.keyword, widget.mode),
         initialWidgetBuilder: (BuildContext context) => FakeLinearProgressIndicator(
           label: language!.STRING_SEARCH_RESULT_LOADER_LABEL,
           duration: Duration(seconds: 10),
@@ -75,7 +75,7 @@ class DiscoverSearchState extends State<DiscoverSearch> {
       );
     else if (widget.mode is Track)
       return FadeFutureBuilder(
-        future: () async => await discover!.search(widget.keyword, widget.mode),
+        future: () async => await discover.search(widget.keyword, widget.mode),
         initialWidgetBuilder: (BuildContext context) => FakeLinearProgressIndicator(
           label: language!.STRING_SEARCH_RESULT_LOADER_LABEL,
           duration: Duration(seconds: 10),

@@ -4,6 +4,7 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/core/lyrics.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/fileintent.dart';
@@ -156,6 +157,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
       providers: [
         ChangeNotifierProvider<Collection>(create: (context) => Collection.get()!),
         ChangeNotifierProvider<Language>(create: (context) => Language.get()!),
+        ChangeNotifierProvider<Lyrics>(create: (context) => Lyrics.get())
       ],
       builder: (context, _) => Consumer<Language>(
         builder: (context, _, __) => Scaffold(

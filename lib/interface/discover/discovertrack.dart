@@ -88,7 +88,7 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
               ? null
               : () {
                   this.setState(() => this._isDownloading = true);
-                  discover!.trackDownload(
+                  discover.trackDownload(
                     widget.track,
                     onCompleted: () {
                       Provider.of<Collection>(context).add(
@@ -344,7 +344,7 @@ class _DiscoverTrackTileState extends State<DiscoverTrackTile> {
           onTap: () {
             if (!(this._isDownloading || this._exists)) {
               this.setState(() => this._isDownloading = true);
-              discover!.trackDownload(
+              discover.trackDownload(
                 widget.track,
                 onCompleted: () => this.setState(() {
                   this._isDownloading = false;

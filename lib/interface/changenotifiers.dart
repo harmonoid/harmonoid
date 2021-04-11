@@ -7,12 +7,25 @@ import 'package:harmonoid/utils/methods.dart';
 class Server extends ChangeNotifier {
   String? homeAddress;
   
-  Server({required String? homeAddress});
+  Server({required this.homeAddress});
 
   void update({required String? homeAddress}) {
     this.homeAddress = homeAddress;
     this.notifyListeners();
     configuration.save(homeAddress: homeAddress);
+  }
+}
+
+
+class NotificationLyrics extends ChangeNotifier {
+  late bool enabled;
+  
+  NotificationLyrics({required this.enabled});
+
+  void update({required bool enabled}) {
+    this.enabled = enabled;
+    this.notifyListeners();
+    configuration.save(notificationLyrics: enabled);
   }
 }
 

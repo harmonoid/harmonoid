@@ -6,6 +6,7 @@ import 'package:harmonoid/core/discover.dart';
 import 'package:harmonoid/core/download.dart';
 import 'package:harmonoid/core/fileintent.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/utils/methods.dart';

@@ -277,7 +277,7 @@ class DiscoverAlbumState extends State<DiscoverAlbum> {
                 ),
                 SubHeader(language!.STRING_ALBUM_VIEW_TRACKS_SUBHEADER),
                 FadeFutureBuilder(
-                  future: () async => await discover!.albumInfo(widget.album),
+                  future: () async => await discover.albumInfo(widget.album),
                   initialWidgetBuilder: (BuildContext context) => Center(
                     child: CircularProgressIndicator(),
                   ),
