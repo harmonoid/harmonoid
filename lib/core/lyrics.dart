@@ -2,11 +2,9 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 
-
 const String HOME = 'harmonoid-lyrics.herokuapp.com';
 
 late Lyrics lyrics = new Lyrics();
-
 
 class Lyric {
   final int time;
@@ -18,20 +16,19 @@ class Lyric {
   });
 
   Map<String, dynamic> toMap(dynamic map) => {
-    'time': this.time,
-    'words': this.words,
-  };
+        'time': this.time,
+        'words': this.words,
+      };
 
   static Lyric fromMap(dynamic map) => new Lyric(
-    time: map['time'],
-    words: map['words'],
-  );
+        time: map['time'],
+        words: map['words'],
+      );
 }
-
 
 class Lyrics extends ChangeNotifier {
   static Lyrics get() => lyrics;
-  
+
   List<Lyric> current = <Lyric>[];
   String query = '';
 
@@ -40,7 +37,8 @@ class Lyrics extends ChangeNotifier {
     this.query = name;
     Uri uri = Uri.https(
       HOME,
-      '/lyrics', {
+      '/lyrics',
+      {
         'name': name,
       },
     );
@@ -49,15 +47,13 @@ class Lyrics extends ChangeNotifier {
       if (response.statusCode == 200) {
         (convert.jsonDecode(response.body) as List).forEach((objectMap) {
           this.current.add(
-            Lyric.fromMap(objectMap),
-          );
+                Lyric.fromMap(objectMap),
+              );
         });
-      }
-      else {
+      } else {
         throw 'Exception: Invalid status code.';
       }
-    }
-    catch(exception) {
+    } catch (exception) {
       throw 'Exception: Please check your internet connection.';
     }
     this.notifyListeners();

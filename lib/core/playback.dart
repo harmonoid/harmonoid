@@ -6,61 +6,71 @@ import 'package:harmonoid/core/download.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/lyrics.dart';
 
+late Play play = new Play();
 
-final AudioPlayer.AssetsAudioPlayer audioPlayer = new AudioPlayer.AssetsAudioPlayer.withId('harmonoid')
-..current.listen((AudioPlayer.Playing? current) async {
-  if (current != null) {
-    await lyrics.fromName(current.audio.audio.metas.title! + ' - ' + current.audio.audio.metas.artist!);
-  }
-})
-..currentPosition.listen((Duration? position) async {
-  if (lyrics.current.isNotEmpty && position != null && configuration.notificationLyrics!) {
-    for (Lyric lyric in lyrics.current) if (lyric.time ~/ 1000 == position.inSeconds) {
-      const AndroidNotificationDetails settings = AndroidNotificationDetails(
-        'com.alexmercerind.harmonoid',
-        'Harmonoid',
-        '',
-        icon: 'mipmap/ic_launcher',
-        importance: Importance.high,
-        priority: Priority.high,
-        showWhen: false,
-        onlyAlertOnce: true,
-        playSound: false,
-        enableVibration: false,
-      );
-      await notification.show(
-        100000,
-        lyrics.query,
-        lyric.words,
-        NotificationDetails(android: settings),
-      );
-      break;
-    }
-  }
-});
+class Play {
+  int? time;
+}
 
+final AudioPlayer.AssetsAudioPlayer audioPlayer =
+    new AudioPlayer.AssetsAudioPlayer.withId('harmonoid')
+      ..current.listen((AudioPlayer.Playing? current) async {
+        if (current != null) {
+          await lyrics.fromName(current.audio.audio.metas.title! +
+              ' - ' +
+              current.audio.audio.metas.artist!);
+        }
+      })
+      ..currentPosition.listen((Duration? position) async {
+        if (lyrics.current.isNotEmpty &&
+            position != null &&
+            configuration.notificationLyrics!) {
+          for (Lyric lyric in lyrics.current)
+            if (lyric.time ~/ 1000 == position.inSeconds) {
+              play.time = position.inSeconds;
+              const AndroidNotificationDetails settings =
+                  AndroidNotificationDetails(
+                'com.alexmercerind.harmonoid',
+                'Harmonoid',
+                '',
+                icon: 'mipmap/ic_launcher',
+                importance: Importance.high,
+                priority: Priority.high,
+                showWhen: false,
+                onlyAlertOnce: true,
+                playSound: false,
+                enableVibration: false,
+              );
+              await notification.show(
+                100000,
+                lyrics.query,
+                lyric.words,
+                NotificationDetails(android: settings),
+              );
+              break;
+            }
+        }
+      });
 
 abstract class Playback {
-
-  static Future<void> play({required int index, required List<Track> tracks}) async {
+  static Future<void> play(
+      {required int index, required List<Track> tracks}) async {
     List<Track> _tracks = tracks;
     if (_tracks.length > 20) _tracks = tracks.sublist(index, index + 20);
     List<AudioPlayer.Audio> audios = <AudioPlayer.Audio>[];
     _tracks.forEach((Track track) {
       audios.add(
-        new AudioPlayer.Audio.file(
-          track.filePath!,
-          metas: new AudioPlayer.Metas(
-            id: track.trackId,
-            image: new AudioPlayer.MetasImage.file(
-              track.albumArt.path,
-            ),
-            title: track.trackName!,
-            album: track.albumName!,
-            artist: track.trackArtistNames!.join(', '),
-            extra: track.toMap(),
-          )
-        ),
+        new AudioPlayer.Audio.file(track.filePath!,
+            metas: new AudioPlayer.Metas(
+              id: track.trackId,
+              image: new AudioPlayer.MetasImage.file(
+                track.albumArt.path,
+              ),
+              title: track.trackName!,
+              album: track.albumName!,
+              artist: track.trackArtistNames!.join(', '),
+              extra: track.toMap(),
+            )),
       );
     });
     audioPlayer.open(
@@ -74,7 +84,7 @@ abstract class Playback {
         nextEnabled: true,
         prevEnabled: true,
         seekBarEnabled: true,
-        stopEnabled: false,   
+        stopEnabled: false,
       ),
     );
   }
