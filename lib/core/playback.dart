@@ -5,12 +5,43 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/download.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/lyrics.dart';
+import 'package:harmonoid/constants/language.dart';
 
 
 final AudioPlayer.AssetsAudioPlayer audioPlayer = new AudioPlayer.AssetsAudioPlayer.withId('harmonoid')
 ..current.listen((AudioPlayer.Playing? current) async {
   if (current != null) {
-    await lyrics.fromName(current.audio.audio.metas.title! + ' - ' + current.audio.audio.metas.artist!);
+    try {
+      await lyrics.fromName(current.audio.audio.metas.title! + ' - ' + current.audio.audio.metas.artist!);
+      const AndroidNotificationDetails settings = AndroidNotificationDetails(
+        'com.alexmercerind.harmonoid',
+        'Harmonoid',
+        '',
+        icon: 'mipmap/ic_launcher',
+        importance: Importance.max,
+        priority: Priority.max,
+        showWhen: false,
+        onlyAlertOnce: true,
+        playSound: false,
+        enableVibration: false,
+        showProgress: true,
+        indeterminate: true,
+      );
+      await notification.show(
+        100000,
+        lyrics.query,
+        language!.STRING_LYRICS_RETRIEVING,
+        NotificationDetails(android: settings),
+      );
+    }
+    catch(exception) {
+      Future.delayed(
+        Duration(seconds: 2),
+        () => notification.cancel(
+          100000,
+        ),
+      );
+    }
   }
 })
 ..currentPosition.listen((Duration? position) async {

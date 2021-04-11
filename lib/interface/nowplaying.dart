@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:assets_audio_player/assets_audio_player.dart' as AudioPlayer;
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -416,6 +417,38 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               alignment: MainAxisAlignment.end,
                               mainAxisSize: MainAxisSize.max,
                               children: [
+                                MaterialButton(
+                                  onPressed: () => showDialog(
+                                    context: context,
+                                    builder: (subContext) => SimpleDialog(
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.center,
+                                          margin: EdgeInsets.all(16.0),
+                                          child: Marquee(
+                                            text: this._track?.trackName ?? language!.STRING_NOW_PLAYING_NOT_PLAYING_TITLE,
+                                            style: Theme.of(context).textTheme.headline1!,
+                                            blankSpace: 100.0,
+                                            velocity: 20.0,
+                                            pauseAfterRound: Duration(seconds: 1),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                          child: Text(
+                                            lyrics.current.isNotEmpty ? lyrics.current.map((lyric) => lyric.words).join('\n'): language!.STRING_LYRICS_NOT_FOUND,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  child: Text(
+                                    language!.STRING_LYRICS.toUpperCase(),
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ),
                                 MaterialButton(
                                   onPressed: () => audioPlayer.previous(),
                                   child: Text(
