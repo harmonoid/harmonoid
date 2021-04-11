@@ -254,6 +254,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -406,6 +409,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Включить механики iOS';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Задать платформу TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
       }
       break;
       case LanguageRegion.slSi: {
@@ -559,6 +565,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Vključi iOS uporabniški vmesnik';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Nastavi platformo na TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -711,6 +720,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Ativar mecânicas do iOS';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Mudar plataforma para TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -863,6 +875,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'iOS मोड';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'platform को TargetPlatform.iOS करें';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
       }
       break;
       case LanguageRegion.deDe: {
@@ -1015,6 +1030,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1167,6 +1185,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
       }
       break;
     }
