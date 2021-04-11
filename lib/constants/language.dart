@@ -257,6 +257,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_LYRICS                                          = 'Lyrics';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -412,6 +414,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_LYRICS                                          = 'Lyrics';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
       case LanguageRegion.slSi: {
@@ -568,6 +572,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_LYRICS                                          = 'Lyrics';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -723,6 +729,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_LYRICS                                          = 'Lyrics';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -878,6 +886,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_LYRICS                                          = 'Lyrics';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
       case LanguageRegion.deDe: {
@@ -1033,6 +1043,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_LYRICS                                          = 'Lyrics';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1188,6 +1200,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_LYRICS                                          = 'Lyrics';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
     }
