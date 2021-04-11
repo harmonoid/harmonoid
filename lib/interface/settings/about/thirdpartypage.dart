@@ -78,8 +78,7 @@ class ThirdPartyPage extends StatelessWidget {
               ListTile(
                 onTap: () => launch('https://www.youtube.com/watch?v=y07YAT1qdOQ'),
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://lh3.googleusercontent.com/CsLz1eLJ7qBu9Ad-wO8Nypz6RUAvATsW0MUTxZI2giSW1TnFs5S6HWtutXr50T14oNmTn5Ka1FcYsno=w60-h60-l90-rj'),
+                  backgroundImage: AssetImage('assets/images/credits-album-art-0.jpg'),
                 ),
                 title: Text('Sunburst'),
                 subtitle: Text('Tobu'),
@@ -87,8 +86,7 @@ class ThirdPartyPage extends StatelessWidget {
               ListTile(
                 onTap: () => launch('https://www.youtube.com/watch?v=BmrSzhw3rGE'),
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://lh3.googleusercontent.com/npz6DWheubb-oT57BWT9RGMFnq-dICZW-Y6fP9zsqr6hYZVdZ7lquE1jXcq-TDnWjOedNMiUFIuSttl7jQ=w60-h60-l90-rj'),
+                  backgroundImage: AssetImage('assets/images/credits-album-art-1.jpg'),
                 ),
                 title: Text('Hope'),
                 subtitle: Text('Tobu'),
@@ -96,8 +94,7 @@ class ThirdPartyPage extends StatelessWidget {
               ListTile(
                 onTap: () => launch('https://www.youtube.com/watch?v=Z1xRUgnT0-0'),
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://lh3.googleusercontent.com/2je-mCKeSSzqvtlvtBT3NjkZ8jSoVwnk-CCAsFYpZHz1TgkDk-6-cDNvyNz9miLHZWN2m88n0_nEf_Mu=w60-h60-l90-rj'),
+                  backgroundImage: AssetImage('assets/images/credits-album-art-2.jpg'),
                 ),
                 title: Text('Safe And Sound'),
                 subtitle: Text('DEAF KEV'),
@@ -105,8 +102,7 @@ class ThirdPartyPage extends StatelessWidget {
               ListTile(
                 onTap: () => launch('https://www.youtube.com/watch?v=m3YZ0l0l1Q8'),
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://lh3.googleusercontent.com/-5xRRnRbxiaPKOTOLI8Fb7JcNkh1aGMMRA6Do86bYgGXKG5AZvRTcXhSMlVaVKN5Wv6RrKrRaCl17TIa=w60-h60-l90-rj'),
+                  backgroundImage: AssetImage('assets/images/credits-album-art-3.jpg'),
                 ),
                 title: Text('NCS: Alpha'),
                 subtitle: Text('Various Artists'),
@@ -211,6 +207,24 @@ class ThirdPartyPage extends StatelessWidget {
                     'https://github.com/bnxm/implicitly_animated_reorderable_list/blob/master/LICENSE'),
                 title: Text('implicitly_animated_reorderable_list'),
                 subtitle: Text('bnxm'),
+              ),
+              ListTile(
+                onTap: () => launch(
+                    'https://github.com/LunaGao/flag_flutter/blob/stable/LICENSE'),
+                title: Text('flag'),
+                subtitle: Text('LunaGao'),
+              ),
+              ListTile(
+                onTap: () => launch(
+                    'https://github.com/marcelgarus/marquee/blob/master/LICENSE'),
+                title: Text('marquee'),
+                subtitle: Text('marcelgarus'),
+              ),
+              ListTile(
+                onTap: () => launch(
+                    'https://github.com/leisim/auto_size_text/blob/master/LICENSE'),
+                title: Text('auto_size_text'),
+                subtitle: Text('leisim'),
               ),
             ]),
           ),

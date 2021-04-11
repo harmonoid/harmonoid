@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'dart:math' as math;
+// import 'dart:math' as math;
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
@@ -19,9 +19,12 @@ class CollectionMusic extends StatefulWidget {
 }
 
 
+/* TODO: Re-implement refresh button. */
+
+
 class CollectionMusicState extends State<CollectionMusic> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  late double _refreshTurns;
-  late Tween<double> _refreshTween;
+  // late double _refreshTurns;
+  // late Tween<double> _refreshTween;
   TabController? _tabController;
 
   @override
@@ -30,37 +33,37 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   @override
   void initState() {
     super.initState();
-    this._refreshTurns = 0;
     this._tabController = TabController(initialIndex: 0, length: 4, vsync: this);
-    this._refreshTween = Tween<double>(begin: 0, end: this._refreshTurns);
+    // this._refreshTurns = 0;
+    // this._refreshTween = Tween<double>(begin: 0, end: this._refreshTurns);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor: Theme.of(context).appBarTheme.color,
-        child: TweenAnimationBuilder(
-          child: Icon(
-            Icons.refresh,
-            color: Theme.of(context).brightness == Brightness.light ? Colors.white: Theme.of(context).accentColor
-          ),
-          tween: this._refreshTween,
-          duration: Duration(milliseconds: 800),
-          builder: (_, dynamic value, child) => Transform.rotate(
-            alignment: Alignment.center,
-            angle: value,
-            child: child,
-          ),
-        ),
-        onPressed: () async {
-          this._refreshTurns += 2 * math.pi;
-          this._refreshTween = Tween<double>(begin: 0, end: this._refreshTurns);
-          this.setState(() {});
-          await Provider.of<Collection>(context, listen: false).refresh();
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor: Theme.of(context).appBarTheme.color,
+      //   child: TweenAnimationBuilder(
+      //     child: Icon(
+      //       Icons.refresh,
+      //       color: Theme.of(context).brightness == Brightness.light ? Colors.white: Theme.of(context).accentColor
+      //     ),
+      //     tween: this._refreshTween,
+      //     duration: Duration(milliseconds: 800),
+      //     builder: (_, dynamic value, child) => Transform.rotate(
+      //       alignment: Alignment.center,
+      //       angle: value,
+      //       child: child,
+      //     ),
+      //   ),
+      //   onPressed: () async {
+      //     this._refreshTurns += 2 * math.pi;
+      //     this._refreshTween = Tween<double>(begin: 0, end: this._refreshTurns);
+      //     this.setState(() {});
+      //     await Provider.of<Collection>(context, listen: false).refresh();
+      //   },
+      // ),
       body: DefaultTabController(
         length: 4,
         child: NestedScrollView(
