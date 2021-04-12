@@ -137,10 +137,10 @@ object RealPathUtil {
 }
 
 
-class MainActivity: FlutterActivity() {
+class MainActivity : FlutterActivity() {
     private val CHANNEL = "com.alexmercerind.harmonoid/openFile"
-
     var openPath: String? = null
+
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
         val channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
@@ -156,6 +156,7 @@ class MainActivity: FlutterActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        handleOpenFileUrl(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -165,13 +166,10 @@ class MainActivity: FlutterActivity() {
 
     private fun handleOpenFileUrl(intent: Intent?) {
         if (intent?.data != null) {
-            val path = RealPathUtil.getRealPath(
+            openPath = RealPathUtil.getRealPath(
                 getApplicationContext(),
                 intent?.data!!
             )
-            if (path != null) {
-                openPath = path
-            }
         }
     }
 }
