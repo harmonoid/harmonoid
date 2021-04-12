@@ -91,7 +91,7 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
                   discover.trackDownload(
                     widget.track,
                     onCompleted: () {
-                      Provider.of<Collection>(context).add(
+                      Provider.of<Collection>(context, listen: false).add(
                         file: File(
                           path.join(
                             Provider.of<Collection>(context, listen: false).collectionDirectory.path,
