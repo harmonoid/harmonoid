@@ -100,10 +100,10 @@ class Collection extends ChangeNotifier {
     return result;
   }
 
-  Future<void> add({File? file}) async {
+  Future<void> add({required File file}) async {
     bool isAlreadyPresent = false;
     for (Track track in this.tracks) {
-      if (track.filePath == file!.path) {
+      if (track.filePath == file.path) {
         isAlreadyPresent = true;
         break;
       }
@@ -111,7 +111,7 @@ class Collection extends ChangeNotifier {
     if (Methods.isFileSupported(file) && !isAlreadyPresent) {
       try {
         MetadataRetriever retriever = new MetadataRetriever();
-        await retriever.setFile(file!);
+        await retriever.setFile(file);
         Track track = Track.fromMap((await retriever.metadata).toMap())!;
         track.filePath = file.path;
         if (track.trackName == 'Unknown Track') {
@@ -296,7 +296,8 @@ class Collection extends ChangeNotifier {
         }
       }
       if (collectionDirectoryContent.length != this.tracks.length) {
-        collectionDirectoryContent.asMap().forEach((int index, FileSystemEntity file) async {
+        for (int index = 0; index < collectionDirectoryContent.length; index++) {
+          File file = collectionDirectoryContent[index];
           bool isTrackAdded = false;
           for (Track track in this.tracks) {
             if (track.filePath == file.path) {
@@ -306,13 +307,12 @@ class Collection extends ChangeNotifier {
           }
           if (!isTrackAdded) {
             await this.add(
-              file: file as File,
+              file: file,
             );
           }
-          onProgress?.call(index + 1, collectionDirectoryContent.length, true);
-        });
+          onProgress?.call(index + 1, collectionDirectoryContent.length, false);
+        }
       }
-      onProgress?.call(collectionDirectoryContent.length, collectionDirectoryContent.length, true);
       for (Album album in this.albums) {
         List<String> allAlbumArtistNames = <String>[];
         album.tracks.forEach((Track track) {
@@ -325,6 +325,7 @@ class Collection extends ChangeNotifier {
           this.artists[this._foundArtists.indexOf(artistName)].albums.add(album);
         }
       }
+      onProgress?.call(collectionDirectoryContent.length, collectionDirectoryContent.length, true);
     }
     if (this.tracks.isNotEmpty) {
       this.lastAlbum = this.albums.last;
