@@ -9,8 +9,8 @@
 
 <table>
   <tr align="center">
-    <td><img height="280" src="https://github.com/alexmercerind/harmonoid/blob/assets/collection.gif?raw=true" /></td>
-    <td><img height="280" src="https://github.com/alexmercerind/harmonoid/blob/assets/now-playing.gif?raw=true" /></td>
+    <td><img height="400" src="https://github.com/alexmercerind/harmonoid/blob/assets/collection.gif?raw=true" /></td>
+    <td><img height="400" src="https://github.com/alexmercerind/harmonoid/blob/assets/now-playing.gif?raw=true" /></td>
   </tr>
 </table>
 
@@ -22,7 +22,7 @@ Recently, it is migrated to use [Provider](https://github.com/rrousselGit/provid
 
 The project supports sorting of music based on media metadata tags & native playback directly from file explorer etc. The whole user interface strictly follows the material design guidelines.
 
-Checkout [project structure](https://github.com/alexmercerind/harmonoid#-project) to get started.
+Checkout [project structure](https://github.com/alexmercerind/harmonoid#structure) to get started.
 
 The plan of project is to bring the best, cross platform music experience for all users.
 
