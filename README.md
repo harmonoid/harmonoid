@@ -1,7 +1,9 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
 <h3 align="center">A music app with a beautiful UI to play all your music.</h3>
 
-<p align="center"><a href='https://play.google.com/store/apps/details?id=com.alexmercerind.harmonoid&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img height='80' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a></p>
+<p align="center"><a href='https://play.google.com/store/apps/details?id=com.alexmercerind.harmonoid&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img height='80' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a></p><p align="center">(Under review presently, download latest APK <a href='https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.5'>here</a>)</p>
+
+
 
 <img src="https://github.com/alexmercerind/harmonoid/blob/assets/0.0.5.jpg?raw=true" />
 
@@ -29,19 +31,20 @@ The plan of project is to bring the best, cross platform music experience for al
 
 ## Features
 
-- **Powerful Library Management**
+- **Powerful music collection generation**
   - Music automatically gets arranged into albums, artists & tracks.
+
+- **Time synced lyrics**
+  - Get time synced lyrics for all your saved music.
+  - See lyrics of currently playing song directly in your notifications.
  
-- **Play Local Music**
+- **Play local music**
   - Play music saved on your device either from the collection in the app or using file browser.
 
-- **Lyrics**
-  - Get time synced lyrics for your music.
-
-- **Beautiful User Interface**
+- **Beautiful user interface**
   - Every element on screen beautifully animated & very strictly follows [material.io](https://material.io) guidelines. 
 
-- **Ads Free Forever**
+- **Ads free forever**
   - No advertisements! No profits associated with the project.
   
 - **Playlists**
@@ -53,7 +56,7 @@ The plan of project is to bring the best, cross platform music experience for al
 - **Personalization**
   - Change accent color & theme of the app.
 
-- **Download Music**
+- **Download music**
   - A personal dedicated server is required for downloading music. [NOT INCLUDED IN APP]
 
 ## Workings
