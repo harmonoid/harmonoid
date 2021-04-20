@@ -92,8 +92,18 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                     Track.fromMap(audio.metas.extra!)!.albumArt,
                   ),
                 ),
-                title: Text(audio.metas.title ?? ''),
-                subtitle: audio.metas.artist == null ? null : Text(audio.metas.artist!),
+                title: Text(
+                  audio.metas.title ?? '',
+                  maxLines: 1,
+                  softWrap: true,
+                  overflow: TextOverflow.fade,
+                ),
+                subtitle: audio.metas.artist == null ? null : Text(
+                  audio.metas.artist?? '',
+                  maxLines: 1,
+                  softWrap: true,
+                  overflow: TextOverflow.fade,
+                ),
                 trailing: this._track!.trackName == audio.metas.title ? Icon(
                   Icons.music_note,
                   color: Theme.of(context).accentColor,
