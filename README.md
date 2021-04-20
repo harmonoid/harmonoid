@@ -1,22 +1,22 @@
-<h1 align="center"><a href="https://github.com/alexmercerind/harmonoid/">Harmonoid</a></h1>
-<h3 align="center">🎵 A music app with a beautiful UI to play all your music!</h3>
+<h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
+<h3 align="center">A music app with a beautiful UI to play all your music.</h3>
 
-<p align="center"><a href="https://github.com/harmonoid/harmonoid/releases/download/v0.0.4/harmonoid-v0.0.4.apk">Download APK</a></p>
-<br></br>
+<p align="center"><a href='https://play.google.com/store/apps/details?id=com.alexmercerind.harmonoid&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img height='80' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a></p><p align="center">(Under review presently, download latest APK <a href='https://github.com/alexmercerind/harmonoid/releases/tag/v0.0.5'>here</a>)</p>
 
-<img src="https://github.com/alexmercerind/harmonoid/blob/assets/light.png?raw=true" />
-<img src="https://github.com/alexmercerind/harmonoid/blob/assets/dark.png?raw=true" />
 
-## 🏂 Animations
+
+<img src="https://github.com/alexmercerind/harmonoid/blob/assets/0.0.5.jpg?raw=true" />
+
+## Animations
 
 <table>
   <tr align="center">
-    <td><img height="280" src="https://github.com/alexmercerind/harmonoid/blob/assets/collection.gif?raw=true" /></td>
-    <td><img height="280" src="https://github.com/alexmercerind/harmonoid/blob/assets/now-playing.gif?raw=true" /></td>
+    <td><img height="400" src="https://github.com/alexmercerind/harmonoid/blob/assets/collection.gif?raw=true" /></td>
+    <td><img height="400" src="https://github.com/alexmercerind/harmonoid/blob/assets/now-playing.gif?raw=true" /></td>
   </tr>
 </table>
 
-## 🎉 Contribute
+## Contribute
 
 As of now, the project contains **OVER 10K LINES OF CODE**.
 
@@ -24,44 +24,46 @@ Recently, it is migrated to use [Provider](https://github.com/rrousselGit/provid
 
 The project supports sorting of music based on media metadata tags & native playback directly from file explorer etc. The whole user interface strictly follows the material design guidelines.
 
-Checkout [project structure](https://github.com/alexmercerind/harmonoid#-project) to get started. You may talk about this in the Discussions section of repository.
+Checkout [project structure](https://github.com/alexmercerind/harmonoid#structure) to get started.
 
-The plan of project is to bring the best, cross platform music experience for all users. If you decide to contribute, add yourself to the about page of the app.
+The plan of project is to bring the best, cross platform music experience for all users.
 
-## ✅ Features
 
-- 🎵 **Powerful Library Management**
+## Features
+
+- **Powerful music collection generation**
   - Music automatically gets arranged into albums, artists & tracks.
+
+- **Time synced lyrics**
+  - Get time synced lyrics for all your saved music.
+  - See lyrics of currently playing song directly in your notifications.
  
-- 📱 **Play Local Music**
+- **Play local music**
   - Play music saved on your device either from the collection in the app or using file browser.
 
-- 🎹 **Lyrics**
-  - Get time synced lyrics for your music.
-
-- ✨ **Beautiful User Interface**
+- **Beautiful user interface**
   - Every element on screen beautifully animated & very strictly follows [material.io](https://material.io) guidelines. 
 
-- 💜 **Ads Free Forever**
+- **Ads free forever**
   - No advertisements! No profits associated with the project.
   
-- 📑 **Playlists**
+- **Playlists**
   - Make own playlists & play your favorite music on the go.
   
-- 🎄 **Freedom**
+- **Freedom**
   - Share music from the app to other devices with a single tap.
 
-- 🌈 **Personalization**
+- **Personalization**
   - Change accent color & theme of the app.
 
-- 💾 **Download Music**
+- **Download music**
   - A personal dedicated server is required for downloading music. [NOT INCLUDED IN APP]
 
-## 📖 Workings
+## Workings
 
 The majority of the logical & core code of this app is [here](https://github.com/alexmercerind/harmonoid/tree/master/lib/core) in the repository.
 
-## 💙 Acknowledgements
+## Acknowledgements
 
 Thanks to following people & organizations for their indirect contribution.
 
@@ -79,7 +81,7 @@ Thanks to following people & organizations for their indirect contribution.
 |[share](https://pub.dev/packages/share)                                              |[flutter](https://github.com/flutter)                   |
 |[url_launcher](https://pub.dev/packages/url_launcher)                                |[flutter](https://github.com/flutter)                   |
 
-## 🔎 Project
+## Structure
 
 Glad you're interested in contributing to the project, here is the project structure for guiding you to this codebase.
 
@@ -122,11 +124,11 @@ harmonoid/lib
         strings.dart
 ```
 
-## 📄 License
+## License
 
 GNU General Public License v3
 
-### 💙 Translation Contributors
+## Translations
 
 Thanks a lot for your contribution.
 
