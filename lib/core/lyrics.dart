@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 
 
-const String HOME = 'harmonoid-lyrics.herokuapp.com';
+const String HOME = 'harmonoid-lyrics.vercel.app';
 
 late Lyrics lyrics = new Lyrics();
 
