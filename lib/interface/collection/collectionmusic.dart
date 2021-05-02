@@ -63,6 +63,7 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
           await Provider.of<Collection>(context, listen: false).refresh(
             onProgress: (_, __, isCompleted) => this._refreshLock = isCompleted,
           );
+          await Provider.of<Collection>(context, listen: false).sort(type: CollectionSort.dateAdded);
         }: () {},
       ),
       body: DefaultTabController(
