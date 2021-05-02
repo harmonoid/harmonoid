@@ -6,7 +6,6 @@ import 'package:harmonoid/core/discover.dart';
 import 'package:harmonoid/core/download.dart';
 import 'package:harmonoid/core/fileintent.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/utils/methods.dart';
@@ -14,7 +13,7 @@ import 'package:harmonoid/constants/language.dart';
 
 
 const String TITLE   = 'harmonoid';
-const String VERSION = '0.0.5';
+const String VERSION = '0.0.6';
 const String AUTHOR  = 'alexmercerind';
 const String LICENSE = 'GPL-3.0';
 
