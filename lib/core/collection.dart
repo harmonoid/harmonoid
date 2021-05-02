@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:harmonoid/core/configuration.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
@@ -20,6 +21,7 @@ enum CollectionSort {
 const List<String> SUPPORTED_FILE_TYPES = [
   'OGG',
   'OGA',
+  'OGX',
   'AAC',
   'M4A',
   'MP3',
@@ -46,6 +48,7 @@ class Collection extends ChangeNotifier {
       ).writeAsBytes((await rootBundle.load('assets/images/collection-album.jpg')).buffer.asUint8List());
     }
     await _collection.refresh();
+    await _collection.sort(type: configuration.collectionSortType);
   }
 
   late Directory collectionDirectory;
@@ -368,6 +371,12 @@ class Collection extends ChangeNotifier {
     }
     else if (type == CollectionSort.dateAdded) {
       await this.refresh();
+      this.albums = this.albums.reversed.toList();
+      this.tracks = this.tracks.reversed.toList();
+      this.artists = this.artists.reversed.toList();
+      this.albums.removeAt(0);
+      this.tracks.removeAt(0);
+      this.artists.removeAt(0);
     }
     this.notifyListeners();
     onCompleted?.call();
