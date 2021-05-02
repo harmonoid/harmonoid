@@ -340,6 +340,7 @@ class Collection extends ChangeNotifier {
   }
 
   Future<void> sort({CollectionSort? type: CollectionSort.dateAdded, void Function()? onCompleted}) async {
+    await this.refresh();
     if (type == CollectionSort.aToZ) {
       for (int index = 0; index < this.albums.length; index++) {
         for (int subIndex = 0; subIndex < this.albums.length - index - 1; subIndex++) {
@@ -370,13 +371,14 @@ class Collection extends ChangeNotifier {
       }
     }
     else if (type == CollectionSort.dateAdded) {
-      await this.refresh();
       this.albums = this.albums.reversed.toList();
       this.tracks = this.tracks.reversed.toList();
       this.artists = this.artists.reversed.toList();
-      this.albums.removeAt(0);
-      this.tracks.removeAt(0);
-      this.artists.removeAt(0);
+      if (this.tracks.isNotEmpty) {
+        this.albums.removeAt(0);
+        this.tracks.removeAt(0);
+        this.artists.removeAt(0);
+      }
     }
     this.notifyListeners();
     onCompleted?.call();
