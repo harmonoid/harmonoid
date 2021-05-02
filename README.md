@@ -62,6 +62,26 @@ The plan of project is to bring the best, cross platform music experience for al
 - **Download music**
   - A personal dedicated server is required for downloading music. [NOT INCLUDED IN APP]
 
+## Translations
+
+Thanks a lot for your contribution.
+
+|Language       |Provider       |
+|---------------|---------------|
+|Russian        |@raitonoberu   |
+|Slovenian      |@mytja         |
+|Portuguese     |@bdlukaa       |
+|Hindi          |@alexmercerind |
+|German         |@MickLesk      |
+|Dutch          |@kebabinjeneus |
+|Swedish        |Max Haureus    |
+
+You can see the app running in your own language by providing me translations.
+
+For that purpose, you can add your changes to [this](https://github.com/alexmercerind/harmonoid/blob/master/lib/constants/language.dart) file on the repository.
+You can translate this, even if you have little to no knowledge of Dart.
+
+
 ## Workings
 
 The majority of the logical & core code of this app is [here](https://github.com/alexmercerind/harmonoid/tree/master/lib/core) in the repository.
@@ -130,21 +150,3 @@ harmonoid/lib
 ## License
 
 GNU General Public License v3
-
-## Translations
-
-Thanks a lot for your contribution.
-
-|Language       |Provider       |
-|---------------|---------------|
-|Russian        |@raitonoberu   |
-|Slovenian      |@mytja         |
-|Portuguese     |@bdlukaa       |
-|Hindi          |@alexmercerind |
-|German         |@MickLesk      |
-|Dutch          |@kebabinjeneus |
-
-You can see the app running in your own language by providing me translations.
-
-For that purpose, you can add your changes to [this](https://github.com/alexmercerind/harmonoid/blob/master/lib/constants/language.dart) file on the repository.
-You can translate this, even if you have little to no knowledge of Dart.
