@@ -37,6 +37,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   Widget _playlistList = Container();
   double? _playlistEnd;
   double albumArtHeight = 0.0;
+  AudioPlayer.LoopMode _loopMode = AudioPlayer.LoopMode.playlist;
 
   Duration get animationDuration => Duration(milliseconds: 400);
 
@@ -235,29 +236,74 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           ),
                           Padding(
                             padding: EdgeInsets.all(10),
-                            child: FloatingActionButton(
-                              onPressed: this._track == null
-                                  ? null
-                                  : () {
-                                      if (this._isPlaying) {
-                                        this._playPauseController.forward();
-                                        audioPlayer.pause();
-                                      } else {
-                                        this._playPauseController.reverse();
-                                        audioPlayer.play();
-                                      }
-                                    },
-                              child: AnimatedIcon(
-                                icon: AnimatedIcons.pause_play,
-                                progress: this._playPauseController,
-                                color: Colors.white,
-                                size: _animationCurved.value *
-                                    28 /
-                                    this.albumArtHeight,
-                              ),
-                              backgroundColor: Theme.of(context).primaryColor,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                FloatingActionButton(
+                                  mini: true,
+                                  onPressed: this._track == null ? null : () {
+                                    if (this._loopMode == AudioPlayer.LoopMode.playlist) {
+                                      audioPlayer.setLoopMode(
+                                        AudioPlayer.LoopMode.single
+                                      );
+                                      this._loopMode = AudioPlayer.LoopMode.single;
+                                    }
+                                    else {
+                                      audioPlayer.setLoopMode(
+                                        AudioPlayer.LoopMode.playlist
+                                      );
+                                      this._loopMode = AudioPlayer.LoopMode.playlist;
+                                    }
+                                    this.setState(() {});
+                                  },
+                                  child: Icon(
+                                    Icons.repeat,
+                                    color: this._loopMode == AudioPlayer.LoopMode.playlist ? Colors.white: Theme.of(context).primaryColor,
+                                    size: _animationCurved.value *
+                                        28 /
+                                        this.albumArtHeight,
+                                  ),
+                                  backgroundColor: this._loopMode == AudioPlayer.LoopMode.playlist ? Theme.of(context).primaryColor: Colors.white,
+                                ),
+                                FloatingActionButton(
+                                  mini: true,
+                                  onPressed: this._track == null ? null: () {
+                                    audioPlayer.toggleShuffle();
+                                    this.setState(() {});
+                                  },
+                                  child: Icon(
+                                    Icons.shuffle,
+                                    color: !audioPlayer.shuffle ? Colors.white: Theme.of(context).primaryColor,
+                                    size: _animationCurved.value *
+                                        28 /
+                                        this.albumArtHeight,
+                                  ),
+                                  backgroundColor: !audioPlayer.shuffle ? Theme.of(context).primaryColor: Colors.white,
+                                ),
+                                FloatingActionButton(
+                                  mini: true,
+                                  onPressed: this._track == null ? null: () {
+                                    if (this._isPlaying) {
+                                      this._playPauseController.forward();
+                                      audioPlayer.pause();
+                                    } else {
+                                      this._playPauseController.reverse();
+                                      audioPlayer.play();
+                                    }
+                                  },
+                                  child: AnimatedIcon(
+                                    icon: AnimatedIcons.pause_play,
+                                    progress: this._playPauseController,
+                                    color: Colors.white,
+                                    size: _animationCurved.value *
+                                        28 /
+                                        this.albumArtHeight,
+                                  ),
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                ),
+                              ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
