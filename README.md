@@ -8,7 +8,7 @@
 <h4  align="center">Loving the project? Consider starring the repository ⭐</h4>
 
 
-<img src="https://github.com/alexmercerind/harmonoid/blob/assets/0.0.5.jpg?raw=true" />
+<img src="https://github.com/alexmercerind/harmonoid/blob/assets/0.0.6.png?raw=true" />
 
 ## Animations
 
