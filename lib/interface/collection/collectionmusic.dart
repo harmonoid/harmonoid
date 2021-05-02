@@ -79,13 +79,6 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   pinned: true,
                   floating: true,
                   snap: true,
-                  leading: IconButton(
-                    icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
-                    iconSize: Theme.of(context).iconTheme.size!,
-                    splashRadius: Theme.of(context).iconTheme.size! - 8,
-                    onPressed: () {},
-                    tooltip: language!.STRING_MENU,
-                  ),
                   title: Text('Harmonoid'),
                   centerTitle: Provider.of<Visuals>(context, listen: false).platform == TargetPlatform.iOS,
                   actions: [

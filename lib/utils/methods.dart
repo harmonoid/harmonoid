@@ -72,7 +72,7 @@ abstract class Methods {
       scaffoldBackgroundColor: isLight ? Colors.grey[100] : Color(0xFF121212),
       accentColor: accentColor,
       toggleableActiveColor: accentColor,
-      cardColor: isLight ? Colors.white : Color(0xFF1C1C1C),
+      cardColor: isLight ? Colors.white : Color(0xFF1F1F1F),
       backgroundColor: accentColor.withOpacity(0.24),
       dividerColor: isLight ? Colors.black12 : Colors.white24,
       disabledColor: isLight ? Colors.black38 : Colors.white38,
@@ -85,7 +85,7 @@ abstract class Methods {
         color: isLight ? Colors.white : Color(0xFF242424),
       ),
       appBarTheme: AppBarTheme(
-        color: isLight ? Colors.white : Color(0xFF1C1C1C),
+        color: isLight ? Colors.white : Color(0xFF292929),
         brightness: isLight ? Brightness.light : Brightness.dark,
         elevation: 4.0,
         iconTheme: IconThemeData(
@@ -102,7 +102,7 @@ abstract class Methods {
         size: 24,
       ),
       bottomNavigationBarTheme: new BottomNavigationBarThemeData(
-        backgroundColor: isLight ? accentColor : Color(0xFF1F1F1F),
+        backgroundColor: isLight ? accentColor : Color(0xFF292929),
         selectedItemColor: Colors.white.withOpacity(0.87),
         unselectedItemColor: Colors.white54,
       ),
