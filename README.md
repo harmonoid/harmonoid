@@ -3,6 +3,9 @@
 
 <p align="center"><a href='https://play.google.com/store/apps/details?id=com.alexmercerind.harmonoid&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img height='80' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a></p>
 
+<h4 align="center">With love... <a href="https://github.com/alexmercerind">alexmercerind</a>, <a href="https://github.com/raitonoberu">raitonoberu</a>, <a href="https://github.com/mytja">mytja</a>, <a href="https://github.com/bdlukaa">bdlukaa</a> and contributors.</h4>
+
+<h4  align="center">Loving the project? Consider starring the repository ⭐</h4>
 
 
 <img src="https://github.com/alexmercerind/harmonoid/blob/assets/0.0.5.jpg?raw=true" />
