@@ -99,6 +99,7 @@ abstract class Playback {
         startIndex: index,
       ),
       showNotification: true,
+      loopMode: AudioPlayer.LoopMode.playlist,
       notificationSettings: new AudioPlayer.NotificationSettings(
         playPauseEnabled: true,
         nextEnabled: true,
