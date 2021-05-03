@@ -1,14 +1,12 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
 <h3 align="center">A music app with a beautiful UI to play all your music.</h3>
-
-<p align="center"><a href='https://play.google.com/store/apps/details?id=com.alexmercerind.harmonoid&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img height='80' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a></p>
+<p align="center"><a href='https://github.com/alexmercerind/harmonoid/releases/download/v0.0.6/harmonoid-v0.0.6-release.apk'><img height='40' alt='Download APK' src='https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white'/></a></p>
+<br>
+<img src="https://github.com/alexmercerind/harmonoid/blob/assets/0.0.6.png?raw=true" />
 
 <h4 align="center">With love... <a href="https://github.com/alexmercerind">alexmercerind</a>, <a href="https://github.com/raitonoberu">raitonoberu</a>, <a href="https://github.com/mytja">mytja</a>, <a href="https://github.com/bdlukaa">bdlukaa</a> and contributors.</h4>
 
 <h4  align="center">Loving the project? Consider starring the repository ⭐</h4>
-
-
-<img src="https://github.com/alexmercerind/harmonoid/blob/assets/0.0.5.jpg?raw=true" />
 
 ## Animations
 
@@ -37,7 +35,7 @@ The plan of project is to bring the best, cross platform music experience for al
 - **Powerful music collection generation**
   - Music automatically gets arranged into albums, artists & tracks.
 
-- **Time synced lyrics**
+- **Time synced lyrics**=
   - Get time synced lyrics for all your saved music.
   - See lyrics of currently playing song directly in your notifications.
  
@@ -61,6 +59,8 @@ The plan of project is to bring the best, cross platform music experience for al
 
 - **Download music**
   - A personal dedicated server is required for downloading music. [NOT INCLUDED IN APP]
+
+<p align="center"><a href='https://play.google.com/store/apps/details?id=com.alexmercerind.harmonoid&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img height='80' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a></p>
 
 ## Translations
 
