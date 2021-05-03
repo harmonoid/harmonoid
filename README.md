@@ -1,8 +1,8 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
 <h3 align="center">A music app with a beautiful UI to play all your music.</h3>
-<p align="center"><a href='https://github.com/alexmercerind/harmonoid/releases/download/v0.0.6/harmonoid-v0.0.6-release.apk'><img height='40' alt='Download APK' src='https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white'/></a></p>
+<p align="center"><a href='https://github.com/alexmercerind/harmonoid/releases/download/v0.0.7/harmonoid-v0.0.7-release.apk'><img height='40' alt='Download APK' src='https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white'/></a></p>
 <br>
-<img src="https://github.com/alexmercerind/harmonoid/blob/assets/0.0.6.png?raw=true" />
+<img src="https://github.com/alexmercerind/harmonoid/blob/assets/0.0.7.png?raw=true" />
 
 <h4 align="center">With love... <a href="https://github.com/alexmercerind">alexmercerind</a>, <a href="https://github.com/raitonoberu">raitonoberu</a>, <a href="https://github.com/mytja">mytja</a>, <a href="https://github.com/bdlukaa">bdlukaa</a> and contributors.</h4>
 
