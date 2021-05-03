@@ -106,7 +106,7 @@ class Language extends Strings with ChangeNotifier {
 
   static Language? get() => language;
 
-  static Future<void> init({LanguageRegion? languageRegion}) async {
+  static Future<void> init({required LanguageRegion languageRegion}) async {
     language = new Language();
     await language!.set(languageRegion: languageRegion);
   }

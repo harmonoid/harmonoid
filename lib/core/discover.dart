@@ -16,7 +16,7 @@ class Discover {
 
   Discover(this.homeAddress);
 
-  static Future<void> init({String? homeAddress}) async {
+  static Future<void> init({required String homeAddress}) async {
     discover = new Discover(homeAddress);
   }
 
