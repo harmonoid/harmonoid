@@ -59,11 +59,9 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
           this._refreshLock = false;
           this._refreshTurns += 2 * math.pi;
           this._refreshTween = Tween<double>(begin: 0, end: this._refreshTurns);
+          await Provider.of<Collection>(context, listen: false).refresh();
+          this._refreshLock = true;
           this.setState(() {});
-          await Provider.of<Collection>(context, listen: false).refresh(
-            onProgress: (_, __, isCompleted) => this._refreshLock = isCompleted,
-          );
-          await Provider.of<Collection>(context, listen: false).sort(type: CollectionSort.dateAdded);
         }: () {},
       ),
       body: DefaultTabController(
@@ -119,12 +117,14 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                           ],
                           elevation: 2.0,
                         );
-                        await Provider.of<Collection>(context, listen: false).sort(
-                          type: collectionSortType,
-                        );
-                        await configuration.save(
-                          collectionSortType: collectionSortType,
-                        );
+                        if (collectionSortType != null) {
+                          await Provider.of<Collection>(context, listen: false).sort(
+                            type: collectionSortType,
+                            onCompleted: () => configuration.save(
+                              collectionSortType: collectionSortType,
+                            ),
+                          );
+                        }
                       }
                     ),
                   ],
