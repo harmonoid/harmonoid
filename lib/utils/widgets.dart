@@ -193,6 +193,7 @@ class ExceptionWidget extends StatelessWidget {
   final String? title;
   final String? subtitle;
   final String? assetImage;
+  final bool large;
 
   const ExceptionWidget({
     Key? key,
@@ -202,67 +203,124 @@ class ExceptionWidget extends StatelessWidget {
     required this.height,
     required this.title,
     required this.subtitle,
+    this.large: false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        elevation: 2.0,
-        clipBehavior: Clip.antiAlias,
-        margin: this.margin,
-        child: Container(
-          width: MediaQuery.of(context).size.width - 16,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (this.assetImage != null)
-                Image.asset(
-                  this.assetImage!,
-                  height: this.height,
-                  width: this.height,
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                )
-              else
-                Container(
-                  height: this.height,
-                  width: this.height,
-                  alignment: Alignment.center,
-                  color: Theme.of(context).dividerColor,
-                  child: Icon(
-                    Icons.library_music,
-                    size: 56.0,
+    return this.large ? Card(
+      elevation: 2.0,
+      clipBehavior: Clip.antiAlias,
+      margin: this.margin,
+      child: Container(
+        width: MediaQuery.of(context).size.width - 16.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            this.assetImage != null ? Image.asset(
+              this.assetImage!,
+              height: this.height,
+              width: MediaQuery.of(context).size.width - 16.0,
+              fit: BoxFit.fitWidth,
+              alignment: Alignment.center,
+            ): Container(
+              height: this.height,
+              width: this.height,
+              alignment: Alignment.center,
+              color: Theme.of(context).dividerColor,
+              child: Icon(
+                Icons.library_music,
+                size: 56.0,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 4.0,
+              ),
+              width: MediaQuery.of(context).size.width - 16.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    this.title!,
+                    style: Theme.of(context).textTheme.headline1,
+                    textAlign: TextAlign.start,
                   ),
-                ),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(left: 8, right: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        this.title!,
-                        style: Theme.of(context).textTheme.headline1,
-                        textAlign: TextAlign.start,
-                      ),
-                      Divider(
-                        color: Colors.transparent,
-                        height: 4.0,
-                      ),
-                      Text(
-                        this.subtitle!,
-                        style: Theme.of(context).textTheme.headline5,
-                        textAlign: TextAlign.start,
-                      ),
-                    ],
+                  Divider(
+                    color: Colors.transparent,
+                    height: 4.0,
                   ),
+                  Text(
+                    this.subtitle!,
+                    style: Theme.of(context).textTheme.headline5,
+                    textAlign: TextAlign.start,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ): Card(
+      elevation: 2.0,
+      clipBehavior: Clip.antiAlias,
+      margin: this.margin,
+      child: Container(
+        width: MediaQuery.of(context).size.width - 16,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (this.assetImage != null)
+              Image.asset(
+                this.assetImage!,
+                height: this.height,
+                width: this.height,
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
+              )
+            else
+              Container(
+                height: this.height,
+                width: this.height,
+                alignment: Alignment.center,
+                color: Theme.of(context).dividerColor,
+                child: Icon(
+                  Icons.library_music,
+                  size: 56.0,
                 ),
               ),
-            ],
-          ),
-        ));
+            Container(
+              margin: EdgeInsets.only(left: 8, right: 8),
+              width: MediaQuery.of(context).size.width - 32 - this.height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    this.title!,
+                    style: Theme.of(context).textTheme.headline1,
+                    textAlign: TextAlign.start,
+                  ),
+                  Divider(
+                    color: Colors.transparent,
+                    height: 4.0,
+                  ),
+                  Text(
+                    this.subtitle!,
+                    style: Theme.of(context).textTheme.headline5,
+                    textAlign: TextAlign.start,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

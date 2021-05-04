@@ -16,16 +16,6 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Harmonoid"
         android:icon="@mipmap/ic_launcher">
-        <service android:name="com.ryanheise.audioservice.AudioService">
-          <intent-filter>
-            <action android:name="android.media.browse.MediaBrowserService" />
-          </intent-filter>
-        </service>
-        <receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver" >
-          <intent-filter>
-            <action android:name="android.intent.action.MEDIA_BUTTON" />
-          </intent-filter>
-        </receiver> 
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

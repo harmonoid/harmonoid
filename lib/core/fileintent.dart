@@ -40,7 +40,8 @@ class FileIntent {
   }
 
   static Future<File> _getOpenFile() async {
-    String filePath = await (_methodChannel.invokeMethod('getOpenFile') as Future<String>);
+    String? response = await _methodChannel.invokeMethod('getOpenFile', {});
+    String filePath = response!;
     File file = new File(filePath);
     if (await file.exists()) return file;
     else throw FileSystemException("File does not exists.");

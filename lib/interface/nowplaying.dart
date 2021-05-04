@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:assets_audio_player/assets_audio_player.dart' as AudioPlayer;
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -36,6 +37,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   Widget _playlistList = Container();
   double? _playlistEnd;
   double albumArtHeight = 0.0;
+  AudioPlayer.LoopMode _loopMode = AudioPlayer.LoopMode.none;
 
   Duration get animationDuration => Duration(milliseconds: 400);
 
@@ -51,7 +53,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   void initState() {
     this._playPauseController = AnimationController(
       vsync: this,
-      duration: animationDuration,
+      duration: this.animationDuration,
     );
     super.initState();
   }
@@ -91,8 +93,18 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                     Track.fromMap(audio.metas.extra!)!.albumArt,
                   ),
                 ),
-                title: Text(audio.metas.title ?? ''),
-                subtitle: audio.metas.artist == null ? null : Text(audio.metas.artist!),
+                title: Text(
+                  audio.metas.title ?? '',
+                  maxLines: 1,
+                  softWrap: true,
+                  overflow: TextOverflow.fade,
+                ),
+                subtitle: audio.metas.artist == null ? null : Text(
+                  audio.metas.artist?? '',
+                  maxLines: 1,
+                  softWrap: true,
+                  overflow: TextOverflow.fade,
+                ),
                 trailing: this._track!.trackName == audio.metas.title ? Icon(
                   Icons.music_note,
                   color: Theme.of(context).accentColor,
@@ -125,6 +137,13 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
             this._playPauseController.reverse();
           else
             this._playPauseController.forward();
+        },
+      );
+      this._streamSubscriptions[2] = audioPlayer.loopMode.listen(
+        (AudioPlayer.LoopMode loopMode) {
+          this.setState(() {
+            this._loopMode = loopMode;
+          });
         },
       );
       this.albumArtHeight = MediaQuery.of(context).size.height -
@@ -223,30 +242,67 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                             fit: BoxFit.cover,
                           ),
                           Padding(
-                            padding: EdgeInsets.all(10),
-                            child: FloatingActionButton(
-                              onPressed: this._track == null
-                                  ? null
-                                  : () {
-                                      if (this._isPlaying) {
-                                        this._playPauseController.forward();
-                                        audioPlayer.pause();
-                                      } else {
-                                        this._playPauseController.reverse();
-                                        audioPlayer.play();
-                                      }
-                                    },
-                              child: AnimatedIcon(
-                                icon: AnimatedIcons.pause_play,
-                                progress: this._playPauseController,
-                                color: Colors.white,
-                                size: _animationCurved.value *
-                                    28 /
-                                    this.albumArtHeight,
-                              ),
-                              backgroundColor: Theme.of(context).primaryColor,
+                            padding: EdgeInsets.all(12),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                FloatingActionButton(
+                                  mini: true,
+                                  onPressed: this._track == null ? null : () {
+                                    if (this._loopMode.index == 2) this._loopMode = AudioPlayer.LoopMode.none;
+                                    else this._loopMode = AudioPlayer.LoopMode.values[this._loopMode.index + 1];
+                                    this.setState(() {});
+                                  },
+                                  child: Icon(
+                                    <AudioPlayer.LoopMode, IconData>{
+                                      AudioPlayer.LoopMode.none: Icons.arrow_forward,
+                                      AudioPlayer.LoopMode.single: Icons.repeat_one,
+                                      AudioPlayer.LoopMode.playlist: Icons.repeat,
+                                    }[this._loopMode],
+                                    color: Colors.white,
+                                    size: _animationCurved.value *
+                                        28 /
+                                        this.albumArtHeight,
+                                  ),
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                ),
+                                FloatingActionButton(
+                                  mini: true,
+                                  onPressed: this._track == null ? null: () {
+                                    audioPlayer.toggleShuffle();
+                                    this.setState(() {});
+                                  },
+                                  child: Icon(
+                                    Icons.shuffle,
+                                    color: !audioPlayer.shuffle ? Colors.white: Theme.of(context).primaryColor,
+                                    size: _animationCurved.value *
+                                        28 /
+                                        this.albumArtHeight,
+                                  ),
+                                  backgroundColor: !audioPlayer.shuffle ? Theme.of(context).primaryColor: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 4.0,
+                                ),
+                                FloatingActionButton(
+                                  onPressed: this._track == null ? null: () {
+                                    audioPlayer.playOrPause();
+                                    this.setState(() {});
+                                  },
+                                  child: AnimatedIcon(
+                                    icon: AnimatedIcons.pause_play,
+                                    progress: this._playPauseController,
+                                    color: Colors.white,
+                                    size: _animationCurved.value *
+                                        28 /
+                                        this.albumArtHeight,
+                                  ),
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                ),
+                              ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -415,6 +471,38 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                               alignment: MainAxisAlignment.end,
                               mainAxisSize: MainAxisSize.max,
                               children: [
+                                MaterialButton(
+                                  onPressed: () => showDialog(
+                                    context: context,
+                                    builder: (subContext) => SimpleDialog(
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.center,
+                                          margin: EdgeInsets.all(16.0),
+                                          child: Marquee(
+                                            text: this._track?.trackName ?? language!.STRING_NOW_PLAYING_NOT_PLAYING_TITLE,
+                                            style: Theme.of(context).textTheme.headline1!,
+                                            blankSpace: 100.0,
+                                            velocity: 20.0,
+                                            pauseAfterRound: Duration(seconds: 1),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                          child: Text(
+                                            lyrics.current.isNotEmpty ? lyrics.current.map((lyric) => lyric.words).join('\n'): language!.STRING_LYRICS_NOT_FOUND,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  child: Text(
+                                    language!.STRING_LYRICS.toUpperCase(),
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ),
                                 MaterialButton(
                                   onPressed: () => audioPlayer.previous(),
                                   child: Text(

@@ -43,11 +43,16 @@ class CollectionArtistTab extends StatelessWidget {
                 ),
               ): <Widget>[
                 ExceptionWidget(
-                  margin: EdgeInsets.only(top: 96.0, left: 8.0, right: 8.0),
+                  margin: EdgeInsets.only(
+                    top: (MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + MediaQuery.of(context).padding.bottom + tileWidth + 256.0)) / 2,
+                    left: 8.0,
+                    right: 8.0,
+                  ),
                   height: tileWidth,
                   assetImage: 'assets/images/collection-album.jpg',
                   title: language!.STRING_NO_COLLECTION_TITLE,
                   subtitle: language!.STRING_NO_COLLECTION_SUBTITLE,
+                  large: true,
                 ),
               ],
             ),

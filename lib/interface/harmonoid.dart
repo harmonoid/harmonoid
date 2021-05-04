@@ -22,10 +22,15 @@ class Harmonoid extends StatelessWidget {
           theme: visuals.theme,
           darkTheme: visuals.darkTheme,
           themeMode: visuals.themeMode,
-          home: ChangeNotifierProvider<Server>(
-            create: (context) => Server(
-              homeAddress: configuration.homeAddress,
-            ),
+          home: MultiProvider(
+            providers: [
+              ChangeNotifierProvider<Server>(
+                create: (context) => Server(homeAddress: configuration.homeAddress),
+              ),
+              ChangeNotifierProvider<NotificationLyrics>(
+                create: (context) => NotificationLyrics(enabled: configuration.notificationLyrics!),
+              ),
+            ],
             builder: (context, _) => Consumer<Server>(
               builder: (context, _, __) => Home(),
             ),

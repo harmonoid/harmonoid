@@ -21,6 +21,7 @@ abstract class ConfigurationKeys {
   ThemeMode? themeMode;
   CollectionSort? collectionSortType;
   bool? automaticAccent;
+  bool? notificationLyrics;
   TargetPlatform? platform;
   List<dynamic>? collectionSearchRecent;
   List<dynamic>? discoverSearchRecent;
@@ -36,6 +37,7 @@ const Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'themeMode': 0,
   'collectionSortType': 0,
   'automaticAccent': false,
+  'notificationLyrics': true,
   'platform': 2,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
@@ -78,6 +80,7 @@ class Configuration extends ConfigurationKeys {
     bool? showOutOfBoxExperience,
     CollectionSort? collectionSortType,
     bool? automaticAccent,
+    bool? notificationLyrics,
     TargetPlatform? platform,
     List<dynamic>? collectionSearchRecent,
     List<dynamic>? discoverSearchRecent,
@@ -113,6 +116,9 @@ class Configuration extends ConfigurationKeys {
     if (automaticAccent != null) {
       this.automaticAccent = automaticAccent;
     }
+    if (notificationLyrics != null) {
+      this.notificationLyrics = notificationLyrics;
+    }
     if (platform != null) {
       this.platform = platform;
     }
@@ -124,6 +130,7 @@ class Configuration extends ConfigurationKeys {
       'themeMode': this.themeMode!.index,
       'collectionSortType': this.collectionSortType!.index,
       'automaticAccent': this.automaticAccent,
+      'notificationLyrics': this.notificationLyrics,
       'platform': this.platform!.index,
       'collectionSearchRecent': this.collectionSearchRecent,
       'discoverSearchRecent': this.discoverSearchRecent,
@@ -145,6 +152,7 @@ class Configuration extends ConfigurationKeys {
     this.themeMode = ThemeMode.values[currentConfiguration['themeMode']];
     this.collectionSortType = CollectionSort.values[currentConfiguration['collectionSortType']];
     this.automaticAccent = currentConfiguration['automaticAccent'];
+    this.notificationLyrics = currentConfiguration['notificationLyrics'];
     this.platform = TargetPlatform.values[currentConfiguration['platform']];
     this.collectionSearchRecent = currentConfiguration['collectionSearchRecent'];
     this.discoverSearchRecent = currentConfiguration['discoverSearchRecent'];

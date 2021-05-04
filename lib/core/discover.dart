@@ -8,8 +8,7 @@ import 'package:harmonoid/core/download.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/methods.dart';
 
-
-Discover? discover;
+late Discover discover;
 
 
 class Discover {
@@ -17,7 +16,7 @@ class Discover {
 
   Discover(this.homeAddress);
 
-  static Future<void> init({String? homeAddress}) async {
+  static Future<void> init({required String homeAddress}) async {
     discover = new Discover(homeAddress);
   }
 
@@ -60,7 +59,7 @@ class Discover {
       return result;
     }
     catch(exception) {
-      throw 'Exception: Please check your internet connection';
+      throw 'Exception: Please check your internet connection.';
     }
   }
 
@@ -87,7 +86,7 @@ class Discover {
       return result;
     }
     catch(exception) {
-      throw 'Exception: Please check your internet connection';
+      throw 'Exception: Please check your internet connection.';
     }
   }
 

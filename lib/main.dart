@@ -14,7 +14,7 @@ import 'package:harmonoid/utils/methods.dart';
 import 'package:harmonoid/constants/language.dart';
 
 const String TITLE   = 'harmonoid';
-const String VERSION = '0.0.4';
+const String VERSION = '0.0.7';
 const String AUTHOR  = 'alexmercerind';
 const String LICENSE = 'GPL-3.0';
 
@@ -30,14 +30,15 @@ void main() async {
     await Methods.askStoragePermission();
     await Configuration.init();
     await Collection.init(
-      collectionDirectory: configuration.collectionDirectory,
-      cacheDirectory: configuration.cacheDirectory,
+      collectionDirectory: configuration.collectionDirectory!,
+      cacheDirectory: configuration.cacheDirectory!,
+      collectionSortType: configuration.collectionSortType!,
     );
     await Discover.init(
-      homeAddress: configuration.homeAddress,
+      homeAddress: configuration.homeAddress!,
     );
     await Language.init(
-      languageRegion: configuration.languageRegion,
+      languageRegion: configuration.languageRegion!,
     );
     await FileIntent.init();
     await Download.init();

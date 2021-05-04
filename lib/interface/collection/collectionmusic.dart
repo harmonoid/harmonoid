@@ -20,6 +20,7 @@ class CollectionMusic extends StatefulWidget {
 
 
 class CollectionMusicState extends State<CollectionMusic> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  bool _refreshLock = true;
   late double _refreshTurns;
   late Tween<double> _refreshTween;
   TabController? _tabController;
@@ -30,8 +31,8 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   @override
   void initState() {
     super.initState();
-    this._refreshTurns = 0;
     this._tabController = TabController(initialIndex: 0, length: 4, vsync: this);
+    this._refreshTurns = 0;
     this._refreshTween = Tween<double>(begin: 0, end: this._refreshTurns);
   }
 
@@ -54,12 +55,14 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
             child: child,
           ),
         ),
-        onPressed: () async {
+        onPressed: this._refreshLock ? () async {
+          this._refreshLock = false;
           this._refreshTurns += 2 * math.pi;
           this._refreshTween = Tween<double>(begin: 0, end: this._refreshTurns);
-          this.setState(() {});
           await Provider.of<Collection>(context, listen: false).refresh();
-        },
+          this._refreshLock = true;
+          this.setState(() {});
+        }: () {},
       ),
       body: DefaultTabController(
         length: 4,
@@ -74,13 +77,6 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   pinned: true,
                   floating: true,
                   snap: true,
-                  leading: IconButton(
-                    icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
-                    iconSize: Theme.of(context).iconTheme.size!,
-                    splashRadius: Theme.of(context).iconTheme.size! - 8,
-                    onPressed: () {},
-                    tooltip: language!.STRING_MENU,
-                  ),
                   title: Text('Harmonoid'),
                   centerTitle: Provider.of<Visuals>(context, listen: false).platform == TargetPlatform.iOS,
                   actions: [
@@ -121,12 +117,14 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                           ],
                           elevation: 2.0,
                         );
-                        await Provider.of<Collection>(context, listen: false).sort(
-                          type: collectionSortType,
-                        );
-                        await configuration.save(
-                          collectionSortType: collectionSortType,
-                        );
+                        if (collectionSortType != null) {
+                          await Provider.of<Collection>(context, listen: false).sort(
+                            type: collectionSortType,
+                            onCompleted: () => configuration.save(
+                              collectionSortType: collectionSortType,
+                            ),
+                          );
+                        }
                       }
                     ),
                   ],

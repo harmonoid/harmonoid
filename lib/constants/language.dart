@@ -77,6 +77,14 @@ class LanguageRegion {
     translator: 'kebabinjeneus',
     github: 'https://github.com/kebabinjeneus',
   );
+  static const svSe = LanguageRegion(
+    code: 'sv',
+    countryCode: 'Se',
+    name: 'Svenska',
+    country: 'Sverige',
+    translator: 'Max Haureus',
+    github: '',
+  );
 
   static const values = <LanguageRegion?>[
     enUs,
@@ -86,6 +94,7 @@ class LanguageRegion {
     hiIn,
     deDe,
     nlNl,
+    svSe,
   ];
 
   int get index => values.indexOf(this);
@@ -97,7 +106,7 @@ class Language extends Strings with ChangeNotifier {
 
   static Language? get() => language;
 
-  static Future<void> init({LanguageRegion? languageRegion}) async {
+  static Future<void> init({required LanguageRegion languageRegion}) async {
     language = new Language();
     await language!.set(languageRegion: languageRegion);
   }
@@ -240,7 +249,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NO_INTERNET_TITLE                               = 'No internet';
         this.STRING_NO_INTERNET_SUBTITLE                            = 'Check your connection.';
         this.STRING_NO_COLLECTION_TITLE                             = 'Empty collection';
-        this.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.\nChange where to look for music from the settings.';
+        this.STRING_NO_COLLECTION_SUBTITLE                          = 'No music found.\nChange where to look for the music from settings.';
         this.STRING_DOWNLOAD_COMPLETED                              = 'Download completed.';
         this.STRING_DOWNLOAD_FAILED                                 = 'Download failed.';
         this.STRING_DISCORD                                         = 'DISCORD SERVER';
@@ -254,6 +263,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -406,6 +420,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Включить механики iOS';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Задать платформу TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
       case LanguageRegion.slSi: {
@@ -559,6 +578,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Vključi iOS uporabniški vmesnik';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Nastavi platformo na TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -711,6 +735,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Ativar mecânicas do iOS';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Mudar plataforma para TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -863,6 +892,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'iOS मोड';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'platform को TargetPlatform.iOS करें';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
       case LanguageRegion.deDe: {
@@ -1015,6 +1049,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1167,6 +1206,168 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Enable iOS mechanics';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Set platform to TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+      }
+      break;
+      case LanguageRegion.svSe: {
+        this.STRING_INTERNET_ERROR                                  = 'Granska din internetanslutning.';
+        this.STRING_SEARCH_HEADER                                   = 'Sök musik';
+        this.STRING_SEARCH_MODE_SUBHEADER                           = 'Vad letar du efter?';
+        this.STRING_COLLECTION                                      = 'Samling';
+        this.STRING_NOW_PLAYING                                     = 'Spelas Nu';
+        this.STRING_SETTING                                         = 'Inställningar';
+        this.STRING_OK                                              = 'OKEJ';
+        this.STRING_YES                                             = 'JA';
+        this.STRING_NO                                              = 'NEJ';
+        this.STRING_ALBUM                                           = 'Album';
+        this.STRING_TRACK                                           = 'Låtar';
+        this.STRING_TOP_TRACKS                                      = 'TOPP LÅTAR';
+        this.STRING_ARTIST                                          = 'Artister';
+        this.STRING_SAVED                                           = 'Sparat';
+        this.STRING_THEME_MODE_LIGHT                                = 'Ljus';
+        this.STRING_THEME_MODE_DARK                                 = 'Mörk';
+        this.STRING_OPTIONS                                         = 'Val';
+        this.STRING_FOLLOWERS                                       = 'följare';
+        this.STRING_PLAYS                                           = 'uppspelningar';
+        this.STRING_EXPORT_TRACK                                    = 'Exportera låt';
+        this.STRING_DELETE_TRACK                                    = 'Radera låt';
+        this.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Sök musik från dina favoritalbum';
+        this.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Sök dina favoritlåtar';
+        this.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Sök musik av dina favoritartister';
+        this.STRING_SEARCH_HISTORY_SUBHEADER                        = 'Dina senaste sökningar';
+        this.STRING_SEARCH_RESULT_LOADER_LABEL                      = 'Hämtar din musik...';
+        this.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Närmaste album från resultatet';
+        this.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK               = 'Närmaste låt från resultatet';
+        this.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST              = 'Närmaste artist från resultatet';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'SPARA ALBUM';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'SPARA LÅT';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'SPARA ARTIST';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM          = 'VISA ALBUM';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK          = 'VISA LÅT';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST         = 'VISA ARTIST';
+        this.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'Fler album från resultaten';
+        this.STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'Fler låtar från resultaten';
+        this.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'Fler liknande artister';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE                  = 'Du kan inte gå tillbaka';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE               = 'En eller fler låtar sparas offline. Vänligen vänta tills alla låtar är sparade.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Låten kunde inte sparas';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Rekommenderat att granska din internetanslutning & prova igen om en stund.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Alla har vi dåliga dagar';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Undantag inträffat vid sparande utav denna låt. Detta betyder vanligen att du behöver kolla & uppdatera din server. Detta felmeddelande har inget att göra med denna applikation.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Vänta';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Denna låt laddas redan ner.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Denna låt är redan sparad';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Vill du ladda ner denna låt igen?';
+        this.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Hämtar låtar...';
+        this.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Här är låtarna från detta album';
+        this.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Lite information om albumet';
+        this.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Sök & spara musik för att se här.\nSnurra på uppdatera för att se nya saker.';
+        this.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Senaste album';
+        this.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Fler album';
+        this.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Senaste låt';
+        this.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Fler låtar';
+        this.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Senaste artist';
+        this.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Fler artister';
+        this.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Låtar från albumet';
+        this.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Lite information om albumet';
+        this.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Är du säker?';
+        this.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'Vill du avlägsna detta album sparat på din enhet?';
+        this.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Är du säker?';
+        this.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Vill du avlägsna denna låt sparad på din enhet?';
+        this.STRING_NOW_PLAYING_NEXT_TRACK                          = 'NÄSTA';
+        this.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'FÖREGÅENDE';
+        this.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Inget spelas upp';
+        this.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Spela från din samling';
+        this.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = "Vi är klara...";
+        this.STRING_SETTING_GITHUB                                  = 'GITHUB';
+        this.STRING_SETTING_STAR_GITHUB                             = 'STJÄRNMÄRK PROJEKTET';
+        this.STRING_SETTING_STARGAZERS_TITLE                        = 'Projekt Stargazers';
+        this.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Tack så mycket för ditt stöd';
+        this.STRING_SETTING_LANGUAGE_TITLE                          = 'Språk';
+        this.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Byt språk på applikationen';
+        this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Applikationsomstart krävs';
+        this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Vill du starta om applikationen nu?';
+        this.STRING_ABOUT_TITLE                                     = 'Om';
+        this.STRING_ABOUT_SUBTITLE                                  = 'Information om applikationen & dess utvecklare';
+        this.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Server';
+        this.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Ändra varifrån applikationen hämtar sitt innehåll';
+        this.STRING_SETTING_SERVER_CHANGE_SERVER_HINT               = 'Ange server URL';
+        this.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL              = 'Server URL';
+        this.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID             = 'Är inte en giltig server URL för applikationen.';
+        this.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Vänligen granska din internetanslutning.';
+        this.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Serverändring lyckades.';
+        this.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Ändrar server för applikationen...';
+        this.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Översättare';
+        this.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Tack så mycket för ditt stöd för applikationen.';
+        this.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accentfärg';
+        this.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Ändra applikationens accentfärg';
+        this.STRING_SETTING_THEME_TITLE                             = 'Tema';
+        this.STRING_SETTING_THEME_SUBTITLE                          = 'Ändra applikationen till ljust eller mörkt läge';
+        this.STRING_NO_DOWNLOAD_UPDATE                              = 'Din applikation är redan uppdaterad';
+        this.STRING_DOWNLOAD_UPDATE                                 = 'LADDA NER UPPDATERING';
+        this.STRING_SETTING_APP_VERSION_TITLE                       = 'Version';
+        this.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Information om nuvarande version av applikationen';
+        this.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Installerad version';
+        this.STRING_SETTING_APP_VERSION_LATEST                      = 'Senaste versionen';
+        this.STRING_MENU                                            = 'Meny';
+        this.STRING_SEARCH_COLLECTION                               = 'Sök samling';
+        this.STRING_SWITCH_THEME                                    = 'Byt tema';
+        this.STRING_DISCOVER                                        = 'Upptäck';
+        this.STRING_PLAY                                            = 'Spela';
+        this.STRING_PAUSE                                           = 'Paus';
+        this.STRING_DELETE                                          = 'Radera';
+        this.STRING_SHARE                                           = 'Dela';
+        this.STRING_ADD_TO_PLAYLIST                                 = 'Lägg till spellista';
+        this.STRING_SAVE_TO_DOWNLOADS                               = 'Spara i nerladdningar';
+        this.STRING_LOCAL_SEARCH_WELCOME                            = 'Skriv något för att söka i din samling';
+        this.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Inget sådant fanns i din samling';
+        this.STRING_PLAYLIST                                        = 'Spellista';
+        this.STRING_PLAYLISTS                                       = 'Spellistor';
+        this.STRING_PLAYLISTS_SUBHEADER                             = 'Dina spellistor';
+        this.STRING_PLAYLISTS_CREATE                                = 'Skapa ny spellista';
+        this.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Spellistans namn';
+        this.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Namn för din nya spellista';
+        this.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Är du säker?';
+        this.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Vill du radera denna spellista?';
+        this.STRING_CANCEL                                          = 'AVBRYT';
+        this.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Lägg till spellista';
+        this.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Välj en spellista för att lägga till denna låt';
+        this.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Här är låtarna i denna spellista';
+        this.STRING_TRANSFERS                                       = 'Överföringar';
+        this.STRING_THEME_MODE_SYSTEM                               = 'Följ systemtema';
+        this.STRING_SETTING_INDEXING_TITLE                          = 'Indexering';
+        this.STRING_SETTING_INDEXING_SUBTITLE                       = 'Omindexera din musiksamling';
+        this.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexerat NUMBER_STRING av TOTAL_STRING låtar...';
+        this.STRING_SETTING_INDEXING_DONE                           = 'Indexerad';
+        this.STRING_SETTING_INDEXING_WARNING                        = 'Avbryt inte processen.';
+        this.STRING_REFRESH                                         = 'UPPDATERA';
+        this.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Dina senaste sökningar visas här';
+        this.STRING_NO_INTERNET_TITLE                               = 'Inget internet';
+        this.STRING_NO_INTERNET_SUBTITLE                            = 'Granska din anslutning.';
+        this.STRING_NO_COLLECTION_TITLE                             = 'Tom samling';
+        this.STRING_NO_COLLECTION_SUBTITLE                          = 'Ingen musik hittades.\nÄndra sökväg till musik i inställningarna.';
+        this.STRING_DOWNLOAD_COMPLETED                              = 'Nerladdning klar.';
+        this.STRING_DOWNLOAD_FAILED                                 = 'Nerladdning misslyckades.';
+        this.STRING_DISCORD                                         = 'DISCORD SERVER';
+        this.STRING_EXIT_TITLE                                      = 'Avsluta';
+        this.STRING_EXIT_SUBTITLE                                   = 'Vill du avsluta Harmonoid?';
+        this.STRING_A_TO_Z                                          = 'A till Ö';
+        this.STRING_DATE_ADDED                                      = 'Datum tillagd';
+        this.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatisk accentfärg';
+        this.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Diverse';
+        this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Andra inställningar i applikationen';
+        this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Aktivera iOS mekanik';
+        this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Ange plattform till TargetPlatform.iOS';
+        this.STRING_SELECTED_DIRECTORY                              = 'Vald katalog:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
     }

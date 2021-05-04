@@ -18,13 +18,6 @@ class Settings extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 4.0,
-        leading: IconButton(
-          icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
-          iconSize: Theme.of(context).iconTheme.size!,
-          splashRadius: Theme.of(context).iconTheme.size! - 8,
-          onPressed: () {},
-          tooltip: language!.STRING_MENU,
-        ),
         title: Text(language!.STRING_SETTING),
       ),
       body: ListView(
