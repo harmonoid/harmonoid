@@ -265,7 +265,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
         builder: (context, collection, _) => InkWell(
           onTap: () async => await Playback.play(
             index: 0,
-            tracks: [collection.lastTrack],
+            tracks: [collection.lastTrack! ],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
