@@ -60,6 +60,7 @@ class IndexingState extends State<IndexingSetting> {
                       width: MediaQuery.of(context).size.width - 32.0,
                       child: LinearProgressIndicator(
                         value: value,
+                        valueColor: AlwaysStoppedAnimation(Theme.of(context).accentColor),
                       ),
                     ),
                   ],
