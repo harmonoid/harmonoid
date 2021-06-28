@@ -1,6 +1,17 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
 <h3 align="center">A music app with a beautiful UI to play all your music.</h3>
-<p align="center"><a href='https://github.com/alexmercerind/harmonoid/releases/download/v0.0.7/harmonoid-v0.0.7-release.apk'>Download APK</a></p>
+
+
+<div align='center'>
+<a href='#README'><img src='https://img.shields.io/badge/Android-yes-teal.svg'/></a>
+<a href='#README'><img src='https://badges.frapsoft.com/os/v1/open-source.svg?v=103'/></a>
+<a href='https://github.com/alexmercerind/harmonoid/releases)'><img src='https://img.shields.io/badge/Version-0.0.8-teal'/></a>
+<a href='https://github.com/alexmercerind/harmonoid/releases/download/v0.0.8/harmonoid-v0.0.8.apk)'><img src='https://img.shields.io/github/downloads/alexmercerind/harmonoid/total.svg'/></a>  
+</div>
+
+<br>
+
+<p align="center"><a href='https://github.com/alexmercerind/harmonoid/releases/download/v0.0.8/harmonoid-v0.0.8.apk'>Download APK</a></p>
 <br>
 <img src="https://github.com/alexmercerind/harmonoid/blob/assets/0.0.7.png?raw=true" />
 
@@ -80,6 +91,7 @@ The plan of project is to bring the best, cross platform music experience for al
 |German         |@MickLesk      |
 |Dutch          |@kebabinjeneus |
 |Swedish        |Max Haureus    |
+|French         |[Gaetan Jonathan](https://github.com/gaetan1903)|
 
 You can see the app running in your own language by providing me translations.
 
