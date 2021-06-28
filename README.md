@@ -1,6 +1,6 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
 <h3 align="center">A music app with a beautiful UI to play all your music.</h3>
-<p align="center"><a href='https://github.com/alexmercerind/harmonoid/releases/download/v0.0.7/harmonoid-v0.0.7-release.apk'>Download APK</a></p>
+<p align="center"><a href='https://github.com/alexmercerind/harmonoid/releases/download/v0.0.8/harmonoid-v0.0.8.apk'>Download APK [v0.0.8]</a></p>
 <br>
 <img src="https://github.com/alexmercerind/harmonoid/blob/assets/0.0.7.png?raw=true" />
 
@@ -61,25 +61,26 @@ The plan of project is to bring the best, cross platform music experience for al
 ## Contributors
 
 **Developer**
-- @alexmercerind
+- [@alexmercerind](https://github.com/alexmercerind)
 
 **Collaborators**
 
-- @raitonoberu
-- @mytja
-- @bdlukaa
+- [@raitonoberu](https://github.com/raitonoberu)
+- [@mytja](https://github.com/mytja)
+- [@bdlukaa](https://github.com/bdlukaa)
 
 **Translators**
 
-|Language       |Provider       |
-|---------------|---------------|
-|Russian        |@raitonoberu   |
-|Slovenian      |@mytja         |
-|Portuguese     |@bdlukaa       |
-|Hindi          |@alexmercerind |
-|German         |@MickLesk      |
-|Dutch          |@kebabinjeneus |
-|Swedish        |Max Haureus    |
+|Language       |Provider                                           |
+|---------------|---------------------------------------------------|
+|Russian        |[@raitonoberu](https://github.com/raitonoberu)     |
+|Slovenian      |[@mytja](https://github.com/mytja)                 |
+|Portuguese     |[@bdlukaa](https://github.com/bdlukaa)             |
+|Hindi          |[@alexmercerind](https://github.com/alexmercerind) |
+|German         |[@MickLesk](https://github.com/MickLesk)           |
+|Dutch          |[@kebabinjeneus](https://github.com/kebabinjeneus) |
+|Swedish        |Max Haureus                                        |
+|French         |[@gaetan1903](https://github.com/gaetan1903)       |
 
 You can see the app running in your own language by providing me translations.
 
