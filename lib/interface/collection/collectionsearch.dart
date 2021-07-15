@@ -10,12 +10,10 @@ import 'package:harmonoid/interface/collection/collectiontrack.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 
-
 class CollectionSearch extends StatefulWidget {
   CollectionSearch({Key? key}) : super(key: key);
   CollectionSearchState createState() => CollectionSearchState();
 }
-
 
 class CollectionSearchState extends State<CollectionSearch> {
   int elementsPerRow = 2;
@@ -25,22 +23,35 @@ class CollectionSearchState extends State<CollectionSearch> {
   double? tileHeightArtist;
   TextEditingController textFieldController = new TextEditingController();
   String query = '';
-  bool get search => this._albums.length == 0 && this._tracks.length == 0 && this._artists.length == 0 && query == '';
-  bool get result => this._albums.length == 0 && this._tracks.length == 0 && this._artists.length == 0 && query != '';
+  bool get search =>
+      this._albums.length == 0 &&
+      this._tracks.length == 0 &&
+      this._artists.length == 0 &&
+      query == '';
+  bool get result =>
+      this._albums.length == 0 &&
+      this._tracks.length == 0 &&
+      this._artists.length == 0 &&
+      query != '';
   bool get albums => this._albums.length == 0;
   bool get tracks => this._tracks.length == 0;
   bool get artists => this._artists.length == 0;
   List<Widget> _albums = <Widget>[];
-  List<Widget> _tracks =  <Widget>[];
-  List<Widget> _artists =  <Widget>[];
+  List<Widget> _tracks = <Widget>[];
+  List<Widget> _artists = <Widget>[];
   int globalIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     this.elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
-    this.tileWidthAlbum = (MediaQuery.of(context).size.width - 16 - (this.elementsPerRow - 1) * 8) / this.elementsPerRow;
+    this.tileWidthAlbum = (MediaQuery.of(context).size.width -
+            16 -
+            (this.elementsPerRow - 1) * 8) /
+        this.elementsPerRow;
     this.tileHeightAlbum = this.tileWidthAlbum! * 242 / 156;
-    this.tileWidthArtist = (MediaQuery.of(context).size.width - 16 - (elementsPerRow - 1) * 8) / elementsPerRow;
+    this.tileWidthArtist =
+        (MediaQuery.of(context).size.width - 16 - (elementsPerRow - 1) * 8) /
+            elementsPerRow;
     this.tileHeightArtist = this.tileWidthArtist! + 36.0;
     return Consumer<Collection>(
       builder: (context, collection, _) => Scaffold(
@@ -54,13 +65,14 @@ class CollectionSearchState extends State<CollectionSearch> {
               this.globalIndex++;
               List<dynamic> resultCollection = await collection.search(query);
               List<Widget> albums = <Widget>[];
-              List<Widget> tracks =  <Widget>[];
-              List<Widget> artists =  <Widget>[];
+              List<Widget> tracks = <Widget>[];
+              List<Widget> artists = <Widget>[];
               for (dynamic collectionItem in resultCollection) {
                 if (collectionItem is Album) {
                   albums.add(
                     Container(
-                      margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
+                      margin:
+                          EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
                       child: CollectionAlbumTile(
                         height: this.tileHeightAlbum,
                         width: this.tileWidthAlbum,
@@ -72,7 +84,8 @@ class CollectionSearchState extends State<CollectionSearch> {
                 if (collectionItem is Artist) {
                   artists.add(
                     Container(
-                      margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
+                      margin:
+                          EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
                       child: CollectionArtistTile(
                         height: this.tileHeightArtist!,
                         width: this.tileWidthArtist!,
@@ -80,8 +93,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                       ),
                     ),
                   );
-                }
-                else if (collectionItem is Track) {
+                } else if (collectionItem is Track) {
                   tracks.add(
                     CollectionTrackTile(
                       track: collectionItem,
@@ -96,18 +108,23 @@ class CollectionSearchState extends State<CollectionSearch> {
                                   title: Text(
                                     language!
                                         .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
-                                    style: Theme.of(subContext).textTheme.headline1,
+                                    style: Theme.of(subContext)
+                                        .textTheme
+                                        .headline1,
                                   ),
                                   content: Text(
                                     language!
                                         .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
-                                    style: Theme.of(subContext).textTheme.headline5,
+                                    style: Theme.of(subContext)
+                                        .textTheme
+                                        .headline5,
                                   ),
                                   actions: [
                                     MaterialButton(
                                       textColor: Theme.of(context).primaryColor,
                                       onPressed: () async {
-                                        await collection.delete(collection.tracks[index]);
+                                        await collection
+                                            .delete(collection.tracks[index]);
                                         Navigator.of(subContext).pop();
                                       },
                                       child: Text(language!.STRING_YES),
@@ -123,8 +140,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                               break;
                             case 1:
                               Share.shareFiles(
-                                [collection.tracks[index].filePath!]
-                              );
+                                  [collection.tracks[index].filePath!]);
                               break;
                             case 2:
                               showDialog(
@@ -134,20 +150,28 @@ class CollectionSearchState extends State<CollectionSearch> {
                                   actionsPadding: EdgeInsets.zero,
                                   title: Text(
                                     language!.STRING_PLAYLIST_ADD_DIALOG_TITLE,
-                                    style: Theme.of(subContext).textTheme.headline1,
+                                    style: Theme.of(subContext)
+                                        .textTheme
+                                        .headline1,
                                   ),
                                   content: Container(
                                     height: 280,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
+                                          padding:
+                                              EdgeInsets.fromLTRB(24, 8, 0, 16),
                                           child: Text(
-                                            language!.STRING_PLAYLIST_ADD_DIALOG_BODY,
-                                            style: Theme.of(subContext).textTheme.headline5,
+                                            language!
+                                                .STRING_PLAYLIST_ADD_DIALOG_BODY,
+                                            style: Theme.of(subContext)
+                                                .textTheme
+                                                .headline5,
                                           ),
                                         ),
                                         Container(
@@ -156,33 +180,45 @@ class CollectionSearchState extends State<CollectionSearch> {
                                           decoration: BoxDecoration(
                                             border: Border.symmetric(
                                               vertical: BorderSide(
-                                                color: Theme.of(context).dividerColor,
+                                                color: Theme.of(context)
+                                                    .dividerColor,
                                                 width: 1,
                                               ),
                                             ),
                                           ),
                                           child: ListView.builder(
                                             shrinkWrap: true,
-                                            itemCount: collection.playlists.length,
-                                            itemBuilder: (context, playlistIndex) {
+                                            itemCount:
+                                                collection.playlists.length,
+                                            itemBuilder:
+                                                (context, playlistIndex) {
                                               return ListTile(
                                                 title: Text(
                                                   collection
-                                                      .playlists[playlistIndex].playlistName!,
-                                                  style:
-                                                      Theme.of(context).textTheme.headline2,
+                                                      .playlists[playlistIndex]
+                                                      .playlistName!,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline2,
                                                 ),
                                                 leading: Icon(
                                                   Icons.queue_music,
-                                                  size: Theme.of(context).iconTheme.size,
-                                                  color: Theme.of(context).iconTheme.color,
+                                                  size: Theme.of(context)
+                                                      .iconTheme
+                                                      .size,
+                                                  color: Theme.of(context)
+                                                      .iconTheme
+                                                      .color,
                                                 ),
                                                 onTap: () async {
-                                                  await collection.playlistAddTrack(
-                                                    collection.playlists[playlistIndex],
+                                                  await collection
+                                                      .playlistAddTrack(
+                                                    collection.playlists[
+                                                        playlistIndex],
                                                     collection.tracks[index],
                                                   );
-                                                  Navigator.of(subContext).pop();
+                                                  Navigator.of(subContext)
+                                                      .pop();
                                                 },
                                               );
                                             },
@@ -233,10 +269,12 @@ class CollectionSearchState extends State<CollectionSearch> {
                 this.setState(() {});
               }
             },
-            decoration: InputDecoration.collapsed(hintText: language!.STRING_SEARCH_COLLECTION),
+            decoration: InputDecoration.collapsed(
+                hintText: language!.STRING_SEARCH_COLLECTION),
           ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
+            icon: Icon(Icons.arrow_back,
+                color: Theme.of(context).iconTheme.color),
             iconSize: Theme.of(context).iconTheme.size!,
             splashRadius: Theme.of(context).iconTheme.size! - 8,
             onPressed: Navigator.of(context).pop,
@@ -248,70 +286,83 @@ class CollectionSearchState extends State<CollectionSearch> {
               splashRadius: Theme.of(context).iconTheme.size! - 8,
               tooltip: language!.STRING_OPTIONS,
               onPressed: this.textFieldController.text != ""
-               ? this.textFieldController.clear
-               : Navigator.of(context).pop,
+                  ? this.textFieldController.clear
+                  : Navigator.of(context).pop,
             ),
           ],
         ),
         body: ListView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           children: <Widget>[
-            this.search ? Container(
-              margin: EdgeInsets.only(top: 56),
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  Icon(Icons.search, size: 72, color: Theme.of(context).iconTheme.color),
-                  Divider(
-                    color: Colors.transparent,
-                    height: 8,
-                  ),
-                  Text(
-                    language!.STRING_LOCAL_SEARCH_WELCOME,
-                    style: Theme.of(context).textTheme.headline5,
-                  )
-                ],
-              ),
-            ) : Container(),
-            this.result ? Container(
-              margin: EdgeInsets.only(top: 56),
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  Icon(Icons.close, size: 72, color: Theme.of(context).iconTheme.color),
-                  Divider(
-                    color: Colors.transparent,
-                    height: 8,
-                  ),
-                  Text(
-                    language!.STRING_LOCAL_SEARCH_NO_RESULTS,
-                    style: Theme.of(context).textTheme.headline5,
-                  )
-                ],
-              ),
-            ) : Container(),
-            this.albums ? Container(): SubHeader(language!.STRING_ALBUM),
-            this.albums ? Container(): Container(
-              margin: EdgeInsets.only(left: 8.0),
-              height: this.tileHeightAlbum! + 16.0,
-              width: MediaQuery.of(context).size.width,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: this._albums,
-              ),
-            ),
-            this.artists ? Container(): SubHeader(language!.STRING_ARTIST),
-            this.artists ? Container(): Container(
-              margin: EdgeInsets.only(left: 8.0),
-              height: this.tileHeightArtist! + 16.0,
-              width: MediaQuery.of(context).size.width,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: this._artists,
-              ),
-            ),
-            this.tracks ? Container(): SubHeader(language!.STRING_TRACK),
-          ] + (this.tracks ? [Container()]: this._tracks),
+                this.search
+                    ? Container(
+                        margin: EdgeInsets.only(top: 56),
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          children: [
+                            Icon(Icons.search,
+                                size: 72,
+                                color: Theme.of(context).iconTheme.color),
+                            Divider(
+                              color: Colors.transparent,
+                              height: 8,
+                            ),
+                            Text(
+                              language!.STRING_LOCAL_SEARCH_WELCOME,
+                              style: Theme.of(context).textTheme.headline5,
+                            )
+                          ],
+                        ),
+                      )
+                    : Container(),
+                this.result
+                    ? Container(
+                        margin: EdgeInsets.only(top: 56),
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          children: [
+                            Icon(Icons.close,
+                                size: 72,
+                                color: Theme.of(context).iconTheme.color),
+                            Divider(
+                              color: Colors.transparent,
+                              height: 8,
+                            ),
+                            Text(
+                              language!.STRING_LOCAL_SEARCH_NO_RESULTS,
+                              style: Theme.of(context).textTheme.headline5,
+                            )
+                          ],
+                        ),
+                      )
+                    : Container(),
+                this.albums ? Container() : SubHeader(language!.STRING_ALBUM),
+                this.albums
+                    ? Container()
+                    : Container(
+                        margin: EdgeInsets.only(left: 8.0),
+                        height: this.tileHeightAlbum! + 16.0,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: this._albums,
+                        ),
+                      ),
+                this.artists ? Container() : SubHeader(language!.STRING_ARTIST),
+                this.artists
+                    ? Container()
+                    : Container(
+                        margin: EdgeInsets.only(left: 8.0),
+                        height: this.tileHeightArtist! + 16.0,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: this._artists,
+                        ),
+                      ),
+                this.tracks ? Container() : SubHeader(language!.STRING_TRACK),
+              ] +
+              (this.tracks ? [Container()] : this._tracks),
         ),
       ),
     );

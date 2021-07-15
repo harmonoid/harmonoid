@@ -7,7 +7,6 @@ import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:provider/provider.dart';
 
-
 const String VERIFICATION_STRING = 'harmonoid';
 
 enum ServerChangeState {
@@ -18,112 +17,115 @@ enum ServerChangeState {
   networkException,
 }
 
-
 extension ServerChangeStateExtension on ServerChangeState {
   Widget indicator({required BuildContext context}) {
     late Widget widget;
-    switch(this) {
-      case ServerChangeState.initial: {
-        widget = Container();
-      }
-      break;
-      case ServerChangeState.changing: {
-        widget = Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 8.0),
-              child: Icon(
-                Icons.info,
-                color: Theme.of(context).primaryColor,
-                size: 24.0,
+    switch (this) {
+      case ServerChangeState.initial:
+        {
+          widget = Container();
+        }
+        break;
+      case ServerChangeState.changing:
+        {
+          widget = Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: Icon(
+                  Icons.info,
+                  color: Theme.of(context).primaryColor,
+                  size: 24.0,
+                ),
               ),
-            ),
-            Text(
-              language!.STRING_SETTING_SERVER_CHANGE_CHANGING,
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 12.0,
+              Text(
+                language!.STRING_SETTING_SERVER_CHANGE_CHANGING,
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 12.0,
+                ),
+              )
+            ],
+          );
+        }
+        break;
+      case ServerChangeState.done:
+        {
+          widget = Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: Icon(
+                  Icons.check,
+                  color: Colors.greenAccent[700],
+                  size: 24.0,
+                ),
               ),
-            )
-          ],
-        );
-      }
-      break;
-      case ServerChangeState.done: {
-        widget = Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 8.0),
-              child: Icon(
-                Icons.check,
-                color: Colors.greenAccent[700],
-                size: 24.0,
+              Text(
+                language!.STRING_SETTING_SERVER_CHANGE_DONE,
+                style: TextStyle(
+                  color: Colors.greenAccent[700],
+                  fontSize: 12.0,
+                ),
+              )
+            ],
+          );
+        }
+        break;
+      case ServerChangeState.invalidException:
+        {
+          widget = Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: Icon(
+                  Icons.close,
+                  color: Colors.redAccent[400],
+                  size: 24.0,
+                ),
               ),
-            ),
-            Text(
-              language!.STRING_SETTING_SERVER_CHANGE_DONE,
-              style: TextStyle(
-                color: Colors.greenAccent[700],
-                fontSize: 12.0,
+              Text(
+                language!.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID,
+                style: TextStyle(
+                  color: Colors.redAccent[400],
+                  fontSize: 12.0,
+                ),
+              )
+            ],
+          );
+        }
+        break;
+      case ServerChangeState.networkException:
+        {
+          widget = Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: Icon(
+                  Icons.close,
+                  color: Colors.redAccent[400],
+                  size: 24.0,
+                ),
               ),
-            )
-          ],
-        );
-      }
-      break;
-      case ServerChangeState.invalidException: {
-        widget = Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 8.0),
-              child: Icon(
-                Icons.close,
-                color: Colors.redAccent[400],
-                size: 24.0,
-              ),
-            ),
-            Text(
-              language!.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID,
-              style: TextStyle(
-                color: Colors.redAccent[400],
-                fontSize: 12.0,
-              ),
-            )
-          ],
-        );
-      }
-      break;
-      case ServerChangeState.networkException: {
-        widget = Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 8.0),
-              child: Icon(
-                Icons.close,
-                color: Colors.redAccent[400],
-                size: 24.0,
-              ),
-            ),
-            Text(
-              language!.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK,
-              style: TextStyle(
-                color: Colors.redAccent[400],
-                fontSize: 12.0,
-              ),
-            )
-          ],
-        );
-      }
-      break;
+              Text(
+                language!.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK,
+                style: TextStyle(
+                  color: Colors.redAccent[400],
+                  fontSize: 12.0,
+                ),
+              )
+            ],
+          );
+        }
+        break;
     }
     return widget;
   }
 }
-
 
 class ServerSetting extends StatefulWidget {
   ServerSetting({Key? key}) : super(key: key);
@@ -132,10 +134,10 @@ class ServerSetting extends StatefulWidget {
   ServerState createState() => ServerState();
 }
 
-
 class ServerState extends State<ServerSetting> {
   ServerChangeState _serverChangeState = ServerChangeState.initial;
-  TextEditingController _textFieldController = new TextEditingController(text: configuration.homeAddress);
+  TextEditingController _textFieldController =
+      new TextEditingController(text: configuration.homeAddress);
 
   @override
   void initState() {
@@ -179,16 +181,20 @@ class ServerState extends State<ServerSetting> {
                           width: 1.0,
                         ),
                       ),
-                      labelText: language!.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL,
-                      hintText: language!.STRING_SETTING_SERVER_CHANGE_SERVER_HINT,
-                      labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                      hintStyle: TextStyle(color: Theme.of(context).primaryColor),
+                      labelText:
+                          language!.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL,
+                      hintText:
+                          language!.STRING_SETTING_SERVER_CHANGE_SERVER_HINT,
+                      labelStyle:
+                          TextStyle(color: Theme.of(context).primaryColor),
+                      hintStyle:
+                          TextStyle(color: Theme.of(context).primaryColor),
                     ),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 12.0),
-                    child: IconButton(
+                  child: IconButton(
                     icon: Icon(
                       Icons.check,
                       color: Theme.of(context).primaryColor,
@@ -196,27 +202,30 @@ class ServerState extends State<ServerSetting> {
                     splashRadius: 24.0,
                     onPressed: () {
                       if (this._textFieldController.text == '') {
-                        Provider.of<Server>(context, listen: false).update(homeAddress: '');
+                        Provider.of<Server>(context, listen: false)
+                            .update(homeAddress: '');
                         return;
-                      }
-                      else {
+                      } else {
                         this.setState(() {
                           this._serverChangeState = ServerChangeState.changing;
                         });
-                        http.get(Uri.parse(this._textFieldController.text))
-                        .then((http.Response response) {
+                        http
+                            .get(Uri.https(this._textFieldController.text, ""))
+                            .then((http.Response response) {
                           if (response.body == VERIFICATION_STRING) {
                             this._serverChangeState = ServerChangeState.done;
-                            Provider.of<Server>(context, listen: false).update(homeAddress: this._textFieldController.text);
-                          }
-                          else {
-                            this._serverChangeState = ServerChangeState.invalidException;
+                            Provider.of<Server>(context, listen: false).update(
+                                homeAddress: this._textFieldController.text);
+                          } else {
+                            this._serverChangeState =
+                                ServerChangeState.invalidException;
                           }
                           this.setState(() {});
-                        })
-                        .catchError((exception) {
-                          this._serverChangeState = ServerChangeState.networkException;
-                          Provider.of<Server>(context, listen: false).update(homeAddress: configuration.homeAddress);
+                        }).catchError((exception) {
+                          this._serverChangeState =
+                              ServerChangeState.networkException;
+                          Provider.of<Server>(context, listen: false)
+                              .update(homeAddress: configuration.homeAddress);
                           this.setState(() {});
                         });
                       }
