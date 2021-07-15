@@ -310,8 +310,8 @@ class LeadingCollectionTrackTile extends StatelessWidget {
       child: Consumer<Collection>(
         builder: (context, collection, _) => InkWell(
           onTap: () async => await Playback.play(
-            index: collection.tracks.length - 1,
-            tracks: collection.tracks,
+            index: 0,
+            tracks: [collection.lastTrack! ],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

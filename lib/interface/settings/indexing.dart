@@ -1,9 +1,8 @@
-import 'dart:io' show Platform, Directory;
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:filepicker_windows/filepicker_windows.dart' as fpw;
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
@@ -70,6 +69,8 @@ class IndexingState extends State<IndexingSetting> {
                                 width: MediaQuery.of(context).size.width - 32.0,
                                 child: LinearProgressIndicator(
                                   value: value,
+                                  valueColor: AlwaysStoppedAnimation(
+                                      Theme.of(context).accentColor),
                                 ),
                               ),
                             ],
@@ -99,15 +100,8 @@ class IndexingState extends State<IndexingSetting> {
       actions: [
         MaterialButton(
           onPressed: () async {
-            String? directoryPath;
-            if (Platform.isWindows) {
-              final dirpicker = fpw.DirectoryPicker();
-              final directory = dirpicker.getDirectory();
-              directoryPath = directory!.path;
-            } else {
-              directoryPath = await FilePicker.platform.getDirectoryPath();
-            }
-            //print(directoryPath);
+            String? directoryPath =
+                await FilePicker.platform.getDirectoryPath();
             if (directoryPath != null) {
               await Future.wait([
                 configuration.save(

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:harmonoid/core/configuration.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
@@ -446,6 +445,20 @@ class Collection extends ChangeNotifier {
         this.artists.removeAt(0);
       }
     }
+    for (Album album in this.albums) {
+      for (int index = 0; index < album.tracks.length; index++) {
+        for (int subIndex = 0;
+            subIndex < album.tracks.length - index - 1;
+            subIndex++) {
+          if ((album.tracks[subIndex].trackNumber ?? 1) >
+              (album.tracks[subIndex + 1].trackNumber ?? 1)) {
+            Track swapTrack = album.tracks[subIndex];
+            album.tracks[subIndex] = album.tracks[subIndex + 1];
+            album.tracks[subIndex + 1] = swapTrack;
+          }
+        }
+      }
+    }
     onCompleted?.call();
     this.notifyListeners();
   }
@@ -529,8 +542,11 @@ class Collection extends ChangeNotifier {
         this._artists[this._foundArtists.indexOf(artistName)].albums.add(album);
       }
     }
-    print(albums);
-    print(tracks);
+    if (this._tracks.isNotEmpty) {
+      this.lastAlbum = this._albums.last;
+      this.lastTrack = this._tracks.last;
+      this.lastArtist = this._artists.last;
+    }
     await this.sort(type: this.collectionSortType);
     await this.saveToCache();
     onProgress?.call(directory.length, directory.length, true);

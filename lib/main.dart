@@ -15,7 +15,7 @@ import 'package:harmonoid/utils/methods.dart';
 import 'package:harmonoid/constants/language.dart';
 
 const String TITLE = 'harmonoid';
-const String VERSION = '0.0.7';
+const String VERSION = '0.0.8';
 const String AUTHOR = 'alexmercerind';
 const String LICENSE = 'GPL-3.0';
 
