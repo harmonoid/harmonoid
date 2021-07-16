@@ -22,7 +22,7 @@ dependencies:
   http: ^0.13.0
   path: ^1.8.0
   url_launcher: ^6.0.3
-  implicitly_animated_reorderable_list: ^0.4.0-dev+4
+  implicitly_animated_reorderable_list: 0.4.0
   flag: ^5.0.0-nullsafety
   marquee: ^2.0.0
   auto_size_text: ^3.0.0-nullsafety.0
