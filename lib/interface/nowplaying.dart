@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:assets_audio_player/assets_audio_player.dart' as AudioPlayer;
@@ -73,49 +74,173 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (this._init) {
-      _streamSubscriptions[0] = audioPlayer.currentPosition.listen((duration) {
-        setState(() => this._position = duration);
+      if (Platform.isAndroid) {
+        _streamSubscriptions[0] =
+            audioPlayer.currentPosition.listen((duration) {
+          setState(() => this._position = duration);
+        });
+        this._streamSubscriptions[1] =
+            audioPlayer.current.listen((AudioPlayer.Playing? playing) {
+          if (playing == null) return;
+          this.setState(() {
+            this._track = Track.fromMap(playing.audio.audio.metas.extra);
+            this._durationSeconds = playing.audio.duration.inSeconds;
+            this._duration = this._getDurationString(this._durationSeconds);
+            this._playlist = <Widget>[];
+            this._playlistEnd = playing.playlist.audios.length * 72.0;
+            playing.playlist.audios
+                .asMap()
+                .forEach((int index, AudioPlayer.Audio audio) {
+              this._playlist.add(
+                    ListTile(
+                      leading: CircleAvatar(
+                        child: Text(
+                          '${audio.metas.extra?['trackNumber'] ?? 1}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundImage: audio.metas.extra == null
+                            ? null
+                            : FileImage(
+                                Track.fromMap(audio.metas.extra!)!.albumArt,
+                              ),
+                      ),
+                      title: Text(
+                        audio.metas.title ?? '',
+                        maxLines: 1,
+                        softWrap: true,
+                        overflow: TextOverflow.fade,
+                      ),
+                      subtitle: audio.metas.artist == null
+                          ? null
+                          : Text(
+                              audio.metas.artist ?? '',
+                              maxLines: 1,
+                              softWrap: true,
+                              overflow: TextOverflow.fade,
+                            ),
+                      trailing: this._track!.trackName == audio.metas.title
+                          ? Icon(
+                              Icons.music_note,
+                              color: Theme.of(context).accentColor,
+                            )
+                          : null,
+                      onTap: () {
+                        audioPlayer.playlistPlayAtIndex(index);
+                      },
+                    ),
+                  );
+            });
+            this._playlistList = Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: this._playlist,
+            );
+            this._animationCurved1 = Tween<double>(
+              begin: 0,
+              end: this._playlistEnd,
+            ).animate(CurvedAnimation(
+              curve: Curves.easeOutCubic,
+              reverseCurve: Curves.easeInCubic,
+              parent: this._animationController1,
+            ));
+          });
+        });
+        this._streamSubscriptions[2] = audioPlayer.isPlaying.listen(
+          (bool isPlaying) {
+            this.setState(() => this._isPlaying = isPlaying);
+            if (isPlaying)
+              this._playPauseController.reverse();
+            else
+              this._playPauseController.forward();
+          },
+        );
+        this._streamSubscriptions[2] = audioPlayer.loopMode.listen(
+          (AudioPlayer.LoopMode loopMode) {
+            this.setState(() {
+              this._loopMode = loopMode;
+            });
+          },
+        );
+        this.albumArtHeight = MediaQuery.of(context).size.height -
+            MediaQuery.of(context).padding.top -
+            MediaQuery.of(context).padding.bottom -
+            2 * 8.0 -
+            56.0 -
+            210.0;
+        if (this.albumArtHeight < 0.0) this.albumArtHeight = 0.0;
+        this._animationController = AnimationController(
+          vsync: this,
+          duration: animationDuration,
+          reverseDuration: animationDuration,
+        );
+        this._animationCurved =
+            Tween<double>(begin: 0, end: this.albumArtHeight)
+                .animate(CurvedAnimation(
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+          parent: this._animationController,
+        ));
+        if (this._track == null) {
+          this._animationController1 = AnimationController(
+            vsync: this,
+            duration: animationDuration,
+            reverseDuration: animationDuration,
+          );
+          this._animationCurved1 =
+              Tween<double>(begin: 0, end: 0).animate(CurvedAnimation(
+            curve: Curves.easeOutCubic,
+            reverseCurve: Curves.easeInCubic,
+            parent: this._animationController1,
+          ));
+        }
+        Timer(Duration(milliseconds: 100), () {
+          this._animationController.forward();
+          this._animationController1.reverse();
+        });
+      }
+    } else {
+      _streamSubscriptions[0] = vlcplayer.positionStream.listen((event) {
+        setState(() => this._position = event.position!);
       });
-      this._streamSubscriptions[1] =
-          audioPlayer.current.listen((AudioPlayer.Playing? playing) {
+      this._streamSubscriptions[1] = vlcplayer.currentStream.listen((playing) {
         if (playing == null) return;
         this.setState(() {
-          this._track = Track.fromMap(playing.audio.audio.metas.extra);
-          this._durationSeconds = playing.audio.duration.inSeconds;
-          this._duration = this._getDurationString(this._durationSeconds);
+          this._track = Track.fromMap(playing.media?.metas);
+          vlcplayer.positionStream.listen((event) {
+            this._durationSeconds = event.duration!.inSeconds;
+            this._duration = this._getDurationString(event.duration!.inSeconds);
+          });
           this._playlist = <Widget>[];
-          this._playlistEnd = playing.playlist.audios.length * 72.0;
-          playing.playlist.audios
-              .asMap()
-              .forEach((int index, AudioPlayer.Audio audio) {
+          this._playlistEnd = playing.medias.length * 72.0;
+          playing.medias.asMap().forEach((int index, media) {
             this._playlist.add(
                   ListTile(
                     leading: CircleAvatar(
                       child: Text(
-                        '${audio.metas.extra?['trackNumber'] ?? 1}',
+                        '${media.metas['trackNumber'] ?? 1}',
                         style: TextStyle(color: Colors.white),
                       ),
-                      backgroundImage: audio.metas.extra == null
+                      backgroundImage: media.metas["albumArtHigh"] == null
                           ? null
                           : FileImage(
-                              Track.fromMap(audio.metas.extra!)!.albumArt,
+                              Track.fromMap(media.metas)!.albumArt,
                             ),
                     ),
                     title: Text(
-                      audio.metas.title ?? '',
+                      media.metas["title"] ?? '',
                       maxLines: 1,
                       softWrap: true,
                       overflow: TextOverflow.fade,
                     ),
-                    subtitle: audio.metas.artist == null
+                    subtitle: media.metas["artist"] == null
                         ? null
                         : Text(
-                            audio.metas.artist ?? '',
+                            media.metas["artist"] ?? '',
                             maxLines: 1,
                             softWrap: true,
                             overflow: TextOverflow.fade,
                           ),
-                    trailing: this._track!.trackName == audio.metas.title
+                    trailing: this._track!.trackName == media.metas["title"]
                         ? Icon(
                             Icons.music_note,
                             color: Theme.of(context).accentColor,
@@ -142,22 +267,22 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
           ));
         });
       });
-      this._streamSubscriptions[2] = audioPlayer.isPlaying.listen(
-        (bool isPlaying) {
-          this.setState(() => this._isPlaying = isPlaying);
-          if (isPlaying)
+      this._streamSubscriptions[2] = vlcplayer.playbackStream.listen(
+        (isPlaying) {
+          this.setState(() => this._isPlaying = isPlaying.isPlaying);
+          if (isPlaying.isPlaying)
             this._playPauseController.reverse();
           else
             this._playPauseController.forward();
         },
       );
-      this._streamSubscriptions[2] = audioPlayer.loopMode.listen(
-        (AudioPlayer.LoopMode loopMode) {
-          this.setState(() {
-            this._loopMode = loopMode;
-          });
-        },
-      );
+      //this._streamSubscriptions[2] = vlcplayer.playbackStream.listen(
+      //  (loopMode) {
+      //    this.setState(() {
+      //      this._loopMode = loopMode.isLoo;
+      //    });
+      //  },
+      //);
       this.albumArtHeight = MediaQuery.of(context).size.height -
           MediaQuery.of(context).padding.top -
           MediaQuery.of(context).padding.bottom -
