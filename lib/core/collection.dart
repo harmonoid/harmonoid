@@ -305,15 +305,11 @@ class Collection extends ChangeNotifier {
     this._artists = <Artist>[];
     this._foundAlbums = <List<String>>[];
     this._foundArtists = <String>[];
-    print(this.cacheDirectory.path);
-    String cachepath = path.join(this.cacheDirectory.path, 'collection.JSON');
-    print(cachepath);
-    if (!await File(cachepath).exists()) {
-      print("Collection doesn't exist");
+    if (!await File(path.join(this.cacheDirectory.path, 'collection.JSON'))
+        .exists()) {
       await this.index();
       onProgress?.call(0, 0, true);
     } else {
-      print("Collection exists");
       Map<String, dynamic> collection = convert.jsonDecode(
           await File(path.join(this.cacheDirectory.path, 'collection.JSON'))
               .readAsString());
@@ -369,10 +365,6 @@ class Collection extends ChangeNotifier {
       onProgress?.call(collectionDirectoryContent.length,
           collectionDirectoryContent.length, true);
     }
-    //print(this.tracks);
-    print("Tracks: ");
-    print(this._tracks);
-    print(this._tracks.isNotEmpty);
     if (this._tracks.isNotEmpty) {
       this.lastAlbum = this._albums.last;
       this.lastTrack = this._tracks.last;

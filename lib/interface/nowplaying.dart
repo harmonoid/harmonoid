@@ -469,7 +469,11 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                   onPressed: this._track == null
                                       ? null
                                       : () {
-                                          audioPlayer.playOrPause();
+                                          if (Platform.isAndroid) {
+                                            audioPlayer.playOrPause();
+                                          } else {
+                                            vlcplayer.playOrPause();
+                                          }
                                           this.setState(() {});
                                         },
                                   child: AnimatedIcon(
