@@ -60,7 +60,6 @@ class Track extends MediaType {
 
   static Track? fromMap(Map<String, dynamic>? trackMap) {
     if (trackMap == null) return null;
-    print(trackMap['trackNumber']);
     int trackNumber;
     if (Platform.isWindows) {
       try {
@@ -71,15 +70,37 @@ class Track extends MediaType {
     } else {
       trackNumber = trackMap['trackNumber'];
     }
+    List trackArtistNames = [];
+    int? year;
+    if (trackMap['trackArtistNames'] != null) {
+      if (Platform.isWindows) {
+        if (trackMap["trackArtistNames"] is List) {
+          trackArtistNames = trackMap["trackArtistNames"];
+        } else {
+          trackArtistNames = trackMap["trackArtistNames"].split("/");
+        }
+      } else {
+        trackArtistNames = trackMap["trackArtistNames"];
+      }
+    } else {
+      trackArtistNames = <String>['Unknown Artist'];
+    }
+    if (Platform.isWindows) {
+      try {
+        year = int.parse(trackMap["year"]);
+      } catch (e) {
+        year = trackMap["year"];
+      }
+    } else {
+      year = trackMap["year"];
+    }
     return new Track(
       trackName: trackMap['trackName'] ?? 'Unknown Track',
       albumName: trackMap['albumName'] ?? 'Unknown Album',
       trackNumber: trackNumber,
-      year: trackMap['year'],
+      year: year,
       albumArtistName: trackMap['albumArtistName'] ?? 'Unknown Artist',
-      trackArtistNames:
-          ((trackMap['trackArtistNames'] ?? <String>['Unknown Artist']) as List)
-              .cast<String>(),
+      trackArtistNames: trackArtistNames.cast<String>(),
       filePath: trackMap['filePath'],
       albumArtHigh: trackMap['albumArtHigh'],
       albumArtMedium: trackMap['albumArtMedium'],

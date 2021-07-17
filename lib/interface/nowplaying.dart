@@ -197,127 +197,141 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
           this._animationController.forward();
           this._animationController1.reverse();
         });
-      }
-    } else {
-      _streamSubscriptions[0] = vlcplayer.positionStream.listen((event) {
-        setState(() => this._position = event.position!);
-      });
-      this._streamSubscriptions[1] = vlcplayer.currentStream.listen((playing) {
-        if (playing == null) return;
-        this.setState(() {
-          this._track = Track.fromMap(playing.media?.metas);
-          vlcplayer.positionStream.listen((event) {
+      } else {
+        _streamSubscriptions[0] = vlcplayer.positionStream.listen((event) {
+          setState(() {
+            vlcplayer.current.media!.parse(Duration(milliseconds: 100));
+            Map<String, dynamic> metas = vlcplayer.current.media!.metas;
+            metas["trackName"] = metas["title"];
+            metas["albumName"] = metas["album"];
+            metas["trackArtistNames"] = metas["artist"];
+            metas["year"] = metas["date"];
+            metas["type"] = "Track";
+            metas["albumArtistName"] = metas["artist"].split("/")[0];
+            this._track = Track.fromMap(metas);
+            this._playlist = <Widget>[];
+            this._playlistEnd = vlcplayer.current.medias.length * 72.0;
             this._durationSeconds = event.duration!.inSeconds;
             this._duration = this._getDurationString(event.duration!.inSeconds);
+            this._position = event.position!;
           });
-          this._playlist = <Widget>[];
-          this._playlistEnd = playing.medias.length * 72.0;
-          playing.medias.asMap().forEach((int index, media) {
-            this._playlist.add(
-                  ListTile(
-                    leading: CircleAvatar(
-                      child: Text(
-                        '${media.metas['trackNumber'] ?? 1}',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      backgroundImage: media.metas["albumArtHigh"] == null
-                          ? null
-                          : FileImage(
-                              Track.fromMap(media.metas)!.albumArt,
-                            ),
-                    ),
-                    title: Text(
-                      media.metas["title"] ?? '',
-                      maxLines: 1,
-                      softWrap: true,
-                      overflow: TextOverflow.fade,
-                    ),
-                    subtitle: media.metas["artist"] == null
-                        ? null
-                        : Text(
-                            media.metas["artist"] ?? '',
-                            maxLines: 1,
-                            softWrap: true,
-                            overflow: TextOverflow.fade,
-                          ),
-                    trailing: this._track!.trackName == media.metas["title"]
-                        ? Icon(
-                            Icons.music_note,
-                            color: Theme.of(context).accentColor,
-                          )
-                        : null,
-                    onTap: () {
-                      audioPlayer.playlistPlayAtIndex(index);
-                    },
-                  ),
-                );
-          });
-          this._playlistList = Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: this._playlist,
-          );
-          this._animationCurved1 = Tween<double>(
-            begin: 0,
-            end: this._playlistEnd,
-          ).animate(CurvedAnimation(
-            curve: Curves.easeOutCubic,
-            reverseCurve: Curves.easeInCubic,
-            parent: this._animationController1,
-          ));
         });
-      });
-      this._streamSubscriptions[2] = vlcplayer.playbackStream.listen(
-        (isPlaying) {
-          this.setState(() => this._isPlaying = isPlaying.isPlaying);
-          if (isPlaying.isPlaying)
-            this._playPauseController.reverse();
-          else
-            this._playPauseController.forward();
-        },
-      );
-      //this._streamSubscriptions[2] = vlcplayer.playbackStream.listen(
-      //  (loopMode) {
-      //    this.setState(() {
-      //      this._loopMode = loopMode.isLoo;
-      //    });
-      //  },
-      //);
-      this.albumArtHeight = MediaQuery.of(context).size.height -
-          MediaQuery.of(context).padding.top -
-          MediaQuery.of(context).padding.bottom -
-          2 * 8.0 -
-          56.0 -
-          210.0;
-      if (this.albumArtHeight < 0.0) this.albumArtHeight = 0.0;
-      this._animationController = AnimationController(
-        vsync: this,
-        duration: animationDuration,
-        reverseDuration: animationDuration,
-      );
-      this._animationCurved = Tween<double>(begin: 0, end: this.albumArtHeight)
-          .animate(CurvedAnimation(
-        curve: Curves.easeOutCubic,
-        reverseCurve: Curves.easeInCubic,
-        parent: this._animationController,
-      ));
-      if (this._track == null) {
-        this._animationController1 = AnimationController(
+
+        this._streamSubscriptions[1] = vlcplayer.currentStream.listen((event) {
+          print("Listening to currentStream");
+          this.setState(() {
+            this._track = Track.fromMap(event.media?.metas);
+            //print(this._track);
+            this._playlist = <Widget>[];
+            this._playlistEnd = vlcplayer.current.medias.length * 72.0;
+            event.medias.asMap().forEach((int index, media) {
+              this._playlist.add(
+                    ListTile(
+                      leading: CircleAvatar(
+                        child: Text(
+                          '${media.metas['trackNumber'] ?? 1}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundImage: media.metas["albumArtHigh"] == null
+                            ? null
+                            : FileImage(
+                                Track.fromMap(media.metas)!.albumArt,
+                              ),
+                      ),
+                      title: Text(
+                        media.metas["title"] ?? '',
+                        maxLines: 1,
+                        softWrap: true,
+                        overflow: TextOverflow.fade,
+                      ),
+                      subtitle: media.metas["artist"] == null
+                          ? null
+                          : Text(
+                              media.metas["artist"] ?? '',
+                              maxLines: 1,
+                              softWrap: true,
+                              overflow: TextOverflow.fade,
+                            ),
+                      trailing: this._track!.trackName == media.metas["title"]
+                          ? Icon(
+                              Icons.music_note,
+                              color: Theme.of(context).accentColor,
+                            )
+                          : null,
+                      onTap: () {
+                        audioPlayer.playlistPlayAtIndex(index);
+                      },
+                    ),
+                  );
+            });
+            this._playlistList = Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: this._playlist,
+            );
+            this._animationCurved1 = Tween<double>(
+              begin: 0,
+              end: this._playlistEnd,
+            ).animate(CurvedAnimation(
+              curve: Curves.easeOutCubic,
+              reverseCurve: Curves.easeInCubic,
+              parent: this._animationController1,
+            ));
+          });
+        });
+        this._streamSubscriptions[2] = vlcplayer.playbackStream.listen(
+          (isPlaying) {
+            this.setState(() => this._isPlaying = isPlaying.isPlaying);
+            if (isPlaying.isPlaying)
+              this._playPauseController.reverse();
+            else
+              this._playPauseController.forward();
+          },
+        );
+        //this._streamSubscriptions[2] = vlcplayer.playbackStream.listen(
+        //  (loopMode) {
+        //    this.setState(() {
+        //      this._loopMode = loopMode.isLoo;
+        //    });
+        //  },
+        //);
+        this.albumArtHeight = MediaQuery.of(context).size.height -
+            MediaQuery.of(context).padding.top -
+            MediaQuery.of(context).padding.bottom -
+            2 * 8.0 -
+            56.0 -
+            210.0;
+        if (this.albumArtHeight < 0.0) this.albumArtHeight = 0.0;
+        this._animationController = AnimationController(
           vsync: this,
           duration: animationDuration,
           reverseDuration: animationDuration,
         );
-        this._animationCurved1 =
-            Tween<double>(begin: 0, end: 0).animate(CurvedAnimation(
+        this._animationCurved =
+            Tween<double>(begin: 0, end: this.albumArtHeight)
+                .animate(CurvedAnimation(
           curve: Curves.easeOutCubic,
           reverseCurve: Curves.easeInCubic,
-          parent: this._animationController1,
+          parent: this._animationController,
         ));
+        if (this._track == null) {
+          this._animationController1 = AnimationController(
+            vsync: this,
+            duration: animationDuration,
+            reverseDuration: animationDuration,
+          );
+          this._animationCurved1 =
+              Tween<double>(begin: 0, end: 0).animate(CurvedAnimation(
+            curve: Curves.easeOutCubic,
+            reverseCurve: Curves.easeInCubic,
+            parent: this._animationController1,
+          ));
+        }
+        Timer(Duration(milliseconds: 100), () {
+          this._animationController.forward();
+          this._animationController1.reverse();
+        });
       }
-      Timer(Duration(milliseconds: 100), () {
-        this._animationController.forward();
-        this._animationController1.reverse();
-      });
     }
     this._init = false;
   }
@@ -331,12 +345,22 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
               onPressed: this._track == null
                   ? null
                   : () {
-                      if (this._isPlaying) {
-                        this._playPauseController.forward();
-                        audioPlayer.pause();
+                      if (Platform.isAndroid) {
+                        if (this._isPlaying) {
+                          this._playPauseController.forward();
+                          audioPlayer.pause();
+                        } else {
+                          this._playPauseController.reverse();
+                          audioPlayer.play();
+                        }
                       } else {
-                        this._playPauseController.reverse();
-                        audioPlayer.play();
+                        if (this._isPlaying) {
+                          this._playPauseController.forward();
+                          vlcplayer.pause();
+                        } else {
+                          this._playPauseController.reverse();
+                          vlcplayer.play();
+                        }
                       }
                     },
               child: AnimatedIcon(
@@ -562,9 +586,15 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                     ),
                                   ),
                                   onChangeEnd: (value) {
-                                    audioPlayer.seek(Duration(
-                                      seconds: value.toInt(),
-                                    ));
+                                    if (Platform.isAndroid) {
+                                      audioPlayer.seek(Duration(
+                                        seconds: value.toInt(),
+                                      ));
+                                    } else {
+                                      vlcplayer.seek(Duration(
+                                        seconds: value.toInt(),
+                                      ));
+                                    }
                                   },
                                 ),
                                 data: SliderThemeData(

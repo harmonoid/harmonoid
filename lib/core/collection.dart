@@ -494,9 +494,15 @@ class Collection extends ChangeNotifier {
             parse: true,
             timeout: Duration(seconds: 10),
           );
-          Map<String, String> metas = media.metas;
-          metas["trackName"] = metas["title"]!;
-          metas["albumName"] = metas["album"]!;
+          Map<String, dynamic> metas = media.metas;
+          metas["trackName"] = metas["title"];
+          metas["albumName"] = metas["album"];
+          metas["filePath"] = object.path;
+          metas["trackArtistNames"] = metas["artist"];
+          metas["year"] = metas["date"];
+          metas["type"] = "Track";
+          metas["albumArtistName"] = metas["artist"].split("/")[0];
+          print(metas);
           track = Track.fromMap(metas)!;
         } else {
           await retriever.setFile(object as File);
