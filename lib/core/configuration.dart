@@ -67,6 +67,15 @@ class Configuration extends ConfigurationKeys {
     await configuration.read();
     if (Platform.isWindows) {
       configuration.cacheDirectory = new Directory('C:\\Harmonoid');
+    } else if (Platform.isLinux) {
+      var result = await Process.run('whoami', []);
+      String currentUser = result.stdout;
+      if (currentUser == "root") {
+        configuration.cacheDirectory = new Directory("/root/Harmonoid/");
+      } else {
+        configuration.cacheDirectory =
+            new Directory("/home/" + currentUser + "/Harmonoid/");
+      }
     } else {
       configuration.cacheDirectory = new Directory(
           '/storage/emulated/0/Android/data/com.alexmercerind.harmonoid/files');

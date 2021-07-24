@@ -372,6 +372,11 @@ class Collection extends ChangeNotifier {
     }
     await this.playlistsGetFromCache();
     await this.sort(type: this.collectionSortType);
+
+    this.tracks = this._tracks;
+    this.albums = this._albums;
+    this.artists = this._artists;
+
     this.notifyListeners();
   }
 
@@ -480,7 +485,7 @@ class Collection extends ChangeNotifier {
         //try {
         Track track;
         MetadataRetriever retriever = new MetadataRetriever();
-        if (Platform.isWindows) {
+        if (Platform.isWindows || Platform.isLinux) {
           VLC.Media media = VLC.Media.file(
             object as File,
             parse: true,

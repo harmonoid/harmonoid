@@ -110,7 +110,7 @@ class Download {
   }
 
   Future<void> _showDownloadNotification({required DownloadTask task}) async {
-    if (Platform.isWindows) {
+    if (Platform.isWindows || Platform.isLinux) {
       // TODO: Support notifications on Desktop
       //Toast toast = Toast(
       //  type: ToastType.text02,

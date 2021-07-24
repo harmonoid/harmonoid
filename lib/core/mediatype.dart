@@ -61,7 +61,7 @@ class Track extends MediaType {
   static Track? fromMap(Map<String, dynamic>? trackMap) {
     if (trackMap == null) return null;
     int trackNumber;
-    if (Platform.isWindows) {
+    if (Platform.isWindows || Platform.isLinux) {
       try {
         trackNumber = int.parse(trackMap['trackNumber']);
       } catch (e) {
@@ -73,7 +73,7 @@ class Track extends MediaType {
     List trackArtistNames = [];
     int? year;
     if (trackMap['trackArtistNames'] != null) {
-      if (Platform.isWindows) {
+      if (Platform.isWindows || Platform.isLinux) {
         if (trackMap["trackArtistNames"] is List) {
           trackArtistNames = trackMap["trackArtistNames"];
         } else {
@@ -85,7 +85,7 @@ class Track extends MediaType {
     } else {
       trackArtistNames = <String>['Unknown Artist'];
     }
-    if (Platform.isWindows) {
+    if (Platform.isWindows || Platform.isLinux) {
       try {
         year = int.parse(trackMap["year"]);
       } catch (e) {

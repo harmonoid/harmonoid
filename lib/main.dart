@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,32 +30,32 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   DartVLC.initialize();
-  //try {
-  await Methods.askStoragePermission();
-  await Configuration.init();
-  await Collection.init(
-    collectionDirectory: configuration.collectionDirectory!,
-    cacheDirectory: configuration.cacheDirectory!,
-    collectionSortType: configuration.collectionSortType!,
-  );
-  await Discover.init(
-    homeAddress: configuration.homeAddress!,
-  );
-  await Language.init(
-    languageRegion: configuration.languageRegion!,
-  );
-  await FileIntent.init();
-  await Download.init();
-  runApp(
-    new Harmonoid(),
-  );
-  //} catch (exception) {
-  //  runApp(
-  //    new ExceptionMaterialApp(
-  //      exception: exception,
-  //    ),
-  //  );
-  //}
+  try {
+    await Methods.askStoragePermission();
+    await Configuration.init();
+    await Collection.init(
+      collectionDirectory: configuration.collectionDirectory!,
+      cacheDirectory: configuration.cacheDirectory!,
+      collectionSortType: configuration.collectionSortType!,
+    );
+    await Discover.init(
+      homeAddress: configuration.homeAddress!,
+    );
+    await Language.init(
+      languageRegion: configuration.languageRegion!,
+    );
+    await FileIntent.init();
+    await Download.init();
+    runApp(
+      new Harmonoid(),
+    );
+  } catch (exception) {
+    runApp(
+      new ExceptionMaterialApp(
+        exception: exception,
+      ),
+    );
+  }
   // Check if it's in desktop
   // This should be changed in the future when Flutter Desktop get stable
   if (Methods.isDesktop) {
