@@ -232,7 +232,7 @@ class CollectionAlbum extends StatelessWidget {
   Widget build(BuildContext context) {
     final double wh;
     if (Platform.isWindows || Platform.isLinux) {
-      wh = MediaQuery.of(context).size.width / 3;
+      wh = MediaQuery.of(context).size.width / 5;
     } else {
       wh = MediaQuery.of(context).size.width;
     }
