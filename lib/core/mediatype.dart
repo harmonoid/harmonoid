@@ -8,7 +8,6 @@ abstract class MediaType {
   Map<String, dynamic> toMap();
 }
 
-
 class Track extends MediaType {
   String? trackName;
   String? albumName;
@@ -24,12 +23,19 @@ class Track extends MediaType {
   String? trackId;
   String? albumId;
   File get albumArt {
-    File albumArtFile = File(path.join(configuration.cacheDirectory!.path, 'albumArts', '${this.albumArtistName}_${this.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
+    File albumArtFile = File(path.join(
+        configuration.cacheDirectory!.path,
+        'albumArts',
+        '${this.albumArtistName}_${this.albumName}'
+                .replaceAll(new RegExp(r'[^\s\w]'), ' ') +
+            '.PNG'));
     if (albumArtFile.existsSync())
       return albumArtFile;
     else
-      return new File(path.join(configuration.cacheDirectory!.path, 'albumArts', 'defaultAlbumArt' + '.PNG'));
+      return new File(path.join(configuration.cacheDirectory!.path, 'albumArts',
+          'defaultAlbumArt' + '.PNG'));
   }
+
   String? type = 'Track';
 
   @override
@@ -41,7 +47,7 @@ class Track extends MediaType {
       'year': this.year,
       'albumArtistName': this.albumArtistName,
       'trackArtistNames': this.trackArtistNames ?? <dynamic>['Unknown Artist'],
-      'filePath' : this.filePath,
+      'filePath': this.filePath,
       'albumArtHigh': this.albumArtHigh,
       'albumArtMedium': this.albumArtHigh,
       'albumArtLow': this.albumArtHigh,
@@ -51,16 +57,50 @@ class Track extends MediaType {
       'type': this.type,
     };
   }
-  
+
   static Track? fromMap(Map<String, dynamic>? trackMap) {
     if (trackMap == null) return null;
+    int trackNumber;
+    if (Platform.isWindows || Platform.isLinux) {
+      try {
+        trackNumber = int.parse(trackMap['trackNumber']);
+      } catch (e) {
+        trackNumber = 1;
+      }
+    } else {
+      trackNumber = trackMap['trackNumber'];
+    }
+    List trackArtistNames = [];
+    int? year;
+    if (trackMap['trackArtistNames'] != null) {
+      if (Platform.isWindows || Platform.isLinux) {
+        if (trackMap["trackArtistNames"] is List) {
+          trackArtistNames = trackMap["trackArtistNames"];
+        } else {
+          trackArtistNames = trackMap["trackArtistNames"].split("/");
+        }
+      } else {
+        trackArtistNames = trackMap["trackArtistNames"];
+      }
+    } else {
+      trackArtistNames = <String>['Unknown Artist'];
+    }
+    if (Platform.isWindows || Platform.isLinux) {
+      try {
+        year = int.parse(trackMap["year"]);
+      } catch (e) {
+        year = trackMap["year"];
+      }
+    } else {
+      year = trackMap["year"];
+    }
     return new Track(
       trackName: trackMap['trackName'] ?? 'Unknown Track',
       albumName: trackMap['albumName'] ?? 'Unknown Album',
-      trackNumber: trackMap['trackNumber'],
-      year: trackMap['year'],
+      trackNumber: trackNumber,
+      year: year,
       albumArtistName: trackMap['albumArtistName'] ?? 'Unknown Artist',
-      trackArtistNames: ((trackMap['trackArtistNames'] ?? <String>['Unknown Artist']) as List).cast<String>(),
+      trackArtistNames: trackArtistNames.cast<String>(),
       filePath: trackMap['filePath'],
       albumArtHigh: trackMap['albumArtHigh'],
       albumArtMedium: trackMap['albumArtMedium'],
@@ -71,9 +111,21 @@ class Track extends MediaType {
     );
   }
 
-  Track({this.trackName, this.albumName, this.trackNumber, this.year, this.albumArtistName, this.trackArtistNames, this.filePath, this.albumArtHigh, this.albumArtMedium, this.albumArtLow, this.trackDuration, this.trackId, this.albumId});
+  Track(
+      {this.trackName,
+      this.albumName,
+      this.trackNumber,
+      this.year,
+      this.albumArtistName,
+      this.trackArtistNames,
+      this.filePath,
+      this.albumArtHigh,
+      this.albumArtMedium,
+      this.albumArtLow,
+      this.trackDuration,
+      this.trackId,
+      this.albumId});
 }
-
 
 class Album extends MediaType {
   String? albumName;
@@ -85,17 +137,24 @@ class Album extends MediaType {
   String? albumArtLow;
   String? albumId;
   File get albumArt {
-    File albumArtFile = File(path.join(configuration.cacheDirectory!.path, 'albumArts', '${this.albumArtistName}_${this.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG'));
+    File albumArtFile = File(path.join(
+        configuration.cacheDirectory!.path,
+        'albumArts',
+        '${this.albumArtistName}_${this.albumName}'
+                .replaceAll(new RegExp(r'[^\s\w]'), ' ') +
+            '.PNG'));
     if (albumArtFile.existsSync())
       return albumArtFile;
     else
-      return new File(path.join(configuration.cacheDirectory!.path, 'albumArts', 'defaultAlbumArt' + '.PNG'));
+      return new File(path.join(configuration.cacheDirectory!.path, 'albumArts',
+          'defaultAlbumArt' + '.PNG'));
   }
+
   String? type = 'Album';
 
   @override
   Map<String, dynamic> toMap() {
-    List<dynamic> tracks = <dynamic>[];    
+    List<dynamic> tracks = <dynamic>[];
     for (Track track in this.tracks) {
       tracks.add(track.toMap());
     }
@@ -114,19 +173,24 @@ class Album extends MediaType {
 
   static Album fromMap(Map<String, dynamic> albumMap) {
     return new Album(
-      albumName: albumMap['albumName'] ?? 'Unknown Album',
-      year: albumMap['year'],
-      albumArtistName: albumMap['albumArtistName'] ?? 'Unknown Artist',
-      albumArtHigh: albumMap['albumArtHigh'],
-      albumArtMedium: albumMap['albumArtMedium'],
-      albumArtLow: albumMap['albumArtLow'],
-      albumId: albumMap['albumId']
-    );
+        albumName: albumMap['albumName'] ?? 'Unknown Album',
+        year: albumMap['year'],
+        albumArtistName: albumMap['albumArtistName'] ?? 'Unknown Artist',
+        albumArtHigh: albumMap['albumArtHigh'],
+        albumArtMedium: albumMap['albumArtMedium'],
+        albumArtLow: albumMap['albumArtLow'],
+        albumId: albumMap['albumId']);
   }
 
-  Album({this.albumName, this.year, this.albumArtistName, this.albumArtHigh, this.albumArtMedium, this.albumArtLow, this.albumId});
+  Album(
+      {this.albumName,
+      this.year,
+      this.albumArtistName,
+      this.albumArtHigh,
+      this.albumArtMedium,
+      this.albumArtLow,
+      this.albumId});
 }
-
 
 class Artist extends MediaType {
   String? artistName;
@@ -136,11 +200,11 @@ class Artist extends MediaType {
 
   @override
   Map<String, dynamic> toMap() {
-    List<dynamic> tracks = <dynamic>[];    
+    List<dynamic> tracks = <dynamic>[];
     for (Track track in this.tracks) {
       tracks.add(track.toMap());
     }
-    List<dynamic> albums = <dynamic>[];    
+    List<dynamic> albums = <dynamic>[];
     for (Album album in this.albums) {
       albums.add(album.toMap());
     }
@@ -160,7 +224,6 @@ class Artist extends MediaType {
 
   Artist({this.artistName});
 }
-
 
 class Playlist extends MediaType {
   String? playlistName;
@@ -185,10 +248,8 @@ class Playlist extends MediaType {
   Playlist({this.playlistName, this.playlistId});
 }
 
-
 List<MediaType> mediaTypes = <MediaType>[
   new Album(),
   new Track(),
   new Artist(),
 ];
-

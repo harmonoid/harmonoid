@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -13,19 +16,20 @@ import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/utils/methods.dart';
 import 'package:harmonoid/constants/language.dart';
 
-const String TITLE   = 'harmonoid';
-const String VERSION = '0.0.7';
-const String AUTHOR  = 'alexmercerind';
+const String TITLE = 'harmonoid';
+const String VERSION = '0.0.8';
+const String AUTHOR = 'alexmercerind';
 const String LICENSE = 'GPL-3.0';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  DartVLC.initialize();
   try {
     await Methods.askStoragePermission();
     await Configuration.init();
@@ -45,16 +49,15 @@ void main() async {
     runApp(
       new Harmonoid(),
     );
-  }
-  catch(exception) {
+  } catch (exception) {
     runApp(
       new ExceptionMaterialApp(
         exception: exception,
       ),
     );
   }
-    // Check if it's in desktop
-    // This should be changed in the future when Flutter Desktop get stable
+  // Check if it's in desktop
+  // This should be changed in the future when Flutter Desktop get stable
   if (Methods.isDesktop) {
     doWhenWindowReady(() {
       final win = appWindow;

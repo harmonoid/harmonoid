@@ -85,6 +85,14 @@ class LanguageRegion {
     translator: 'Max Haureus',
     github: '',
   );
+  static const frFr = LanguageRegion(
+    code: 'fr',
+    countryCode: 'FR',
+    name: 'Français',
+    country: 'France',
+    translator: 'Gaetan Jonathan',
+    github: 'https://github.com/gaetan1903',
+  );
 
   static const values = <LanguageRegion?>[
     enUs,
@@ -95,6 +103,7 @@ class LanguageRegion {
     deDe,
     nlNl,
     svSe,
+    frFr
   ];
 
   int get index => values.indexOf(this);
@@ -314,6 +323,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Трек не может быть сохранён';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Пожалуйста, проверьте интернет-соединение и попробуйте снова.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'У всех бывают плохие дни';
+        // Not translated yet
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Подождите';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Этот трек уже скачивается.';
@@ -419,6 +429,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Другие настройки';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Включить механики iOS';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Задать платформу TargetPlatform.iOS';
+        // Not translated yet
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
         this.STRING_LYRICS                                          = 'Lyrics';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
@@ -471,7 +482,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Pesmi ni bilo mogoče shraniti';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Priporočamo, da preverite internetno povezavo in poskusite znova kasneje.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Vsi imamo slabe dni... :-(';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Prišlo je do napake pri prenašanju te pesmi. To po večini pomeni, da moraš preveriti strežnik, ga posodobiti ali znova zagnati. Ta napaka ni povezana z to aplikacijo.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Počakaj';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Ta pesem se že prenaša.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Pesem je že shranjena.';
@@ -577,12 +588,12 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Ostale nastavitve aplikacije';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Vključi iOS uporabniški vmesnik';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Nastavi platformo na TargetPlatform.iOS';
-        this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
-        this.STRING_LYRICS                                          = 'Lyrics';
-        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
-        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
-        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
-        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_SELECTED_DIRECTORY                              = 'Izbrana mapa:';
+        this.STRING_LYRICS                                          = 'Besedilo pesmi';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Besedilo pesmi v obvestilu';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Pokaži besedilo pesmi v obvestilu.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Pridobivanje besedila pesmi...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Besedilo pesmi ni najdeno.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -629,6 +640,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'A música não pode ser baixada';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Nós recomendamos que você verifique sua conexão com a internet & tente novamente em alguns minutos.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Todos nós temos dias ruins';
+        // Not translated yet
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Aguarde';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Essa música já está sendo baixada.';
@@ -734,6 +746,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Outras configurações do aplicativo';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Ativar mecânicas do iOS';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Mudar plataforma para TargetPlatform.iOS';
+        // Not translated yet
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
         this.STRING_LYRICS                                          = 'Lyrics';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
@@ -1363,11 +1376,169 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Aktivera iOS mekanik';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Ange plattform till TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Vald katalog:';
+        // Not translated yet
         this.STRING_LYRICS                                          = 'Lyrics';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+      }
+      break;
+      case LanguageRegion.frFr: {
+        this.STRING_INTERNET_ERROR                                  = 'Vérifier votre connexion Internet.';
+        this.STRING_SEARCH_HEADER                                   = 'Rechercher musique';
+        this.STRING_SEARCH_MODE_SUBHEADER                           = 'qu\'est-ce que vous cherchez?';
+        this.STRING_COLLECTION                                      = 'Collection';
+        this.STRING_NOW_PLAYING                                     = 'Lecture en cours';
+        this.STRING_SETTING                                         = 'Paramètres';
+        this.STRING_OK                                              = 'OK';
+        this.STRING_YES                                             = 'OUI';
+        this.STRING_NO                                              = 'NON';
+        this.STRING_ALBUM                                           = 'Albums';
+        this.STRING_TRACK                                           = 'Pistes';
+        this.STRING_TOP_TRACKS                                      = 'Meilleurs Pistes';
+        this.STRING_ARTIST                                          = 'Artistes';
+        this.STRING_SAVED                                           = 'Enregistré';
+        this.STRING_THEME_MODE_LIGHT                                = 'Clair';
+        this.STRING_THEME_MODE_DARK                                 = 'Sombre';
+        this.STRING_OPTIONS                                         = 'Options';
+        this.STRING_FOLLOWERS                                       = 'Abonnés';
+        this.STRING_PLAYS                                           = 'Jouer';
+        this.STRING_EXPORT_TRACK                                    = 'Exporter la piste';
+        this.STRING_DELETE_TRACK                                    = 'Supprimer la piste';
+        this.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Rechercher à partir de vos albums préférés';
+        this.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Rechercher à partir de vos pistes préférés';
+        this.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Rechercher à partir de vos artistes préférés';
+        this.STRING_SEARCH_HISTORY_SUBHEADER                        = 'Vos recherches récentes';
+        this.STRING_SEARCH_RESULT_LOADER_LABEL                      = 'Obtention de votre musique ...';
+        this.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Album le plus proche du résultat';
+        this.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK               = 'Piste le plus proche du résultat';
+        this.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST              = 'Artiste le plus proche du résultat';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'ALBUM enregistré';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'PISTE enregistré';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'ARTIST enregistré';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM          = 'AFFICHER ALBUM';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK          = 'AFFICHER PISTE';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST         = 'AFFICHER ARTISTE';
+        this.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'Plus d\'albums du résultat';
+        this.STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'Plus de piste du résultat';
+        this.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'Plus d\'artistes similaires';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE                  = 'Vous ne pouvez pas revenir en arrière';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE               = 'Une ou plusieurs pistes sont enregistrées hors ligne. Veuillez attendre que toutes les pistes soient enregistrées.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'La piste n\'a pas pu être enregistrée';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Il est fortement recommandé de vérifier votre connexion Internet et de réessayer dans quelques instants.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Nous avons tous de mauvais jours';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = "Une exception est rencontrée lors de l'enregistrement de cette piste. Cela signifie généralement que vous devez vérifier et mettre à jour votre serveur. Cette erreur n'a rien à voir avec cette application.";
+        this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Attendez';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Cette piste est déjà en cours de téléchargement.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Cette piste est déjà enregistrée';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Voulez-vous télécharger à nouveau cette piste?';
+        this.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Obtention des pistes ...';
+        this.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Voici les morceaux de cet album';
+        this.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Quelques aperçus de l\'album';
+        this.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Recherchez et enregistrez de la musique pour la voir ici.\nActualisez-la pour voir de nouvelles choses.';
+        this.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Dernier album';
+        this.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Plus d\'album';
+        this.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Dernier piste';
+        this.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Plus de pistes';
+        this.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Dernier artiste';
+        this.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Plus d\'artistes';
+        this.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Pistes de l\'album';
+        this.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Quelques aperçus de l\'album';
+        this.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Êtes-vous sûr?';
+        this.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'Voulez-vous supprimer cet album enregistré sur votre appareil?';
+        this.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Êtes-vous sûr?';
+        this.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Voulez-vous supprimer cette piste enregistrée sur votre appareil?';
+        this.STRING_NOW_PLAYING_NEXT_TRACK                          = 'Suivant';
+        this.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'Précedent';
+        this.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Rien n\'est joué';
+        this.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Lire depuis votre collection';
+        this.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = "We're all set...";
+        this.STRING_SETTING_GITHUB                                  = 'GITHUB';
+        this.STRING_SETTING_STAR_GITHUB                             = 'STAR THE PROJECT';
+        this.STRING_SETTING_STARGAZERS_TITLE                        = 'Project Stargazers';
+        this.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Merci beaucoup pour votre soutien';
+        this.STRING_SETTING_LANGUAGE_TITLE                          = 'Langues';
+        this.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Changer la langue de l\'application';
+        this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Redémarrage de l\'application requis';
+        this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Voulez-vous redémarrer l\'application maintenant?';
+        this.STRING_ABOUT_TITLE                                     = 'À propos';
+        this.STRING_ABOUT_SUBTITLE                                  = 'Informations sur l\'application et ses développeurs';
+        this.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Serveur';
+        this.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = "Modifier l'endroit où l'application demande son contenu";
+        this.STRING_SETTING_SERVER_CHANGE_SERVER_HINT               = 'Entrer un\'URL de serveur';
+        this.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL              = 'URL du serveur';
+        this.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID             = "Ce n'est pas une URL de serveur valide pour l'application.";
+        this.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'S\'il vous plait, vérifiez votre connexion internet.';
+        this.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Le serveur a bien été modifié.';
+        this.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Changement de serveur pour l\'application ...';
+        this.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Fournisseurs de traduction';
+        this.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Merci beaucoup pour votre soutien à l\'application.';
+        this.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Accent';
+        this.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = "Changer la coloration d'accent de l'application";
+        this.STRING_SETTING_THEME_TITLE                             = 'Theme';
+        this.STRING_SETTING_THEME_SUBTITLE                          = 'Changez l\'application en mode clair ou sombre';
+        this.STRING_NO_DOWNLOAD_UPDATE                              = 'Votre application est déjà mise à jour';
+        this.STRING_DOWNLOAD_UPDATE                                 = 'TÉLÉCHARGER LA MISE À JOUR';
+        this.STRING_SETTING_APP_VERSION_TITLE                       = 'Version';
+        this.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Informations sur la version actuelle de l\'application';
+        this.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Version instalée';
+        this.STRING_SETTING_APP_VERSION_LATEST                      = 'dernière version';
+        this.STRING_MENU                                            = 'Menu';
+        this.STRING_SEARCH_COLLECTION                               = 'Chercher collection';
+        this.STRING_SWITCH_THEME                                    = 'Changer de theme';
+        this.STRING_DISCOVER                                        = 'Discover';
+        this.STRING_PLAY                                            = 'Lire';
+        this.STRING_PAUSE                                           = 'Pause';
+        this.STRING_DELETE                                          = 'Supprimer';
+        this.STRING_SHARE                                           = 'Partager';
+        this.STRING_ADD_TO_PLAYLIST                                 = 'Ajouter au Playlist';
+        this.STRING_SAVE_TO_DOWNLOADS                               = 'Enregistrer dans les téléchargements';
+        this.STRING_LOCAL_SEARCH_WELCOME                            = 'Entrez quelque chose à rechercher dans votre collection';
+        this.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Rien de tel n\'a pu être trouvé dans votre collection';
+        this.STRING_PLAYLIST                                        = 'Playlist';
+        this.STRING_PLAYLISTS                                       = 'Playlists';
+        this.STRING_PLAYLISTS_SUBHEADER                             = 'Votre playlists';
+        this.STRING_PLAYLISTS_CREATE                                = 'Créer un nouveau playlist';
+        this.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Nom du Playlist';
+        this.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Nom pour votre nouveau playlist';
+        this.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Êtes-vous sûr?';
+        this.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Voulez-vous supprimer cette playlist?';
+        this.STRING_CANCEL                                          = 'ANNULER';
+        this.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Ajouter au playlist';
+        this.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Sélectionnez une playlist pour ajouter cette piste';
+        this.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Voici les morceaux de cette playlist';
+        this.STRING_TRANSFERS                                       = 'Transfers';
+        this.STRING_THEME_MODE_SYSTEM                               = 'Suivre le thème du système';
+        this.STRING_SETTING_INDEXING_TITLE                          = 'Indexage';
+        this.STRING_SETTING_INDEXING_SUBTITLE                       = 'Réindexez votre collection de musique';
+        this.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'NUMBER_STRING pistes indexées sur TOTAL_STRING ...';
+        this.STRING_SETTING_INDEXING_DONE                           = 'Indexée';
+        this.STRING_SETTING_INDEXING_WARNING                        = 'N\'interrompez pas le processus.';
+        this.STRING_REFRESH                                         = 'ACTUALISER';
+        this.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Vos recherches récentes s\'afficheront ici';
+        this.STRING_NO_INTERNET_TITLE                               = 'Pas d\'internet';
+        this.STRING_NO_INTERNET_SUBTITLE                            = 'Vérifiez votre connexion.';
+        this.STRING_NO_COLLECTION_TITLE                             = 'Collection vide';
+        this.STRING_NO_COLLECTION_SUBTITLE                          = 'Aucune musique trouvée.\nChangez où chercher la musique dans les paramètres.';
+        this.STRING_DOWNLOAD_COMPLETED                              = 'Téléchargement terminé.';
+        this.STRING_DOWNLOAD_FAILED                                 = 'Échec du téléchargement.';
+        this.STRING_DISCORD                                         = 'DISCORD SERVEUR';
+        this.STRING_EXIT_TITLE                                      = 'Quitter';
+        this.STRING_EXIT_SUBTITLE                                   = 'Voulez-vous quitter Harmonoid?';
+        this.STRING_A_TO_Z                                          = 'A à Z';
+        this.STRING_DATE_ADDED                                      = 'Date ajouté';
+        this.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatique accent';
+        this.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Miscellaneous';
+        this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Autres paramètres de l\'application';
+        this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Activer la mécanique iOS';
+        this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Définir la plate-forme sur TargetPlatform.iOS';
+        this.STRING_SELECTED_DIRECTORY                              = 'Répertoire sélectionné:';
+        this.STRING_LYRICS                                          = 'Paroles';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification de Paroles';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Afficher les paroles dans une notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Récupération des paroles ...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Paroles non trouvées.';
       }
       break;
     }

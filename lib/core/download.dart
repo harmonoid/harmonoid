@@ -5,15 +5,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:harmonoid/constants/language.dart';
 
-
 late Download download;
-
 
 enum DownloadExceptionType {
   connection,
   statusCode,
 }
-
 
 class DownloadException {
   final int? statusCode;
@@ -22,7 +19,6 @@ class DownloadException {
 
   DownloadException({this.statusCode, this.message, this.type});
 }
-
 
 class DownloadTask {
   final Uri fileUri;
@@ -41,7 +37,15 @@ class DownloadTask {
   bool isSuccess = true;
   late http.StreamedResponse _responseStream;
 
-  DownloadTask({required this.fileUri, required this.saveLocation, this.downloadId, this.fileSize, this.extras, this.onProgress, this.onCompleted, this.onException});
+  DownloadTask(
+      {required this.fileUri,
+      required this.saveLocation,
+      this.downloadId,
+      this.fileSize,
+      this.extras,
+      this.onProgress,
+      this.onCompleted,
+      this.onException});
 
   Stream<DownloadTask> start() async* {
     http.Client httpClient = new http.Client();
@@ -53,16 +57,17 @@ class DownloadTask {
       this.fileSize = this._responseStream.contentLength;
       await for (List<int> responseChunk in this._responseStream.stream) {
         this.downloadedSize += responseChunk.length;
-        if (this._responseStream.statusCode >= 200 && this._responseStream.statusCode < 300) {
+        if (this._responseStream.statusCode >= 200 &&
+            this._responseStream.statusCode < 300) {
           streamConsumer.add(responseChunk);
           this.progress = this.downloadedSize / this.fileSize!;
           this.onProgress?.call(this.progress);
           yield this;
-        }
-        else {
+        } else {
           this.exception = DownloadException(
             statusCode: this._responseStream.statusCode,
-            message: 'Exception: Invalid status code: ${this._responseStream.statusCode}.',
+            message:
+                'Exception: Invalid status code: ${this._responseStream.statusCode}.',
             type: DownloadExceptionType.statusCode,
           );
           throw this.exception!;
@@ -74,8 +79,7 @@ class DownloadTask {
       this.isCompleted = true;
       this.onCompleted?.call();
       yield this;
-    }
-    catch(exception) {
+    } catch (exception) {
       this.isSuccess = false;
       httpClient.close();
       streamConsumer.close();
@@ -83,8 +87,7 @@ class DownloadTask {
       if (await this.saveLocation.exists()) this.saveLocation.delete();
       if (exception is DownloadException) {
         throw this.exception!;
-      }
-      else {
+      } else {
         this.exception = DownloadException(
           statusCode: null,
           message: 'Exception: Could not connect to the host.',
@@ -95,7 +98,6 @@ class DownloadTask {
     }
   }
 }
-
 
 class Download {
   List<DownloadTask> tasks = <DownloadTask>[];
@@ -108,30 +110,43 @@ class Download {
   }
 
   Future<void> _showDownloadNotification({required DownloadTask task}) async {
-    NotificationDetails details = NotificationDetails(
-      android: AndroidNotificationDetails(
-        'com.alexmercerind.harmonoid',
-        'Harmonoid',
-        '',
-        subText: task.extras.albumName,
-        icon: 'mipmap/ic_launcher',
-        showProgress: !task.isCompleted,
-        progress: (task.progress * 100).toInt(),
-        maxProgress: 100,
-        ongoing: !(task.isCompleted || task.progress == 1.0),
-        showWhen: false,
-        onlyAlertOnce: true,
-        playSound: false,
-        enableVibration: false,
-      ),
-    );
-    await notification.show(
-      task.downloadId!,
-      task.extras.trackName,
-      task.isCompleted ? '${task.isSuccess ? language!.STRING_DOWNLOAD_COMPLETED : language!.STRING_DOWNLOAD_FAILED} ' : '' + '${this._toMegaBytes(task.downloadedSize)}/${this._toMegaBytes(task.fileSize)} MB',
-      details,
-      payload: '',
-    );
+    if (Platform.isWindows || Platform.isLinux) {
+      // TODO: Support notifications on Desktop
+      //Toast toast = Toast(
+      //  type: ToastType.text02,
+      //  title: task.extras.albumName,
+      //  subtitle: (task.progress * 100).toString() + "%/100%",
+      //);
+      //service?.show(toast);
+    } else {
+      NotificationDetails details = NotificationDetails(
+        android: AndroidNotificationDetails(
+          'com.alexmercerind.harmonoid',
+          'Harmonoid',
+          '',
+          subText: task.extras.albumName,
+          icon: 'mipmap/ic_launcher',
+          showProgress: !task.isCompleted,
+          progress: (task.progress * 100).toInt(),
+          maxProgress: 100,
+          ongoing: !(task.isCompleted || task.progress == 1.0),
+          showWhen: false,
+          onlyAlertOnce: true,
+          playSound: false,
+          enableVibration: false,
+        ),
+      );
+      await notification.show(
+        task.downloadId!,
+        task.extras.trackName,
+        task.isCompleted
+            ? '${task.isSuccess ? language!.STRING_DOWNLOAD_COMPLETED : language!.STRING_DOWNLOAD_FAILED} '
+            : '' +
+                '${this._toMegaBytes(task.downloadedSize)}/${this._toMegaBytes(task.fileSize)} MB',
+        details,
+        payload: '',
+      );
+    }
   }
 
   static Future<void> init() async {
@@ -139,7 +154,8 @@ class Download {
   }
 
   void start() {
-    this.taskStream = this._streamCurrentDownloadItem().asBroadcastStream()..listen((task) {});
+    this.taskStream = this._streamCurrentDownloadItem().asBroadcastStream()
+      ..listen((task) {});
   }
 
   void addTask(DownloadTask task, {bool start: true}) {
@@ -180,8 +196,7 @@ class Download {
               task: this.currentTask!,
             );
           });
-        }
-        on DownloadException catch(exception) {
+        } on DownloadException catch (exception) {
           Future.delayed(Duration(seconds: 1), () async {
             for (DownloadTask task in this._updatedTasks) {
               task.isSuccess = false;
@@ -199,15 +214,15 @@ class Download {
           });
           break;
         }
-      }
-      else {
+      } else {
         await this._showDownloadNotification(
           task: this.currentTask!,
         );
         yield task;
       }
       if (this._isBatchModified) {
-        this.taskStream = this._streamCurrentDownloadItem().asBroadcastStream()..listen((task) {});
+        this.taskStream = this._streamCurrentDownloadItem().asBroadcastStream()
+          ..listen((task) {});
         break;
       }
     }
@@ -217,7 +232,8 @@ class Download {
   List<DownloadTask> _updatedTasks = <DownloadTask>[];
 }
 
-final FlutterLocalNotificationsPlugin notification = FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin notification =
+    FlutterLocalNotificationsPlugin();
 final InitializationSettings notificationSettings = InitializationSettings(
   android: AndroidInitializationSettings('mipmap/ic_launcher'),
 );

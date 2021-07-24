@@ -7,14 +7,20 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:provider/provider.dart';
 
-
 class LanguageSetting extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final regions = LanguageRegion.values.toList()
-    ..removeWhere((languageRegion) => languageRegion == Provider.of<Language>(context, listen: false).current)
-    ..insert(0, Provider.of<Language>(context, listen: false).current);
+      ..removeWhere((languageRegion) =>
+          languageRegion ==
+          Provider.of<Language>(context, listen: false).current)
+      ..insert(0, Provider.of<Language>(context, listen: false).current);
+    List<LanguageRegion> rgion = [];
+    regions.forEach((element) {
+      if (element != null) {
+        rgion.add(element);
+      }
+    });
     return Consumer<Language>(
       builder: (context, language, _) => Card(
         margin: EdgeInsets.only(
@@ -80,11 +86,11 @@ class LanguageSetting extends StatelessWidget {
               child: _buildLanguageRegionTile(language.current),
             ),
             children: [
-              ImplicitlyAnimatedList<LanguageRegion?>(
+              ImplicitlyAnimatedList<LanguageRegion>(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 areItemsTheSame: (a, b) => a == b,
-                items: regions,
+                items: rgion,
                 itemBuilder: (context, animation, region, index) {
                   return SizeFadeTransition(
                     sizeFraction: 0.7,
@@ -109,7 +115,8 @@ class LanguageSetting extends StatelessWidget {
         title: Text(languageRegion!.name),
         subtitle: Text(languageRegion.country),
         groupValue: configuration.languageRegion,
-        onChanged: (languageRegion) async => await language.set(languageRegion: languageRegion),
+        onChanged: (languageRegion) async =>
+            await language.set(languageRegion: languageRegion),
         secondary: Container(
           height: 20,
           decoration: BoxDecoration(
@@ -122,10 +129,8 @@ class LanguageSetting extends StatelessWidget {
             height: 12,
             child: AspectRatio(
               aspectRatio: 3 / 2,
-              child: Flag(
-                languageRegion.countryCode,
-                fit: BoxFit.cover,
-              ),
+              child: Flag.fromString(languageRegion.countryCode,
+                  fit: BoxFit.cover),
             ),
           ),
         ),
@@ -134,9 +139,7 @@ class LanguageSetting extends StatelessWidget {
   }
 }
 
-
 const Duration _kExpand = Duration(milliseconds: 200);
-
 
 class ExpansionTile extends StatefulWidget {
   const ExpansionTile({
@@ -182,7 +185,6 @@ class ExpansionTile extends StatefulWidget {
   @override
   _ExpansionTileState createState() => _ExpansionTileState();
 }
-
 
 class _ExpansionTileState extends State<ExpansionTile>
     with SingleTickerProviderStateMixin {

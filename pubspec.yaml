@@ -1,7 +1,7 @@
 name: harmonoid
 description: A music app with a beautiful UI to play all your music!
 publish_to: 'none'
-version: 0.0.7+5001
+version: 0.0.8+5002
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -12,8 +12,7 @@ dependencies:
   animations: ^2.0.0
   provider: ^5.0.0
   assets_audio_player:
-    git:
-      url: https://github.com/jxzy999/Flutter-AssetsAudioPlayer.git
+  dart_vlc:
   flutter_media_metadata: ^0.1.0
   flutter_local_notifications: ^5.0.0
   file_picker: ^3.0.0
@@ -23,11 +22,12 @@ dependencies:
   http: ^0.13.0
   path: ^1.8.0
   url_launcher: ^6.0.3
-  implicitly_animated_reorderable_list: ^0.4.0-dev+4
+  implicitly_animated_reorderable_list: ^0.4.0
   flag: ^5.0.0-nullsafety
   marquee: ^2.0.0
   auto_size_text: ^3.0.0-nullsafety.0
   bitsdojo_window: ^0.1.0
+  filepicker_windows:
 
 dev_dependencies:
   flutter_test:

@@ -8,13 +8,10 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
-
-
 class IndexingSetting extends StatefulWidget {
   IndexingSetting({Key? key}) : super(key: key);
   IndexingState createState() => IndexingState();
 }
-
 
 class IndexingState extends State<IndexingSetting> {
   List<int>? linearProgressIndicatorValues;
@@ -40,47 +37,61 @@ class IndexingState extends State<IndexingSetting> {
             Container(
               height: 56.0,
               alignment: Alignment.topLeft,
-              child: this.linearProgressIndicatorValues != null ? TweenAnimationBuilder(
-                tween: Tween<double>(begin: 0, end: this.linearProgressIndicatorValues![0]/this.linearProgressIndicatorValues![1]),
-                duration: Duration(milliseconds: 400),
-                child: Text(
-                  (
-                    language!.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
-                    .replaceAll('NUMBER_STRING', this.linearProgressIndicatorValues![0].toString())
-                  ).replaceAll('TOTAL_STRING', this.linearProgressIndicatorValues![1].toString()),
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-                builder: (_, dynamic value, child) => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    child!,
-                    Container(
-                      margin: EdgeInsets.only(top: 6.0),
-                      height: 4.0,
-                      width: MediaQuery.of(context).size.width - 32.0,
-                      child: LinearProgressIndicator(
-                        value: value,
+              child: this.linearProgressIndicatorValues != null
+                  ? TweenAnimationBuilder(
+                      tween: Tween<double>(
+                          begin: 0,
+                          end: this.linearProgressIndicatorValues![0] /
+                              this.linearProgressIndicatorValues![1]),
+                      duration: Duration(milliseconds: 400),
+                      child: Text(
+                        (language!
+                                .STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
+                                .replaceAll(
+                                    'NUMBER_STRING',
+                                    this
+                                        .linearProgressIndicatorValues![0]
+                                        .toString()))
+                            .replaceAll(
+                                'TOTAL_STRING',
+                                this
+                                    .linearProgressIndicatorValues![1]
+                                    .toString()),
+                        style: Theme.of(context).textTheme.headline4,
                       ),
-                    ),
-                  ],
-                )
-              ): Container(
-                child: Chip(
-                  backgroundColor: Theme.of(context).accentColor,
-                  avatar: Icon(
-                    Icons.check_circle,
-                    color: Colors.white,
-                  ),
-                  label: Text(
-                    language!.STRING_SETTING_INDEXING_DONE,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                )
-              ),
+                      builder: (_, dynamic value, child) => Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              child!,
+                              Container(
+                                margin: EdgeInsets.only(top: 6.0),
+                                height: 4.0,
+                                width: MediaQuery.of(context).size.width - 32.0,
+                                child: LinearProgressIndicator(
+                                  value: value,
+                                  valueColor: AlwaysStoppedAnimation(
+                                      Theme.of(context).accentColor),
+                                ),
+                              ),
+                            ],
+                          ))
+                  : Container(
+                      child: Chip(
+                      backgroundColor: Theme.of(context).accentColor,
+                      avatar: Icon(
+                        Icons.check_circle,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        language!.STRING_SETTING_INDEXING_DONE,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    )),
             ),
-            Text(language!.STRING_SETTING_INDEXING_WARNING,
+            Text(
+              language!.STRING_SETTING_INDEXING_WARNING,
               style: Theme.of(context).textTheme.headline4,
             ),
           ],
@@ -89,7 +100,8 @@ class IndexingState extends State<IndexingSetting> {
       actions: [
         MaterialButton(
           onPressed: () async {
-            String? directoryPath = await FilePicker.platform.getDirectoryPath();
+            String? directoryPath =
+                await FilePicker.platform.getDirectoryPath();
             if (directoryPath != null) {
               await Future.wait([
                 configuration.save(
@@ -99,7 +111,10 @@ class IndexingState extends State<IndexingSetting> {
                   collectionDirectory: configuration.collectionDirectory,
                   cacheDirectory: configuration.cacheDirectory,
                   onProgress: (completed, total, isCompleted) {
-                    this.setState(() => this.linearProgressIndicatorValues = [completed, total]);
+                    this.setState(() => this.linearProgressIndicatorValues = [
+                          completed,
+                          total
+                        ]);
                   },
                 ),
               ]);
@@ -117,7 +132,8 @@ class IndexingState extends State<IndexingSetting> {
           onPressed: () async {
             await Provider.of<Collection>(context, listen: false).index(
               onProgress: (completed, total, isCompleted) {
-                this.setState(() => this.linearProgressIndicatorValues = [completed, total]);
+                this.setState(() =>
+                    this.linearProgressIndicatorValues = [completed, total]);
               },
             );
             this.setState(() => this.linearProgressIndicatorValues = null);
