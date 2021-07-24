@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:filepicker_windows/filepicker_windows.dart'
+    as FilePickerWindows;
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
@@ -100,8 +102,13 @@ class IndexingState extends State<IndexingSetting> {
       actions: [
         MaterialButton(
           onPressed: () async {
-            String? directoryPath =
-                await FilePicker.platform.getDirectoryPath();
+            String? directoryPath;
+            if (Platform.isAndroid) {
+              directoryPath = await FilePicker.platform.getDirectoryPath();
+            } else {
+              var fp = FilePickerWindows.DirectoryPicker();
+              directoryPath = fp.getDirectory()!.path;
+            }
             if (directoryPath != null) {
               await Future.wait([
                 configuration.save(
