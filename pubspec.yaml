@@ -11,8 +11,6 @@ dependencies:
     sdk: flutter
   animations: ^2.0.0
   provider: ^5.0.0
-  assets_audio_player:
-  dart_vlc:
   flutter_media_metadata: ^0.1.0
   flutter_local_notifications: ^5.0.0
   file_picker: ^3.0.0
@@ -27,7 +25,14 @@ dependencies:
   marquee: ^2.0.0
   auto_size_text: ^3.0.0-nullsafety.0
   bitsdojo_window: ^0.1.0
-  filepicker_windows:
+  artwork_extractor_dart:
+    git:
+      https://github.com/mytja/artwork_extractor_dart
+  file_selector_linux: ^0.0.2+1
+  file_selector_windows: ^0.0.2+1
+  file_selector: ^0.8.2
+  dart_vlc: ^0.1.0
+  assets_audio_player: ^3.0.3+6
 
 dev_dependencies:
   flutter_test:

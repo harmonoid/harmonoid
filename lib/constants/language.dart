@@ -323,7 +323,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Трек не может быть сохранён';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Пожалуйста, проверьте интернет-соединение и попробуйте снова.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'У всех бывают плохие дни';
-        // Not translated yet
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Подождите';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Этот трек уже скачивается.';
@@ -429,7 +428,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Другие настройки';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Включить механики iOS';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Задать платформу TargetPlatform.iOS';
-        // Not translated yet
         this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
         this.STRING_LYRICS                                          = 'Lyrics';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
@@ -482,7 +480,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Pesmi ni bilo mogoče shraniti';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Priporočamo, da preverite internetno povezavo in poskusite znova kasneje.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Vsi imamo slabe dni... :-(';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Prišlo je do napake pri prenašanju te pesmi. To po večini pomeni, da moraš preveriti strežnik, ga posodobiti ali znova zagnati. Ta napaka ni povezana z to aplikacijo.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Počakaj';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Ta pesem se že prenaša.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Pesem je že shranjena.';
@@ -588,12 +586,12 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Ostale nastavitve aplikacije';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Vključi iOS uporabniški vmesnik';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Nastavi platformo na TargetPlatform.iOS';
-        this.STRING_SELECTED_DIRECTORY                              = 'Izbrana mapa:';
-        this.STRING_LYRICS                                          = 'Besedilo pesmi';
-        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Besedilo pesmi v obvestilu';
-        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Pokaži besedilo pesmi v obvestilu.';
-        this.STRING_LYRICS_RETRIEVING                               = 'Pridobivanje besedila pesmi...';
-        this.STRING_LYRICS_NOT_FOUND                                = 'Besedilo pesmi ni najdeno.';
+        this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
+        this.STRING_LYRICS                                          = 'Lyrics';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -640,7 +638,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'A música não pode ser baixada';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Nós recomendamos que você verifique sua conexão com a internet & tente novamente em alguns minutos.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Todos nós temos dias ruins';
-        // Not translated yet
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Aguarde';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Essa música já está sendo baixada.';
@@ -686,7 +683,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Servidor alterado com sucesso.';
         this.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Mudando de servidor...';
         this.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Tradutores';
-        this.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Muito obrigado pelo seu apoio no aplicativo';
+        this.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Muito obrigado pelo seu apoio ao aplicativo';
         this.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Cor de destaque';
         this.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Mude a cor de destaque do aplicativo';
         this.STRING_SETTING_THEME_TITLE                             = 'Tema';
@@ -721,7 +718,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Adicionar à playlist';
         this.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Selecione uma playlist para adicionar essa música';
         this.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Aqui estão algumas músicas nessa playlist';
-        this.STRING_TRANSFERS                                       = 'Transfers';
+        this.STRING_TRANSFERS                                       = 'Transferências';
         this.STRING_THEME_MODE_SYSTEM                               = 'Seguir tema do sistema';
         this.STRING_SETTING_INDEXING_TITLE                          = 'Indexando';
         this.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindexando sua coleção de múscias';
@@ -742,17 +739,16 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_A_TO_Z                                          = 'A à Z';
         this.STRING_DATE_ADDED                                      = 'Data adicionada';
         this.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Cor de destaque automatica';
-        this.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Outros';
+        this.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Outras';
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Outras configurações do aplicativo';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Ativar mecânicas do iOS';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Mudar plataforma para TargetPlatform.iOS';
-        // Not translated yet
-        this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
-        this.STRING_LYRICS                                          = 'Lyrics';
-        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
-        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
-        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
-        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_SELECTED_DIRECTORY                              = 'Diretório selecionado:';
+        this.STRING_LYRICS                                          = 'Letras';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Letras nas notificações';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Mostrar letras numa notificação.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Baixando letras...'; // (Downloading lyrics)
+        this.STRING_LYRICS_NOT_FOUND                                = 'Letras não disponíveis.'; // (Lyrics not available.)
       }
       break;
       case LanguageRegion.hiIn: {
@@ -1376,7 +1372,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Aktivera iOS mekanik';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Ange plattform till TargetPlatform.iOS';
         this.STRING_SELECTED_DIRECTORY                              = 'Vald katalog:';
-        // Not translated yet
         this.STRING_LYRICS                                          = 'Lyrics';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';

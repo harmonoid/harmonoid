@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:filepicker_windows/filepicker_windows.dart'
-    as FilePickerWindows;
+import 'package:file_selector/file_selector.dart' as FilePickerDesktop;
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
@@ -106,8 +105,7 @@ class IndexingState extends State<IndexingSetting> {
             if (Platform.isAndroid) {
               directoryPath = await FilePicker.platform.getDirectoryPath();
             } else {
-              var fp = FilePickerWindows.DirectoryPicker();
-              directoryPath = fp.getDirectory()!.path;
+              directoryPath = await FilePickerDesktop.getDirectoryPath();
             }
             if (directoryPath != null) {
               await Future.wait([

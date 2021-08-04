@@ -37,8 +37,8 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
     null,
     null
   ];
-  List<Widget> _playlist = [Container()];
-  Widget _playlistList = Container();
+  List<Widget> _playlist = [const SizedBox()];
+  Widget _playlistList = const SizedBox();
   double? _playlistEnd;
   double albumArtHeight = 0.0;
   AudioPlayer.LoopMode _loopMode = AudioPlayer.LoopMode.none;
@@ -224,6 +224,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
             //print(this._track);
             this._playlist = <Widget>[];
             this._playlistEnd = vlcplayer.current.medias.length * 72.0;
+            print(event.medias);
             event.medias.asMap().forEach((int index, media) {
               this._playlist.add(
                     ListTile(

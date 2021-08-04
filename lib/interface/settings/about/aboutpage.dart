@@ -8,7 +8,6 @@ import 'package:harmonoid/interface/settings/about/thirdpartypage.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 
-
 class AboutPage extends StatelessWidget {
   const AboutPage({
     Key? key,
@@ -219,7 +218,8 @@ class AboutPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     MaterialButton(
-                      onPressed: () => launch('https://www.linkedin.com/in/hitesh-kumar-saini-78b4a3209'),
+                      onPressed: () => launch(
+                          'https://www.linkedin.com/in/hitesh-kumar-saini-78b4a3209'),
                       child: Text(
                         'LINKEDIN',
                         style: TextStyle(
@@ -228,7 +228,8 @@ class AboutPage extends StatelessWidget {
                       ),
                     ),
                     MaterialButton(
-                      onPressed: () => launch('https://www.twitter.com/alexmercerind'),
+                      onPressed: () =>
+                          launch('https://www.twitter.com/alexmercerind'),
                       child: Text(
                         'TWITTER',
                         style: TextStyle(
@@ -243,7 +244,8 @@ class AboutPage extends StatelessWidget {
           ),
           SettingsTile(
             title: 'Collaborators',
-            subtitle: 'Thanks to these guys, irrespective of order, for their contribution to development of this project.',
+            subtitle:
+                'Thanks to these guys, irrespective of order, for their contribution to development of this project.',
             child: Column(
               children: [
                 ListTile(
@@ -291,7 +293,7 @@ class AboutPage extends StatelessWidget {
                     height: 16,
                     child: AspectRatio(
                       aspectRatio: 3 / 2,
-                      child: Flag(
+                      child: Flag.fromString(
                         region.countryCode,
                         fit: BoxFit.cover,
                       ),

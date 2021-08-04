@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as path;
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:artwork_extractor_dart/artwork_extractor_dart.dart'
+    as artworkextractor;
 
 import 'package:harmonoid/utils/methods.dart';
 import 'package:harmonoid/core/mediatype.dart';
@@ -499,7 +501,6 @@ class Collection extends ChangeNotifier {
           metas["year"] = metas["date"];
           metas["type"] = "Track";
           metas["albumArtistName"] = metas["artist"].split("/")[0];
-          print(metas);
           track = Track.fromMap(metas)!;
         } else {
           await retriever.setFile(object as File);
@@ -513,13 +514,28 @@ class Collection extends ChangeNotifier {
         Future<void> albumArtMethod() async {
           if (Platform.isAndroid) {
             if (retriever.albumArt != null) {
-              File albumArtFile = new File(path.join(
+              String pathToFile = path.join(
                   this.cacheDirectory.path,
                   'albumArts',
                   '${track.albumArtistName}_${track.albumName}'
                           .replaceAll(new RegExp(r'[^\s\w]'), ' ') +
-                      '.PNG'));
+                      '.PNG');
+              print("Path: ");
+              print(pathToFile);
+              File albumArtFile = new File(pathToFile);
               await albumArtFile.writeAsBytes(retriever.albumArt!);
+            }
+          } else {
+            if (track.albumArt != null) {
+              String pathToFile = path.join(
+                  this.cacheDirectory.path,
+                  'albumArts',
+                  '${track.albumArtistName}_${track.albumName}'
+                          .replaceAll(new RegExp(r'[^\s\w]'), ' ') +
+                      '.PNG');
+              await artworkextractor.writeExecutable(
+                  track.filePath!, pathToFile,
+                  folowMime: true);
             }
           }
         }
