@@ -480,7 +480,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Pesmi ni bilo mogoče shraniti';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Priporočamo, da preverite internetno povezavo in poskusite znova kasneje.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Vsi imamo slabe dni... :-(';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'We have encountered an error while saving this track. This generally means that you need to check & update your server. This error has nothing to do with this application.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Prišlo je do napake pri prenašanju te pesmi. To po večini pomeni, da moraš preveriti strežnik, ga posodobiti ali znova zagnati. Ta napaka ni povezana z to aplikacijo.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Počakaj';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Ta pesem se že prenaša.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Pesem je že shranjena.';
@@ -586,12 +586,12 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Ostale nastavitve aplikacije';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Vključi iOS uporabniški vmesnik';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Nastavi platformo na TargetPlatform.iOS';
-        this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
-        this.STRING_LYRICS                                          = 'Lyrics';
-        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
-        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
-        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
-        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_SELECTED_DIRECTORY                              = 'Izbrana mapa:';
+        this.STRING_LYRICS                                          = 'Besedilo pesmi';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Besedilo pesmi v obvestilu';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Pokaži besedilo pesmi v obvestilu.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Pridobivanje besedila pesmi...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Besedilo pesmi ni najdeno.';
       }
       break;
       case LanguageRegion.ptBr: {
