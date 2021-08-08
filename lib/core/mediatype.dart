@@ -89,6 +89,7 @@ class Track extends MediaType {
       try {
         year = int.parse(trackMap["year"]);
       } catch (e) {
+        print(trackMap["year"]);
         year = trackMap["year"];
       }
     } else {
