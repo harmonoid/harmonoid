@@ -501,7 +501,6 @@ class Collection extends ChangeNotifier {
           metas["albumArtistName"] = metas["artist"].split("/")[0];
           track = Track.fromMap(metas)!;
         } else {
-          MetadataRetriever retriever = new MetadataRetriever();
           await retriever.setFile(object as File);
           track = Track.fromMap((await retriever.metadata).toMap())!;
         }
@@ -524,9 +523,7 @@ class Collection extends ChangeNotifier {
           } else {
             if (track.albumArt != null) {
               try {
-                await artworkextractor.writeExecutable(
-                    track.filePath!, pathToFile,
-                    folowMime: true);
+                artworkextractor.write(track.filePath!, pathToFile);
               } catch (e) {}
             }
           }

@@ -231,10 +231,13 @@ class CollectionAlbum extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double wh;
+    final double wh2;
     if (Platform.isWindows || Platform.isLinux) {
       wh = MediaQuery.of(context).size.width / 5;
+      wh2 = wh * 2;
     } else {
       wh = MediaQuery.of(context).size.width;
+      wh2 = wh;
     }
     return Consumer<Collection>(
       child: Stack(
@@ -243,8 +246,8 @@ class CollectionAlbum extends StatelessWidget {
           Image.file(
             this.album!.albumArt,
             fit: BoxFit.fill,
-            width: wh,
-            height: wh,
+            width: wh2,
+            height: wh2,
             filterQuality: FilterQuality.low,
           ),
           Container(
@@ -277,8 +280,8 @@ class CollectionAlbum extends StatelessWidget {
                       alignment: Alignment.bottomCenter,
                       children: [
                         Container(
-                          width: wh * 2,
-                          height: wh * 2,
+                          width: wh2,
+                          height: wh2,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                                 begin: Alignment.topCenter,

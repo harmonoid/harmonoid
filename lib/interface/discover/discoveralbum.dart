@@ -161,8 +161,12 @@ class DiscoverAlbumState extends State<DiscoverAlbum> {
   @override
   Widget build(BuildContext context) {
     double albumArtSize = MediaQuery.of(context).size.width;
+    final double wh2;
     if (Platform.isWindows || Platform.isLinux) {
       albumArtSize = albumArtSize / 5;
+      wh2 = albumArtSize * 1.75;
+    } else {
+      wh2 = albumArtSize;
     }
     return Scaffold(
         body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -212,8 +216,8 @@ class DiscoverAlbumState extends State<DiscoverAlbum> {
                 alignment: Alignment.bottomCenter,
                 children: [
                   Container(
-                    width: albumArtSize * 1.75,
-                    height: albumArtSize * 1.75,
+                    width: wh2,
+                    height: wh2,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                           begin: Alignment.topCenter,
