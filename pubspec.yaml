@@ -30,7 +30,7 @@ dependencies:
   file_selector: ^0.8.2
   dart_vlc:
     git:
-      url: https://github.com/alexmercerind/dart_vlc
+      url: https://github.com/alexmercerind/dart_vlc.git
   assets_audio_player: ^3.0.3+6
   artwork_extractor_dart: ^1.0.0+1
 

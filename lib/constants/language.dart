@@ -747,8 +747,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_LYRICS                                          = 'Letras';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Letras nas notificações';
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Mostrar letras numa notificação.';
-        this.STRING_LYRICS_RETRIEVING                               = 'Baixando letras...'; // (Downloading lyrics)
-        this.STRING_LYRICS_NOT_FOUND                                = 'Letras não disponíveis.'; // (Lyrics not available.)
+        this.STRING_LYRICS_RETRIEVING                               = 'Baixando letras...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Letras não disponíveis.';
       }
       break;
       case LanguageRegion.hiIn: {
