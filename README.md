@@ -31,6 +31,9 @@ The plan of project is to bring the best, cross platform music experience for al
 - **Powerful music collection generation**
   - Music automatically gets arranged into albums, artists & tracks.
 
+- **Supports multiple platforms**
+  - Supports Android and Windows
+
 - **Time synced lyrics**
   - Get time synced lyrics for all your saved music.
   - See lyrics of currently playing song directly in your notifications.

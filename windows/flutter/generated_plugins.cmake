@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
   dart_vlc
+  file_selector_windows
   url_launcher_windows
 )
 

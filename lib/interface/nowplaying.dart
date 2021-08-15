@@ -5,10 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:assets_audio_player/assets_audio_player.dart' as AudioPlayer;
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
+
+import 'package:path/path.dart' as path;
 
 // TODO: Implement lyrics visualizing & caching.
 
@@ -130,6 +133,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                     ),
                   );
             });
+            print(this._playlist);
             this._playlistList = Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -198,9 +202,11 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
           this._animationController1.reverse();
         });
       } else {
+        // Don't ask what's here
+        // It's complex 😅😅
         _streamSubscriptions[0] = vlcplayer.positionStream.listen((event) {
           setState(() {
-            vlcplayer.current.media!.parse(Duration(milliseconds: 100));
+            vlcplayer.current.media!.parse(Duration(milliseconds: 50));
             Map<String, dynamic> metas = vlcplayer.current.media!.metas;
             metas["trackName"] = metas["title"];
             metas["albumName"] = metas["album"];
@@ -208,12 +214,90 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
             metas["year"] = metas["date"];
             metas["type"] = "Track";
             metas["albumArtistName"] = metas["artist"].split("/")[0];
+            metas["albumArtHigh"] = path.join(
+                configuration.cacheDirectory!.path,
+                'albumArts',
+                '${metas["albumArtistName"]}_${metas["albumName"]}'
+                        .replaceAll(new RegExp(r'[^\s\w]'), ' ') +
+                    '.PNG');
             this._track = Track.fromMap(metas);
             this._playlist = <Widget>[];
             this._playlistEnd = vlcplayer.current.medias.length * 72.0;
             this._durationSeconds = event.duration!.inSeconds;
             this._duration = this._getDurationString(event.duration!.inSeconds);
             this._position = event.position!;
+
+            vlcplayer.current.medias.asMap().forEach((int index, media) {
+              media.parse(Duration(milliseconds: 50));
+              Map<String, dynamic> metas = media.metas;
+              metas["trackName"] = metas["title"];
+              metas["albumName"] = metas["album"];
+              metas["trackArtistNames"] = metas["artist"];
+              metas["year"] = metas["date"];
+              metas["type"] = "Track";
+              metas["albumArtistName"] = metas["artist"].split("/")[0];
+              metas["albumArtHigh"] = path.join(
+                  configuration.cacheDirectory!.path,
+                  'albumArts',
+                  '${metas["albumArtistName"]}_${metas["albumName"]}'
+                          .replaceAll(new RegExp(r'[^\s\w]'), ' ') +
+                      '.PNG');
+              this._playlist.add(
+                    ListTile(
+                      leading: CircleAvatar(
+                        child: Text(
+                          '${metas['trackNumber'] ?? 1}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundImage: metas["albumArtHigh"] == null
+                            ? null
+                            : FileImage(
+                                Track.fromMap(metas)!.albumArt,
+                              ),
+                      ),
+                      title: Text(
+                        metas["title"] ?? '',
+                        maxLines: 1,
+                        softWrap: true,
+                        overflow: TextOverflow.fade,
+                      ),
+                      subtitle: metas["artist"] == null
+                          ? null
+                          : Text(
+                              metas["artist"] ?? '',
+                              maxLines: 1,
+                              softWrap: true,
+                              overflow: TextOverflow.fade,
+                            ),
+                      trailing: this._track!.trackName == metas["title"]
+                          ? Icon(
+                              Icons.music_note,
+                              color: Theme.of(context).accentColor,
+                            )
+                          : null,
+                      onTap: () {
+                        if (Platform.isAndroid) {
+                          audioPlayer.playlistPlayAtIndex(index);
+                        } else {
+                          vlcplayer.jump(index);
+                        }
+                      },
+                    ),
+                  );
+            });
+            this._playlistList = Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: this._playlist,
+            );
+            this._animationCurved1 = Tween<double>(
+              begin: 0,
+              end: this._playlistEnd,
+            ).animate(CurvedAnimation(
+              curve: Curves.easeOutCubic,
+              reverseCurve: Curves.easeInCubic,
+              parent: this._animationController1,
+            ));
           });
         });
 
@@ -224,6 +308,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
             //print(this._track);
             this._playlist = <Widget>[];
             this._playlistEnd = vlcplayer.current.medias.length * 72.0;
+            print(event.medias);
             event.medias.asMap().forEach((int index, media) {
               this._playlist.add(
                     ListTile(
@@ -716,7 +801,13 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                   ),
                                 ),
                                 MaterialButton(
-                                  onPressed: () => audioPlayer.previous(),
+                                  onPressed: () {
+                                    if (Platform.isAndroid) {
+                                      audioPlayer.previous();
+                                    } else {
+                                      vlcplayer.back();
+                                    }
+                                  },
                                   child: Text(
                                     language!.STRING_NOW_PLAYING_PREVIOUS_TRACK,
                                     style: TextStyle(
@@ -725,7 +816,13 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                   ),
                                 ),
                                 MaterialButton(
-                                  onPressed: () => audioPlayer.next(),
+                                  onPressed: () {
+                                    if (Platform.isAndroid) {
+                                      audioPlayer.next();
+                                    } else {
+                                      vlcplayer.next();
+                                    }
+                                  },
                                   child: Text(
                                     language!.STRING_NOW_PLAYING_NEXT_TRACK,
                                     style: TextStyle(

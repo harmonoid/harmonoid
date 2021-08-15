@@ -68,7 +68,11 @@ class Track extends MediaType {
         trackNumber = 1;
       }
     } else {
-      trackNumber = trackMap['trackNumber'];
+      try {
+        trackNumber = trackMap['trackNumber'];
+      } catch (e) {
+        trackNumber = 1;
+      }
     }
     List trackArtistNames = [];
     int? year;
@@ -89,6 +93,7 @@ class Track extends MediaType {
       try {
         year = int.parse(trackMap["year"]);
       } catch (e) {
+        print(trackMap["year"]);
         year = trackMap["year"];
       }
     } else {

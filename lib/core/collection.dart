@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as path;
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:artwork_extractor_dart/artwork_extractor_dart.dart'
+    as artworkextractor;
 
 import 'package:harmonoid/utils/methods.dart';
 import 'package:harmonoid/core/mediatype.dart';
@@ -465,7 +467,7 @@ class Collection extends ChangeNotifier {
           onProgress}) async {
     if (await File(path.join(this.cacheDirectory.path, 'collection.JSON'))
         .exists()) {
-      //print("Collection file existed");
+      print("Collection file existed");
       //print(this.cacheDirectory.path);
       await File(path.join(this.cacheDirectory.path, 'collection.JSON'))
           .delete();
@@ -478,20 +480,18 @@ class Collection extends ChangeNotifier {
     this._foundArtists = <String>[];
     List<FileSystemEntity> directory =
         this.collectionDirectory.listSync(recursive: true);
-    //print(directory);
     for (int index = 0; index < directory.length; index++) {
       FileSystemEntity object = directory[index];
       if (Methods.isFileSupported(object)) {
-        //try {
         Track track;
         MetadataRetriever retriever = new MetadataRetriever();
         if (Platform.isWindows || Platform.isLinux) {
           VLC.Media media = VLC.Media.file(
             object as File,
-            parse: true,
-            timeout: Duration(seconds: 10),
           );
+          media.parse(Duration(seconds: 10));
           Map<String, dynamic> metas = media.metas;
+          print(metas);
           metas["trackName"] = metas["title"];
           metas["albumName"] = metas["album"];
           metas["filePath"] = object.path;
@@ -499,27 +499,32 @@ class Collection extends ChangeNotifier {
           metas["year"] = metas["date"];
           metas["type"] = "Track";
           metas["albumArtistName"] = metas["artist"].split("/")[0];
-          print(metas);
           track = Track.fromMap(metas)!;
         } else {
           await retriever.setFile(object as File);
           track = Track.fromMap((await retriever.metadata).toMap())!;
         }
-        //print(track);
         if (track.trackName == 'Unknown Track') {
           track.trackName = path.basename(object.path).split('.').first;
         }
         track.filePath = object.path;
         Future<void> albumArtMethod() async {
+          String pathToFile = path.join(
+              this.cacheDirectory.path,
+              'albumArts',
+              '${track.albumArtistName}_${track.albumName}'
+                      .replaceAll(new RegExp(r'[^\s\w]'), ' ') +
+                  '.PNG');
           if (Platform.isAndroid) {
             if (retriever.albumArt != null) {
-              File albumArtFile = new File(path.join(
-                  this.cacheDirectory.path,
-                  'albumArts',
-                  '${track.albumArtistName}_${track.albumName}'
-                          .replaceAll(new RegExp(r'[^\s\w]'), ' ') +
-                      '.PNG'));
+              File albumArtFile = new File(pathToFile);
               await albumArtFile.writeAsBytes(retriever.albumArt!);
+            }
+          } else {
+            if (track.albumArt != null) {
+              try {
+                artworkextractor.write(track.filePath!, pathToFile);
+              } catch (e) {}
             }
           }
         }
@@ -559,6 +564,17 @@ class Collection extends ChangeNotifier {
     this.notifyListeners();
   }
 
+  Future<void> playlistReorder(
+      Playlist playlist, int oldIndex, int newIndex) async {
+    Track track = playlist.tracks[oldIndex];
+    playlist.tracks.remove(track);
+    if (playlist.tracks.length < newIndex) {
+      newIndex--;
+    }
+    playlist.tracks.insert(newIndex, track);
+    await this.playlistsSaveToCache();
+  }
+
   Future<void> playlistAdd(Playlist playlist) async {
     if (this.playlists.length == 0) {
       this.playlists.add(
@@ -595,8 +611,11 @@ class Collection extends ChangeNotifier {
 
   Future<void> playlistRemoveTrack(Playlist playlist, Track track) async {
     for (int index = 0; index < this.playlists.length; index++) {
+      print(index);
       if (this.playlists[index].playlistId == playlist.playlistId) {
-        for (int trackIndex = 0; trackIndex < playlist.tracks.length; index++) {
+        for (int trackIndex = 0;
+            trackIndex < playlist.tracks.length;
+            trackIndex++) {
           if (this.playlists[index].tracks[trackIndex].trackName ==
                   track.trackName &&
               this.playlists[index].tracks[trackIndex].albumName ==
