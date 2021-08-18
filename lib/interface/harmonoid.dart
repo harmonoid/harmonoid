@@ -5,16 +5,14 @@ import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/home.dart';
 
-
 class Harmonoid extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<Visuals>(
       create: (context) => Visuals(
         accent: configuration.accent,
         themeMode: configuration.themeMode,
-        platform: configuration.platform,
+        platform: TargetPlatform.windows,
       ),
       builder: (context, _) => Consumer<Visuals>(
         builder: (context, visuals, _) => MaterialApp(
@@ -25,10 +23,12 @@ class Harmonoid extends StatelessWidget {
           home: MultiProvider(
             providers: [
               ChangeNotifierProvider<Server>(
-                create: (context) => Server(homeAddress: configuration.homeAddress),
+                create: (context) =>
+                    Server(homeAddress: configuration.homeAddress),
               ),
               ChangeNotifierProvider<NotificationLyrics>(
-                create: (context) => NotificationLyrics(enabled: configuration.notificationLyrics!),
+                create: (context) => NotificationLyrics(
+                    enabled: configuration.notificationLyrics!),
               ),
             ],
             builder: (context, _) => Consumer<Server>(
@@ -40,4 +40,3 @@ class Harmonoid extends StatelessWidget {
     );
   }
 }
-

@@ -1,5 +1,7 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
@@ -12,18 +14,15 @@ import 'package:harmonoid/interface/collection/collectionartist.dart';
 import 'package:harmonoid/interface/collection/collectionplaylist.dart';
 import 'package:harmonoid/constants/language.dart';
 
-
 class CollectionMusic extends StatefulWidget {
   const CollectionMusic({Key? key}) : super(key: key);
   CollectionMusicState createState() => CollectionMusicState();
 }
 
-
-class CollectionMusicState extends State<CollectionMusic> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  bool _refreshLock = true;
-  late double _refreshTurns;
-  late Tween<double> _refreshTween;
+class CollectionMusicState extends State<CollectionMusic>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TabController? _tabController;
+  int index = 0;
 
   @override
   bool get wantKeepAlive => true;
@@ -31,138 +30,142 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
   @override
   void initState() {
     super.initState();
-    this._tabController = TabController(initialIndex: 0, length: 4, vsync: this);
-    this._refreshTurns = 0;
-    this._refreshTween = Tween<double>(begin: 0, end: this._refreshTurns);
+    this._tabController =
+        TabController(initialIndex: 0, length: 4, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor: Theme.of(context).appBarTheme.color,
-        child: TweenAnimationBuilder(
-          child: Icon(
-            Icons.refresh,
-            color: Theme.of(context).brightness == Brightness.light ? Colors.white: Theme.of(context).accentColor
-          ),
-          tween: this._refreshTween,
-          duration: Duration(milliseconds: 800),
-          builder: (_, dynamic value, child) => Transform.rotate(
-            alignment: Alignment.center,
-            angle: value,
-            child: child,
-          ),
-        ),
-        onPressed: this._refreshLock ? () async {
-          this._refreshLock = false;
-          this._refreshTurns += 2 * math.pi;
-          this._refreshTween = Tween<double>(begin: 0, end: this._refreshTurns);
-          await Provider.of<Collection>(context, listen: false).refresh();
-          this._refreshLock = true;
-          this.setState(() {});
-        }: () {},
-      ),
-      body: DefaultTabController(
-        length: 4,
-        child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return <Widget>[
-              SliverOverlapAbsorber(
-                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                sliver: SliverAppBar(
-                  elevation: innerBoxIsScrolled ? 4.0 : 1.0,
-                  forceElevated: true,
-                  pinned: true,
-                  floating: true,
-                  snap: true,
-                  title: Text('Harmonoid'),
-                  centerTitle: Provider.of<Visuals>(context, listen: false).platform == TargetPlatform.iOS,
-                  actions: [
-                    IconButton(
-                      icon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
-                      iconSize: Theme.of(context).iconTheme.size!,
-                      splashRadius: Theme.of(context).iconTheme.size! - 8,
-                      tooltip: language!.STRING_SEARCH_COLLECTION,
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('collectionSearch');
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.more_vert, color: Theme.of(context).iconTheme.color),
-                      iconSize: Theme.of(context).iconTheme.size!,
-                      splashRadius: Theme.of(context).iconTheme.size! - 8,
-                      tooltip: language!.STRING_OPTIONS,
-                      onPressed: () async {
-                        CollectionSort? collectionSortType = await showMenu<CollectionSort>(
-                          context: context,
-                          position: RelativeRect.fromLTRB(
-                            MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).padding.top + 48.0,
-                            0.0,
-                            0.0,
+      floatingActionButton: RefreshCollectionButton(),
+      body: Column(
+        children: [
+          Container(
+            height: 72.0,
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withOpacity(0.08)
+                : Colors.black.withOpacity(0.08),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: 72.0,
+                      width: 192.0,
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(
+                        top: 12.0,
+                        bottom: 12.0,
+                        left: 4.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white.withOpacity(0.08)
+                            : Colors.black.withOpacity(0.08),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8.0),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 8.0,
                           ),
-                          items: <PopupMenuEntry<CollectionSort>>[
-                            CheckedPopupMenuItem<CollectionSort>(
-                              checked: CollectionSort.aToZ == configuration.collectionSortType,
-                              value: CollectionSort.aToZ,
-                              child: Text(language!.STRING_A_TO_Z),
-                            ),
-                            CheckedPopupMenuItem<CollectionSort>(
-                              checked: CollectionSort.dateAdded == configuration.collectionSortType,
-                              value: CollectionSort.dateAdded,
-                              child: Text(language!.STRING_DATE_ADDED),
-                            ),
-                          ],
-                          elevation: 2.0,
-                        );
-                        if (collectionSortType != null) {
-                          await Provider.of<Collection>(context, listen: false).sort(
-                            type: collectionSortType,
-                            onCompleted: () => configuration.save(
-                              collectionSortType: collectionSortType,
-                            ),
-                          );
-                        }
-                      }
+                          Icon(Icons.refresh),
+                          SizedBox(
+                            width: 8.0,
+                          ),
+                          Text(
+                            'Adding your music...',
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                  bottom: TabBar(
-                    controller: this._tabController,
-                    indicatorColor: Theme.of(context).accentColor,
-                    isScrollable: true,
-                    tabs: [
-                      Tab(
-                        child: Text(
-                          language!.STRING_ALBUM.toUpperCase(),
-                        ),
-                      ),
-                      Tab(
-                        child: Text(
-                          language!.STRING_TRACK.toUpperCase(),
-                        ),
-                      ),
-                      Tab(
-                        child: Text(
-                          language!.STRING_ARTIST.toUpperCase(),
-                        ),
-                      ),
-                      Tab(
-                        child: Text(
-                          language!.STRING_PLAYLISTS.toUpperCase(),
-                        ),
-                      ),
-                    ],
                   ),
                 ),
-              ),
-            ];
-          },
-          body: Consumer<Collection>(
-            builder: (context, collection, _) => TabBarView(
-              controller: this._tabController,
-              children: <Widget>[
+                GestureDetector(
+                  onTap: () => this.setState(() => this.index = 0),
+                  child: Container(
+                    height: 72.0,
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      language!.STRING_ALBUM.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight:
+                            this.index == 0 ? FontWeight.w600 : FontWeight.w200,
+                        color: Colors.white
+                            .withOpacity(this.index == 0 ? 1.0 : 0.67),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => this.setState(() => this.index = 1),
+                  child: Container(
+                    height: 72.0,
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      language!.STRING_TRACK.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight:
+                            this.index == 1 ? FontWeight.w600 : FontWeight.w200,
+                        color: Colors.white
+                            .withOpacity(this.index == 1 ? 1.0 : 0.67),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => this.setState(() => this.index = 2),
+                  child: Container(
+                    height: 72.0,
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      language!.STRING_ARTIST.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight:
+                            this.index == 2 ? FontWeight.w600 : FontWeight.w200,
+                        color: Colors.white
+                            .withOpacity(this.index == 2 ? 1.0 : 0.67),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => this.setState(() => this.index = 3),
+                  child: Container(
+                    height: 72.0,
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      language!.STRING_PLAYLISTS.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight:
+                            this.index == 3 ? FontWeight.w600 : FontWeight.w200,
+                        color: Colors.white
+                            .withOpacity(this.index == 3 ? 1.0 : 0.67),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: PageTransitionSwitcher(
+              child: [
                 Builder(
                   key: PageStorageKey(new Album().type),
                   builder: (context) => CollectionAlbumTab(),
@@ -179,10 +182,18 @@ class CollectionMusicState extends State<CollectionMusic> with SingleTickerProvi
                   key: PageStorageKey(new Playlist().type),
                   builder: (context) => CollectionPlaylistTab(),
                 ),
-              ],
+              ][this.index],
+              transitionBuilder: (child, animation, secondaryAnimation) =>
+                  SharedAxisTransition(
+                fillColor: Colors.transparent,
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                transitionType: SharedAxisTransitionType.vertical,
+                child: child,
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

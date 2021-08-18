@@ -15,14 +15,13 @@ import 'package:harmonoid/interface/nowplaying.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
-
 class Home extends StatefulWidget {
-  Home({Key? key}) : super(key : key);
+  Home({Key? key}) : super(key: key);
   HomeState createState() => HomeState();
 }
 
-
-class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindingObserver {
+class HomeState extends State<Home>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   int? index = fileIntent.tabIndex;
   List<GlobalKey<NavigatorState>> navigatorKeys = <GlobalKey<NavigatorState>>[
     new GlobalKey<NavigatorState>(),
@@ -49,8 +48,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
   Future<bool> didPopRoute() async {
     if (this.navigatorKeys[this.index!].currentState!.canPop()) {
       this.navigatorKeys[this.index!].currentState!.pop();
-    }
-    else {
+    } else {
       showDialog(
         context: context,
         builder: (subContext) => AlertDialog(
@@ -102,18 +100,21 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         onGenerateRoute: (RouteSettings routeSettings) {
           Route<dynamic>? route;
           if (routeSettings.name == 'collectionMusic') {
-            route = new MaterialPageRoute(builder: (BuildContext context) => CollectionMusic());
+            route = new MaterialPageRoute(
+              builder: (BuildContext context) => CollectionMusic(),
+            );
           }
           if (routeSettings.name == 'collectionSearch') {
             route = new PageRouteBuilder(
-              transitionDuration: Duration(milliseconds: 400),
-              reverseTransitionDuration: Duration(milliseconds: 400),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeThroughTransition(
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) =>
+                      FadeThroughTransition(
                 animation: animation,
                 secondaryAnimation: secondaryAnimation,
                 child: child,
               ),
-              pageBuilder: (context, animation, secondaryAnimation) => Consumer<Collection>(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  Consumer<Collection>(
                 builder: (context, collection, _) => CollectionSearch(),
               ),
             );
@@ -121,23 +122,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
           return route;
         },
       ),
-    ] + (
-      configuration.homeAddress != '' ? <Navigator>[
-        Navigator(
-          key: this.navigatorKeys[2],
-          initialRoute: 'discover',
-          onGenerateRoute: (RouteSettings routeSettings) {
-            Route? route;
-            if (routeSettings.name == 'discover') {
-              route = MaterialPageRoute(
-                builder: (BuildContext context) => DiscoverMusic(),
-              );
-            }
-            return route;
-          },
-        ),
-      ]: <Navigator>[]
-    ) + <Navigator>[
       Navigator(
         key: this.navigatorKeys[3],
         initialRoute: 'settings',
@@ -155,7 +139,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
     if (this.index! >= screens.length) this.index = screens.length - 1;
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<Collection>(create: (context) => Collection.get()!),
+        ChangeNotifierProvider<Collection>(
+            create: (context) => Collection.get()!),
         ChangeNotifierProvider<Language>(create: (context) => Language.get()!),
         ChangeNotifierProvider<Lyrics>(create: (context) => Lyrics.get())
       ],
@@ -163,45 +148,55 @@ class HomeState extends State<Home> with TickerProviderStateMixin, WidgetsBindin
         builder: (context, _, __) => Scaffold(
           body: PageTransitionSwitcher(
             child: screens[this.index!],
-            duration: Duration(milliseconds: 400),
-            transitionBuilder: (child, animation, secondaryAnimation) => FadeThroughTransition(
+            transitionBuilder: (child, animation, secondaryAnimation) =>
+                FadeThroughTransition(
               animation: animation,
               secondaryAnimation: secondaryAnimation,
               fillColor: Theme.of(context).scaffoldBackgroundColor,
               child: child,
             ),
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.shifting,
-            currentIndex: this.index!,
-            onTap: (int index) => this.setState(() => this.index = index),
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.play_arrow),
-                label: language!.STRING_NOW_PLAYING,
-                backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.library_music),
-                label: language!.STRING_COLLECTION,
-                backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-              ),
-            ] + (
-              configuration.homeAddress != '' ? <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.search),
-                  label: language!.STRING_DISCOVER,
-                  backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-                ),
-              ]: <BottomNavigationBarItem>[]
-            ) + <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: language!.STRING_SETTING,
-                backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-              ),
-            ],
-          ),
+          // bottomNavigationBar: BottomNavigationBar(
+          //   type: BottomNavigationBarType.shifting,
+          //   currentIndex: this.index!,
+          //   onTap: (int index) => this.setState(() => this.index = index),
+          //   items: <BottomNavigationBarItem>[
+          //         BottomNavigationBarItem(
+          //           icon: Icon(Icons.play_arrow),
+          //           label: language!.STRING_NOW_PLAYING,
+          //           backgroundColor: Theme.of(context)
+          //               .bottomNavigationBarTheme
+          //               .backgroundColor,
+          //         ),
+          //         BottomNavigationBarItem(
+          //           icon: Icon(Icons.library_music),
+          //           label: language!.STRING_COLLECTION,
+          //           backgroundColor: Theme.of(context)
+          //               .bottomNavigationBarTheme
+          //               .backgroundColor,
+          //         ),
+          //       ] +
+          //       (configuration.homeAddress != ''
+          //           ? <BottomNavigationBarItem>[
+          //               BottomNavigationBarItem(
+          //                 icon: Icon(Icons.search),
+          //                 label: language!.STRING_DISCOVER,
+          //                 backgroundColor: Theme.of(context)
+          //                     .bottomNavigationBarTheme
+          //                     .backgroundColor,
+          //               ),
+          //             ]
+          //           : <BottomNavigationBarItem>[]) +
+          //       <BottomNavigationBarItem>[
+          //         BottomNavigationBarItem(
+          //           icon: Icon(Icons.settings),
+          //           label: language!.STRING_SETTING,
+          //           backgroundColor: Theme.of(context)
+          //               .bottomNavigationBarTheme
+          //               .backgroundColor,
+          //         ),
+          //       ],
+          // ),
         ),
       ),
     );

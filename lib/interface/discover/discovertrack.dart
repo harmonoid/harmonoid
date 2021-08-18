@@ -9,7 +9,6 @@ import 'package:harmonoid/core/discover.dart';
 import 'package:harmonoid/core/download.dart';
 import 'package:harmonoid/constants/language.dart';
 
-
 class LeadingDiscoverTrackTile extends StatefulWidget {
   final Track track;
   LeadingDiscoverTrackTile({Key? key, required this.track}) : super(key: key);
@@ -37,7 +36,9 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
       }
       if (!inDownloadQueue) {
         File locationFile = File(path.join(
-          Provider.of<Collection>(context, listen: false).collectionDirectory.path,
+          Provider.of<Collection>(context, listen: false)
+              .collectionDirectory
+              .path,
           '${widget.track.trackArtistNames!.join(', ')}_${widget.track.trackName}'
                   .replaceAll(new RegExp(r'[^\s\w]'), '') +
               '.OGG',
@@ -94,8 +95,12 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
                       Provider.of<Collection>(context, listen: false).add(
                         file: File(
                           path.join(
-                            Provider.of<Collection>(context, listen: false).collectionDirectory.path,
-                            '${widget.track.trackArtistNames!.join(', ')}_${widget.track.trackName}'.replaceAll(new RegExp(r'[^\s\w]'), '') + '.OGG',
+                            Provider.of<Collection>(context, listen: false)
+                                .collectionDirectory
+                                .path,
+                            '${widget.track.trackArtistNames!.join(', ')}_${widget.track.trackName}'
+                                    .replaceAll(new RegExp(r'[^\s\w]'), '') +
+                                '.OGG',
                           ),
                         ),
                       );
@@ -104,8 +109,7 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
                           this._isDownloading = false;
                           this._exists = true;
                         });
-                      }
-                      catch(exception) {}
+                      } catch (exception) {}
                     },
                     onException: (DownloadException exception) {
                       if (exception.type == DownloadExceptionType.connection) {
@@ -113,11 +117,13 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
                           context: context,
                           builder: (subContext) => AlertDialog(
                             title: Text(
-                              language!.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE,
+                              language!
+                                  .STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE,
                               style: Theme.of(subContext).textTheme.headline1,
                             ),
                             content: Text(
-                              language!.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE,
+                              language!
+                                  .STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE,
                               style: Theme.of(subContext).textTheme.headline5,
                             ),
                             actions: [
@@ -134,11 +140,13 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
                           context: context,
                           builder: (subContext) => AlertDialog(
                             title: Text(
-                              language!.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE,
+                              language!
+                                  .STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE,
                               style: Theme.of(subContext).textTheme.headline1,
                             ),
                             content: Text(
-                              language!.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE,
+                              language!
+                                  .STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE,
                               style: Theme.of(subContext).textTheme.headline5,
                             ),
                             actions: [
@@ -199,7 +207,8 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
                         child: this._exists
                             ? Icon(Icons.check)
                             : Text('${widget.track.trackNumber ?? 1}'),
-                        backgroundImage: NetworkImage(widget.track.albumArtLow!),
+                        backgroundImage:
+                            NetworkImage(widget.track.albumArtLow!),
                         foregroundColor: Colors.white,
                       ),
                     ),
@@ -255,7 +264,8 @@ class _LeadingDiscoverTrackTileState extends State<LeadingDiscoverTrackTile> {
                           );
                         else
                           return Text(
-                            this._getDurationString(widget.track.trackDuration!),
+                            this._getDurationString(
+                                widget.track.trackDuration!),
                           );
                       }(),
                     ),
@@ -296,7 +306,9 @@ class _DiscoverTrackTileState extends State<DiscoverTrackTile> {
       }
       if (!inDownloadQueue) {
         File locationFile = File(path.join(
-          Provider.of<Collection>(context, listen: false).collectionDirectory.path,
+          Provider.of<Collection>(context, listen: false)
+              .collectionDirectory
+              .path,
           '${widget.track.trackArtistNames!.join(', ')}_${widget.track.trackName}'
                   .replaceAll(new RegExp(r'[^\s\w]'), '') +
               '.OGG',
@@ -356,11 +368,13 @@ class _DiscoverTrackTileState extends State<DiscoverTrackTile> {
                       context: context,
                       builder: (subContext) => AlertDialog(
                         title: Text(
-                          language!.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE,
+                          language!
+                              .STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE,
                           style: Theme.of(subContext).textTheme.headline1,
                         ),
                         content: Text(
-                          language!.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE,
+                          language!
+                              .STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE,
                           style: Theme.of(subContext).textTheme.headline5,
                         ),
                         actions: [
@@ -381,7 +395,8 @@ class _DiscoverTrackTileState extends State<DiscoverTrackTile> {
                           style: Theme.of(subContext).textTheme.headline1,
                         ),
                         content: Text(
-                          language!.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE,
+                          language!
+                              .STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE,
                           style: Theme.of(subContext).textTheme.headline5,
                         ),
                         actions: [

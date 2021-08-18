@@ -7,21 +7,13 @@ import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 
-
 class CollectionTrackTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    int elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
-    double tileWidth = (MediaQuery.of(context).size.width - 16 - (elementsPerRow - 1) * 8) / elementsPerRow;
     return Consumer<Collection>(
-      builder: (context, collection, _) => CustomScrollView(
-        slivers: [
-          SliverOverlapInjector(
-            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              collection.tracks.isNotEmpty ? () {
+      builder: (context, collection, _) => collection.tracks.isNotEmpty
+          ? ListView(
+              children: () {
                 List<Widget> children = <Widget>[];
                 children.addAll([
                   SubHeader(language!.STRING_LOCAL_TOP_SUBHEADER_TRACK),
@@ -34,7 +26,7 @@ class CollectionTrackTab extends StatelessWidget {
                       track: collection.tracks[index],
                       index: index,
                       popupMenuButton: PopupMenuButton(
-                        elevation: 2,
+                        elevation: 0,
                         onSelected: (index) {
                           switch (index) {
                             case 0:
@@ -44,18 +36,23 @@ class CollectionTrackTab extends StatelessWidget {
                                   title: Text(
                                     language!
                                         .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
-                                    style: Theme.of(subContext).textTheme.headline1,
+                                    style: Theme.of(subContext)
+                                        .textTheme
+                                        .headline1,
                                   ),
                                   content: Text(
                                     language!
                                         .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
-                                    style: Theme.of(subContext).textTheme.headline5,
+                                    style: Theme.of(subContext)
+                                        .textTheme
+                                        .headline5,
                                   ),
                                   actions: [
                                     MaterialButton(
                                       textColor: Theme.of(context).primaryColor,
                                       onPressed: () async {
-                                        await collection.delete(collection.tracks[index]);
+                                        await collection
+                                            .delete(collection.tracks[index]);
                                         Navigator.of(subContext).pop();
                                       },
                                       child: Text(language!.STRING_YES),
@@ -84,20 +81,28 @@ class CollectionTrackTab extends StatelessWidget {
                                   actionsPadding: EdgeInsets.zero,
                                   title: Text(
                                     language!.STRING_PLAYLIST_ADD_DIALOG_TITLE,
-                                    style: Theme.of(subContext).textTheme.headline1,
+                                    style: Theme.of(subContext)
+                                        .textTheme
+                                        .headline1,
                                   ),
                                   content: Container(
                                     height: 280,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
+                                          padding:
+                                              EdgeInsets.fromLTRB(24, 8, 0, 16),
                                           child: Text(
-                                            language!.STRING_PLAYLIST_ADD_DIALOG_BODY,
-                                            style: Theme.of(subContext).textTheme.headline5,
+                                            language!
+                                                .STRING_PLAYLIST_ADD_DIALOG_BODY,
+                                            style: Theme.of(subContext)
+                                                .textTheme
+                                                .headline5,
                                           ),
                                         ),
                                         Container(
@@ -106,33 +111,45 @@ class CollectionTrackTab extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             border: Border.symmetric(
                                               vertical: BorderSide(
-                                                color: Theme.of(context).dividerColor,
+                                                color: Theme.of(context)
+                                                    .dividerColor,
                                                 width: 1,
                                               ),
                                             ),
                                           ),
                                           child: ListView.builder(
                                             shrinkWrap: true,
-                                            itemCount: collection.playlists.length,
-                                            itemBuilder: (context, playlistIndex) {
+                                            itemCount:
+                                                collection.playlists.length,
+                                            itemBuilder:
+                                                (context, playlistIndex) {
                                               return ListTile(
                                                 title: Text(
                                                   collection
-                                                      .playlists[playlistIndex].playlistName!,
-                                                  style:
-                                                      Theme.of(context).textTheme.headline2,
+                                                      .playlists[playlistIndex]
+                                                      .playlistName!,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline2,
                                                 ),
                                                 leading: Icon(
                                                   Icons.queue_music,
-                                                  size: Theme.of(context).iconTheme.size,
-                                                  color: Theme.of(context).iconTheme.color,
+                                                  size: Theme.of(context)
+                                                      .iconTheme
+                                                      .size,
+                                                  color: Theme.of(context)
+                                                      .iconTheme
+                                                      .color,
                                                 ),
                                                 onTap: () async {
-                                                  await collection.playlistAddTrack(
-                                                    collection.playlists[playlistIndex],
+                                                  await collection
+                                                      .playlistAddTrack(
+                                                    collection.playlists[
+                                                        playlistIndex],
                                                     collection.tracks[index],
                                                   );
-                                                  Navigator.of(subContext).pop();
+                                                  Navigator.of(subContext)
+                                                      .pop();
                                                 },
                                               );
                                             },
@@ -160,15 +177,42 @@ class CollectionTrackTab extends StatelessWidget {
                         itemBuilder: (_) => <PopupMenuEntry>[
                           PopupMenuItem(
                             value: 0,
-                            child: Text(language!.STRING_DELETE),
+                            child: Text(
+                              language!.STRING_DELETE,
+                              style: TextStyle(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontSize: 14.0,
+                              ),
+                            ),
                           ),
                           PopupMenuItem(
                             value: 1,
-                            child: Text(language!.STRING_SHARE),
+                            child: Text(
+                              language!.STRING_SHARE,
+                              style: TextStyle(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontSize: 14.0,
+                              ),
+                            ),
                           ),
                           PopupMenuItem(
                             value: 2,
-                            child: Text(language!.STRING_ADD_TO_PLAYLIST),
+                            child: Text(
+                              language!.STRING_ADD_TO_PLAYLIST,
+                              style: TextStyle(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontSize: 14.0,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -176,34 +220,30 @@ class CollectionTrackTab extends StatelessWidget {
                   );
                 });
                 return children;
-              }(): <Widget>[
-                ExceptionWidget(
-                  margin: EdgeInsets.only(
-                    top: (MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + MediaQuery.of(context).padding.bottom + tileWidth + 256.0)) / 2,
-                    left: 8.0,
-                    right: 8.0,
-                  ),
-                  height: tileWidth,
-                  assetImage: 'assets/images/collection-album.jpg',
-                  title: language!.STRING_NO_COLLECTION_TITLE,
-                  subtitle: language!.STRING_NO_COLLECTION_SUBTITLE,
-                  large: true,
-                ),
-              ],
+              }(),
+            )
+          : Center(
+              child: ExceptionWidget(
+                height: 256.0,
+                width: 420.0,
+                margin: EdgeInsets.zero,
+                title: language!.STRING_NO_COLLECTION_TITLE,
+                subtitle: language!.STRING_NO_COLLECTION_SUBTITLE,
+              ),
             ),
-          ),
-        ],
-      ),
     );
   }
 }
-
 
 class CollectionTrackTile extends StatelessWidget {
   final Track track;
   final int? index;
   final PopupMenuButton popupMenuButton;
-  const CollectionTrackTile({Key? key, required this.track, this.index, required this.popupMenuButton});
+  const CollectionTrackTile(
+      {Key? key,
+      required this.track,
+      this.index,
+      required this.popupMenuButton});
 
   @override
   Widget build(BuildContext context) {
@@ -230,18 +270,31 @@ class CollectionTrackTile extends StatelessWidget {
             ),
             backgroundImage: FileImage(this.track.albumArt),
           ),
-          title: Text(this.track.trackName!,
-            style: Theme.of(context).textTheme.headline2!,
+          title: Text(
+            this.track.trackName!,
+            style: TextStyle(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
+            ),
             overflow: TextOverflow.fade,
             maxLines: 1,
             softWrap: false,
           ),
-          subtitle: Text(this.track.albumName! +
-              ' - ' +
-              (this.track.trackArtistNames!.length < 2
-                  ? this.track.trackArtistNames!.join(', ')
-                  : this.track.trackArtistNames!.sublist(0, 2).join(', ')),
-            style: Theme.of(context).textTheme.headline5!,
+          subtitle: Text(
+            this.track.albumName! +
+                ' - ' +
+                (this.track.trackArtistNames!.length < 2
+                    ? this.track.trackArtistNames!.join(', ')
+                    : this.track.trackArtistNames!.sublist(0, 2).join(', ')),
+            style: TextStyle(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white.withOpacity(0.8)
+                  : Colors.black.withOpacity(0.8),
+              fontSize: 14.0,
+            ),
             overflow: TextOverflow.fade,
             maxLines: 1,
             softWrap: false,
@@ -253,19 +306,23 @@ class CollectionTrackTile extends StatelessWidget {
   }
 }
 
-
 class LeadingCollectionTrackTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+      ),
       clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
-      child:  Consumer<Collection>(
+      child: Consumer<Collection>(
         builder: (context, collection, _) => InkWell(
           onTap: () async => await Playback.play(
             index: 0,
-            tracks: [collection.lastTrack! ],
+            tracks: [collection.lastTrack!],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -308,26 +365,43 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                             color: Colors.transparent,
                             height: 8.0,
                           ),
-                          Marquee(
-                            text: collection.lastTrack!.trackName!,
-                            style: Theme.of(context).textTheme.headline1!,
-                            blankSpace: 100.0,
-                            velocity: 20.0,
-                            pauseAfterRound: Duration(seconds: 1),
+                          Text(
+                            collection.lastTrack!.trackName!,
+                            style: TextStyle(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           Text(
                             collection.lastTrack!.albumName!,
-                            style: Theme.of(context).textTheme.headline5,
+                            style: TextStyle(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white.withOpacity(0.8)
+                                  : Colors.black.withOpacity(0.8),
+                              fontSize: 14.0,
+                            ),
                             textAlign: TextAlign.start,
                             maxLines: 1,
                           ),
                           Text(
                             collection.lastTrack!.trackArtistNames!.length < 2
-                                ? collection.lastTrack!.trackArtistNames!.join(', ')
+                                ? collection.lastTrack!.trackArtistNames!
+                                    .join(', ')
                                 : collection.lastTrack!.trackArtistNames!
                                     .sublist(0, 2)
                                     .join(', '),
-                            style: Theme.of(context).textTheme.headline5,
+                            style: TextStyle(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white.withOpacity(0.8)
+                                  : Colors.black.withOpacity(0.8),
+                              fontSize: 14.0,
+                            ),
                             maxLines: 1,
                             textAlign: TextAlign.start,
                           ),

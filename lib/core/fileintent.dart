@@ -7,12 +7,10 @@ import 'package:path/path.dart' as path;
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 
-
 late FileIntent fileIntent;
 
-
-const _methodChannel = const MethodChannel('com.alexmercerind.harmonoid/openFile');
-
+const _methodChannel =
+    const MethodChannel('com.alexmercerind.harmonoid/openFile');
 
 class FileIntent {
   int? tabIndex;
@@ -27,8 +25,7 @@ class FileIntent {
         tabIndex: 0,
         openedFile: file,
       );
-    }
-    catch(exception) {
+    } catch (exception) {
       fileIntent = new FileIntent(
         tabIndex: 1,
       );
@@ -39,27 +36,30 @@ class FileIntent {
     String? response = await _methodChannel.invokeMethod('getOpenFile', {});
     String filePath = response!;
     File file = new File(filePath);
-    if (await file.exists()) return file;
-    else throw FileSystemException("File does not exists.");
+    if (await file.exists())
+      return file;
+    else
+      throw FileSystemException("File does not exists.");
   }
 
   Future<void> play() async {
-    MetadataRetriever retriever = new MetadataRetriever();
-    await retriever.setFile(this.openedFile!);
-    Track track = Track.fromMap((await retriever.metadata).toMap())!;
+    Metadata metadata = await MetadataRetriever.fromFile(this.openedFile!);
+    Track track = Track.fromMap(metadata.toMap())!;
     if (track.trackName == 'Unknown Track') {
       track.trackName = path.basename(this.openedFile!.path).split('.').first;
     }
     track.filePath = this.openedFile!.path;
-    if (retriever.albumArt != null) {
+    if (metadata.albumArt != null) {
       File albumArtFile = new File(
         path.join(
           configuration.cacheDirectory!.path,
           'albumArts',
-          '${track.albumArtistName}_${track.albumName}'.replaceAll(new RegExp(r'[^\s\w]'), ' ') + '.PNG',
+          '${track.albumArtistName}_${track.albumName}'
+                  .replaceAll(new RegExp(r'[^\s\w]'), ' ') +
+              '.PNG',
         ),
       );
-      await albumArtFile.writeAsBytes(retriever.albumArt!);
+      await albumArtFile.writeAsBytes(metadata.albumArt!);
     }
     Playback.play(
       tracks: <Track>[track],

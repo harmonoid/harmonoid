@@ -8,9 +8,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/constants/language.dart';
 
-
 late Configuration configuration;
-
 
 abstract class ConfigurationKeys {
   Directory? collectionDirectory;
@@ -28,9 +26,8 @@ abstract class ConfigurationKeys {
   List<dynamic>? discoverRecent;
 }
 
-
 const Map<String, dynamic> DEFAULT_CONFIGURATION = {
-  'collectionDirectory': '/storage/emulated/0/Music',
+  'collectionDirectory': 'C:/Users/alexmercerind/Music',
   'homeAddress': '',
   'languageRegion': 0,
   'accent': 0,
@@ -44,25 +41,25 @@ const Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'discoverRecent': [],
 };
 
-
 class Configuration extends ConfigurationKeys {
-  
   late File configurationFile;
 
   static Future<void> init() async {
-    configuration = new Configuration();
+    configuration = Configuration();
     configuration.configurationFile = File(
       path.join(
-        (await path.getExternalStorageDirectory())!.path,
+        'C:/Users/alexmercerind/.harmonoid',
         'configuration.JSON',
       ),
     );
     if (!await configuration.configurationFile.exists()) {
       await configuration.configurationFile.create(recursive: true);
-      await configuration.configurationFile.writeAsString(convert.jsonEncode(DEFAULT_CONFIGURATION));
+      await configuration.configurationFile
+          .writeAsString(convert.jsonEncode(DEFAULT_CONFIGURATION));
     }
     await configuration.read();
-    configuration.cacheDirectory = new Directory('/storage/emulated/0/Android/data/com.alexmercerind.harmonoid/files');
+    configuration.cacheDirectory =
+        Directory('C:/Users/alexmercerind/.harmonoid/cache');
   }
 
   Future<void> save({
@@ -79,7 +76,7 @@ class Configuration extends ConfigurationKeys {
     List<dynamic>? collectionSearchRecent,
     List<dynamic>? discoverSearchRecent,
     List<dynamic>? discoverRecent,
-    }) async {
+  }) async {
     if (collectionDirectory != null) {
       this.collectionDirectory = collectionDirectory;
     }
@@ -133,22 +130,27 @@ class Configuration extends ConfigurationKeys {
   }
 
   Future<dynamic> read() async {
-    Map<String, dynamic> currentConfiguration = convert.jsonDecode(await this.configurationFile.readAsString());
+    Map<String, dynamic> currentConfiguration =
+        convert.jsonDecode(await this.configurationFile.readAsString());
     DEFAULT_CONFIGURATION.keys.forEach((String key) {
       if (!currentConfiguration.containsKey(key)) {
         currentConfiguration[key] = DEFAULT_CONFIGURATION[key];
       }
     });
-    this.collectionDirectory = Directory(currentConfiguration['collectionDirectory']);
+    this.collectionDirectory =
+        Directory(currentConfiguration['collectionDirectory']);
     this.homeAddress = currentConfiguration['homeAddress'];
-    this.languageRegion = LanguageRegion.values[currentConfiguration['languageRegion']];
+    this.languageRegion =
+        LanguageRegion.values[currentConfiguration['languageRegion']];
     this.accent = accents[currentConfiguration['accent']];
     this.themeMode = ThemeMode.values[currentConfiguration['themeMode']];
-    this.collectionSortType = CollectionSort.values[currentConfiguration['collectionSortType']];
+    this.collectionSortType =
+        CollectionSort.values[currentConfiguration['collectionSortType']];
     this.automaticAccent = currentConfiguration['automaticAccent'];
     this.notificationLyrics = currentConfiguration['notificationLyrics'];
     this.platform = TargetPlatform.values[currentConfiguration['platform']];
-    this.collectionSearchRecent = currentConfiguration['collectionSearchRecent'];
+    this.collectionSearchRecent =
+        currentConfiguration['collectionSearchRecent'];
     this.discoverSearchRecent = currentConfiguration['discoverSearchRecent'];
     this.discoverRecent = currentConfiguration['discoverRecent'];
   }
