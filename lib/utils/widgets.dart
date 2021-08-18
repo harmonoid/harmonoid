@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:marquee/marquee.dart' as marquee;
 
+import 'package:harmonoid/core/collection.dart';
 
 List<Widget> tileGridListWidgets({
   required double tileHeight,
@@ -48,12 +51,16 @@ List<Widget> tileGridListWidgets({
   }
   if (widgetCount % elementsPerRow != 0) {
     rowChildren = <Widget>[];
-    for (int index = widgetCount - (widgetCount % elementsPerRow); index < widgetCount; index++) {
+    for (int index = widgetCount - (widgetCount % elementsPerRow);
+        index < widgetCount;
+        index++) {
       rowChildren.add(
         builder(context, index),
       );
     }
-    for (int index = 0; index < elementsPerRow - (widgetCount % elementsPerRow); index++) {
+    for (int index = 0;
+        index < elementsPerRow - (widgetCount % elementsPerRow);
+        index++) {
       rowChildren.add(
         Container(
           height: tileHeight,
@@ -78,7 +85,6 @@ List<Widget> tileGridListWidgets({
   return widgets;
 }
 
-
 class SubHeader extends StatelessWidget {
   final String? text;
 
@@ -90,20 +96,75 @@ class SubHeader extends StatelessWidget {
       alignment: Alignment.centerLeft,
       height: 48,
       padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-      color: Theme.of(context).scaffoldBackgroundColor,
       child: Text(
         text!,
-        style: Theme.of(context).textTheme.headline5,
+        style: TextStyle(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white.withOpacity(0.9)
+              : Colors.black.withOpacity(0.9),
+          fontSize: 14.0,
+        ),
       ),
     );
   }
 }
 
+class RefreshCollectionButton extends StatefulWidget {
+  RefreshCollectionButton({Key? key}) : super(key: key);
+
+  @override
+  _RefreshCollectionButtonState createState() =>
+      _RefreshCollectionButtonState();
+}
+
+class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
+  bool lock = true;
+  late double turns;
+  late Tween<double> tween;
+
+  @override
+  void initState() {
+    super.initState();
+    this.turns = 0;
+    this.tween = Tween<double>(begin: 0, end: this.turns);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      backgroundColor: Theme.of(context).accentColor,
+      child: TweenAnimationBuilder(
+        child: Icon(
+          Icons.refresh,
+          color: Colors.white,
+        ),
+        tween: this.tween,
+        duration: Duration(milliseconds: 800),
+        builder: (_, dynamic value, child) => Transform.rotate(
+          alignment: Alignment.center,
+          angle: value,
+          child: child,
+        ),
+      ),
+      onPressed: this.lock
+          ? () async {
+              this.lock = false;
+              this.turns += 2 * math.pi;
+              this.tween = Tween<double>(begin: 0, end: this.turns);
+              await Provider.of<Collection>(context, listen: false).refresh();
+              this.lock = true;
+              this.setState(() {});
+            }
+          : () {},
+    );
+  }
+}
 
 class FadeFutureBuilder extends StatefulWidget {
   final Future<Object> Function() future;
   final Widget Function(BuildContext context) initialWidgetBuilder;
-  final Widget Function(BuildContext context, Object? object) finalWidgetBuilder;
+  final Widget Function(BuildContext context, Object? object)
+      finalWidgetBuilder;
   final Widget Function(BuildContext context, Object object) errorWidgetBuilder;
   final Duration transitionDuration;
 
@@ -117,7 +178,6 @@ class FadeFutureBuilder extends StatefulWidget {
   }) : super(key: key);
   FadeFutureBuilderState createState() => FadeFutureBuilderState();
 }
-
 
 class FadeFutureBuilderState extends State<FadeFutureBuilder>
     with SingleTickerProviderStateMixin {
@@ -185,145 +245,76 @@ class FadeFutureBuilderState extends State<FadeFutureBuilder>
   }
 }
 
-
 class ExceptionWidget extends StatelessWidget {
   final EdgeInsets margin;
   final double height;
+  final double width;
   final Icon? icon;
   final String? title;
   final String? subtitle;
-  final String? assetImage;
-  final bool large;
 
   const ExceptionWidget({
     Key? key,
-    this.assetImage,
     this.icon,
     required this.margin,
     required this.height,
+    required this.width,
     required this.title,
     required this.subtitle,
-    this.large: false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return this.large ? Card(
-      elevation: 2.0,
-      clipBehavior: Clip.antiAlias,
-      margin: this.margin,
-      child: Container(
-        width: MediaQuery.of(context).size.width - 16.0,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            this.assetImage != null ? Image.asset(
-              this.assetImage!,
-              height: this.height,
-              width: MediaQuery.of(context).size.width - 16.0,
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.center,
-            ): Container(
-              height: this.height,
-              width: this.height,
-              alignment: Alignment.center,
-              color: Theme.of(context).dividerColor,
-              child: Icon(
-                Icons.library_music,
-                size: 56.0,
-              ),
+    return Container(
+      width: this.width,
+      height: this.height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 4.0,
             ),
-            Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 4.0,
-              ),
-              width: MediaQuery.of(context).size.width - 16.0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    this.title!,
-                    style: Theme.of(context).textTheme.headline1,
-                    textAlign: TextAlign.start,
+            width: this.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  this.title!,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16.0,
                   ),
-                  Divider(
-                    color: Colors.transparent,
-                    height: 4.0,
-                  ),
-                  Text(
-                    this.subtitle!,
-                    style: Theme.of(context).textTheme.headline5,
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    ): Card(
-      elevation: 2.0,
-      clipBehavior: Clip.antiAlias,
-      margin: this.margin,
-      child: Container(
-        width: MediaQuery.of(context).size.width - 16,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (this.assetImage != null)
-              Image.asset(
-                this.assetImage!,
-                height: this.height,
-                width: this.height,
-                fit: BoxFit.cover,
-                alignment: Alignment.center,
-              )
-            else
-              Container(
-                height: this.height,
-                width: this.height,
-                alignment: Alignment.center,
-                color: Theme.of(context).dividerColor,
-                child: Icon(
-                  Icons.library_music,
-                  size: 56.0,
+                  textAlign: TextAlign.start,
                 ),
-              ),
-            Container(
-              margin: EdgeInsets.only(left: 8, right: 8),
-              width: MediaQuery.of(context).size.width - 32 - this.height,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    this.title!,
-                    style: Theme.of(context).textTheme.headline1,
-                    textAlign: TextAlign.start,
+                Divider(
+                  color: Colors.transparent,
+                  height: 4.0,
+                ),
+                Text(
+                  this.subtitle!,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white.withOpacity(0.8)
+                        : Colors.black.withOpacity(0.8),
+                    fontSize: 14.0,
                   ),
-                  Divider(
-                    color: Colors.transparent,
-                    height: 4.0,
-                  ),
-                  Text(
-                    this.subtitle!,
-                    style: Theme.of(context).textTheme.headline5,
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-              ),
+                  textAlign: TextAlign.start,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-
 
 class FakeLinearProgressIndicator extends StatelessWidget {
   final String label;
@@ -373,11 +364,15 @@ class FakeLinearProgressIndicator extends StatelessWidget {
   }
 }
 
-
 class ClosedTile extends StatelessWidget {
   final String? title;
   final String? subtitle;
-  const ClosedTile({Key? key, required this.open, required this.title, required this.subtitle}) : super(key: key);
+  const ClosedTile(
+      {Key? key,
+      required this.open,
+      required this.title,
+      required this.subtitle})
+      : super(key: key);
 
   final Function open;
 

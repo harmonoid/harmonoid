@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,10 +6,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/constants/language.dart';
 
-
 abstract class Methods {
-
-  static int binaryIndexOf(List<dynamic> collectionList, List<dynamic> keywordList) {
+  static int binaryIndexOf(
+      List<dynamic> collectionList, List<dynamic> keywordList) {
     int indexOfKeywordList = -1;
     for (int index = 0; index < collectionList.length; index++) {
       List<dynamic> object = collectionList[index];
@@ -22,13 +20,16 @@ abstract class Methods {
     return indexOfKeywordList;
   }
 
-  static bool binaryContains(List<dynamic> collectionList, List<dynamic> keywordList) => binaryIndexOf(collectionList, keywordList) != -1 ? true : false;
+  static bool binaryContains(
+          List<dynamic> collectionList, List<dynamic> keywordList) =>
+      binaryIndexOf(collectionList, keywordList) != -1 ? true : false;
 
   static bool isFileSupported(FileSystemEntity? file) {
-    if (file is File && SUPPORTED_FILE_TYPES.contains(file.path.split('.').last.toUpperCase())) {
+    if (file is File &&
+        SUPPORTED_FILE_TYPES
+            .contains(file.path.split('.').last.toUpperCase())) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -47,38 +48,43 @@ abstract class Methods {
   }
 
   static Future<void> askStoragePermission() async {
-    if (Platform.isAndroid)
-      if (await Permission.storage.isDenied) {
-        PermissionStatus storagePermissionState = await Permission.storage.request();
-        if (!storagePermissionState.isGranted) {
-          SystemNavigator.pop(
-            animated: true,
-          );
-        }
+    if (Platform.isAndroid) if (await Permission.storage.isDenied) {
+      PermissionStatus storagePermissionState =
+          await Permission.storage.request();
+      if (!storagePermissionState.isGranted) {
+        SystemNavigator.pop(
+          animated: true,
+        );
       }
+    }
   }
 
-  static ThemeData getTheme({required Color accentColor, ThemeMode? themeMode, TargetPlatform? platform}) {
+  static ThemeData getTheme(
+      {required Color accentColor,
+      ThemeMode? themeMode,
+      TargetPlatform? platform}) {
     bool isLight = themeMode == ThemeMode.light;
-    return new ThemeData(
+    return ThemeData(
       platform: platform,
       splashFactory: InkRipple.splashFactory,
-      splashColor: isLight ? Colors.black12 : Colors.white12,
-      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
       brightness: isLight ? Brightness.light : Brightness.dark,
       primaryColorLight: accentColor,
       primaryColor: accentColor,
       primaryColorDark: accentColor,
-      scaffoldBackgroundColor: isLight ? Colors.grey[100] : Color(0xFF121212),
+      scaffoldBackgroundColor: Colors.transparent,
       accentColor: accentColor,
       toggleableActiveColor: accentColor,
-      cardColor: isLight ? Colors.white : Color(0xFF1F1F1F),
+      cardColor: isLight
+          ? Colors.black.withOpacity(0.04)
+          : Colors.white.withOpacity(0.04),
       backgroundColor: accentColor.withOpacity(0.24),
       dividerColor: isLight ? Colors.black12 : Colors.white24,
       disabledColor: isLight ? Colors.black38 : Colors.white38,
       tabBarTheme: TabBarTheme(
         labelColor: accentColor,
-        unselectedLabelColor: isLight ? Colors.black54 : Colors.white.withOpacity(0.67),
+        unselectedLabelColor:
+            isLight ? Colors.black54 : Colors.white.withOpacity(0.67),
       ),
       popupMenuTheme: PopupMenuThemeData(
         elevation: 2.0,
@@ -101,12 +107,12 @@ abstract class Methods {
         color: isLight ? Colors.black54 : Colors.white.withOpacity(0.87),
         size: 24,
       ),
-      bottomNavigationBarTheme: new BottomNavigationBarThemeData(
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: isLight ? accentColor : Color(0xFF292929),
         selectedItemColor: Colors.white.withOpacity(0.87),
         unselectedItemColor: Colors.white54,
       ),
-      primaryTextTheme: new TextTheme(
+      primaryTextTheme: TextTheme(
         headline1: TextStyle(
           fontWeight: FontWeight.normal,
           color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
@@ -138,7 +144,7 @@ abstract class Methods {
           fontSize: 18,
         ),
       ),
-      textTheme: new TextTheme(
+      textTheme: TextTheme(
         headline1: TextStyle(
           fontWeight: FontWeight.normal,
           color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
