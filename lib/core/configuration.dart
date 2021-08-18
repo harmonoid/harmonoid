@@ -8,6 +8,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/constants/language.dart';
 
+// TODO: Migrate this shitty JSON based storage to better alternative like Hive etc.
 late Configuration configuration;
 
 abstract class ConfigurationKeys {
@@ -28,14 +29,19 @@ abstract class ConfigurationKeys {
 
 const Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'collectionDirectory': 'C:/Users/alexmercerind/Music',
+  // TODO: Remove this.
   'homeAddress': '',
   'languageRegion': 0,
   'accent': 0,
   'themeMode': 0,
   'collectionSortType': 0,
+  // TODO: Remove this.
   'automaticAccent': false,
+  // TODO: Remove this.
   'notificationLyrics': true,
+  // TODO: Remove this.
   'platform': 2,
+  // TODO: Remove this.
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
   'discoverRecent': [],

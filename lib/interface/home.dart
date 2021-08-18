@@ -80,7 +80,7 @@ class HomeState extends State<Home>
 
   @override
   Widget build(BuildContext context) {
-    final List<Navigator> screens = <Navigator>[
+    final List<Widget> screens = <Widget>[
       Navigator(
         key: this.navigatorKeys[0],
         initialRoute: 'nowPlaying',
@@ -94,33 +94,36 @@ class HomeState extends State<Home>
           return route;
         },
       ),
-      Navigator(
-        key: this.navigatorKeys[1],
-        initialRoute: 'collectionMusic',
-        onGenerateRoute: (RouteSettings routeSettings) {
-          Route<dynamic>? route;
-          if (routeSettings.name == 'collectionMusic') {
-            route = new MaterialPageRoute(
-              builder: (BuildContext context) => CollectionMusic(),
-            );
-          }
-          if (routeSettings.name == 'collectionSearch') {
-            route = new PageRouteBuilder(
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) =>
-                      FadeThroughTransition(
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                child: child,
-              ),
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  Consumer<Collection>(
-                builder: (context, collection, _) => CollectionSearch(),
-              ),
-            );
-          }
-          return route;
-        },
+      HeroControllerScope(
+        controller: MaterialApp.createMaterialHeroController(),
+        child: Navigator(
+          key: this.navigatorKeys[1],
+          initialRoute: 'collectionMusic',
+          onGenerateRoute: (RouteSettings routeSettings) {
+            Route<dynamic>? route;
+            if (routeSettings.name == 'collectionMusic') {
+              route = new MaterialPageRoute(
+                builder: (BuildContext context) => CollectionMusic(),
+              );
+            }
+            if (routeSettings.name == 'collectionSearch') {
+              route = new PageRouteBuilder(
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) =>
+                        FadeThroughTransition(
+                  animation: animation,
+                  secondaryAnimation: secondaryAnimation,
+                  child: child,
+                ),
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    Consumer<Collection>(
+                  builder: (context, collection, _) => CollectionSearch(),
+                ),
+              );
+            }
+            return route;
+          },
+        ),
       ),
       Navigator(
         key: this.navigatorKeys[3],

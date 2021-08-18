@@ -7,23 +7,24 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:provider/provider.dart';
 
-
 class LanguageSetting extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final regions = LanguageRegion.values.toList()
-    ..removeWhere((languageRegion) => languageRegion == Provider.of<Language>(context, listen: false).current)
-    ..insert(0, Provider.of<Language>(context, listen: false).current);
+      ..removeWhere((languageRegion) =>
+          languageRegion ==
+          Provider.of<Language>(context, listen: false).current)
+      ..insert(0, Provider.of<Language>(context, listen: false).current);
     return Consumer<Language>(
-      builder: (context, language, _) => Card(
-        margin: EdgeInsets.only(
-          left: 8.0,
-          right: 8.0,
-          top: 4.0,
-          bottom: 4.0,
+      builder: (context, language, _) => Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 4.0,
         ),
-        elevation: 2.0,
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
         child: Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: ExpansionTile(
@@ -49,12 +50,25 @@ class LanguageSetting extends StatelessWidget {
                       children: [
                         Text(
                           language.STRING_SETTING_LANGUAGE_TITLE,
-                          style: Theme.of(context).textTheme.headline2,
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.0,
+                          ),
                         ),
                         Divider(color: Colors.transparent, height: 4.0),
                         Text(
                           language.STRING_SETTING_LANGUAGE_SUBTITLE,
-                          style: Theme.of(context).textTheme.headline5,
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white.withOpacity(0.8)
+                                    : Colors.black.withOpacity(0.8),
+                            fontSize: 14.0,
+                          ),
                         ),
                         Divider(color: Colors.transparent, height: 8.0),
                       ],
@@ -65,7 +79,10 @@ class LanguageSetting extends StatelessWidget {
                       begin: 0.0,
                       end: 0.5,
                     ).animate(animation as Animation<double>),
-                    child: Icon(Icons.expand_more),
+                    child: Icon(
+                      Icons.expand_more,
+                      size: 24,
+                    ),
                   ),
                 ]),
                 Divider(
@@ -106,37 +123,34 @@ class LanguageSetting extends StatelessWidget {
       builder: (context, language, _) => RadioListTile<LanguageRegion?>(
         key: key,
         value: languageRegion,
-        title: Text(languageRegion!.name),
-        subtitle: Text(languageRegion.country),
-        groupValue: configuration.languageRegion,
-        onChanged: (languageRegion) async => await language.set(languageRegion: languageRegion),
-        secondary: Container(
-          height: 20,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Theme.of(context).dividerColor,
-              width: 0.5,
-            ),
-          ),
-          child: SizedBox(
-            height: 12,
-            child: AspectRatio(
-              aspectRatio: 3 / 2,
-              child: Flag(
-                languageRegion.countryCode,
-                fit: BoxFit.cover,
-              ),
-            ),
+        title: Text(
+          languageRegion!.name,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+            fontSize: 14.0,
+            fontWeight: FontWeight.w600,
           ),
         ),
+        subtitle: Text(
+          languageRegion.country,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withOpacity(0.8)
+                : Colors.black.withOpacity(0.8),
+            fontSize: 14.0,
+          ),
+        ),
+        groupValue: configuration.languageRegion,
+        onChanged: (languageRegion) async =>
+            await language.set(languageRegion: languageRegion),
       ),
     );
   }
 }
 
-
 const Duration _kExpand = Duration(milliseconds: 200);
-
 
 class ExpansionTile extends StatefulWidget {
   const ExpansionTile({
@@ -182,7 +196,6 @@ class ExpansionTile extends StatefulWidget {
   @override
   _ExpansionTileState createState() => _ExpansionTileState();
 }
-
 
 class _ExpansionTileState extends State<ExpansionTile>
     with SingleTickerProviderStateMixin {

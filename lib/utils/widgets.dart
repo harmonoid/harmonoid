@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -103,6 +104,37 @@ class SubHeader extends StatelessWidget {
               ? Colors.white.withOpacity(0.9)
               : Colors.black.withOpacity(0.9),
           fontSize: 14.0,
+        ),
+      ),
+    );
+  }
+}
+
+class NavigatorPopButton extends StatelessWidget {
+  const NavigatorPopButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: Navigator.of(context).pop,
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+        child: Container(
+          height: 40.0,
+          width: 40.0,
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withOpacity(0.04)
+                : Colors.black.withOpacity(0.04),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Icon(
+            FluentIcons.arrow_left_20_filled,
+            size: 20.0,
+          ),
         ),
       ),
     );
@@ -378,15 +410,15 @@ class ClosedTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(
-        left: 8.0,
-        right: 8.0,
-        top: 4.0,
-        bottom: 4.0,
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 8.0,
+        vertical: 4.0,
       ),
-      color: Theme.of(context).cardColor,
-      elevation: 2.0,
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       child: ListTile(
         title: Text(this.title!),
         subtitle: Text(this.subtitle!),
