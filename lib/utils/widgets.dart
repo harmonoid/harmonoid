@@ -420,8 +420,25 @@ class ClosedTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: ListTile(
-        title: Text(this.title!),
-        subtitle: Text(this.subtitle!),
+        title: Text(
+          this.title!,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+            fontWeight: FontWeight.w600,
+            fontSize: 14.0,
+          ),
+        ),
+        subtitle: Text(
+          this.subtitle!,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withOpacity(0.8)
+                : Colors.black.withOpacity(0.8),
+            fontSize: 14.0,
+          ),
+        ),
         onTap: open as void Function()?,
       ),
     );

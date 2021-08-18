@@ -125,7 +125,7 @@ class SettingsTile extends StatelessWidget {
                         ? Colors.white
                         : Colors.black,
                     fontWeight: FontWeight.w600,
-                    fontSize: 16.0,
+                    fontSize: 14.0,
                   ),
                 ),
                 Divider(color: Colors.transparent, height: 4.0),
