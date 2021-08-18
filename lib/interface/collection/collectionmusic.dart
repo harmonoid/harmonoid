@@ -1,6 +1,8 @@
 import 'package:animations/animations.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
@@ -49,7 +51,7 @@ class CollectionMusicState extends State<CollectionMusic>
                 : Colors.black.withOpacity(0.08),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Container(
@@ -88,10 +90,12 @@ class CollectionMusicState extends State<CollectionMusic>
                     ),
                   ),
                 ),
-                GestureDetector(
+                InkWell(
+                  borderRadius: BorderRadius.circular(8.0),
                   onTap: () => this.setState(() => this.index = 0),
                   child: Container(
-                    height: 72.0,
+                    height: 40.0,
+                    padding: EdgeInsets.symmetric(horizontal: 4.0),
                     alignment: Alignment.center,
                     margin: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
@@ -106,10 +110,12 @@ class CollectionMusicState extends State<CollectionMusic>
                     ),
                   ),
                 ),
-                GestureDetector(
+                InkWell(
+                  borderRadius: BorderRadius.circular(8.0),
                   onTap: () => this.setState(() => this.index = 1),
                   child: Container(
-                    height: 72.0,
+                    height: 40.0,
+                    padding: EdgeInsets.symmetric(horizontal: 4.0),
                     alignment: Alignment.center,
                     margin: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
@@ -124,10 +130,12 @@ class CollectionMusicState extends State<CollectionMusic>
                     ),
                   ),
                 ),
-                GestureDetector(
+                InkWell(
+                  borderRadius: BorderRadius.circular(8.0),
                   onTap: () => this.setState(() => this.index = 2),
                   child: Container(
-                    height: 72.0,
+                    height: 40.0,
+                    padding: EdgeInsets.symmetric(horizontal: 4.0),
                     alignment: Alignment.center,
                     margin: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
@@ -142,10 +150,12 @@ class CollectionMusicState extends State<CollectionMusic>
                     ),
                   ),
                 ),
-                GestureDetector(
+                InkWell(
+                  borderRadius: BorderRadius.circular(8.0),
                   onTap: () => this.setState(() => this.index = 3),
                   child: Container(
-                    height: 72.0,
+                    height: 40.0,
+                    padding: EdgeInsets.symmetric(horizontal: 4.0),
                     alignment: Alignment.center,
                     margin: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
@@ -156,6 +166,42 @@ class CollectionMusicState extends State<CollectionMusic>
                             this.index == 3 ? FontWeight.w600 : FontWeight.w200,
                         color: Colors.white
                             .withOpacity(this.index == 3 ? 1.0 : 0.67),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  FadeThroughTransition(
+                            fillColor: Colors.transparent,
+                            animation: animation,
+                            secondaryAnimation: secondaryAnimation,
+                            child: Settings(),
+                          ),
+                        ),
+                      );
+                    },
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8.0),
+                    ),
+                    child: Container(
+                      height: 40.0,
+                      width: 40.0,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white.withOpacity(0.04)
+                            : Colors.black.withOpacity(0.04),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Icon(
+                        FluentIcons.settings_20_regular,
+                        size: 20.0,
                       ),
                     ),
                   ),

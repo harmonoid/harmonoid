@@ -1,4 +1,6 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/collection/collectionalbum.dart';
 import 'package:harmonoid/interface/collection/collectiontrack.dart';
 import 'package:provider/provider.dart';
@@ -138,25 +140,41 @@ class CollectionArtistTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OpenContainer(
-      closedShape: RoundedRectangleBorder(
+    return Container(
+      height: this.height,
+      width: this.width,
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.all(
           Radius.circular(8.0),
         ),
+        color: Theme.of(context).cardColor,
       ),
-      closedElevation: 0.0,
-      closedColor: Theme.of(context).cardColor,
-      openColor: Theme.of(context).scaffoldBackgroundColor,
-      closedBuilder: (_, open) => Container(
-        height: this.height,
-        width: this.width,
-        child: InkWell(
-          onTap: open,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ClipRRect(
+      child: InkWell(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+        onTap: () {
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  FadeThroughTransition(
+                fillColor: Colors.transparent,
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                child: CollectionArtist(
+                  artist: this.artist,
+                ),
+              ),
+            ),
+          );
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Hero(
+              tag: 'artist_art_${this.artist.artistName!}',
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Image(
                   image: FileImage(this.artist.tracks.last.albumArt),
@@ -165,29 +183,28 @@ class CollectionArtistTile extends StatelessWidget {
                   width: this.width,
                 ),
               ),
-              Container(
-                height: 36.0,
-                width: this.width,
-                alignment: Alignment.topLeft,
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  this.artist.artistName!,
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.left,
-                  maxLines: 1,
+            ),
+            Container(
+              height: 36.0,
+              width: this.width,
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                this.artist.artistName!,
+                style: TextStyle(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w600,
                 ),
+                textAlign: TextAlign.left,
+                maxLines: 1,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-      openBuilder: (_, __) => CollectionArtist(artist: artist),
     );
   }
 }
@@ -198,131 +215,199 @@ class CollectionArtist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
-    double tileWidth =
-        (MediaQuery.of(context).size.width - 16 - (elementsPerRow - 1) * 8) /
-            elementsPerRow;
-    double tileHeight = tileWidth * 242 / 156;
+    int elementsPerRow =
+        (MediaQuery.of(context).size.width * 2 / 3) ~/ (156 + 8);
+    double tileWidth = ((MediaQuery.of(context).size.width * 2 / 3) -
+            16 -
+            (elementsPerRow - 1) * 8) /
+        elementsPerRow;
+    double tileHeight = tileWidth * 260 / 156;
 
     return Consumer<Collection>(
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          Image.file(
-            this.artist!.tracks.last.albumArt,
-            fit: BoxFit.fill,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.width,
-            filterQuality: FilterQuality.low,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white.withOpacity(0.04)
+              : Colors.black.withOpacity(0.04),
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(16.0),
+            bottomRight: Radius.circular(16.0),
           ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.4, 1.0],
-                colors: [
-                  Colors.transparent,
-                  Theme.of(context).scaffoldBackgroundColor,
+        ),
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width / 3,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                NavigatorPopButton(),
+                SizedBox(
+                  width: 24.0,
+                ),
+                Text(
+                  'Artist',
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16.0,
+                  ),
+                )
+              ],
+            ),
+            Divider(
+              height: 1.0,
+              thickness: 1.0,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(8.0),
+                    child: Hero(
+                      tag: 'artist_art_${this.artist!.artistName}',
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: Image.file(
+                          this.artist!.albums.last.albumArt,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                          width: 256.0,
+                          height: 256.0,
+                          filterQuality: FilterQuality.low,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 18.0),
+                  Container(
+                    margin: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white.withOpacity(0.04)
+                          : Colors.black.withOpacity(0.04),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          this.artist!.artistName!,
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                        ),
+                        SizedBox(height: 4.0),
+                        Text(
+                          '${this.artist!.tracks.length} tracks & ${this.artist!.albums.length} albums.',
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white.withOpacity(0.8)
+                                    : Colors.black.withOpacity(0.8),
+                            fontSize: 14.0,
+                          ),
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 18.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: Text(
+                          'Play Now',
+                        ),
+                      ),
+                      SizedBox(
+                        width: 12.0,
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: Text(
+                          'Add to Now Playing',
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-      builder: (context, collection, child) => this.artist!.tracks.length == 0
-          ? Container()
-          : AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.light,
-              child: Scaffold(
-                  body: Stack(
-                children: [
-                  child!,
-                  ListView(
-                    padding: EdgeInsets.zero,
-                    children: <Widget>[
-                          Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 192.0 + 128.0,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    stops: [
-                                      0.4,
-                                      1.0,
-                                    ],
-                                    colors: [
-                                      Colors.transparent,
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Card(
-                                margin: EdgeInsets.only(
-                                  left: (MediaQuery.of(context).size.width -
-                                          192.0) /
-                                      2,
-                                  right: (MediaQuery.of(context).size.width -
-                                          192.0) /
-                                      2,
-                                  bottom: 32.0,
-                                ),
-                                elevation: 2.0,
-                                clipBehavior: Clip.antiAlias,
-                                child: Container(
-                                  height: 192.0 + 36.0,
-                                  width: 192.0,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Image.file(
-                                        this.artist!.tracks.last.albumArt,
-                                        fit: BoxFit.fill,
-                                        height: 192.0,
-                                        width: 192.0,
-                                      ),
-                                      Container(
-                                        height: 36.0,
-                                        width: 192.0,
-                                        alignment: Alignment.topLeft,
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Text(
-                                          this.artist!.artistName!,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline2,
-                                          textAlign: TextAlign.left,
-                                          maxLines: 1,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
+      builder: (context, collection, child) => Scaffold(
+          body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Row(
+            children: [
+              child!,
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width * 2 / 3,
+                child: ListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                        Container(
+                          height: 56.0,
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(left: 24.0),
+                          child: Text(
+                            'Albums from this artist.',
+                            style: TextStyle(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14.0,
+                            ),
                           ),
-                          Container(
-                            height: tileHeight + 8.0,
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            width: MediaQuery.of(context).size.width,
+                        ),
+                        Container(
+                          height: tileHeight + 16.0,
+                          alignment: Alignment.centerLeft,
+                          margin: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Scrollbar(
                             child: ListView(
-                              padding: EdgeInsets.symmetric(horizontal: 4.0),
                               scrollDirection: Axis.horizontal,
                               children: this
                                   .artist!
                                   .albums
                                   .map(
-                                    (Album album) => Container(
-                                      margin: EdgeInsets.all(4.0),
+                                    (album) => Container(
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 4.0,
+                                        vertical: 8.0,
+                                      ),
                                       child: CollectionAlbumTile(
                                         album: album,
                                         height: tileHeight,
@@ -333,150 +418,216 @@ class CollectionArtist extends StatelessWidget {
                                   .toList(),
                             ),
                           ),
-                          Container(
-                            height: 16.0,
-                            color: Theme.of(context).scaffoldBackgroundColor,
+                        ),
+                        Container(
+                          height: 56.0,
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(left: 24.0),
+                          child: Text(
+                            'Tracks from this artist.',
+                            style: TextStyle(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14.0,
+                            ),
                           ),
-                        ] +
-                        this
-                            .artist!
-                            .tracks
-                            .map(
-                              (Track track) => Container(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                child: CollectionTrackTile(
-                                  track: track,
-                                  popupMenuButton: PopupMenuButton(
-                                    elevation: 2,
-                                    onSelected: (index) {
+                        ),
+                      ] +
+                      this
+                          .artist!
+                          .tracks
+                          .map(
+                            (Track track) => Container(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              child: new Material(
+                                color: Colors.transparent,
+                                child: new ListTile(
+                                  onTap: () async {
+                                    await Playback.play(
+                                      index: this.artist!.tracks.indexOf(track),
+                                      tracks: this.artist!.tracks,
+                                    );
+                                  },
+                                  title: Text(
+                                    track.trackName!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                    style: TextStyle(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    track.trackArtistNames!.join(', '),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                    style: TextStyle(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white.withOpacity(0.8)
+                                          : Colors.black.withOpacity(0.8),
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                  leading: CircleAvatar(
+                                    child: Text('${track.trackNumber ?? 1}'),
+                                    backgroundImage: FileImage(track.albumArt),
+                                  ),
+                                  trailing: PopupMenuButton(
+                                    color: Theme.of(context).appBarTheme.color,
+                                    elevation: 0,
+                                    onSelected: (dynamic index) {
                                       switch (index) {
                                         case 0:
-                                          showDialog(
-                                            context: context,
-                                            builder: (subContext) =>
-                                                AlertDialog(
-                                              title: Text(
-                                                language!
-                                                    .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
-                                                style: Theme.of(subContext)
-                                                    .textTheme
-                                                    .headline1,
-                                              ),
-                                              content: Text(
-                                                language!
-                                                    .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
-                                                style: Theme.of(subContext)
-                                                    .textTheme
-                                                    .headline5,
-                                              ),
-                                              actions: [
-                                                MaterialButton(
-                                                  textColor: Theme.of(context)
-                                                      .primaryColor,
-                                                  onPressed: () async {
-                                                    await collection
-                                                        .delete(track);
-                                                    Navigator.of(subContext)
-                                                        .pop();
-                                                    if (this
-                                                        .artist!
-                                                        .tracks
-                                                        .isEmpty)
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                  },
-                                                  child: Text(
-                                                      language!.STRING_YES),
+                                          {
+                                            showDialog(
+                                              context: context,
+                                              builder: (subContext) =>
+                                                  AlertDialog(
+                                                title: Text(
+                                                  language!
+                                                      .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
+                                                  style: Theme.of(subContext)
+                                                      .textTheme
+                                                      .headline1,
                                                 ),
-                                                MaterialButton(
-                                                  textColor: Theme.of(context)
-                                                      .primaryColor,
-                                                  onPressed:
+                                                content: Text(
+                                                  language!
+                                                      .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
+                                                  style: Theme.of(subContext)
+                                                      .textTheme
+                                                      .headline5,
+                                                ),
+                                                actions: [
+                                                  MaterialButton(
+                                                    textColor: Theme.of(context)
+                                                        .primaryColor,
+                                                    onPressed: () async {
                                                       Navigator.of(subContext)
-                                                          .pop,
-                                                  child:
-                                                      Text(language!.STRING_NO),
-                                                ),
-                                              ],
-                                            ),
-                                          );
+                                                          .pop();
+                                                      await collection
+                                                          .delete(track);
+                                                      if (this
+                                                          .artist!
+                                                          .tracks
+                                                          .isEmpty) {
+                                                        while (Navigator.of(
+                                                                context)
+                                                            .canPop())
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                      }
+                                                    },
+                                                    child: Text(
+                                                        language!.STRING_YES),
+                                                  ),
+                                                  MaterialButton(
+                                                    textColor: Theme.of(context)
+                                                        .primaryColor,
+                                                    onPressed:
+                                                        Navigator.of(subContext)
+                                                            .pop,
+                                                    child: Text(
+                                                        language!.STRING_NO),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
                                           break;
                                         case 1:
-                                          Share.shareFiles(
-                                            [track.filePath!],
-                                            subject:
-                                                '${track.trackName} - ${track.albumName}. Shared using Harmonoid!',
-                                          );
+                                          {
+                                            Share.shareFiles(
+                                              [track.filePath!],
+                                              subject:
+                                                  '${track.trackName} - ${track.albumName}.',
+                                            );
+                                          }
                                           break;
                                         case 2:
-                                          showDialog(
-                                            context: context,
-                                            builder: (subContext) =>
-                                                AlertDialog(
-                                              contentPadding: EdgeInsets.zero,
-                                              actionsPadding: EdgeInsets.zero,
-                                              title: Text(
-                                                language!
-                                                    .STRING_PLAYLIST_ADD_DIALOG_TITLE,
-                                                style: Theme.of(subContext)
-                                                    .textTheme
-                                                    .headline1,
-                                              ),
-                                              content: Container(
-                                                height: 280,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              24, 8, 0, 16),
-                                                      child: Text(
-                                                        language!
-                                                            .STRING_PLAYLIST_ADD_DIALOG_BODY,
-                                                        style:
-                                                            Theme.of(subContext)
-                                                                .textTheme
-                                                                .headline5,
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      height: 236,
-                                                      width: 280,
-                                                      decoration: BoxDecoration(
-                                                        border:
-                                                            Border.symmetric(
-                                                          vertical: BorderSide(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .dividerColor,
-                                                            width: 1,
-                                                          ),
+                                          {
+                                            showDialog(
+                                              context: context,
+                                              builder: (subContext) =>
+                                                  AlertDialog(
+                                                contentPadding: EdgeInsets.zero,
+                                                actionsPadding: EdgeInsets.zero,
+                                                title: Text(
+                                                  language!
+                                                      .STRING_PLAYLIST_ADD_DIALOG_TITLE,
+                                                  style: Theme.of(subContext)
+                                                      .textTheme
+                                                      .headline1,
+                                                ),
+                                                content: Container(
+                                                  height: 280,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 24,
+                                                                top: 8,
+                                                                bottom: 16),
+                                                        child: Text(
+                                                          language!
+                                                              .STRING_PLAYLIST_ADD_DIALOG_BODY,
+                                                          style: Theme.of(
+                                                                  subContext)
+                                                              .textTheme
+                                                              .headline5,
                                                         ),
                                                       ),
-                                                      child: ListView.builder(
-                                                        shrinkWrap: true,
-                                                        itemCount: collection
-                                                            .playlists.length,
-                                                        itemBuilder: (context,
-                                                            playlistIndex) {
-                                                          return ListTile(
-                                                            title: Text(
-                                                              collection
-                                                                  .playlists[
-                                                                      playlistIndex]
-                                                                  .playlistName!,
-                                                              style: Theme.of(
+                                                      Container(
+                                                        height: 236,
+                                                        width: 280,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                border: Border(
+                                                          top: BorderSide(
+                                                              color: Theme.of(
                                                                       context)
-                                                                  .textTheme
-                                                                  .headline2,
-                                                            ),
+                                                                  .dividerColor,
+                                                              width: 1),
+                                                          bottom: BorderSide(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .dividerColor,
+                                                              width: 1),
+                                                        )),
+                                                        child: ListView.builder(
+                                                          shrinkWrap: true,
+                                                          itemCount: collection
+                                                              .playlists.length,
+                                                          itemBuilder: (BuildContext
+                                                                      context,
+                                                                  int playlistIndex) =>
+                                                              ListTile(
+                                                            title: Text(
+                                                                collection
+                                                                    .playlists[
+                                                                        playlistIndex]
+                                                                    .playlistName!,
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .headline2),
                                                             leading: Icon(
                                                               Icons.queue_music,
                                                               size: Theme.of(
@@ -500,26 +651,26 @@ class CollectionArtist extends StatelessWidget {
                                                                       subContext)
                                                                   .pop();
                                                             },
-                                                          );
-                                                        },
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
+                                                actions: [
+                                                  MaterialButton(
+                                                    textColor: Theme.of(context)
+                                                        .primaryColor,
+                                                    onPressed:
+                                                        Navigator.of(subContext)
+                                                            .pop,
+                                                    child: Text(language!
+                                                        .STRING_CANCEL),
+                                                  ),
+                                                ],
                                               ),
-                                              actions: [
-                                                MaterialButton(
-                                                  textColor: Theme.of(context)
-                                                      .primaryColor,
-                                                  onPressed:
-                                                      Navigator.of(subContext)
-                                                          .pop,
-                                                  child: Text(
-                                                      language!.STRING_CANCEL),
-                                                ),
-                                              ],
-                                            ),
-                                          );
+                                            );
+                                          }
                                           break;
                                       }
                                     },
@@ -531,29 +682,59 @@ class CollectionArtist extends StatelessWidget {
                                     itemBuilder: (_) => <PopupMenuEntry>[
                                       PopupMenuItem(
                                         value: 0,
-                                        child: Text(language!.STRING_DELETE),
+                                        child: Text(
+                                          language!.STRING_DELETE,
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
                                       ),
                                       PopupMenuItem(
                                         value: 1,
-                                        child: Text(language!.STRING_SHARE),
+                                        child: Text(
+                                          language!.STRING_SHARE,
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
                                       ),
                                       PopupMenuItem(
                                         value: 2,
                                         child: Text(
-                                            language!.STRING_ADD_TO_PLAYLIST),
+                                          language!.STRING_ADD_TO_PLAYLIST,
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                            )
-                            .toList()
-                            .reversed
-                            .toList(),
-                  ),
-                ],
-              )),
-            ),
+                            ),
+                          )
+                          .toList(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      )),
     );
   }
 }
