@@ -13,17 +13,17 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "791798106cd9e7548dfd41f46c8467d76eb1c41a"
-      url: "https://github.com/jxzy999/Flutter-AssetsAudioPlayer.git"
+      resolved-ref: "182b310b81a6450693f9e768a7ee0f7c4ea88dfe"
+      url: "https://github.com/florent37/Flutter-AssetsAudioPlayer.git"
     source: git
-    version: "3.0.3+2"
+    version: "3.0.3+6"
   assets_audio_player_web:
     dependency: transitive
     description:
       name: assets_audio_player_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3+2"
+    version: "3.0.3+6"
   async:
     dependency: transitive
     description:
@@ -122,11 +122,25 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0-nullsafety"
+  fluentui_system_icons:
+    dependency: "direct main"
+    description:
+      name: fluentui_system_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.136"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_acrylic:
+    dependency: "direct main"
+    description:
+      name: flutter_acrylic
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -144,10 +158,12 @@ packages:
   flutter_media_metadata:
     dependency: "direct main"
     description:
-      name: flutter_media_metadata
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
+      path: "."
+      ref: HEAD
+      resolved-ref: "06c2da91094cae8e6af162fe9ea7379eeb19fe67"
+      url: "https://github.com/alexmercerind/flutter_media_metadata.git"
+    source: git
+    version: "0.1.1"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -178,7 +194,7 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.1"
+    version: "0.13.3"
   http_parser:
     dependency: transitive
     description:
@@ -269,7 +285,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   path_provider_linux:
     dependency: transitive
     description:
@@ -360,7 +376,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.26.0"
+    version: "0.27.1"
   share:
     dependency: "direct main"
     description:
@@ -477,7 +493,7 @@ packages:
       name: uuid
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.4"
   vector_math:
     dependency: transitive
     description:

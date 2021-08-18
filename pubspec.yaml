@@ -11,10 +11,14 @@ dependencies:
     sdk: flutter
   animations: ^2.0.0
   provider: ^5.0.0
+  flutter_acrylic: ^0.0.2
+  fluentui_system_icons: ^1.1.136
   assets_audio_player:
     git:
       url: https://github.com/florent37/Flutter-AssetsAudioPlayer.git
-  flutter_media_metadata: ^0.1.0
+  flutter_media_metadata:
+    git:
+      url: https://github.com/alexmercerind/flutter_media_metadata.git
   flutter_local_notifications: ^5.0.0
   file_picker: ^3.0.0
   permission_handler: ^6.1.1
