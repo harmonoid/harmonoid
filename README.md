@@ -15,11 +15,8 @@
 
 ## Contribute
 
-As of now, the project contains **OVER 10K LINES OF CODE**.
+[Provider](https://github.com/rrousselGit/provider) is used for the state management of the project.
 
-Recently, it is migrated to use [Provider](https://github.com/rrousselGit/provider) for its state management. At few, places `StatefulWidget`s are still present.
-
-The project supports sorting of music based on media metadata tags & native playback directly from file explorer etc. The whole user interface strictly follows the material design guidelines.
 
 Checkout [project structure](https://github.com/alexmercerind/harmonoid#structure) to get started.
 
