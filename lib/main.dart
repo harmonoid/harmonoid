@@ -34,7 +34,7 @@ void main() async {
     await Methods.askStoragePermission();
     await Configuration.init();
     await Collection.init(
-      collectionDirectory: configuration.collectionDirectory!,
+      collectionDirectories: configuration.collectionDirectories!,
       cacheDirectory: configuration.cacheDirectory!,
       collectionSortType: configuration.collectionSortType!,
     );

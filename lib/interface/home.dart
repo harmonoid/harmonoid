@@ -1,19 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:provider/provider.dart';
-import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/core/lyrics.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/fileintent.dart';
 import 'package:harmonoid/interface/collection/collectionmusic.dart';
-import 'package:harmonoid/interface/collection/collectionsearch.dart';
-import 'package:harmonoid/interface/discover/discovermusic.dart';
-import 'package:harmonoid/interface/nowplaying.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class Home extends StatefulWidget {
@@ -24,13 +18,7 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   int? index = fileIntent.tabIndex;
-  List<GlobalKey<NavigatorState>> navigatorKeys = <GlobalKey<NavigatorState>>[
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-    GlobalKey<NavigatorState>(),
-  ];
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -47,8 +35,8 @@ class HomeState extends State<Home>
 
   @override
   Future<bool> didPopRoute() async {
-    if (this.navigatorKeys[this.index!].currentState!.canPop()) {
-      this.navigatorKeys[this.index!].currentState!.pop();
+    if (this.navigatorKey.currentState!.canPop()) {
+      this.navigatorKey.currentState!.pop();
     } else {
       showDialog(
         context: context,
@@ -81,70 +69,6 @@ class HomeState extends State<Home>
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> screens = <Widget>[
-      Navigator(
-        key: this.navigatorKeys[0],
-        initialRoute: 'nowPlaying',
-        onGenerateRoute: (RouteSettings routeSettings) {
-          Route? route;
-          if (routeSettings.name == 'nowPlaying') {
-            route = MaterialPageRoute(
-              builder: (BuildContext context) => NowPlaying(),
-            );
-          }
-          return route;
-        },
-      ),
-      HeroControllerScope(
-        controller: MaterialApp.createMaterialHeroController(),
-        child: Navigator(
-          key: this.navigatorKeys[1],
-          initialRoute: 'collectionMusic',
-          onGenerateRoute: (RouteSettings routeSettings) {
-            Route<dynamic>? route;
-            if (routeSettings.name == 'collectionMusic') {
-              route = MaterialPageRoute(
-                builder: (BuildContext context) => ChangeNotifierProvider(
-                  child: CollectionMusic(),
-                  create: (context) => CollectionRefresh(),
-                  builder: (context, child) => child!,
-                ),
-              );
-            }
-            if (routeSettings.name == 'collectionSearch') {
-              route = PageRouteBuilder(
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) =>
-                        FadeThroughTransition(
-                  animation: animation,
-                  secondaryAnimation: secondaryAnimation,
-                  child: child,
-                ),
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    Consumer<Collection>(
-                  builder: (context, collection, _) => CollectionSearch(),
-                ),
-              );
-            }
-            return route;
-          },
-        ),
-      ),
-      Navigator(
-        key: this.navigatorKeys[3],
-        initialRoute: 'settings',
-        onGenerateRoute: (RouteSettings routeSettings) {
-          Route? route;
-          if (routeSettings.name == 'settings') {
-            route = MaterialPageRoute(
-              builder: (BuildContext context) => Settings(),
-            );
-          }
-          return route;
-        },
-      ),
-    ];
-    if (this.index! >= screens.length) this.index = screens.length - 1;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<Collection>(
@@ -154,14 +78,24 @@ class HomeState extends State<Home>
       ],
       builder: (context, _) => Consumer<Language>(
         builder: (context, _, __) => Scaffold(
-          body: PageTransitionSwitcher(
-            child: screens[this.index!],
-            transitionBuilder: (child, animation, secondaryAnimation) =>
-                FadeThroughTransition(
-              animation: animation,
-              secondaryAnimation: secondaryAnimation,
-              fillColor: Theme.of(context).scaffoldBackgroundColor,
-              child: child,
+          body: HeroControllerScope(
+            controller: MaterialApp.createMaterialHeroController(),
+            child: Navigator(
+              key: this.navigatorKey,
+              initialRoute: 'collection',
+              onGenerateRoute: (RouteSettings routeSettings) {
+                Route<dynamic>? route;
+                if (routeSettings.name == 'collection') {
+                  route = MaterialPageRoute(
+                    builder: (BuildContext context) => ChangeNotifierProvider(
+                      child: CollectionMusic(),
+                      create: (context) => CollectionRefresh(),
+                      builder: (context, child) => child!,
+                    ),
+                  );
+                }
+                return route;
+              },
             ),
           ),
           // bottomNavigationBar: BottomNavigationBar(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/collection/collectionsearch.dart';
+import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
@@ -30,7 +31,7 @@ class CollectionMusicState extends State<CollectionMusic>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (this.mounted) {
+    if (!initialized) {
       Provider.of<Collection>(context, listen: false).refresh(
           onProgress: (progress, total, _) {
         Provider.of<CollectionRefresh>(context, listen: false).progress =
@@ -39,6 +40,7 @@ class CollectionMusicState extends State<CollectionMusic>
         Provider.of<CollectionRefresh>(context, listen: false)
             .notifyListeners();
       });
+      initialized = true;
     }
   }
 

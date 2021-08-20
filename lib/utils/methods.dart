@@ -65,6 +65,9 @@ abstract class Methods {
       TargetPlatform? platform}) {
     bool isLight = themeMode == ThemeMode.light;
     return ThemeData(
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: accentColor,
+      ),
       platform: platform,
       splashFactory: InkRipple.splashFactory,
       splashColor: Colors.transparent,

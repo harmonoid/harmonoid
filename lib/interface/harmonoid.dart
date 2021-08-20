@@ -5,6 +5,11 @@ import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/home.dart';
 
+// TODO (alexmercerind): Improvise this. This is used to identify prevent automatic calling of `didChangeDependencies`,
+// when the parent widgets are updated. Since, this project still isn't using riverpod, it can only access
+// [ChangeNotifier]s inside the Widget tree.
+bool initialized = false;
+
 class Harmonoid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

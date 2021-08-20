@@ -27,12 +27,30 @@ class IndexingState extends State<IndexingSetting> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Divider(color: Colors.transparent, height: 4.0),
-            Text(
-              language!.STRING_SELECTED_DIRECTORY,
+            SizedBox(
+              height: 8.0,
             ),
             Text(
-              configuration.collectionDirectory!.path,
+              'Selected directories:',
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+                fontWeight: FontWeight.w600,
+                fontSize: 14.0,
+              ),
+            ),
+            SizedBox(
+              height: 4.0,
+            ),
+            Text(
+              configuration.collectionDirectories!
+                  .map((directory) => directory.path)
+                  .toList()
+                  .join('\n'),
+            ),
+            SizedBox(
+              height: 4.0,
             ),
             Divider(color: Colors.transparent, height: 4.0),
             Container(
@@ -99,36 +117,37 @@ class IndexingState extends State<IndexingSetting> {
         ),
       ),
       actions: [
-        MaterialButton(
-          onPressed: () async {
-            String? directoryPath =
-                await FilePicker.platform.getDirectoryPath();
-            if (directoryPath != null) {
-              await Future.wait([
-                configuration.save(
-                  collectionDirectory: new Directory(directoryPath),
-                ),
-                Provider.of<Collection>(context, listen: false).setDirectories(
-                  collectionDirectory: configuration.collectionDirectory,
-                  cacheDirectory: configuration.cacheDirectory,
-                  onProgress: (completed, total, isCompleted) {
-                    this.setState(() => this.linearProgressIndicatorValues = [
-                          completed,
-                          total
-                        ]);
-                  },
-                ),
-              ]);
-              this.setState(() => this.linearProgressIndicatorValues = null);
-            }
-          },
-          child: Text(
-            'CHANGE DIRECTORY',
-            style: TextStyle(
-              color: Theme.of(context).accentColor,
-            ),
-          ),
-        ),
+        // TODO (alexmercerind): Add support for multiple directories.
+        // MaterialButton(
+        //   onPressed: () async {
+        //     String? directoryPath =
+        //         await FilePicker.platform.getDirectoryPath();
+        //     if (directoryPath != null) {
+        //       await Future.wait([
+        //         configuration.save(
+        //           collectionDirectory: new Directory(directoryPath),
+        //         ),
+        //         Provider.of<Collection>(context, listen: false).setDirectories(
+        //           collectionDirectory: configuration.collectionDirectory,
+        //           cacheDirectory: configuration.cacheDirectory,
+        //           onProgress: (completed, total, isCompleted) {
+        //             this.setState(() => this.linearProgressIndicatorValues = [
+        //                   completed,
+        //                   total
+        //                 ]);
+        //           },
+        //         ),
+        //       ]);
+        //       this.setState(() => this.linearProgressIndicatorValues = null);
+        //     }
+        //   },
+        //   child: Text(
+        //     'CHANGE DIRECTORY',
+        //     style: TextStyle(
+        //       color: Theme.of(context).accentColor,
+        //     ),
+        //   ),
+        // ),
         MaterialButton(
           onPressed: () async {
             await Provider.of<Collection>(context, listen: false).index(
