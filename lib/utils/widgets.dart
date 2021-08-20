@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:marquee/marquee.dart' as marquee;
@@ -151,7 +152,7 @@ class RefreshCollectionButton extends StatefulWidget {
 }
 
 class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
-  bool lock = true;
+  bool lock = false;
   late double turns;
   late Tween<double> tween;
 
@@ -180,15 +181,23 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
         ),
       ),
       onPressed: this.lock
-          ? () async {
+          ? () {}
+          : () async {
               this.lock = false;
               this.turns += 2 * math.pi;
               this.tween = Tween<double>(begin: 0, end: this.turns);
-              await Provider.of<Collection>(context, listen: false).refresh();
-              this.lock = true;
+              Provider.of<Collection>(context, listen: false).refresh(
+                  onProgress: (progress, total, isCompleted) {
+                Provider.of<CollectionRefresh>(context, listen: false)
+                    .progress = progress;
+                Provider.of<CollectionRefresh>(context, listen: false).total =
+                    total;
+                Provider.of<CollectionRefresh>(context, listen: false)
+                    .notifyListeners();
+                this.lock = !isCompleted;
+              });
               this.setState(() {});
-            }
-          : () {},
+            },
     );
   }
 }
