@@ -8,9 +8,9 @@
 Checkout [next-gen](https://github.com/harmonoid/harmonoid/tree/next-gen) branch for seeing the progress. This new design includes close match with new Windows 11 design & transparency/blur effects. Support for Windows & Linux is on its way aswell.
 
 
-<img src='https://github.com/harmonoid/harmonoid/blob/assets/harmonoid-next-3.jpg' height='600'></img>
-<img src='https://github.com/harmonoid/harmonoid/blob/assets/harmonoid-next-2.jpg' height='600'></img>
-<img src='https://github.com/harmonoid/harmonoid/blob/assets/harmonoid-next-1.jpg' height='600'></img>
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid-next-3.jpg)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid-next-2.jpg)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid-next-1.jpg)
 
 https://user-images.githubusercontent.com/28951144/130282872-cd650fa8-1752-41ba-816f-57b589854b12.mp4
 
