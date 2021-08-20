@@ -264,83 +264,78 @@ class CollectionPlaylist extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Collection>(
       builder: (context, collection, _) => Scaffold(
-        body: ListView(
-          children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: Navigator.of(context).pop,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(8.0),
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 56.0,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white.withOpacity(0.08)
+                  : Colors.black.withOpacity(0.08),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  NavigatorPopButton(),
+                  SizedBox(
+                    width: 24.0,
+                  ),
+                  Text(
+                    this.playlist.playlistName!,
+                    style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                      SubHeader(language!.STRING_PLAYLIST_TRACKS_SUBHEADER),
+                    ] +
+                    (this.playlist.tracks.map((Track track) {
+                      return ListTile(
+                        onTap: () => Playback.play(
+                          index: this.playlist.tracks.indexOf(track),
+                          tracks: this.playlist.tracks,
                         ),
-                        child: Container(
-                          height: 44.0,
-                          width: 44.0,
-                          child: Icon(
-                            FluentIcons.arrow_left_20_filled,
-                            size: 20.0,
+                        isThreeLine: true,
+                        leading: CircleAvatar(
+                          child: Text('${track.trackNumber ?? 1}'),
+                          backgroundImage: FileImage(track.albumArt),
+                        ),
+                        title: Text(track.trackName!),
+                        subtitle: Text(
+                          track.albumName! +
+                              '\n' +
+                              (track.trackArtistNames!.length < 2
+                                  ? track.trackArtistNames!.join(', ')
+                                  : track.trackArtistNames!
+                                      .sublist(0, 2)
+                                      .join(', ')),
+                        ),
+                        trailing: IconButton(
+                          onPressed: () {
+                            collection.playlistRemoveTrack(
+                                this.playlist, track);
+                          },
+                          icon: Icon(
+                            FluentIcons.subtract_circle_20_regular,
+                            color: Theme.of(context).iconTheme.color,
                           ),
+                          iconSize: 20.0,
+                          splashRadius: Theme.of(context).iconTheme.size! - 8,
                         ),
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 16.0, top: 16.0),
-                          child: Text(
-                            this.playlist.playlistName!,
-                            style: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ),
-                        SubHeader(language!.STRING_PLAYLIST_TRACKS_SUBHEADER),
-                      ],
-                    ),
-                  ],
-                ),
-              ] +
-              (this.playlist.tracks.map((Track track) {
-                return ListTile(
-                  onTap: () => Playback.play(
-                    index: this.playlist.tracks.indexOf(track),
-                    tracks: this.playlist.tracks,
-                  ),
-                  isThreeLine: true,
-                  leading: CircleAvatar(
-                    child: Text('${track.trackNumber ?? 1}'),
-                    backgroundImage: FileImage(track.albumArt),
-                  ),
-                  title: Text(track.trackName!),
-                  subtitle: Text(
-                    track.albumName! +
-                        '\n' +
-                        (track.trackArtistNames!.length < 2
-                            ? track.trackArtistNames!.join(', ')
-                            : track.trackArtistNames!.sublist(0, 2).join(', ')),
-                  ),
-                  trailing: IconButton(
-                    onPressed: () {
-                      collection.playlistRemoveTrack(this.playlist, track);
-                    },
-                    icon: Icon(
-                      Icons.remove,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
-                    iconSize: Theme.of(context).iconTheme.size!,
-                    splashRadius: Theme.of(context).iconTheme.size! - 8,
-                  ),
-                );
-              }).toList()),
+                      );
+                    }).toList()),
+              ),
+            ),
+          ],
         ),
       ),
     );

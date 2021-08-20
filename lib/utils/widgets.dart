@@ -101,8 +101,9 @@ class SubHeader extends StatelessWidget {
         text!,
         style: TextStyle(
           color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white.withOpacity(0.9)
-              : Colors.black.withOpacity(0.9),
+              ? Colors.white
+              : Colors.black,
+          fontWeight: FontWeight.w600,
           fontSize: 14.0,
         ),
       ),

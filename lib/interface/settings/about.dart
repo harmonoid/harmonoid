@@ -39,6 +39,11 @@ class AboutState extends State<AboutSetting> {
       closedColor: Colors.transparent,
       openColor: Colors.transparent,
       closedElevation: 0.0,
+      closedShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+      ),
       openElevation: 0.0,
       closedBuilder: (context, open) => ClosedTile(
         open: open,
