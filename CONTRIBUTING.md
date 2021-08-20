@@ -1,18 +1,17 @@
-## 🎉 Contribute
+## Contribute
 
-😃 Thanks for deciding to contribute to the project.
+[Provider](https://github.com/rrousselGit/provider) is used for state management.
 
-As of now, the project contains **OVER 10K LINES OF CODE**.
 
-Recently, it is migrated to use [Provider](https://github.com/rrousselGit/provider) for its state management. At few, places `StatefulWidgets` are still present.
+Checkout project structure below to get started.
 
-The project supports sorting of music based on media metadata tags & native playback directly from file explorer etc. The whole user interface strictly follows the material design guidelines.
+The plan of project is to bring the best, cross platform music experience for all users.
 
-Checkout [project structure](https://github.com/alexmercerind/harmonoid#-project) to get started. You may also join our [Discord Server](https://discord.gg/ZG7Pj9SREG). New Flutter developers are also welcomed.
+The plan of project is to bring the best, cross platform music experience for all users.
 
-The plan of project is to bring the best, cross platform music experience for all users. Fork the project today & add your features. We are actively looking for contributors. If you decide to contribute, add yourself to the about page of the app.
+Fork the project today & add your features. We are actively looking for contributors. If you decide to contribute, add yourself to the about page of the app.
 
-## 🔎 Project
+## Project
 
 Glad you're interested in contributing to the project, here is the project structure for guiding you to this codebase.
 
