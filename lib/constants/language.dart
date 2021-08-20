@@ -309,7 +309,7 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_NO_INTERNET_SUBTITLE = 'Check your connection.';
           this.STRING_NO_COLLECTION_TITLE = 'Empty collection';
           this.STRING_NO_COLLECTION_SUBTITLE =
-              'No music found.\nChange where to look for the music from settings.';
+              'No local music found.\nChange where to look for the music from settings.\nOtherwise, let\'s play some from YouTube tab.';
           this.STRING_DOWNLOAD_COMPLETED = 'Download completed.';
           this.STRING_DOWNLOAD_FAILED = 'Download failed.';
           this.STRING_DISCORD = 'DISCORD SERVER';

@@ -130,7 +130,8 @@ class AboutPage extends StatelessWidget {
                         EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     child: Row(children: [
                       Chip(
-                        avatar: Icon(Icons.star_border, color: Colors.white),
+                        avatar: Icon(FluentIcons.star_20_regular,
+                            size: 20.0, color: Colors.white),
                         label: Text(
                           '${this.repository!['stargazers_count']} stars',
                           style: TextStyle(
@@ -141,7 +142,8 @@ class AboutPage extends StatelessWidget {
                       ),
                       SizedBox(width: 8.0),
                       Chip(
-                        avatar: Icon(Icons.restaurant, color: Colors.white),
+                        avatar: Icon(FluentIcons.branch_fork_20_regular,
+                            size: 20.0, color: Colors.white),
                         label: Text(
                           '${this.repository!['forks']} forks',
                           style: TextStyle(color: Colors.white),

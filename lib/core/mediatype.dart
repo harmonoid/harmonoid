@@ -28,12 +28,12 @@ class Track extends MediaType {
         configuration.cacheDirectory!.path,
         'albumArts',
         '${this.albumArtistName}_${this.albumName}'
-                .replaceAll(new RegExp(r'[^\s\w]'), ' ') +
+                .replaceAll(RegExp(r'[^\s\w]'), ' ') +
             '.PNG'));
     if (albumArtFile.existsSync())
       return albumArtFile;
     else
-      return new File(path.join(configuration.cacheDirectory!.path, 'albumArts',
+      return File(path.join(configuration.cacheDirectory!.path, 'albumArts',
           'defaultAlbumArt' + '.PNG'));
   }
 
@@ -61,9 +61,18 @@ class Track extends MediaType {
 
   static Track? fromMap(Map<String, dynamic>? trackMap) {
     if (trackMap == null) return null;
-    return new Track(
-      trackName: trackMap['trackName'] ?? 'Unknown Track',
-      albumName: trackMap['albumName'] ?? 'Unknown Album',
+    bool isNotNullOrEmpty(dynamic data) {
+      if (data == '' || data == null) return false;
+      return true;
+    }
+
+    return Track(
+      trackName: isNotNullOrEmpty(trackMap['trackName'])
+          ? trackMap['trackName']
+          : 'Unknown Track',
+      albumName: isNotNullOrEmpty(trackMap['albumName'])
+          ? trackMap['albumName']
+          : 'Unknown Album',
       trackNumber: trackMap['trackNumber'],
       year: trackMap['year'],
       albumArtistName: trackMap['albumArtistName'] ?? 'Unknown Artist',
@@ -110,12 +119,12 @@ class Album extends MediaType {
         configuration.cacheDirectory!.path,
         'albumArts',
         '${this.albumArtistName}_${this.albumName}'
-                .replaceAll(new RegExp(r'[^\s\w]'), ' ') +
+                .replaceAll(RegExp(r'[^\s\w]'), ' ') +
             '.PNG'));
     if (albumArtFile.existsSync())
       return albumArtFile;
     else
-      return new File(path.join(configuration.cacheDirectory!.path, 'albumArts',
+      return File(path.join(configuration.cacheDirectory!.path, 'albumArts',
           'defaultAlbumArt' + '.PNG'));
   }
 
@@ -141,7 +150,7 @@ class Album extends MediaType {
   }
 
   static Album fromMap(Map<String, dynamic> albumMap) {
-    return new Album(
+    return Album(
         albumName: albumMap['albumName'] ?? 'Unknown Album',
         year: albumMap['year'],
         albumArtistName: albumMap['albumArtistName'] ?? 'Unknown Artist',
@@ -186,7 +195,7 @@ class Artist extends MediaType {
   }
 
   static Artist fromMap(Map<String, dynamic> artistMap) {
-    return new Artist(
+    return Artist(
       artistName: artistMap['artistName'],
     );
   }
@@ -218,7 +227,7 @@ class Playlist extends MediaType {
 }
 
 List<MediaType> mediaTypes = <MediaType>[
-  new Album(),
-  new Track(),
-  new Artist(),
+  Album(),
+  Track(),
+  Artist(),
 ];

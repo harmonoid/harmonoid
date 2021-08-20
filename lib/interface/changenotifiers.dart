@@ -15,6 +15,21 @@ class Server extends ChangeNotifier {
   }
 }
 
+class CollectionRefresh extends ChangeNotifier {
+  int progress = 0;
+  int total = 0;
+
+  void setProgress(int progress) {
+    this.progress = progress;
+    this.notifyListeners();
+  }
+
+  void setTotal(int total) {
+    this.total = total;
+    this.notifyListeners();
+  }
+}
+
 class NotificationLyrics extends ChangeNotifier {
   late bool enabled;
 
@@ -80,5 +95,5 @@ List<Accent?> accents = [
   new Accent(light: Color(0xFF1DB954), dark: Color(0xFF1DB954)),
   new Accent(light: Color(0xFF5B51D8), dark: Color(0xFFD1C4E9)),
   new Accent(light: Color(0xFFF50057), dark: Color(0xFFFF80AB)),
-  new Accent(light: Color(0xFF424242), dark: Color(0xFFE0E0E0)),
+  new Accent(light: Color(0xFF424242), dark: Colors.grey.shade600),
 ];

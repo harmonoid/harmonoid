@@ -27,13 +27,14 @@ abstract class ConfigurationKeys {
   List<dynamic>? discoverRecent;
 }
 
-const Map<String, dynamic> DEFAULT_CONFIGURATION = {
-  'collectionDirectory': 'C:/Users/alexmercerind/Music',
+Map<String, dynamic> DEFAULT_CONFIGURATION = {
+  'collectionDirectory':
+      path.join(Platform.environment['USERPROFILE']!, 'Music'),
   // TODO: Remove this.
   'homeAddress': '',
   'languageRegion': 0,
   'accent': 0,
-  'themeMode': 0,
+  'themeMode': 2,
   'collectionSortType': 0,
   // TODO: Remove this.
   'automaticAccent': false,

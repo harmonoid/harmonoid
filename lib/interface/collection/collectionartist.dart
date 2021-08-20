@@ -273,7 +273,7 @@ class CollectionArtist extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12.0),
                         child: Image.file(
-                          this.artist!.albums.last.albumArt,
+                          this.artist!.tracks.last.albumArt,
                           fit: BoxFit.cover,
                           alignment: Alignment.topCenter,
                           width: 256.0,

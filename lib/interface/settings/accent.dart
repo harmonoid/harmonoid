@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -102,8 +103,10 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                                 scale: this.animationControllers.last,
                                 alignment: Alignment.center,
                                 child: Container(
-                                  child: Icon(Icons.check,
-                                      color: Colors.white, size: 28.0),
+                                  child: Icon(
+                                      FluentIcons.checkmark_circle_48_regular,
+                                      color: Colors.white,
+                                      size: 28.0),
                                   alignment: Alignment.center,
                                 ),
                               ),

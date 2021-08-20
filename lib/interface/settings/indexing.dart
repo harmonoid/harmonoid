@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
@@ -79,7 +80,7 @@ class IndexingState extends State<IndexingSetting> {
                       child: Chip(
                       backgroundColor: Theme.of(context).accentColor,
                       avatar: Icon(
-                        Icons.check_circle,
+                        FluentIcons.checkmark_circle_48_regular,
                         color: Colors.white,
                       ),
                       label: Text(

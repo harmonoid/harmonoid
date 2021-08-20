@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
@@ -24,11 +25,11 @@ class HomeState extends State<Home>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   int? index = fileIntent.tabIndex;
   List<GlobalKey<NavigatorState>> navigatorKeys = <GlobalKey<NavigatorState>>[
-    new GlobalKey<NavigatorState>(),
-    new GlobalKey<NavigatorState>(),
-    new GlobalKey<NavigatorState>(),
-    new GlobalKey<NavigatorState>(),
-    new GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
   ];
 
   @override
@@ -102,12 +103,16 @@ class HomeState extends State<Home>
           onGenerateRoute: (RouteSettings routeSettings) {
             Route<dynamic>? route;
             if (routeSettings.name == 'collectionMusic') {
-              route = new MaterialPageRoute(
-                builder: (BuildContext context) => CollectionMusic(),
+              route = MaterialPageRoute(
+                builder: (BuildContext context) => ChangeNotifierProvider(
+                  child: CollectionMusic(),
+                  create: (context) => CollectionRefresh(),
+                  builder: (context, child) => child!,
+                ),
               );
             }
             if (routeSettings.name == 'collectionSearch') {
-              route = new PageRouteBuilder(
+              route = PageRouteBuilder(
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) =>
                         FadeThroughTransition(
