@@ -52,7 +52,6 @@ class Collection extends ChangeNotifier {
               .buffer
               .asUint8List());
     }
-    await _collection.refresh();
   }
 
   late Directory collectionDirectory;
@@ -162,7 +161,10 @@ class Collection extends ChangeNotifier {
                 .add(album);
           }
         }
-      } catch (exception) {}
+      } catch (exception, stacktrace) {
+        print(exception);
+        print(stacktrace);
+      }
     }
     await this.saveToCache();
     this.sort(type: this.collectionSortType);
@@ -304,8 +306,7 @@ class Collection extends ChangeNotifier {
     this._foundArtists = <String>[];
     if (!await File(path.join(this.cacheDirectory.path, 'collection.JSON'))
         .exists()) {
-      await this.index();
-      onProgress?.call(0, 0, true);
+      this.index(onProgress: onProgress);
     } else {
       Map<String, dynamic> collection = convert.jsonDecode(
           await File(path.join(this.cacheDirectory.path, 'collection.JSON'))
@@ -316,7 +317,6 @@ class Collection extends ChangeNotifier {
           await this._arrange(track, () async {});
         }
       }
-      await this.saveToCache();
       List<File> collectionDirectoryContent = <File>[];
       for (FileSystemEntity object
           in this.collectionDirectory.listSync(recursive: true)) {
@@ -367,6 +367,7 @@ class Collection extends ChangeNotifier {
       this.lastTrack = this._tracks.last;
       this.lastArtist = this._artists.last;
     }
+    await this.saveToCache();
     await this.playlistsGetFromCache();
     await this.sort(type: this.collectionSortType);
     this.notifyListeners();
@@ -491,7 +492,10 @@ class Collection extends ChangeNotifier {
           }
 
           await this._arrange(track, albumArtMethod);
-        } catch (exception) {}
+        } catch (exception, stacktrace) {
+          print(exception);
+          print(stacktrace);
+        }
       }
       onProgress?.call(index + 1, directory.length, true);
     }
