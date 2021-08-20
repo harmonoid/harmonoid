@@ -1,10 +1,20 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
-<h3 align="center">A music app with a beautiful UI to play local music & YouTube music.</h3>
-
+<h4 align="center">[WIP] A music app with a beautiful UI to play local music & YouTube music.</h4>
 <br></br>
 
-<h4>Harmonoid is being redesigned & being ported to Windows & Linux.</h4>
 
+**🎉 Harmonoid is being completely redesigned.**
+
+Checkout [next-gen](https://github.com/harmonoid/harmonoid/tree/next-gen) branch for seeing the progress. This new design includes close match with new Windows 11 design & transparency/blur effects. Support for Windows & Linux is on its way aswell.
+
+
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/harmonoid-next-3.jpg' height='600'></img>
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/harmonoid-next-2.jpg' height='600'></img>
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/harmonoid-next-1.jpg' height='600'></img>
+
+https://user-images.githubusercontent.com/28951144/130282872-cd650fa8-1752-41ba-816f-57b589854b12.mp4
+
+<br></br>
 
 ## Features
 
