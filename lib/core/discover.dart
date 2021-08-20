@@ -10,7 +10,6 @@ import 'package:harmonoid/utils/methods.dart';
 
 late Discover discover;
 
-
 class Discover {
   String? homeAddress;
 
@@ -25,7 +24,8 @@ class Discover {
     String modeString = mode.type!.toLowerCase();
     Uri uri = Uri.https(
       this.homeAddress!,
-      '/search', {
+      '/search',
+      {
         'keyword': keyword,
         'mode': modeString,
       },
@@ -33,20 +33,23 @@ class Discover {
     try {
       http.Response response = await http.get(uri);
       if (response.statusCode == 200) {
-        (convert.jsonDecode(response.body)['result'] as List).forEach((objectMap) {
+        (convert.jsonDecode(response.body)['result'] as List)
+            .forEach((objectMap) {
           if (mode is Album) result.add(Album.fromMap(objectMap));
           if (mode is Track) result.add(Track.fromMap(objectMap));
           if (mode is Artist) result.add(Artist.fromMap(objectMap));
         });
-      }
-      else {
+      } else {
         throw 'Exception: Invalid status code.';
       }
       List<dynamic> searchRecents = configuration.discoverSearchRecent!;
       String searchKeyword = '';
       for (String element in keyword.split(' ')) {
         if (element.length > 1)
-          searchKeyword = searchKeyword + element[0].toUpperCase() + element.substring(1, element.length) + ' ';
+          searchKeyword = searchKeyword +
+              element[0].toUpperCase() +
+              element.substring(1, element.length) +
+              ' ';
       }
       if (!Methods.binaryContains(searchRecents, [searchKeyword, mode.type])) {
         searchRecents.insert(
@@ -57,8 +60,7 @@ class Discover {
       if (searchRecents.length > 5) searchRecents.removeLast();
       await configuration.save(discoverSearchRecent: searchRecents);
       return result;
-    }
-    catch(exception) {
+    } catch (exception) {
       throw 'Exception: Please check your internet connection.';
     }
   }
@@ -67,44 +69,45 @@ class Discover {
     List<Track> result = <Track>[];
     Uri uri = Uri.https(
       this.homeAddress!,
-      '/albumInfo', {
+      '/albumInfo',
+      {
         'albumId': album.albumId,
       },
     );
     try {
       http.Response response = await http.get(uri);
       if (response.statusCode == 200) {
-        (convert.jsonDecode(response.body)['tracks'] as List).forEach((objectMap) {
+        (convert.jsonDecode(response.body)['tracks'] as List)
+            .forEach((objectMap) {
           objectMap['albumName'] = album.albumName;
           objectMap['albumId'] = album.albumId;
           result.add(Track.fromMap(objectMap)!);
         });
-      }
-      else {
+      } else {
         throw 'Exception: Invalid status code.';
       }
       return result;
-    }
-    catch(exception) {
+    } catch (exception) {
       throw 'Exception: Please check your internet connection.';
     }
   }
 
-  Future<void> trackDownload(Track track, {void Function()? onCompleted, void Function(double progress)? onProgress, void Function(DownloadException exception)? onException}) async {
-    File trackDestination = File(
-      path.join(
-        configuration.collectionDirectory!.path,
-        '${track.trackArtistNames!.join(', ')}_${track.trackName}'.replaceAll(new RegExp(r'[^\s\w]'),'') + '.OGG',
+  Future<void> trackDownload(Track track,
+      {void Function()? onCompleted,
+      void Function(double progress)? onProgress,
+      void Function(DownloadException exception)? onException}) async {
+    File trackDestination = File(path.join(
+      configuration.collectionDirectories!.first.path,
+      '${track.trackArtistNames!.join(', ')}_${track.trackName}'
+              .replaceAll(new RegExp(r'[^\s\w]'), '') +
+          '.OGG',
     ));
     download.addTask(
       new DownloadTask(
-        fileUri: Uri.https(
-          this.homeAddress!,
-          '/trackDownload', {
-            'trackId': track.trackId,
-            'albumId': track.albumId,
-          }
-        ),
+        fileUri: Uri.https(this.homeAddress!, '/trackDownload', {
+          'trackId': track.trackId,
+          'albumId': track.albumId,
+        }),
         saveLocation: trackDestination,
         onProgress: onProgress,
         onCompleted: onCompleted,

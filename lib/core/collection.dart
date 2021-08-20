@@ -31,15 +31,16 @@ class Collection extends ChangeNotifier {
   static Collection? get() => _collection;
 
   static Future<void> init(
-      {required Directory collectionDirectory,
+      {required List<Directory> collectionDirectories,
       required Directory cacheDirectory,
       required CollectionSort collectionSortType}) async {
     _collection = new Collection();
-    _collection.collectionDirectory = collectionDirectory;
+    _collection.collectionDirectories = collectionDirectories;
     _collection.cacheDirectory = cacheDirectory;
     _collection.collectionSortType = collectionSortType;
-    if (!await _collection.collectionDirectory.exists())
-      await _collection.collectionDirectory.create(recursive: true);
+    for (Directory directory in collectionDirectories) {
+      if (!await directory.exists()) await directory.create(recursive: true);
+    }
     if (!await Directory(
             path.join(_collection.cacheDirectory.path, 'albumArts'))
         .exists()) {
@@ -54,7 +55,7 @@ class Collection extends ChangeNotifier {
     }
   }
 
-  late Directory collectionDirectory;
+  late List<Directory> collectionDirectories;
   late Directory cacheDirectory;
   late CollectionSort collectionSortType;
   List<Playlist> playlists = <Playlist>[];
@@ -66,13 +67,14 @@ class Collection extends ChangeNotifier {
   Artist? lastArtist;
 
   Future<void> setDirectories(
-      {required Directory? collectionDirectory,
+      {required List<Directory>? collectionDirectories,
       required Directory? cacheDirectory,
       void Function(int, int, bool)? onProgress}) async {
-    _collection.collectionDirectory = collectionDirectory!;
+    _collection.collectionDirectories = collectionDirectories!;
     _collection.cacheDirectory = cacheDirectory!;
-    if (!await _collection.collectionDirectory.exists())
-      await _collection.collectionDirectory.create(recursive: true);
+    for (Directory directory in collectionDirectories) {
+      if (!await directory.exists()) await directory.create(recursive: true);
+    }
     if (!await Directory(
             path.join(_collection.cacheDirectory.path, 'albumArts'))
         .exists()) {
@@ -297,8 +299,9 @@ class Collection extends ChangeNotifier {
           onProgress}) async {
     if (!await this.cacheDirectory.exists())
       await this.cacheDirectory.create(recursive: true);
-    if (!await this.collectionDirectory.exists())
-      await this.collectionDirectory.create(recursive: true);
+    for (Directory directory in collectionDirectories) {
+      if (!await directory.exists()) await directory.create(recursive: true);
+    }
     this._albums = <Album>[];
     this._tracks = <Track>[];
     this._artists = <Artist>[];
@@ -317,18 +320,20 @@ class Collection extends ChangeNotifier {
           await this._arrange(track, () async {});
         }
       }
-      List<File> collectionDirectoryContent = <File>[];
-      for (FileSystemEntity object
-          in this.collectionDirectory.listSync(recursive: true)) {
-        if (Methods.isFileSupported(object) && object is File) {
-          collectionDirectoryContent.add(object);
+      List<File> collectionDirectoriesContent = <File>[];
+      for (Directory collectionDirectory in this.collectionDirectories) {
+        for (FileSystemEntity object
+            in collectionDirectory.listSync(recursive: true)) {
+          if (Methods.isFileSupported(object) && object is File) {
+            collectionDirectoriesContent.add(object);
+          }
         }
       }
-      if (collectionDirectoryContent.length != this._tracks.length) {
+      if (collectionDirectoriesContent.length != this._tracks.length) {
         for (int index = 0;
-            index < collectionDirectoryContent.length;
+            index < collectionDirectoriesContent.length;
             index++) {
-          File file = collectionDirectoryContent[index];
+          File file = collectionDirectoriesContent[index];
           bool isTrackAdded = false;
           for (Track track in this._tracks) {
             if (track.filePath == file.path) {
@@ -341,7 +346,8 @@ class Collection extends ChangeNotifier {
               file: file,
             );
           }
-          onProgress?.call(index + 1, collectionDirectoryContent.length, false);
+          onProgress?.call(
+              index + 1, collectionDirectoriesContent.length, false);
         }
       }
       for (Album album in this._albums) {
@@ -359,8 +365,8 @@ class Collection extends ChangeNotifier {
               .add(album);
         }
       }
-      onProgress?.call(collectionDirectoryContent.length,
-          collectionDirectoryContent.length, true);
+      onProgress?.call(collectionDirectoriesContent.length,
+          collectionDirectoriesContent.length, true);
     }
     if (this._tracks.isNotEmpty) {
       this.lastAlbum = this._albums.last;
@@ -467,8 +473,9 @@ class Collection extends ChangeNotifier {
     this.playlists = <Playlist>[];
     this._foundAlbums = <List<String>>[];
     this._foundArtists = <String>[];
-    List<FileSystemEntity> directory =
-        this.collectionDirectory.listSync(recursive: true);
+    List<FileSystemEntity> directory = [];
+    for (Directory collectionDirectory in this.collectionDirectories)
+      directory.addAll(collectionDirectory.listSync());
     for (int index = 0; index < directory.length; index++) {
       FileSystemEntity object = directory[index];
       if (Methods.isFileSupported(object)) {

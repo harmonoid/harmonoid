@@ -12,7 +12,7 @@ import 'package:harmonoid/constants/language.dart';
 late Configuration configuration;
 
 abstract class ConfigurationKeys {
-  Directory? collectionDirectory;
+  List<Directory>? collectionDirectories;
   Directory? cacheDirectory;
   String? homeAddress;
   LanguageRegion? languageRegion;
@@ -28,8 +28,9 @@ abstract class ConfigurationKeys {
 }
 
 Map<String, dynamic> DEFAULT_CONFIGURATION = {
-  'collectionDirectory':
-      path.join(Platform.environment['USERPROFILE']!, 'Music'),
+  'collectionDirectories': [
+    path.join(Platform.environment['USERPROFILE']!, 'Music'),
+  ],
   // TODO: Remove this.
   'homeAddress': '',
   'languageRegion': 0,
@@ -70,7 +71,7 @@ class Configuration extends ConfigurationKeys {
   }
 
   Future<void> save({
-    Directory? collectionDirectory,
+    List<Directory>? collectionDirectories,
     String? homeAddress,
     LanguageRegion? languageRegion,
     Accent? accent,
@@ -84,8 +85,8 @@ class Configuration extends ConfigurationKeys {
     List<dynamic>? discoverSearchRecent,
     List<dynamic>? discoverRecent,
   }) async {
-    if (collectionDirectory != null) {
-      this.collectionDirectory = collectionDirectory;
+    if (collectionDirectories != null) {
+      this.collectionDirectories = collectionDirectories;
     }
     if (homeAddress != null) {
       this.homeAddress = homeAddress;
@@ -121,7 +122,11 @@ class Configuration extends ConfigurationKeys {
       this.platform = platform;
     }
     await configuration.configurationFile.writeAsString(convert.jsonEncode({
-      'collectionDirectory': this.collectionDirectory!.path,
+      'collectionDirectories': this
+          .collectionDirectories!
+          .map((directory) => directory.path)
+          .toList()
+          .cast<String>(),
       'homeAddress': this.homeAddress,
       'languageRegion': this.languageRegion!.index,
       'accent': accents.indexOf(this.accent),
@@ -144,8 +149,10 @@ class Configuration extends ConfigurationKeys {
         currentConfiguration[key] = DEFAULT_CONFIGURATION[key];
       }
     });
-    this.collectionDirectory =
-        Directory(currentConfiguration['collectionDirectory']);
+    this.collectionDirectories = currentConfiguration['collectionDirectories']
+        .map((directory) => Directory(directory))
+        .toList()
+        .cast<Directory>();
     this.homeAddress = currentConfiguration['homeAddress'];
     this.languageRegion =
         LanguageRegion.values[currentConfiguration['languageRegion']];
