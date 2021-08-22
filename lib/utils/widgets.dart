@@ -4,8 +4,6 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:provider/provider.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:marquee/marquee.dart' as marquee;
 
 import 'package:harmonoid/core/collection.dart';
 
@@ -455,43 +453,158 @@ class ClosedTile extends StatelessWidget {
   }
 }
 
-class Marquee extends StatelessWidget {
-  const Marquee({
+class ContextMenuButton<T> extends StatefulWidget {
+  const ContextMenuButton({
     Key? key,
-    required this.text,
-    required this.style,
-    this.velocity = 20.0,
-    this.blankSpace = 40.0,
-    this.startAfter = const Duration(seconds: 2),
-    this.pauseAfterRound = const Duration(seconds: 2),
-  }) : super(key: key);
+    required this.itemBuilder,
+    this.initialValue,
+    this.onSelected,
+    this.onCanceled,
+    this.tooltip,
+    this.elevation,
+    this.padding = const EdgeInsets.all(8.0),
+    this.child,
+    this.icon,
+    this.iconSize,
+    this.offset = Offset.zero,
+    this.enabled = true,
+    this.shape,
+    this.color,
+    this.enableFeedback,
+  })  : assert(
+          !(child != null && icon != null),
+          'You can only pass [child] or [icon], not both.',
+        ),
+        super(key: key);
 
-  final String text;
-  final TextStyle style;
-  final double velocity;
-  final double blankSpace;
-  final Duration startAfter;
-  final Duration pauseAfterRound;
+  final PopupMenuItemBuilder<T> itemBuilder;
+
+  final T? initialValue;
+
+  final PopupMenuItemSelected<T>? onSelected;
+
+  final PopupMenuCanceled? onCanceled;
+
+  final String? tooltip;
+
+  final double? elevation;
+
+  final EdgeInsetsGeometry padding;
+
+  final Widget? child;
+
+  final Widget? icon;
+
+  final Offset offset;
+
+  final bool enabled;
+
+  final ShapeBorder? shape;
+
+  final Color? color;
+
+  final bool? enableFeedback;
+
+  final double? iconSize;
+
+  @override
+  ContextMenuButtonState<T> createState() => ContextMenuButtonState<T>();
+}
+
+class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
+  void showButtonMenu() {
+    final PopupMenuThemeData popupMenuTheme = PopupMenuTheme.of(context);
+    final RenderBox button = context.findRenderObject()! as RenderBox;
+    final RenderBox overlay =
+        Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(widget.offset, ancestor: overlay),
+        button.localToGlobal(
+            button.size.bottomRight(Offset.zero) + widget.offset,
+            ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
+    final List<PopupMenuEntry<T>> items = widget.itemBuilder(context);
+
+    if (items.isNotEmpty) {
+      showMenu<T?>(
+        context: context,
+        elevation: widget.elevation ?? popupMenuTheme.elevation,
+        items: items,
+        initialValue: widget.initialValue,
+        position: position,
+        shape: widget.shape ??
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(8.0),
+              ),
+            ),
+        color: widget.color ?? popupMenuTheme.color,
+      ).then<void>((T? newValue) {
+        if (!mounted) return null;
+        if (newValue == null) {
+          widget.onCanceled?.call();
+          return null;
+        }
+        widget.onSelected?.call(newValue);
+      });
+    }
+  }
+
+  bool get _canRequestFocus {
+    final NavigationMode mode = MediaQuery.maybeOf(context)?.navigationMode ??
+        NavigationMode.traditional;
+    switch (mode) {
+      case NavigationMode.traditional:
+        return widget.enabled;
+      case NavigationMode.directional:
+        return true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      height: (style.fontSize! + 4.0) * MediaQuery.of(context).textScaleFactor,
-      child: AutoSizeText(
-        text,
-        minFontSize: style.fontSize!,
-        maxFontSize: style.fontSize!,
-        style: style,
-        overflowReplacement: marquee.Marquee(
-          text: text,
-          blankSpace: blankSpace,
-          accelerationCurve: Curves.easeOutCubic,
-          velocity: velocity,
-          startPadding: 2.0,
-          startAfter: startAfter,
-          pauseAfterRound: pauseAfterRound,
-          style: style,
+    final bool enableFeedback = widget.enableFeedback ??
+        PopupMenuTheme.of(context).enableFeedback ??
+        true;
+
+    assert(debugCheckHasMaterialLocalizations(context));
+
+    if (widget.child != null)
+      return Tooltip(
+        message:
+            widget.tooltip ?? MaterialLocalizations.of(context).showMenuTooltip,
+        child: InkWell(
+          onTap: widget.enabled ? showButtonMenu : null,
+          canRequestFocus: _canRequestFocus,
+          child: widget.child,
+          enableFeedback: enableFeedback,
+        ),
+      );
+
+    return Padding(
+      padding: EdgeInsets.all(4.0),
+      child: InkWell(
+        onTap: widget.enabled ? showButtonMenu : null,
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+        child: Container(
+          height: 40.0,
+          width: 40.0,
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withOpacity(0.04)
+                : Colors.black.withOpacity(0.04),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: widget.icon ??
+              Icon(
+                FluentIcons.more_vertical_20_regular,
+                size: 20.0,
+              ),
         ),
       ),
     );

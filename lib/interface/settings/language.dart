@@ -1,4 +1,3 @@
-import 'package:flag/flag.dart';
 import 'package:flutter/material.dart' hide ExpansionTile;
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';

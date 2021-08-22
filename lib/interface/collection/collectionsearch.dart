@@ -115,7 +115,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                             tracks.add(
                               CollectionTrackTile(
                                 track: collectionItem,
-                                popupMenuButton: PopupMenuButton(
+                                popupMenuButton: ContextMenuButton(
                                   elevation: 0,
                                   onSelected: (index) {
                                     switch (index) {
@@ -280,9 +280,11 @@ class CollectionSearchState extends State<CollectionSearch> {
                                         break;
                                     }
                                   },
-                                  icon: Icon(Icons.more_vert,
-                                      color: Theme.of(context).iconTheme.color,
-                                      size: Theme.of(context).iconTheme.size),
+                                  icon: Icon(
+                                    FluentIcons.more_vertical_20_regular,
+                                    color: Theme.of(context).iconTheme.color,
+                                    size: 20.0,
+                                  ),
                                   tooltip: language!.STRING_OPTIONS,
                                   itemBuilder: (_) => <PopupMenuEntry>[
                                     PopupMenuItem(

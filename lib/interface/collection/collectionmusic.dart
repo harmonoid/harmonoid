@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animations/animations.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -74,9 +76,7 @@ class CollectionMusicState extends State<CollectionMusic>
                       color: Theme.of(context).brightness == Brightness.dark
                           ? Colors.white.withOpacity(0.08)
                           : Colors.black.withOpacity(0.08),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8.0),
-                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                     child:
                         (collectionRefresh.progress != collectionRefresh.total)
@@ -229,6 +229,47 @@ class CollectionMusicState extends State<CollectionMusic>
                       ),
                     ),
                   ),
+                ),
+                SizedBox(
+                  width: 8.0,
+                ),
+                ContextMenuButton<CollectionSort>(
+                  offset: Offset.fromDirection(pi / 2, 64.0),
+                  icon: Icon(
+                    FluentIcons.more_vertical_20_regular,
+                    size: 20.0,
+                  ),
+                  elevation: 0.0,
+                  onSelected: (value) {
+                    Provider.of<Collection>(context, listen: false)
+                        .sort(type: value);
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: CollectionSort.dateAdded,
+                      child: Text(
+                        'Date added',
+                        style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: CollectionSort.aToZ,
+                      child: Text(
+                        'A to Z',
+                        style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: EdgeInsets.all(8.0),

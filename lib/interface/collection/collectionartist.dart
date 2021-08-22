@@ -482,7 +482,7 @@ class CollectionArtist extends StatelessWidget {
                                     child: Text('${track.trackNumber ?? 1}'),
                                     backgroundImage: FileImage(track.albumArt),
                                   ),
-                                  trailing: PopupMenuButton(
+                                  trailing: ContextMenuButton(
                                     color: Theme.of(context).appBarTheme.color,
                                     elevation: 0,
                                     onSelected: (dynamic index) {
@@ -674,10 +674,11 @@ class CollectionArtist extends StatelessWidget {
                                           break;
                                       }
                                     },
-                                    icon: Icon(Icons.more_vert,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
-                                        size: Theme.of(context).iconTheme.size),
+                                    icon: Icon(
+                                      FluentIcons.more_vertical_20_regular,
+                                      color: Theme.of(context).iconTheme.color,
+                                      size: 20.0,
+                                    ),
                                     tooltip: language!.STRING_OPTIONS,
                                     itemBuilder: (_) => <PopupMenuEntry>[
                                       PopupMenuItem(

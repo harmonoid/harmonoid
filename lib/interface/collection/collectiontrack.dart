@@ -25,7 +25,7 @@ class CollectionTrackTab extends StatelessWidget {
                     CollectionTrackTile(
                       track: collection.tracks[index],
                       index: index,
-                      popupMenuButton: PopupMenuButton(
+                      popupMenuButton: ContextMenuButton(
                         elevation: 0,
                         onSelected: (index) {
                           switch (index) {
@@ -170,9 +170,6 @@ class CollectionTrackTab extends StatelessWidget {
                               break;
                           }
                         },
-                        icon: Icon(Icons.more_vert,
-                            color: Theme.of(context).iconTheme.color,
-                            size: Theme.of(context).iconTheme.size),
                         tooltip: language!.STRING_OPTIONS,
                         itemBuilder: (_) => <PopupMenuEntry>[
                           PopupMenuItem(
@@ -238,7 +235,7 @@ class CollectionTrackTab extends StatelessWidget {
 class CollectionTrackTile extends StatelessWidget {
   final Track track;
   final int? index;
-  final PopupMenuButton popupMenuButton;
+  final ContextMenuButton popupMenuButton;
   const CollectionTrackTile(
       {Key? key,
       required this.track,

@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -493,7 +494,7 @@ class CollectionAlbum extends StatelessWidget {
                                     backgroundImage:
                                         FileImage(this.album!.albumArt),
                                   ),
-                                  trailing: PopupMenuButton(
+                                  trailing: ContextMenuButton(
                                     color: Theme.of(context).appBarTheme.color,
                                     elevation: 0,
                                     onSelected: (dynamic index) {
@@ -683,10 +684,11 @@ class CollectionAlbum extends StatelessWidget {
                                           break;
                                       }
                                     },
-                                    icon: Icon(Icons.more_vert,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
-                                        size: Theme.of(context).iconTheme.size),
+                                    icon: Icon(
+                                      FluentIcons.more_vertical_20_regular,
+                                      color: Theme.of(context).iconTheme.color,
+                                      size: 20.0,
+                                    ),
                                     tooltip: language!.STRING_OPTIONS,
                                     itemBuilder: (_) => <PopupMenuEntry>[
                                       PopupMenuItem(
