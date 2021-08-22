@@ -8,7 +8,7 @@ abstract class MediaType {
   Map<String, dynamic> toMap();
 }
 
-class Track extends MediaType {
+class Track extends MediaType with Comparable {
   String? trackName;
   String? albumName;
   int? trackNumber;
@@ -89,6 +89,15 @@ class Track extends MediaType {
     );
   }
 
+  @override
+  int compareTo(dynamic track) {
+    int result = -1;
+    if (track is Track) {
+      result = this.trackName!.compareTo(track.trackName!);
+    }
+    return result;
+  }
+
   Track(
       {this.trackName,
       this.albumName,
@@ -105,7 +114,7 @@ class Track extends MediaType {
       this.albumId});
 }
 
-class Album extends MediaType {
+class Album extends MediaType with Comparable {
   String? albumName;
   int? year;
   String? albumArtistName;
@@ -168,9 +177,18 @@ class Album extends MediaType {
       this.albumArtMedium,
       this.albumArtLow,
       this.albumId});
+
+  @override
+  int compareTo(dynamic album) {
+    int result = -1;
+    if (album is Album) {
+      result = this.albumName!.compareTo(album.albumName!);
+    }
+    return result;
+  }
 }
 
-class Artist extends MediaType {
+class Artist extends MediaType with Comparable {
   String? artistName;
   List<Album> albums = <Album>[];
   List<Track> tracks = <Track>[];
@@ -198,6 +216,15 @@ class Artist extends MediaType {
     return Artist(
       artistName: artistMap['artistName'],
     );
+  }
+
+  @override
+  int compareTo(dynamic artist) {
+    int result = -1;
+    if (artist is Artist) {
+      result = this.artistName!.compareTo(artist.artistName!);
+    }
+    return result;
   }
 
   Artist({this.artistName});
