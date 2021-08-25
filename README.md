@@ -45,6 +45,12 @@ https://user-images.githubusercontent.com/28951144/130282872-cd650fa8-1752-41ba-
 - **Personalization**
   - Change accent color & theme of the app.
 
+- **Discord integration**
+  - Tell your friends what you listen.
+
+- **Small size**
+  - Complete application under 20 MB on (Windows & Android).
+
 
 <h4  align="center">Loving the project? Consider starring the repository ⭐</h4>
 
