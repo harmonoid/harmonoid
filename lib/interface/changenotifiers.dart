@@ -84,16 +84,16 @@ class Accent {
 }
 
 List<Accent?> accents = [
-  new Accent(
+  Accent(
       light: Colors.deepPurpleAccent.shade700,
       dark: Colors.deepPurpleAccent.shade200),
-  new Accent(light: Color(0xFF4285F4), dark: Color(0xFF82B1FF)),
-  new Accent(light: Color(0xFFDB4437), dark: Color(0xFFFF8A80)),
-  new Accent(light: Color(0xFFF4B400), dark: Color(0xFFFFE57F)),
-  new Accent(light: Color(0xFF0F9D58), dark: Color(0xFF0F9D58)),
-  new Accent(light: Color(0xFFFF3D00), dark: Color(0xFFFF9E80)),
-  new Accent(light: Color(0xFF1DB954), dark: Color(0xFF1DB954)),
-  new Accent(light: Color(0xFF5B51D8), dark: Color(0xFFD1C4E9)),
-  new Accent(light: Color(0xFFF50057), dark: Color(0xFFFF80AB)),
-  new Accent(light: Color(0xFF424242), dark: Colors.grey.shade600),
+  Accent(light: Color(0xFF4285F4), dark: Color(0xFF82B1FF)),
+  Accent(light: Color(0xFFDB4437), dark: Color(0xFFFF8A80)),
+  Accent(light: Color(0xFFF4B400), dark: Color(0xFFFFE57F)),
+  Accent(light: Color(0xFF0F9D58), dark: Color(0xFF0F9D58)),
+  Accent(light: Color(0xFFFF3D00), dark: Color(0xFFFF9E80)),
+  Accent(light: Color(0xFF1DB954), dark: Color(0xFF1DB954)),
+  Accent(light: Color(0xFF5B51D8), dark: Color(0xFFD1C4E9)),
+  Accent(light: Color(0xFFF50057), dark: Color(0xFFFF80AB)),
+  Accent(light: Color(0xFF424242), dark: Colors.grey.shade600),
 ];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:harmonoid/constants/language.dart';
 
 import 'package:harmonoid/interface/settings/accent.dart';
 import 'package:harmonoid/interface/settings/server.dart';
@@ -31,7 +32,7 @@ class Settings extends StatelessWidget {
                 width: 24.0,
               ),
               Text(
-                'Settings',
+                language!.STRING_SETTING,
                 style: TextStyle(
                   color: Theme.of(context).brightness == Brightness.dark
                       ? Colors.white
@@ -51,10 +52,9 @@ class Settings extends StatelessWidget {
                 height: 4.0,
               ),
               AboutSetting(),
+              IndexingSetting(),
               ThemeSetting(),
               AccentSetting(),
-              // TODO (alexmercerind): Add support for multiple directories.
-              IndexingSetting(),
               // TODO: Server is no longer necessary.
               // ServerSetting(),
               LanguageSetting(),

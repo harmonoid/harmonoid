@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/discover.dart';
 import 'package:harmonoid/core/download.dart';
 import 'package:harmonoid/core/fileintent.dart';
 import 'package:harmonoid/core/configuration.dart';
@@ -38,22 +38,26 @@ void main() async {
       cacheDirectory: configuration.cacheDirectory!,
       collectionSortType: configuration.collectionSortType!,
     );
-    await Discover.init(
-      homeAddress: configuration.homeAddress!,
-    );
     await Language.init(
       languageRegion: configuration.languageRegion!,
     );
     await FileIntent.init();
     await Download.init();
     runApp(
-      new Harmonoid(),
+      Harmonoid(),
     );
-  } catch (exception) {
+  } catch (exception, stacktrace) {
     runApp(
-      new ExceptionMaterialApp(
+      ExceptionApp(
         exception: exception,
+        stacktrace: stacktrace,
       ),
     );
   }
+  doWhenWindowReady(() {
+    appWindow.minSize = Size(640, 480);
+    appWindow.size = Size(1024, 640);
+    appWindow.alignment = Alignment.center;
+    appWindow.show();
+  });
 }

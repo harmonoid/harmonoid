@@ -435,7 +435,7 @@ class CollectionAlbum extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           padding: EdgeInsets.only(left: 24.0),
                           child: Text(
-                            'Tracks from this album.',
+                            language!.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER,
                             style: TextStyle(
                               color: Theme.of(context).brightness ==
                                       Brightness.dark

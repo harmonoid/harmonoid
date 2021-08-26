@@ -2,7 +2,6 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/collection/collectionalbum.dart';
-import 'package:harmonoid/interface/collection/collectiontrack.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
@@ -63,18 +62,38 @@ class LeadingCollectionArtistTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<Collection>(
-      builder: (context, collection, _) => Padding(
-        padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 2.0, bottom: 4.0),
-        child: OpenContainer(
-          closedElevation: 0,
-          closedShape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(8.0),
-            ),
+      builder: (context, collection, _) => Container(
+        margin: EdgeInsets.only(
+          left: 8.0,
+          right: 8.0,
+          bottom: 4.0,
+          top: 2.0,
+        ),
+        height: this.height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(8.0),
           ),
-          closedColor: Theme.of(context).cardColor,
-          openColor: Theme.of(context).scaffoldBackgroundColor,
-          closedBuilder: (_, open) => Container(
+          color: Theme.of(context).cardColor,
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.all(
+            Radius.circular(8.0),
+          ),
+          onTap: () {
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    FadeThroughTransition(
+                  fillColor: Colors.transparent,
+                  animation: animation,
+                  secondaryAnimation: secondaryAnimation,
+                  child: CollectionArtist(artist: collection.lastArtist),
+                ),
+              ),
+            );
+          },
+          child: Container(
             height: this.height,
             width: MediaQuery.of(context).size.width - 16,
             child: InkWell(
@@ -82,14 +101,17 @@ class LeadingCollectionArtistTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image(
-                      image: FileImage(
-                          collection.lastArtist!.tracks.last.albumArt),
-                      fit: BoxFit.fill,
-                      height: this.height,
-                      width: this.height,
+                  Hero(
+                    tag: 'artist_art_${collection.lastArtist!.artistName}',
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image(
+                        image: FileImage(
+                            collection.lastArtist!.tracks.last.albumArt),
+                        fit: BoxFit.fill,
+                        height: this.height,
+                        width: this.height,
+                      ),
                     ),
                   ),
                   Container(
@@ -119,8 +141,6 @@ class LeadingCollectionArtistTile extends StatelessWidget {
               ),
             ),
           ),
-          openBuilder: (_, __) =>
-              CollectionArtist(artist: collection.lastArtist),
         ),
       ),
     );

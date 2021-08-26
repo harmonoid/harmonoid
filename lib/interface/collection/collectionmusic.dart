@@ -4,6 +4,7 @@ import 'package:animations/animations.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/collection/collectionsearch.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
@@ -54,7 +55,7 @@ class CollectionMusicState extends State<CollectionMusic>
       body: Column(
         children: [
           Container(
-            height: 72.0,
+            height: 64.0,
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.white.withOpacity(0.08)
@@ -63,170 +64,135 @@ class CollectionMusicState extends State<CollectionMusic>
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Consumer<CollectionRefresh>(
-                  builder: (context, collectionRefresh, child) => Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.only(
-                      top: 12.0,
-                      bottom: 12.0,
-                      left: 4.0,
-                      right: 4.0,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white.withOpacity(0.08)
-                          : Colors.black.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child:
-                        (collectionRefresh.progress != collectionRefresh.total)
-                            ? Row(
-                                children: [
-                                  SizedBox(
-                                    width: 12.0,
-                                  ),
-                                  Icon(Icons.refresh, size: 20.0),
-                                  SizedBox(
-                                    width: 12.0,
-                                  ),
-                                  Text(
-                                    'Adding your local music... ${collectionRefresh.progress} of ${collectionRefresh.total}',
-                                  ),
-                                  SizedBox(
-                                    width: 16.0,
-                                  ),
-                                ],
-                              )
-                            : Row(
-                                children: [
-                                  SizedBox(
-                                    width: 12.0,
-                                  ),
-                                  Icon(FluentIcons.checkmark_circle_20_regular,
-                                      size: 20.0),
-                                  SizedBox(
-                                    width: 12.0,
-                                  ),
-                                  Text(
-                                    'All your local music is synced.',
-                                  ),
-                                  SizedBox(
-                                    width: 16.0,
-                                  ),
-                                ],
-                              ),
-                  ),
-                ),
                 Expanded(
-                  child: Container(),
-                ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(8.0),
-                  onTap: () => this.setState(() => this.index = 0),
                   child: Container(
-                    height: 40.0,
-                    padding: EdgeInsets.symmetric(horizontal: 4.0),
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      language!.STRING_ALBUM.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight:
-                            this.index == 0 ? FontWeight.w600 : FontWeight.w200,
-                        color: (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black)
-                            .withOpacity(this.index == 0 ? 1.0 : 0.67),
-                      ),
-                    ),
-                  ),
-                ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(8.0),
-                  onTap: () => this.setState(() => this.index = 1),
-                  child: Container(
-                    height: 40.0,
-                    padding: EdgeInsets.symmetric(horizontal: 4.0),
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      language!.STRING_TRACK.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight:
-                            this.index == 1 ? FontWeight.w600 : FontWeight.w200,
-                        color: (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black)
-                            .withOpacity(this.index == 1 ? 1.0 : 0.67),
-                      ),
-                    ),
-                  ),
-                ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(8.0),
-                  onTap: () => this.setState(() => this.index = 2),
-                  child: Container(
-                    height: 40.0,
-                    padding: EdgeInsets.symmetric(horizontal: 4.0),
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      language!.STRING_ARTIST.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight:
-                            this.index == 2 ? FontWeight.w600 : FontWeight.w200,
-                        color: (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black)
-                            .withOpacity(this.index == 2 ? 1.0 : 0.67),
-                      ),
-                    ),
-                  ),
-                ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(8.0),
-                  onTap: () => this.setState(() => this.index = 3),
-                  child: Container(
-                    height: 40.0,
-                    padding: EdgeInsets.symmetric(horizontal: 4.0),
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      language!.STRING_PLAYLISTS.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight:
-                            this.index == 3 ? FontWeight.w600 : FontWeight.w200,
-                        color: (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black)
-                            .withOpacity(this.index == 3 ? 1.0 : 0.67),
-                      ),
-                    ),
-                  ),
-                ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(8.0),
-                  onTap: () => this.setState(() => this.index = 4),
-                  child: Container(
-                    height: 40.0,
-                    padding: EdgeInsets.symmetric(horizontal: 4.0),
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      'Search'.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight:
-                            this.index == 4 ? FontWeight.w600 : FontWeight.w200,
-                        color: (Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black)
-                            .withOpacity(this.index == 4 ? 1.0 : 0.67),
-                      ),
+                    height: 44.0,
+                    child: ListView(
+                      reverse: true,
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      children: [
+                        InkWell(
+                          borderRadius: BorderRadius.circular(8.0),
+                          onTap: () => this.setState(() => this.index = 4),
+                          child: Container(
+                            height: 40.0,
+                            padding: EdgeInsets.symmetric(horizontal: 4.0),
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              'Search'.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: this.index == 4
+                                    ? FontWeight.w600
+                                    : FontWeight.w200,
+                                color: (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black)
+                                    .withOpacity(this.index == 4 ? 1.0 : 0.67),
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(8.0),
+                          onTap: () => this.setState(() => this.index = 3),
+                          child: Container(
+                            height: 40.0,
+                            padding: EdgeInsets.symmetric(horizontal: 4.0),
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              language!.STRING_PLAYLISTS.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: this.index == 3
+                                    ? FontWeight.w600
+                                    : FontWeight.w200,
+                                color: (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black)
+                                    .withOpacity(this.index == 3 ? 1.0 : 0.67),
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(8.0),
+                          onTap: () => this.setState(() => this.index = 2),
+                          child: Container(
+                            height: 40.0,
+                            padding: EdgeInsets.symmetric(horizontal: 4.0),
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              language!.STRING_ARTIST.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: this.index == 2
+                                    ? FontWeight.w600
+                                    : FontWeight.w200,
+                                color: (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black)
+                                    .withOpacity(this.index == 2 ? 1.0 : 0.67),
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(8.0),
+                          onTap: () => this.setState(() => this.index = 1),
+                          child: Container(
+                            height: 40.0,
+                            padding: EdgeInsets.symmetric(horizontal: 4.0),
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              language!.STRING_TRACK.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: this.index == 1
+                                    ? FontWeight.w600
+                                    : FontWeight.w200,
+                                color: (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black)
+                                    .withOpacity(this.index == 1 ? 1.0 : 0.67),
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(8.0),
+                          onTap: () => this.setState(() => this.index = 0),
+                          child: Container(
+                            height: 40.0,
+                            padding: EdgeInsets.symmetric(horizontal: 4.0),
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              language!.STRING_ALBUM.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: this.index == 0
+                                    ? FontWeight.w600
+                                    : FontWeight.w200,
+                                color: (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black)
+                                    .withOpacity(this.index == 0 ? 1.0 : 0.67),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -240,15 +206,18 @@ class CollectionMusicState extends State<CollectionMusic>
                     size: 20.0,
                   ),
                   elevation: 0.0,
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     Provider.of<Collection>(context, listen: false)
                         .sort(type: value);
+                    await configuration.save(
+                      collectionSortType: value,
+                    );
                   },
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: CollectionSort.dateAdded,
                       child: Text(
-                        'Date added',
+                        language!.STRING_DATE_ADDED,
                         style: TextStyle(
                           color: Theme.of(context).brightness == Brightness.dark
                               ? Colors.white
@@ -260,7 +229,7 @@ class CollectionMusicState extends State<CollectionMusic>
                     PopupMenuItem(
                       value: CollectionSort.aToZ,
                       child: Text(
-                        'A to Z',
+                        language!.STRING_A_TO_Z,
                         style: TextStyle(
                           color: Theme.of(context).brightness == Brightness.dark
                               ? Colors.white

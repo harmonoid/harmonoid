@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/core/lyrics.dart';
@@ -69,77 +70,90 @@ class HomeState extends State<Home>
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<Collection>(
-            create: (context) => Collection.get()!),
-        ChangeNotifierProvider<Language>(create: (context) => Language.get()!),
-        ChangeNotifierProvider<Lyrics>(create: (context) => Lyrics.get())
-      ],
-      builder: (context, _) => Consumer<Language>(
-        builder: (context, _, __) => Scaffold(
-          body: HeroControllerScope(
-            controller: MaterialApp.createMaterialHeroController(),
-            child: Navigator(
-              key: this.navigatorKey,
-              initialRoute: 'collection',
-              onGenerateRoute: (RouteSettings routeSettings) {
-                Route<dynamic>? route;
-                if (routeSettings.name == 'collection') {
-                  route = MaterialPageRoute(
-                    builder: (BuildContext context) => ChangeNotifierProvider(
-                      child: CollectionMusic(),
-                      create: (context) => CollectionRefresh(),
-                      builder: (context, child) => child!,
+    return Scaffold(
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          WindowTitleBar(),
+          Expanded(
+            child: MultiProvider(
+              providers: [
+                ChangeNotifierProvider<Collection>(
+                    create: (context) => Collection.get()!),
+                ChangeNotifierProvider<Language>(
+                    create: (context) => Language.get()!),
+                ChangeNotifierProvider<Lyrics>(
+                    create: (context) => Lyrics.get())
+              ],
+              builder: (context, _) => Consumer<Language>(
+                builder: (context, _, __) => Scaffold(
+                  body: HeroControllerScope(
+                    controller: MaterialApp.createMaterialHeroController(),
+                    child: Navigator(
+                      key: this.navigatorKey,
+                      initialRoute: 'collection',
+                      onGenerateRoute: (RouteSettings routeSettings) {
+                        Route<dynamic>? route;
+                        if (routeSettings.name == 'collection') {
+                          route = MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                ChangeNotifierProvider(
+                              child: CollectionMusic(),
+                              create: (context) => CollectionRefresh(),
+                              builder: (context, child) => child!,
+                            ),
+                          );
+                        }
+                        return route;
+                      },
                     ),
-                  );
-                }
-                return route;
-              },
+                  ),
+                  // bottomNavigationBar: BottomNavigationBar(
+                  //   type: BottomNavigationBarType.shifting,
+                  //   currentIndex: this.index!,
+                  //   onTap: (int index) => this.setState(() => this.index = index),
+                  //   items: <BottomNavigationBarItem>[
+                  //         BottomNavigationBarItem(
+                  //           icon: Icon(Icons.play_arrow),
+                  //           label: language!.STRING_NOW_PLAYING,
+                  //           backgroundColor: Theme.of(context)
+                  //               .bottomNavigationBarTheme
+                  //               .backgroundColor,
+                  //         ),
+                  //         BottomNavigationBarItem(
+                  //           icon: Icon(Icons.library_music),
+                  //           label: language!.STRING_COLLECTION,
+                  //           backgroundColor: Theme.of(context)
+                  //               .bottomNavigationBarTheme
+                  //               .backgroundColor,
+                  //         ),
+                  //       ] +
+                  //       (configuration.homeAddress != ''
+                  //           ? <BottomNavigationBarItem>[
+                  //               BottomNavigationBarItem(
+                  //                 icon: Icon(Icons.search),
+                  //                 label: language!.STRING_DISCOVER,
+                  //                 backgroundColor: Theme.of(context)
+                  //                     .bottomNavigationBarTheme
+                  //                     .backgroundColor,
+                  //               ),
+                  //             ]
+                  //           : <BottomNavigationBarItem>[]) +
+                  //       <BottomNavigationBarItem>[
+                  //         BottomNavigationBarItem(
+                  //           icon: Icon(Icons.settings),
+                  //           label: language!.STRING_SETTING,
+                  //           backgroundColor: Theme.of(context)
+                  //               .bottomNavigationBarTheme
+                  //               .backgroundColor,
+                  //         ),
+                  //       ],
+                  // ),
+                ),
+              ),
             ),
           ),
-          // bottomNavigationBar: BottomNavigationBar(
-          //   type: BottomNavigationBarType.shifting,
-          //   currentIndex: this.index!,
-          //   onTap: (int index) => this.setState(() => this.index = index),
-          //   items: <BottomNavigationBarItem>[
-          //         BottomNavigationBarItem(
-          //           icon: Icon(Icons.play_arrow),
-          //           label: language!.STRING_NOW_PLAYING,
-          //           backgroundColor: Theme.of(context)
-          //               .bottomNavigationBarTheme
-          //               .backgroundColor,
-          //         ),
-          //         BottomNavigationBarItem(
-          //           icon: Icon(Icons.library_music),
-          //           label: language!.STRING_COLLECTION,
-          //           backgroundColor: Theme.of(context)
-          //               .bottomNavigationBarTheme
-          //               .backgroundColor,
-          //         ),
-          //       ] +
-          //       (configuration.homeAddress != ''
-          //           ? <BottomNavigationBarItem>[
-          //               BottomNavigationBarItem(
-          //                 icon: Icon(Icons.search),
-          //                 label: language!.STRING_DISCOVER,
-          //                 backgroundColor: Theme.of(context)
-          //                     .bottomNavigationBarTheme
-          //                     .backgroundColor,
-          //               ),
-          //             ]
-          //           : <BottomNavigationBarItem>[]) +
-          //       <BottomNavigationBarItem>[
-          //         BottomNavigationBarItem(
-          //           icon: Icon(Icons.settings),
-          //           label: language!.STRING_SETTING,
-          //           backgroundColor: Theme.of(context)
-          //               .bottomNavigationBarTheme
-          //               .backgroundColor,
-          //         ),
-          //       ],
-          // ),
-        ),
+        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
@@ -287,8 +288,8 @@ class FadeFutureBuilderState extends State<FadeFutureBuilder>
 
 class ExceptionWidget extends StatelessWidget {
   final EdgeInsets margin;
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
   final Icon? icon;
   final String? title;
   final String? subtitle;
@@ -297,8 +298,8 @@ class ExceptionWidget extends StatelessWidget {
     Key? key,
     this.icon,
     required this.margin,
-    required this.height,
-    required this.width,
+    this.height,
+    this.width,
     required this.title,
     required this.subtitle,
   }) : super(key: key);
@@ -605,6 +606,85 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
                 FluentIcons.more_vertical_20_regular,
                 size: 20.0,
               ),
+        ),
+      ),
+    );
+  }
+}
+
+class WindowTitleBar extends StatelessWidget {
+  const WindowTitleBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 32.0,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? Colors.white.withOpacity(0.08)
+          : Colors.black.withOpacity(0.08),
+      child: MoveWindow(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 14.0,
+            ),
+            Text(
+              'Harmonoid Music',
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+                fontSize: 12.0,
+              ),
+            ),
+            Expanded(
+              child: Container(),
+            ),
+            MinimizeWindowButton(
+              colors: WindowButtonColors(
+                iconNormal: Colors.white,
+                iconMouseDown: Colors.white,
+                iconMouseOver: Colors.white,
+                normal: Colors.transparent,
+                mouseOver: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.04)
+                    : Colors.white.withOpacity(0.04),
+                mouseDown: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.08)
+                    : Colors.white.withOpacity(0.08),
+              ),
+            ),
+            MaximizeWindowButton(
+              colors: WindowButtonColors(
+                iconNormal: Colors.white,
+                iconMouseDown: Colors.white,
+                iconMouseOver: Colors.white,
+                normal: Colors.transparent,
+                mouseOver: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.04)
+                    : Colors.white.withOpacity(0.04),
+                mouseDown: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.08)
+                    : Colors.white.withOpacity(0.08),
+              ),
+            ),
+            CloseWindowButton(
+              colors: WindowButtonColors(
+                iconNormal: Colors.white,
+                iconMouseDown: Colors.white,
+                iconMouseOver: Colors.white,
+                normal: Colors.transparent,
+                mouseOver: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.04)
+                    : Colors.white.withOpacity(0.04),
+                mouseDown: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.08)
+                    : Colors.white.withOpacity(0.08),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -296,12 +296,12 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_THEME_MODE_SYSTEM = 'Follow system theme';
           this.STRING_SETTING_INDEXING_TITLE = 'Indexing';
           this.STRING_SETTING_INDEXING_SUBTITLE =
-              'Reindex your music collection';
+              'Change where app looks for your local music.';
           this.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR =
               'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
           this.STRING_SETTING_INDEXING_DONE = 'Indexed';
           this.STRING_SETTING_INDEXING_WARNING =
-              'Do not interrupt the process.';
+              'Do not interrupt the indexing process.';
           this.STRING_REFRESH = 'REFRESH';
           this.STRING_SEARCH_NO_RECENT_SEARCHES =
               'Your recent searches will show here';

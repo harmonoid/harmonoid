@@ -1,10 +1,8 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/interface/settings/about/thirdpartypage.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -71,7 +69,7 @@ class AboutPage extends StatelessWidget {
                       Image.asset(
                         'assets/images/about-header.jpg',
                         fit: BoxFit.fitWidth,
-                        alignment: Alignment.topCenter,
+                        alignment: Alignment.bottomCenter,
                         height: 192,
                         width: MediaQuery.of(context).size.width - 16.0,
                       ),
