@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/methods.dart';
@@ -55,6 +58,14 @@ class Visuals extends ChangeNotifier {
     this.accent = accent ?? this.accent;
     this.themeMode = themeMode ?? this.themeMode;
     this.platform = platform ?? this.platform;
+    if (Platform.isWindows || Platform.isLinux) {
+      Acrylic.setEffect(
+        effect: AcrylicEffect.acrylic,
+        gradientColor: this.themeMode == ThemeMode.light
+            ? Color(0xCCDDDDDD)
+            : Color(0xCC222222),
+      );
+    }
     this.notifyListeners();
     configuration.save(
       accent: this.accent,

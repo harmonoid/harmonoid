@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
@@ -83,7 +84,7 @@ class HomeState extends State<Home>
                 ChangeNotifierProvider<Language>(
                     create: (context) => Language.get()!),
                 ChangeNotifierProvider<Lyrics>(
-                    create: (context) => Lyrics.get())
+                    create: (context) => Lyrics.get()),
               ],
               builder: (context, _) => Consumer<Language>(
                 builder: (context, _, __) => Scaffold(

@@ -644,9 +644,15 @@ class WindowTitleBar extends StatelessWidget {
             ),
             MinimizeWindowButton(
               colors: WindowButtonColors(
-                iconNormal: Colors.white,
-                iconMouseDown: Colors.white,
-                iconMouseOver: Colors.white,
+                iconNormal: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseDown: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseOver: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
                 normal: Colors.transparent,
                 mouseOver: Theme.of(context).brightness == Brightness.light
                     ? Colors.black.withOpacity(0.04)
@@ -658,9 +664,15 @@ class WindowTitleBar extends StatelessWidget {
             ),
             MaximizeWindowButton(
               colors: WindowButtonColors(
-                iconNormal: Colors.white,
-                iconMouseDown: Colors.white,
-                iconMouseOver: Colors.white,
+                iconNormal: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseDown: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseOver: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
                 normal: Colors.transparent,
                 mouseOver: Theme.of(context).brightness == Brightness.light
                     ? Colors.black.withOpacity(0.04)
@@ -672,9 +684,15 @@ class WindowTitleBar extends StatelessWidget {
             ),
             CloseWindowButton(
               colors: WindowButtonColors(
-                iconNormal: Colors.white,
-                iconMouseDown: Colors.white,
-                iconMouseOver: Colors.white,
+                iconNormal: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseDown: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseOver: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
                 normal: Colors.transparent,
                 mouseOver: Theme.of(context).brightness == Brightness.light
                     ? Colors.black.withOpacity(0.04)

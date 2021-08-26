@@ -22,6 +22,7 @@ abstract class ConfigurationKeys {
   bool? automaticAccent;
   bool? notificationLyrics;
   TargetPlatform? platform;
+  bool? acrylicEnabled;
   List<dynamic>? collectionSearchRecent;
   List<dynamic>? discoverSearchRecent;
   List<dynamic>? discoverRecent;
@@ -44,6 +45,7 @@ Map<String, dynamic> DEFAULT_CONFIGURATION = {
   // TODO: Remove this.
   'platform': 2,
   // TODO: Remove this.
+  'acrylicEnabled': true,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
   'discoverRecent': [],
@@ -81,6 +83,7 @@ class Configuration extends ConfigurationKeys {
     bool? automaticAccent,
     bool? notificationLyrics,
     TargetPlatform? platform,
+    bool? acrylicEnabled,
     List<dynamic>? collectionSearchRecent,
     List<dynamic>? discoverSearchRecent,
     List<dynamic>? discoverRecent,
@@ -121,6 +124,9 @@ class Configuration extends ConfigurationKeys {
     if (platform != null) {
       this.platform = platform;
     }
+    if (acrylicEnabled != null) {
+      this.acrylicEnabled = acrylicEnabled;
+    }
     await configuration.configurationFile.writeAsString(convert.jsonEncode({
       'collectionDirectories': this
           .collectionDirectories!
@@ -135,6 +141,7 @@ class Configuration extends ConfigurationKeys {
       'automaticAccent': this.automaticAccent,
       'notificationLyrics': this.notificationLyrics,
       'platform': this.platform!.index,
+      'acrylicEnabled': this.acrylicEnabled,
       'collectionSearchRecent': this.collectionSearchRecent,
       'discoverSearchRecent': this.discoverSearchRecent,
       'discoverRecent': this.discoverRecent,
@@ -163,6 +170,7 @@ class Configuration extends ConfigurationKeys {
     this.automaticAccent = currentConfiguration['automaticAccent'];
     this.notificationLyrics = currentConfiguration['notificationLyrics'];
     this.platform = TargetPlatform.values[currentConfiguration['platform']];
+    this.acrylicEnabled = currentConfiguration['acrylicEnabled'];
     this.collectionSearchRecent =
         currentConfiguration['collectionSearchRecent'];
     this.discoverSearchRecent = currentConfiguration['discoverSearchRecent'];

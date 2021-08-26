@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
-class MiscellaneousSetting extends StatelessWidget {
+class MiscellaneousSetting extends StatefulWidget {
+  MiscellaneousSettingState createState() => MiscellaneousSettingState();
+}
+
+class MiscellaneousSettingState extends State<MiscellaneousSetting> {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
@@ -13,57 +19,41 @@ class MiscellaneousSetting extends StatelessWidget {
       subtitle: language!.STRING_SETTING_MISCELLANEOUS_SUBTITLE,
       child: Column(
         children: [
-          Consumer<Visuals>(
-            builder: (context, visuals, _) => SwitchListTile(
-              title: Text(
-                language!.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE,
-                style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14.0,
-                ),
-              ),
-              subtitle: Text(
-                language!.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE,
-                style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white.withOpacity(0.8)
-                      : Colors.black.withOpacity(0.8),
-                  fontSize: 14.0,
-                ),
-              ),
-              value: visuals.platform == TargetPlatform.iOS,
-              onChanged: (bool isiOS) => visuals.update(
-                platform: isiOS ? TargetPlatform.iOS : TargetPlatform.android,
+          SwitchListTile(
+            title: Text(
+              'Enable Windows acrylic blur',
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+                fontWeight: FontWeight.w600,
+                fontSize: 14.0,
               ),
             ),
-          ),
-          Consumer<NotificationLyrics>(
-            builder: (context, lyrics, _) => SwitchListTile(
-              title: Text(
-                language!.STRING_NOTIFICATION_LYRICS_TITLE,
-                style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14.0,
-                ),
+            subtitle: Text(
+              'Add blur effect to the app.\'s background.',
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white.withOpacity(0.8)
+                    : Colors.black.withOpacity(0.8),
+                fontSize: 14.0,
               ),
-              subtitle: Text(
-                language!.STRING_NOTIFICATION_LYRICS_SUBTITLE,
-                style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white.withOpacity(0.8)
-                      : Colors.black.withOpacity(0.8),
-                  fontSize: 14.0,
-                ),
-              ),
-              value: lyrics.enabled,
-              onChanged: (bool enabled) => lyrics.update(enabled: enabled),
             ),
+            value: configuration.acrylicEnabled!,
+            onChanged: (bool enabled) async {
+              await configuration.save(
+                acrylicEnabled: enabled,
+              );
+              await Acrylic.setEffect(
+                effect: enabled ? AcrylicEffect.acrylic : AcrylicEffect.solid,
+                gradientColor: Theme.of(context).brightness == Brightness.dark
+                    ? Color(0xCC222222)
+                    : Color(0xCCDDDDDD),
+              );
+              // Causes scaffoldBackgroundColor to update.
+              Provider.of<Visuals>(context, listen: false).update();
+              this.setState(() {});
+            },
           ),
         ],
       ),

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
@@ -25,11 +26,8 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  await Acrylic.initialize();
-  await Acrylic.setEffect(
-    effect: AcrylicEffect.acrylic,
-    gradientColor: Color(0xCC222222),
-  );
+  if (Platform.isWindows || Platform.isLinux) await Acrylic.initialize();
+
   try {
     await Methods.askStoragePermission();
     await Configuration.init();

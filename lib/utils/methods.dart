@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -75,7 +76,9 @@ abstract class Methods {
       primaryColorLight: accentColor,
       primaryColor: accentColor,
       primaryColorDark: accentColor,
-      scaffoldBackgroundColor: Colors.transparent,
+      scaffoldBackgroundColor: configuration.acrylicEnabled!
+          ? Colors.transparent
+          : (isLight ? Color(0xFFDDDDDD) : Color(0xFF121212)),
       accentColor: accentColor,
       toggleableActiveColor: accentColor,
       cardColor: isLight

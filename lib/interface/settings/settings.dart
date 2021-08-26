@@ -61,7 +61,7 @@ class Settings extends StatelessWidget {
               // TODO: Fix scrolling bug in CollectionTabs widget & implement saving configuration.
               // CollectionTabs(),
               // TODO: Removed miscellaneous settings until we decide which ones are important.
-              // MiscellaneousSetting(),
+              MiscellaneousSetting(),
               VersionSetting(),
               SizedBox(
                 height: 4.0,
