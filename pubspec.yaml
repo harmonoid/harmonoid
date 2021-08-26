@@ -21,6 +21,7 @@ dependencies:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
       ref: 919819aaed18ced20994f3ed004efb6d1f689a9d
   filepicker_windows: ^2.0.0
+  bitsdojo_window: ^0.1.1+1
   flutter_local_notifications: ^5.0.0
   file_picker: ^3.0.0
   permission_handler: ^6.1.1
