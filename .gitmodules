@@ -1,0 +1,6 @@
+[submodule "external/libwinmedia"]
+	path = external/libwinmedia
+	url = https://github.com/harmonoid/libwinmedia.git
+[submodule "external/libwinmedia.dart"]
+	path = external/libwinmedia.dart
+	url = https://github.com/libwinmedia/libwinmedia.dart.git
