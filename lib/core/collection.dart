@@ -446,11 +446,6 @@ class Collection extends ChangeNotifier {
   Future<void> index(
       {void Function(int completed, int total, bool isCompleted)?
           onProgress}) async {
-    if (await File(path.join(this.cacheDirectory.path, 'collection.JSON'))
-        .exists()) {
-      await File(path.join(this.cacheDirectory.path, 'collection.JSON'))
-          .delete();
-    }
     this._albums = <Album>[];
     this._tracks = <Track>[];
     this._artists = <Artist>[];
@@ -602,6 +597,10 @@ class Collection extends ChangeNotifier {
 
   Future<void> _arrange(
       Track track, Future<void> Function() albumArtMethod) async {
+    // TODO (alexmercerind): Prevent this additional O(n).
+    // This is here because, for some reason (as of now) [File]s get doubly indexed due to some state management
+    // bug (not in this class).
+    if (this.tracks.contains(track)) return;
     if (!Methods.binaryContains(
         this._foundAlbums, [track.albumName, track.albumArtistName])) {
       this._foundAlbums.add([track.albumName!, track.albumArtistName!]);
