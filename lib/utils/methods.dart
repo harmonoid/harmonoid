@@ -78,7 +78,7 @@ abstract class Methods {
       primaryColorDark: accentColor,
       scaffoldBackgroundColor: configuration.acrylicEnabled!
           ? Colors.transparent
-          : (isLight ? Color(0xFFDDDDDD) : Color(0xFF121212)),
+          : (isLight ? Colors.white : Color(0xFF121212)),
       accentColor: accentColor,
       toggleableActiveColor: accentColor,
       cardColor: isLight

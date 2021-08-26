@@ -62,7 +62,7 @@ class Visuals extends ChangeNotifier {
       Acrylic.setEffect(
         effect: AcrylicEffect.acrylic,
         gradientColor: this.themeMode == ThemeMode.light
-            ? Color(0xCCDDDDDD)
+            ? Colors.white
             : Color(0xCC222222),
       );
     }

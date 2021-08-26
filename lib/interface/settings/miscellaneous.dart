@@ -46,9 +46,9 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               );
               await Acrylic.setEffect(
                 effect: enabled ? AcrylicEffect.acrylic : AcrylicEffect.solid,
-                gradientColor: Theme.of(context).brightness == Brightness.dark
-                    ? Color(0xCC222222)
-                    : Color(0xCCDDDDDD),
+                gradientColor: Theme.of(context).brightness == ThemeMode.light
+                    ? Colors.white
+                    : Color(0xCC222222),
               );
               // Causes scaffoldBackgroundColor to update.
               Provider.of<Visuals>(context, listen: false).update();

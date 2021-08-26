@@ -1,15 +1,9 @@
 import 'dart:math';
-
-import 'package:animations/animations.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
-import 'package:harmonoid/interface/collection/collectionsearch.dart';
-import 'package:harmonoid/interface/harmonoid.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/utils/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/collection/collectionalbum.dart';
@@ -17,7 +11,12 @@ import 'package:harmonoid/interface/collection/collectiontrack.dart';
 import 'package:harmonoid/interface/collection/collectionartist.dart';
 import 'package:harmonoid/interface/collection/collectionplaylist.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:provider/provider.dart';
+import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:harmonoid/interface/collection/collectionsearch.dart';
+import 'package:harmonoid/interface/harmonoid.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/utils/widgets.dart';
 
 class CollectionMusic extends StatefulWidget {
   const CollectionMusic({Key? key}) : super(key: key);

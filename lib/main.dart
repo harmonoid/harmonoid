@@ -26,11 +26,21 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  if (Platform.isWindows || Platform.isLinux) await Acrylic.initialize();
 
   try {
     await Methods.askStoragePermission();
     await Configuration.init();
+    if (Platform.isWindows || Platform.isLinux) {
+      await Acrylic.initialize();
+      Acrylic.setEffect(
+        effect: configuration.acrylicEnabled!
+            ? AcrylicEffect.acrylic
+            : AcrylicEffect.solid,
+        gradientColor: configuration.themeMode! == ThemeMode.light
+            ? Colors.white
+            : Color(0xCC222222),
+      );
+    }
     await Collection.init(
       collectionDirectories: configuration.collectionDirectories!,
       cacheDirectory: configuration.cacheDirectory!,
