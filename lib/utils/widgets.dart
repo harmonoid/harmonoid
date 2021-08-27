@@ -96,16 +96,10 @@ class SubHeader extends StatelessWidget {
     return Container(
       alignment: Alignment.centerLeft,
       height: 48,
-      padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+      padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
       child: Text(
         text!,
-        style: TextStyle(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white
-              : Colors.black,
-          fontWeight: FontWeight.w600,
-          fontSize: 14.0,
-        ),
+        style: Theme.of(context).textTheme.subtitle1,
       ),
     );
   }

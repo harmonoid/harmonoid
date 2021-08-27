@@ -124,13 +124,7 @@ class CollectionAlbumTile extends StatelessWidget {
                     padding: EdgeInsets.only(top: 4),
                     child: Text(
                       this.album.albumName!,
-                      style: TextStyle(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.0,
-                      ),
+                      style: Theme.of(context).textTheme.headline2,
                       textAlign: TextAlign.left,
                       maxLines: 2,
                     ),
@@ -139,12 +133,7 @@ class CollectionAlbumTile extends StatelessWidget {
                     padding: EdgeInsets.only(top: 2),
                     child: Text(
                       '${this.album.albumArtistName}\n(${this.album.year ?? 'Unknown Year'})',
-                      style: TextStyle(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withOpacity(0.8)
-                            : Colors.black.withOpacity(0.8),
-                        fontSize: 14.0,
-                      ),
+                      style: Theme.of(context).textTheme.headline3,
                       maxLines: 2,
                       textAlign: TextAlign.left,
                     ),
@@ -226,13 +215,7 @@ class LeadingCollectionAlbumTile extends StatelessWidget {
                       Provider.of<Collection>(context, listen: false)
                           .lastAlbum!
                           .albumName!,
-                      style: TextStyle(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: Theme.of(context).textTheme.headline1,
                       textAlign: TextAlign.start,
                       maxLines: 2,
                     ),
@@ -240,23 +223,13 @@ class LeadingCollectionAlbumTile extends StatelessWidget {
                       Provider.of<Collection>(context, listen: false)
                           .lastAlbum!
                           .albumArtistName!,
-                      style: TextStyle(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withOpacity(0.8)
-                            : Colors.black.withOpacity(0.8),
-                        fontSize: 14.0,
-                      ),
+                      style: Theme.of(context).textTheme.headline3,
                       textAlign: TextAlign.start,
                       maxLines: 1,
                     ),
                     Text(
                       '(${Provider.of<Collection>(context, listen: false).lastAlbum!.year ?? 'Unknown Year'})',
-                      style: TextStyle(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withOpacity(0.8)
-                            : Colors.black.withOpacity(0.8),
-                        fontSize: 14.0,
-                      ),
+                      style: Theme.of(context).textTheme.headline3,
                       textAlign: TextAlign.start,
                       maxLines: 1,
                     ),
@@ -300,15 +273,8 @@ class CollectionAlbum extends StatelessWidget {
                 SizedBox(
                   width: 24.0,
                 ),
-                Text(
+                SubHeader(
                   'Album',
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.0,
-                  ),
                 )
               ],
             ),
@@ -351,27 +317,14 @@ class CollectionAlbum extends StatelessWidget {
                       children: [
                         Text(
                           this.album!.albumName!,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.headline1,
                           textAlign: TextAlign.center,
                           maxLines: 2,
                         ),
                         SizedBox(height: 4.0),
                         Text(
                           '${this.album!.albumArtistName}\n(${this.album!.year ?? 'Unknown Year'})',
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white.withOpacity(0.8)
-                                    : Colors.black.withOpacity(0.8),
-                            fontSize: 14.0,
-                          ),
+                          style: Theme.of(context).textTheme.headline3,
                           maxLines: 2,
                           textAlign: TextAlign.center,
                         ),
@@ -430,21 +383,8 @@ class CollectionAlbum extends StatelessWidget {
                 child: ListView(
                   shrinkWrap: true,
                   children: <Widget>[
-                        Container(
-                          height: 56.0,
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.only(left: 24.0),
-                          child: Text(
-                            language!.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER,
-                            style: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.0,
-                            ),
-                          ),
+                        SubHeader(
+                          language!.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER,
                         ),
                       ] +
                       this
@@ -467,27 +407,12 @@ class CollectionAlbum extends StatelessWidget {
                                     overflow: TextOverflow.fade,
                                     maxLines: 1,
                                     softWrap: false,
-                                    style: TextStyle(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w600,
-                                    ),
                                   ),
                                   subtitle: Text(
                                     track.trackArtistNames!.join(', '),
                                     overflow: TextOverflow.fade,
                                     maxLines: 1,
                                     softWrap: false,
-                                    style: TextStyle(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white.withOpacity(0.8)
-                                          : Colors.black.withOpacity(0.8),
-                                      fontSize: 14.0,
-                                    ),
                                   ),
                                   leading: CircleAvatar(
                                     child: Text('${track.trackNumber ?? 1}'),
@@ -695,42 +620,27 @@ class CollectionAlbum extends StatelessWidget {
                                         value: 0,
                                         child: Text(
                                           language!.STRING_DELETE,
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                            fontSize: 14.0,
-                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4,
                                         ),
                                       ),
                                       PopupMenuItem(
                                         value: 1,
                                         child: Text(
                                           language!.STRING_SHARE,
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                            fontSize: 14.0,
-                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4,
                                         ),
                                       ),
                                       PopupMenuItem(
                                         value: 2,
                                         child: Text(
                                           language!.STRING_ADD_TO_PLAYLIST,
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                            fontSize: 14.0,
-                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4,
                                         ),
                                       ),
                                     ],

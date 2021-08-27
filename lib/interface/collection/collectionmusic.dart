@@ -217,24 +217,14 @@ class CollectionMusicState extends State<CollectionMusic>
                       value: CollectionSort.dateAdded,
                       child: Text(
                         language!.STRING_DATE_ADDED,
-                        style: TextStyle(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
-                          fontSize: 14.0,
-                        ),
+                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                     PopupMenuItem(
                       value: CollectionSort.aToZ,
                       child: Text(
                         language!.STRING_A_TO_Z,
-                        style: TextStyle(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
-                          fontSize: 14.0,
-                        ),
+                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ],

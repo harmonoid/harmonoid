@@ -49,25 +49,12 @@ class LanguageSetting extends StatelessWidget {
                       children: [
                         Text(
                           language.STRING_SETTING_LANGUAGE_TITLE,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.0,
-                          ),
+                          style: Theme.of(context).textTheme.headline2,
                         ),
                         Divider(color: Colors.transparent, height: 4.0),
                         Text(
                           language.STRING_SETTING_LANGUAGE_SUBTITLE,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white.withOpacity(0.8)
-                                    : Colors.black.withOpacity(0.8),
-                            fontSize: 14.0,
-                          ),
+                          style: Theme.of(context).textTheme.headline3,
                         ),
                         Divider(color: Colors.transparent, height: 8.0),
                       ],

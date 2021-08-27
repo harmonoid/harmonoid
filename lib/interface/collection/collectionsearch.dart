@@ -71,12 +71,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                       autofocus: true,
                       controller: textFieldController,
                       cursorWidth: 1.0,
-                      style: TextStyle(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-                        fontSize: 14.0,
-                      ),
+                      style: Theme.of(context).textTheme.headline4,
                       onChanged: (String query) async {
                         int localIndex = globalIndex;
                         globalIndex++;
@@ -291,39 +286,27 @@ class CollectionSearchState extends State<CollectionSearch> {
                                       value: 0,
                                       child: Text(
                                         language!.STRING_DELETE,
-                                        style: TextStyle(
-                                          color: Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontSize: 14.0,
-                                        ),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline4,
                                       ),
                                     ),
                                     PopupMenuItem(
                                       value: 1,
                                       child: Text(
                                         language!.STRING_SHARE,
-                                        style: TextStyle(
-                                          color: Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontSize: 14.0,
-                                        ),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline4,
                                       ),
                                     ),
                                     PopupMenuItem(
                                       value: 2,
                                       child: Text(
                                         language!.STRING_ADD_TO_PLAYLIST,
-                                        style: TextStyle(
-                                          color: Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontSize: 14.0,
-                                        ),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline4,
                                       ),
                                     ),
                                   ],
@@ -342,12 +325,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                       decoration: InputDecoration.collapsed(
                         hintText:
                             'Enter something to lookup in your collection.',
-                        hintStyle: TextStyle(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white.withOpacity(0.8)
-                              : Colors.black.withOpacity(0.8),
-                          fontSize: 14.0,
-                        ),
+                        hintStyle: Theme.of(context).textTheme.headline3,
                       ),
                     ),
                   ),
@@ -373,13 +351,8 @@ class CollectionSearchState extends State<CollectionSearch> {
                                   ),
                                   Text(
                                     language!.STRING_LOCAL_SEARCH_WELCOME,
-                                    style: TextStyle(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white.withOpacity(0.8)
-                                          : Colors.black.withOpacity(0.8),
-                                      fontSize: 14.0,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
                                   )
                                 ],
                               ),
@@ -400,13 +373,8 @@ class CollectionSearchState extends State<CollectionSearch> {
                                   ),
                                   Text(
                                     language!.STRING_LOCAL_SEARCH_NO_RESULTS,
-                                    style: TextStyle(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white.withOpacity(0.8)
-                                          : Colors.black.withOpacity(0.8),
-                                      fontSize: 14.0,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
                                   )
                                 ],
                               ),

@@ -123,14 +123,7 @@ class LeadingCollectionArtistTile extends StatelessWidget {
                       children: [
                         Text(
                           collection.lastArtist!.artistName!,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.headline1,
                           textAlign: TextAlign.start,
                           maxLines: 1,
                         ),
@@ -211,13 +204,7 @@ class CollectionArtistTile extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               child: Text(
                 this.artist.artistName!,
-                style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: Theme.of(context).textTheme.headline3,
                 textAlign: TextAlign.left,
                 maxLines: 1,
               ),
@@ -268,13 +255,7 @@ class CollectionArtist extends StatelessWidget {
                 ),
                 Text(
                   'Artist',
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.0,
-                  ),
+                  style: Theme.of(context).textTheme.headline1,
                 )
               ],
             ),
@@ -317,27 +298,14 @@ class CollectionArtist extends StatelessWidget {
                       children: [
                         Text(
                           this.artist!.artistName!,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.headline3,
                           textAlign: TextAlign.center,
                           maxLines: 2,
                         ),
                         SizedBox(height: 4.0),
                         Text(
                           '${this.artist!.tracks.length} tracks & ${this.artist!.albums.length} albums.',
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white.withOpacity(0.8)
-                                    : Colors.black.withOpacity(0.8),
-                            fontSize: 14.0,
-                          ),
+                          style: Theme.of(context).textTheme.headline3,
                           maxLines: 2,
                           textAlign: TextAlign.center,
                         ),
@@ -396,21 +364,8 @@ class CollectionArtist extends StatelessWidget {
                 child: ListView(
                   shrinkWrap: true,
                   children: <Widget>[
-                        Container(
-                          height: 56.0,
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.only(left: 24.0),
-                          child: Text(
-                            'Albums from this artist.',
-                            style: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.0,
-                            ),
-                          ),
+                        SubHeader(
+                          'Albums from this artist.',
                         ),
                         Container(
                           height: tileHeight + 16.0,
@@ -439,21 +394,8 @@ class CollectionArtist extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Container(
-                          height: 56.0,
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.only(left: 24.0),
-                          child: Text(
-                            'Tracks from this artist.',
-                            style: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.0,
-                            ),
-                          ),
+                        SubHeader(
+                          'Tracks from this artist.',
                         ),
                       ] +
                       this
@@ -476,27 +418,12 @@ class CollectionArtist extends StatelessWidget {
                                     overflow: TextOverflow.fade,
                                     maxLines: 1,
                                     softWrap: false,
-                                    style: TextStyle(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w600,
-                                    ),
                                   ),
                                   subtitle: Text(
                                     track.trackArtistNames!.join(', '),
                                     overflow: TextOverflow.fade,
                                     maxLines: 1,
                                     softWrap: false,
-                                    style: TextStyle(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white.withOpacity(0.8)
-                                          : Colors.black.withOpacity(0.8),
-                                      fontSize: 14.0,
-                                    ),
                                   ),
                                   leading: CircleAvatar(
                                     child: Text('${track.trackNumber ?? 1}'),
@@ -705,42 +632,27 @@ class CollectionArtist extends StatelessWidget {
                                         value: 0,
                                         child: Text(
                                           language!.STRING_DELETE,
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                            fontSize: 14.0,
-                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4,
                                         ),
                                       ),
                                       PopupMenuItem(
                                         value: 1,
                                         child: Text(
                                           language!.STRING_SHARE,
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                            fontSize: 14.0,
-                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4,
                                         ),
                                       ),
                                       PopupMenuItem(
                                         value: 2,
                                         child: Text(
                                           language!.STRING_ADD_TO_PLAYLIST,
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                            fontSize: 14.0,
-                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4,
                                         ),
                                       ),
                                     ],

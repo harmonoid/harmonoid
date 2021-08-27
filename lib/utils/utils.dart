@@ -38,6 +38,53 @@ abstract class Utils {
       ThemeMode? themeMode,
       TargetPlatform? platform}) {
     bool isLight = themeMode == ThemeMode.light;
+    TextTheme textTheme = TextTheme(
+      // Leading tile widgets text theme.
+      headline1: TextStyle(
+        color: isLight ? Colors.black : Colors.white,
+        fontSize: 16.0,
+        fontWeight: FontWeight.w600,
+      ),
+      // AlbumTile text theme.
+      headline2: TextStyle(
+        color: isLight ? Colors.black : Colors.white,
+        fontSize: 14.0,
+        fontWeight: FontWeight.w600,
+      ),
+      headline3: TextStyle(
+        color: isLight
+            ? Colors.black.withOpacity(0.8)
+            : Colors.white.withOpacity(0.8),
+        fontSize: 14.0,
+        fontWeight: FontWeight.normal,
+      ),
+      headline4: TextStyle(
+        color: isLight ? Colors.black : Colors.white,
+        fontSize: 14.0,
+        fontWeight: FontWeight.normal,
+      ),
+      // ListTile text theme.
+      // [ListTile.title]'s text theme must be overrided to headline4, if it does not contain subtitle.
+      subtitle1: TextStyle(
+        color: isLight ? Colors.black : Colors.white,
+        fontSize: 14.0,
+        fontWeight: FontWeight.w600,
+      ),
+      bodyText2: TextStyle(
+        color: isLight
+            ? Colors.black.withOpacity(0.8)
+            : Colors.white.withOpacity(0.8),
+        fontSize: 14.0,
+        fontWeight: FontWeight.normal,
+      ),
+      caption: TextStyle(
+        color: isLight
+            ? Colors.black.withOpacity(0.8)
+            : Colors.white.withOpacity(0.8),
+        fontSize: 14.0,
+        fontWeight: FontWeight.normal,
+      ),
+    );
     return ThemeData(
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: accentColor,
@@ -91,6 +138,8 @@ abstract class Utils {
         selectedItemColor: Colors.white.withOpacity(0.87),
         unselectedItemColor: Colors.white54,
       ),
+      textTheme: textTheme,
+      primaryTextTheme: textTheme,
     );
   }
 }

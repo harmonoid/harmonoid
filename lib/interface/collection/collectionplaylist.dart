@@ -27,25 +27,12 @@ class CollectionPlaylistTab extends StatelessWidget {
                       children: [
                         Text(
                           language!.STRING_PLAYLISTS,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16.0,
-                          ),
+                          style: Theme.of(context).textTheme.headline1,
                           textAlign: TextAlign.start,
                         ),
                         Text(
                           language!.STRING_PLAYLISTS_SUBHEADER,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white.withOpacity(0.9)
-                                    : Colors.black.withOpacity(0.9),
-                            fontSize: 14.0,
-                          ),
+                          style: Theme.of(context).textTheme.headline3,
                         ),
                       ],
                     ),
@@ -72,13 +59,7 @@ class CollectionPlaylistTab extends StatelessWidget {
                         ),
                         title: Text(
                           language!.STRING_PLAYLISTS_CREATE,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white.withOpacity(0.9)
-                                    : Colors.black.withOpacity(0.9),
-                            fontSize: 14.0,
-                          ),
+                          style: Theme.of(context).textTheme.headline4,
                         ),
                         children: [
                           Row(
@@ -88,13 +69,7 @@ class CollectionPlaylistTab extends StatelessWidget {
                               Expanded(
                                 child: TextField(
                                   controller: this._textFieldController,
-                                  style: TextStyle(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white.withOpacity(0.9)
-                                        : Colors.black.withOpacity(0.9),
-                                    fontSize: 14.0,
-                                  ),
+                                  style: Theme.of(context).textTheme.headline4,
                                   cursorWidth: 1,
                                   autofocus: true,
                                   autocorrect: true,
@@ -111,15 +86,11 @@ class CollectionPlaylistTab extends StatelessWidget {
                                         .STRING_PLAYLISTS_TEXT_FIELD_LABEL,
                                     hintText: language!
                                         .STRING_PLAYLISTS_TEXT_FIELD_HINT,
-                                    hintStyle: TextStyle(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white.withOpacity(0.9)
-                                          : Colors.black.withOpacity(0.9),
-                                      fontSize: 14.0,
-                                    ),
+                                    hintStyle:
+                                        Theme.of(context).textTheme.headline3,
                                     labelStyle: TextStyle(
-                                        color: Theme.of(context).accentColor),
+                                      color: Theme.of(context).accentColor,
+                                    ),
                                     enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
                                             color:
@@ -225,13 +196,7 @@ class CollectionPlaylistTab extends StatelessWidget {
                               ),
                         title: Text(
                           playlist.playlistName!,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white.withOpacity(0.9)
-                                    : Colors.black.withOpacity(0.9),
-                            fontSize: 14.0,
-                          ),
+                          style: Theme.of(context).textTheme.headline4,
                         ),
                         trailing: IconButton(
                           onPressed: () => Playback.play(
@@ -282,13 +247,7 @@ class CollectionPlaylist extends StatelessWidget {
                   ),
                   Text(
                     this.playlist.playlistName!,
-                    style: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : Colors.black,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16.0,
-                    ),
+                    style: Theme.of(context).textTheme.headline1,
                   ),
                 ],
               ),

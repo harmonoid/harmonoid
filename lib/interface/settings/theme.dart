@@ -18,12 +18,7 @@ class ThemeSetting extends StatelessWidget {
                 value: ThemeMode.system,
                 title: Text(
                   language!.STRING_THEME_MODE_SYSTEM,
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    fontSize: 14.0,
-                  ),
+                  style: Theme.of(context).textTheme.headline4,
                 ),
                 groupValue: visuals.themeMode,
                 onChanged: (dynamic themeMode) => visuals.update(
@@ -34,12 +29,7 @@ class ThemeSetting extends StatelessWidget {
                 value: ThemeMode.light,
                 title: Text(
                   language!.STRING_THEME_MODE_LIGHT,
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    fontSize: 14.0,
-                  ),
+                  style: Theme.of(context).textTheme.headline4,
                 ),
                 groupValue: visuals.themeMode,
                 onChanged: (dynamic themeMode) => visuals.update(
@@ -50,12 +40,7 @@ class ThemeSetting extends StatelessWidget {
                 value: ThemeMode.dark,
                 title: Text(
                   language!.STRING_THEME_MODE_DARK,
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    fontSize: 14.0,
-                  ),
+                  style: Theme.of(context).textTheme.headline4,
                 ),
                 groupValue: visuals.themeMode,
                 onChanged: (dynamic themeMode) => visuals.update(

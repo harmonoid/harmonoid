@@ -31,7 +31,7 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               ),
             ),
             subtitle: Text(
-              'Add blur effect to the app.\'s background.',
+              'Add blur effect to the app\'s background.',
               style: TextStyle(
                 color: Theme.of(context).brightness == Brightness.dark
                     ? Colors.white.withOpacity(0.8)

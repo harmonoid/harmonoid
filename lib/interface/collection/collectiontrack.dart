@@ -176,39 +176,21 @@ class CollectionTrackTab extends StatelessWidget {
                             value: 0,
                             child: Text(
                               language!.STRING_DELETE,
-                              style: TextStyle(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                                fontSize: 14.0,
-                              ),
+                              style: Theme.of(context).textTheme.headline4,
                             ),
                           ),
                           PopupMenuItem(
                             value: 1,
                             child: Text(
                               language!.STRING_SHARE,
-                              style: TextStyle(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                                fontSize: 14.0,
-                              ),
+                              style: Theme.of(context).textTheme.headline4,
                             ),
                           ),
                           PopupMenuItem(
                             value: 2,
                             child: Text(
                               language!.STRING_ADD_TO_PLAYLIST,
-                              style: TextStyle(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                                fontSize: 14.0,
-                              ),
+                              style: Theme.of(context).textTheme.headline4,
                             ),
                           ),
                         ],
@@ -269,13 +251,6 @@ class CollectionTrackTile extends StatelessWidget {
           ),
           title: Text(
             this.track.trackName!,
-            style: TextStyle(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white
-                  : Colors.black,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w600,
-            ),
             overflow: TextOverflow.fade,
             maxLines: 1,
             softWrap: false,
@@ -286,12 +261,6 @@ class CollectionTrackTile extends StatelessWidget {
                 (this.track.trackArtistNames!.length < 2
                     ? this.track.trackArtistNames!.join(', ')
                     : this.track.trackArtistNames!.sublist(0, 2).join(', ')),
-            style: TextStyle(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white.withOpacity(0.8)
-                  : Colors.black.withOpacity(0.8),
-              fontSize: 14.0,
-            ),
             overflow: TextOverflow.fade,
             maxLines: 1,
             softWrap: false,
@@ -364,24 +333,11 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                           ),
                           Text(
                             collection.lastTrack!.trackName!,
-                            style: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: Theme.of(context).textTheme.headline1,
                           ),
                           Text(
                             collection.lastTrack!.albumName!,
-                            style: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white.withOpacity(0.8)
-                                  : Colors.black.withOpacity(0.8),
-                              fontSize: 14.0,
-                            ),
+                            style: Theme.of(context).textTheme.headline3,
                             textAlign: TextAlign.start,
                             maxLines: 1,
                           ),
@@ -392,13 +348,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                                 : collection.lastTrack!.trackArtistNames!
                                     .sublist(0, 2)
                                     .join(', '),
-                            style: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white.withOpacity(0.8)
-                                  : Colors.black.withOpacity(0.8),
-                              fontSize: 14.0,
-                            ),
+                            style: Theme.of(context).textTheme.headline3,
                             maxLines: 1,
                             textAlign: TextAlign.start,
                           ),
