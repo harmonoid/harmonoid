@@ -6,7 +6,6 @@ import 'package:assets_audio_player/assets_audio_player.dart' as AudioPlayer;
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 
 // TODO: Implement lyrics visualizing & caching.
@@ -73,11 +72,12 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (this._init) {
-      _streamSubscriptions[0] = audioPlayer.currentPosition.listen((duration) {
+      _streamSubscriptions[0] =
+          assetsAudioPlayer.currentPosition.listen((duration) {
         setState(() => this._position = duration);
       });
       this._streamSubscriptions[1] =
-          audioPlayer.current.listen((AudioPlayer.Playing? playing) {
+          assetsAudioPlayer.current.listen((AudioPlayer.Playing? playing) {
         if (playing == null) return;
         this.setState(() {
           this._track = Track.fromMap(playing.audio.audio.metas.extra);
@@ -122,7 +122,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                           )
                         : null,
                     onTap: () {
-                      audioPlayer.playlistPlayAtIndex(index);
+                      assetsAudioPlayer.playlistPlayAtIndex(index);
                     },
                   ),
                 );
@@ -142,7 +142,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
           ));
         });
       });
-      this._streamSubscriptions[2] = audioPlayer.isPlaying.listen(
+      this._streamSubscriptions[2] = assetsAudioPlayer.isPlaying.listen(
         (bool isPlaying) {
           this.setState(() => this._isPlaying = isPlaying);
           if (isPlaying)
@@ -151,7 +151,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
             this._playPauseController.forward();
         },
       );
-      this._streamSubscriptions[2] = audioPlayer.loopMode.listen(
+      this._streamSubscriptions[2] = assetsAudioPlayer.loopMode.listen(
         (AudioPlayer.LoopMode loopMode) {
           this.setState(() {
             this._loopMode = loopMode;
@@ -208,10 +208,10 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                   : () {
                       if (this._isPlaying) {
                         this._playPauseController.forward();
-                        audioPlayer.pause();
+                        assetsAudioPlayer.pause();
                       } else {
                         this._playPauseController.reverse();
-                        audioPlayer.play();
+                        assetsAudioPlayer.play();
                       }
                     },
               child: AnimatedIcon(
@@ -300,19 +300,19 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                   onPressed: this._track == null
                                       ? null
                                       : () {
-                                          audioPlayer.toggleShuffle();
+                                          assetsAudioPlayer.toggleShuffle();
                                           this.setState(() {});
                                         },
                                   child: Icon(
                                     Icons.shuffle,
-                                    color: !audioPlayer.shuffle
+                                    color: !assetsAudioPlayer.shuffle
                                         ? Colors.white
                                         : Theme.of(context).primaryColor,
                                     size: _animationCurved.value *
                                         28 /
                                         this.albumArtHeight,
                                   ),
-                                  backgroundColor: !audioPlayer.shuffle
+                                  backgroundColor: !assetsAudioPlayer.shuffle
                                       ? Theme.of(context).primaryColor
                                       : Colors.white,
                                 ),
@@ -323,7 +323,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                   onPressed: this._track == null
                                       ? null
                                       : () {
-                                          audioPlayer.playOrPause();
+                                          assetsAudioPlayer.playOrPause();
                                           this.setState(() {});
                                         },
                                   child: AnimatedIcon(
@@ -437,7 +437,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                     ),
                                   ),
                                   onChangeEnd: (value) {
-                                    audioPlayer.seek(Duration(
+                                    assetsAudioPlayer.seek(Duration(
                                       seconds: value.toInt(),
                                     ));
                                   },
@@ -554,7 +554,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                   ),
                                 ),
                                 MaterialButton(
-                                  onPressed: () => audioPlayer.previous(),
+                                  onPressed: () => assetsAudioPlayer.previous(),
                                   child: Text(
                                     language!.STRING_NOW_PLAYING_PREVIOUS_TRACK,
                                     style: TextStyle(
@@ -563,7 +563,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                                   ),
                                 ),
                                 MaterialButton(
-                                  onPressed: () => audioPlayer.next(),
+                                  onPressed: () => assetsAudioPlayer.next(),
                                   child: Text(
                                     language!.STRING_NOW_PLAYING_NEXT_TRACK,
                                     style: TextStyle(
