@@ -12,14 +12,17 @@ dependencies:
   animations: ^2.0.0
   provider: ^5.0.0
   flutter_acrylic: ^0.0.2
-  fluentui_system_icons: ^1.1.136
-  assets_audio_player:
-    git:
-      url: https://github.com/florent37/Flutter-AssetsAudioPlayer.git
+  ffi: ^1.1.2
+  libwinmedia:
+    path: ./external/libwinmedia.dart
   flutter_media_metadata:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
       ref: 919819aaed18ced20994f3ed004efb6d1f689a9d
+  fluentui_system_icons: ^1.1.136
+  assets_audio_player:
+    git:
+      url: https://github.com/florent37/Flutter-AssetsAudioPlayer.git
   filepicker_windows: ^2.0.0
   bitsdojo_window: ^0.1.1+1
   flutter_local_notifications: ^5.0.0
