@@ -7,34 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/constants/language.dart';
 
-abstract class Methods {
-  static int binaryIndexOf(
-      List<dynamic> collectionList, List<dynamic> keywordList) {
-    int indexOfKeywordList = -1;
-    for (int index = 0; index < collectionList.length; index++) {
-      List<dynamic> object = collectionList[index];
-      if (object[0] == keywordList[0] && object[1] == keywordList[1]) {
-        indexOfKeywordList = index;
-        break;
-      }
-    }
-    return indexOfKeywordList;
-  }
-
-  static bool binaryContains(
-          List<dynamic> collectionList, List<dynamic> keywordList) =>
-      binaryIndexOf(collectionList, keywordList) != -1 ? true : false;
-
-  static bool isFileSupported(FileSystemEntity? file) {
-    if (file is File &&
-        SUPPORTED_FILE_TYPES
-            .contains(file.path.split('.').last.toUpperCase())) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
+abstract class Utils {
   static String? mediaTypeToLanguage(MediaType mediaType) {
     if (mediaType is Album)
       return language!.STRING_ALBUM;
@@ -117,70 +90,6 @@ abstract class Methods {
         backgroundColor: isLight ? accentColor : Color(0xFF292929),
         selectedItemColor: Colors.white.withOpacity(0.87),
         unselectedItemColor: Colors.white54,
-      ),
-      primaryTextTheme: TextTheme(
-        headline1: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
-          fontSize: 18,
-        ),
-        headline2: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
-          fontSize: 16,
-        ),
-        headline3: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: isLight ? Colors.black54 : Colors.white.withOpacity(0.54),
-          fontSize: 16,
-        ),
-        headline4: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
-          fontSize: 14,
-        ),
-        headline5: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: isLight ? Colors.black54 : Colors.white.withOpacity(0.54),
-          fontSize: 14,
-        ),
-        headline6: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
-          fontSize: 18,
-        ),
-      ),
-      textTheme: TextTheme(
-        headline1: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
-          fontSize: 18,
-        ),
-        headline2: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
-          fontSize: 16,
-        ),
-        headline3: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: isLight ? Colors.black54 : Colors.white.withOpacity(0.54),
-          fontSize: 16,
-        ),
-        headline4: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
-          fontSize: 14,
-        ),
-        headline5: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: isLight ? Colors.black54 : Colors.white.withOpacity(0.54),
-          fontSize: 14,
-        ),
-        headline6: TextStyle(
-          fontWeight: FontWeight.normal,
-          color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
-          fontSize: 18,
-        ),
       ),
     );
   }

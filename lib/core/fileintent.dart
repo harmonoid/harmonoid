@@ -39,7 +39,7 @@ class FileIntent {
     if (await file.exists())
       return file;
     else
-      throw FileSystemException("File does not exists.");
+      throw FileSystemException();
   }
 
   Future<void> play() async {

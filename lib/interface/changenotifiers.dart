@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/utils/methods.dart';
+import 'package:harmonoid/utils/utils.dart';
 
 class Server extends ChangeNotifier {
   String? homeAddress;
@@ -74,13 +74,13 @@ class Visuals extends ChangeNotifier {
     );
   }
 
-  ThemeData get theme => Methods.getTheme(
+  ThemeData get theme => Utils.getTheme(
         accentColor: this.accent!.light,
         themeMode: ThemeMode.light,
         platform: this.platform,
       );
 
-  ThemeData get darkTheme => Methods.getTheme(
+  ThemeData get darkTheme => Utils.getTheme(
         accentColor: this.accent!.dark,
         themeMode: ThemeMode.dark,
         platform: this.platform,

@@ -5,12 +5,11 @@ import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/download.dart';
 import 'package:harmonoid/core/fileintent.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
-import 'package:harmonoid/utils/methods.dart';
+import 'package:harmonoid/utils/utils.dart';
 import 'package:harmonoid/constants/language.dart';
 
 const String TITLE = 'Harmonoid';
@@ -18,21 +17,13 @@ const String VERSION = '0.0.8';
 const String AUTHOR = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String LICENSE = 'GPL-3.0';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-
+Future<void> main(List<String> args) async {
   try {
-    await Methods.askStoragePermission();
-    await Configuration.init();
-    if (Platform.isWindows || Platform.isLinux) {
+    if (Platform.isWindows) {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Configuration.init();
       await Acrylic.initialize();
-      Acrylic.setEffect(
+      await Acrylic.setEffect(
         effect: configuration.acrylicEnabled!
             ? AcrylicEffect.acrylic
             : AcrylicEffect.solid,
@@ -40,6 +31,44 @@ void main() async {
             ? Colors.white
             : Color(0xCC222222),
       );
+      await FileIntent.init();
+      doWhenWindowReady(() {
+        appWindow.minSize = Size(640, 480);
+        appWindow.size = Size(1024, 640);
+        appWindow.alignment = Alignment.center;
+        appWindow.show();
+      });
+    }
+    if (Platform.isLinux) {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Configuration.init();
+      await Acrylic.initialize();
+      await Acrylic.setEffect(
+        effect: configuration.acrylicEnabled!
+            ? AcrylicEffect.acrylic
+            : AcrylicEffect.solid,
+        gradientColor: configuration.themeMode! == ThemeMode.light
+            ? Colors.white
+            : Color(0xCC222222),
+      );
+      await FileIntent.init();
+      doWhenWindowReady(() {
+        appWindow.minSize = Size(640, 480);
+        appWindow.size = Size(1024, 640);
+        appWindow.alignment = Alignment.center;
+        appWindow.show();
+      });
+    }
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(
+          SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+      await Utils.askStoragePermission();
+      await Configuration.init();
+      await FileIntent.init();
     }
     await Collection.init(
       collectionDirectories: configuration.collectionDirectories!,
@@ -49,8 +78,6 @@ void main() async {
     await Language.init(
       languageRegion: configuration.languageRegion!,
     );
-    await FileIntent.init();
-    await Download.init();
     runApp(
       Harmonoid(),
     );
@@ -62,10 +89,4 @@ void main() async {
       ),
     );
   }
-  doWhenWindowReady(() {
-    appWindow.minSize = Size(640, 480);
-    appWindow.size = Size(1024, 640);
-    appWindow.alignment = Alignment.center;
-    appWindow.show();
-  });
 }

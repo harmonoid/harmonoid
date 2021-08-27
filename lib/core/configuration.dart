@@ -23,14 +23,18 @@ abstract class ConfigurationKeys {
   bool? notificationLyrics;
   TargetPlatform? platform;
   bool? acrylicEnabled;
-  List<dynamic>? collectionSearchRecent;
-  List<dynamic>? discoverSearchRecent;
-  List<dynamic>? discoverRecent;
+  List<String>? collectionSearchRecent;
+  List<String>? discoverSearchRecent;
+  List<String>? discoverRecent;
 }
 
 Map<String, dynamic> DEFAULT_CONFIGURATION = {
-  'collectionDirectories': [
-    path.join(Platform.environment['USERPROFILE']!, 'Music'),
+  'collectionDirectories': <String>[
+    {
+      'windows': () => path.join(Platform.environment['USERPROFILE']!, 'Music'),
+      'linux': () => path.join(Platform.environment['HOME']!, 'Music'),
+      'android': () => '/storage/emulated/0/Music',
+    }[Platform.operatingSystem]!(),
   ],
   // TODO: Remove this.
   'homeAddress': '',
@@ -54,11 +58,24 @@ Map<String, dynamic> DEFAULT_CONFIGURATION = {
 class Configuration extends ConfigurationKeys {
   late File configurationFile;
 
+  Future<String> get configurationDirectory async {
+    switch (Platform.operatingSystem) {
+      case 'windows':
+        return Platform.environment['USERPROFILE']!;
+      case 'linux':
+        return Platform.environment['HOME']!;
+      case 'android':
+        return (await path.getExternalStorageDirectory())!.path;
+      default:
+        return '';
+    }
+  }
+
   static Future<void> init() async {
     configuration = Configuration();
     configuration.configurationFile = File(
       path.join(
-        'C:/Users/alexmercerind/.harmonoid',
+        await configuration.configurationDirectory,
         'configuration.JSON',
       ),
     );
@@ -68,8 +85,12 @@ class Configuration extends ConfigurationKeys {
           .writeAsString(convert.jsonEncode(DEFAULT_CONFIGURATION));
     }
     await configuration.read();
-    configuration.cacheDirectory =
-        Directory('C:/Users/alexmercerind/.harmonoid/cache');
+    configuration.cacheDirectory = Directory(
+      path.join(
+        await configuration.configurationDirectory,
+        '.harmonoid',
+      ),
+    );
   }
 
   Future<void> save({
@@ -84,9 +105,9 @@ class Configuration extends ConfigurationKeys {
     bool? notificationLyrics,
     TargetPlatform? platform,
     bool? acrylicEnabled,
-    List<dynamic>? collectionSearchRecent,
-    List<dynamic>? discoverSearchRecent,
-    List<dynamic>? discoverRecent,
+    List<String>? collectionSearchRecent,
+    List<String>? discoverSearchRecent,
+    List<String>? discoverRecent,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -172,8 +193,9 @@ class Configuration extends ConfigurationKeys {
     this.platform = TargetPlatform.values[currentConfiguration['platform']];
     this.acrylicEnabled = currentConfiguration['acrylicEnabled'];
     this.collectionSearchRecent =
-        currentConfiguration['collectionSearchRecent'];
-    this.discoverSearchRecent = currentConfiguration['discoverSearchRecent'];
-    this.discoverRecent = currentConfiguration['discoverRecent'];
+        currentConfiguration['collectionSearchRecent'].cast<String>();
+    this.discoverSearchRecent =
+        currentConfiguration['discoverSearchRecent'].cast<String>();
+    this.discoverRecent = currentConfiguration['discoverRecent'].cast<String>();
   }
 }

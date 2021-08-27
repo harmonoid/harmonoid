@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/utils/methods.dart';
+import 'package:harmonoid/utils/utils.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
@@ -16,7 +16,7 @@ class ExceptionApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      darkTheme: Methods.getTheme(
+      darkTheme: Utils.getTheme(
         accentColor: Colors.deepPurpleAccent.shade200,
         themeMode: ThemeMode.dark,
         platform: TargetPlatform.windows,
