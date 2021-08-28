@@ -7,6 +7,7 @@ cmake_policy(SET CMP0063 NEW)
 
 set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
 
+set(CMAKE_SHARED_LINKER_FLAGS_PROFILE "${CMAKE_SHARED_LINKER_FLAGS_PROFILE}")
 set(DART_VM "Enable")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../external/libwinmedia" "${CMAKE_BINARY_DIR}/libwinmedia")
 
