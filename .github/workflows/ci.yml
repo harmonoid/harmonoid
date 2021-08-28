@@ -12,10 +12,10 @@ jobs:
           submodules: 'recursive'
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'stable'
+          channel: 'beta'
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
-      - run: flutter build windows
+      - run: flutter build windows --verbose
       - uses: actions/upload-artifact@v1
         with:
           name: dart_vlc_example
