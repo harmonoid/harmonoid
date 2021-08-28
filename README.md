@@ -3,18 +3,19 @@
 <br></br>
 
 
-**🎉 Harmonoid is being completely redesigned.**
+**🎉 Harmonoid is being entirely redesigned.**
 
 Checkout [next-gen](https://github.com/harmonoid/harmonoid/tree/next-gen) branch for seeing the progress. This new design includes close match with new Windows 11 design & transparency/blur effects. Support for Windows & Linux is on its way aswell.
 
 
-![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid-next-3.jpg)
-![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid-next-2.jpg)
-![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid-next-1.jpg)
+![](https://github.com/harmonoid/harmonoid/blob/assets/windows-next-final-0.jpg)
+![](https://github.com/harmonoid/harmonoid/blob/assets/windows-next-final-1.jpg)
 
-https://user-images.githubusercontent.com/28951144/130282872-cd650fa8-1752-41ba-816f-57b589854b12.mp4
 
 <br></br>
+
+<h4  align="center">Loving the project? Consider starring the repository ⭐ & share with your friends 💜.</h4>
+
 
 ## Features
 
@@ -34,7 +35,7 @@ https://user-images.githubusercontent.com/28951144/130282872-cd650fa8-1752-41ba-
   - Every element in app follows standard design & motion effects. 
 
 - **Ads free forever**
-  - No advertisements! No profits associated with the project.
+  - No advertisements! Zero profits associated with the project.
   
 - **Playlists**
   - Make own playlists & play your favorite music on the go.
@@ -49,10 +50,9 @@ https://user-images.githubusercontent.com/28951144/130282872-cd650fa8-1752-41ba-
   - Tell your friends what you listen.
 
 - **Small size**
-  - Complete application under 20 MB on (Windows & Android).
+  - Complete application under 20 MB (on Windows, Linux & Android).
 
 
-<h4  align="center">Loving the project? Consider starring the repository ⭐</h4>
 
 ## Translators
 
