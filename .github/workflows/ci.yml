@@ -15,8 +15,8 @@ jobs:
           channel: 'beta'
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
-      - run: flutter build windows --verbose
+      - run: flutter build windows
       - uses: actions/upload-artifact@v1
         with:
-          name: dart_vlc_example
+          name: harmonoid-windows
           path: build/windows/runner/Release
