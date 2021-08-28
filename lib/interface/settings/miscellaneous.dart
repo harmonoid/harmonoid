@@ -21,23 +21,8 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
         children: [
           SwitchListTile(
             title: Text(
-              'Enable Windows acrylic blur',
-              style: TextStyle(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 14.0,
-              ),
-            ),
-            subtitle: Text(
-              'Add blur effect to the app\'s background.',
-              style: TextStyle(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white.withOpacity(0.8)
-                    : Colors.black.withOpacity(0.8),
-                fontSize: 14.0,
-              ),
+              language!.STRING_ENABLE_ACRYLIC_BLUR,
+              style: Theme.of(context).textTheme.headline4,
             ),
             value: configuration.acrylicEnabled!,
             onChanged: (bool enabled) async {
@@ -46,12 +31,25 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               );
               await Acrylic.setEffect(
                 effect: enabled ? AcrylicEffect.acrylic : AcrylicEffect.solid,
-                gradientColor: Theme.of(context).brightness == ThemeMode.light
+                gradientColor: Theme.of(context).brightness == Brightness.light
                     ? Colors.white
                     : Color(0xCC222222),
               );
               // Causes scaffoldBackgroundColor to update.
               Provider.of<Visuals>(context, listen: false).update();
+              this.setState(() {});
+            },
+          ),
+          SwitchListTile(
+            title: Text(
+              language!.STRING_NOTIFICATION_LYRICS_TITLE,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            value: configuration.acrylicEnabled!,
+            onChanged: (bool enabled) async {
+              await configuration.save(
+                notificationLyrics: enabled,
+              );
               this.setState(() {});
             },
           ),

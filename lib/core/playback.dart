@@ -145,6 +145,7 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
 abstract class Playback {
   static Future<void> add(List<Track> tracks) async {
     if (Platform.isWindows) {
+      /// TODO (alexmercerind): Fix on Windows, otherwise comment out.
       tracks.forEach((track) {
         player.add(
           LIBWINMEDIA.Media(

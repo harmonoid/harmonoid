@@ -21,7 +21,6 @@ abstract class ConfigurationKeys {
   CollectionSort? collectionSortType;
   bool? automaticAccent;
   bool? notificationLyrics;
-  TargetPlatform? platform;
   bool? acrylicEnabled;
   List<String>? collectionSearchRecent;
   List<String>? discoverSearchRecent;
@@ -42,12 +41,9 @@ Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'accent': 0,
   'themeMode': 2,
   'collectionSortType': 0,
-  // TODO: Remove this.
   'automaticAccent': false,
-  // TODO: Remove this.
   'notificationLyrics': true,
   // TODO: Remove this.
-  'platform': 2,
   // TODO: Remove this.
   'acrylicEnabled': true,
   'collectionSearchRecent': [],
@@ -103,7 +99,6 @@ class Configuration extends ConfigurationKeys {
     CollectionSort? collectionSortType,
     bool? automaticAccent,
     bool? notificationLyrics,
-    TargetPlatform? platform,
     bool? acrylicEnabled,
     List<String>? collectionSearchRecent,
     List<String>? discoverSearchRecent,
@@ -142,9 +137,6 @@ class Configuration extends ConfigurationKeys {
     if (notificationLyrics != null) {
       this.notificationLyrics = notificationLyrics;
     }
-    if (platform != null) {
-      this.platform = platform;
-    }
     if (acrylicEnabled != null) {
       this.acrylicEnabled = acrylicEnabled;
     }
@@ -161,7 +153,6 @@ class Configuration extends ConfigurationKeys {
       'collectionSortType': this.collectionSortType!.index,
       'automaticAccent': this.automaticAccent,
       'notificationLyrics': this.notificationLyrics,
-      'platform': this.platform!.index,
       'acrylicEnabled': this.acrylicEnabled,
       'collectionSearchRecent': this.collectionSearchRecent,
       'discoverSearchRecent': this.discoverSearchRecent,
@@ -190,7 +181,6 @@ class Configuration extends ConfigurationKeys {
         CollectionSort.values[currentConfiguration['collectionSortType']];
     this.automaticAccent = currentConfiguration['automaticAccent'];
     this.notificationLyrics = currentConfiguration['notificationLyrics'];
-    this.platform = TargetPlatform.values[currentConfiguration['platform']];
     this.acrylicEnabled = currentConfiguration['acrylicEnabled'];
     this.collectionSearchRecent =
         currentConfiguration['collectionSearchRecent'].cast<String>();

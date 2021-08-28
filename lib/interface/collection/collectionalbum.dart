@@ -274,7 +274,7 @@ class CollectionAlbum extends StatelessWidget {
                   width: 24.0,
                 ),
                 SubHeader(
-                  'Album',
+                  language!.STRING_ALBUM_SINGLE,
                 )
               ],
             ),
@@ -319,14 +319,16 @@ class CollectionAlbum extends StatelessWidget {
                           this.album!.albumName!,
                           style: Theme.of(context).textTheme.headline1,
                           textAlign: TextAlign.center,
-                          maxLines: 2,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 4.0),
                         Text(
                           '${this.album!.albumArtistName}\n(${this.album!.year ?? 'Unknown Year'})',
                           style: Theme.of(context).textTheme.headline3,
-                          maxLines: 2,
+                          maxLines: 1,
                           textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
@@ -341,9 +343,14 @@ class CollectionAlbum extends StatelessWidget {
                             Theme.of(context).primaryColor,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Playback.play(
+                            index: 0,
+                            tracks: album!.tracks,
+                          );
+                        },
                         child: Text(
-                          'Play Now',
+                          language!.STRING_PLAY_NOW,
                         ),
                       ),
                       SizedBox(
@@ -355,9 +362,11 @@ class CollectionAlbum extends StatelessWidget {
                             Theme.of(context).primaryColor,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Playback.add(album!.tracks);
+                        },
                         child: Text(
-                          'Add to Now Playing',
+                          language!.STRING_ADD_TO_NOW_PLAYING,
                         ),
                       ),
                     ],

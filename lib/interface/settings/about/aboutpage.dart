@@ -230,7 +230,7 @@ class AboutPage extends StatelessWidget {
                           ),
                         ),
                         subtitle: Text(
-                          'Lead developer. Deals with playback & metadata parsing of music files. Maintains core C++ plugins for project. Writes UI code.',
+                          'Lead developer. Deals with playback & metadata parsing of music files. Maintains core C++ plugins for project. Writes UI code, state management & lifcycle.',
                           style: TextStyle(
                             color:
                                 Theme.of(context).brightness == Brightness.dark

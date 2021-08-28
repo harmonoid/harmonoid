@@ -80,7 +80,7 @@ class CollectionMusicState extends State<CollectionMusic>
                             alignment: Alignment.center,
                             margin: EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(
-                              'Search'.toUpperCase(),
+                              language!.STRING_SEARCH.toUpperCase(),
                               style: TextStyle(
                                 fontSize: 20.0,
                                 fontWeight: this.index == 4

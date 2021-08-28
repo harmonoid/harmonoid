@@ -323,8 +323,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                         }
                       },
                       decoration: InputDecoration.collapsed(
-                        hintText:
-                            'Enter something to lookup in your collection.',
+                        hintText: language!.STRING_COLLECTION_SEARCH_LABEL,
                         hintStyle: Theme.of(context).textTheme.headline3,
                       ),
                     ),

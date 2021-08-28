@@ -204,7 +204,7 @@ class CollectionArtistTile extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               child: Text(
                 this.artist.artistName!,
-                style: Theme.of(context).textTheme.headline3,
+                style: Theme.of(context).textTheme.headline2,
                 textAlign: TextAlign.left,
                 maxLines: 1,
               ),
@@ -254,7 +254,7 @@ class CollectionArtist extends StatelessWidget {
                   width: 24.0,
                 ),
                 Text(
-                  'Artist',
+                  language!.STRING_ARTIST_SINGLE,
                   style: Theme.of(context).textTheme.headline1,
                 )
               ],
@@ -298,15 +298,17 @@ class CollectionArtist extends StatelessWidget {
                       children: [
                         Text(
                           this.artist!.artistName!,
-                          style: Theme.of(context).textTheme.headline3,
+                          style: Theme.of(context).textTheme.headline1,
                           textAlign: TextAlign.center,
-                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                         SizedBox(height: 4.0),
                         Text(
                           '${this.artist!.tracks.length} tracks & ${this.artist!.albums.length} albums.',
                           style: Theme.of(context).textTheme.headline3,
-                          maxLines: 2,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -365,7 +367,7 @@ class CollectionArtist extends StatelessWidget {
                   shrinkWrap: true,
                   children: <Widget>[
                         SubHeader(
-                          'Albums from this artist.',
+                          language!.STRING_ALBUMS_FROM_ARTIST,
                         ),
                         Container(
                           height: tileHeight + 16.0,
@@ -395,7 +397,7 @@ class CollectionArtist extends StatelessWidget {
                           ),
                         ),
                         SubHeader(
-                          'Tracks from this artist.',
+                          language!.STRING_TRACKS_FROM_ARTIST,
                         ),
                       ] +
                       this

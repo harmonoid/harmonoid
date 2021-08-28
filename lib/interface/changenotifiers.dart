@@ -139,7 +139,6 @@ class Visuals extends ChangeNotifier {
     configuration.save(
       accent: this.accent,
       themeMode: this.themeMode,
-      platform: this.platform,
     );
   }
 
