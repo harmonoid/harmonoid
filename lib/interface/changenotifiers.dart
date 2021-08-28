@@ -1,10 +1,79 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 
+import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/utils.dart';
+
+CurrentlyPlaying currentlyPlaying = CurrentlyPlaying();
+
+class CurrentlyPlaying extends ChangeNotifier {
+  int? get index => _index;
+  List<Track> get tracks => _tracks;
+  bool get isPlaying => _isPlaying;
+  bool get isBuffering => _isBuffering;
+  bool get isCompleted => _isCompleted;
+  double get volume => _volume;
+  double get rate => _rate;
+  Duration get position => _position;
+  Duration get duration => _duration;
+
+  set index(int? index) {
+    this._index = index;
+    this.notifyListeners();
+  }
+
+  set tracks(List<Track> tracks) {
+    this._tracks = tracks;
+    this.notifyListeners();
+  }
+
+  set isPlaying(bool isPlaying) {
+    this._isPlaying = isPlaying;
+    this.notifyListeners();
+  }
+
+  set isBuffering(bool isBuffering) {
+    this._isBuffering = isBuffering;
+    this.notifyListeners();
+  }
+
+  set isCompleted(bool isCompleted) {
+    this._isCompleted = isCompleted;
+    this.notifyListeners();
+  }
+
+  set volume(double volume) {
+    this._volume = volume;
+    this.notifyListeners();
+  }
+
+  set rate(double rate) {
+    this._rate = rate;
+    this.notifyListeners();
+  }
+
+  set position(Duration position) {
+    this._position = position;
+    this.notifyListeners();
+  }
+
+  set duration(Duration duration) {
+    this._duration = duration;
+    this.notifyListeners();
+  }
+
+  int? _index;
+  List<Track> _tracks = <Track>[];
+  bool _isPlaying = false;
+  bool _isBuffering = false;
+  bool _isCompleted = false;
+  double _volume = 1.0;
+  double _rate = 1.0;
+  Duration _position = Duration.zero;
+  Duration _duration = Duration.zero;
+}
 
 class Server extends ChangeNotifier {
   String? homeAddress;

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:harmonoid/interface/nowplayingbar.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
@@ -72,21 +72,27 @@ class HomeState extends State<Home>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          WindowTitleBar(),
-          Expanded(
-            child: MultiProvider(
-              providers: [
-                ChangeNotifierProvider<Collection>(
-                    create: (context) => Collection.get()!),
-                ChangeNotifierProvider<Language>(
-                    create: (context) => Language.get()!),
-                ChangeNotifierProvider<Lyrics>(
-                    create: (context) => Lyrics.get()),
-              ],
-              builder: (context, _) => Consumer<Language>(
+      body: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<Collection>(
+            create: (context) => Collection.get()!,
+          ),
+          ChangeNotifierProvider<Language>(
+            create: (context) => Language.get()!,
+          ),
+          ChangeNotifierProvider<Lyrics>(
+            create: (context) => Lyrics.get(),
+          ),
+          ChangeNotifierProvider<CurrentlyPlaying>(
+            create: (context) => currentlyPlaying,
+          ),
+        ],
+        builder: (context, _) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const WindowTitleBar(),
+            Expanded(
+              child: Consumer<Language>(
                 builder: (context, _, __) => Scaffold(
                   body: HeroControllerScope(
                     controller: MaterialApp.createMaterialHeroController(),
@@ -99,7 +105,7 @@ class HomeState extends State<Home>
                           route = MaterialPageRoute(
                             builder: (BuildContext context) =>
                                 ChangeNotifierProvider(
-                              child: CollectionMusic(),
+                              child: const CollectionMusic(),
                               create: (context) => CollectionRefresh(),
                               builder: (context, child) => child!,
                             ),
@@ -153,8 +159,9 @@ class HomeState extends State<Home>
                 ),
               ),
             ),
-          ),
-        ],
+            const NowPlayingBar(),
+          ],
+        ),
       ),
     );
   }
