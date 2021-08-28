@@ -1,0 +1,22 @@
+name: Github Actions
+on: [push, pull_request]
+
+jobs:
+  build_windows:
+    name: Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.TOKEN }}
+          submodules: 'recursive'
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      - run: flutter config --enable-windows-desktop
+      - run: flutter pub get
+      - run: flutter build windows
+      - uses: actions/upload-artifact@v1
+        with:
+          name: dart_vlc_example
+          path: build/windows/runner/Release
