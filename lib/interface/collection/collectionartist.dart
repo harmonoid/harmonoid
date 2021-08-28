@@ -440,6 +440,10 @@ class CollectionArtist extends StatelessWidget {
                                               context: context,
                                               builder: (subContext) =>
                                                   AlertDialog(
+                                                backgroundColor:
+                                                    Theme.of(context)
+                                                        .appBarTheme
+                                                        .color,
                                                 title: Text(
                                                   language!
                                                       .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,

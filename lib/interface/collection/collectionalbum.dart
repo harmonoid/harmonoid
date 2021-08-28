@@ -430,6 +430,10 @@ class CollectionAlbum extends StatelessWidget {
                                               context: context,
                                               builder: (subContext) =>
                                                   AlertDialog(
+                                                backgroundColor:
+                                                    Theme.of(context)
+                                                        .appBarTheme
+                                                        .color,
                                                 title: Text(
                                                   language!
                                                       .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
@@ -526,7 +530,7 @@ class CollectionAlbum extends StatelessWidget {
                                                           style: Theme.of(
                                                                   subContext)
                                                               .textTheme
-                                                              .headline5,
+                                                              .headline3,
                                                         ),
                                                       ),
                                                       Container(
@@ -562,7 +566,7 @@ class CollectionAlbum extends StatelessWidget {
                                                                 style: Theme.of(
                                                                         context)
                                                                     .textTheme
-                                                                    .headline2),
+                                                                    .headline4),
                                                             leading: Icon(
                                                               Icons.queue_music,
                                                               size: Theme.of(

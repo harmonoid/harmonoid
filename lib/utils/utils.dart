@@ -63,6 +63,13 @@ abstract class Utils {
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
       ),
+      headline5: TextStyle(
+        color: isLight
+            ? Colors.black.withOpacity(0.8)
+            : Colors.white.withOpacity(0.8),
+        fontSize: 12.0,
+        fontWeight: FontWeight.normal,
+      ),
       // ListTile text theme.
       // [ListTile.title]'s text theme must be overrided to headline4, if it does not contain subtitle.
       subtitle1: TextStyle(
