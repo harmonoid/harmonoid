@@ -182,11 +182,7 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
               Provider.of<Collection>(context, listen: false).refresh(
                   onProgress: (progress, total, isCompleted) {
                 Provider.of<CollectionRefresh>(context, listen: false)
-                    .progress = progress;
-                Provider.of<CollectionRefresh>(context, listen: false).total =
-                    total;
-                Provider.of<CollectionRefresh>(context, listen: false)
-                    .notifyListeners();
+                    .set(progress, total);
                 this.lock = !isCompleted;
               });
               this.setState(() {});

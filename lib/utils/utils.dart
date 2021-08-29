@@ -149,4 +149,15 @@ abstract class Utils {
       primaryTextTheme: textTheme,
     );
   }
+
+  static bool isPresentInCollectionDirectories(Track track) {
+    bool isPresent = false;
+    for (Directory directory in configuration.collectionDirectories!) {
+      if (directory.path.startsWith(track.filePath!)) {
+        isPresent = true;
+        break;
+      }
+    }
+    return isPresent;
+  }
 }

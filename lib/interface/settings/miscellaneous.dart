@@ -45,7 +45,7 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               language!.STRING_NOTIFICATION_LYRICS_TITLE,
               style: Theme.of(context).textTheme.headline4,
             ),
-            value: configuration.acrylicEnabled!,
+            value: configuration.notificationLyrics!,
             onChanged: (bool enabled) async {
               await configuration.save(
                 notificationLyrics: enabled,

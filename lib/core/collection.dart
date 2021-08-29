@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:harmonoid/utils/utils.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:harmonoid/core/mediatype.dart';
@@ -325,8 +326,8 @@ class Collection extends ChangeNotifier {
   }
 
   Future<void> refresh(
-      {void Function(int completed, int total, bool isCompleted)?
-          onProgress}) async {
+      {void Function(int completed, int total, bool isCompleted)? onProgress,
+      bool respectChangedDirectories: false}) async {
     if (!await this.cacheDirectory.exists())
       await this.cacheDirectory.create(recursive: true);
     for (Directory directory in collectionDirectories) {
@@ -347,7 +348,14 @@ class Collection extends ChangeNotifier {
                 .readAsString());
         for (Map<String, dynamic> trackMap in collection['tracks']) {
           Track track = Track.fromMap(trackMap)!;
-          if (await File(track.filePath!).exists()) {
+          bool presentInCollectionDirectories = true;
+          if (respectChangedDirectories) {
+            /// This is rather expensive to perform, thus only done when `respectChangedDirectories` explicitly passed as true.
+            presentInCollectionDirectories =
+                Utils.isPresentInCollectionDirectories(track);
+          }
+          if (await File(track.filePath!).exists() &&
+              presentInCollectionDirectories) {
             await this._arrange(track, () async {});
           }
         }
