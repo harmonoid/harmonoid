@@ -19,6 +19,8 @@ class CurrentlyPlaying extends ChangeNotifier {
   Duration get position => _position;
   Duration get duration => _duration;
 
+  double volumeBeforeMute = 1.0;
+
   set index(int? index) {
     this._index = index;
     this.notifyListeners();

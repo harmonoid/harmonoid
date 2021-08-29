@@ -176,7 +176,7 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
       onPressed: this.lock
           ? () {}
           : () async {
-              this.lock = false;
+              this.lock = true;
               this.turns += 2 * math.pi;
               this.tween = Tween<double>(begin: 0, end: this.turns);
               Provider.of<Collection>(context, listen: false).refresh(

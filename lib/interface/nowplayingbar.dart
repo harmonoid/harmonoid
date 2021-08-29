@@ -265,9 +265,14 @@ class NowPlayingBar extends StatelessWidget {
                       IconButton(
                         onPressed: () {
                           Playback.setVolume(
-                              currentlyPlaying.volume > 0.0 ? 0.0 : 1.0);
+                            currentlyPlaying.volume > 0.0
+                                ? 0.0
+                                : currentlyPlaying.volumeBeforeMute,
+                          );
                           currentlyPlaying.volume =
-                              currentlyPlaying.volume > 0.0 ? 0.0 : 1.0;
+                              currentlyPlaying.volume > 0.0
+                                  ? 0.0
+                                  : currentlyPlaying.volumeBeforeMute;
                         },
                         iconSize: 20.0,
                         color: Theme.of(context).brightness == Brightness.dark
@@ -275,7 +280,7 @@ class NowPlayingBar extends StatelessWidget {
                             : Colors.black,
                         splashRadius: 18.0,
                         icon: Icon(
-                          currentlyPlaying.volume > 0.0
+                          currentlyPlaying.volume == 0.0
                               ? Icons.volume_off
                               : Icons.volume_up,
                         ),
@@ -307,6 +312,7 @@ class NowPlayingBar extends StatelessWidget {
                             onChanged: (value) {
                               Playback.setVolume(value);
                               currentlyPlaying.volume = value;
+                              currentlyPlaying.volumeBeforeMute = value;
                             },
                             max: 1.0,
                             min: 0.0,
