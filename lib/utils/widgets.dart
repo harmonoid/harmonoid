@@ -179,11 +179,11 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
               this.lock = true;
               this.turns += 2 * math.pi;
               this.tween = Tween<double>(begin: 0, end: this.turns);
-              Provider.of<Collection>(context, listen: false).refresh(
+              await Provider.of<Collection>(context, listen: false).refresh(
                   onProgress: (progress, total, isCompleted) {
                 Provider.of<CollectionRefresh>(context, listen: false)
                     .set(progress, total);
-                this.lock = !isCompleted;
+                this.setState(() => this.lock = !isCompleted);
               });
               this.setState(() {});
             },
