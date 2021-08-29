@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/discordrpc.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/nowplayingbar.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -83,6 +85,9 @@ class HomeState extends State<Home>
           ),
           ChangeNotifierProvider<CurrentlyPlaying>(
             create: (context) => currentlyPlaying,
+          ),
+          Provider<DiscordRPC>(
+            create: (context) => discordRPC,
           ),
         ],
         builder: (context, _) => Column(

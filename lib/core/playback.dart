@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:assets_audio_player/assets_audio_player.dart'
     as AssetsAudioPlayer;
+import 'package:dart_discord_rpc/dart_discord_rpc.dart';
+import 'package:harmonoid/core/discordrpc.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:libwinmedia/libwinmedia.dart' as LIBWINMEDIA;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -23,18 +25,7 @@ import 'package:harmonoid/constants/language.dart';
 final LIBWINMEDIA.Player player = LIBWINMEDIA.Player(id: 0)
   ..streams.index.listen((index) {
     currentlyPlaying.index = index;
-    try {
-      List<LIBWINMEDIA.Media> medias = player.state.medias;
-      int index = player.state.index;
-      Track track = Track.fromMap(medias[index].extras)!;
-      player.nativeControls.update(
-        albumArtist: track.albumArtistName,
-        album: track.albumName,
-        title: track.trackName,
-        artist: track.trackArtistNames?.join(', '),
-        thumbnail: track.albumArt,
-      );
-    } catch (exception) {}
+    onTrackChange();
   })
   ..streams.medias.listen((medias) {
     currentlyPlaying.tracks = medias
@@ -52,18 +43,10 @@ final LIBWINMEDIA.Player player = LIBWINMEDIA.Player(id: 0)
   ..streams.isCompleted.listen((isCompleted) async {
     currentlyPlaying.isCompleted = isCompleted;
     if (!isCompleted) {
-      try {
-        List<LIBWINMEDIA.Media> medias = player.state.medias;
-        int index = player.state.index;
-        Track track = Track.fromMap(medias[index].extras)!;
-        player.nativeControls.update(
-          albumArtist: track.albumArtistName,
-          album: track.albumName,
-          title: track.trackName,
-          artist: track.trackArtistNames?.join(', '),
-          thumbnail: track.albumArt,
-        );
-      } catch (exception) {}
+      onTrackChange();
+    }
+    if (isCompleted) {
+      discordRPC.clearPresence();
     }
   })
   ..streams.position.listen((position) {
@@ -245,4 +228,32 @@ abstract class Playback {
       );
     }
   }
+}
+
+/// Invoked when a new Track starts playing i.e. either index is changed or isPlaying changed.
+void onTrackChange() {
+  try {
+    List<LIBWINMEDIA.Media> medias = player.state.medias;
+    int index = player.state.index;
+    Track track = Track.fromMap(medias[index].extras)!;
+    player.nativeControls.update(
+      albumArtist: track.albumArtistName,
+      album: track.albumName,
+      title: track.trackName,
+      artist: track.trackArtistNames?.join(', '),
+      thumbnail: track.albumArt,
+    );
+    discordRPC.start(autoRegister: true);
+    discordRPC.updatePresence(
+      DiscordPresence(
+        state: '${track.albumName}',
+        details: '${track.trackName} - ${track.albumArtistName}',
+        startTimeStamp: DateTime.now().millisecondsSinceEpoch,
+        largeImageKey: '52f61nfzmwl51',
+        largeImageText: 'Listening to music. 💜',
+        smallImageKey: '32f61n5ghl51',
+        smallImageText: 'Harmonoid',
+      ),
+    );
+  } catch (exception) {}
 }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:libwinmedia/libwinmedia.dart';
+import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/intent.dart';
@@ -39,6 +40,7 @@ Future<void> main(List<String> args) async {
           join(dirname(Platform.resolvedExecutable), 'libwinmedia.dll'),
         ),
       );
+      DiscordRPC.initialize();
       await Intent.init(args: args);
       doWhenWindowReady(() {
         appWindow.minSize = Size(640, 480);
