@@ -287,6 +287,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -457,6 +458,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
       }
       break;
       case LanguageRegion.slSi: {
@@ -628,6 +630,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -798,6 +801,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -968,6 +972,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
       }
       break;
       case LanguageRegion.deDe: {
@@ -1304,6 +1309,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
       }
       break;
       case LanguageRegion.svSe: {
@@ -1474,6 +1480,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
       }
       break;
       case LanguageRegion.frFr: {
@@ -1644,6 +1651,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
       }
       break;
     }

@@ -329,7 +329,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                     width: 16.0,
                                   ),
                                   Text(
-                                    'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.',
+                                    language!.STRING_COLLECTION_INDEXING_LABEL,
                                   ),
                                 ],
                               ),
