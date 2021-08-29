@@ -614,7 +614,7 @@ class Collection extends ChangeNotifier {
     // TODO (alexmercerind): Prevent this additional O(n).
     // This is here because, for some reason (as of now) [File]s get doubly indexed due to some state management
     // bug (not in this class).
-    if (this.tracks.contains(track)) return;
+    if (this._tracks.contains(track)) return;
     if (!this._foundAlbums.contains(track.albumName)) {
       this._foundAlbums.add(track.albumName!);
       await albumArtMethod();
