@@ -108,6 +108,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+  dart_discord_rpc:
+    dependency: "direct main"
+    description:
+      name: dart_discord_rpc
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
+  dart_discord_rpc_ffi:
+    dependency: transitive
+    description:
+      name: dart_discord_rpc_ffi
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   fake_async:
     dependency: transitive
     description:
