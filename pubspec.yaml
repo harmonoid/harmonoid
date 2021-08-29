@@ -1,7 +1,7 @@
 name: harmonoid
-description: A music app with a beautiful UI to play all your music!
+description: A beautiful app to play all your music.
 publish_to: 'none'
-version: 0.0.8+5002
+version: 0.1.0+5003
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -18,7 +18,7 @@ dependencies:
   flutter_media_metadata:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
-      ref: 919819aaed18ced20994f3ed004efb6d1f689a9d
+      ref: f7773003d97d6310f6aebf2d76bd6a19a65e6955
   fluentui_system_icons: ^1.1.136
   assets_audio_player:
     git:
