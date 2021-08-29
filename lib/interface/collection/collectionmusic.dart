@@ -6,6 +6,7 @@ import 'package:animations/animations.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/interface/collection/collectionalbum.dart';
 import 'package:harmonoid/interface/collection/collectiontrack.dart';
 import 'package:harmonoid/interface/collection/collectionartist.dart';
@@ -34,13 +35,11 @@ class CollectionMusicState extends State<CollectionMusic>
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!initialized) {
+      intent.play();
       Provider.of<Collection>(context, listen: false).refresh(
           onProgress: (progress, total, _) {
-        Provider.of<CollectionRefresh>(context, listen: false).progress =
-            progress;
-        Provider.of<CollectionRefresh>(context, listen: false).total = total;
         Provider.of<CollectionRefresh>(context, listen: false)
-            .notifyListeners();
+            .set(progress, total);
       });
       initialized = true;
     }

@@ -100,6 +100,12 @@ class CollectionRefresh extends ChangeNotifier {
     this.total = total;
     this.notifyListeners();
   }
+
+  void set(int progress, int total) {
+    this.progress = progress;
+    this.total = total;
+    this.notifyListeners();
+  }
 }
 
 class NotificationLyrics extends ChangeNotifier {

@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:harmonoid/core/lyrics.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/fileintent.dart';
 import 'package:harmonoid/interface/collection/collectionmusic.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -19,13 +18,12 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  int? index = fileIntent.tabIndex;
+  int? index = 0;
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
     super.initState();
-    if (fileIntent.tabIndex == 0) fileIntent.play();
     WidgetsBinding.instance!.addObserver(this);
   }
 

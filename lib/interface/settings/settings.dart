@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/constants/language.dart';
 
 import 'package:harmonoid/interface/settings/accent.dart';
-import 'package:harmonoid/interface/settings/server.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
 import 'package:harmonoid/interface/settings/language.dart';

@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/lyrics.dart';

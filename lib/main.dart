@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:ffi';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:libwinmedia/libwinmedia.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/fileintent.dart';
+import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
@@ -39,7 +39,7 @@ Future<void> main(List<String> args) async {
           join(dirname(Platform.resolvedExecutable), 'libwinmedia.dll'),
         ),
       );
-      await FileIntent.init();
+      await Intent.init(args: args);
       doWhenWindowReady(() {
         appWindow.minSize = Size(640, 480);
         appWindow.size = Size(1024, 640);
@@ -59,7 +59,7 @@ Future<void> main(List<String> args) async {
             ? Colors.white
             : Color(0xCC222222),
       );
-      await FileIntent.init();
+      await Intent.init(args: args);
       doWhenWindowReady(() {
         appWindow.minSize = Size(640, 480);
         appWindow.size = Size(1024, 640);
@@ -76,7 +76,7 @@ Future<void> main(List<String> args) async {
       ]);
       await Utils.askStoragePermission();
       await Configuration.init();
-      await FileIntent.init();
+      await Intent.init();
     }
     await Collection.init(
       collectionDirectories: configuration.collectionDirectories!,

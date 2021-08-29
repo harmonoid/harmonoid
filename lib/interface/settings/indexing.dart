@@ -4,6 +4,8 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
+// TODO (alexmercerind): Add Linux & Android support.
+// ignore: unused_import
 import 'package:file_picker/file_picker.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -16,7 +18,7 @@ class IndexingSetting extends StatefulWidget {
 }
 
 class IndexingState extends State<IndexingSetting> {
-  List<int>? linearProgressIndicatorValues;
+  List<dynamic>? linearProgressIndicatorValues;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,7 @@ class IndexingState extends State<IndexingSetting> {
                           Text(directory.path),
                           MaterialButton(
                             onPressed: () async {
-                              // TODO: Show alert dialog.
+                              // TODO (alexmercerind): Show alert dialog.
                               if (configuration.collectionDirectories!.length ==
                                   1) return;
                               configuration.collectionDirectories!
@@ -67,13 +69,14 @@ class IndexingState extends State<IndexingSetting> {
                               this.setState(() {});
                               Provider.of<Collection>(context, listen: false)
                                   .refresh(
-                                onProgress: (completed, total, isCompleted) {
-                                  this.setState(() =>
-                                      this.linearProgressIndicatorValues = [
-                                        completed,
-                                        total
-                                      ]);
-                                },
+                                onProgress: (progress, total, completed) =>
+                                    this.setState(
+                                  () => this.linearProgressIndicatorValues = [
+                                    progress,
+                                    total
+                                  ],
+                                ),
+                                respectChangedDirectories: true,
                               );
                             },
                             child: Text(
@@ -172,10 +175,11 @@ class IndexingState extends State<IndexingSetting> {
                 Provider.of<Collection>(context, listen: false).setDirectories(
                   collectionDirectories: configuration.collectionDirectories,
                   cacheDirectory: configuration.cacheDirectory,
-                  onProgress: (completed, total, isCompleted) {
+                  onProgress: (progress, total, completed) {
                     this.setState(() => this.linearProgressIndicatorValues = [
-                          completed,
-                          total
+                          progress,
+                          total,
+                          completed
                         ]);
                   },
                 ),
@@ -194,9 +198,9 @@ class IndexingState extends State<IndexingSetting> {
           onPressed: this.linearProgressIndicatorValues == null
               ? () async {
                   await Provider.of<Collection>(context, listen: false).index(
-                    onProgress: (completed, total, isCompleted) {
+                    onProgress: (progress, total, completed) {
                       this.setState(() => this.linearProgressIndicatorValues = [
-                            completed,
+                            progress,
                             total
                           ]);
                     },
