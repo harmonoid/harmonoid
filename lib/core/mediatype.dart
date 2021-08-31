@@ -16,13 +16,10 @@ class Track extends MediaType with Comparable {
   String? albumArtistName;
   List<String>? trackArtistNames;
   String? filePath;
-  String? albumArtHigh;
-  String? albumArtMedium;
-  String? albumArtLow;
+  String? networkAlbumArt;
   int? trackDuration;
   String? trackId;
   String? albumId;
-  // TODO: Change albumArt getter to return [FileImage] or [NetworkImage], so that we can use same container for streaming purposes.
   File get albumArt {
     File albumArtFile = File(path.join(
         configuration.cacheDirectory!.path,
@@ -49,9 +46,7 @@ class Track extends MediaType with Comparable {
       'albumArtistName': this.albumArtistName,
       'trackArtistNames': this.trackArtistNames ?? <dynamic>['Unknown Artist'],
       'filePath': this.filePath,
-      'albumArtHigh': this.albumArtHigh,
-      'albumArtMedium': this.albumArtHigh,
-      'albumArtLow': this.albumArtHigh,
+      'networkAlbumArt': this.networkAlbumArt,
       'trackDuration': this.trackDuration,
       'trackId': this.trackId,
       'albumId': this.albumId,
@@ -80,9 +75,7 @@ class Track extends MediaType with Comparable {
           ((trackMap['trackArtistNames'] ?? <String>['Unknown Artist']) as List)
               .cast<String>(),
       filePath: trackMap['filePath'],
-      albumArtHigh: trackMap['albumArtHigh'],
-      albumArtMedium: trackMap['albumArtMedium'],
-      albumArtLow: trackMap['albumArtLow'],
+      networkAlbumArt: trackMap['networkAlbumArt'],
       trackDuration: trackMap['trackDuration'],
       trackId: trackMap['trackId'],
       albumId: trackMap['albumId'],
@@ -106,9 +99,7 @@ class Track extends MediaType with Comparable {
       this.albumArtistName,
       this.trackArtistNames,
       this.filePath,
-      this.albumArtHigh,
-      this.albumArtMedium,
-      this.albumArtLow,
+      this.networkAlbumArt,
       this.trackDuration,
       this.trackId,
       this.albumId});
@@ -119,9 +110,7 @@ class Album extends MediaType with Comparable {
   int? year;
   String? albumArtistName;
   List<Track> tracks = <Track>[];
-  String? albumArtHigh;
-  String? albumArtMedium;
-  String? albumArtLow;
+  String? networkAlbumArt;
   String? albumId;
   File get albumArt {
     File albumArtFile = File(path.join(
@@ -150,9 +139,7 @@ class Album extends MediaType with Comparable {
       'year': this.year,
       'albumArtistName': this.albumArtistName,
       'tracks': this.tracks,
-      'albumArtHigh': this.albumArtHigh,
-      'albumArtMedium': this.albumArtHigh,
-      'albumArtLow': this.albumArtHigh,
+      'networkAlbumArt': this.networkAlbumArt,
       'albumId': this.albumId,
       'type': this.type,
     };
@@ -163,9 +150,7 @@ class Album extends MediaType with Comparable {
         albumName: albumMap['albumName'] ?? 'Unknown Album',
         year: albumMap['year'],
         albumArtistName: albumMap['albumArtistName'] ?? 'Unknown Artist',
-        albumArtHigh: albumMap['albumArtHigh'],
-        albumArtMedium: albumMap['albumArtMedium'],
-        albumArtLow: albumMap['albumArtLow'],
+        networkAlbumArt: albumMap['networkAlbumArt'],
         albumId: albumMap['albumId']);
   }
 
@@ -173,9 +158,7 @@ class Album extends MediaType with Comparable {
       {this.albumName,
       this.year,
       this.albumArtistName,
-      this.albumArtHigh,
-      this.albumArtMedium,
-      this.albumArtLow,
+      this.networkAlbumArt,
       this.albumId});
 
   @override
