@@ -288,6 +288,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
+        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
+        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
+        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
+        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -459,6 +464,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
+        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
+        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
+        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
+        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
       }
       break;
       case LanguageRegion.slSi: {
@@ -631,6 +641,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
+        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
+        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
+        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
+        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -802,6 +817,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
+        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
+        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
+        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
+        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -973,6 +993,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
+        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
+        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
+        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
+        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
       }
       break;
       case LanguageRegion.deDe: {
@@ -1310,6 +1335,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
+        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
+        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
+        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
+        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
       }
       break;
       case LanguageRegion.svSe: {
@@ -1481,6 +1511,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
+        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
+        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
+        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
+        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
       }
       break;
       case LanguageRegion.frFr: {
@@ -1652,6 +1687,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
+        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
+        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
+        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
+        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
       }
       break;
     }
