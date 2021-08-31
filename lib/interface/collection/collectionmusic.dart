@@ -11,6 +11,7 @@ import 'package:harmonoid/interface/collection/collectionalbum.dart';
 import 'package:harmonoid/interface/collection/collectiontrack.dart';
 import 'package:harmonoid/interface/collection/collectionartist.dart';
 import 'package:harmonoid/interface/collection/collectionplaylist.dart';
+import 'package:harmonoid/interface/discover/discovermusic.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
@@ -70,6 +71,30 @@ class CollectionMusicState extends State<CollectionMusic>
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       children: [
+                        InkWell(
+                          borderRadius: BorderRadius.circular(8.0),
+                          onTap: () => this.setState(() => this.index = 5),
+                          child: Container(
+                            height: 40.0,
+                            padding: EdgeInsets.symmetric(horizontal: 4.0),
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              language!.STRING_DISCOVER.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: this.index == 5
+                                    ? FontWeight.w600
+                                    : FontWeight.w200,
+                                color: (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black)
+                                    .withOpacity(this.index == 5 ? 1.0 : 0.67),
+                              ),
+                            ),
+                          ),
+                        ),
                         InkWell(
                           borderRadius: BorderRadius.circular(8.0),
                           onTap: () => this.setState(() => this.index = 4),
@@ -293,6 +318,10 @@ class CollectionMusicState extends State<CollectionMusic>
                           Builder(
                             key: PageStorageKey('Search'),
                             builder: (context) => CollectionSearch(),
+                          ),
+                          Builder(
+                            key: PageStorageKey('Discover'),
+                            builder: (context) => DiscoverMusic(),
                           ),
                         ][this.index],
                         transitionBuilder:

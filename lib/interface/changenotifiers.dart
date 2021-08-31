@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:harmonoid/constants/language.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/core/discover.dart';
 import 'package:harmonoid/utils/utils.dart';
 
 CurrentlyPlaying currentlyPlaying = CurrentlyPlaying();
@@ -77,15 +79,21 @@ class CurrentlyPlaying extends ChangeNotifier {
   Duration _duration = Duration.zero;
 }
 
-class Server extends ChangeNotifier {
-  String? homeAddress;
+class DiscoverController extends ChangeNotifier {
+  Discover instance = Discover();
+  String state = language!.STRING_DISCOVER_PLUGIN_STARTING;
 
-  Server({required this.homeAddress});
-
-  void update({required String? homeAddress}) {
-    this.homeAddress = homeAddress;
-    this.notifyListeners();
-    configuration.save(homeAddress: homeAddress);
+  DiscoverController() {
+    Discover.init().then((_) {
+      this.state = '';
+      this.notifyListeners();
+    }).catchError((error) {
+      if (error is ScriptNotFound)
+        this.state = language!.STRING_DISCOVER_SCRIPT_NOT_FOUND;
+      if (error is ScriptStartError)
+        this.state = language!.STRING_DISCOVER_SCRIPT_START_ERROR;
+      this.notifyListeners();
+    });
   }
 }
 
@@ -107,18 +115,6 @@ class CollectionRefresh extends ChangeNotifier {
     this.progress = progress;
     this.total = total;
     this.notifyListeners();
-  }
-}
-
-class NotificationLyrics extends ChangeNotifier {
-  late bool enabled;
-
-  NotificationLyrics({required this.enabled});
-
-  void update({required bool enabled}) {
-    this.enabled = enabled;
-    this.notifyListeners();
-    configuration.save(notificationLyrics: enabled);
   }
 }
 
@@ -168,6 +164,30 @@ class Accent {
   final Color dark;
 
   Accent({required this.light, required this.dark});
+}
+
+class NotificationLyrics extends ChangeNotifier {
+  late bool enabled;
+
+  NotificationLyrics({required this.enabled});
+
+  void update({required bool enabled}) {
+    this.enabled = enabled;
+    this.notifyListeners();
+    configuration.save(notificationLyrics: enabled);
+  }
+}
+
+class Server extends ChangeNotifier {
+  String? homeAddress;
+
+  Server({required this.homeAddress});
+
+  void update({required String? homeAddress}) {
+    this.homeAddress = homeAddress;
+    this.notifyListeners();
+    configuration.save(homeAddress: homeAddress);
+  }
 }
 
 List<Accent?> accents = [

@@ -55,16 +55,21 @@ class CollectionSearchState extends State<CollectionSearch> {
         body: Column(
           children: [
             Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white.withOpacity(0.08)
+                    : Colors.black.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              margin: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0),
               height: 56.0,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white.withOpacity(0.08)
-                  : Colors.black.withOpacity(0.08),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: 24.0,
+                    width: 12.0,
                   ),
                   Expanded(
                     child: TextField(
@@ -338,22 +343,28 @@ class CollectionSearchState extends State<CollectionSearch> {
                 children: <Widget>[
                       search
                           ? Container(
-                              margin: EdgeInsets.only(top: 56),
+                              height: MediaQuery.of(context).size.height -
+                                  96.0 -
+                                  96.0,
                               width: MediaQuery.of(context).size.width,
-                              child: Column(
-                                children: [
-                                  Icon(FluentIcons.search_20_regular,
-                                      size: 72,
-                                      color: Theme.of(context).iconTheme.color),
-                                  SizedBox(
-                                    height: 16.0,
-                                  ),
-                                  Text(
-                                    language!.STRING_LOCAL_SEARCH_WELCOME,
-                                    style:
-                                        Theme.of(context).textTheme.headline3,
-                                  )
-                                ],
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(FluentIcons.search_20_regular,
+                                        size: 72,
+                                        color:
+                                            Theme.of(context).iconTheme.color),
+                                    SizedBox(
+                                      height: 16.0,
+                                    ),
+                                    // Text(
+                                    //   language!.STRING_LOCAL_SEARCH_WELCOME,
+                                    //   style:
+                                    //       Theme.of(context).textTheme.headline3,
+                                    // )
+                                  ],
+                                ),
                               ),
                             )
                           : Container(),

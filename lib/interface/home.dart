@@ -86,6 +86,9 @@ class HomeState extends State<Home>
           ChangeNotifierProvider<CurrentlyPlaying>(
             create: (context) => currentlyPlaying,
           ),
+          ChangeNotifierProvider<DiscoverController>(
+            create: (context) => DiscoverController(),
+          ),
           Provider<DiscordRPC>(
             create: (context) => discordRPC,
           ),

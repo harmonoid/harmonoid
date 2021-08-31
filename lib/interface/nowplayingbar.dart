@@ -1,11 +1,13 @@
 import 'dart:core';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/lyrics.dart';
-import 'package:harmonoid/core/playback.dart';
 import 'package:provider/provider.dart';
 
+import 'package:harmonoid/core/lyrics.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
+
+const double HORIZONTAL_BREAKPOINT = 720.0;
 
 class NowPlayingBar extends StatelessWidget {
   const NowPlayingBar({Key? key}) : super(key: key);
@@ -27,7 +29,8 @@ class NowPlayingBar extends StatelessWidget {
               child: (currentlyPlaying.index != null &&
                       currentlyPlaying.tracks.length >
                           (currentlyPlaying.index ?? double.infinity) &&
-                      0 <= (currentlyPlaying.index ?? double.infinity))
+                      0 <= (currentlyPlaying.index ?? double.infinity) &&
+                      HORIZONTAL_BREAKPOINT < MediaQuery.of(context).size.width)
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
@@ -37,12 +40,23 @@ class NowPlayingBar extends StatelessWidget {
                         ),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: Image.file(
-                            currentlyPlaying
-                                .tracks[currentlyPlaying.index!].albumArt,
-                            height: 64.0,
-                            width: 64.0,
-                          ),
+                          child: currentlyPlaying
+                                      .tracks[currentlyPlaying.index!]
+                                      .networkAlbumArt ==
+                                  null
+                              ? Image.file(
+                                  currentlyPlaying
+                                      .tracks[currentlyPlaying.index!].albumArt,
+                                  height: 64.0,
+                                  width: 64.0,
+                                )
+                              : Image.network(
+                                  currentlyPlaying
+                                      .tracks[currentlyPlaying.index!]
+                                      .networkAlbumArt!,
+                                  height: 64.0,
+                                  width: 64.0,
+                                ),
                         ),
                         SizedBox(
                           width: 10.0,
