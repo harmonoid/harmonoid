@@ -27,7 +27,7 @@ class CollectionMusic extends StatefulWidget {
 
 class CollectionMusicState extends State<CollectionMusic>
     with AutomaticKeepAliveClientMixin {
-  int index = 0;
+  int index = 5;
 
   @override
   bool get wantKeepAlive => true;
@@ -71,30 +71,6 @@ class CollectionMusicState extends State<CollectionMusic>
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       children: [
-                        InkWell(
-                          borderRadius: BorderRadius.circular(8.0),
-                          onTap: () => this.setState(() => this.index = 5),
-                          child: Container(
-                            height: 40.0,
-                            padding: EdgeInsets.symmetric(horizontal: 4.0),
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                              language!.STRING_DISCOVER.toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: this.index == 5
-                                    ? FontWeight.w600
-                                    : FontWeight.w200,
-                                color: (Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Colors.black)
-                                    .withOpacity(this.index == 5 ? 1.0 : 0.67),
-                              ),
-                            ),
-                          ),
-                        ),
                         InkWell(
                           borderRadius: BorderRadius.circular(8.0),
                           onTap: () => this.setState(() => this.index = 4),
@@ -211,6 +187,30 @@ class CollectionMusicState extends State<CollectionMusic>
                                         ? Colors.white
                                         : Colors.black)
                                     .withOpacity(this.index == 0 ? 1.0 : 0.67),
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(8.0),
+                          onTap: () => this.setState(() => this.index = 5),
+                          child: Container(
+                            height: 40.0,
+                            padding: EdgeInsets.symmetric(horizontal: 4.0),
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              language!.STRING_DISCOVER.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: this.index == 5
+                                    ? FontWeight.w600
+                                    : FontWeight.w200,
+                                color: (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black)
+                                    .withOpacity(this.index == 5 ? 1.0 : 0.67),
                               ),
                             ),
                           ),
