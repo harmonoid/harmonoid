@@ -45,7 +45,7 @@ Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'notificationLyrics': true,
   // TODO: Remove this.
   // TODO: Remove this.
-  'acrylicEnabled': true,
+  'acrylicEnabled': false,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
   'discoverRecent': [],
