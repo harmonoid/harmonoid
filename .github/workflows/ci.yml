@@ -18,5 +18,11 @@ jobs:
       - run: flutter build windows
       - uses: actions/upload-artifact@v1
         with:
-          name: harmonoid-windows
+          name: harmonoid-windows-exe
           path: build/windows/runner/Release
+      - run: flutter pub run msix:create --password ${{ secrets.PASSWORD }}
+      - run: xcopy "build\\windows\\runner\\Release\\harmonoid.msix" "windows\\msix\\distribution\\src"
+      - uses: actions/upload-artifact@v1
+        with:
+          name: harmonoid-windows-msix
+          path: windows/msix/distribution
