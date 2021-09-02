@@ -133,6 +133,7 @@ abstract class Playback {
         player.add(
           LIBWINMEDIA.Media(
             uri: track.filePath!,
+            extras: track.toMap(),
           ),
         );
       });
@@ -241,7 +242,9 @@ void onTrackChange() {
       album: track.albumName,
       title: track.trackName,
       artist: track.trackArtistNames?.join(', '),
-      thumbnail: track.albumArt,
+      thumbnail: Uri.parse(
+        track.networkAlbumArt ?? track.albumArt.path,
+      ),
     );
     discordRPC.start(autoRegister: true);
     discordRPC.updatePresence(
