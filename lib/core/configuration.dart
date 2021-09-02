@@ -48,7 +48,7 @@ Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'acrylicEnabled': false,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
-  'discoverRecent': [],
+  'discoverRecent': ['XfEMj-z3TtA'],
 };
 
 class Configuration extends ConfigurationKeys {
@@ -72,6 +72,7 @@ class Configuration extends ConfigurationKeys {
     configuration.configurationFile = File(
       path.join(
         await configuration.configurationDirectory,
+        '.harmonoid',
         'configuration.JSON',
       ),
     );
