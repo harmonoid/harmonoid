@@ -91,6 +91,14 @@ class LanguageRegion {
     translator: 'Gaetan Jonathan',
     github: 'https://github.com/gaetan1903',
   );
+  static const huHu = LanguageRegion(
+    code: 'hu',
+    countryCode: 'HU',
+    name: 'Magyar',
+    country: 'Magyarország',
+    translator: 'RedyAu',
+    github: 'https://github.com/RedyAu',
+  );
 
   static const values = <LanguageRegion?>[
     enUs,
@@ -101,7 +109,8 @@ class LanguageRegion {
     deDe,
     nlNl,
     svSe,
-    frFr
+    frFr,
+    huHu
   ];
 
   int get index => values.indexOf(this);
@@ -1657,6 +1666,180 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Afficher les paroles dans une notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Récupération des paroles ...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Paroles non trouvées.';
+        this.STRING_ALBUM_SINGLE                                    = 'Album';
+        this.STRING_TRACK_SINGLE                                    = 'Track';
+        this.STRING_ARTIST_SINGLE                                   = 'Artist';
+        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums from this artist.';
+        this.STRING_TRACKS_FROM_ARTIST                              = 'Tracks from this artist.';
+        this.STRING_REMOVE                                          = 'REMOVE';
+        this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
+        this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
+        this.STRING_PLAY_NOW                                        = 'Play now';
+        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Enter something to lookup in your collection.';
+        this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
+        this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
+      }
+      break;
+      case LanguageRegion.huHu: {
+        this.STRING_INTERNET_ERROR                                  = 'Nincs internetelérés.';
+        this.STRING_SEARCH_HEADER                                   = 'Keresés';
+        this.STRING_SEARCH_MODE_SUBHEADER                           = 'Mit hallgatnál?';
+        this.STRING_COLLECTION                                      = 'Gyűjtemény';
+        this.STRING_NOW_PLAYING                                     = 'Most játszott';
+        this.STRING_SETTING                                         = 'Beállítások';
+        this.STRING_OK                                              = 'OK';
+        this.STRING_YES                                             = 'IGEN';
+        this.STRING_NO                                              = 'NEM';
+        this.STRING_ALBUM                                           = 'Albumok';
+        this.STRING_TRACK                                           = 'Számok';
+        this.STRING_TOP_TRACKS                                      = 'TOPLISTA';
+        this.STRING_ARTIST                                          = 'Előadók';
+        this.STRING_SAVED                                           = 'Mentve';
+        this.STRING_THEME_MODE_LIGHT                                = 'Világos';
+        this.STRING_THEME_MODE_DARK                                 = 'Sötét';
+        this.STRING_OPTIONS                                         = 'Opciók';
+        this.STRING_FOLLOWERS                                       = 'követők';
+        this.STRING_PLAYS                                           = 'hallgatja';
+        this.STRING_EXPORT_TRACK                                    = 'Szám exportálása';
+        this.STRING_DELETE_TRACK                                    = 'Szám törlése';
+        this.STRING_SEARCH_MODE_SUBTITLE_ALBUM                      = 'Zenék keresése a mentett albumokban';
+        this.STRING_SEARCH_MODE_SUBTITLE_TRACK                      = 'Zenék keresése a kedvenc számok között';
+        this.STRING_SEARCH_MODE_SUBTITLE_ARTIST                     = 'Zenék keresése a mentett előadóktól';
+        this.STRING_SEARCH_HISTORY_SUBHEADER                        = 'Legutóbbi keresések';
+        this.STRING_SEARCH_RESULT_LOADER_LABEL                      = 'Zenék hozzádása folyamatban...';
+        this.STRING_SEARCH_RESULT_TOP_SUBHEADER_ALBUM               = 'Legjobb találat';
+        this.STRING_SEARCH_RESULT_TOP_SUBHEADER_TRACK               = 'Legjobb találat';
+        this.STRING_SEARCH_RESULT_TOP_SUBHEADER_ARTIST              = 'Legjobb találat';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ALBUM          = 'ALBUM MENTÉSE';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_TRACK          = 'SZÁM MENTÉSE';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_0_ARTIST         = 'ELŐADÓ MENTÉSE';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ALBUM          = 'UGRÁS AZ ALBUMRA';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_TRACK          = 'UGRÁS A SZÁMRA';
+        this.STRING_SEARCH_RESULT_TOP_BUTTON_LABEL_1_ARTIST         = 'UGRÁS AZ ELŐADÓRA';
+        this.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ALBUM             = 'Több ilyen album';
+        this.STRING_SEARCH_RESULT_OTHER_SUBHEADER_TRACK             = 'Több ilyen szám';
+        this.STRING_SEARCH_RESULT_OTHER_SUBHEADER_ARTIST            = 'Több ilyen előadó';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_BACK_TITLE                  = 'Nincs hova visszalépni';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_BACK_SUBTITLE               = 'Szám(ok) letöltése még folyamatban van offline használatra. Kis türelmet...';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'A szám mentése nem sikerült';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'Kérjük, ellenőrizd az internetkapcsolatod, és próbáld újra később.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'Mindenkinek van rossz napja...';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'A szám mentése közben hiba lépett fel. Ez általában azt jelenti, hogy frissítened kell a szerveredet. A hibához ennek az alkalmazásnak nincs köze.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Egy pillanat';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'A szám letöltése már folyamatban van.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'A szám már le van töltve';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_SUBTITLE      = 'Szeretnéd újra letölteni a számot?';
+        this.STRING_ALBUM_VIEW_LOADER_LABEL                         = 'Számok betöltése...';
+        this.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Számok az albumból';
+        this.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Pár tudnivaló az albumról';
+        this.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Keress és ments számokat, hogy itt megjelenjenek.\nFrissíts, hogy lásd az újdonságokat.';
+        this.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Legújabb album';
+        this.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'További albumok';
+        this.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Legújabb szám';
+        this.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'További számok';
+        this.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Legújabb előadó';
+        this.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'További előadók';
+        this.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Számok az albumból';
+        this.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Pár tudnivaló az albumról';
+        this.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_HEADER     = 'Egészen biztos?';
+        this.STRING_LOCAL_ALBUM_VIEW_ALBUM_DELETE_DIALOG_BODY       = 'Törölni akarod ezt a letöltött albumot az eszközödről?';
+        this.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER     = 'Egészen biztos?';
+        this.STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY       = 'Törölni akarod ezt a letöltött számot az eszközödről?';
+        this.STRING_NOW_PLAYING_NEXT_TRACK                          = 'KÖVETKEZŐ';
+        this.STRING_NOW_PLAYING_PREVIOUS_TRACK                      = 'ELŐZŐ';
+        this.STRING_NOW_PLAYING_NOT_PLAYING_TITLE                   = 'Semmit sem játszol le épp';
+        this.STRING_NOW_PLAYING_NOT_PLAYING_SUBTITLE                = 'Indíts el valamit a gyűjteményedből!';
+        this.STRING_NOW_PLAYING_NOT_PLAYING_HEADER                  = "Minden készen áll...";
+        this.STRING_SETTING_GITHUB                                  = 'GITHUB';
+        this.STRING_SETTING_STAR_GITHUB                             = 'CSILLAGOZD BE A PROJEKTET';
+        this.STRING_SETTING_STARGAZERS_TITLE                        = 'A projektet csillagozták';
+        this.STRING_SETTING_STARGAZERS_SUBTITLE                     = 'Nagyon köszönjük a támogatást';
+        this.STRING_SETTING_LANGUAGE_TITLE                          = 'Nyelv';
+        this.STRING_SETTING_LANGUAGE_SUBTITLE                       = 'Az app nyelvének beállítása';
+        this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_TITLE           = 'Újra kell indítani az appot';
+        this.STRING_SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE        = 'Újraindítod most?';
+        this.STRING_ABOUT_TITLE                                     = 'Névjegy';
+        this.STRING_ABOUT_SUBTITLE                                  = 'Infók az appról és fejlesztőiről';
+        this.STRING_SETTING_SERVER_CHANGE_TITLE                     = 'Szerver';
+        this.STRING_SETTING_SERVER_CHANGE_SUBTITLE                  = 'Beállíthatod, honnan kérje le az app a tartalmakat';
+        this.STRING_SETTING_SERVER_CHANGE_SERVER_HINT               = 'Add meg a szerver elérhetőségét';
+        this.STRING_SETTING_SERVER_CHANGE_SERVER_LABEL              = 'Szerver címe';
+        this.STRING_SETTING_SERVER_CHANGE_ERROR_INVALID             = 'Helytelen cím.';
+        this.STRING_SETTING_SERVER_CHANGE_ERROR_NETWORK             = 'Ellenőrizd az internetkapcsolatod.';
+        this.STRING_SETTING_SERVER_CHANGE_DONE                      = 'Szerver átállítása sikeres.';
+        this.STRING_SETTING_SERVER_CHANGE_CHANGING                  = 'Szerver átállítása folyamatban...';
+        this.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE                = 'Fordítók';
+        this.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE             = 'Köszönjük a segítséget';
+        this.STRING_SETTING_ACCENT_COLOR_TITLE                      = 'Szín';
+        this.STRING_SETTING_ACCENT_COLOR_SUBTITLE                   = 'Beállíthatod az app színét';
+        this.STRING_SETTING_THEME_TITLE                             = 'Téma';
+        this.STRING_SETTING_THEME_SUBTITLE                          = 'Világos vagy sötét módot állíthatsz be';
+        this.STRING_NO_DOWNLOAD_UPDATE                              = 'A legfrissebb verziót futtatod.';
+        this.STRING_DOWNLOAD_UPDATE                                 = 'FRISSÍTÉS LETÖLTÉSE';
+        this.STRING_SETTING_APP_VERSION_TITLE                       = 'Verzió';
+        this.STRING_SETTING_APP_VERSION_SUBTITLE                    = 'Tudnivalók a telepített app verziójáról';
+        this.STRING_SETTING_APP_VERSION_INSTALLED                   = 'Telepített verzió';
+        this.STRING_SETTING_APP_VERSION_LATEST                      = 'Legfrissebb verzió';
+        this.STRING_MENU                                            = 'Menü';
+        this.STRING_SEARCH_COLLECTION                               = 'Keresés a gyűjteményben';
+        this.STRING_SWITCH_THEME                                    = 'Téma váltása';
+        this.STRING_PLAY                                            = 'Lejátszás';
+        this.STRING_PAUSE                                           = 'Szünet';
+        this.STRING_DELETE                                          = 'Törlés';
+        this.STRING_SHARE                                           = 'Megosztás';
+        this.STRING_ADD_TO_PLAYLIST                                 = 'Hozzáadás lejátszási listához';
+        this.STRING_SAVE_TO_DOWNLOADS                               = 'Mentés a letöltések közé';
+        this.STRING_LOCAL_SEARCH_WELCOME                            = 'Mit szeretnél hallgatni a gyűjteményedből?';
+        this.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Nincs találat a gyűjteményedben.';
+        this.STRING_PLAYLIST                                        = 'Lejátszási lista';
+        this.STRING_PLAYLISTS                                       = 'Lejátszási listák';
+        this.STRING_PLAYLISTS_SUBHEADER                             = 'Lejátszási listáid';
+        this.STRING_PLAYLISTS_CREATE                                = 'Lejátszási lista létrehozása';
+        this.STRING_PLAYLISTS_TEXT_FIELD_LABEL                      = 'Lejátszási lista neve';
+        this.STRING_PLAYLISTS_TEXT_FIELD_HINT                       = 'Adj nevet a listádnak';
+        this.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Egészen biztos?';
+        this.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Törölni akarod ezt a lejátszási listát?';
+        this.STRING_CANCEL                                          = 'MÉGSE';
+        this.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Hozzáadás lejátszási listához';
+        this.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Melyik listához akarod hozzáadni?';
+        this.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'A lejátszási lista számai';
+        this.STRING_TRANSFERS                                       = 'Átvitelek';
+        this.STRING_THEME_MODE_SYSTEM                               = 'Rendszertéma';
+        this.STRING_SETTING_INDEXING_TITLE                          = 'Helyi gyűjtemény';
+        this.STRING_SETTING_INDEXING_SUBTITLE                       = 'Helyi gyűjtemény frissítése';
+        this.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Frissítés folyamatban... NUMBER_STRING / TOTAL_STRING';
+        this.STRING_SETTING_INDEXING_DONE                           = 'Frissítve';
+        this.STRING_SETTING_INDEXING_WARNING                        = 'Ne szakítsd meg a folyamatot.';
+        this.STRING_REFRESH                                         = 'FRISSÍTÉS';
+        this.STRING_SEARCH_NO_RECENT_SEARCHES                       = 'Itt fognak megjelenni a legutóbbi kereséseid';
+        this.STRING_NO_INTERNET_TITLE                               = 'Nincs internet';
+        this.STRING_NO_INTERNET_SUBTITLE                            = 'Ellenőrizd az internetkapcsolatod.';
+        this.STRING_NO_COLLECTION_TITLE                             = 'A gyűjteményed üres';
+        this.STRING_NO_COLLECTION_SUBTITLE                          = 'Nincsenek zenék.\nÁllítsd be a zenéid helyét a beállításokban.';
+        this.STRING_DOWNLOAD_COMPLETED                              = 'Letöltés kész.';
+        this.STRING_DOWNLOAD_FAILED                                 = 'A letöltés nem sikerült.';
+        this.STRING_DISCORD                                         = 'DISCORD SZERVER';
+        this.STRING_EXIT_TITLE                                      = 'Kilépés';
+        this.STRING_EXIT_SUBTITLE                                   = 'Biztosan kilépsz a Harmonoidból?';
+        this.STRING_A_TO_Z                                          = 'Ábécérend';
+        this.STRING_DATE_ADDED                                      = 'Hozzáadás dátuma';
+        this.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatikus';
+        this.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Egyéb';
+        this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Minden más beállítás';
+        this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'iOS funkciók engedélyezése';
+        this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Állítsd a platformot "TargetPlatform.iOS"-ra.';
+        this.STRING_SELECTED_DIRECTORY                              = 'Kiválasztott mappa:';
+        this.STRING_LYRICS                                          = 'Énekszöveg';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Énekszöveg értesítésben';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Énekszöveg megjelenítése értesítésként.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Énekszöveg betöltése...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Nem található énekszöveg.';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
         this.STRING_TRACK_SINGLE                                    = 'Track';
         this.STRING_ARTIST_SINGLE                                   = 'Artist';

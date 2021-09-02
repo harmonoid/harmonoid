@@ -1,16 +1,12 @@
 ## Contribute
 
-Thanks for deciding to contribute to the project.
+[Provider](https://github.com/rrousselGit/provider) is used for state management.
 
-[Provider](https://github.com/rrousselGit/provider) is used for the state management of the project.
+Checkout project structure below to get started.
 
-The project supports sorting of music based on media metadata tags, playback from file explorer & native notifications etc.
-User interface of the project follows consistent design.
+The plan of project is to bring the best, cross platform music experience for all users.
 
-Checkout the project structure below to get started. New Flutter developers are also welcomed.
-
-
-The plan of project is to bring the best, cross platform music experience for all users. Fork the project today & add your features. We are actively looking for contributors. If you decide to contribute, add yourself to the about page of the app.
+Fork the project today & add your features. We are actively looking for contributors. If you decide to contribute, add yourself to the about page of the app.
 
 ## Project
 
