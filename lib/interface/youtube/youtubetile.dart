@@ -54,9 +54,17 @@ class YouTubeTile extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: FloatingActionButton(
-                    mini: true,
-                    onPressed: this.action,
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                    height: 36.0,
+                    width: 36.0,
                     child: Icon(
                       Icons.play_arrow,
                       size: 24.0,
@@ -80,6 +88,7 @@ class YouTubeTile extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline2,
                       textAlign: TextAlign.left,
                       maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Padding(
@@ -99,6 +108,7 @@ class YouTubeTile extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline3,
                           maxLines: 1,
                           textAlign: TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),

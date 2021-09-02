@@ -67,7 +67,6 @@ class CollectionMusicState extends State<CollectionMusic>
                   child: Container(
                     height: 44.0,
                     child: ListView(
-                      reverse: true,
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       children: [
@@ -215,7 +214,7 @@ class CollectionMusicState extends State<CollectionMusic>
                             ),
                           ),
                         ),
-                      ],
+                      ].reversed.toList(),
                     ),
                   ),
                 ),

@@ -206,9 +206,8 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
                 SettingsTile(
-                  title: 'Developers',
-                  subtitle:
-                      'People making this project. Adding more people to the list.',
+                  title: 'Developer',
+                  subtitle: 'Person powering this music project in Flutter 💙',
                   child: Column(
                     children: [
                       ListTile(
@@ -219,7 +218,7 @@ class AboutPage extends StatelessWidget {
                           ),
                         ),
                         title: Text(
-                          'alexmercerind',
+                          'Hitesh Kumar Saini',
                           style: TextStyle(
                             color:
                                 Theme.of(context).brightness == Brightness.dark
@@ -243,104 +242,37 @@ class AboutPage extends StatelessWidget {
                         ),
                         trailing: Icon(FluentIcons.link_20_regular),
                       ),
-                      ListTile(
-                        onTap: () => launch('https://github.com/raitonoberu'),
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            'https://avatars.githubusercontent.com/u/64320078',
-                          ),
-                        ),
-                        title: Text(
-                          'raitonoberu',
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Deals with music streaming & discovery inside the application. Fixes many crucial bugs inside the apps.',
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white.withOpacity(0.8)
-                                    : Colors.black.withOpacity(0.8),
-                            fontSize: 14.0,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        trailing: Icon(FluentIcons.link_20_regular),
-                      ),
-                      ListTile(
-                        onTap: () => launch('https://github.com/mytja'),
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            'https://avatars.githubusercontent.com/u/52399966',
-                          ),
-                        ),
-                        title: Text(
-                          'mytja',
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Does everything that everyone else cannot. Deals with networking and playback.',
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white.withOpacity(0.8)
-                                    : Colors.black.withOpacity(0.8),
-                            fontSize: 14.0,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        trailing: Icon(FluentIcons.link_20_regular),
-                      ),
-                      ListTile(
-                        onTap: () => launch('https://github.com/bdlukaa'),
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            'https://avatars.githubusercontent.com/u/45696119',
-                          ),
-                        ),
-                        title: Text(
-                          'bdlukaa',
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Deals with UI development, app lifecycle & state management. Targets Android.',
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white.withOpacity(0.8)
-                                    : Colors.black.withOpacity(0.8),
-                            fontSize: 14.0,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        trailing: Icon(FluentIcons.link_20_regular),
-                      ),
                     ],
                   ),
+                  actions: [
+                    MaterialButton(
+                      onPressed: () => launch(
+                        'https://github.com/alexmercerind',
+                      ),
+                      child: Text(
+                        'GITHUB',
+                        style: TextStyle(color: Theme.of(context).accentColor),
+                      ),
+                    ),
+                    MaterialButton(
+                      onPressed: () => launch(
+                        'https://twitter.com/alexmercerind',
+                      ),
+                      child: Text(
+                        'TWITTER',
+                        style: TextStyle(color: Theme.of(context).accentColor),
+                      ),
+                    ),
+                    MaterialButton(
+                      onPressed: () => launch(
+                        'https://www.linkedin.com/in/hitesh-kumar-saini-78b4a3209',
+                      ),
+                      child: Text(
+                        'LINKEDIN',
+                        style: TextStyle(color: Theme.of(context).accentColor),
+                      ),
+                    ),
+                  ],
                 ),
                 SettingsTile(
                   title: language!.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE,

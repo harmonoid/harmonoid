@@ -57,8 +57,8 @@ class VersionState extends State<VersionSetting> {
           ? null
           : [
               MaterialButton(
-                onPressed: () => launch(
-                    'https://api.github.com/repos/alexmercerind/harmonoid/releases'),
+                onPressed: () =>
+                    launch('https://github.com/harmonoid/harmonoid/releases'),
                 child: Text(
                   language!.STRING_DOWNLOAD_UPDATE,
                   style: TextStyle(
