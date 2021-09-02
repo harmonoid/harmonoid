@@ -1,43 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:harmonoid/constants/language.dart';
 
 import 'package:harmonoid/interface/settings/accent.dart';
-import 'package:harmonoid/interface/settings/server.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
 import 'package:harmonoid/interface/settings/language.dart';
 import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/version.dart';
-import 'package:harmonoid/constants/language.dart';
-
+import 'package:harmonoid/utils/widgets.dart';
 
 class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 4.0,
-        title: Text(language!.STRING_SETTING),
-      ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(vertical: 4.0),
-        children: [
-          AboutSetting(),
-          ThemeSetting(),
-          AccentSetting(),
-          IndexingSetting(),
-          ServerSetting(),
-          LanguageSetting(),
-          // TODO: Fix scrolling bug in CollectionTabs widget & implement saving configuration.
-          // CollectionTabs(),
-          MiscellaneousSetting(),
-          VersionSetting(),
-        ],
-      ),
-    );
+        body: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 56.0,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white.withOpacity(0.08)
+              : Colors.black.withOpacity(0.08),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              NavigatorPopButton(),
+              SizedBox(
+                width: 24.0,
+              ),
+              Text(
+                language!.STRING_SETTING,
+                style: TextStyle(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              SizedBox(
+                height: 4.0,
+              ),
+              AboutSetting(),
+              IndexingSetting(),
+              ThemeSetting(),
+              AccentSetting(),
+              // TODO: Server is no longer necessary.
+              // ServerSetting(),
+              LanguageSetting(),
+              // TODO: Fix scrolling bug in CollectionTabs widget & implement saving configuration.
+              // CollectionTabs(),
+              // TODO: Removed miscellaneous settings until we decide which ones are important.
+              MiscellaneousSetting(),
+              VersionSetting(),
+              SizedBox(
+                height: 4.0,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ));
   }
 }
-
 
 class SettingsTile extends StatelessWidget {
   final String? title;
@@ -57,13 +91,14 @@ class SettingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2.0,
-      margin: EdgeInsets.only(
-        left: 8.0,
-        right: 8.0,
-        bottom: 4.0,
-        top: 4.0,
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 8.0,
+        vertical: 4.0,
+      ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,12 +119,23 @@ class SettingsTile extends StatelessWidget {
               children: [
                 Text(
                   this.title!,
-                  style: Theme.of(context).textTheme.headline2,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14.0,
+                  ),
                 ),
                 Divider(color: Colors.transparent, height: 4.0),
                 Text(
                   this.subtitle!,
-                  style: Theme.of(context).textTheme.headline5,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white.withOpacity(0.8)
+                        : Colors.black.withOpacity(0.8),
+                    fontSize: 14.0,
+                  ),
                 ),
                 Divider(color: Colors.transparent, height: 8.0),
                 Divider(

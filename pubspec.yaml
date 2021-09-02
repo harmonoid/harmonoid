@@ -1,7 +1,7 @@
 name: harmonoid
-description: A music app with a beautiful UI to play all your music!
+description: A beautiful app to play all your music.
 publish_to: 'none'
-version: 0.0.8+5002
+version: 0.1.0+5003
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -11,26 +11,40 @@ dependencies:
     sdk: flutter
   animations: ^2.0.0
   provider: ^5.0.0
+  flutter_acrylic: ^0.0.2
+  ffi: ^1.1.2
+  libwinmedia:
+    path: ./external/libwinmedia.dart
+  flutter_media_metadata:
+    git:
+      url: https://github.com/alexmercerind/flutter_media_metadata.git
+      ref: f7773003d97d6310f6aebf2d76bd6a19a65e6955
+  fluentui_system_icons: ^1.1.136
   assets_audio_player:
     git:
       url: https://github.com/florent37/Flutter-AssetsAudioPlayer.git
-  flutter_media_metadata: ^0.1.0
+  filepicker_windows: ^2.0.0
+  bitsdojo_window: ^0.1.1+1
   flutter_local_notifications: ^5.0.0
   file_picker: ^3.0.0
   permission_handler: ^6.1.1
   share: ^2.0.1
   palette_generator: ^0.3.0
+  dart_discord_rpc: ^0.0.1
   http: ^0.13.0
   path: ^1.8.0
   url_launcher: ^6.0.3
   implicitly_animated_reorderable_list: ^0.4.0-dev+4
-  flag: ^5.0.0-nullsafety
-  marquee: ^2.0.0
-  auto_size_text: ^3.0.0-nullsafety.0
+  youtube_explode_dart: ^1.10.6
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  msix:
+    git:
+      url: git://github.com/alexmercerind/msix.git
+      ref: a2c15a8662dd346b2738ea89538179f532d4f437
+
+dependency_overrides: 
+  freezed_annotation: 0.14.2
 
 flutter:
   uses-material-design: true
@@ -49,3 +63,18 @@ flutter:
     - assets/images/credits-album-art-1.jpg
     - assets/images/credits-album-art-2.jpg
     - assets/images/credits-album-art-3.jpg
+
+msix_config:
+  msix_version: 0.0.1.0
+  display_name: Harmonoid
+  identity_name: com.alexmercerind.harmonoid
+  file_extension: ogg, ogx, aac, m4a, mp3, wma, wav, aiff, flac, opus
+  icons_background_color: transparent
+  architecture: x64
+  capabilities: broadFileSystemAccess, musicLibrary
+  vs_generated_images_folder_path: ./windows/msix/assets
+  publisher_display_name: Hitesh Kumar Saini
+  publisher: E=saini123hitesh@gmail.com, CN=Hitesh Kumar Saini, OU=com.alexmercerind, O=com.alexmercerind, L=Dehradun, S=Uttarakhand, C=IN
+  certificate_path: ./windows/msix/certificate.pfx
+  store: false
+  

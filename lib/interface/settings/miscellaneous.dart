@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
+class MiscellaneousSetting extends StatefulWidget {
+  MiscellaneousSettingState createState() => MiscellaneousSettingState();
+}
 
-class MiscellaneousSetting extends StatelessWidget {
+class MiscellaneousSettingState extends State<MiscellaneousSetting> {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
@@ -14,24 +19,33 @@ class MiscellaneousSetting extends StatelessWidget {
       subtitle: language!.STRING_SETTING_MISCELLANEOUS_SUBTITLE,
       child: Column(
         children: [
-          Consumer<Visuals>(
-            builder: (context, visuals, _) => SwitchListTile(
-              title: Text(language!.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE),
-              subtitle:
-                  Text(language!.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE),
-              value: visuals.platform == TargetPlatform.iOS,
-              onChanged: (bool isiOS) => visuals.update(
-                platform: isiOS ? TargetPlatform.iOS: TargetPlatform.android,
-              ),
+          SwitchListTile(
+            title: Text(
+              language!.STRING_ENABLE_ACRYLIC_BLUR,
+              style: Theme.of(context).textTheme.headline4,
             ),
+            value: configuration.acrylicEnabled!,
+            onChanged: (bool enabled) async {
+              await configuration.save(
+                acrylicEnabled: enabled,
+              );
+              // Causes scaffoldBackgroundColor to update.
+              Provider.of<Visuals>(context, listen: false).update();
+              this.setState(() {});
+            },
           ),
-          Consumer<NotificationLyrics>(
-            builder: (context, lyrics, _) => SwitchListTile(
-              title: Text(language!.STRING_NOTIFICATION_LYRICS_TITLE),
-              subtitle: Text(language!.STRING_NOTIFICATION_LYRICS_SUBTITLE),
-              value: lyrics.enabled,
-              onChanged: (bool enabled) => lyrics.update(enabled: enabled),
+          SwitchListTile(
+            title: Text(
+              language!.STRING_NOTIFICATION_LYRICS_TITLE,
+              style: Theme.of(context).textTheme.headline4,
             ),
+            value: configuration.notificationLyrics!,
+            onChanged: (bool enabled) async {
+              await configuration.save(
+                notificationLyrics: enabled,
+              );
+              this.setState(() {});
+            },
           ),
         ],
       ),

@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:harmonoid/constants/strings.dart';
 import 'package:harmonoid/core/configuration.dart';
 
-
 class LanguageRegion {
   final String code;
   final String countryCode;
@@ -13,9 +12,9 @@ class LanguageRegion {
   final String github;
 
   const LanguageRegion({
-    required this.code, 
+    required this.code,
     required this.countryCode,
-    required this.name, 
+    required this.name,
     required this.country,
     required this.translator,
     required this.github,
@@ -62,13 +61,12 @@ class LanguageRegion {
     github: 'https://github.com/alexmercerind',
   );
   static const deDe = LanguageRegion(
-    code: 'de',
-    countryCode: 'DE',
-    name: 'Deutsche',
-    country: 'Deutschland',
-    translator: 'MickLesk',
-    github: 'https://github.com/MickLesk'
-  );
+      code: 'de',
+      countryCode: 'DE',
+      name: 'Deutsche',
+      country: 'Deutschland',
+      translator: 'MickLesk',
+      github: 'https://github.com/MickLesk');
   static const nlNl = LanguageRegion(
     code: 'nl',
     countryCode: 'NL',
@@ -118,7 +116,6 @@ class LanguageRegion {
   int get index => values.indexOf(this);
 }
 
-
 class Language extends Strings with ChangeNotifier {
   LanguageRegion? current;
 
@@ -130,7 +127,7 @@ class Language extends Strings with ChangeNotifier {
   }
 
   Future<void> set({LanguageRegion? languageRegion}) async {
-    switch(languageRegion) {
+    switch (languageRegion) {
       case LanguageRegion.enUs: {
         this.STRING_INTERNET_ERROR                                  = 'Check your internet connection.';
         this.STRING_SEARCH_HEADER                                   = 'Search music';
@@ -234,7 +231,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Menu';
         this.STRING_SEARCH_COLLECTION                               = 'Search collection';
         this.STRING_SWITCH_THEME                                    = 'Switch theme';
-        this.STRING_DISCOVER                                        = 'Discover';
         this.STRING_PLAY                                            = 'Play';
         this.STRING_PAUSE                                           = 'Pause';
         this.STRING_DELETE                                          = 'Delete';
@@ -286,6 +282,24 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_ALBUM_SINGLE                                    = 'Album';
+        this.STRING_TRACK_SINGLE                                    = 'Track';
+        this.STRING_ARTIST_SINGLE                                   = 'Artist';
+        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums from this artist.';
+        this.STRING_TRACKS_FROM_ARTIST                              = 'Tracks from this artist.';
+        this.STRING_REMOVE                                          = 'REMOVE';
+        this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
+        this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
+        this.STRING_PLAY_NOW                                        = 'Play now';
+        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Enter something to lookup in your collection.';
+        this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
+        this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -391,7 +405,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Меню';
         this.STRING_SEARCH_COLLECTION                               = 'Поиск по коллекции';
         this.STRING_SWITCH_THEME                                    = 'Сменить тему';
-        this.STRING_DISCOVER                                        = 'Поиск';
         this.STRING_PLAY                                            = 'Плей';
         this.STRING_PAUSE                                           = 'Пауза';
         this.STRING_DELETE                                          = 'Удалить';
@@ -443,6 +456,24 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_ALBUM_SINGLE                                    = 'Album';
+        this.STRING_TRACK_SINGLE                                    = 'Track';
+        this.STRING_ARTIST_SINGLE                                   = 'Artist';
+        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums from this artist.';
+        this.STRING_TRACKS_FROM_ARTIST                              = 'Tracks from this artist.';
+        this.STRING_REMOVE                                          = 'REMOVE';
+        this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
+        this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
+        this.STRING_PLAY_NOW                                        = 'Play now';
+        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Enter something to lookup in your collection.';
+        this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
+        this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.slSi: {
@@ -548,7 +579,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Meni';
         this.STRING_SEARCH_COLLECTION                               = 'Preišči kolekcijo';
         this.STRING_SWITCH_THEME                                    = 'Zamenjaj temo';
-        this.STRING_DISCOVER                                        = 'Razišči';
         this.STRING_PLAY                                            = 'Predvajaj';
         this.STRING_PAUSE                                           = 'Ustavi';
         this.STRING_DELETE                                          = 'Izbriši';
@@ -601,6 +631,24 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_ALBUM_SINGLE                                    = 'Album';
+        this.STRING_TRACK_SINGLE                                    = 'Track';
+        this.STRING_ARTIST_SINGLE                                   = 'Artist';
+        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums from this artist.';
+        this.STRING_TRACKS_FROM_ARTIST                              = 'Tracks from this artist.';
+        this.STRING_REMOVE                                          = 'REMOVE';
+        this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
+        this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
+        this.STRING_PLAY_NOW                                        = 'Play now';
+        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Enter something to lookup in your collection.';
+        this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
+        this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -706,7 +754,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Menu';
         this.STRING_SEARCH_COLLECTION                               = 'Procurar Coleção';
         this.STRING_SWITCH_THEME                                    = 'Trocar tema';
-        this.STRING_DISCOVER                                        = 'Descobrir';
         this.STRING_PLAY                                            = 'Tocar';
         this.STRING_PAUSE                                           = 'Pausar';
         this.STRING_DELETE                                          = 'Deletar';
@@ -756,8 +803,26 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_LYRICS                                          = 'Letras';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Letras nas notificações';
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Mostrar letras numa notificação.';
-        this.STRING_LYRICS_RETRIEVING                               = 'Baixando letras...'; // (Downloading lyrics)
-        this.STRING_LYRICS_NOT_FOUND                                = 'Letras não disponíveis.'; // (Lyrics not available.)
+        this.STRING_LYRICS_RETRIEVING                               = 'Baixando letras...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Letras não disponíveis.';
+        this.STRING_ALBUM_SINGLE                                    = 'Album';
+        this.STRING_TRACK_SINGLE                                    = 'Track';
+        this.STRING_ARTIST_SINGLE                                   = 'Artist';
+        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums from this artist.';
+        this.STRING_TRACKS_FROM_ARTIST                              = 'Tracks from this artist.';
+        this.STRING_REMOVE                                          = 'REMOVE';
+        this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
+        this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
+        this.STRING_PLAY_NOW                                        = 'Play now';
+        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Enter something to lookup in your collection.';
+        this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
+        this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -863,7 +928,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'मेन्यू';
         this.STRING_SEARCH_COLLECTION                               = 'कलेक्शन में ढूंढें';
         this.STRING_SWITCH_THEME                                    = 'थीम बदलें';
-        this.STRING_DISCOVER                                        = 'ढूंढें';
         this.STRING_PLAY                                            = 'बजाएं';
         this.STRING_PAUSE                                           = 'रोकें';
         this.STRING_DELETE                                          = 'डिलीट';
@@ -915,6 +979,24 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_ALBUM_SINGLE                                    = 'Album';
+        this.STRING_TRACK_SINGLE                                    = 'Track';
+        this.STRING_ARTIST_SINGLE                                   = 'Artist';
+        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums from this artist.';
+        this.STRING_TRACKS_FROM_ARTIST                              = 'Tracks from this artist.';
+        this.STRING_REMOVE                                          = 'REMOVE';
+        this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
+        this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
+        this.STRING_PLAY_NOW                                        = 'Play now';
+        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Enter something to lookup in your collection.';
+        this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
+        this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.deDe: {
@@ -1020,7 +1102,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Menu';
         this.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         this.STRING_SWITCH_THEME                                    = 'Switch Theme';
-        this.STRING_DISCOVER                                        = 'Discover';
         this.STRING_PLAY                                            = 'Play';
         this.STRING_PAUSE                                           = 'Pause';
         this.STRING_DELETE                                          = 'Delete';
@@ -1072,6 +1153,15 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_ALBUM_SINGLE                                    = 'Album';
+        this.STRING_TRACK_SINGLE                                    = 'Track';
+        this.STRING_ARTIST_SINGLE                                   = 'Artist';
+        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums from this artist.';
+        this.STRING_TRACKS_FROM_ARTIST                              = 'Tracks from this artist.';
+        this.STRING_REMOVE                                          = 'REMOVE';
+        this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
+        this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
+        this.STRING_PLAY_NOW                                        = 'Play now';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1177,7 +1267,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Menu';
         this.STRING_SEARCH_COLLECTION                               = 'Zoek Collectie';
         this.STRING_SWITCH_THEME                                    = 'Wissel Thema';
-        this.STRING_DISCOVER                                        = 'Ontdek';
         this.STRING_PLAY                                            = 'Speel';
         this.STRING_PAUSE                                           = 'Pauze';
         this.STRING_DELETE                                          = 'Verwijder';
@@ -1229,6 +1318,24 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_ALBUM_SINGLE                                    = 'Album';
+        this.STRING_TRACK_SINGLE                                    = 'Track';
+        this.STRING_ARTIST_SINGLE                                   = 'Artist';
+        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums from this artist.';
+        this.STRING_TRACKS_FROM_ARTIST                              = 'Tracks from this artist.';
+        this.STRING_REMOVE                                          = 'REMOVE';
+        this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
+        this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
+        this.STRING_PLAY_NOW                                        = 'Play now';
+        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Enter something to lookup in your collection.';
+        this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
+        this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.svSe: {
@@ -1334,7 +1441,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Meny';
         this.STRING_SEARCH_COLLECTION                               = 'Sök samling';
         this.STRING_SWITCH_THEME                                    = 'Byt tema';
-        this.STRING_DISCOVER                                        = 'Upptäck';
         this.STRING_PLAY                                            = 'Spela';
         this.STRING_PAUSE                                           = 'Paus';
         this.STRING_DELETE                                          = 'Radera';
@@ -1386,6 +1492,24 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_ALBUM_SINGLE                                    = 'Album';
+        this.STRING_TRACK_SINGLE                                    = 'Track';
+        this.STRING_ARTIST_SINGLE                                   = 'Artist';
+        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums from this artist.';
+        this.STRING_TRACKS_FROM_ARTIST                              = 'Tracks from this artist.';
+        this.STRING_REMOVE                                          = 'REMOVE';
+        this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
+        this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
+        this.STRING_PLAY_NOW                                        = 'Play now';
+        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Enter something to lookup in your collection.';
+        this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
+        this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.frFr: {
@@ -1491,7 +1615,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Menu';
         this.STRING_SEARCH_COLLECTION                               = 'Chercher collection';
         this.STRING_SWITCH_THEME                                    = 'Changer de theme';
-        this.STRING_DISCOVER                                        = 'Discover';
         this.STRING_PLAY                                            = 'Lire';
         this.STRING_PAUSE                                           = 'Pause';
         this.STRING_DELETE                                          = 'Supprimer';
@@ -1543,6 +1666,24 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Afficher les paroles dans une notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Récupération des paroles ...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Paroles non trouvées.';
+        this.STRING_ALBUM_SINGLE                                    = 'Album';
+        this.STRING_TRACK_SINGLE                                    = 'Track';
+        this.STRING_ARTIST_SINGLE                                   = 'Artist';
+        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums from this artist.';
+        this.STRING_TRACKS_FROM_ARTIST                              = 'Tracks from this artist.';
+        this.STRING_REMOVE                                          = 'REMOVE';
+        this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
+        this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
+        this.STRING_PLAY_NOW                                        = 'Play now';
+        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Enter something to lookup in your collection.';
+        this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
+        this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.huHu: {
@@ -1648,7 +1789,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Menü';
         this.STRING_SEARCH_COLLECTION                               = 'Keresés a gyűjteményben';
         this.STRING_SWITCH_THEME                                    = 'Téma váltása';
-        this.STRING_DISCOVER                                        = 'Felfedezés';
         this.STRING_PLAY                                            = 'Lejátszás';
         this.STRING_PAUSE                                           = 'Szünet';
         this.STRING_DELETE                                          = 'Törlés';
@@ -1700,6 +1840,24 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Énekszöveg megjelenítése értesítésként.';
         this.STRING_LYRICS_RETRIEVING                               = 'Énekszöveg betöltése...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Nem található énekszöveg.';
+        this.STRING_ALBUM_SINGLE                                    = 'Album';
+        this.STRING_TRACK_SINGLE                                    = 'Track';
+        this.STRING_ARTIST_SINGLE                                   = 'Artist';
+        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums from this artist.';
+        this.STRING_TRACKS_FROM_ARTIST                              = 'Tracks from this artist.';
+        this.STRING_REMOVE                                          = 'REMOVE';
+        this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
+        this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
+        this.STRING_PLAY_NOW                                        = 'Play now';
+        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Enter something to lookup in your collection.';
+        this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
+        this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
     }

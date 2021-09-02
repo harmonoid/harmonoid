@@ -8,12 +8,11 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/constants/language.dart';
 
-
+// TODO: Migrate this shitty JSON based storage to better alternative like Hive etc.
 late Configuration configuration;
 
-
 abstract class ConfigurationKeys {
-  Directory? collectionDirectory;
+  List<Directory>? collectionDirectories;
   Directory? cacheDirectory;
   String? homeAddress;
   LanguageRegion? languageRegion;
@@ -22,51 +21,77 @@ abstract class ConfigurationKeys {
   CollectionSort? collectionSortType;
   bool? automaticAccent;
   bool? notificationLyrics;
-  TargetPlatform? platform;
-  List<dynamic>? collectionSearchRecent;
-  List<dynamic>? discoverSearchRecent;
-  List<dynamic>? discoverRecent;
+  bool? acrylicEnabled;
+  List<String>? collectionSearchRecent;
+  List<String>? discoverSearchRecent;
+  List<String>? discoverRecent;
 }
 
-
-const Map<String, dynamic> DEFAULT_CONFIGURATION = {
-  'collectionDirectory': '/storage/emulated/0/Music',
+Map<String, dynamic> DEFAULT_CONFIGURATION = {
+  'collectionDirectories': <String>[
+    {
+      'windows': () => path.join(Platform.environment['USERPROFILE']!, 'Music'),
+      'linux': () => path.join(Platform.environment['HOME']!, 'Music'),
+      'android': () => '/storage/emulated/0/Music',
+    }[Platform.operatingSystem]!(),
+  ],
+  // TODO: Remove this.
   'homeAddress': '',
   'languageRegion': 0,
   'accent': 0,
-  'themeMode': 0,
+  'themeMode': 2,
   'collectionSortType': 0,
   'automaticAccent': false,
   'notificationLyrics': true,
-  'platform': 2,
+  // TODO: Remove this.
+  // TODO: Remove this.
+  'acrylicEnabled': false,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
-  'discoverRecent': [],
+  'discoverRecent': ['XfEMj-z3TtA'],
 };
 
-
 class Configuration extends ConfigurationKeys {
-  
   late File configurationFile;
 
+  Future<String> get configurationDirectory async {
+    switch (Platform.operatingSystem) {
+      case 'windows':
+        return Platform.environment['USERPROFILE']!;
+      case 'linux':
+        return Platform.environment['HOME']!;
+      case 'android':
+        return (await path.getExternalStorageDirectory())!.path;
+      default:
+        return '';
+    }
+  }
+
   static Future<void> init() async {
-    configuration = new Configuration();
+    configuration = Configuration();
     configuration.configurationFile = File(
       path.join(
-        (await path.getExternalStorageDirectory())!.path,
+        await configuration.configurationDirectory,
+        '.harmonoid',
         'configuration.JSON',
       ),
     );
     if (!await configuration.configurationFile.exists()) {
       await configuration.configurationFile.create(recursive: true);
-      await configuration.configurationFile.writeAsString(convert.jsonEncode(DEFAULT_CONFIGURATION));
+      await configuration.configurationFile
+          .writeAsString(convert.jsonEncode(DEFAULT_CONFIGURATION));
     }
     await configuration.read();
-    configuration.cacheDirectory = new Directory('/storage/emulated/0/Android/data/com.alexmercerind.harmonoid/files');
+    configuration.cacheDirectory = Directory(
+      path.join(
+        await configuration.configurationDirectory,
+        '.harmonoid',
+      ),
+    );
   }
 
   Future<void> save({
-    Directory? collectionDirectory,
+    List<Directory>? collectionDirectories,
     String? homeAddress,
     LanguageRegion? languageRegion,
     Accent? accent,
@@ -75,13 +100,13 @@ class Configuration extends ConfigurationKeys {
     CollectionSort? collectionSortType,
     bool? automaticAccent,
     bool? notificationLyrics,
-    TargetPlatform? platform,
-    List<dynamic>? collectionSearchRecent,
-    List<dynamic>? discoverSearchRecent,
-    List<dynamic>? discoverRecent,
-    }) async {
-    if (collectionDirectory != null) {
-      this.collectionDirectory = collectionDirectory;
+    bool? acrylicEnabled,
+    List<String>? collectionSearchRecent,
+    List<String>? discoverSearchRecent,
+    List<String>? discoverRecent,
+  }) async {
+    if (collectionDirectories != null) {
+      this.collectionDirectories = collectionDirectories;
     }
     if (homeAddress != null) {
       this.homeAddress = homeAddress;
@@ -104,7 +129,7 @@ class Configuration extends ConfigurationKeys {
     if (discoverSearchRecent != null) {
       this.discoverSearchRecent = discoverSearchRecent;
     }
-    if (collectionSearchRecent != null) {
+    if (discoverRecent != null) {
       this.discoverRecent = discoverRecent;
     }
     if (automaticAccent != null) {
@@ -113,11 +138,15 @@ class Configuration extends ConfigurationKeys {
     if (notificationLyrics != null) {
       this.notificationLyrics = notificationLyrics;
     }
-    if (platform != null) {
-      this.platform = platform;
+    if (acrylicEnabled != null) {
+      this.acrylicEnabled = acrylicEnabled;
     }
     await configuration.configurationFile.writeAsString(convert.jsonEncode({
-      'collectionDirectory': this.collectionDirectory!.path,
+      'collectionDirectories': this
+          .collectionDirectories!
+          .map((directory) => directory.path)
+          .toList()
+          .cast<String>(),
       'homeAddress': this.homeAddress,
       'languageRegion': this.languageRegion!.index,
       'accent': accents.indexOf(this.accent),
@@ -125,7 +154,7 @@ class Configuration extends ConfigurationKeys {
       'collectionSortType': this.collectionSortType!.index,
       'automaticAccent': this.automaticAccent,
       'notificationLyrics': this.notificationLyrics,
-      'platform': this.platform!.index,
+      'acrylicEnabled': this.acrylicEnabled,
       'collectionSearchRecent': this.collectionSearchRecent,
       'discoverSearchRecent': this.discoverSearchRecent,
       'discoverRecent': this.discoverRecent,
@@ -133,23 +162,31 @@ class Configuration extends ConfigurationKeys {
   }
 
   Future<dynamic> read() async {
-    Map<String, dynamic> currentConfiguration = convert.jsonDecode(await this.configurationFile.readAsString());
+    Map<String, dynamic> currentConfiguration =
+        convert.jsonDecode(await this.configurationFile.readAsString());
     DEFAULT_CONFIGURATION.keys.forEach((String key) {
       if (!currentConfiguration.containsKey(key)) {
         currentConfiguration[key] = DEFAULT_CONFIGURATION[key];
       }
     });
-    this.collectionDirectory = Directory(currentConfiguration['collectionDirectory']);
+    this.collectionDirectories = currentConfiguration['collectionDirectories']
+        .map((directory) => Directory(directory))
+        .toList()
+        .cast<Directory>();
     this.homeAddress = currentConfiguration['homeAddress'];
-    this.languageRegion = LanguageRegion.values[currentConfiguration['languageRegion']];
+    this.languageRegion =
+        LanguageRegion.values[currentConfiguration['languageRegion']];
     this.accent = accents[currentConfiguration['accent']];
     this.themeMode = ThemeMode.values[currentConfiguration['themeMode']];
-    this.collectionSortType = CollectionSort.values[currentConfiguration['collectionSortType']];
+    this.collectionSortType =
+        CollectionSort.values[currentConfiguration['collectionSortType']];
     this.automaticAccent = currentConfiguration['automaticAccent'];
     this.notificationLyrics = currentConfiguration['notificationLyrics'];
-    this.platform = TargetPlatform.values[currentConfiguration['platform']];
-    this.collectionSearchRecent = currentConfiguration['collectionSearchRecent'];
-    this.discoverSearchRecent = currentConfiguration['discoverSearchRecent'];
-    this.discoverRecent = currentConfiguration['discoverRecent'];
+    this.acrylicEnabled = currentConfiguration['acrylicEnabled'];
+    this.collectionSearchRecent =
+        currentConfiguration['collectionSearchRecent'].cast<String>();
+    this.discoverSearchRecent =
+        currentConfiguration['discoverSearchRecent'].cast<String>();
+    this.discoverRecent = currentConfiguration['discoverRecent'].cast<String>();
   }
 }

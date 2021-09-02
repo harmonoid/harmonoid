@@ -2,10 +2,7 @@
 
 [Provider](https://github.com/rrousselGit/provider) is used for state management.
 
-
 Checkout project structure below to get started.
-
-The plan of project is to bring the best, cross platform music experience for all users.
 
 The plan of project is to bring the best, cross platform music experience for all users.
 

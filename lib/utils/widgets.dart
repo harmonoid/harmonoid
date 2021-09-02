@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:math' as math;
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:marquee/marquee.dart' as marquee;
+import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:provider/provider.dart';
 
+import 'package:harmonoid/core/collection.dart';
 
 List<Widget> tileGridListWidgets({
   required double tileHeight,
@@ -48,12 +52,16 @@ List<Widget> tileGridListWidgets({
   }
   if (widgetCount % elementsPerRow != 0) {
     rowChildren = <Widget>[];
-    for (int index = widgetCount - (widgetCount % elementsPerRow); index < widgetCount; index++) {
+    for (int index = widgetCount - (widgetCount % elementsPerRow);
+        index < widgetCount;
+        index++) {
       rowChildren.add(
         builder(context, index),
       );
     }
-    for (int index = 0; index < elementsPerRow - (widgetCount % elementsPerRow); index++) {
+    for (int index = 0;
+        index < elementsPerRow - (widgetCount % elementsPerRow);
+        index++) {
       rowChildren.add(
         Container(
           height: tileHeight,
@@ -78,7 +86,6 @@ List<Widget> tileGridListWidgets({
   return widgets;
 }
 
-
 class SubHeader extends StatelessWidget {
   final String? text;
 
@@ -86,24 +93,111 @@ class SubHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      height: 48,
-      padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: Text(
-        text!,
-        style: Theme.of(context).textTheme.headline5,
+    return text != null
+        ? Container(
+            alignment: Alignment.centerLeft,
+            height: 48,
+            padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
+            child: Text(
+              text!,
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          )
+        : Container();
+  }
+}
+
+class NavigatorPopButton extends StatelessWidget {
+  const NavigatorPopButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: Navigator.of(context).pop,
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+        child: Container(
+          height: 40.0,
+          width: 40.0,
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withOpacity(0.04)
+                : Colors.black.withOpacity(0.04),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Icon(
+            FluentIcons.arrow_left_20_filled,
+            size: 20.0,
+          ),
+        ),
       ),
     );
   }
 }
 
+class RefreshCollectionButton extends StatefulWidget {
+  RefreshCollectionButton({Key? key}) : super(key: key);
+
+  @override
+  _RefreshCollectionButtonState createState() =>
+      _RefreshCollectionButtonState();
+}
+
+class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
+  bool lock = false;
+  late double turns;
+  late Tween<double> tween;
+
+  @override
+  void initState() {
+    super.initState();
+    this.turns = 0;
+    this.tween = Tween<double>(begin: 0, end: this.turns);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      backgroundColor: Theme.of(context).accentColor,
+      child: TweenAnimationBuilder(
+        child: Icon(
+          Icons.refresh,
+          color: Colors.white,
+        ),
+        tween: this.tween,
+        duration: Duration(milliseconds: 800),
+        builder: (_, dynamic value, child) => Transform.rotate(
+          alignment: Alignment.center,
+          angle: value,
+          child: child,
+        ),
+      ),
+      onPressed: this.lock
+          ? () {}
+          : () async {
+              this.lock = true;
+              this.turns += 2 * math.pi;
+              this.tween = Tween<double>(begin: 0, end: this.turns);
+              await Provider.of<Collection>(context, listen: false).refresh(
+                  onProgress: (progress, total, isCompleted) {
+                Provider.of<CollectionRefresh>(context, listen: false)
+                    .set(progress, total);
+                this.setState(() => this.lock = !isCompleted);
+              });
+              this.setState(() {});
+            },
+    );
+  }
+}
 
 class FadeFutureBuilder extends StatefulWidget {
   final Future<Object> Function() future;
   final Widget Function(BuildContext context) initialWidgetBuilder;
-  final Widget Function(BuildContext context, Object? object) finalWidgetBuilder;
+  final Widget Function(BuildContext context, Object? object)
+      finalWidgetBuilder;
   final Widget Function(BuildContext context, Object object) errorWidgetBuilder;
   final Duration transitionDuration;
 
@@ -117,7 +211,6 @@ class FadeFutureBuilder extends StatefulWidget {
   }) : super(key: key);
   FadeFutureBuilderState createState() => FadeFutureBuilderState();
 }
-
 
 class FadeFutureBuilderState extends State<FadeFutureBuilder>
     with SingleTickerProviderStateMixin {
@@ -185,145 +278,76 @@ class FadeFutureBuilderState extends State<FadeFutureBuilder>
   }
 }
 
-
 class ExceptionWidget extends StatelessWidget {
   final EdgeInsets margin;
-  final double height;
+  final double? height;
+  final double? width;
   final Icon? icon;
   final String? title;
   final String? subtitle;
-  final String? assetImage;
-  final bool large;
 
   const ExceptionWidget({
     Key? key,
-    this.assetImage,
     this.icon,
     required this.margin,
-    required this.height,
+    this.height,
+    this.width,
     required this.title,
     required this.subtitle,
-    this.large: false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return this.large ? Card(
-      elevation: 2.0,
-      clipBehavior: Clip.antiAlias,
-      margin: this.margin,
-      child: Container(
-        width: MediaQuery.of(context).size.width - 16.0,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            this.assetImage != null ? Image.asset(
-              this.assetImage!,
-              height: this.height,
-              width: MediaQuery.of(context).size.width - 16.0,
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.center,
-            ): Container(
-              height: this.height,
-              width: this.height,
-              alignment: Alignment.center,
-              color: Theme.of(context).dividerColor,
-              child: Icon(
-                Icons.library_music,
-                size: 56.0,
-              ),
+    return Container(
+      width: this.width,
+      height: this.height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 4.0,
             ),
-            Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 4.0,
-              ),
-              width: MediaQuery.of(context).size.width - 16.0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    this.title!,
-                    style: Theme.of(context).textTheme.headline1,
-                    textAlign: TextAlign.start,
+            width: this.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  this.title!,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16.0,
                   ),
-                  Divider(
-                    color: Colors.transparent,
-                    height: 4.0,
-                  ),
-                  Text(
-                    this.subtitle!,
-                    style: Theme.of(context).textTheme.headline5,
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    ): Card(
-      elevation: 2.0,
-      clipBehavior: Clip.antiAlias,
-      margin: this.margin,
-      child: Container(
-        width: MediaQuery.of(context).size.width - 16,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (this.assetImage != null)
-              Image.asset(
-                this.assetImage!,
-                height: this.height,
-                width: this.height,
-                fit: BoxFit.cover,
-                alignment: Alignment.center,
-              )
-            else
-              Container(
-                height: this.height,
-                width: this.height,
-                alignment: Alignment.center,
-                color: Theme.of(context).dividerColor,
-                child: Icon(
-                  Icons.library_music,
-                  size: 56.0,
+                  textAlign: TextAlign.start,
                 ),
-              ),
-            Container(
-              margin: EdgeInsets.only(left: 8, right: 8),
-              width: MediaQuery.of(context).size.width - 32 - this.height,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    this.title!,
-                    style: Theme.of(context).textTheme.headline1,
-                    textAlign: TextAlign.start,
+                Divider(
+                  color: Colors.transparent,
+                  height: 4.0,
+                ),
+                Text(
+                  this.subtitle!,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white.withOpacity(0.8)
+                        : Colors.black.withOpacity(0.8),
+                    fontSize: 14.0,
                   ),
-                  Divider(
-                    color: Colors.transparent,
-                    height: 4.0,
-                  ),
-                  Text(
-                    this.subtitle!,
-                    style: Theme.of(context).textTheme.headline5,
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-              ),
+                  textAlign: TextAlign.start,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-
 
 class FakeLinearProgressIndicator extends StatelessWidget {
   final String label;
@@ -373,71 +397,304 @@ class FakeLinearProgressIndicator extends StatelessWidget {
   }
 }
 
-
 class ClosedTile extends StatelessWidget {
   final String? title;
   final String? subtitle;
-  const ClosedTile({Key? key, required this.open, required this.title, required this.subtitle}) : super(key: key);
+  const ClosedTile(
+      {Key? key,
+      required this.open,
+      required this.title,
+      required this.subtitle})
+      : super(key: key);
 
   final Function open;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(
-        left: 8.0,
-        right: 8.0,
-        top: 4.0,
-        bottom: 4.0,
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 8.0,
+        vertical: 4.0,
       ),
-      color: Theme.of(context).cardColor,
-      elevation: 2.0,
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       child: ListTile(
-        title: Text(this.title!),
-        subtitle: Text(this.subtitle!),
+        title: Text(
+          this.title!,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+            fontWeight: FontWeight.w600,
+            fontSize: 14.0,
+          ),
+        ),
+        subtitle: Text(
+          this.subtitle!,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withOpacity(0.8)
+                : Colors.black.withOpacity(0.8),
+            fontSize: 14.0,
+          ),
+        ),
         onTap: open as void Function()?,
       ),
     );
   }
 }
 
-class Marquee extends StatelessWidget {
-  const Marquee({
+class ContextMenuButton<T> extends StatefulWidget {
+  const ContextMenuButton({
     Key? key,
-    required this.text,
-    required this.style,
-    this.velocity = 20.0,
-    this.blankSpace = 40.0,
-    this.startAfter = const Duration(seconds: 2),
-    this.pauseAfterRound = const Duration(seconds: 2),
-  }) : super(key: key);
+    required this.itemBuilder,
+    this.initialValue,
+    this.onSelected,
+    this.onCanceled,
+    this.tooltip,
+    this.elevation,
+    this.padding = const EdgeInsets.all(8.0),
+    this.child,
+    this.icon,
+    this.iconSize,
+    this.offset = Offset.zero,
+    this.enabled = true,
+    this.shape,
+    this.color,
+    this.enableFeedback,
+  })  : assert(
+          !(child != null && icon != null),
+          'You can only pass [child] or [icon], not both.',
+        ),
+        super(key: key);
 
-  final String text;
-  final TextStyle style;
-  final double velocity;
-  final double blankSpace;
-  final Duration startAfter;
-  final Duration pauseAfterRound;
+  final PopupMenuItemBuilder<T> itemBuilder;
+
+  final T? initialValue;
+
+  final PopupMenuItemSelected<T>? onSelected;
+
+  final PopupMenuCanceled? onCanceled;
+
+  final String? tooltip;
+
+  final double? elevation;
+
+  final EdgeInsetsGeometry padding;
+
+  final Widget? child;
+
+  final Widget? icon;
+
+  final Offset offset;
+
+  final bool enabled;
+
+  final ShapeBorder? shape;
+
+  final Color? color;
+
+  final bool? enableFeedback;
+
+  final double? iconSize;
+
+  @override
+  ContextMenuButtonState<T> createState() => ContextMenuButtonState<T>();
+}
+
+class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
+  void showButtonMenu() {
+    final PopupMenuThemeData popupMenuTheme = PopupMenuTheme.of(context);
+    final RenderBox button = context.findRenderObject()! as RenderBox;
+    final RenderBox overlay =
+        Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(widget.offset, ancestor: overlay),
+        button.localToGlobal(
+            button.size.bottomRight(Offset.zero) + widget.offset,
+            ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
+    final List<PopupMenuEntry<T>> items = widget.itemBuilder(context);
+
+    if (items.isNotEmpty) {
+      showMenu<T?>(
+        context: context,
+        elevation: widget.elevation ?? popupMenuTheme.elevation,
+        items: items,
+        initialValue: widget.initialValue,
+        position: position,
+        shape: widget.shape ??
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(8.0),
+              ),
+            ),
+        color: widget.color ?? popupMenuTheme.color,
+      ).then<void>((T? newValue) {
+        if (!mounted) return null;
+        if (newValue == null) {
+          widget.onCanceled?.call();
+          return null;
+        }
+        widget.onSelected?.call(newValue);
+      });
+    }
+  }
+
+  bool get _canRequestFocus {
+    final NavigationMode mode = MediaQuery.maybeOf(context)?.navigationMode ??
+        NavigationMode.traditional;
+    switch (mode) {
+      case NavigationMode.traditional:
+        return widget.enabled;
+      case NavigationMode.directional:
+        return true;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool enableFeedback = widget.enableFeedback ??
+        PopupMenuTheme.of(context).enableFeedback ??
+        true;
+
+    assert(debugCheckHasMaterialLocalizations(context));
+
+    if (widget.child != null)
+      return Tooltip(
+        message:
+            widget.tooltip ?? MaterialLocalizations.of(context).showMenuTooltip,
+        child: InkWell(
+          onTap: widget.enabled ? showButtonMenu : null,
+          canRequestFocus: _canRequestFocus,
+          child: widget.child,
+          enableFeedback: enableFeedback,
+        ),
+      );
+
+    return Padding(
+      padding: EdgeInsets.all(4.0),
+      child: InkWell(
+        onTap: widget.enabled ? showButtonMenu : null,
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+        child: Container(
+          height: 40.0,
+          width: 40.0,
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withOpacity(0.04)
+                : Colors.black.withOpacity(0.04),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: widget.icon ??
+              Icon(
+                FluentIcons.more_vertical_20_regular,
+                size: 20.0,
+              ),
+        ),
+      ),
+    );
+  }
+}
+
+class WindowTitleBar extends StatelessWidget {
+  const WindowTitleBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.centerLeft,
-      height: (style.fontSize! + 4.0) * MediaQuery.of(context).textScaleFactor,
-      child: AutoSizeText(
-        text,
-        minFontSize: style.fontSize!,
-        maxFontSize: style.fontSize!,
-        style: style,
-        overflowReplacement: marquee.Marquee(
-          text: text,
-          blankSpace: blankSpace,
-          accelerationCurve: Curves.easeOutCubic,
-          velocity: velocity,
-          startPadding: 2.0,
-          startAfter: startAfter,
-          pauseAfterRound: pauseAfterRound,
-          style: style,
+      width: MediaQuery.of(context).size.width,
+      height: 32.0,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? Colors.white.withOpacity(0.08)
+          : Colors.black.withOpacity(0.08),
+      child: MoveWindow(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 14.0,
+            ),
+            Text(
+              'Harmonoid Music',
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+                fontSize: 12.0,
+              ),
+            ),
+            Expanded(
+              child: Container(),
+            ),
+            MinimizeWindowButton(
+              colors: WindowButtonColors(
+                iconNormal: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseDown: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseOver: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                normal: Colors.transparent,
+                mouseOver: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.04)
+                    : Colors.white.withOpacity(0.04),
+                mouseDown: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.08)
+                    : Colors.white.withOpacity(0.08),
+              ),
+            ),
+            MaximizeWindowButton(
+              colors: WindowButtonColors(
+                iconNormal: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseDown: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseOver: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                normal: Colors.transparent,
+                mouseOver: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.04)
+                    : Colors.white.withOpacity(0.04),
+                mouseDown: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.08)
+                    : Colors.white.withOpacity(0.08),
+              ),
+            ),
+            CloseWindowButton(
+              colors: WindowButtonColors(
+                iconNormal: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseDown: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseOver: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                normal: Colors.transparent,
+                mouseOver: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.04)
+                    : Colors.white.withOpacity(0.04),
+                mouseDown: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.08)
+                    : Colors.white.withOpacity(0.08),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -5,15 +5,18 @@ import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorder
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
-
 class CollectionTabs extends StatefulWidget {
   CollectionTabs({Key? key}) : super(key: key);
   _CollectionTabsState createState() => _CollectionTabsState();
 }
 
-
+// TODO: bdlukaa intended to add this feature, but alexmercerind is too lazy too implement this for now.
 class _CollectionTabsState extends State<CollectionTabs> {
-  List<String?> names = [language!.STRING_ALBUM, language!.STRING_TRACK, language!.STRING_PLAYLISTS];
+  List<String?> names = [
+    language!.STRING_ALBUM,
+    language!.STRING_TRACK,
+    language!.STRING_PLAYLISTS
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,7 @@ class _CollectionTabsState extends State<CollectionTabs> {
       ),
     );
   }
-
 }
 
-bool get isMaterial => [TargetPlatform.android, TargetPlatform.fuchsia].contains(defaultTargetPlatform);
+bool get isMaterial => [TargetPlatform.android, TargetPlatform.fuchsia]
+    .contains(defaultTargetPlatform);

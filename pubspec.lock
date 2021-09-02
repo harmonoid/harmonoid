@@ -8,22 +8,36 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  ansicolor:
+    dependency: transitive
+    description:
+      name: ansicolor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
+  args:
+    dependency: transitive
+    description:
+      name: args
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   assets_audio_player:
     dependency: "direct main"
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "791798106cd9e7548dfd41f46c8467d76eb1c41a"
-      url: "https://github.com/jxzy999/Flutter-AssetsAudioPlayer.git"
+      resolved-ref: "182b310b81a6450693f9e768a7ee0f7c4ea88dfe"
+      url: "https://github.com/florent37/Flutter-AssetsAudioPlayer.git"
     source: git
-    version: "3.0.3+2"
+    version: "3.0.3+6"
   assets_audio_player_web:
     dependency: transitive
     description:
       name: assets_audio_player_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3+2"
+    version: "3.0.3+6"
   async:
     dependency: transitive
     description:
@@ -31,20 +45,41 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.6.1"
-  auto_size_text:
+  bitsdojo_window:
     dependency: "direct main"
     description:
-      name: auto_size_text
+      name: bitsdojo_window
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0-nullsafety.0"
-  boolean_selector:
+    version: "0.1.1+1"
+  bitsdojo_window_linux:
     dependency: transitive
     description:
-      name: boolean_selector
+      name: bitsdojo_window_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "0.1.1"
+  bitsdojo_window_macos:
+    dependency: transitive
+    description:
+      name: bitsdojo_window_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
+  bitsdojo_window_platform_interface:
+    dependency: transitive
+    description:
+      name: bitsdojo_window_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
+  bitsdojo_window_windows:
+    dependency: transitive
+    description:
+      name: bitsdojo_window_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   characters:
     dependency: transitive
     description:
@@ -59,13 +94,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  clock:
-    dependency: transitive
-    description:
-      name: clock
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   collection:
     dependency: transitive
     description:
@@ -80,27 +108,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
-  fading_edge_scrollview:
+  csslib:
     dependency: transitive
     description:
-      name: fading_edge_scrollview
+      name: csslib
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
-  fake_async:
+    version: "0.17.0"
+  dart_discord_rpc:
+    dependency: "direct main"
+    description:
+      name: dart_discord_rpc
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
+  dart_discord_rpc_ffi:
     dependency: transitive
     description:
-      name: fake_async
+      name: dart_discord_rpc_ffi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "0.0.1"
   ffi:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: ffi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.2"
   file:
     dependency: transitive
     description:
@@ -115,18 +150,32 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
-  flag:
+  filepicker_windows:
     dependency: "direct main"
     description:
-      name: flag
+      name: filepicker_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0-nullsafety"
+    version: "2.0.0"
+  fluentui_system_icons:
+    dependency: "direct main"
+    description:
+      name: fluentui_system_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.136"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_acrylic:
+    dependency: "direct main"
+    description:
+      name: flutter_acrylic
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -144,10 +193,12 @@ packages:
   flutter_media_metadata:
     dependency: "direct main"
     description:
-      name: flutter_media_metadata
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
+      path: "."
+      ref: f7773003d97d6310f6aebf2d76bd6a19a65e6955
+      resolved-ref: f7773003d97d6310f6aebf2d76bd6a19a65e6955
+      url: "https://github.com/alexmercerind/flutter_media_metadata.git"
+    source: git
+    version: "0.1.1"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -155,30 +206,32 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  flutter_svg:
-    dependency: transitive
-    description:
-      name: flutter_svg
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.21.0-nullsafety.0"
-  flutter_test:
-    dependency: "direct dev"
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
+  freezed_annotation:
+    dependency: "direct overridden"
+    description:
+      name: freezed_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.14.2"
+  html:
+    dependency: transitive
+    description:
+      name: html
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.15.0"
   http:
     dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.1"
+    version: "0.13.3"
   http_parser:
     dependency: transitive
     description:
@@ -193,6 +246,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.0-dev+4"
+  injector:
+    dependency: transitive
+    description:
+      name: injector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   js:
     dependency: transitive
     description:
@@ -200,20 +260,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3"
-  marquee:
-    dependency: "direct main"
-    description:
-      name: marquee
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
-  matcher:
+  json_annotation:
     dependency: transitive
     description:
-      name: matcher
+      name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.10"
+    version: "4.0.1"
+  libwinmedia:
+    dependency: "direct main"
+    description:
+      path: "external/libwinmedia.dart"
+      relative: true
+    source: path
+    version: "0.0.1"
   meta:
     dependency: transitive
     description:
@@ -228,6 +288,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  msix:
+    dependency: "direct dev"
+    description:
+      path: "."
+      ref: a2c15a8662dd346b2738ea89538179f532d4f437
+      resolved-ref: a2c15a8662dd346b2738ea89538179f532d4f437
+      url: "git://github.com/alexmercerind/msix.git"
+    source: git
+    version: "2.1.2"
   nested:
     dependency: transitive
     description:
@@ -235,6 +304,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  package_config:
+    dependency: transitive
+    description:
+      name: package_config
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   palette_generator:
     dependency: "direct main"
     description:
@@ -249,27 +325,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-  path_drawing:
-    dependency: transitive
-    description:
-      name: path_drawing
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.0-nullsafety.0"
-  path_parsing:
-    dependency: transitive
-    description:
-      name: path_parsing
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0-nullsafety.0"
   path_provider:
     dependency: transitive
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   path_provider_linux:
     dependency: transitive
     description:
@@ -325,7 +387,7 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.2"
+    version: "4.1.0"
   platform:
     dependency: transitive
     description:
@@ -360,7 +422,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.26.0"
+    version: "0.27.1"
   share:
     dependency: "direct main"
     description:
@@ -380,20 +442,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.1"
-  stack_trace:
-    dependency: transitive
-    description:
-      name: stack_trace
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.10.0"
-  stream_channel:
-    dependency: transitive
-    description:
-      name: stream_channel
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
   string_scanner:
     dependency: transitive
     description:
@@ -408,13 +456,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  test_api:
-    dependency: transitive
-    description:
-      name: test_api
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0"
   timezone:
     dependency: transitive
     description:
@@ -477,7 +518,7 @@ packages:
       name: uuid
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.4"
   vector_math:
     dependency: transitive
     description:
@@ -491,7 +532,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.2.5"
   xdg_directories:
     dependency: transitive
     description:
@@ -505,7 +546,21 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.2"
+    version: "5.1.2"
+  yaml:
+    dependency: transitive
+    description:
+      name: yaml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
+  youtube_explode_dart:
+    dependency: "direct main"
+    description:
+      name: youtube_explode_dart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.10.6"
 sdks:
-  dart: ">=2.12.0 <3.0.0"
+  dart: ">=2.13.0 <3.0.0"
   flutter: ">=2.0.0"
