@@ -349,11 +349,6 @@ class Collection extends ChangeNotifier {
         for (Map<String, dynamic> trackMap in collection['tracks']) {
           Track track = Track.fromMap(trackMap)!;
           bool presentInCollectionDirectories = true;
-          if (respectChangedDirectories) {
-            /// This is rather expensive to perform, thus only done when `respectChangedDirectories` explicitly passed as true.
-            presentInCollectionDirectories =
-                Utils.isPresentInCollectionDirectories(track);
-          }
           if (await File(track.filePath!).exists() &&
               presentInCollectionDirectories) {
             await this._arrange(track, () async {});
@@ -408,7 +403,9 @@ class Collection extends ChangeNotifier {
         }
         onProgress?.call(collectionDirectoriesContent.length,
             collectionDirectoriesContent.length, true);
-      } catch (exception) {
+      } catch (exception, stacktrace) {
+        print(exception);
+        print(stacktrace);
         // Fallback collection regeneration from scratch in case the cache file appears to be corrupt due
         // to user exiting the application in middle of indexing or editing/saving the cache file.
         this.index(onProgress: onProgress);
