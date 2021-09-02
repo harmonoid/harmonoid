@@ -210,7 +210,8 @@ extension TrackExtension on Track {
               .toList()
               .cast<String>(),
           trackDuration: duration * 1000,
-          networkAlbumArt: object['thumbnail']['thumbnails'].last['url'],
+          networkAlbumArt: object['thumbnail']['thumbnails']
+              [object['thumbnail']['thumbnails'].length - 3]['url'],
           albumId: object['menu']['menuRenderer']['items']
                       [object['menu']['menuRenderer']['items'].length - 2]
                   ['menuNavigationItemRenderer']['navigationEndpoint']

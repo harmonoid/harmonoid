@@ -129,7 +129,7 @@ class Configuration extends ConfigurationKeys {
     if (discoverSearchRecent != null) {
       this.discoverSearchRecent = discoverSearchRecent;
     }
-    if (collectionSearchRecent != null) {
+    if (discoverRecent != null) {
       this.discoverRecent = discoverRecent;
     }
     if (automaticAccent != null) {
