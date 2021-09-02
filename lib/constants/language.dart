@@ -222,7 +222,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Menu';
         this.STRING_SEARCH_COLLECTION                               = 'Search collection';
         this.STRING_SWITCH_THEME                                    = 'Switch theme';
-        this.STRING_DISCOVER                                        = 'Discover';
         this.STRING_PLAY                                            = 'Play';
         this.STRING_PAUSE                                           = 'Pause';
         this.STRING_DELETE                                          = 'Delete';
@@ -288,11 +287,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
-        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
-        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
-        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
-        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
-        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -398,7 +395,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Меню';
         this.STRING_SEARCH_COLLECTION                               = 'Поиск по коллекции';
         this.STRING_SWITCH_THEME                                    = 'Сменить тему';
-        this.STRING_DISCOVER                                        = 'Поиск';
         this.STRING_PLAY                                            = 'Плей';
         this.STRING_PAUSE                                           = 'Пауза';
         this.STRING_DELETE                                          = 'Удалить';
@@ -464,11 +460,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
-        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
-        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
-        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
-        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
-        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
       }
       break;
       case LanguageRegion.slSi: {
@@ -574,7 +568,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Meni';
         this.STRING_SEARCH_COLLECTION                               = 'Preišči kolekcijo';
         this.STRING_SWITCH_THEME                                    = 'Zamenjaj temo';
-        this.STRING_DISCOVER                                        = 'Razišči';
         this.STRING_PLAY                                            = 'Predvajaj';
         this.STRING_PAUSE                                           = 'Ustavi';
         this.STRING_DELETE                                          = 'Izbriši';
@@ -641,11 +634,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
-        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
-        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
-        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
-        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
-        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -751,7 +742,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Menu';
         this.STRING_SEARCH_COLLECTION                               = 'Procurar Coleção';
         this.STRING_SWITCH_THEME                                    = 'Trocar tema';
-        this.STRING_DISCOVER                                        = 'Descobrir';
         this.STRING_PLAY                                            = 'Tocar';
         this.STRING_PAUSE                                           = 'Pausar';
         this.STRING_DELETE                                          = 'Deletar';
@@ -817,11 +807,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
-        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
-        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
-        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
-        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
-        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -927,7 +915,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'मेन्यू';
         this.STRING_SEARCH_COLLECTION                               = 'कलेक्शन में ढूंढें';
         this.STRING_SWITCH_THEME                                    = 'थीम बदलें';
-        this.STRING_DISCOVER                                        = 'ढूंढें';
         this.STRING_PLAY                                            = 'बजाएं';
         this.STRING_PAUSE                                           = 'रोकें';
         this.STRING_DELETE                                          = 'डिलीट';
@@ -993,11 +980,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
-        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
-        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
-        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
-        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
-        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
       }
       break;
       case LanguageRegion.deDe: {
@@ -1103,7 +1088,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Menu';
         this.STRING_SEARCH_COLLECTION                               = 'Search Collection';
         this.STRING_SWITCH_THEME                                    = 'Switch Theme';
-        this.STRING_DISCOVER                                        = 'Discover';
         this.STRING_PLAY                                            = 'Play';
         this.STRING_PAUSE                                           = 'Pause';
         this.STRING_DELETE                                          = 'Delete';
@@ -1269,7 +1253,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Menu';
         this.STRING_SEARCH_COLLECTION                               = 'Zoek Collectie';
         this.STRING_SWITCH_THEME                                    = 'Wissel Thema';
-        this.STRING_DISCOVER                                        = 'Ontdek';
         this.STRING_PLAY                                            = 'Speel';
         this.STRING_PAUSE                                           = 'Pauze';
         this.STRING_DELETE                                          = 'Verwijder';
@@ -1335,11 +1318,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
-        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
-        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
-        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
-        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
-        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
       }
       break;
       case LanguageRegion.svSe: {
@@ -1445,7 +1426,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Meny';
         this.STRING_SEARCH_COLLECTION                               = 'Sök samling';
         this.STRING_SWITCH_THEME                                    = 'Byt tema';
-        this.STRING_DISCOVER                                        = 'Upptäck';
         this.STRING_PLAY                                            = 'Spela';
         this.STRING_PAUSE                                           = 'Paus';
         this.STRING_DELETE                                          = 'Radera';
@@ -1511,11 +1491,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
-        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
-        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
-        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
-        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
-        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
       }
       break;
       case LanguageRegion.frFr: {
@@ -1621,7 +1599,6 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Menu';
         this.STRING_SEARCH_COLLECTION                               = 'Chercher collection';
         this.STRING_SWITCH_THEME                                    = 'Changer de theme';
-        this.STRING_DISCOVER                                        = 'Discover';
         this.STRING_PLAY                                            = 'Lire';
         this.STRING_PAUSE                                           = 'Pause';
         this.STRING_DELETE                                          = 'Supprimer';
@@ -1687,11 +1664,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
-        this.STRING_DISCOVER_SCRIPT_START_ERROR                     = 'Discover music plugin failed to start.';
-        this.STRING_DISCOVER_SCRIPT_NOT_FOUND                       = 'A Python installation could not be located.';
-        this.STRING_DISCOVER_PLUGIN_STARTING                        = 'Discover music plugin is being started.';
-        this.STRING_DISCOVER_NO_RESULTS                             = 'Nothing like that could be found.';
-        this.STRING_DISCOVER_WELCOME                                = 'Enter something to lookup & play.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
       }
       break;
     }
