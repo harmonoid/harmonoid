@@ -93,15 +93,17 @@ class SubHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      height: 48,
-      padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
-      child: Text(
-        text!,
-        style: Theme.of(context).textTheme.subtitle1,
-      ),
-    );
+    return text != null
+        ? Container(
+            alignment: Alignment.centerLeft,
+            height: 48,
+            padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
+            child: Text(
+              text!,
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          )
+        : Container();
   }
 }
 

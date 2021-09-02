@@ -76,7 +76,6 @@ class IndexingState extends State<IndexingSetting> {
                                     total
                                   ],
                                 ),
-                                respectChangedDirectories: true,
                               );
                             },
                             child: Text(
