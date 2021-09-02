@@ -290,6 +290,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -463,6 +464,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.slSi: {
@@ -637,6 +639,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -810,6 +813,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -983,6 +987,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.deDe: {
@@ -1321,6 +1326,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.svSe: {
@@ -1494,6 +1500,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
       case LanguageRegion.frFr: {
@@ -1667,6 +1674,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
       }
       break;
     }

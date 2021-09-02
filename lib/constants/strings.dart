@@ -172,4 +172,5 @@ class Strings {
   late String STRING_RECOMMENDATIONS;
   late String STRING_YOUTUBE_WELCOME;
   late String STRING_YOUTUBE_NO_RESULTS;
+  late String STRING_YOUTUBE_INTERNET_ERROR;
 }
