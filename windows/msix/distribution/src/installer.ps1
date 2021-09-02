@@ -47,5 +47,5 @@ else{
         $AdminProcess = Start-Process "powershell.exe" -Verb RunAs -WorkingDirectory $PSScriptRoot -ArgumentList $RelaunchArgs -Wait
     }
 
-    Add-AppxPackage -Path "$PSScriptRoot\$packageName.msix" -ForceApplicationShutdown -Verbose
+    Invoke-Item "$PSScriptRoot\$packageName.msix"
 }
