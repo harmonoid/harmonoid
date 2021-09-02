@@ -156,17 +156,31 @@ extension TrackExtension on Track {
         await Client.external.videos.streamsClient.getManifest(video.id);
     var description = video.description.split('\n\n');
     var year;
-    if (description.length >= 5) {
-      year = description[4].replaceAll('Released on: ', '').split('-').first;
-    }
-    trackName = trackName ?? video.title;
-    trackDuration = trackDuration ?? video.duration!.inMilliseconds;
-    trackArtistNames =
-        trackArtistNames ?? description[1].split(' · ').sublist(1);
-    albumName = albumName ?? description[2].trim();
-    albumArtistName =
-        albumArtistName ?? description[1].split(' · ').sublist(1).first;
-    year = year ?? int.tryParse(year);
+    try {
+      if (description.length >= 5) {
+        year = description[4].replaceAll('Released on: ', '').split('-').first;
+      }
+    } catch (e) {}
+    try {
+      trackName = trackName ?? video.title;
+    } catch (e) {}
+    try {
+      trackDuration = trackDuration ?? video.duration!.inMilliseconds;
+    } catch (e) {}
+    try {
+      trackArtistNames =
+          trackArtistNames ?? description[1].split(' · ').sublist(1);
+    } catch (e) {}
+    try {
+      albumName = albumName ?? description[2].trim();
+    } catch (e) {}
+    try {
+      albumArtistName =
+          albumArtistName ?? description[1].split(' · ').sublist(1).first;
+    } catch (e) {}
+    try {
+      year = year ?? int.tryParse(year);
+    } catch (e) {}
     filePath = filePath ?? manifest.audio.withHighestBitrate().url.toString();
   }
 
