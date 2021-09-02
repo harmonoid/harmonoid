@@ -167,8 +167,7 @@ extension TrackExtension on Track {
     albumArtistName =
         albumArtistName ?? description[1].split(' · ').sublist(1).first;
     year = year ?? int.tryParse(year);
-    filePath =
-        filePath ?? manifest.audioOnly.sortByBitrate().last.url.toString();
+    filePath = filePath ?? manifest.audio.withHighestBitrate().url.toString();
   }
 
   Future<List<Track>> get recommendations async {
