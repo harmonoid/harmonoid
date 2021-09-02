@@ -11,7 +11,7 @@ import 'package:harmonoid/interface/collection/collectionalbum.dart';
 import 'package:harmonoid/interface/collection/collectiontrack.dart';
 import 'package:harmonoid/interface/collection/collectionartist.dart';
 import 'package:harmonoid/interface/collection/collectionplaylist.dart';
-import 'package:harmonoid/interface/discover/discovermusic.dart';
+import 'package:harmonoid/interface/youtube/youtubemusic.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
@@ -200,7 +200,7 @@ class CollectionMusicState extends State<CollectionMusic>
                             alignment: Alignment.center,
                             margin: EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(
-                              language!.STRING_DISCOVER.toUpperCase(),
+                              'YouTube'.toUpperCase(),
                               style: TextStyle(
                                 fontSize: 20.0,
                                 fontWeight: this.index == 5
@@ -320,8 +320,8 @@ class CollectionMusicState extends State<CollectionMusic>
                             builder: (context) => CollectionSearch(),
                           ),
                           Builder(
-                            key: PageStorageKey('Discover'),
-                            builder: (context) => DiscoverMusic(),
+                            key: PageStorageKey('YouTube'),
+                            builder: (context) => YouTubeMusic(),
                           ),
                         ][this.index],
                         transitionBuilder:

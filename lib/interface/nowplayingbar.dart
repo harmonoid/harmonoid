@@ -26,75 +26,100 @@ class NowPlayingBar extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: (currentlyPlaying.index != null &&
-                      currentlyPlaying.tracks.length >
-                          (currentlyPlaying.index ?? double.infinity) &&
-                      0 <= (currentlyPlaying.index ?? double.infinity) &&
-                      HORIZONTAL_BREAKPOINT < MediaQuery.of(context).size.width)
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: currentlyPlaying
-                                      .tracks[currentlyPlaying.index!]
-                                      .networkAlbumArt ==
-                                  null
-                              ? Image.file(
-                                  currentlyPlaying
-                                      .tracks[currentlyPlaying.index!].albumArt,
-                                  height: 64.0,
-                                  width: 64.0,
-                                )
-                              : Image.network(
-                                  currentlyPlaying
-                                      .tracks[currentlyPlaying.index!]
-                                      .networkAlbumArt!,
-                                  height: 64.0,
-                                  width: 64.0,
-                                ),
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                currentlyPlaying.tracks[currentlyPlaying.index!]
-                                        .trackName ??
-                                    '',
-                                style: Theme.of(context).textTheme.headline1,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+              child: !currentlyPlaying.isBuffering
+                  ? ((currentlyPlaying.index != null &&
+                          currentlyPlaying.tracks.length >
+                              (currentlyPlaying.index ?? double.infinity) &&
+                          0 <= (currentlyPlaying.index ?? double.infinity) &&
+                          HORIZONTAL_BREAKPOINT <
+                              MediaQuery.of(context).size.width)
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: currentlyPlaying
+                                          .tracks[currentlyPlaying.index!]
+                                          .networkAlbumArt ==
+                                      null
+                                  ? Image.file(
+                                      currentlyPlaying
+                                          .tracks[currentlyPlaying.index!]
+                                          .albumArt,
+                                      height: 64.0,
+                                      width: 64.0,
+                                    )
+                                  : Image.network(
+                                      currentlyPlaying
+                                          .tracks[currentlyPlaying.index!]
+                                          .networkAlbumArt!,
+                                      height: 64.0,
+                                      width: 64.0,
+                                    ),
+                            ),
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    currentlyPlaying
+                                            .tracks[currentlyPlaying.index!]
+                                            .trackName ??
+                                        '',
+                                    style:
+                                        Theme.of(context).textTheme.headline1,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    currentlyPlaying
+                                            .tracks[currentlyPlaying.index!]
+                                            .trackArtistNames
+                                            ?.join(', ') ??
+                                        '',
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    '(${currentlyPlaying.tracks[currentlyPlaying.index!].year ?? 'Unknown Year'})',
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                               ),
-                              Text(
-                                currentlyPlaying.tracks[currentlyPlaying.index!]
-                                        .trackArtistNames
-                                        ?.join(', ') ??
-                                    '',
-                                style: Theme.of(context).textTheme.headline5,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                '(${currentlyPlaying.tracks[currentlyPlaying.index!].year ?? 'Unknown Year'})',
-                                style: Theme.of(context).textTheme.headline5,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                            ),
+                          ],
+                        )
+                      : Container())
+                  : Container(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 32.0,
                           ),
-                        ),
-                      ],
-                    )
-                  : Container(),
+                          CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
             ),
             Stack(
               alignment: Alignment.bottomCenter,

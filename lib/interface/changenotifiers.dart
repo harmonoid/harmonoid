@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
-import 'package:harmonoid/constants/language.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/youtubemusic.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/core/discover.dart';
 import 'package:harmonoid/utils/utils.dart';
 
 CurrentlyPlaying currentlyPlaying = CurrentlyPlaying();
@@ -79,24 +78,6 @@ class CurrentlyPlaying extends ChangeNotifier {
   Duration _duration = Duration.zero;
 }
 
-class DiscoverController extends ChangeNotifier {
-  Discover instance = Discover();
-  String state = language!.STRING_DISCOVER_PLUGIN_STARTING;
-
-  DiscoverController() {
-    Discover.init().then((_) {
-      this.state = '';
-      this.notifyListeners();
-    }).catchError((error) {
-      if (error is ScriptNotFound)
-        this.state = language!.STRING_DISCOVER_SCRIPT_NOT_FOUND;
-      if (error is ScriptStartError)
-        this.state = language!.STRING_DISCOVER_SCRIPT_START_ERROR;
-      this.notifyListeners();
-    });
-  }
-}
-
 class CollectionRefresh extends ChangeNotifier {
   int progress = 0;
   int total = 0;
@@ -159,6 +140,31 @@ class Visuals extends ChangeNotifier {
         themeMode: ThemeMode.dark,
         platform: this.platform,
       );
+}
+
+class YouTubeState extends ChangeNotifier {
+  List<Track> recommendations = <Track>[];
+  String? recommendation;
+  bool exception = false;
+  Future<void> updateRecommendations(Track track) async {
+    this.recommendation = track.trackId!;
+    try {
+      this.recommendations = await track.recommendations;
+      // TODO (alexmercerind): Sometimes recommendations are not fetched & we're stuck so retrying is the best option for now. Improve in future.
+      if (this.recommendations.length == 1) {
+        this.recommendations = await track.recommendations;
+      }
+      configuration.save(
+        discoverRecent: [
+          track.trackId!,
+        ],
+      );
+      this.exception = false;
+    } catch (exception) {
+      this.exception = true;
+    }
+    this.notifyListeners();
+  }
 }
 
 class Accent {
