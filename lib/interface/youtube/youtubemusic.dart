@@ -39,18 +39,20 @@ class YouTubeMusicState extends State<YouTubeMusic> {
   Future<void> play(Track track) async {
     Provider.of<CurrentlyPlaying>(context, listen: false).isBuffering = true;
     await track.attachAudioStream();
-    await Playback.play(
-      index: 0,
-      tracks: [
-        track,
-      ],
-    );
-    Provider.of<CurrentlyPlaying>(context, listen: false).isBuffering = false;
-    await configuration.save(
-      discoverRecent: [
-        track.trackId!,
-      ],
-    );
+    if (track.filePath != null) {
+      await Playback.play(
+        index: 0,
+        tracks: [
+          track,
+        ],
+      );
+      Provider.of<CurrentlyPlaying>(context, listen: false).isBuffering = false;
+      await configuration.save(
+        discoverRecent: [
+          track.trackId!,
+        ],
+      );
+    }
   }
 
   TextEditingController controller = TextEditingController();
@@ -137,8 +139,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                       ScrollController _controller = ScrollController();
                       List<Track> tracks = await YTM.search(query);
                       this.result = tracks.isNotEmpty
-                          ? ListView(
-                              controller: _controller,
+                          ? CustomListView(
                               children: tracks
                                   .map(
                                     (track) => ListTile(
@@ -149,9 +150,17 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                                         backgroundImage: NetworkImage(
                                             track.networkAlbumArt!),
                                       ),
-                                      title: Text(track.trackName!),
+                                      title: Text(
+                                        track.trackName!,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                       subtitle: Text(
-                                          track.trackArtistNames!.join(', ')),
+                                        track.trackArtistNames!.join(', ') +
+                                            ' • ${track.albumName}',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                       trailing: IconButton(
                                         onPressed: () => this.play(
                                           track,
@@ -203,7 +212,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
             child: PageTransitionSwitcher(
                 child: this.result ??
                     (youtube.recommendations.isNotEmpty
-                        ? ListView(
+                        ? CustomListView(
                             children: tileGridListWidgets(
                               context: context,
                               tileHeight: tileHeight,

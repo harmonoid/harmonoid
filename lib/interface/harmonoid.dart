@@ -9,6 +9,7 @@ import 'package:harmonoid/interface/home.dart';
 // when the parent widgets are updated. Since, this project still isn't using riverpod, it can only access
 // [ChangeNotifier]s inside the Widget tree.
 bool initialized = false;
+GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
 
 class Harmonoid extends StatelessWidget {
   @override
@@ -25,6 +26,7 @@ class Harmonoid extends StatelessWidget {
           theme: visuals.theme,
           darkTheme: visuals.darkTheme,
           themeMode: visuals.themeMode,
+          navigatorKey: key,
           home: Home(),
         ),
       ),

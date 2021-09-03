@@ -16,9 +16,13 @@ class CustomListView extends StatelessWidget {
   final List<Widget> children;
   final Axis? scrollDirection;
   final bool? shrinkWrap;
+  final EdgeInsets? padding;
 
   CustomListView(
-      {required this.children, this.scrollDirection, this.shrinkWrap}) {
+      {required this.children,
+      this.scrollDirection,
+      this.shrinkWrap,
+      this.padding}) {
     if (Platform.isWindows || Platform.isLinux) {
       scroller.addListener(
         () {
@@ -41,6 +45,7 @@ class CustomListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      padding: this.padding ?? EdgeInsets.zero,
       controller: this.scroller,
       scrollDirection: this.scrollDirection ?? Axis.vertical,
       shrinkWrap: this.shrinkWrap ?? false,

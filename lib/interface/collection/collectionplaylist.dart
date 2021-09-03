@@ -14,7 +14,7 @@ class CollectionPlaylistTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<Collection>(
-      builder: (context, collection, _) => ListView(children: [
+      builder: (context, collection, _) => CustomListView(children: [
         Container(
           margin: EdgeInsets.all(8),
           child: Column(
@@ -253,7 +253,7 @@ class CollectionPlaylist extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: ListView(
+              child: CustomListView(
                 children: <Widget>[
                       SubHeader(language!.STRING_PLAYLIST_TRACKS_SUBHEADER),
                     ] +

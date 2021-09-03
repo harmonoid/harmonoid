@@ -337,9 +337,7 @@ class CollectionSearchState extends State<CollectionSearch> {
               ),
             ),
             Expanded(
-              child: ListView(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
+              child: CustomListView(
                 children: <Widget>[
                       search
                           ? Container(
@@ -397,7 +395,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                               margin: EdgeInsets.only(left: 8.0),
                               height: tileHeightAlbum + 16.0,
                               width: MediaQuery.of(context).size.width,
-                              child: ListView(
+                              child: CustomListView(
                                 scrollDirection: Axis.horizontal,
                                 children: _albums,
                               ),
@@ -411,7 +409,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                               margin: EdgeInsets.only(left: 8.0),
                               height: tileHeightArtist + 16.0,
                               width: MediaQuery.of(context).size.width,
-                              child: ListView(
+                              child: CustomListView(
                                 scrollDirection: Axis.horizontal,
                                 children: _artists,
                               ),

@@ -46,7 +46,7 @@ class AboutPage extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView(
+            child: CustomListView(
               children: [
                 SizedBox(
                   height: 4.0,

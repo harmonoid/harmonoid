@@ -21,7 +21,7 @@ class CollectionArtistTab extends StatelessWidget {
 
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
-          ? ListView(
+          ? CustomListView(
               children: tileGridListWidgets(
                 context: context,
                 tileHeight: tileHeight,
@@ -76,61 +76,69 @@ class LeadingCollectionArtistTile extends StatelessWidget {
           ),
           color: Theme.of(context).cardColor,
         ),
-        child: InkWell(
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
-          ),
-          onTap: () {
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    FadeThroughTransition(
-                  fillColor: Colors.transparent,
-                  animation: animation,
-                  secondaryAnimation: secondaryAnimation,
-                  child: CollectionArtist(artist: collection.lastArtist),
-                ),
-              ),
-            );
-          },
-          child: Container(
-            height: this.height,
-            width: MediaQuery.of(context).size.width - 16,
+        child: Material(
+          color: Colors.transparent,
+          child: Material(
+            color: Colors.transparent,
             child: InkWell(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Hero(
-                    tag: 'artist_art_${collection.lastArtist!.artistName}',
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image(
-                        image: FileImage(
-                            collection.lastArtist!.tracks.last.albumArt),
-                        fit: BoxFit.fill,
-                        height: this.height,
-                        width: this.height,
-                      ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(8.0),
+              ),
+              onTap: () {
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      fillColor: Colors.transparent,
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: CollectionArtist(artist: collection.lastArtist),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(left: 8, right: 8),
-                    width: MediaQuery.of(context).size.width - 32 - this.height,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          collection.lastArtist!.artistName!,
-                          style: Theme.of(context).textTheme.headline1,
-                          textAlign: TextAlign.start,
-                          maxLines: 1,
+                );
+              },
+              child: Container(
+                height: this.height,
+                width: MediaQuery.of(context).size.width - 16,
+                child: InkWell(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Hero(
+                        tag: 'artist_art_${collection.lastArtist!.artistName}',
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image(
+                            image: FileImage(
+                                collection.lastArtist!.tracks.last.albumArt),
+                            fit: BoxFit.fill,
+                            height: this.height,
+                            width: this.height,
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 8, right: 8),
+                        width: MediaQuery.of(context).size.width -
+                            32 -
+                            this.height,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              collection.lastArtist!.artistName!,
+                              style: Theme.of(context).textTheme.headline1,
+                              textAlign: TextAlign.start,
+                              maxLines: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
@@ -162,54 +170,57 @@ class CollectionArtistTile extends StatelessWidget {
         ),
         color: Theme.of(context).cardColor,
       ),
-      child: InkWell(
-        borderRadius: BorderRadius.all(
-          Radius.circular(8.0),
-        ),
-        onTap: () {
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  FadeThroughTransition(
-                fillColor: Colors.transparent,
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                child: CollectionArtist(
-                  artist: this.artist,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.all(
+            Radius.circular(8.0),
+          ),
+          onTap: () {
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    FadeThroughTransition(
+                  fillColor: Colors.transparent,
+                  animation: animation,
+                  secondaryAnimation: secondaryAnimation,
+                  child: CollectionArtist(
+                    artist: this.artist,
+                  ),
                 ),
               ),
-            ),
-          );
-        },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Hero(
-              tag: 'artist_art_${this.artist.artistName!}',
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image(
-                  image: FileImage(this.artist.tracks.last.albumArt),
-                  fit: BoxFit.fill,
-                  height: this.width,
-                  width: this.width,
+            );
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Hero(
+                tag: 'artist_art_${this.artist.artistName!}',
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image(
+                    image: FileImage(this.artist.tracks.last.albumArt),
+                    fit: BoxFit.fill,
+                    height: this.width,
+                    width: this.width,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              height: 36.0,
-              width: this.width,
-              alignment: Alignment.topLeft,
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                this.artist.artistName!,
-                style: Theme.of(context).textTheme.headline2,
-                textAlign: TextAlign.left,
-                maxLines: 1,
+              Container(
+                height: 36.0,
+                width: this.width,
+                alignment: Alignment.topLeft,
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  this.artist.artistName!,
+                  style: Theme.of(context).textTheme.headline2,
+                  textAlign: TextAlign.left,
+                  maxLines: 1,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -363,7 +374,7 @@ class CollectionArtist extends StatelessWidget {
                     ? child!
                     : Container(),
                 Expanded(
-                  child: ListView(
+                  child: CustomListView(
                     shrinkWrap: true,
                     children: <Widget>[
                           constraints.maxWidth > HORIZONTAL_BREAKPOINT
@@ -377,7 +388,7 @@ class CollectionArtist extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             margin: EdgeInsets.symmetric(horizontal: 16.0),
                             child: Scrollbar(
-                              child: ListView(
+                              child: CustomListView(
                                 scrollDirection: Axis.horizontal,
                                 children: this
                                     .artist!

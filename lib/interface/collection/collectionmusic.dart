@@ -66,7 +66,7 @@ class CollectionMusicState extends State<CollectionMusic>
                 Expanded(
                   child: Container(
                     height: 44.0,
-                    child: ListView(
+                    child: CustomListView(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       children: [

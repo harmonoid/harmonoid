@@ -12,7 +12,7 @@ class CollectionTrackTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
-          ? ListView(
+          ? CustomListView(
               children: () {
                 List<Widget> children = <Widget>[];
                 children.addAll([
@@ -72,7 +72,7 @@ class CollectionTrackTab extends StatelessWidget {
                               Share.shareFiles(
                                 [collection.tracks[index].filePath!],
                                 subject:
-                                    '${collection.tracks[index].trackName} - ${collection.tracks[index].albumName}. Shared using Harmonoid!',
+                                    '${collection.tracks[index].trackName} • ${collection.tracks[index].albumName}. Shared using Harmonoid!',
                               );
                               break;
                             case 2:
@@ -259,7 +259,7 @@ class CollectionTrackTile extends StatelessWidget {
           ),
           subtitle: Text(
             this.track.albumName! +
-                ' - ' +
+                ' • ' +
                 (this.track.trackArtistNames!.length < 2
                     ? this.track.trackArtistNames!.join(', ')
                     : this.track.trackArtistNames!.sublist(0, 2).join(', ')),

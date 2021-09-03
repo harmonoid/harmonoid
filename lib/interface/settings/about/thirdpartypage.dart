@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/interface/settings/settings.dart';
@@ -18,8 +19,7 @@ class ThirdPartyPage extends StatelessWidget {
         ),
         title: Text('Third Party Credits'),
       ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(vertical: 4.0),
+      body: CustomListView(
         children: [
           SettingsTile(
             title: 'Images',

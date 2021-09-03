@@ -1,5 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
@@ -13,6 +14,8 @@ import 'package:harmonoid/constants/language.dart';
 const double HORIZONTAL_BREAKPOINT = 720.0;
 
 class CollectionAlbumTab extends StatelessWidget {
+  static const velocity = 60;
+
   Widget build(BuildContext context) {
     int elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
     double tileWidth =
@@ -22,23 +25,25 @@ class CollectionAlbumTab extends StatelessWidget {
 
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
-          ? ListView(
-              children: tileGridListWidgets(
-                context: context,
-                tileHeight: tileHeight,
-                tileWidth: tileWidth,
-                elementsPerRow: elementsPerRow,
-                subHeader: language!.STRING_LOCAL_OTHER_SUBHEADER_ALBUM,
-                leadingSubHeader: language!.STRING_LOCAL_TOP_SUBHEADER_ALBUM,
-                widgetCount: collection.albums.length,
-                leadingWidget: LeadingCollectionAlbumTile(
-                  height: tileWidth,
-                ),
-                builder: (BuildContext context, int index) =>
-                    CollectionAlbumTile(
-                  height: tileHeight,
-                  width: tileWidth,
-                  album: collection.albums[index],
+          ? Container(
+              child: CustomListView(
+                children: tileGridListWidgets(
+                  context: context,
+                  tileHeight: tileHeight,
+                  tileWidth: tileWidth,
+                  elementsPerRow: elementsPerRow,
+                  subHeader: language!.STRING_LOCAL_OTHER_SUBHEADER_ALBUM,
+                  leadingSubHeader: language!.STRING_LOCAL_TOP_SUBHEADER_ALBUM,
+                  widgetCount: collection.albums.length,
+                  leadingWidget: LeadingCollectionAlbumTile(
+                    height: tileWidth,
+                  ),
+                  builder: (BuildContext context, int index) =>
+                      CollectionAlbumTile(
+                    height: tileHeight,
+                    width: tileWidth,
+                    album: collection.albums[index],
+                  ),
                 ),
               ),
             )
@@ -77,73 +82,76 @@ class CollectionAlbumTile extends StatelessWidget {
         ),
         color: Theme.of(context).cardColor,
       ),
-      child: InkWell(
-        borderRadius: BorderRadius.all(
-          Radius.circular(8.0),
-        ),
-        onTap: () {
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  FadeThroughTransition(
-                fillColor: Colors.transparent,
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                child: CollectionAlbum(
-                  album: this.album,
-                ),
-              ),
-            ),
-          );
-        },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Hero(
-              tag: 'album_art_${this.album.albumName}',
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(8.0),
-                ),
-                child: Image.file(
-                  this.album.albumArt,
-                  fit: BoxFit.fill,
-                  height: this.width,
-                  width: this.width,
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-              height: this.height! - this.width!,
-              width: this.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 4),
-                    child: Text(
-                      this.album.albumName!,
-                      style: Theme.of(context).textTheme.headline2,
-                      textAlign: TextAlign.left,
-                      maxLines: 2,
-                    ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.all(
+            Radius.circular(8.0),
+          ),
+          onTap: () {
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    FadeThroughTransition(
+                  fillColor: Colors.transparent,
+                  animation: animation,
+                  secondaryAnimation: secondaryAnimation,
+                  child: CollectionAlbum(
+                    album: this.album,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 2),
-                    child: Text(
-                      '${this.album.albumArtistName}\n(${this.album.year ?? 'Unknown Year'})',
-                      style: Theme.of(context).textTheme.headline3,
-                      maxLines: 2,
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+            );
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Hero(
+                tag: 'album_art_${this.album.albumName}',
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8.0),
+                  ),
+                  child: Image.file(
+                    this.album.albumArt,
+                    fit: BoxFit.fill,
+                    height: this.width,
+                    width: this.width,
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                height: this.height! - this.width!,
+                width: this.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Text(
+                        this.album.albumName!,
+                        style: Theme.of(context).textTheme.headline2,
+                        textAlign: TextAlign.left,
+                        maxLines: 2,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 2),
+                      child: Text(
+                        '${this.album.albumArtistName}\n(${this.album.year ?? 'Unknown Year'})',
+                        style: Theme.of(context).textTheme.headline3,
+                        maxLines: 2,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -160,85 +168,88 @@ class LeadingCollectionAlbumTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 8, right: 8, bottom: 4.0),
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  FadeThroughTransition(
-                fillColor: Colors.transparent,
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                child: CollectionAlbum(
-                  album: Provider.of<Collection>(context, listen: false)
-                      .lastAlbum!,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    FadeThroughTransition(
+                  fillColor: Colors.transparent,
+                  animation: animation,
+                  secondaryAnimation: secondaryAnimation,
+                  child: CollectionAlbum(
+                    album: Provider.of<Collection>(context, listen: false)
+                        .lastAlbum!,
+                  ),
                 ),
               ),
-            ),
-          );
-        },
-        borderRadius: BorderRadius.all(
-          Radius.circular(8.0),
-        ),
-        child: Container(
-          height: this.height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            color: Theme.of(context).cardColor,
+            );
+          },
+          borderRadius: BorderRadius.all(
+            Radius.circular(8.0),
           ),
-          width: MediaQuery.of(context).size.width - 16,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Hero(
-                  tag:
-                      'album_art_${Provider.of<Collection>(context, listen: false).lastAlbum!.albumName!}',
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image(
-                      image: FileImage(
-                          Provider.of<Collection>(context, listen: false)
-                              .lastAlbum!
-                              .albumArt),
-                      fit: BoxFit.fill,
-                      height: this.height,
-                      width: this.height,
-                    ),
-                  )),
-              Container(
-                margin: EdgeInsets.only(left: 8, right: 8),
-                width: MediaQuery.of(context).size.width - 32 - this.height,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      Provider.of<Collection>(context, listen: false)
-                          .lastAlbum!
-                          .albumName!,
-                      style: Theme.of(context).textTheme.headline1,
-                      textAlign: TextAlign.start,
-                      maxLines: 2,
-                    ),
-                    Text(
-                      Provider.of<Collection>(context, listen: false)
-                          .lastAlbum!
-                          .albumArtistName!,
-                      style: Theme.of(context).textTheme.headline3,
-                      textAlign: TextAlign.start,
-                      maxLines: 1,
-                    ),
-                    Text(
-                      '(${Provider.of<Collection>(context, listen: false).lastAlbum!.year ?? 'Unknown Year'})',
-                      style: Theme.of(context).textTheme.headline3,
-                      textAlign: TextAlign.start,
-                      maxLines: 1,
-                    ),
-                  ],
+          child: Container(
+            height: this.height,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              color: Theme.of(context).cardColor,
+            ),
+            width: MediaQuery.of(context).size.width - 16,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Hero(
+                    tag:
+                        'album_art_${Provider.of<Collection>(context, listen: false).lastAlbum!.albumName!}',
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image(
+                        image: FileImage(
+                            Provider.of<Collection>(context, listen: false)
+                                .lastAlbum!
+                                .albumArt),
+                        fit: BoxFit.fill,
+                        height: this.height,
+                        width: this.height,
+                      ),
+                    )),
+                Container(
+                  margin: EdgeInsets.only(left: 8, right: 8),
+                  width: MediaQuery.of(context).size.width - 32 - this.height,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        Provider.of<Collection>(context, listen: false)
+                            .lastAlbum!
+                            .albumName!,
+                        style: Theme.of(context).textTheme.headline1,
+                        textAlign: TextAlign.start,
+                        maxLines: 2,
+                      ),
+                      Text(
+                        Provider.of<Collection>(context, listen: false)
+                            .lastAlbum!
+                            .albumArtistName!,
+                        style: Theme.of(context).textTheme.headline3,
+                        textAlign: TextAlign.start,
+                        maxLines: 1,
+                      ),
+                      Text(
+                        '(${Provider.of<Collection>(context, listen: false).lastAlbum!.year ?? 'Unknown Year'})',
+                        style: Theme.of(context).textTheme.headline3,
+                        textAlign: TextAlign.start,
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -387,8 +398,7 @@ class CollectionAlbum extends StatelessWidget {
                     ? child!
                     : Container(),
                 Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
+                  child: CustomListView(
                     children: <Widget>[
                           constraints.maxWidth > HORIZONTAL_BREAKPOINT
                               ? Container()

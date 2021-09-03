@@ -44,7 +44,7 @@ class Settings extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: ListView(
+          child: CustomListView(
             shrinkWrap: true,
             children: [
               SizedBox(
