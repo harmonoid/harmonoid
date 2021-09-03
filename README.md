@@ -1,8 +1,9 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
 <h4 align="center">A music app with a beautiful UI to play local music & YouTube music.</h4>
-<br></br>
 
-## [Download](#download)
+<h4 align="center"><a href='#download'>Download Now</a></h4>
+
+<br></br>
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/windows-0.jpg)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/windows-1.jpg)
@@ -14,6 +15,22 @@
 <h4  align="center">Loving the project? Consider starring the repository ⭐ & share with your friends 💜.</h4>
 
 ## Download
+
+#### Windows
+
+- [MSIX Installer](https://github.com/harmonoid/harmonoid/releases/download/v0.1.1/harmonoid-windows-msix.zip) (15.9 MB) _Recommended_
+- [Setup Installer](https://github.com/harmonoid/harmonoid/releases/download/v0.1.1/harmonoid-windows-setup.zip) (15.0 MB)
+- [Raw EXE](https://github.com/harmonoid/harmonoid/releases/download/v0.1.1/harmonoid-windows-exe.zip) (12.2 MB)
+
+#### Linux
+
+Coming very soon.
+
+#### Android
+
+Older release.
+
+- [APK](https://github.com/harmonoid/harmonoid/releases/download/v0.0.8/harmonoid-v0.0.8.apk) (25.2 MB).
 
 ## Features
 
