@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/core/configuration.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:harmonoid/interface/harmonoid.dart';
 
 abstract class Utils {
   static String? mediaTypeToLanguage(MediaType mediaType) {
@@ -19,6 +22,38 @@ abstract class Utils {
       return language!.STRING_PLAYLIST;
     else
       return null;
+  }
+
+  static Future<void> handleYouTubeFailure() async {
+    showDialog(
+      context: key.currentState!.overlay!.context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Could not fetch the YouTube audio stream.',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Text(
+          'Please report the issue on the repository. Possibly something changed on YouTube\'s website.\nLet\'s play your local music till then.',
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.8),
+            fontSize: 12.0,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            textColor: Theme.of(context).primaryColor,
+            onPressed: Navigator.of(context).pop,
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+    currentlyPlaying.isBuffering = false;
   }
 
   static Future<void> askStoragePermission() async {

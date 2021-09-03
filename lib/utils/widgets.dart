@@ -1,12 +1,53 @@
+import 'dart:io';
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
+
+class CustomListView extends StatelessWidget {
+  final ScrollController scroller = ScrollController();
+  final int velocity = 80;
+  final List<Widget> children;
+  final Axis? scrollDirection;
+  final bool? shrinkWrap;
+
+  CustomListView(
+      {required this.children, this.scrollDirection, this.shrinkWrap}) {
+    if (Platform.isWindows || Platform.isLinux) {
+      scroller.addListener(
+        () {
+          ScrollDirection scrollDirection =
+              scroller.position.userScrollDirection;
+          if (scrollDirection != ScrollDirection.idle) {
+            double scrollEnd = scroller.offset +
+                (scrollDirection == ScrollDirection.reverse
+                    ? velocity
+                    : -velocity);
+            scrollEnd = math.min(scroller.position.maxScrollExtent,
+                math.max(scroller.position.minScrollExtent, scrollEnd));
+            scroller.jumpTo(scrollEnd);
+          }
+        },
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      controller: this.scroller,
+      scrollDirection: this.scrollDirection ?? Axis.vertical,
+      shrinkWrap: this.shrinkWrap ?? false,
+      children: this.children,
+    );
+  }
+}
 
 List<Widget> tileGridListWidgets({
   required double tileHeight,
