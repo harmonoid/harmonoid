@@ -1,7 +1,7 @@
 name: harmonoid
 description: A beautiful app to play all your music.
 publish_to: 'none'
-version: 0.1.0+5003
+version: 0.1.1+5003
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -42,9 +42,6 @@ dev_dependencies:
       url: git://github.com/alexmercerind/msix.git
       ref: a2c15a8662dd346b2738ea89538179f532d4f437
 
-dependency_overrides: 
-  freezed_annotation: 0.14.2
-
 flutter:
   uses-material-design: true
   assets:
@@ -64,7 +61,7 @@ flutter:
     - assets/images/credits-album-art-3.jpg
 
 msix_config:
-  msix_version: 0.0.1.0
+  msix_version: 0.1.1.0
   display_name: Harmonoid
   identity_name: com.alexmercerind.harmonoid
   file_extension: ogg, ogx, aac, m4a, mp3, wma, wav, aiff, flac, opus
