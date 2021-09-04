@@ -224,7 +224,7 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
       onPressed: this.lock
           ? () {}
           : () async {
-              this.lock = true;
+              this.setState(() => this.lock = true);
               this.turns += 2 * math.pi;
               this.tween = Tween<double>(begin: 0, end: this.turns);
               await Provider.of<Collection>(context, listen: false).refresh(
@@ -233,7 +233,6 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
                     .set(progress, total);
                 this.setState(() => this.lock = !isCompleted);
               });
-              this.setState(() {});
             },
     );
   }
