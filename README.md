@@ -19,9 +19,9 @@
 
 #### Windows
 
-- [MSIX Installer](https://github.com/harmonoid/harmonoid/releases/download/v0.1.1/harmonoid-windows-msix.zip) (15.9 MB) _Recommended_
-- [Setup Installer](https://github.com/harmonoid/harmonoid/releases/download/v0.1.1/harmonoid-windows-setup.zip) (15.0 MB)
-- [Raw EXE](https://github.com/harmonoid/harmonoid/releases/download/v0.1.1/harmonoid-windows-exe.zip) (12.2 MB)
+- [Setup Installer](https://github.com/harmonoid/harmonoid/releases/download/v0.1.2/harmonoid-windows-setup.zip) (12.3 MB) _Recommended_
+- [MSIX Installer](https://github.com/harmonoid/harmonoid/releases/download/v0.1.2/harmonoid-windows-msix.zip) (15.9 MB)
+- [Raw EXE](https://github.com/harmonoid/harmonoid/releases/download/v0.1.2/harmonoid-windows-exe.zip) (15.0 MB)
 
 #### Linux
 
@@ -36,17 +36,27 @@ Older release.
 ## Features
 
 - **Powerful metadata engine**
+  - Indexes all your music into albums & artists according to embedded tags.
 - **Discord integration**
+  - Show your friends what you listen.
 - **Play local music**
+  - Local music playback. Strong format support.
 - **Play YouTube music**
+  - Play YouTube music directly with a link or search for it. YouTube music must be available in your country.
 - **Small size**
+  - < 15 MB standalone installer.
 - **Lyrics retriever**
+  - Gets lyrics for your music.
 - **Beautiful user interface**
+  - Awesome user interface.
 - **Ads free forever**
+  - No advertisements.
 - **Playlists**
+  - Create ever-staying playlists for your music.
 - **Freedom**
+  - Open source.
 - **Personalization**
-
+  - Set your favorite colors & themes.
 
 ## License
 
