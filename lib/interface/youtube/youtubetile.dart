@@ -48,7 +48,7 @@ class YouTubeTile extends StatelessWidget {
                       ),
                       child: Image.network(
                         this.track.networkAlbumArt!,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                         height: this.width,
                         width: this.width,
                       ),
@@ -106,7 +106,7 @@ class YouTubeTile extends StatelessWidget {
                             textAlign: TextAlign.left,
                           ),
                           Text(
-                            '${this.track.albumName} (${this.track.year ?? 'Unknown Year'})',
+                            '${this.track.albumName}',
                             style: Theme.of(context).textTheme.headline3,
                             maxLines: 1,
                             textAlign: TextAlign.left,

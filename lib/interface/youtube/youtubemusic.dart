@@ -1,6 +1,9 @@
+import 'dart:io';
+import 'dart:math' as math;
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter/rendering.dart';
 import 'package:harmonoid/core/configuration.dart';
 
 import 'package:harmonoid/core/playback.dart';
@@ -9,6 +12,7 @@ import 'package:harmonoid/core/youtubemusic.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/youtube/youtubetile.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/utils.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -127,6 +131,17 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                     cursorWidth: 1.0,
                     style: Theme.of(context).textTheme.headline4,
                     onSubmitted: (String query) async {
+                      try {
+                        Track? track = await YTM.identify(query);
+                        if (track != null) {
+                          this.play(track);
+                          this.controller.clear();
+                          return;
+                        }
+                      } catch (e) {
+                        Utils.handleInvalidLink();
+                        return;
+                      }
                       this.setState(() {
                         this.result = Center(
                           child: CircularProgressIndicator(
@@ -137,9 +152,30 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                         );
                       });
                       ScrollController _controller = ScrollController();
+                      int velocity = 80;
+                      if (Platform.isWindows || Platform.isLinux) {
+                        _controller.addListener(
+                          () {
+                            ScrollDirection scrollDirection =
+                                _controller.position.userScrollDirection;
+                            if (scrollDirection != ScrollDirection.idle) {
+                              double scrollEnd = _controller.offset +
+                                  (scrollDirection == ScrollDirection.reverse
+                                      ? velocity
+                                      : -velocity);
+                              scrollEnd = math.min(
+                                  _controller.position.maxScrollExtent,
+                                  math.max(_controller.position.minScrollExtent,
+                                      scrollEnd));
+                              _controller.jumpTo(scrollEnd);
+                            }
+                          },
+                        );
+                      }
                       List<Track> tracks = await YTM.search(query);
                       this.result = tracks.isNotEmpty
-                          ? CustomListView(
+                          ? ListView(
+                              controller: _controller,
                               children: tracks
                                   .map(
                                     (track) => ListTile(
