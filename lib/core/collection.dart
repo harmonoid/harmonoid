@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:harmonoid/utils/utils.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:harmonoid/core/mediatype.dart';
@@ -23,7 +22,8 @@ const List<String> SUPPORTED_FILE_TYPES = [
   'WMA',
   'WAV',
   'FLAC',
-  'OPUS'
+  'OPUS',
+  'AIFF',
 ];
 
 /// This music sorting logic & class is part of [Harmonoid](https://github.com/harmonoid/harmonoid) project, and it
@@ -311,6 +311,11 @@ class Collection extends ChangeNotifier {
           await File(track.filePath!).delete();
         }
       }
+    }
+    if (this._tracks.isNotEmpty) {
+      this.lastAlbum = this._albums.last;
+      this.lastTrack = this._tracks.last;
+      this.lastArtist = this._artists.last;
     }
     await this.sort(type: this.collectionSortType);
     await this.saveToCache();

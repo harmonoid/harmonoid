@@ -29,6 +29,9 @@ class Track extends MediaType with Comparable {
             '.PNG'));
     if (albumArtFile.existsSync())
       return albumArtFile;
+    else if (File(path.join(path.dirname(this.filePath!), 'cover.jpg'))
+        .existsSync())
+      return File(path.join(path.dirname(this.filePath!), 'cover.jpg'));
     else
       return File(path.join(configuration.cacheDirectory!.path, 'albumArts',
           'defaultAlbumArt' + '.PNG'));
@@ -121,6 +124,11 @@ class Album extends MediaType with Comparable {
             '.PNG'));
     if (albumArtFile.existsSync())
       return albumArtFile;
+    else if (File(
+            path.join(path.dirname(this.tracks.first.filePath!), 'cover.jpg'))
+        .existsSync())
+      return File(
+          path.join(path.dirname(this.tracks.first.filePath!), 'cover.jpg'));
     else
       return File(path.join(configuration.cacheDirectory!.path, 'albumArts',
           'defaultAlbumArt' + '.PNG'));
