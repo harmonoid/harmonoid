@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -115,7 +115,7 @@ class CollectionAlbumTile extends StatelessWidget {
                   ),
                   child: Image.file(
                     this.album.albumArt,
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                     height: this.width,
                     width: this.width,
                   ),
@@ -211,7 +211,7 @@ class LeadingCollectionAlbumTile extends StatelessWidget {
                             Provider.of<Collection>(context, listen: false)
                                 .lastAlbum!
                                 .albumArt),
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                         height: this.height,
                         width: this.height,
                       ),

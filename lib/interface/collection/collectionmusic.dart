@@ -50,7 +50,7 @@ class CollectionMusicState extends State<CollectionMusic>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      floatingActionButton: RefreshCollectionButton(),
+      floatingActionButton: index != 5 ? RefreshCollectionButton() : null,
       body: Column(
         children: [
           Container(
@@ -318,10 +318,7 @@ class CollectionMusicState extends State<CollectionMusic>
                             key: PageStorageKey('Search'),
                             builder: (context) => CollectionSearch(),
                           ),
-                          Builder(
-                            key: PageStorageKey('YouTube'),
-                            builder: (context) => YouTubeMusic(),
-                          ),
+                          YouTubeMusic(),
                         ][this.index],
                         transitionBuilder:
                             (child, animation, secondaryAnimation) =>
