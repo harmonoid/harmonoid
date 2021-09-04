@@ -28,6 +28,7 @@ abstract class Utils {
     showDialog(
       context: key.currentState!.overlay!.context,
       builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).appBarTheme.color,
         title: Text(
           'Could not fetch the YouTube audio stream.',
           style: TextStyle(
@@ -40,7 +41,7 @@ abstract class Utils {
           'Please report the issue on the repository. Possibly something changed on YouTube\'s website.\nLet\'s play your local music till then.',
           style: TextStyle(
             color: Colors.white.withOpacity(0.8),
-            fontSize: 12.0,
+            fontSize: 14.0,
             fontWeight: FontWeight.normal,
           ),
         ),
@@ -54,6 +55,38 @@ abstract class Utils {
       ),
     );
     currentlyPlaying.isBuffering = false;
+  }
+
+  static Future<void> handleInvalidLink() async {
+    showDialog(
+      context: key.currentState!.overlay!.context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).appBarTheme.color,
+        title: Text(
+          'Invalid link.',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Text(
+          'Please give us correct link to the media.\nIf you think this is a false result, please report at the repository.',
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.8),
+            fontSize: 14.0,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            textColor: Theme.of(context).primaryColor,
+            onPressed: Navigator.of(context).pop,
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   static Future<void> askStoragePermission() async {

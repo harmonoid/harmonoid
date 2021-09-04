@@ -52,6 +52,7 @@ class NowPlayingBar extends StatelessWidget {
                                           .albumArt,
                                       height: 64.0,
                                       width: 64.0,
+                                      fit: BoxFit.cover,
                                     )
                                   : Image.network(
                                       currentlyPlaying
@@ -59,6 +60,7 @@ class NowPlayingBar extends StatelessWidget {
                                           .networkAlbumArt!,
                                       height: 64.0,
                                       width: 64.0,
+                                      fit: BoxFit.cover,
                                     ),
                             ),
                             SizedBox(
@@ -102,7 +104,36 @@ class NowPlayingBar extends StatelessWidget {
                             ),
                           ],
                         )
-                      : Container())
+                      : (currentlyPlaying.tracks.isEmpty
+                          ? Container()
+                          : Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 24.0,
+                                ),
+                                Container(
+                                  height: 24.0,
+                                  width: 24.0,
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation(
+                                      Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 24.0,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    currentlyPlaying.state,
+                                    style:
+                                        Theme.of(context).textTheme.headline2,
+                                  ),
+                                ),
+                              ],
+                            )))
                   : Container(
                       alignment: Alignment.centerLeft,
                       child: Row(

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:harmonoid/constants/language.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/youtubemusic.dart';
@@ -40,7 +41,7 @@ class CurrentlyPlaying extends ChangeNotifier {
 
   set isBuffering(bool isBuffering) {
     this._isBuffering = isBuffering;
-    if (!this._isBuffering) this._state = '';
+    if (!this._isBuffering) this._state = language!.STRING_BUFFERING;
     this.notifyListeners();
   }
 
@@ -83,7 +84,7 @@ class CurrentlyPlaying extends ChangeNotifier {
   double _rate = 1.0;
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
-  String _state = '';
+  String _state = language!.STRING_BUFFERING;
 }
 
 class CollectionRefresh extends ChangeNotifier {
@@ -210,8 +211,8 @@ List<Accent?> accents = [
   Accent(
       light: Colors.deepPurpleAccent.shade700,
       dark: Colors.deepPurpleAccent.shade200),
+  Accent(light: Color(0xFFFF0000), dark: Color(0xFFFF0000)),
   Accent(light: Color(0xFF4285F4), dark: Color(0xFF82B1FF)),
-  Accent(light: Color(0xFFDB4437), dark: Color(0xFFFF8A80)),
   Accent(light: Color(0xFFF4B400), dark: Color(0xFFFFE57F)),
   Accent(light: Color(0xFF0F9D58), dark: Color(0xFF0F9D58)),
   Accent(light: Color(0xFFFF3D00), dark: Color(0xFFFF9E80)),
