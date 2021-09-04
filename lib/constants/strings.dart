@@ -176,4 +176,5 @@ class Strings {
   late String STRING_RETRIEVING_INFO;
   late String STRING_RETRIEVING_LINK;
   late String STRING_STARTING_PLAYBACK;
+  late String STRING_BUFFERING;
 }

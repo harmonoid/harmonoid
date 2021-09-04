@@ -297,12 +297,13 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
-        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to search or give a YouTube link.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
         this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
-        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info.';
-        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream.';
-        this.STRING_STARTING_PLAYBACK                               = 'Starting playback.';
+        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info';
+        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
+        this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
+        this.STRING_BUFFERING                                       = 'Buffering...';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -474,12 +475,13 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
-        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to search or give a YouTube link.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
         this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
-        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info.';
-        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream.';
-        this.STRING_STARTING_PLAYBACK                               = 'Starting playback.';
+        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info';
+        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
+        this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
+        this.STRING_BUFFERING                                       = 'Buffering...';
       }
       break;
       case LanguageRegion.slSi: {
@@ -652,12 +654,13 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
-        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to search or give a YouTube link.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
         this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
-        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info.';
-        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream.';
-        this.STRING_STARTING_PLAYBACK                               = 'Starting playback.';
+        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info';
+        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
+        this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
+        this.STRING_BUFFERING                                       = 'Buffering...';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -829,12 +832,13 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
-        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to search or give a YouTube link.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
         this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
-        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info.';
-        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream.';
-        this.STRING_STARTING_PLAYBACK                               = 'Starting playback.';
+        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info';
+        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
+        this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
+        this.STRING_BUFFERING                                       = 'Buffering...';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -1006,12 +1010,13 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
-        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to search or give a YouTube link.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
         this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
-        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info.';
-        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream.';
-        this.STRING_STARTING_PLAYBACK                               = 'Starting playback.';
+        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info';
+        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
+        this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
+        this.STRING_BUFFERING                                       = 'Buffering...';
       }
       break;
       case LanguageRegion.deDe: {
@@ -1348,12 +1353,13 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
-        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to search or give a YouTube link.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
         this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
-        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info.';
-        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream.';
-        this.STRING_STARTING_PLAYBACK                               = 'Starting playback.';
+        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info';
+        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
+        this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
+        this.STRING_BUFFERING                                       = 'Buffering...';
       }
       break;
       case LanguageRegion.svSe: {
@@ -1525,12 +1531,13 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
-        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to search or give a YouTube link.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
         this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
-        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info.';
-        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream.';
-        this.STRING_STARTING_PLAYBACK                               = 'Starting playback.';
+        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info';
+        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
+        this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
+        this.STRING_BUFFERING                                       = 'Buffering...';
       }
       break;
       case LanguageRegion.frFr: {
@@ -1702,12 +1709,13 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
-        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to search or give a YouTube link.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
         this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
-        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info.';
-        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream.';
-        this.STRING_STARTING_PLAYBACK                               = 'Starting playback.';
+        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info';
+        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
+        this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
+        this.STRING_BUFFERING                                       = 'Buffering...';
       }
       break;
       case LanguageRegion.huHu: {
@@ -1879,12 +1887,13 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SEARCH                                          = 'Search';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app in middle of this.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
-        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to lookup & play.';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Enter something to search or give a YouTube link.';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
         this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
-        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info.';
-        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream.';
-        this.STRING_STARTING_PLAYBACK                               = 'Starting playback.';
+        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info';
+        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
+        this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
+        this.STRING_BUFFERING                                       = 'Buffering...';
       }
       break;
     }
