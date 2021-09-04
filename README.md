@@ -3,6 +3,7 @@
 
 <h4 align="center"><a href='#download'>Download Now</a></h4>
 
+🏁 Feel free to report bugs & issues. We'll be there to fix.
 <br></br>
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/windows-0.jpg)
