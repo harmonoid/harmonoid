@@ -187,8 +187,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: f7773003d97d6310f6aebf2d76bd6a19a65e6955
-      resolved-ref: f7773003d97d6310f6aebf2d76bd6a19a65e6955
+      ref: a304b1a51b0f2ed86f0f31df035ba3ef960c7a12
+      resolved-ref: a304b1a51b0f2ed86f0f31df035ba3ef960c7a12
       url: "https://github.com/alexmercerind/flutter_media_metadata.git"
     source: git
     version: "0.1.1"

@@ -18,7 +18,7 @@ dependencies:
   flutter_media_metadata:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
-      ref: f7773003d97d6310f6aebf2d76bd6a19a65e6955
+      ref: a304b1a51b0f2ed86f0f31df035ba3ef960c7a12
   fluentui_system_icons: ^1.1.136
   assets_audio_player:
     git:
