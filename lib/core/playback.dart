@@ -190,6 +190,11 @@ abstract class Playback {
             )
             .toList(),
       );
+      Future.delayed(
+        Duration(
+          milliseconds: 100,
+        ),
+      );
       player.jump(index);
       player.play();
     }

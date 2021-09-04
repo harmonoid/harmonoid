@@ -1,5 +1,6 @@
 // ignore_for_file: empty_catches
 import 'dart:convert' as convert;
+import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/utils/utils.dart';
 import 'package:http/http.dart' as http;
 
@@ -107,6 +108,14 @@ abstract class YTM {
               .map((meta) => meta.trim())
               .toList()
               .cast<String>(),
+          albumArtistName: metas
+              .split('\u2022')
+              .first
+              .split(RegExp(',|&'))
+              .map((meta) => meta.trim())
+              .toList()
+              .cast<String>()
+              .first,
           trackDuration: duration * 1000,
           networkAlbumArt: object['thumbnail']['musicThumbnailRenderer']
                   ['thumbnail']['thumbnails']
@@ -150,6 +159,7 @@ abstract class YTM {
 extension TrackExtension on Track {
   Future<void> attachAudioStream() async {
     if (filePath != null) return;
+    currentlyPlaying.state = 'Retrieving info.';
     var video = await http.post(
       Uri.https(
         'www.youtube.com',
@@ -177,6 +187,7 @@ extension TrackExtension on Track {
     // Please Google & YouTube, don't change anything 🙏🙏🙏. So that I can show this project to people & employers, that something I made actually works.
     // And I don't wanna fix things everytime I just open my app to listen to the music.
     //
+    currentlyPlaying.state = 'Retrieving stream.';
     var stream = await http.get(Uri.parse(
         'https://yt-music-headless.vercel.app/decipher?${preferred ?? fallback}'));
     if (stream.statusCode != 200) {
@@ -184,6 +195,7 @@ extension TrackExtension on Track {
       return;
     }
     filePath = stream.body;
+    currentlyPlaying.state = 'Starting playback.';
   }
 
   Future<List<Track>> get recommendations async {
