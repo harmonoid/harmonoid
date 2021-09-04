@@ -37,7 +37,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
   }
 
   Future<void> play(Track track) async {
-    Provider.of<CurrentlyPlaying>(context, listen: false).isBuffering = true;
+    currentlyPlaying.isBuffering = true;
     await track.attachAudioStream();
     if (track.filePath != null) {
       await Playback.play(
@@ -46,7 +46,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
           track,
         ],
       );
-      Provider.of<CurrentlyPlaying>(context, listen: false).isBuffering = false;
+      currentlyPlaying.isBuffering = false;
       await configuration.save(
         discoverRecent: [
           track.trackId!,

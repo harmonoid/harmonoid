@@ -106,15 +106,28 @@ class NowPlayingBar extends StatelessWidget {
                   : Container(
                       alignment: Alignment.centerLeft,
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SizedBox(
-                            width: 32.0,
+                            width: 24.0,
                           ),
-                          CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation(
-                              Theme.of(context).primaryColor,
+                          Container(
+                            height: 24.0,
+                            width: 24.0,
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(
+                                Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 24.0,
+                          ),
+                          Expanded(
+                            child: Text(
+                              currentlyPlaying.state,
+                              style: Theme.of(context).textTheme.headline2,
                             ),
                           ),
                         ],

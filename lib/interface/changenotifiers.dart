@@ -19,6 +19,7 @@ class CurrentlyPlaying extends ChangeNotifier {
   double get rate => _rate;
   Duration get position => _position;
   Duration get duration => _duration;
+  String get state => _state;
 
   double volumeBeforeMute = 1.0;
 
@@ -39,6 +40,7 @@ class CurrentlyPlaying extends ChangeNotifier {
 
   set isBuffering(bool isBuffering) {
     this._isBuffering = isBuffering;
+    if (!this._isBuffering) this._state = '';
     this.notifyListeners();
   }
 
@@ -67,6 +69,11 @@ class CurrentlyPlaying extends ChangeNotifier {
     this.notifyListeners();
   }
 
+  set state(String state) {
+    this._state = state;
+    this.notifyListeners();
+  }
+
   int? _index;
   List<Track> _tracks = <Track>[];
   bool _isPlaying = false;
@@ -76,6 +83,7 @@ class CurrentlyPlaying extends ChangeNotifier {
   double _rate = 1.0;
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
+  String _state = '';
 }
 
 class CollectionRefresh extends ChangeNotifier {
