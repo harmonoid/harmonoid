@@ -17,7 +17,7 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:path/path.dart';
 
 const String TITLE = 'Harmonoid';
-const String VERSION = '0.1.0';
+const String VERSION = '0.1.3';
 const String AUTHOR = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String LICENSE = 'GPL-3.0';
 
