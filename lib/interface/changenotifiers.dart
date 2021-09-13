@@ -111,23 +111,22 @@ class CollectionRefresh extends ChangeNotifier {
 class Visuals extends ChangeNotifier {
   Accent? accent;
   ThemeMode? themeMode;
-  TargetPlatform? platform;
 
-  Visuals(
-      {required this.accent, required this.themeMode, required this.platform});
+  Visuals({required this.accent, required this.themeMode});
 
   void update(
       {Accent? accent, ThemeMode? themeMode, TargetPlatform? platform}) {
     this.accent = accent ?? this.accent;
     this.themeMode = themeMode ?? this.themeMode;
-    this.platform = platform ?? this.platform;
     if (Platform.isWindows || Platform.isLinux) {
       Acrylic.setEffect(
         effect: configuration.acrylicEnabled!
-            ? AcrylicEffect.acrylic
+            ? (Platform.isWindows
+                ? AcrylicEffect.acrylic
+                : AcrylicEffect.transparent)
             : AcrylicEffect.disabled,
         gradientColor: this.themeMode == ThemeMode.light
-            ? Colors.white
+            ? Colors.white70
             : Color(0xCC222222),
       );
     }
@@ -141,13 +140,11 @@ class Visuals extends ChangeNotifier {
   ThemeData get theme => Utils.getTheme(
         accentColor: this.accent!.light,
         themeMode: ThemeMode.light,
-        platform: this.platform,
       );
 
   ThemeData get darkTheme => Utils.getTheme(
         accentColor: this.accent!.dark,
         themeMode: ThemeMode.dark,
-        platform: this.platform,
       );
 }
 
@@ -209,7 +206,7 @@ class Server extends ChangeNotifier {
 
 List<Accent?> accents = [
   Accent(
-      light: Colors.deepPurpleAccent.shade700,
+      light: Colors.deepPurpleAccent.shade200,
       dark: Colors.deepPurpleAccent.shade200),
   Accent(light: Color(0xFFFF0000), dark: Color(0xFFFF0000)),
   Accent(light: Color(0xFF4285F4), dark: Color(0xFF82B1FF)),

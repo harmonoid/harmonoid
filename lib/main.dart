@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ffi';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
@@ -14,7 +13,6 @@ import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/utils/utils.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:path/path.dart';
 
 const String TITLE = 'Harmonoid';
 const String VERSION = '0.1.3';
@@ -35,11 +33,7 @@ Future<void> main(List<String> args) async {
             ? Colors.white
             : Color(0xCC222222),
       );
-      LWM.initialize(
-        DynamicLibrary.open(
-          join(dirname(Platform.resolvedExecutable), 'libwinmedia.dll'),
-        ),
-      );
+      LWM.initialize();
       DiscordRPC.initialize();
       await Intent.init(args: args);
       doWhenWindowReady(() {
@@ -55,19 +49,15 @@ Future<void> main(List<String> args) async {
       await Acrylic.initialize();
       await Acrylic.setEffect(
         effect: configuration.acrylicEnabled!
-            ? AcrylicEffect.acrylic
+            ? AcrylicEffect.transparent
             : AcrylicEffect.solid,
         gradientColor: configuration.themeMode! == ThemeMode.light
-            ? Colors.white
-            : Color(0xCC222222),
+            ? Colors.white70
+            : Color(0xCC121212),
       );
+      LWM.initialize();
+      DiscordRPC.initialize();
       await Intent.init(args: args);
-      doWhenWindowReady(() {
-        appWindow.minSize = Size(640, 480);
-        appWindow.size = Size(1024, 640);
-        appWindow.alignment = Alignment.center;
-        appWindow.show();
-      });
     }
     if (Platform.isAndroid) {
       SystemChrome.setSystemUIOverlayStyle(
@@ -92,6 +82,8 @@ Future<void> main(List<String> args) async {
       Harmonoid(),
     );
   } catch (exception, stacktrace) {
+    print(exception);
+    print(stacktrace);
     runApp(
       ExceptionApp(
         exception: exception,

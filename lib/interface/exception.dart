@@ -19,7 +19,6 @@ class ExceptionApp extends StatelessWidget {
       darkTheme: Utils.getTheme(
         accentColor: Colors.deepPurpleAccent.shade200,
         themeMode: ThemeMode.dark,
-        platform: TargetPlatform.windows,
       ),
       themeMode: ThemeMode.dark,
       home: Scaffold(

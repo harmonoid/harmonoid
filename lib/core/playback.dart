@@ -127,8 +127,7 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
 
 abstract class Playback {
   static Future<void> add(List<Track> tracks) async {
-    if (Platform.isWindows) {
-      /// TODO (alexmercerind): Fix on Windows, otherwise comment out.
+    if (Platform.isWindows || Platform.isLinux) {
       tracks.forEach((track) {
         player.add(
           LIBWINMEDIA.Media(
@@ -141,33 +140,37 @@ abstract class Playback {
   }
 
   static Future<void> setRate(double rate) async {
-    player.rate = rate;
+    if (Platform.isWindows || Platform.isLinux) {
+      player.rate = rate;
+    }
   }
 
   static Future<void> setVolume(double volume) async {
-    player.volume = volume;
+    if (Platform.isWindows || Platform.isLinux) {
+      player.volume = volume;
+    }
   }
 
   static Future<void> back() async {
-    if (Platform.isWindows) {
+    if (Platform.isWindows || Platform.isLinux) {
       player.back();
     }
   }
 
   static Future<void> next() async {
-    if (Platform.isWindows) {
+    if (Platform.isWindows || Platform.isLinux) {
       player.next();
     }
   }
 
   static Future<void> seek(Duration position) async {
-    if (Platform.isWindows) {
+    if (Platform.isWindows || Platform.isLinux) {
       player.seek(position);
     }
   }
 
   static Future<void> playOrPause() async {
-    if (Platform.isWindows) {
+    if (Platform.isWindows || Platform.isLinux) {
       if (player.state.isPlaying)
         player.pause();
       else
@@ -179,7 +182,7 @@ abstract class Playback {
       {required int index, required List<Track> tracks}) async {
     List<Track> _tracks = [...tracks];
     // libwinmedia.dart
-    if (Platform.isWindows) {
+    if (Platform.isWindows || Platform.isLinux) {
       player.open(
         _tracks
             .map(
@@ -189,11 +192,6 @@ abstract class Playback {
               ),
             )
             .toList(),
-      );
-      Future.delayed(
-        Duration(
-          milliseconds: 100,
-        ),
       );
       player.jump(index);
       player.play();
@@ -242,15 +240,18 @@ void onTrackChange() {
     List<LIBWINMEDIA.Media> medias = player.state.medias;
     int index = player.state.index;
     Track track = Track.fromMap(medias[index].extras)!;
-    player.nativeControls.update(
-      albumArtist: track.albumArtistName,
-      album: track.albumName,
-      title: track.trackName,
-      artist: track.trackArtistNames?.join(', '),
-      thumbnail: Uri.parse(
-        track.networkAlbumArt ?? track.albumArt.path,
-      ),
-    );
+    // TODO (alexmercerind): SMTC only working on Windows.
+    if (Platform.isWindows) {
+      player.nativeControls.update(
+        albumArtist: track.albumArtistName,
+        album: track.albumName,
+        title: track.trackName,
+        artist: track.trackArtistNames?.join(', '),
+        thumbnail: Uri.parse(
+          track.networkAlbumArt ?? track.albumArt.path,
+        ),
+      );
+    }
     discordRPC.start(autoRegister: true);
     discordRPC.updatePresence(
       DiscordPresence(

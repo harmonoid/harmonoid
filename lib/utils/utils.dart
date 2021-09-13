@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -34,7 +33,7 @@ abstract class Utils {
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.0,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeights.thick(false),
           ),
         ),
         content: Text(
@@ -42,7 +41,7 @@ abstract class Utils {
           style: TextStyle(
             color: Colors.white.withOpacity(0.8),
             fontSize: 14.0,
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeights.thin(false),
           ),
         ),
         actions: [
@@ -67,7 +66,7 @@ abstract class Utils {
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.0,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeights.thick(false),
           ),
         ),
         content: Text(
@@ -75,7 +74,7 @@ abstract class Utils {
           style: TextStyle(
             color: Colors.white.withOpacity(0.8),
             fontSize: 14.0,
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeights.thin(false),
           ),
         ),
         actions: [
@@ -102,69 +101,66 @@ abstract class Utils {
   }
 
   static ThemeData getTheme(
-      {required Color accentColor,
-      ThemeMode? themeMode,
-      TargetPlatform? platform}) {
+      {required Color accentColor, ThemeMode? themeMode}) {
     bool isLight = themeMode == ThemeMode.light;
     TextTheme textTheme = TextTheme(
       // Leading tile widgets text theme.
       headline1: TextStyle(
         color: isLight ? Colors.black : Colors.white,
         fontSize: 16.0,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeights.thick(isLight),
       ),
       // AlbumTile text theme.
       headline2: TextStyle(
         color: isLight ? Colors.black : Colors.white,
         fontSize: 14.0,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeights.thick(isLight),
       ),
       headline3: TextStyle(
         color: isLight
             ? Colors.black.withOpacity(0.8)
             : Colors.white.withOpacity(0.8),
         fontSize: 14.0,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeights.thin(isLight),
       ),
       headline4: TextStyle(
         color: isLight ? Colors.black : Colors.white,
         fontSize: 14.0,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeights.thin(isLight),
       ),
       headline5: TextStyle(
         color: isLight
             ? Colors.black.withOpacity(0.8)
             : Colors.white.withOpacity(0.8),
         fontSize: 12.0,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeights.thin(isLight),
       ),
       // ListTile text theme.
       // [ListTile.title]'s text theme must be overrided to headline4, if it does not contain subtitle.
       subtitle1: TextStyle(
         color: isLight ? Colors.black : Colors.white,
         fontSize: 14.0,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeights.thick(isLight),
       ),
       bodyText2: TextStyle(
         color: isLight
             ? Colors.black.withOpacity(0.8)
             : Colors.white.withOpacity(0.8),
         fontSize: 14.0,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeights.thin(isLight),
       ),
       caption: TextStyle(
         color: isLight
             ? Colors.black.withOpacity(0.8)
             : Colors.white.withOpacity(0.8),
         fontSize: 14.0,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeights.thin(isLight),
       ),
     );
     return ThemeData(
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: accentColor,
       ),
-      platform: platform,
       splashFactory: InkRipple.splashFactory,
       splashColor: Colors.transparent,
       brightness: isLight ? Brightness.light : Brightness.dark,
@@ -205,7 +201,7 @@ abstract class Utils {
         ),
       ),
       iconTheme: IconThemeData(
-        color: isLight ? Colors.black54 : Colors.white.withOpacity(0.87),
+        color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
         size: 24,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -227,5 +223,23 @@ abstract class Utils {
       }
     }
     return isPresent;
+  }
+}
+
+class FontWeights {
+  static FontWeight thick(bool isLight) {
+    if (Platform.isLinux) {
+      return FontWeight.w400;
+    }
+    return FontWeight.w600;
+  }
+
+  static FontWeight thin(bool isLight) {
+    if (Platform.isLinux) {
+      return isLight
+          ? FontWeight.normal
+          : FontWeight.lerp(FontWeight.w400, FontWeight.w300, 0.8)!;
+    }
+    return FontWeight.normal;
   }
 }
