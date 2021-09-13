@@ -27,9 +27,7 @@ jobs:
 
       - run: |
           "%programfiles(x86)%\Inno Setup 6\iscc.exe" "Harmonoid_InnoSetup.iss"
-        shell: cmd
-        # still need to sign it somehow
-
+        shell: cmd 
       - uses: actions/upload-artifact@v1
         with:
           name: harmonoid-windows-setup
@@ -41,3 +39,26 @@ jobs:
         with:
           name: harmonoid-windows-msix
           path: windows/msix/distribution
+
+  build_linux:
+    name: Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.TOKEN }}
+          submodules: 'recursive'
+      
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'beta'
+
+      - run: flutter config --enable-linux-desktop
+      - run: flutter pub get
+      - run: flutter build linux
+
+      - uses: actions/upload-artifact@v1
+        with:
+          name: harmonoid-linux-exe
+          path: build/linux/x64/release/bundle
+      
