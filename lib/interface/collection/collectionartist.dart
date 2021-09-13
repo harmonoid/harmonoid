@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/playback.dart';
@@ -13,9 +15,13 @@ import 'package:harmonoid/constants/language.dart';
 
 class CollectionArtistTab extends StatelessWidget {
   Widget build(BuildContext context) {
-    int elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
+    int elementsPerRow =
+        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) ~/
+            (156 + 8);
     double tileWidth =
-        (MediaQuery.of(context).size.width - 16 - (elementsPerRow - 1) * 8) /
+        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) -
+                16 -
+                (elementsPerRow - 1) * 8) /
             elementsPerRow;
     double tileHeight = tileWidth + 36.0;
 
@@ -99,7 +105,9 @@ class LeadingCollectionArtistTile extends StatelessWidget {
               },
               child: Container(
                 height: this.height,
-                width: MediaQuery.of(context).size.width - 16,
+                width: (MediaQuery.of(context).size.width *
+                        (Platform.isLinux ? 0.8 : 1.0)) -
+                    16,
                 child: InkWell(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -120,7 +128,8 @@ class LeadingCollectionArtistTile extends StatelessWidget {
                       ),
                       Container(
                         margin: EdgeInsets.only(left: 8, right: 8),
-                        width: MediaQuery.of(context).size.width -
+                        width: (MediaQuery.of(context).size.width *
+                                (Platform.isLinux ? 0.8 : 1.0)) -
                             32 -
                             this.height,
                         child: Column(
@@ -234,11 +243,17 @@ class CollectionArtist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int elementsPerRow =
-        (MediaQuery.of(context).size.width * 2 / 3) ~/ (156 + 8);
-    double tileWidth = ((MediaQuery.of(context).size.width * 2 / 3) -
-            16 -
-            (elementsPerRow - 1) * 8) /
-        elementsPerRow;
+        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) *
+                2 /
+                3) ~/
+            (156 + 8);
+    double tileWidth =
+        (((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) *
+                    2 /
+                    3) -
+                16 -
+                (elementsPerRow - 1) * 8) /
+            elementsPerRow;
     double tileHeight = tileWidth * 260 / 156;
 
     return Consumer<Collection>(
@@ -253,7 +268,9 @@ class CollectionArtist extends StatelessWidget {
           ),
         ),
         height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width / 3,
+        width: (MediaQuery.of(context).size.width *
+                (Platform.isLinux ? 0.8 : 1.0)) /
+            3,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -366,7 +383,8 @@ class CollectionArtist extends StatelessWidget {
         body: LayoutBuilder(
           builder: (context, constraints) => Container(
             height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+            width: (MediaQuery.of(context).size.width *
+                (Platform.isLinux ? 0.8 : 1.0)),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

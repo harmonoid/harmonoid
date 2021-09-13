@@ -125,7 +125,8 @@ class IndexingState extends State<IndexingSetting> {
                                   Container(
                                     margin: EdgeInsets.only(top: 6.0),
                                     height: 4.0,
-                                    width: MediaQuery.of(context).size.width -
+                                    width: (MediaQuery.of(context).size.width *
+                                            (Platform.isLinux ? 0.8 : 1.0)) -
                                         32.0,
                                     child: LinearProgressIndicator(
                                       value: value,

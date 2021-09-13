@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -71,7 +73,9 @@ class AboutPage extends StatelessWidget {
                         fit: BoxFit.fitWidth,
                         alignment: Alignment.bottomCenter,
                         height: 192,
-                        width: MediaQuery.of(context).size.width - 16.0,
+                        width: (MediaQuery.of(context).size.width *
+                                (Platform.isLinux ? 0.8 : 1.0)) -
+                            16.0,
                       ),
                       Divider(
                         height: 1.0,

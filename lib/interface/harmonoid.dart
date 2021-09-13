@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,6 @@ class Harmonoid extends StatelessWidget {
       create: (context) => Visuals(
         accent: configuration.accent,
         themeMode: configuration.themeMode,
-        platform: TargetPlatform.windows,
       ),
       builder: (context, _) => Consumer<Visuals>(
         builder: (context, visuals, _) => MaterialApp(
@@ -27,7 +27,18 @@ class Harmonoid extends StatelessWidget {
           darkTheme: visuals.darkTheme,
           themeMode: visuals.themeMode,
           navigatorKey: key,
-          home: Home(),
+          home: Platform.isLinux
+              ? FractionallySizedBox(
+                  heightFactor: 0.8,
+                  widthFactor: 0.8,
+                  child: Transform.scale(
+                    scale: 1.25,
+                    child: SizedBox.shrink(
+                      child: Home(),
+                    ),
+                  ),
+                )
+              : Home(),
         ),
       ),
     );

@@ -63,9 +63,13 @@ class YouTubeMusicState extends State<YouTubeMusic> {
   Widget? result;
   @override
   Widget build(BuildContext context) {
-    int elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
+    int elementsPerRow =
+        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) ~/
+            (156 + 8);
     double tileWidth =
-        (MediaQuery.of(context).size.width - 16 - (elementsPerRow - 1) * 8) /
+        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) -
+                16 -
+                (elementsPerRow - 1) * 8) /
             elementsPerRow;
     double tileHeight = tileWidth * 246.0 / 156;
     return Consumer<YouTubeState>(
@@ -81,7 +85,9 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                   ? Colors.white.withOpacity(0.08)
                   : Colors.black.withOpacity(0.08),
             ),
-            width: MediaQuery.of(context).size.width - 16,
+            width: (MediaQuery.of(context).size.width *
+                    (Platform.isLinux ? 0.8 : 1.0)) -
+                16,
             child: Row(
               children: [
                 Padding(
@@ -321,7 +327,8 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                         secondaryAnimation: secondaryAnimation,
                         transitionType: SharedAxisTransitionType.vertical,
                         child: Container(
-                          width: MediaQuery.of(context).size.width,
+                          width: (MediaQuery.of(context).size.width *
+                              (Platform.isLinux ? 0.8 : 1.0)),
                           child: child,
                         ))),
           ),

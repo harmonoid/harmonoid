@@ -84,7 +84,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                 fontSize: 20.0,
                                 fontWeight: this.index == 4
                                     ? FontWeight.w600
-                                    : FontWeight.w200,
+                                    : FontWeight.w300,
                                 color: (Theme.of(context).brightness ==
                                             Brightness.dark
                                         ? Colors.white
@@ -108,7 +108,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                 fontSize: 20.0,
                                 fontWeight: this.index == 3
                                     ? FontWeight.w600
-                                    : FontWeight.w200,
+                                    : FontWeight.w300,
                                 color: (Theme.of(context).brightness ==
                                             Brightness.dark
                                         ? Colors.white
@@ -132,7 +132,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                 fontSize: 20.0,
                                 fontWeight: this.index == 2
                                     ? FontWeight.w600
-                                    : FontWeight.w200,
+                                    : FontWeight.w300,
                                 color: (Theme.of(context).brightness ==
                                             Brightness.dark
                                         ? Colors.white
@@ -156,7 +156,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                 fontSize: 20.0,
                                 fontWeight: this.index == 1
                                     ? FontWeight.w600
-                                    : FontWeight.w200,
+                                    : FontWeight.w300,
                                 color: (Theme.of(context).brightness ==
                                             Brightness.dark
                                         ? Colors.white
@@ -180,7 +180,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                 fontSize: 20.0,
                                 fontWeight: this.index == 0
                                     ? FontWeight.w600
-                                    : FontWeight.w200,
+                                    : FontWeight.w300,
                                 color: (Theme.of(context).brightness ==
                                             Brightness.dark
                                         ? Colors.white
@@ -204,7 +204,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                 fontSize: 20.0,
                                 fontWeight: this.index == 5
                                     ? FontWeight.w600
-                                    : FontWeight.w200,
+                                    : FontWeight.w300,
                                 color: (Theme.of(context).brightness ==
                                             Brightness.dark
                                         ? Colors.white

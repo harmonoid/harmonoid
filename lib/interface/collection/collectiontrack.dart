@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -301,7 +303,9 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                 fit: BoxFit.fitWidth,
                 alignment: Alignment.center,
                 height: 156.0,
-                width: MediaQuery.of(context).size.width - 16.0,
+                width: (MediaQuery.of(context).size.width *
+                        (Platform.isLinux ? 0.8 : 1.0)) -
+                    16.0,
               ),
               Padding(
                 padding: EdgeInsets.only(top: 8.0, bottom: 12.0),

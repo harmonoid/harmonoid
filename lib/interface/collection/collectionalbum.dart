@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -17,9 +18,13 @@ class CollectionAlbumTab extends StatelessWidget {
   static const velocity = 60;
 
   Widget build(BuildContext context) {
-    int elementsPerRow = MediaQuery.of(context).size.width ~/ (156 + 8);
+    int elementsPerRow =
+        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) ~/
+            (156 + 8);
     double tileWidth =
-        (MediaQuery.of(context).size.width - 16 - (elementsPerRow - 1) * 8) /
+        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) -
+                16 -
+                (elementsPerRow - 1) * 8) /
             elementsPerRow;
     double tileHeight = tileWidth * 260.0 / 156;
 
@@ -196,7 +201,9 @@ class LeadingCollectionAlbumTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
               color: Theme.of(context).cardColor,
             ),
-            width: MediaQuery.of(context).size.width - 16,
+            width: (MediaQuery.of(context).size.width *
+                    (Platform.isLinux ? 0.8 : 1.0)) -
+                16,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -218,7 +225,10 @@ class LeadingCollectionAlbumTile extends StatelessWidget {
                     )),
                 Container(
                   margin: EdgeInsets.only(left: 8, right: 8),
-                  width: MediaQuery.of(context).size.width - 32 - this.height,
+                  width: (MediaQuery.of(context).size.width *
+                          (Platform.isLinux ? 0.8 : 1.0)) -
+                      32 -
+                      this.height,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -271,7 +281,10 @@ class CollectionAlbum extends StatelessWidget {
               : Colors.black.withOpacity(0.04),
         ),
         height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width * 2 / 5,
+        width: (MediaQuery.of(context).size.width *
+                (Platform.isLinux ? 0.8 : 1.0)) *
+            2 /
+            5,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -390,7 +403,8 @@ class CollectionAlbum extends StatelessWidget {
         body: LayoutBuilder(
           builder: (context, constraints) => Container(
             height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+            width: (MediaQuery.of(context).size.width *
+                (Platform.isLinux ? 0.8 : 1.0)),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
