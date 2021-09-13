@@ -158,6 +158,7 @@ abstract class Utils {
       ),
     );
     return ThemeData(
+      fontFamily: Platform.isLinux ? 'Roboto' : null,
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: accentColor,
       ),

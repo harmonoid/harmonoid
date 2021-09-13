@@ -63,6 +63,21 @@ flutter:
     - assets/images/credits-album-art-2.jpg
     - assets/images/credits-album-art-3.jpg
 
+  fonts:
+    - family: 'Roboto'
+      fonts:
+        - asset: fonts/Roboto/Roboto-Thin.ttf
+          weight: 100
+        - asset: fonts/Roboto/Roboto-Light.ttf
+          weight: 300
+        - asset: fonts/Roboto/Roboto-Regular.ttf
+          weight: 400
+        - asset: fonts/Roboto/Roboto-Medium.ttf
+          weight: 500
+        - asset: fonts/Roboto/Roboto-Bold.ttf
+          weight: 700
+        - asset: fonts/Roboto/Roboto-Black.ttf 
+
 msix_config:
   msix_version: 0.1.2.0
   display_name: Harmonoid
