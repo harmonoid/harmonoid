@@ -11,31 +11,34 @@ dependencies:
     sdk: flutter
   animations: ^2.0.0
   provider: ^5.0.0
-  flutter_acrylic: ^0.0.2
-  ffi: ^1.1.2
-  libwinmedia:
-    path: ./external/libwinmedia.dart
+  libwinmedia: ^0.0.3
   flutter_media_metadata:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
-      ref: a304b1a51b0f2ed86f0f31df035ba3ef960c7a12
+  flutter_acrylic: ^0.0.2
+  dart_discord_rpc: ^0.0.2
   fluentui_system_icons: ^1.1.136
   assets_audio_player:
     git:
       url: https://github.com/florent37/Flutter-AssetsAudioPlayer.git
   filepicker_windows: ^2.0.0
+  file_selector: ^0.8.2
+  file_selector_linux:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding.git
+      path: plugins/file_selector/file_selector_linux
   bitsdojo_window: ^0.1.1+1
   flutter_local_notifications: ^5.0.0
   file_picker: ^3.0.0
   permission_handler: ^6.1.1
   share_plus: ^2.1.4
   palette_generator: ^0.3.0
-  dart_discord_rpc: ^0.0.1
   http: ^0.13.0
   path: ^1.8.0
   url_launcher: ^6.0.3
+  google_fonts: ^2.1.0
   implicitly_animated_reorderable_list: ^0.4.0-dev+4
-
+      
 dev_dependencies:
   msix:
     git:

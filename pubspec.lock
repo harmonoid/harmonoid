@@ -101,6 +101,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
+  cross_file:
+    dependency: transitive
+    description:
+      name: cross_file
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1+5"
   crypto:
     dependency: transitive
     description:
@@ -114,16 +121,16 @@ packages:
       name: dart_discord_rpc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.2"
   dart_discord_rpc_ffi:
     dependency: transitive
     description:
       name: dart_discord_rpc_ffi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.2"
   ffi:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: ffi
       url: "https://pub.dartlang.org"
@@ -143,6 +150,36 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+  file_selector:
+    dependency: "direct main"
+    description:
+      name: file_selector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.2"
+  file_selector_linux:
+    dependency: "direct main"
+    description:
+      path: "plugins/file_selector/file_selector_linux"
+      ref: HEAD
+      resolved-ref: "03d957e8b5c99fc83cd4a781031b154ab3de8753"
+      url: "https://github.com/google/flutter-desktop-embedding.git"
+    source: git
+    version: "0.0.2+1"
+  file_selector_platform_interface:
+    dependency: transitive
+    description:
+      name: file_selector_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
+  file_selector_web:
+    dependency: transitive
+    description:
+      name: file_selector_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.1+2"
   filepicker_windows:
     dependency: "direct main"
     description:
@@ -187,8 +224,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: a304b1a51b0f2ed86f0f31df035ba3ef960c7a12
-      resolved-ref: a304b1a51b0f2ed86f0f31df035ba3ef960c7a12
+      ref: HEAD
+      resolved-ref: ade09dafeb36252b0e0fa2ff6c3d206938a9eb5b
       url: "https://github.com/alexmercerind/flutter_media_metadata.git"
     source: git
     version: "0.1.1"
@@ -204,6 +241,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_fonts:
+    dependency: "direct main"
+    description:
+      name: google_fonts
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   http:
     dependency: "direct main"
     description:
@@ -242,10 +286,10 @@ packages:
   libwinmedia:
     dependency: "direct main"
     description:
-      path: "external/libwinmedia.dart"
-      relative: true
-    source: path
-    version: "0.0.1"
+      name: libwinmedia
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   meta:
     dependency: transitive
     description:
