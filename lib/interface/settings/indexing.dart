@@ -1,12 +1,10 @@
 import 'dart:io';
+import 'package:file_selector/file_selector.dart';
 import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
-// TODO (alexmercerind): Add Linux & Android support.
-// ignore: unused_import
-import 'package:file_picker/file_picker.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
@@ -162,9 +160,18 @@ class IndexingState extends State<IndexingSetting> {
       actions: [
         MaterialButton(
           onPressed: () async {
+            Directory? directory;
             // TODO (alexmercerind): Handle Android specific calls. Will require requestLegacyExternalStorage.
-            DirectoryPicker picker = new DirectoryPicker();
-            Directory? directory = picker.getDirectory();
+            if (Platform.isWindows) {
+              DirectoryPicker picker = new DirectoryPicker();
+              directory = picker.getDirectory();
+            }
+            if (Platform.isLinux) {
+              var path = await getDirectoryPath();
+              if (path != null) {
+                directory = Directory(path);
+              }
+            }
             if (directory != null) {
               await Future.wait([
                 configuration.save(
