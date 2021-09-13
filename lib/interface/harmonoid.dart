@@ -29,10 +29,10 @@ class Harmonoid extends StatelessWidget {
           navigatorKey: key,
           home: Platform.isLinux
               ? FractionallySizedBox(
-                  heightFactor: 0.8,
-                  widthFactor: 0.8,
+                  heightFactor: 0.75,
+                  widthFactor: 0.75,
                   child: Transform.scale(
-                    scale: 1.25,
+                    scale: 1 / 0.75,
                     child: SizedBox.shrink(
                       child: Home(),
                     ),

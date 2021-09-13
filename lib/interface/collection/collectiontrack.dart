@@ -304,7 +304,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                 alignment: Alignment.center,
                 height: 156.0,
                 width: (MediaQuery.of(context).size.width *
-                        (Platform.isLinux ? 0.8 : 1.0)) -
+                        (Platform.isLinux ? 0.75 : 1.0)) -
                     16.0,
               ),
               Padding(

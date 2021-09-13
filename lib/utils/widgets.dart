@@ -657,7 +657,7 @@ class WindowTitleBar extends StatelessWidget {
     return Platform.isWindows
         ? Container(
             width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.8 : 1.0)),
+                (Platform.isLinux ? 0.75 : 1.0)),
             height: 32.0,
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.white.withOpacity(0.08)

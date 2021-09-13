@@ -45,10 +45,10 @@ class CollectionSearchState extends State<CollectionSearch> {
     /// But their dimensions do not get recalculated because they are now part of mutable list.
     /// Thus, overflow happens if someone resizes the window. Unlike other tabs.
     int elementsPerRow =
-        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) ~/
+        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) ~/
             (156 + 8);
     double tileWidthAlbum =
-        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) -
+        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) -
                 16 -
                 (elementsPerRow - 1) * 8) /
             elementsPerRow;
@@ -350,7 +350,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                                   96.0 -
                                   96.0,
                               width: (MediaQuery.of(context).size.width *
-                                  (Platform.isLinux ? 0.8 : 1.0)),
+                                  (Platform.isLinux ? 0.75 : 1.0)),
                               child: Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -376,7 +376,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                           ? Container(
                               margin: EdgeInsets.only(top: 56),
                               width: (MediaQuery.of(context).size.width *
-                                  (Platform.isLinux ? 0.8 : 1.0)),
+                                  (Platform.isLinux ? 0.75 : 1.0)),
                               child: Column(
                                 children: [
                                   Icon(FluentIcons.emoji_sad_20_regular,
@@ -402,7 +402,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                               margin: EdgeInsets.only(left: 8.0),
                               height: tileHeightAlbum + 16.0,
                               width: (MediaQuery.of(context).size.width *
-                                  (Platform.isLinux ? 0.8 : 1.0)),
+                                  (Platform.isLinux ? 0.75 : 1.0)),
                               child: CustomListView(
                                 scrollDirection: Axis.horizontal,
                                 children: _albums,
@@ -417,7 +417,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                               margin: EdgeInsets.only(left: 8.0),
                               height: tileHeightArtist + 16.0,
                               width: (MediaQuery.of(context).size.width *
-                                  (Platform.isLinux ? 0.8 : 1.0)),
+                                  (Platform.isLinux ? 0.75 : 1.0)),
                               child: CustomListView(
                                 scrollDirection: Axis.horizontal,
                                 children: _artists,

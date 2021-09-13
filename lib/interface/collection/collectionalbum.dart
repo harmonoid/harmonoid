@@ -19,10 +19,10 @@ class CollectionAlbumTab extends StatelessWidget {
 
   Widget build(BuildContext context) {
     int elementsPerRow =
-        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) ~/
+        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) ~/
             (156 + 8);
     double tileWidth =
-        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) -
+        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) -
                 16 -
                 (elementsPerRow - 1) * 8) /
             elementsPerRow;
@@ -202,7 +202,7 @@ class LeadingCollectionAlbumTile extends StatelessWidget {
               color: Theme.of(context).cardColor,
             ),
             width: (MediaQuery.of(context).size.width *
-                    (Platform.isLinux ? 0.8 : 1.0)) -
+                    (Platform.isLinux ? 0.75 : 1.0)) -
                 16,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -226,7 +226,7 @@ class LeadingCollectionAlbumTile extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(left: 8, right: 8),
                   width: (MediaQuery.of(context).size.width *
-                          (Platform.isLinux ? 0.8 : 1.0)) -
+                          (Platform.isLinux ? 0.75 : 1.0)) -
                       32 -
                       this.height,
                   child: Column(
@@ -282,7 +282,7 @@ class CollectionAlbum extends StatelessWidget {
         ),
         height: MediaQuery.of(context).size.height,
         width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.8 : 1.0)) *
+                (Platform.isLinux ? 0.75 : 1.0)) *
             2 /
             5,
         child: Column(
@@ -404,7 +404,7 @@ class CollectionAlbum extends StatelessWidget {
           builder: (context, constraints) => Container(
             height: MediaQuery.of(context).size.height,
             width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.8 : 1.0)),
+                (Platform.isLinux ? 0.75 : 1.0)),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
