@@ -19,14 +19,14 @@
 
 #### **Windows**
 
-- [Setup Installer](https://github.com/harmonoid/harmonoid/releases/download/v0.1.3/harmonoid-windows-setup.zip) (13.2 MB) _Recommended. Automatically links with various file extensions_
-- [Standalone EXE](https://github.com/harmonoid/harmonoid/releases/download/v0.1.3/harmonoid-windows-exe.zip) (15.7 MB)
+- [Setup Installer](https://github.com/harmonoid/harmonoid/releases/download/v0.1.3/harmonoid-windows-setup.exe) (13.2 MB) _Recommended. Automatically links with various file extensions_
+- [Portable EXE](https://github.com/harmonoid/harmonoid/releases/download/v0.1.3/harmonoid-windows-exe.zip) (15.7 MB)
 
 #### **Linux**
 
-- [DEB Package](https://github.com/harmonoid/harmonoid/releases/download/v0.1.3/harmonoid-linux-debian.deb) (9.96 MB) e.g. Ubuntu, Debian, elementaryOS, KDE Neon etc.
-- [RPM Package](#) Coming Soon
-- [Raw Executable](https://github.com/harmonoid/harmonoid/releases/download/v0.1.3/harmonoid-windows-setup.exe) (13.2 MB)
+- [DEB Package](https://github.com/harmonoid/harmonoid/releases/download/v0.1.3/harmonoid-linux-debian.deb) (9.96 MB) _e.g. Ubuntu, Debian, elementaryOS, KDE Neon etc._
+- [RPM Package](#) _Coming Soon_
+- [Raw Executable](https://github.com/harmonoid/harmonoid/releases/download/v0.1.3/harmonoid-linux-exe.zip) (13.2 MB)
 
 You might need to run `sudo apt-get install libmediainfo-dev gstreamer1.0-libav libwebkit2gtk-4.0-dev`.
 
