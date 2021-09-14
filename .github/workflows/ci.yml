@@ -64,7 +64,25 @@ jobs:
       - run: mkdir linux/debian/$(dir linux/debian)/usr/local
       - run: cp -R build/linux/x64/release/bundle linux/debian/$(dir linux/debian)/usr/local/bin -f
       - run: dpkg-deb --build --root-owner-group linux/debian/$(dir linux/debian)
+      - run: sudo rm -r linux/debian/$(ls linux/debian | head -1)
       - uses: actions/upload-artifact@v1
         with:
           name: harmonoid-linux-deb
-          path: linux/debian/harmonoid_*
+          path: linux/debian
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: master
+          draft: true
+          prerelease: false
+      - uses: svenstaro/upload-release-action@master
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: flutube-windows.zip
+          tag: ${{ github.ref }}
+          body: ''
+          overwrite: true
