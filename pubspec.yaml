@@ -1,7 +1,7 @@
 name: harmonoid
 description: A beautiful app to play all your music.
 publish_to: 'none'
-version: 0.1.2+5003
+version: 0.1.3+5003
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -79,7 +79,7 @@ flutter:
         - asset: fonts/Roboto/Roboto-Black.ttf 
 
 msix_config:
-  msix_version: 0.1.2.0
+  msix_version: 0.1.3.0
   display_name: Harmonoid
   identity_name: com.alexmercerind.harmonoid
   file_extension: ogg, ogx, aac, m4a, mp3, wma, wav, aiff, flac, opus
