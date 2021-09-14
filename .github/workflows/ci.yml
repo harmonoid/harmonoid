@@ -33,7 +33,7 @@ jobs:
           draft: true
           prerelease: false
           body: ''
-          tag_name: 'master'
+          tag_name: 'vnext'
           files: |
             Output/harmonoid-windows-setup.exe
             harmonoid-windows-exe.zip
@@ -71,7 +71,7 @@ jobs:
           draft: true
           prerelease: false
           body: ''
-          tag_name: 'master'
+          tag_name: 'vnext'
           files: |
             harmonoid-linux-debian.deb
             harmonoid-linux-exe.zip
