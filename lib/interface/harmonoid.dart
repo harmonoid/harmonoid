@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/interface/changenotifiers.dart';
@@ -27,18 +28,9 @@ class Harmonoid extends StatelessWidget {
           darkTheme: visuals.darkTheme,
           themeMode: visuals.themeMode,
           navigatorKey: key,
-          home: Platform.isLinux
-              ? FractionallySizedBox(
-                  heightFactor: 0.75,
-                  widthFactor: 0.75,
-                  child: Transform.scale(
-                    scale: 1 / 0.75,
-                    child: SizedBox.shrink(
-                      child: Home(),
-                    ),
-                  ),
-                )
-              : Home(),
+          home: FractionallyScaledWidget(
+            child: Home(),
+          ),
         ),
       ),
     );

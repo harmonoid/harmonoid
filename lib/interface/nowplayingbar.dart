@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/lyrics.dart';
@@ -421,26 +422,28 @@ class NowPlayingBar extends StatelessWidget {
                                 '${currentlyPlaying.tracks[currentlyPlaying.index!].trackName!} ${currentlyPlaying.tracks[currentlyPlaying.index!].albumArtistName!}');
                             showDialog(
                               context: context,
-                              builder: (context) => SimpleDialog(
-                                backgroundColor:
-                                    Theme.of(context).appBarTheme.color,
-                                title: Text(
-                                  currentlyPlaying
-                                      .tracks[currentlyPlaying.index!]
-                                      .trackName!,
+                              builder: (context) => FractionallyScaledWidget(
+                                child: SimpleDialog(
+                                  backgroundColor:
+                                      Theme.of(context).appBarTheme.color,
+                                  title: Text(
+                                    currentlyPlaying
+                                        .tracks[currentlyPlaying.index!]
+                                        .trackName!,
+                                  ),
+                                  titlePadding: EdgeInsets.all(16.0),
+                                  contentPadding: EdgeInsets.all(16.0),
+                                  children: lyrics.current
+                                      .map(
+                                        (lyric) => Text(
+                                          lyric.words,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4,
+                                        ),
+                                      )
+                                      .toList(),
                                 ),
-                                titlePadding: EdgeInsets.all(16.0),
-                                contentPadding: EdgeInsets.all(16.0),
-                                children: lyrics.current
-                                    .map(
-                                      (lyric) => Text(
-                                        lyric.words,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline4,
-                                      ),
-                                    )
-                                    .toList(),
                               ),
                             );
                           }

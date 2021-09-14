@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -26,31 +27,33 @@ abstract class Utils {
   static Future<void> handleYouTubeFailure() async {
     showDialog(
       context: key.currentState!.overlay!.context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).appBarTheme.color,
-        title: Text(
-          'Could not fetch the YouTube audio stream.',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.0,
-            fontWeight: FontWeights.thick(false),
+      builder: (context) => FractionallyScaledWidget(
+        child: AlertDialog(
+          backgroundColor: Theme.of(context).appBarTheme.color,
+          title: Text(
+            'Could not fetch the YouTube audio stream.',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+              fontWeight: FontWeights.thick(false),
+            ),
           ),
+          content: Text(
+            'Please report the issue on the repository. Possibly something changed on YouTube\'s website.\nLet\'s play your local music till then.',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 14.0,
+              fontWeight: FontWeights.thin(false),
+            ),
+          ),
+          actions: [
+            MaterialButton(
+              textColor: Theme.of(context).primaryColor,
+              onPressed: Navigator.of(context).pop,
+              child: Text('OK'),
+            ),
+          ],
         ),
-        content: Text(
-          'Please report the issue on the repository. Possibly something changed on YouTube\'s website.\nLet\'s play your local music till then.',
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.8),
-            fontSize: 14.0,
-            fontWeight: FontWeights.thin(false),
-          ),
-        ),
-        actions: [
-          MaterialButton(
-            textColor: Theme.of(context).primaryColor,
-            onPressed: Navigator.of(context).pop,
-            child: Text('OK'),
-          ),
-        ],
       ),
     );
     currentlyPlaying.isBuffering = false;
@@ -59,31 +62,33 @@ abstract class Utils {
   static Future<void> handleInvalidLink() async {
     showDialog(
       context: key.currentState!.overlay!.context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).appBarTheme.color,
-        title: Text(
-          'Invalid link.',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.0,
-            fontWeight: FontWeights.thick(false),
+      builder: (context) => FractionallyScaledWidget(
+        child: AlertDialog(
+          backgroundColor: Theme.of(context).appBarTheme.color,
+          title: Text(
+            'Invalid link.',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+              fontWeight: FontWeights.thick(false),
+            ),
           ),
+          content: Text(
+            'Please give us correct link to the media.\nIf you think this is a false result, please report at the repository.',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 14.0,
+              fontWeight: FontWeights.thin(false),
+            ),
+          ),
+          actions: [
+            MaterialButton(
+              textColor: Theme.of(context).primaryColor,
+              onPressed: Navigator.of(context).pop,
+              child: Text('OK'),
+            ),
+          ],
         ),
-        content: Text(
-          'Please give us correct link to the media.\nIf you think this is a false result, please report at the repository.',
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.8),
-            fontSize: 14.0,
-            fontWeight: FontWeights.thin(false),
-          ),
-        ),
-        actions: [
-          MaterialButton(
-            textColor: Theme.of(context).primaryColor,
-            onPressed: Navigator.of(context).pop,
-            child: Text('OK'),
-          ),
-        ],
       ),
     );
   }

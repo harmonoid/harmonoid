@@ -10,6 +10,26 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
 
+class FractionallyScaledWidget extends StatelessWidget {
+  final Widget child;
+  const FractionallyScaledWidget({Key? key, required this.child})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (Platform.isLinux)
+      return FractionallySizedBox(
+        heightFactor: 0.75,
+        widthFactor: 0.75,
+        child: Transform.scale(
+          scale: 1 / 0.75,
+          child: this.child,
+        ),
+      );
+    return this.child;
+  }
+}
+
 class CustomListView extends StatelessWidget {
   final ScrollController scroller = ScrollController();
   final int velocity = 80;

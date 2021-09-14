@@ -466,59 +466,64 @@ class CollectionAlbum extends StatelessWidget {
                                               showDialog(
                                                 context: context,
                                                 builder: (subContext) =>
-                                                    AlertDialog(
-                                                  backgroundColor:
-                                                      Theme.of(context)
-                                                          .appBarTheme
-                                                          .color,
-                                                  title: Text(
-                                                    language!
-                                                        .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
-                                                    style: Theme.of(subContext)
-                                                        .textTheme
-                                                        .headline1,
-                                                  ),
-                                                  content: Text(
-                                                    language!
-                                                        .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
-                                                    style: Theme.of(subContext)
-                                                        .textTheme
-                                                        .headline5,
-                                                  ),
-                                                  actions: [
-                                                    MaterialButton(
-                                                      textColor:
-                                                          Theme.of(context)
-                                                              .primaryColor,
-                                                      onPressed: () async {
-                                                        Navigator.of(subContext)
-                                                            .pop();
-                                                        await collection
-                                                            .delete(track);
-                                                        if (album!
-                                                            .tracks.isEmpty) {
-                                                          while (Navigator.of(
-                                                                  context)
-                                                              .canPop())
-                                                            Navigator.of(
+                                                    FractionallyScaledWidget(
+                                                  child: AlertDialog(
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .appBarTheme
+                                                            .color,
+                                                    title: Text(
+                                                      language!
+                                                          .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
+                                                      style:
+                                                          Theme.of(subContext)
+                                                              .textTheme
+                                                              .headline1,
+                                                    ),
+                                                    content: Text(
+                                                      language!
+                                                          .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
+                                                      style:
+                                                          Theme.of(subContext)
+                                                              .textTheme
+                                                              .headline5,
+                                                    ),
+                                                    actions: [
+                                                      MaterialButton(
+                                                        textColor:
+                                                            Theme.of(context)
+                                                                .primaryColor,
+                                                        onPressed: () async {
+                                                          Navigator.of(
+                                                                  subContext)
+                                                              .pop();
+                                                          await collection
+                                                              .delete(track);
+                                                          if (album!
+                                                              .tracks.isEmpty) {
+                                                            while (Navigator.of(
                                                                     context)
-                                                                .pop();
-                                                        }
-                                                      },
-                                                      child: Text(
-                                                          language!.STRING_YES),
-                                                    ),
-                                                    MaterialButton(
-                                                      textColor:
-                                                          Theme.of(context)
-                                                              .primaryColor,
-                                                      onPressed: Navigator.of(
-                                                              subContext)
-                                                          .pop,
-                                                      child: Text(
-                                                          language!.STRING_NO),
-                                                    ),
-                                                  ],
+                                                                .canPop())
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                          }
+                                                        },
+                                                        child: Text(language!
+                                                            .STRING_YES),
+                                                      ),
+                                                      MaterialButton(
+                                                        textColor:
+                                                            Theme.of(context)
+                                                                .primaryColor,
+                                                        onPressed: Navigator.of(
+                                                                subContext)
+                                                            .pop,
+                                                        child: Text(language!
+                                                            .STRING_NO),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               );
                                             }
@@ -537,125 +542,129 @@ class CollectionAlbum extends StatelessWidget {
                                               showDialog(
                                                 context: context,
                                                 builder: (subContext) =>
-                                                    AlertDialog(
-                                                  contentPadding:
-                                                      EdgeInsets.zero,
-                                                  actionsPadding:
-                                                      EdgeInsets.zero,
-                                                  title: Text(
-                                                    language!
-                                                        .STRING_PLAYLIST_ADD_DIALOG_TITLE,
-                                                    style: Theme.of(subContext)
-                                                        .textTheme
-                                                        .headline1,
-                                                  ),
-                                                  content: Container(
-                                                    height: 280,
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  left: 24,
-                                                                  top: 8,
-                                                                  bottom: 16),
-                                                          child: Text(
-                                                            language!
-                                                                .STRING_PLAYLIST_ADD_DIALOG_BODY,
-                                                            style: Theme.of(
-                                                                    subContext)
-                                                                .textTheme
-                                                                .headline3,
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          height: 236,
-                                                          width: 280,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  border:
-                                                                      Border(
-                                                            top: BorderSide(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .dividerColor,
-                                                                width: 1),
-                                                            bottom: BorderSide(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .dividerColor,
-                                                                width: 1),
-                                                          )),
-                                                          child:
-                                                              ListView.builder(
-                                                            shrinkWrap: true,
-                                                            itemCount:
-                                                                collection
-                                                                    .playlists
-                                                                    .length,
-                                                            itemBuilder: (BuildContext
-                                                                        context,
-                                                                    int playlistIndex) =>
-                                                                ListTile(
-                                                              title: Text(
-                                                                  collection
-                                                                      .playlists[
-                                                                          playlistIndex]
-                                                                      .playlistName!,
-                                                                  style: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headline4),
-                                                              leading: Icon(
-                                                                Icons
-                                                                    .queue_music,
-                                                                size: Theme.of(
-                                                                        context)
-                                                                    .iconTheme
-                                                                    .size,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .iconTheme
-                                                                    .color,
-                                                              ),
-                                                              onTap: () async {
-                                                                await collection
-                                                                    .playlistAddTrack(
-                                                                  collection
-                                                                          .playlists[
-                                                                      playlistIndex],
-                                                                  track,
-                                                                );
-                                                                Navigator.of(
-                                                                        subContext)
-                                                                    .pop();
-                                                              },
+                                                    FractionallyScaledWidget(
+                                                  child: AlertDialog(
+                                                    contentPadding:
+                                                        EdgeInsets.zero,
+                                                    actionsPadding:
+                                                        EdgeInsets.zero,
+                                                    title: Text(
+                                                      language!
+                                                          .STRING_PLAYLIST_ADD_DIALOG_TITLE,
+                                                      style:
+                                                          Theme.of(subContext)
+                                                              .textTheme
+                                                              .headline1,
+                                                    ),
+                                                    content: Container(
+                                                      height: 280,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 24,
+                                                                    top: 8,
+                                                                    bottom: 16),
+                                                            child: Text(
+                                                              language!
+                                                                  .STRING_PLAYLIST_ADD_DIALOG_BODY,
+                                                              style: Theme.of(
+                                                                      subContext)
+                                                                  .textTheme
+                                                                  .headline3,
                                                             ),
                                                           ),
-                                                        ),
-                                                      ],
+                                                          Container(
+                                                            height: 236,
+                                                            width: 280,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    border:
+                                                                        Border(
+                                                              top: BorderSide(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .dividerColor,
+                                                                  width: 1),
+                                                              bottom: BorderSide(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .dividerColor,
+                                                                  width: 1),
+                                                            )),
+                                                            child: ListView
+                                                                .builder(
+                                                              shrinkWrap: true,
+                                                              itemCount:
+                                                                  collection
+                                                                      .playlists
+                                                                      .length,
+                                                              itemBuilder: (BuildContext
+                                                                          context,
+                                                                      int playlistIndex) =>
+                                                                  ListTile(
+                                                                title: Text(
+                                                                    collection
+                                                                        .playlists[
+                                                                            playlistIndex]
+                                                                        .playlistName!,
+                                                                    style: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .headline4),
+                                                                leading: Icon(
+                                                                  Icons
+                                                                      .queue_music,
+                                                                  size: Theme.of(
+                                                                          context)
+                                                                      .iconTheme
+                                                                      .size,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .iconTheme
+                                                                      .color,
+                                                                ),
+                                                                onTap:
+                                                                    () async {
+                                                                  await collection
+                                                                      .playlistAddTrack(
+                                                                    collection
+                                                                            .playlists[
+                                                                        playlistIndex],
+                                                                    track,
+                                                                  );
+                                                                  Navigator.of(
+                                                                          subContext)
+                                                                      .pop();
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
+                                                    actions: [
+                                                      MaterialButton(
+                                                        textColor:
+                                                            Theme.of(context)
+                                                                .primaryColor,
+                                                        onPressed: Navigator.of(
+                                                                subContext)
+                                                            .pop,
+                                                        child: Text(language!
+                                                            .STRING_CANCEL),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  actions: [
-                                                    MaterialButton(
-                                                      textColor:
-                                                          Theme.of(context)
-                                                              .primaryColor,
-                                                      onPressed: Navigator.of(
-                                                              subContext)
-                                                          .pop,
-                                                      child: Text(language!
-                                                          .STRING_CANCEL),
-                                                    ),
-                                                  ],
                                                 ),
                                               );
                                             }
