@@ -67,4 +67,4 @@ jobs:
       - uses: actions/upload-artifact@v1
         with:
           name: harmonoid-linux-deb
-          path: linux/debian/$(dir linux/debian)
+          path: linux/debian/harmonoid_*
