@@ -20,25 +20,24 @@ jobs:
       - run: flutter pub get
       - run: flutter build windows
 
-      - uses: actions/upload-artifact@v1
-        with:
-          name: harmonoid-windows-exe
-          path: build/windows/runner/Release
-
       - run: |
           "%programfiles(x86)%\Inno Setup 6\iscc.exe" "Harmonoid_InnoSetup.iss"
-        shell: cmd 
-      - uses: actions/upload-artifact@v1
+        shell: cmd
+      
+      - run: cp -r build/windows/runner/Release harmonoid-windows-exe
+      - run: tar.exe -a -c -f harmonoid-windows-exe.zip harmonoid-windows-exe
+      
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: harmonoid-windows-setup
-          path: Output/harmonoid-setup.exe
-
-      - run: flutter pub run msix:create --password ${{ secrets.PASSWORD }}
-      - run: xcopy "build\windows\runner\Release\harmonoid.msix" "windows\msix\distribution\src"
-      - uses: actions/upload-artifact@v1
-        with:
-          name: harmonoid-windows-msix
-          path: windows/msix/distribution
+          draft: true
+          prerelease: false
+          body: ''
+          tag_name: 'master'
+          files: |
+            Output/harmonoid-windows-setup.exe
+            harmonoid-windows-exe.zip
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   build_linux:
     name: Linux
@@ -57,32 +56,23 @@ jobs:
       - run: flutter config --enable-linux-desktop
       - run: flutter pub get
       - run: flutter build linux --verbose
-      - uses: actions/upload-artifact@v1
-        with:
-          name: harmonoid-linux-exe
-          path: build/linux/x64/release/bundle
+
       - run: mkdir linux/debian/$(dir linux/debian)/usr/local
       - run: cp -R build/linux/x64/release/bundle linux/debian/$(dir linux/debian)/usr/local/bin -f
       - run: dpkg-deb --build --root-owner-group linux/debian/$(dir linux/debian)
       - run: sudo rm -r linux/debian/$(ls linux/debian | head -1)
-      - uses: actions/upload-artifact@v1
+      - run: cp linux/debian/$(ls linux/debian | head -1) harmonoid-linux-debian.deb
+      - run: cp -r build/linux/x64/release/bundle bundle
+      - run: zip -r harmonoid-linux-exe.zip bundle
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: harmonoid-linux-deb
-          path: linux/debian
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: master
           draft: true
           prerelease: false
-      - uses: svenstaro/upload-release-action@master
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: flutube-windows.zip
-          tag: ${{ github.ref }}
           body: ''
-          overwrite: true
+          tag_name: 'master'
+          files: |
+            harmonoid-linux-debian.deb
+            harmonoid-linux-exe.zip
+          token: ${{ secrets.GITHUB_TOKEN }}
