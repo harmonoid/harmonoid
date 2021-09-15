@@ -1,10 +1,10 @@
 name: harmonoid
 description: A beautiful app to play all your music.
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.4+5003
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -38,7 +38,7 @@ dependencies:
   url_launcher: ^6.0.3
   google_fonts: ^2.1.0
   implicitly_animated_reorderable_list: ^0.4.0-dev+4
-      
+
 dev_dependencies:
   msix:
     git:
@@ -64,7 +64,7 @@ flutter:
     - assets/images/credits-album-art-3.jpg
 
   fonts:
-    - family: 'Roboto'
+    - family: "Roboto"
       fonts:
         - asset: fonts/Roboto/Roboto-Thin.ttf
           weight: 100
@@ -76,7 +76,7 @@ flutter:
           weight: 500
         - asset: fonts/Roboto/Roboto-Bold.ttf
           weight: 700
-        - asset: fonts/Roboto/Roboto-Black.ttf 
+        - asset: fonts/Roboto/Roboto-Black.ttf
 
 msix_config:
   msix_version: 0.1.3.0
@@ -91,4 +91,3 @@ msix_config:
   publisher: E=saini123hitesh@gmail.com, CN=Hitesh Kumar Saini, OU=com.alexmercerind, O=com.alexmercerind, L=Dehradun, S=Uttarakhand, C=IN
   certificate_path: ./windows/msix/certificate.pfx
   store: false
-  

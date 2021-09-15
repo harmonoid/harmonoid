@@ -10,7 +10,6 @@
 ![](https://github.com/harmonoid/harmonoid/blob/assets/windows-1.jpg)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/windows-2.jpg)
 
-
 <br></br>
 
 <h4  align="center">Loving the project? Consider starring the repository ⭐ & share with your friends 💜.</h4>
@@ -19,14 +18,15 @@
 
 #### **Windows**
 
-- [Setup Installer](https://github.com/harmonoid/harmonoid/releases/download/v0.1.3/harmonoid-windows-setup.exe) (13.2 MB) _Recommended. Automatically links with various file extensions_
-- [Portable EXE](https://github.com/harmonoid/harmonoid/releases/download/v0.1.3/harmonoid-windows-exe.zip) (15.7 MB)
+- [Setup Installer](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-windows-setup.exe) (13.2 MB) _Recommended. Automatically links with various file extensions_
+- [Portable EXE](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-windows-exe.zip) (15.7 MB)
 
 #### **Linux**
 
-- [DEB Package](https://github.com/harmonoid/harmonoid/releases/download/v0.1.3/harmonoid-linux-debian.deb) (9.96 MB) _e.g. Ubuntu, Debian, elementaryOS, KDE Neon etc._
+- [DEB Package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-debian.deb) (9.96 MB) _e.g. Ubuntu, Debian, elementaryOS, KDE Neon etc._
 - [RPM Package](#) _Coming Soon_
-- [Raw Executable](https://github.com/harmonoid/harmonoid/releases/download/v0.1.3/harmonoid-linux-exe.zip) (13.2 MB)
+- [AppImage](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.AppImage) (---)
+- [Raw Executable](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.tar.gz) (13.2 MB)
 
 You might need to run `sudo apt-get install libmediainfo-dev gstreamer1.0-libav libwebkit2gtk-4.0-dev`.
 
@@ -37,7 +37,6 @@ Older release
 - [APK](https://github.com/harmonoid/harmonoid/releases/download/v0.0.8/harmonoid-v0.0.8.apk) (25.2 MB)
 
 Thanks to [@raitonoberu](https://github.com/raitonoberu) for creating awesome installer for Windows.
-
 
 ## Features
 

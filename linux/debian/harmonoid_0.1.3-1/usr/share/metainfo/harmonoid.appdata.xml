@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+	<id>harmonoid</id>
+	<name>Harmonoid</name>
+	<summary>A music app with a beautiful UI to play local music & YouTube music.</summary>
+	<metadata_license>CC0-1.0</metadata_license>
+	<project_license>GPL-3.0-only</project_license>
+	<recommends>
+		<control>pointing</control>
+		<control>keyboard</control>
+		<control>touch</control>
+	</recommends>
+	<developer_name>alexmercerind</developer_name>
+	<url type="homepage">https://github.com/harmonoid/harmonoid</url>
+	<description>
+		<p>A music app with a beautiful UI to play local music & YouTube music</p>
+		<p>Features:</p>
+		<ul>
+			<li>Powerful metadata engine</li>
+			<li>Discord integration</li>
+			<li>Play local music</li>
+			<li>Play YouTube music</li>
+			<li>Small size </li>
+			<li>Lyrics retriever</li>
+			<li>Beautiful user interface</li>
+			<li>Ads free forever</li>
+			<li>Playlists</li>
+			<li>Freedom - Open source.</li>
+			<li>Personalization - Set your favorite colors & themes.</li>
+		</ul>
+	</description>
+	<screenshots>
+		<screenshot>
+			<image type="source">https://raw.githubusercontent.com/harmonoid/harmonoid/assets/linux_0.jpg</image>
+			<image type="source">https://raw.githubusercontent.com/harmonoid/harmonoid/assets/linux_1.jpg</image>
+		</screenshot>
+	</screenshots>
+	<launchable type="desktop-id">harmonoid.desktop</launchable>
+	<releases>
+		<release version="0.1.3" date="2021-09-15"/>
+	</releases>
+	<content_rating type="oars-1.0" />
+	<update_contact>saini123hitesh@gmail.com</update_contact>
+</component>
