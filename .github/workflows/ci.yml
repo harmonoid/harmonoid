@@ -9,7 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.TOKEN }}
           submodules: 'recursive'
 
       - uses: subosito/flutter-action@v1
@@ -19,13 +18,19 @@ jobs:
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
       - run: flutter build windows
+      - uses: timheuer/base64-to-file@v1
+        with:
+          fileName: 'certificate.pfx'
+          encodedString: ${{ secrets.CERTIFICATE }}
+
+      - run: signtool.exe sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "certificate.pfx" /p ${{ secrets.PASSWORD }} "build/windows/runner/Release/harmonoid.exe"
+      - run: cp -r build/windows/runner/Release harmonoid-windows-exe
+      - run: tar.exe -a -c -f harmonoid-windows-exe.zip harmonoid-windows-exe
 
       - run: |
           "%programfiles(x86)%\Inno Setup 6\iscc.exe" "Harmonoid_InnoSetup.iss"
         shell: cmd
-      
-      - run: cp -r build/windows/runner/Release harmonoid-windows-exe
-      - run: tar.exe -a -c -f harmonoid-windows-exe.zip harmonoid-windows-exe
+      - run: signtool.exe sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "certificate.pfx" /p ${{ secrets.PASSWORD }} "Output/harmonoid-windows-setup.exe"
       
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -45,7 +50,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.TOKEN }}
           submodules: 'recursive'
       
       - uses: subosito/flutter-action@v1
