@@ -113,14 +113,14 @@ class ThirdPartyPage extends StatelessWidget {
           //       onPressed: () => launch('https://www.youtube.com/user/NoCopyrightSounds'),
           //       child: Text(
           //         'YOUTUBE',
-          //         style: TextStyle(color: Theme.of(context).accentColor),
+          //         style: TextStyle(color: Theme.of(context).colorScheme.secondary),
           //       ),
           //     ),
           //     MaterialButton(
           //       onPressed: () => launch('https://ncs.io/'),
           //       child: Text(
           //         'NOCOPYRIGHTSOUNDS',
-          //         style: TextStyle(color: Theme.of(context).accentColor),
+          //         style: TextStyle(color: Theme.of(context).colorScheme.secondary),
           //       ),
           //     ),
           //   ],

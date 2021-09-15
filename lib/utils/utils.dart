@@ -29,7 +29,7 @@ abstract class Utils {
       context: key.currentState!.overlay!.context,
       builder: (context) => FractionallyScaledWidget(
         child: AlertDialog(
-          backgroundColor: Theme.of(context).appBarTheme.color,
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           title: Text(
             'Could not fetch the YouTube audio stream.',
             style: TextStyle(
@@ -64,7 +64,7 @@ abstract class Utils {
       context: key.currentState!.overlay!.context,
       builder: (context) => FractionallyScaledWidget(
         child: AlertDialog(
-          backgroundColor: Theme.of(context).appBarTheme.color,
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           title: Text(
             'Invalid link.',
             style: TextStyle(
@@ -169,14 +169,12 @@ abstract class Utils {
       ),
       splashFactory: InkRipple.splashFactory,
       splashColor: Colors.transparent,
-      brightness: isLight ? Brightness.light : Brightness.dark,
       primaryColorLight: accentColor,
       primaryColor: accentColor,
       primaryColorDark: accentColor,
       scaffoldBackgroundColor: configuration.acrylicEnabled!
           ? Colors.transparent
           : (isLight ? Colors.white : Color(0xFF121212)),
-      accentColor: accentColor,
       toggleableActiveColor: accentColor,
       cardColor: isLight
           ? Colors.black.withOpacity(0.04)
@@ -195,7 +193,8 @@ abstract class Utils {
       ),
       appBarTheme: AppBarTheme(
         color: isLight ? Colors.white : Color(0xFF292929),
-        brightness: isLight ? Brightness.light : Brightness.dark,
+        systemOverlayStyle:
+            isLight ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
         elevation: 4.0,
         iconTheme: IconThemeData(
           color: isLight ? Colors.black54 : Colors.white.withOpacity(0.87),
@@ -217,6 +216,10 @@ abstract class Utils {
       ),
       textTheme: textTheme,
       primaryTextTheme: textTheme,
+      colorScheme: ColorScheme.fromSwatch().copyWith(
+        secondary: accentColor,
+        brightness: isLight ? Brightness.light : Brightness.dark,
+      ),
     );
   }
 

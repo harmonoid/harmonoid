@@ -118,7 +118,7 @@ class NowPlayingState extends State<NowPlaying> with TickerProviderStateMixin {
                     trailing: this._track!.trackName == audio.metas.title
                         ? Icon(
                             Icons.music_note,
-                            color: Theme.of(context).accentColor,
+                            color: Theme.of(context).colorScheme.secondary,
                           )
                         : null,
                     onTap: () {

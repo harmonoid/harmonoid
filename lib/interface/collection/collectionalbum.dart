@@ -456,8 +456,9 @@ class CollectionAlbum extends StatelessWidget {
                                           FileImage(this.album!.albumArt),
                                     ),
                                     trailing: ContextMenuButton(
-                                      color:
-                                          Theme.of(context).appBarTheme.color,
+                                      color: Theme.of(context)
+                                          .appBarTheme
+                                          .backgroundColor,
                                       elevation: 0,
                                       onSelected: (dynamic index) {
                                         switch (index) {
@@ -471,7 +472,7 @@ class CollectionAlbum extends StatelessWidget {
                                                     backgroundColor:
                                                         Theme.of(context)
                                                             .appBarTheme
-                                                            .color,
+                                                            .backgroundColor,
                                                     title: Text(
                                                       language!
                                                           .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
