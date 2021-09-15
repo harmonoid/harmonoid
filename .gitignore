@@ -8,6 +8,8 @@
 .buildlog/
 .history
 .svn/
+AppDir/
+*.AppImage
 
 # IntelliJ related
 *.iml

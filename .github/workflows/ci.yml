@@ -8,24 +8,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
 
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'beta'
+          channel: "beta"
 
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
       - run: flutter build windows
-      
+
       - name: Create PFX
         id: create_pfx
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: 'certificate.pfx'
+          fileName: "certificate.pfx"
           encodedString: ${{ secrets.CERTIFICATE }}
-          
+
       - run: |
           "%programfiles(x86)%\Windows Kits\10\App Certification Kit\signtool.exe" sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f "${{ steps.create_pfx.outputs.filePath }}" /p ${{ secrets.PASSWORD }} "build/windows/runner/Release/harmonoid.exe"
         shell: cmd
@@ -43,8 +41,8 @@ jobs:
         with:
           draft: true
           prerelease: false
-          body: ''
-          tag_name: 'vnext'
+          body: ""
+          tag_name: "vnext"
           files: |
             Output/harmonoid-windows-setup.exe
             harmonoid-windows-exe.zip
@@ -55,34 +53,51 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
-      
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'beta'
+          channel: "beta"
       - run: sudo apt-get update
       - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev libwebkit2gtk-4.0-dev libmediainfo-dev dpkg-dev
       - run: flutter config --enable-linux-desktop
       - run: flutter pub get
       - run: flutter build linux --verbose
 
-      - run: mkdir linux/debian/$(dir linux/debian)/usr/local
-      - run: cp -R build/linux/x64/release/bundle linux/debian/$(dir linux/debian)/usr/local/bin -f
-      - run: dpkg-deb --build --root-owner-group linux/debian/$(dir linux/debian)
-      - run: sudo rm -r linux/debian/$(ls linux/debian | head -1)
-      - run: cp linux/debian/$(ls linux/debian | head -1) harmonoid-linux-debian.deb
-      - run: cp -r build/linux/x64/release/bundle bundle
-      - run: zip -r harmonoid-linux-exe.zip bundle
+      - name: Build .deb executable
+        run: |
+          mkdir linux/debian/$(dir linux/debian)/usr/local
+          cp -R build/linux/x64/release/bundle linux/debian/$(dir linux/debian)/usr/local/bin -f
+          dpkg-deb --build --root-owner-group linux/debian/$(dir linux/debian)
+          cp linux/debian/*.deb harmonoid-linux-debian.deb
+
+      - name: Build Tarball executable
+        run: |
+          cp -r build/linux/x64/release/bundle AppDir
+          cp linux/debian/$(ls linux/debian | head -1)/usr/share/applications/harmonoid.desktop AppDir
+          cp linux/debian/$(ls linux/debian | head -1)/usr/share/pixmaps/harmonoid.png AppDir
+          cp linux/debian/$(ls linux/debian | head -1)/usr/share/metainfo/harmonoid.appdata.xml AppDir
+          tar czf harmonoid-linux-x86_64.tar.gz -C AppDir/ .
+          rm AppDir/harmonoid.appdata.xml
+
+      - name: Build AppImage
+        run: |
+          echo '#!/bin/sh
+          cd "$(dirname "$0")"
+          exec ./harmonoid' > AppDir/AppRun
+          chmod +x AppDir/AppRun
+          cp -aR linux/debian/$(ls linux/debian | head -1)/usr/ AppDir/
+          curl -L https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -o appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir/ harmonoid-linux-x86_64.AppImage
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           draft: true
           prerelease: false
-          body: ''
-          tag_name: 'vnext'
+          body: ""
+          tag_name: "vnext"
           files: |
             harmonoid-linux-debian.deb
-            harmonoid-linux-exe.zip
+            harmonoid-linux-x86_64.tar.gz
+            harmonoid-linux-x86_64.AppImage
           token: ${{ secrets.GITHUB_TOKEN }}
