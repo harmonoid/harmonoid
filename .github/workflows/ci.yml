@@ -21,6 +21,7 @@ jobs:
       - uses: timheuer/base64-to-file@v1
         with:
           fileName: 'certificate.pfx'
+          fileDir: .
           encodedString: ${{ secrets.CERTIFICATE }}
 
       - run: |
