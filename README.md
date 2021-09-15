@@ -25,10 +25,11 @@
 
 - [DEB Package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-debian.deb) (9.96 MB) _e.g. Ubuntu, Debian, elementaryOS, KDE Neon etc._
 - [RPM Package](#) _Coming Soon_
-- [AppImage](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.AppImage) (---)
+- [AppImage](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.AppImage) (12.9 MB)
 - [Raw Executable](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.tar.gz) (13.2 MB)
 
-You might need to run `sudo apt-get install libmediainfo-dev gstreamer1.0-libav libwebkit2gtk-4.0-dev`.
+You might need to run `sudo apt-get install libmediainfo-dev gstreamer1.0-libav libwebkit2gtk-4.0-dev` on Ubuntu or Debian.
+
 
 #### **Android**
 
@@ -36,7 +37,9 @@ Older release
 
 - [APK](https://github.com/harmonoid/harmonoid/releases/download/v0.0.8/harmonoid-v0.0.8.apk) (25.2 MB)
 
-Thanks to [@raitonoberu](https://github.com/raitonoberu) for creating awesome installer for Windows.
+Thanks to [@raitonoberu](https://github.com/raitonoberu) for creating INNO installer for Windows.
+
+Thanks to [@prateekmedia](https://github.com/prateekmedia) for creating AppImage for Linux.
 
 ## Features
 
