@@ -227,7 +227,7 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      backgroundColor: Theme.of(context).accentColor,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
       child: TweenAnimationBuilder(
         child: Icon(
           Icons.refresh,

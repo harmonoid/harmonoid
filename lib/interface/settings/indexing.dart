@@ -131,14 +131,17 @@ class IndexingState extends State<IndexingSetting> {
                                     child: LinearProgressIndicator(
                                       value: value,
                                       valueColor: AlwaysStoppedAnimation(
-                                          Theme.of(context).accentColor),
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .secondary),
                                     ),
                                   ),
                                 ],
                               ))
                       : Container(
                           child: Chip(
-                          backgroundColor: Theme.of(context).accentColor,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondary,
                           avatar: Icon(
                             FluentIcons.checkmark_circle_48_regular,
                             color: Colors.white,
@@ -197,7 +200,7 @@ class IndexingState extends State<IndexingSetting> {
           child: Text(
             'ADD NEW FOLDER',
             style: TextStyle(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
         ),
@@ -219,7 +222,7 @@ class IndexingState extends State<IndexingSetting> {
           child: Text(
             language!.STRING_REFRESH,
             style: TextStyle(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
         ),

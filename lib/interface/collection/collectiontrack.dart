@@ -37,8 +37,9 @@ class CollectionTrackTab extends StatelessWidget {
                                 builder: (subContext) =>
                                     FractionallyScaledWidget(
                                   child: AlertDialog(
-                                    backgroundColor:
-                                        Theme.of(context).appBarTheme.color,
+                                    backgroundColor: Theme.of(context)
+                                        .appBarTheme
+                                        .backgroundColor,
                                     title: Text(
                                       language!
                                           .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
@@ -377,7 +378,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                       child: IconButton(
                         icon: Icon(
                           Icons.play_arrow_outlined,
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).colorScheme.secondary,
                           size: 28.0,
                         ),
                         onPressed: null,

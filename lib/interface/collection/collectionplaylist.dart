@@ -89,22 +89,27 @@ class CollectionPlaylistTab extends StatelessWidget {
                                     hintStyle:
                                         Theme.of(context).textTheme.headline3,
                                     labelStyle: TextStyle(
-                                      color: Theme.of(context).accentColor,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            color:
-                                                Theme.of(context).accentColor,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             width: 1)),
                                     border: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            color:
-                                                Theme.of(context).accentColor,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             width: 1)),
                                     focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            color:
-                                                Theme.of(context).accentColor,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             width: 1)),
                                   ),
                                 ),

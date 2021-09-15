@@ -143,7 +143,8 @@ class AboutPage extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                               ),
-                              backgroundColor: Theme.of(context).accentColor,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
                             ),
                             SizedBox(width: 8.0),
                             Chip(
@@ -153,7 +154,8 @@ class AboutPage extends StatelessWidget {
                                 '${this.repository!['forks']} forks',
                                 style: TextStyle(color: Colors.white),
                               ),
-                              backgroundColor: Theme.of(context).accentColor,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
                             ),
                           ]),
                         ),
@@ -201,7 +203,8 @@ class AboutPage extends StatelessWidget {
                             child: Text(
                               language!.STRING_SETTING_STAR_GITHUB,
                               style: TextStyle(
-                                  color: Theme.of(context).accentColor),
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
                             ),
                           ),
                         ],
@@ -255,7 +258,8 @@ class AboutPage extends StatelessWidget {
                       ),
                       child: Text(
                         'GITHUB',
-                        style: TextStyle(color: Theme.of(context).accentColor),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary),
                       ),
                     ),
                     MaterialButton(
@@ -264,7 +268,8 @@ class AboutPage extends StatelessWidget {
                       ),
                       child: Text(
                         'TWITTER',
-                        style: TextStyle(color: Theme.of(context).accentColor),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary),
                       ),
                     ),
                     MaterialButton(
@@ -273,7 +278,8 @@ class AboutPage extends StatelessWidget {
                       ),
                       child: Text(
                         'LINKEDIN',
-                        style: TextStyle(color: Theme.of(context).accentColor),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary),
                       ),
                     ),
                   ],

@@ -424,8 +424,9 @@ class NowPlayingBar extends StatelessWidget {
                               context: context,
                               builder: (context) => FractionallyScaledWidget(
                                 child: SimpleDialog(
-                                  backgroundColor:
-                                      Theme.of(context).appBarTheme.color,
+                                  backgroundColor: Theme.of(context)
+                                      .appBarTheme
+                                      .backgroundColor,
                                   title: Text(
                                     currentlyPlaying
                                         .tracks[currentlyPlaying.index!]

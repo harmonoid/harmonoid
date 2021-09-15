@@ -62,7 +62,7 @@ class VersionState extends State<VersionSetting> {
                 child: Text(
                   language!.STRING_DOWNLOAD_UPDATE,
                   style: TextStyle(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
               ),
