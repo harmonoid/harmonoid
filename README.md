@@ -5,10 +5,12 @@
 
 🏁 Feel free to report bugs & issues. We'll be there to fix.
 <br></br>
-![](https://github.com/harmonoid/harmonoid/blob/assets/linux_0.jpg)
-![](https://github.com/harmonoid/harmonoid/blob/assets/linux_1.jpg)
+
+
 ![](https://github.com/harmonoid/harmonoid/blob/assets/windows-1.jpg)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/windows-2.jpg)
+![](https://github.com/harmonoid/harmonoid/blob/assets/linux_0.jpg)
+![](https://github.com/harmonoid/harmonoid/blob/assets/linux_1.jpg)
 
 <br></br>
 
