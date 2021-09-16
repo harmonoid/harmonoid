@@ -4,7 +4,7 @@ Section: base
 Priority: optional
 Homepage: https://github.com/harmonoid/harmonoid
 Architecture: amd64
-Depends: libmediainfo-dev, gstreamer1.0-libav, libwebkit2gtk-4.0-dev
+Depends: mediainfo, gstreamer1.0-libav, libwebkit2gtk-4.0-dev
 Maintainer: Hitesh Kumar Saini <saini123hitesh@gmail.com>
 Description: Harmonoid
  A music app with a beautiful UI to play local music & YouTube music. Distributes music
