@@ -47,14 +47,6 @@ Future<void> main(List<String> args) async {
       WidgetsFlutterBinding.ensureInitialized();
       await Configuration.init();
       await Acrylic.initialize();
-      await Acrylic.setEffect(
-        effect: configuration.acrylicEnabled!
-            ? AcrylicEffect.transparent
-            : AcrylicEffect.solid,
-        gradientColor: configuration.themeMode! == ThemeMode.light
-            ? Colors.white70
-            : Color(0xCC121212),
-      );
       LWM.initialize();
       DiscordRPC.initialize();
       await Intent.init(args: args);

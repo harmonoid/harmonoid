@@ -32,19 +32,11 @@ abstract class Utils {
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           title: Text(
             'Could not fetch the YouTube audio stream.',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.0,
-              fontWeight: FontWeights.thick(false),
-            ),
+            style: Theme.of(context).textTheme.headline1,
           ),
           content: Text(
             'Please report the issue on the repository. Possibly something changed on YouTube\'s website.\nLet\'s play your local music till then.',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
-              fontSize: 14.0,
-              fontWeight: FontWeights.thin(false),
-            ),
+            style: Theme.of(context).textTheme.headline5,
           ),
           actions: [
             MaterialButton(
@@ -67,19 +59,11 @@ abstract class Utils {
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           title: Text(
             'Invalid link.',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.0,
-              fontWeight: FontWeights.thick(false),
-            ),
+            style: Theme.of(context).textTheme.headline1,
           ),
           content: Text(
             'Please give us correct link to the media.\nIf you think this is a false result, please report at the repository.',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
-              fontSize: 14.0,
-              fontWeight: FontWeights.thin(false),
-            ),
+            style: Theme.of(context).textTheme.headline5,
           ),
           actions: [
             MaterialButton(

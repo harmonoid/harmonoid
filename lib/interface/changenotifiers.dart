@@ -118,12 +118,10 @@ class Visuals extends ChangeNotifier {
       {Accent? accent, ThemeMode? themeMode, TargetPlatform? platform}) {
     this.accent = accent ?? this.accent;
     this.themeMode = themeMode ?? this.themeMode;
-    if (Platform.isWindows || Platform.isLinux) {
+    if (Platform.isWindows) {
       Acrylic.setEffect(
         effect: configuration.acrylicEnabled!
-            ? (Platform.isWindows
-                ? AcrylicEffect.acrylic
-                : AcrylicEffect.transparent)
+            ? AcrylicEffect.acrylic
             : AcrylicEffect.disabled,
         gradientColor: this.themeMode == ThemeMode.light
             ? Colors.white70
