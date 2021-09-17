@@ -677,6 +677,13 @@ class CollectionArtist extends StatelessWidget {
                                               );
                                             }
                                             break;
+                                          case 3:
+                                            Playback.add(
+                                              [
+                                                track,
+                                              ],
+                                            );
+                                            break;
                                         }
                                       },
                                       icon: Icon(
@@ -709,6 +716,15 @@ class CollectionArtist extends StatelessWidget {
                                           value: 2,
                                           child: Text(
                                             language!.STRING_ADD_TO_PLAYLIST,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                          ),
+                                        ),
+                                        PopupMenuItem(
+                                          value: 3,
+                                          child: Text(
+                                            language!.STRING_ADD_TO_NOW_PLAYING,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4,

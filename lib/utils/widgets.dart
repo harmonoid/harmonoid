@@ -1,15 +1,17 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:math' as math;
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
-import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:share_plus/share_plus.dart';
 
 class FractionallyScaledWidget extends StatelessWidget {
   final Widget child;
@@ -786,5 +788,184 @@ class WindowTitleBar extends StatelessWidget {
             ),
           )
         : Container();
+  }
+}
+
+class CollectionTrackContextMenu extends StatelessWidget {
+  final Track track;
+  const CollectionTrackContextMenu({
+    Key? key,
+    required this.track,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<Collection>(
+      builder: (context, collection, _) => ContextMenuButton(
+        elevation: 0,
+        onSelected: (index) {
+          switch (index) {
+            case 0:
+              showDialog(
+                context: context,
+                builder: (subContext) => FractionallyScaledWidget(
+                  child: AlertDialog(
+                    backgroundColor:
+                        Theme.of(context).appBarTheme.backgroundColor,
+                    title: Text(
+                      language!
+                          .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
+                      style: Theme.of(subContext).textTheme.headline1,
+                    ),
+                    content: Text(
+                      language!
+                          .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
+                      style: Theme.of(subContext).textTheme.headline5,
+                    ),
+                    actions: [
+                      MaterialButton(
+                        textColor: Theme.of(context).primaryColor,
+                        onPressed: () async {
+                          await collection.delete(track);
+                          Navigator.of(subContext).pop();
+                        },
+                        child: Text(language!.STRING_YES),
+                      ),
+                      MaterialButton(
+                        textColor: Theme.of(context).primaryColor,
+                        onPressed: Navigator.of(subContext).pop,
+                        child: Text(language!.STRING_NO),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+              break;
+            case 1:
+              Share.shareFiles(
+                [track.filePath!],
+                subject:
+                    '${track.trackName} • ${track.albumName}. Shared using Harmonoid!',
+              );
+              break;
+            case 2:
+              showDialog(
+                context: context,
+                builder: (subContext) => FractionallyScaledWidget(
+                  child: AlertDialog(
+                    contentPadding: EdgeInsets.zero,
+                    actionsPadding: EdgeInsets.zero,
+                    title: Text(
+                      language!.STRING_PLAYLIST_ADD_DIALOG_TITLE,
+                      style: Theme.of(subContext).textTheme.headline1,
+                    ),
+                    content: Container(
+                      height: 280,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
+                            child: Text(
+                              language!.STRING_PLAYLIST_ADD_DIALOG_BODY,
+                              style: Theme.of(subContext).textTheme.headline5,
+                            ),
+                          ),
+                          Container(
+                            height: 236,
+                            width: 280,
+                            decoration: BoxDecoration(
+                              border: Border.symmetric(
+                                vertical: BorderSide(
+                                  color: Theme.of(context).dividerColor,
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: collection.playlists.length,
+                              itemBuilder: (context, playlistIndex) {
+                                return ListTile(
+                                  title: Text(
+                                    collection
+                                        .playlists[playlistIndex].playlistName!,
+                                    style:
+                                        Theme.of(context).textTheme.headline2,
+                                  ),
+                                  leading: Icon(
+                                    Icons.queue_music,
+                                    size: Theme.of(context).iconTheme.size,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                  onTap: () async {
+                                    await collection.playlistAddTrack(
+                                      collection.playlists[playlistIndex],
+                                      track,
+                                    );
+                                    Navigator.of(subContext).pop();
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      MaterialButton(
+                        textColor: Theme.of(context).primaryColor,
+                        onPressed: Navigator.of(subContext).pop,
+                        child: Text(language!.STRING_CANCEL),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+              break;
+            case 3:
+              Playback.add(
+                [
+                  track,
+                ],
+              );
+              break;
+          }
+        },
+        tooltip: language!.STRING_OPTIONS,
+        itemBuilder: (_) => <PopupMenuEntry>[
+          PopupMenuItem(
+            value: 0,
+            child: Text(
+              language!.STRING_DELETE,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+          PopupMenuItem(
+            value: 1,
+            child: Text(
+              language!.STRING_SHARE,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+          PopupMenuItem(
+            value: 2,
+            child: Text(
+              language!.STRING_ADD_TO_PLAYLIST,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+          PopupMenuItem(
+            value: 3,
+            child: Text(
+              language!.STRING_ADD_TO_NOW_PLAYING,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
