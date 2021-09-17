@@ -150,6 +150,15 @@ abstract class Utils {
       fontFamily: Platform.isLinux ? 'Roboto' : null,
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: accentColor,
+        selectionColor: accentColor.withOpacity(0.2),
+      ),
+      scrollbarTheme: ScrollbarThemeData(
+        thickness: MaterialStateProperty.all(8.0),
+        thumbColor: MaterialStateProperty.all(
+          isLight
+              ? Colors.black.withOpacity(0.2)
+              : Colors.white.withOpacity(0.2),
+        ),
       ),
       splashFactory: InkRipple.splashFactory,
       splashColor: Colors.transparent,
