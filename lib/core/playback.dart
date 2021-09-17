@@ -54,7 +54,8 @@ final LIBWINMEDIA.Player player = LIBWINMEDIA.Player(id: 0)
   })
   ..streams.duration.listen((duration) {
     currentlyPlaying.duration = duration;
-  });
+  })
+  ..volume = 1.0;
 
 final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
     AssetsAudioPlayer.AssetsAudioPlayer.withId('harmonoid')

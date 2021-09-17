@@ -60,28 +60,22 @@ class CollectionSearchState extends State<CollectionSearch> {
         body: Column(
           children: [
             Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white.withOpacity(0.08)
-                    : Colors.black.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
               margin: EdgeInsets.all(8.0),
-              padding: EdgeInsets.all(8.0),
-              height: 56.0,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 12.0,
+                  Padding(
+                    padding: EdgeInsets.only(right: 8.0),
+                    child: Container(
+                      width: 56.0,
+                      child: Icon(
+                        FluentIcons.search_24_regular,
+                        size: 24.0,
+                      ),
+                    ),
                   ),
                   Expanded(
                     child: TextField(
-                      autofocus: true,
                       controller: textFieldController,
-                      cursorWidth: 1.0,
-                      style: Theme.of(context).textTheme.headline4,
                       onChanged: (String query) async {
                         int localIndex = globalIndex;
                         globalIndex++;
@@ -342,11 +336,34 @@ class CollectionSearchState extends State<CollectionSearch> {
                           setState(() {});
                         }
                       },
-                      decoration: InputDecoration.collapsed(
+                      style: Theme.of(context).textTheme.headline4,
+                      cursorWidth: 1.0,
+                      decoration: InputDecoration(
                         hintText: language!.STRING_COLLECTION_SEARCH_LABEL,
                         hintStyle: Theme.of(context).textTheme.headline3,
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.secondary,
+                            width: 1.0,
+                          ),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).dividerColor,
+                            width: 1.0,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.secondary,
+                            width: 1.0,
+                          ),
+                        ),
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    width: 24.0,
                   ),
                 ],
               ),
