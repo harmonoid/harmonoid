@@ -14,74 +14,76 @@ class ExceptionApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      darkTheme: Utils.getTheme(
-        accentColor: Colors.deepPurpleAccent.shade200,
+    return FractionallyScaledWidget(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        darkTheme: Utils.getTheme(
+          accentColor: Colors.deepPurpleAccent.shade200,
+          themeMode: ThemeMode.dark,
+        ),
         themeMode: ThemeMode.dark,
-      ),
-      themeMode: ThemeMode.dark,
-      home: Scaffold(
-        body: Column(
-          children: [
-            WindowTitleBar(),
-            Expanded(
-              child: ListView(
-                children: [
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  SettingsTile(
-                    title: 'Exception occured',
-                    subtitle: 'Something wrong has happened.',
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          exception.toString(),
-                        ),
-                        Text(
-                          stacktrace.toString(),
-                        ),
-                        Divider(
-                          color: Colors.transparent,
-                          height: 16.0,
-                        ),
-                      ],
+        home: Scaffold(
+          body: Column(
+            children: [
+              WindowTitleBar(),
+              Expanded(
+                child: ListView(
+                  children: [
+                    SizedBox(
+                      height: 8.0,
                     ),
-                    margin: EdgeInsets.all(16.0),
+                    SettingsTile(
+                      title: 'Exception occured',
+                      subtitle: 'Something wrong has happened.',
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            exception.toString(),
+                          ),
+                          Text(
+                            stacktrace.toString(),
+                          ),
+                          Divider(
+                            color: Colors.transparent,
+                            height: 16.0,
+                          ),
+                        ],
+                      ),
+                      margin: EdgeInsets.all(16.0),
+                    ),
+                  ],
+                ),
+              ),
+              ButtonBar(
+                children: [
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Colors.deepPurpleAccent.shade200,
+                      ),
+                    ),
+                    onPressed: () => UrlLauncher.launch(
+                        'https://github.com/alexmercerind/harmonoid/issues'),
+                    child: Text(
+                      'REPORT ISSUE',
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Colors.deepPurpleAccent.shade200,
+                      ),
+                    ),
+                    onPressed: SystemNavigator.pop,
+                    child: Text(
+                      'EXIT APP',
+                    ),
                   ),
                 ],
               ),
-            ),
-            ButtonBar(
-              children: [
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      Colors.deepPurpleAccent.shade200,
-                    ),
-                  ),
-                  onPressed: () => UrlLauncher.launch(
-                      'https://github.com/alexmercerind/harmonoid/issues'),
-                  child: Text(
-                    'REPORT ISSUE',
-                  ),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      Colors.deepPurpleAccent.shade200,
-                    ),
-                  ),
-                  onPressed: SystemNavigator.pop,
-                  child: Text(
-                    'EXIT APP',
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

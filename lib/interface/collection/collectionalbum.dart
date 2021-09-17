@@ -282,9 +282,8 @@ class CollectionAlbum extends StatelessWidget {
         ),
         height: MediaQuery.of(context).size.height,
         width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.75 : 1.0)) *
-            2 /
-            5,
+                (Platform.isLinux ? 0.75 : 1.0)) /
+            3,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -295,8 +294,9 @@ class CollectionAlbum extends StatelessWidget {
                 SizedBox(
                   width: 24.0,
                 ),
-                SubHeader(
+                Text(
                   language!.STRING_ALBUM_SINGLE,
+                  style: Theme.of(context).textTheme.headline1,
                 )
               ],
             ),
@@ -305,95 +305,104 @@ class CollectionAlbum extends StatelessWidget {
               thickness: 1.0,
             ),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(8.0),
-                    child: Hero(
-                      tag: 'album_art_${this.album!.albumName}',
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12.0),
-                        child: Image.file(
-                          this.album!.albumArt,
-                          fit: BoxFit.cover,
-                          alignment: Alignment.topCenter,
-                          width: 256.0,
-                          height: 256.0,
-                          filterQuality: FilterQuality.low,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxWidth: 256.0,
+                            maxHeight: 256.0,
+                          ),
+                          child: Hero(
+                            tag: 'album_art_${this.album!.albumName}',
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12.0),
+                              child: Image.file(
+                                this.album!.albumArt,
+                                fit: BoxFit.contain,
+                                alignment: Alignment.center,
+                                filterQuality: FilterQuality.low,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 18.0),
-                  Container(
-                    margin: EdgeInsets.all(8.0),
-                    padding: EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white.withOpacity(0.04)
-                          : Colors.black.withOpacity(0.04),
-                      borderRadius: BorderRadius.circular(8.0),
+                    SizedBox(height: 18.0),
+                    Container(
+                      margin: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white.withOpacity(0.04)
+                            : Colors.black.withOpacity(0.04),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            this.album!.albumName!,
+                            style: Theme.of(context).textTheme.headline1,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(
+                            '${this.album!.albumArtistName}\n(${this.album!.year ?? 'Unknown Year'})',
+                            style: Theme.of(context).textTheme.headline3,
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Column(
+                    SizedBox(height: 18.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          this.album!.albumName!,
-                          style: Theme.of(context).textTheme.headline1,
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          onPressed: () {
+                            Playback.play(
+                              index: 0,
+                              tracks: album!.tracks,
+                            );
+                          },
+                          child: Text(
+                            language!.STRING_PLAY_NOW,
+                          ),
                         ),
-                        SizedBox(height: 4.0),
-                        Text(
-                          '${this.album!.albumArtistName}\n(${this.album!.year ?? 'Unknown Year'})',
-                          style: Theme.of(context).textTheme.headline3,
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
+                        SizedBox(
+                          width: 12.0,
+                        ),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          onPressed: () {
+                            Playback.add(album!.tracks);
+                          },
+                          child: Text(
+                            language!.STRING_ADD_TO_NOW_PLAYING,
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 18.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        onPressed: () {
-                          Playback.play(
-                            index: 0,
-                            tracks: album!.tracks,
-                          );
-                        },
-                        child: Text(
-                          language!.STRING_PLAY_NOW,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 12.0,
-                      ),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        onPressed: () {
-                          Playback.add(album!.tracks);
-                        },
-                        child: Text(
-                          language!.STRING_ADD_TO_NOW_PLAYING,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
