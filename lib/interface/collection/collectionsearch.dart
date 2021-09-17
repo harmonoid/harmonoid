@@ -19,18 +19,9 @@ class CollectionSearch extends StatefulWidget {
 
 class CollectionSearchState extends State<CollectionSearch> {
   int elementsPerRow = 2;
-  TextEditingController textFieldController = new TextEditingController();
-  String query = '';
+  TextEditingController controller = new TextEditingController();
   bool get search =>
-      _albums.length == 0 &&
-      _tracks.length == 0 &&
-      _artists.length == 0 &&
-      query == '';
-  bool get result =>
-      _albums.length == 0 &&
-      _tracks.length == 0 &&
-      _artists.length == 0 &&
-      query != '';
+      _albums.length == 0 && _tracks.length == 0 && _artists.length == 0;
   bool get albums => _albums.length == 0;
   bool get tracks => _tracks.length == 0;
   bool get artists => _artists.length == 0;
@@ -75,7 +66,8 @@ class CollectionSearchState extends State<CollectionSearch> {
                   ),
                   Expanded(
                     child: TextField(
-                      controller: textFieldController,
+                      autofocus: true,
+                      controller: controller,
                       onChanged: (String query) async {
                         int localIndex = globalIndex;
                         globalIndex++;
@@ -369,91 +361,75 @@ class CollectionSearchState extends State<CollectionSearch> {
               ),
             ),
             Expanded(
-              child: CustomListView(
-                children: <Widget>[
-                      search
-                          ? Container(
-                              height: MediaQuery.of(context).size.height -
-                                  96.0 -
-                                  96.0,
-                              width: (MediaQuery.of(context).size.width *
-                                  (Platform.isLinux ? 0.75 : 1.0)),
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(FluentIcons.search_20_regular,
-                                        size: 72,
-                                        color:
-                                            Theme.of(context).iconTheme.color),
-                                    SizedBox(
-                                      height: 16.0,
+              child: search
+                  ? (controller.text.isEmpty
+                      ? Center(
+                          child: Icon(
+                            FluentIcons.search_20_regular,
+                            size: 72.0,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                        )
+                      : Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(FluentIcons.emoji_sad_24_regular,
+                                  size: 72.0,
+                                  color: Theme.of(context).iconTheme.color),
+                              Divider(
+                                color: Colors.transparent,
+                                height: 12.0,
+                              ),
+                              Text(
+                                language!.STRING_LOCAL_SEARCH_NO_RESULTS,
+                                style: Theme.of(context).textTheme.headline3,
+                              )
+                            ],
+                          ),
+                        ))
+                  : ListView(
+                      children: <Widget>[
+                            albums
+                                ? Container()
+                                : SubHeader(language!.STRING_ALBUM),
+                            albums
+                                ? Container()
+                                : Container(
+                                    margin: EdgeInsets.only(left: 8.0),
+                                    height: tileHeightAlbum + 16.0,
+                                    width: (MediaQuery.of(context).size.width *
+                                        (Platform.isLinux ? 0.75 : 1.0)),
+                                    child: CustomListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: _albums,
                                     ),
-                                    // Text(
-                                    //   language!.STRING_LOCAL_SEARCH_WELCOME,
-                                    //   style:
-                                    //       Theme.of(context).textTheme.headline3,
-                                    // )
-                                  ],
-                                ),
-                              ),
-                            )
-                          : Container(),
-                      result
-                          ? Container(
-                              margin: EdgeInsets.only(top: 56),
-                              width: (MediaQuery.of(context).size.width *
-                                  (Platform.isLinux ? 0.75 : 1.0)),
-                              child: Column(
-                                children: [
-                                  Icon(FluentIcons.emoji_sad_20_regular,
-                                      size: 72,
-                                      color: Theme.of(context).iconTheme.color),
-                                  Divider(
-                                    color: Colors.transparent,
-                                    height: 8,
                                   ),
-                                  Text(
-                                    language!.STRING_LOCAL_SEARCH_NO_RESULTS,
-                                    style:
-                                        Theme.of(context).textTheme.headline3,
-                                  )
-                                ],
-                              ),
-                            )
-                          : Container(),
-                      albums ? Container() : SubHeader(language!.STRING_ALBUM),
-                      albums
-                          ? Container()
-                          : Container(
-                              margin: EdgeInsets.only(left: 8.0),
-                              height: tileHeightAlbum + 16.0,
-                              width: (MediaQuery.of(context).size.width *
-                                  (Platform.isLinux ? 0.75 : 1.0)),
-                              child: CustomListView(
-                                scrollDirection: Axis.horizontal,
-                                children: _albums,
-                              ),
-                            ),
-                      artists
-                          ? Container()
-                          : SubHeader(language!.STRING_ARTIST),
-                      artists
-                          ? Container()
-                          : Container(
-                              margin: EdgeInsets.only(left: 8.0),
-                              height: tileHeightArtist + 16.0,
-                              width: (MediaQuery.of(context).size.width *
-                                  (Platform.isLinux ? 0.75 : 1.0)),
-                              child: CustomListView(
-                                scrollDirection: Axis.horizontal,
-                                children: _artists,
-                              ),
-                            ),
-                      tracks ? Container() : SubHeader(language!.STRING_TRACK),
-                    ] +
-                    (tracks ? [Container()] : _tracks),
-              ),
+                            artists
+                                ? Container()
+                                : SubHeader(language!.STRING_ARTIST),
+                            artists
+                                ? Container()
+                                : Container(
+                                    margin: EdgeInsets.only(left: 8.0),
+                                    height: tileHeightArtist + 16.0,
+                                    width: (MediaQuery.of(context).size.width *
+                                        (Platform.isLinux ? 0.75 : 1.0)),
+                                    child: CustomListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: _artists,
+                                    ),
+                                  ),
+                            tracks
+                                ? Container()
+                                : SubHeader(language!.STRING_TRACK),
+                          ] +
+                          (tracks
+                              ? [
+                                  Container(),
+                                ]
+                              : _tracks),
+                    ),
             ),
           ],
         ),
