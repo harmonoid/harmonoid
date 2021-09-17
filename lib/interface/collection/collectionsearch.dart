@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/interface/collection/collectionartist.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
-import 'package:share_plus/share_plus.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/collection/collectionalbum.dart';
