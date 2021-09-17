@@ -99,7 +99,7 @@ jobs:
           body: ""
           tag_name: "vnext"
           files: |
-            harmonoid-linux-debian.deb
+            harmonoid-linux-x86_64.deb
             harmonoid-linux-x86_64.tar.gz
             harmonoid-linux-x86_64.AppImage
           token: ${{ secrets.GITHUB_TOKEN }}
