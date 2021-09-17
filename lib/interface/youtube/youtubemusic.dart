@@ -302,6 +302,12 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                               color: Theme.of(context).colorScheme.secondary,
                               width: 1.0),
                         ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).dividerColor,
+                            width: 1.0,
+                          ),
+                        ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: Theme.of(context).colorScheme.secondary,

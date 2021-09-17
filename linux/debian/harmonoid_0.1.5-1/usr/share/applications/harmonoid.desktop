@@ -7,7 +7,6 @@ Icon=harmonoid
 Exec=harmonoid
 StartupWMClass=harmonoid
 Terminal=false
-Type=Application
 Categories=AudioVideo;Audio;Player;Music;
 GenericName=Harmonoid
 Keywords=music;audio;lyrics;library;music-library;youtube;
