@@ -657,8 +657,8 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
           width: 40.0,
           decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.04)
-                : Colors.black.withOpacity(0.04),
+                ? Colors.white.withOpacity(0.08)
+                : Colors.black.withOpacity(0.08),
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: widget.icon ??
