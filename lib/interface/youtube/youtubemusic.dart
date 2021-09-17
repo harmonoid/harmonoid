@@ -278,6 +278,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                     ),
                     fieldViewBuilder: (context, controller, node, callback) =>
                         TextField(
+                      autofocus: true,
                       controller: controller,
                       focusNode: node,
                       onChanged: (value) async {
