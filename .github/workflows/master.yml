@@ -1,9 +1,12 @@
-name: Github Actions
-on: [push, pull_request]
+name: Harmonoid
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build_windows:
-    name: Windows
+    name: Harmonoid Windows
     runs-on: windows-latest
 
     steps:
@@ -49,7 +52,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   build_linux:
-    name: Linux
+    name: Harmonoid Linux
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
