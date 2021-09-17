@@ -311,19 +311,23 @@ class CollectionAlbum extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: Hero(
-                          tag: 'album_art_${this.album!.albumName}',
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12.0),
-                            child: Image.file(
-                              this.album!.albumArt,
-                              fit: BoxFit.cover,
-                              alignment: Alignment.topCenter,
-                              width: 256.0,
-                              height: 256.0,
-                              filterQuality: FilterQuality.low,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxWidth: 256.0,
+                            maxHeight: 256.0,
+                          ),
+                          child: Hero(
+                            tag: 'album_art_${this.album!.albumName}',
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12.0),
+                              child: Image.file(
+                                this.album!.albumArt,
+                                fit: BoxFit.contain,
+                                alignment: Alignment.center,
+                                filterQuality: FilterQuality.low,
+                              ),
                             ),
                           ),
                         ),

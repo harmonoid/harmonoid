@@ -242,19 +242,8 @@ class CollectionArtist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int elementsPerRow =
-        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) *
-                2 /
-                3) ~/
-            (156 + 8);
-    double tileWidth = (((MediaQuery.of(context).size.width *
-                    (Platform.isLinux ? 0.75 : 1.0)) *
-                2 /
-                3) -
-            16 -
-            (elementsPerRow - 1) * 8) /
-        elementsPerRow;
-    double tileHeight = tileWidth * 260 / 156;
+    double tileWidth = 156.0;
+    double tileHeight = 260.0;
 
     return Consumer<Collection>(
       child: Container(
@@ -294,19 +283,23 @@ class CollectionArtist extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: Hero(
-                          tag: 'artist_art_${this.artist!.artistName}',
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12.0),
-                            child: Image.file(
-                              this.artist!.tracks.last.albumArt,
-                              fit: BoxFit.cover,
-                              alignment: Alignment.topCenter,
-                              width: 256.0,
-                              height: 256.0,
-                              filterQuality: FilterQuality.low,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxWidth: 256.0,
+                            maxHeight: 256.0,
+                          ),
+                          child: Hero(
+                            tag: 'artist_art_${this.artist!.artistName}',
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12.0),
+                              child: Image.file(
+                                this.artist!.tracks.last.albumArt,
+                                fit: BoxFit.contain,
+                                alignment: Alignment.center,
+                                filterQuality: FilterQuality.low,
+                              ),
                             ),
                           ),
                         ),
