@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math' as math;
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -59,8 +58,78 @@ class YouTubeMusicState extends State<YouTubeMusic> {
     }
   }
 
-  TextEditingController controller = TextEditingController();
+  void search(String query) async {
+    try {
+      Track? track = await YTM.identify(query);
+      if (track != null) {
+        this.play(track);
+        return;
+      }
+    } catch (exception) {
+      Utils.handleInvalidLink();
+      return;
+    }
+    this.setState(() {
+      this.result = Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation(
+            Theme.of(context).primaryColor,
+          ),
+        ),
+      );
+    });
+    List<Track> tracks = await YTM.search(query);
+    this.result = tracks.isNotEmpty
+        ? ListView(
+            children: tracks
+                .map(
+                  (track) => Material(
+                    color: Colors.transparent,
+                    child: ListTile(
+                      onTap: () => this.play(
+                        track,
+                      ),
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(track.networkAlbumArt!),
+                      ),
+                      title: Text(
+                        track.trackName!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Text(
+                        track.trackArtistNames!.join(', ') +
+                            ' • ${track.albumName}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: IconButton(
+                        onPressed: () => this.play(
+                          track,
+                        ),
+                        icon: Icon(
+                          FluentIcons.play_circle_20_regular,
+                          size: 20.0,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                        iconSize: Theme.of(context).iconTheme.size!,
+                        splashRadius: Theme.of(context).iconTheme.size! - 8,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          )
+        : Center(
+            child: Text(
+              language!.STRING_YOUTUBE_NO_RESULTS,
+            ),
+          );
+    this.setState(() {});
+  }
+
   Widget? result;
+  List<String> suggestions = [];
   @override
   Widget build(BuildContext context) {
     int elementsPerRow =
@@ -78,16 +147,6 @@ class YouTubeMusicState extends State<YouTubeMusic> {
         children: [
           Container(
             margin: EdgeInsets.all(8.0),
-            height: 56.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white.withOpacity(0.08)
-                  : Colors.black.withOpacity(0.08),
-            ),
-            width: (MediaQuery.of(context).size.width *
-                    (Platform.isLinux ? 0.75 : 1.0)) -
-                16,
             child: Row(
               children: [
                 Padding(
@@ -107,7 +166,6 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                               this.setState(
                                 () => this.result = null,
                               );
-                              this.controller.clear();
                             },
                             borderRadius: BorderRadius.all(
                               Radius.circular(8.0),
@@ -131,116 +189,131 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                         ),
                 ),
                 Expanded(
-                  child: TextField(
-                    controller: this.controller,
-                    autofocus: true,
-                    cursorWidth: 1.0,
-                    style: Theme.of(context).textTheme.headline4,
-                    onSubmitted: (String query) async {
-                      try {
-                        Track? track = await YTM.identify(query);
-                        if (track != null) {
-                          this.play(track);
-                          this.controller.clear();
+                  child: Autocomplete<String>(
+                    optionsBuilder: (query) {
+                      if (query.text.isEmpty) return [];
+                      return this.suggestions;
+                    },
+                    optionsViewBuilder:
+                        (context, callback, Iterable<String> values) =>
+                            Container(
+                      margin: EdgeInsets.only(right: 16.0),
+                      width: (MediaQuery.of(context).size.width *
+                              (Platform.isLinux ? 0.75 : 1.0)) -
+                          16.0 -
+                          56.0,
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Stack(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                callback('');
+                              },
+                              child: Container(
+                                color: Colors.transparent,
+                                width: MediaQuery.of(context).size.width *
+                                    (Platform.isLinux ? 0.75 : 1.0),
+                                height: MediaQuery.of(context).size.height *
+                                    (Platform.isLinux ? 0.75 : 1.0),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 4.0),
+                              height: 236.0,
+                              width: (MediaQuery.of(context).size.width *
+                                      (Platform.isLinux ? 0.75 : 1.0)) -
+                                  2 * 16.0 -
+                                  56.0 -
+                                  16.0,
+                              child: Material(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Color(0xFF242424)
+                                    : Color(0xFFFBFBFB),
+                                elevation: 2.0,
+                                child: Container(
+                                  height: 236.0,
+                                  width: (MediaQuery.of(context).size.width *
+                                          (Platform.isLinux ? 0.75 : 1.0)) -
+                                      2 * 16.0 -
+                                      56.0 -
+                                      16.0,
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    itemCount: values.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      final String option =
+                                          values.elementAt(index);
+                                      return InkWell(
+                                        onTap: () {
+                                          callback(option);
+                                          this.search(option);
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Text(
+                                            option,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5
+                                                ?.copyWith(
+                                                    color: Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    fieldViewBuilder: (context, controller, node, callback) =>
+                        TextField(
+                      controller: controller,
+                      focusNode: node,
+                      onChanged: (value) async {
+                        if (value.isEmpty) {
+                          this.suggestions = [];
+                          this.setState(() {});
                           return;
                         }
-                      } catch (e) {
-                        Utils.handleInvalidLink();
-                        return;
-                      }
-                      this.setState(() {
-                        this.result = Center(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation(
-                              Theme.of(context).primaryColor,
-                            ),
+                        this.suggestions = await YTM.suggestions(value);
+                        this.setState(() {});
+                      },
+                      style: Theme.of(context).textTheme.headline4,
+                      onSubmitted: (value) {
+                        this.search(value);
+                      },
+                      cursorWidth: 1.0,
+                      decoration: InputDecoration(
+                        hintText: language!.STRING_YOUTUBE_WELCOME,
+                        hintStyle: Theme.of(context).textTheme.headline3,
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary,
+                              width: 1.0),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).dividerColor,
+                            width: 1.0,
                           ),
-                        );
-                      });
-                      ScrollController _controller = ScrollController();
-                      int velocity = 80;
-                      if (Platform.isWindows || Platform.isLinux) {
-                        _controller.addListener(
-                          () {
-                            ScrollDirection scrollDirection =
-                                _controller.position.userScrollDirection;
-                            if (scrollDirection != ScrollDirection.idle) {
-                              double scrollEnd = _controller.offset +
-                                  (scrollDirection == ScrollDirection.reverse
-                                      ? velocity
-                                      : -velocity);
-                              scrollEnd = math.min(
-                                  _controller.position.maxScrollExtent,
-                                  math.max(_controller.position.minScrollExtent,
-                                      scrollEnd));
-                              _controller.jumpTo(scrollEnd);
-                            }
-                          },
-                        );
-                      }
-                      List<Track> tracks = await YTM.search(query);
-                      this.result = tracks.isNotEmpty
-                          ? ListView(
-                              controller: _controller,
-                              children: tracks
-                                  .map(
-                                    (track) => ListTile(
-                                      onTap: () => this.play(
-                                        track,
-                                      ),
-                                      leading: CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            track.networkAlbumArt!),
-                                      ),
-                                      title: Text(
-                                        track.trackName!,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      subtitle: Text(
-                                        track.trackArtistNames!.join(', ') +
-                                            ' • ${track.albumName}',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      trailing: IconButton(
-                                        onPressed: () => this.play(
-                                          track,
-                                        ),
-                                        icon: Icon(
-                                          FluentIcons.play_circle_20_regular,
-                                          size: 20.0,
-                                          color:
-                                              Theme.of(context).iconTheme.color,
-                                        ),
-                                        iconSize:
-                                            Theme.of(context).iconTheme.size!,
-                                        splashRadius:
-                                            Theme.of(context).iconTheme.size! -
-                                                8,
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                            )
-                          : Center(
-                              child: Text(
-                                language!.STRING_YOUTUBE_NO_RESULTS,
-                              ),
-                            );
-                      this.setState(() {});
-                      Future.delayed(Duration(milliseconds: 200), () {
-                        _controller
-                          ..animateTo(
-                            0.0,
-                            duration: Duration(milliseconds: 50),
-                            curve: Curves.easeInOut,
-                          );
-                      });
-                    },
-                    decoration: InputDecoration.collapsed(
-                      hintText: language!.STRING_YOUTUBE_WELCOME,
-                      hintStyle: Theme.of(context).textTheme.headline3,
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary,
+                              width: 1.0),
+                        ),
+                      ),
                     ),
                   ),
                 ),
