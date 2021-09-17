@@ -67,19 +67,17 @@ jobs:
 
       - name: Build .deb executable
         run: |
-          mkdir linux/debian/$(dir linux/debian)/usr/local
-          cp -R build/linux/x64/release/bundle linux/debian/$(dir linux/debian)/usr/local/bin -f
-          dpkg-deb --build --root-owner-group linux/debian/$(dir linux/debian)
-          cp linux/debian/*.deb harmonoid-linux-debian.deb
+          mkdir linux/debian/usr/local
+          cp -fr build/linux/x64/release/bundle linux/debian/usr/local/bin
+          dpkg-deb --build --root-owner-group linux/debian
+          cp linux/*.deb harmonoid-linux-x86_64.deb
 
-      - name: Build Tarball executable
+      - name: Build Tarball
         run: |
-          cp -r build/linux/x64/release/bundle AppDir
-          cp linux/debian/$(ls linux/debian | head -1)/usr/share/applications/harmonoid.desktop AppDir
-          cp linux/debian/$(ls linux/debian | head -1)/usr/share/pixmaps/harmonoid.png AppDir
-          cp linux/debian/$(ls linux/debian | head -1)/usr/share/metainfo/harmonoid.appdata.xml AppDir
+          mkdir -p AppDir/
+          cp -r linux/debian/usr AppDir/
+          ln -sr AppDir/usr/local/bin/harmonoid AppDir/harmonoid
           tar czf harmonoid-linux-x86_64.tar.gz -C AppDir/ .
-          rm AppDir/harmonoid.appdata.xml
 
       - name: Build AppImage
         run: |
@@ -87,7 +85,8 @@ jobs:
           cd "$(dirname "$0")"
           exec ./harmonoid' > AppDir/AppRun
           chmod +x AppDir/AppRun
-          cp -aR linux/debian/$(ls linux/debian | head -1)/usr/ AppDir/
+          ln -sr AppDir/usr/share/pixmaps/harmonoid.png AppDir/harmonoid.png
+          cp AppDir/usr/share/applications/harmonoid.desktop AppDir/harmonoid.desktop
           curl -L https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -o appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
           ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir/ harmonoid-linux-x86_64.AppImage
