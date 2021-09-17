@@ -388,7 +388,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                             ],
                           ),
                         ))
-                  : ListView(
+                  : CustomListView(
                       children: <Widget>[
                             albums
                                 ? Container()

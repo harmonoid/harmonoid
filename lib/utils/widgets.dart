@@ -5,6 +5,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:provider/provider.dart';
 
@@ -752,6 +753,10 @@ class WindowTitleBar extends StatelessWidget {
                     ),
                   ),
                   CloseWindowButton(
+                    onPressed: () {
+                      if (Platform.isWindows) player.dispose();
+                      appWindow.close();
+                    },
                     colors: WindowButtonColors(
                       iconNormal:
                           Theme.of(context).brightness == Brightness.light
