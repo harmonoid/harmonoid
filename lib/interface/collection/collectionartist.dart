@@ -262,10 +262,6 @@ class CollectionArtist extends StatelessWidget {
           color: Theme.of(context).brightness == Brightness.dark
               ? Colors.white.withOpacity(0.04)
               : Colors.black.withOpacity(0.04),
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(16.0),
-            bottomRight: Radius.circular(16.0),
-          ),
         ),
         height: MediaQuery.of(context).size.height,
         width: (MediaQuery.of(context).size.width *
@@ -292,88 +288,93 @@ class CollectionArtist extends StatelessWidget {
               thickness: 1.0,
             ),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(8.0),
-                    child: Hero(
-                      tag: 'artist_art_${this.artist!.artistName}',
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12.0),
-                        child: Image.file(
-                          this.artist!.tracks.last.albumArt,
-                          fit: BoxFit.cover,
-                          alignment: Alignment.topCenter,
-                          width: 256.0,
-                          height: 256.0,
-                          filterQuality: FilterQuality.low,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Hero(
+                          tag: 'artist_art_${this.artist!.artistName}',
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12.0),
+                            child: Image.file(
+                              this.artist!.tracks.last.albumArt,
+                              fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
+                              width: 256.0,
+                              height: 256.0,
+                              filterQuality: FilterQuality.low,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 18.0),
-                  Container(
-                    margin: EdgeInsets.all(8.0),
-                    padding: EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white.withOpacity(0.04)
-                          : Colors.black.withOpacity(0.04),
-                      borderRadius: BorderRadius.circular(8.0),
+                    SizedBox(height: 18.0),
+                    Container(
+                      margin: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white.withOpacity(0.04)
+                            : Colors.black.withOpacity(0.04),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            this.artist!.artistName!,
+                            style: Theme.of(context).textTheme.headline1,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(
+                            '${this.artist!.tracks.length} tracks & ${this.artist!.albums.length} albums.',
+                            style: Theme.of(context).textTheme.headline3,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Column(
+                    SizedBox(height: 18.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          this.artist!.artistName!,
-                          style: Theme.of(context).textTheme.headline1,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: Text(
+                            'Play Now',
+                          ),
                         ),
-                        SizedBox(height: 4.0),
-                        Text(
-                          '${this.artist!.tracks.length} tracks & ${this.artist!.albums.length} albums.',
-                          style: Theme.of(context).textTheme.headline3,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
+                        SizedBox(
+                          width: 12.0,
+                        ),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: Text(
+                            'Add to Now Playing',
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 18.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          'Play Now',
-                        ),
-                      ),
-                      SizedBox(
-                        width: 12.0,
-                      ),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          'Add to Now Playing',
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
