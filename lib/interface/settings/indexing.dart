@@ -130,6 +130,10 @@ class IndexingState extends State<IndexingSetting> {
                                         32.0,
                                     child: LinearProgressIndicator(
                                       value: value,
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .secondary
+                                          .withOpacity(0.2),
                                       valueColor: AlwaysStoppedAnimation(
                                           Theme.of(context)
                                               .colorScheme

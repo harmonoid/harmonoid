@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,13 +9,31 @@ import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 
-class AboutPage extends StatelessWidget {
+class AboutPage extends StatefulWidget {
   const AboutPage({
     Key? key,
-    required this.repository,
   }) : super(key: key);
+  AboutPageState createState() => AboutPageState();
+}
 
-  final Map<String, dynamic>? repository;
+class AboutPageState extends State<AboutPage> {
+  dynamic repository;
+
+  @override
+  void initState() {
+    super.initState();
+    http
+        .get(Uri.parse('https://api.github.com/repos/alexmercerind/harmonoid'))
+        .then(
+      (response) {
+        this.setState(
+          () => repository = convert.jsonDecode(
+            response.body,
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +68,8 @@ class AboutPage extends StatelessWidget {
           ),
           Expanded(
             child: CustomListView(
+              padding: EdgeInsets.symmetric(vertical: 4.0),
               children: [
-                SizedBox(
-                  height: 4.0,
-                ),
                 Container(
                   clipBehavior: Clip.antiAlias,
                   margin: EdgeInsets.only(
@@ -71,7 +88,7 @@ class AboutPage extends StatelessWidget {
                       Image.asset(
                         'assets/images/about-header.jpg',
                         fit: BoxFit.fitWidth,
-                        alignment: Alignment.bottomCenter,
+                        alignment: Alignment.center,
                         height: 192,
                         width: (MediaQuery.of(context).size.width *
                                 (Platform.isLinux ? 0.8 : 1.0)) -
@@ -213,43 +230,32 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
                 SettingsTile(
-                  title: 'Developer',
-                  subtitle: 'Person powering this music project in Flutter 💙',
-                  child: Column(
-                    children: [
-                      ListTile(
-                        onTap: () => launch('https://github.com/alexmercerind'),
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            'https://avatars.githubusercontent.com/u/28951144',
-                          ),
-                        ),
-                        title: Text(
-                          'Hitesh Kumar Saini',
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'Lead developer. Deals with playback & metadata parsing of music files. Maintains core C++ plugins for project. Writes UI code, state management & lifcycle.',
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white.withOpacity(0.8)
-                                    : Colors.black.withOpacity(0.8),
-                            fontSize: 14.0,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        trailing: Icon(FluentIcons.link_20_regular),
+                  title: 'Lead Developer',
+                  subtitle: 'Maintainer & creator of the project.',
+                  child: ListTile(
+                    onTap: () => launch(
+                      'https://github.com/alexmercerind',
+                    ),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        'https://avatars.githubusercontent.com/u/28951144?s=80&v=4',
                       ),
-                    ],
+                      backgroundColor: Colors.transparent,
+                    ),
+                    title: Text(
+                      'Hitesh Kumar Saini',
+                      style: Theme.of(context).textTheme.headline2,
+                    ),
+                    subtitle: Text(
+                      'Deals with playback & metadata parsing of music files. Maintains core C++ plugins for project. Writes UI code, state management & lifcycle.',
+                      style: Theme.of(context).textTheme.headline3,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: Icon(
+                      Icons.open_in_new_sharp,
+                      size: 18.0,
+                    ),
                   ),
                   actions: [
                     MaterialButton(
@@ -285,56 +291,119 @@ class AboutPage extends StatelessWidget {
                   ],
                 ),
                 SettingsTile(
-                  title: language!.STRING_SETTING_LANGUAGE_PROVIDERS_TITLE,
-                  subtitle:
-                      language!.STRING_SETTING_LANGUAGE_PROVIDERS_SUBTITLE,
+                  title: 'Contributors',
+                  subtitle: 'People who are working or worked on this project.',
                   child: Column(
-                    children:
-                        List.generate(LanguageRegion.values.length, (index) {
-                      final region = LanguageRegion.values[index]!;
-                      return ListTile(
-                        onTap: () => launch(region.github),
-                        title: Text(
-                          region.translator,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
+                    children: <List<String>>[
+                      [
+                        'https://github.com/raitonoberu',
+                        'https://avatars.githubusercontent.com/u/64320078?s=80&v=4',
+                        'Denis',
+                        'Windows installer & bug fixes. Russian translation.',
+                      ],
+                      [
+                        'https://github.com/bdlukaa',
+                        'https://avatars.githubusercontent.com/u/45696119?s=80&v=4',
+                        'Bruno D\'Luka',
+                        'User interface & design. Portuguese translation.',
+                      ],
+                      [
+                        'https://github.com/mytja',
+                        'https://avatars.githubusercontent.com/u/52399966?s=80&v=4',
+                        'mytja',
+                        'Bug reports. Slovenian translation.',
+                      ],
+                      [
+                        'https://github.com/prateekmedia',
+                        'https://avatars.githubusercontent.com/u/41370460?s=80&v=4',
+                        'Prateek SU',
+                        'AppImage & Flatpak installers. Bug reports.',
+                      ],
+                      [
+                        'https://github.com/gaetan1903',
+                        'https://avatars.githubusercontent.com/u/43904633?s=80&v=4',
+                        'Gaetan Jonathan BAKARY',
+                        'French translation.',
+                      ],
+                      [
+                        'https://github.com/RedyAu',
+                        'https://avatars.githubusercontent.com/u/12989935?s=80&v=4',
+                        'RedyAu',
+                        'Hungarian translation.',
+                      ],
+                      [
+                        'https://github.com/arafatamim',
+                        'https://avatars.githubusercontent.com/u/31634638?s=80&v=4',
+                        'Tamim Arafat',
+                        'User interface & design. Bug reports.',
+                      ],
+                      [
+                        'mailto:max.haureus@gmail.com',
+                        '',
+                        'Max Haureus',
+                        'Swedish translation.',
+                      ],
+                      [
+                        'https://github.com/kebabinjeneus',
+                        'https://avatars.githubusercontent.com/u/16196003?s=80&v=4',
+                        'Lars',
+                        'Dutch translation.',
+                      ],
+                      [
+                        'https://github.com/MickLesk',
+                        'https://avatars.githubusercontent.com/u/47820557?s=80&v=4',
+                        'CanbiZ',
+                        'German translation.',
+                      ],
+                      [
+                        'https://github.com/ilopX',
+                        'https://avatars.githubusercontent.com/u/8049534?s=80&v=4',
+                        'ilopX',
+                        'Testing & bug reports.',
+                      ],
+                      [
+                        'https://github.com/7HAVEN',
+                        'https://avatars.githubusercontent.com/u/56985621?s=80&v=4',
+                        'Ankit Rana',
+                        'Testing & bug reports.',
+                      ],
+                    ]
+                        .map(
+                          (contributor) => ListTile(
+                            onTap: () => launch(
+                              contributor[0],
+                            ),
+                            leading: CircleAvatar(
+                              backgroundImage: contributor[1].isNotEmpty
+                                  ? NetworkImage(
+                                      contributor[1],
+                                    )
+                                  : null,
+                              child: contributor[1].isEmpty
+                                  ? Icon(
+                                      FluentIcons.person_48_regular,
+                                    )
+                                  : null,
+                              backgroundColor: Colors.transparent,
+                            ),
+                            title: Text(
+                              contributor[2],
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                            subtitle: Text(
+                              contributor[3],
+                              style: Theme.of(context).textTheme.headline3,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: Icon(
+                              Icons.open_in_new_sharp,
+                              size: 18.0,
+                            ),
                           ),
-                        ),
-                        subtitle: Text(
-                          region.name,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white.withOpacity(0.8)
-                                    : Colors.black.withOpacity(0.8),
-                            fontSize: 14.0,
-                          ),
-                        ),
-                      );
-                    }),
+                        )
+                        .toList(),
                   ),
-                ),
-                // TODO: Update third party credits screen design.
-                // OpenContainer(
-                //   transitionDuration: Duration(milliseconds: 400),
-                //   closedColor: Colors.transparent,
-                //   openColor: Colors.transparent,
-                //   closedElevation: 0.0,
-                //   openElevation: 0.0,
-                //   closedBuilder: (_, open) => ClosedTile(
-                //     open: open,
-                //     title: 'Third Party Credits',
-                //     subtitle: 'Thanks for your indirect contribution.',
-                //   ),
-                //   openBuilder: (context, _) => ThirdPartyPage(),
-                // ),
-                SizedBox(
-                  height: 4.0,
                 ),
               ],
             ),
