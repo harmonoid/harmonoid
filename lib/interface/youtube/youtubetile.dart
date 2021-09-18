@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:harmonoid/constants/language.dart';
 
+import 'package:harmonoid/core/youtubemusic.dart';
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/utils/widgets.dart';
 
 class YouTubeTile extends StatelessWidget {
   final double? height;
@@ -55,22 +59,31 @@ class YouTubeTile extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 1.0,
+                    padding: EdgeInsets.all(2.0),
+                    child: ContextMenuButton(
+                      onSelected: (index) async {
+                        switch (index) {
+                          case 0:
+                            {
+                              await track.attachAudioStream();
+                              await Playback.add(
+                                [
+                                  track,
+                                ],
+                              );
+                              break;
+                            }
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 0,
+                          child: Text(
+                            language!.STRING_ADD_TO_NOW_PLAYING,
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                      height: 36.0,
-                      width: 36.0,
-                      child: Icon(
-                        Icons.play_arrow,
-                        size: 24.0,
-                      ),
+                      ],
                     ),
                   ),
                 ],

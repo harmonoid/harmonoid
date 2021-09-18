@@ -103,17 +103,30 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      trailing: IconButton(
-                        onPressed: () => this.play(
-                          track,
-                        ),
-                        icon: Icon(
-                          FluentIcons.play_circle_20_regular,
-                          size: 20.0,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                        iconSize: Theme.of(context).iconTheme.size!,
-                        splashRadius: Theme.of(context).iconTheme.size! - 8,
+                      trailing: ContextMenuButton(
+                        onSelected: (index) async {
+                          switch (index) {
+                            case 0:
+                              {
+                                await track.attachAudioStream();
+                                await Playback.add(
+                                  [
+                                    track,
+                                  ],
+                                );
+                                break;
+                              }
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            value: 0,
+                            child: Text(
+                              language!.STRING_ADD_TO_NOW_PLAYING,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

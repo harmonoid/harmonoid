@@ -15,7 +15,7 @@ import 'package:harmonoid/utils/utils.dart';
 import 'package:harmonoid/constants/language.dart';
 
 const String TITLE = 'Harmonoid';
-const String VERSION = '0.1.5';
+const String VERSION = '0.1.6';
 const String AUTHOR = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String LICENSE = 'GPL-3.0';
 
@@ -37,7 +37,7 @@ Future<void> main(List<String> args) async {
       DiscordRPC.initialize();
       await Intent.init(args: args);
       doWhenWindowReady(() {
-        appWindow.minSize = Size(640, 480);
+        appWindow.minSize = Size(854, 640);
         appWindow.size = Size(1024, 640);
         appWindow.alignment = Alignment.center;
         appWindow.show();
