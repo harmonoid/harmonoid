@@ -85,7 +85,7 @@ jobs:
           cd "$(dirname "$0")"
           exec ./harmonoid' > AppDir/AppRun
           chmod +x AppDir/AppRun
-          ln -sr AppDir/usr/share/pixmaps/harmonoid.png AppDir/harmonoid.png
+          cp AppDir/usr/share/pixmaps/harmonoid.png AppDir/harmonoid.png
           cp AppDir/usr/share/applications/harmonoid.desktop AppDir/harmonoid.desktop
           curl -L https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -o appimagetool-x86_64.AppImage
           chmod +x appimagetool-x86_64.AppImage
