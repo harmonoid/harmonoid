@@ -203,13 +203,17 @@ abstract class Playback {
         AssetsAudioPlayer.Playlist(
           audios: _tracks
               .map(
-                (track) => AssetsAudioPlayer.Audio.file(
+                (track) => AssetsAudioPlayer.Audio.network(
                   track.filePath!,
                   metas: AssetsAudioPlayer.Metas(
                     id: track.trackId,
-                    image: AssetsAudioPlayer.MetasImage.file(
-                      track.albumArt.path,
-                    ),
+                    image: track.networkAlbumArt == null
+                        ? AssetsAudioPlayer.MetasImage.file(
+                            track.albumArt.path,
+                          )
+                        : AssetsAudioPlayer.MetasImage.network(
+                            track.networkAlbumArt!,
+                          ),
                     title: track.trackName!,
                     album: track.albumName!,
                     artist: track.trackArtistNames!.join(', '),
