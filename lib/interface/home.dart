@@ -72,6 +72,7 @@ class HomeState extends State<Home>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: MultiProvider(
         providers: [
           ChangeNotifierProvider<Collection>(
@@ -100,6 +101,7 @@ class HomeState extends State<Home>
             Expanded(
               child: Consumer<Language>(
                 builder: (context, _, __) => Scaffold(
+                  resizeToAvoidBottomInset: false,
                   body: HeroControllerScope(
                     controller: MaterialApp.createMaterialHeroController(),
                     child: Navigator(

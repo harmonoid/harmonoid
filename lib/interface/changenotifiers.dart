@@ -204,7 +204,7 @@ class Server extends ChangeNotifier {
 
 List<Accent?> accents = [
   Accent(
-      light: Colors.deepPurpleAccent.shade200,
+      light: Colors.deepPurpleAccent.shade400,
       dark: Colors.deepPurpleAccent.shade200),
   Accent(light: Color(0xFFFF0000), dark: Color(0xFFFF0000)),
   Accent(light: Color(0xFF4285F4), dark: Color(0xFF82B1FF)),

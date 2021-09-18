@@ -252,7 +252,9 @@ class CollectionArtist extends StatelessWidget {
               ? Colors.white.withOpacity(0.04)
               : Colors.black.withOpacity(0.04),
         ),
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.width > HORIZONTAL_BREAKPOINT
+            ? MediaQuery.of(context).size.height
+            : MediaQuery.of(context).size.width + 128.0,
         width: (MediaQuery.of(context).size.width *
                 (Platform.isLinux ? 0.75 : 1.0)) /
             3,
@@ -278,7 +280,7 @@ class CollectionArtist extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -398,28 +400,26 @@ class CollectionArtist extends StatelessWidget {
                           Container(
                             height: tileHeight + 16.0,
                             alignment: Alignment.centerLeft,
-                            margin: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Scrollbar(
-                              child: CustomListView(
-                                scrollDirection: Axis.horizontal,
-                                children: this
-                                    .artist!
-                                    .albums
-                                    .map(
-                                      (album) => Container(
-                                        margin: EdgeInsets.symmetric(
-                                          horizontal: 4.0,
-                                          vertical: 8.0,
-                                        ),
-                                        child: CollectionAlbumTile(
-                                          album: album,
-                                          height: tileHeight,
-                                          width: tileWidth,
-                                        ),
+                            child: CustomListView(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              scrollDirection: Axis.horizontal,
+                              children: this
+                                  .artist!
+                                  .albums
+                                  .map(
+                                    (album) => Container(
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 4.0,
+                                        vertical: 8.0,
                                       ),
-                                    )
-                                    .toList(),
-                              ),
+                                      child: CollectionAlbumTile(
+                                        album: album,
+                                        height: tileHeight,
+                                        width: tileWidth,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
                             ),
                           ),
                           SubHeader(

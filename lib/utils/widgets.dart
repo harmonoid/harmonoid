@@ -68,6 +68,7 @@ class CustomListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       padding: this.padding ?? EdgeInsets.zero,
       controller: this.scroller,
       scrollDirection: this.scrollDirection ?? Axis.vertical,
@@ -677,6 +678,10 @@ class WindowTitleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Platform.isAndroid)
+      return Container(
+        height: MediaQuery.of(context).padding.top,
+      );
     return Platform.isWindows
         ? Container(
             width: (MediaQuery.of(context).size.width *

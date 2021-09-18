@@ -5,13 +5,13 @@ import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:libwinmedia/libwinmedia.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
-import 'package:harmonoid/utils/utils.dart';
 import 'package:harmonoid/constants/language.dart';
 
 const String TITLE = 'Harmonoid';
@@ -52,13 +52,18 @@ Future<void> main(List<String> args) async {
       await Intent.init(args: args);
     }
     if (Platform.isAndroid) {
+      WidgetsFlutterBinding.ensureInitialized();
       SystemChrome.setSystemUIOverlayStyle(
           SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
-      await Utils.askStoragePermission();
+      if (Platform.isAndroid) if (await Permission.storage.isDenied) {
+        PermissionStatus storagePermissionState =
+            await Permission.storage.request();
+        if (!storagePermissionState.isGranted) {
+          SystemNavigator.pop(
+            animated: true,
+          );
+        }
+      }
       await Configuration.init();
       await Intent.init();
     }

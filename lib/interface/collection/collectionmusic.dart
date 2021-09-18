@@ -50,6 +50,7 @@ class CollectionMusicState extends State<CollectionMusic>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButton: index != 5 ? RefreshCollectionButton() : null,
       body: Column(
         children: [
@@ -277,8 +278,8 @@ class CollectionMusicState extends State<CollectionMusic>
                       width: 40.0,
                       decoration: BoxDecoration(
                         color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withOpacity(0.04)
-                            : Colors.black.withOpacity(0.04),
+                            ? Colors.white.withOpacity(0.08)
+                            : Colors.black.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Icon(
@@ -353,8 +354,12 @@ class CollectionMusicState extends State<CollectionMusic>
                                   SizedBox(
                                     width: 16.0,
                                   ),
-                                  Text(
-                                    language!.STRING_COLLECTION_INDEXING_LABEL,
+                                  Expanded(
+                                    child: Text(
+                                      language!
+                                          .STRING_COLLECTION_INDEXING_LABEL,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ],
                               ),

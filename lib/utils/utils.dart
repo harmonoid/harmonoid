@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -77,18 +76,6 @@ abstract class Utils {
     );
   }
 
-  static Future<void> askStoragePermission() async {
-    if (Platform.isAndroid) if (await Permission.storage.isDenied) {
-      PermissionStatus storagePermissionState =
-          await Permission.storage.request();
-      if (!storagePermissionState.isGranted) {
-        SystemNavigator.pop(
-          animated: true,
-        );
-      }
-    }
-  }
-
   static ThemeData getTheme(
       {required Color accentColor, ThemeMode? themeMode}) {
     bool isLight = themeMode == ThemeMode.light;
@@ -161,8 +148,12 @@ abstract class Utils {
         ),
       ),
       splashFactory: InkRipple.splashFactory,
-      splashColor: Colors.transparent,
       primaryColorLight: accentColor,
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          elevation: MaterialStateProperty.all(0.0),
+        ),
+      ),
       primaryColor: accentColor,
       primaryColorDark: accentColor,
       scaffoldBackgroundColor: configuration.acrylicEnabled!
