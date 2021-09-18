@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/rendering.dart';
-import 'package:harmonoid/core/configuration.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
@@ -13,7 +14,7 @@ import 'package:harmonoid/interface/youtube/youtubetile.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/utils.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:provider/provider.dart';
+import 'package:harmonoid/core/configuration.dart';
 
 class YouTubeMusic extends StatefulWidget {
   const YouTubeMusic({Key? key}) : super(key: key);
@@ -80,7 +81,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
     });
     List<Track> tracks = await YTM.search(query);
     this.result = tracks.isNotEmpty
-        ? ListView(
+        ? CustomListView(
             children: tracks
                 .map(
                   (track) => Material(
@@ -104,6 +105,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       trailing: ContextMenuButton(
+                        elevation: 0.0,
                         onSelected: (index) async {
                           switch (index) {
                             case 0:
@@ -116,6 +118,13 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                                 );
                                 break;
                               }
+                            case 1:
+                              {
+                                await Share.share(
+                                  'https://youtu.be/${track.trackId}',
+                                );
+                                break;
+                              }
                           }
                         },
                         itemBuilder: (context) => [
@@ -123,6 +132,13 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                             value: 0,
                             child: Text(
                               language!.STRING_ADD_TO_NOW_PLAYING,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: 1,
+                            child: Text(
+                              language!.STRING_SHARE,
                               style: Theme.of(context).textTheme.headline4,
                             ),
                           ),
@@ -253,6 +269,9 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                                       56.0 -
                                       16.0,
                                   child: ListView.builder(
+                                    keyboardDismissBehavior:
+                                        ScrollViewKeyboardDismissBehavior
+                                            .onDrag,
                                     padding: EdgeInsets.zero,
                                     itemCount: values.length,
                                     itemBuilder:
@@ -291,7 +310,9 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                     ),
                     fieldViewBuilder: (context, controller, node, callback) =>
                         TextField(
-                      autofocus: true,
+                      autofocus: Platform.isWindows ||
+                          Platform.isLinux ||
+                          Platform.isMacOS,
                       controller: controller,
                       focusNode: node,
                       onChanged: (value) async {

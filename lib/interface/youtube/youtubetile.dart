@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:harmonoid/constants/language.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:harmonoid/core/youtubemusic.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/constants/language.dart';
 
 class YouTubeTile extends StatelessWidget {
   final double? height;
@@ -61,6 +62,7 @@ class YouTubeTile extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(2.0),
                     child: ContextMenuButton(
+                      elevation: 0.0,
                       onSelected: (index) async {
                         switch (index) {
                           case 0:
@@ -73,6 +75,13 @@ class YouTubeTile extends StatelessWidget {
                               );
                               break;
                             }
+                          case 1:
+                            {
+                              await Share.share(
+                                'https://youtu.be/${track.trackId}',
+                              );
+                              break;
+                            }
                         }
                       },
                       itemBuilder: (context) => [
@@ -80,6 +89,13 @@ class YouTubeTile extends StatelessWidget {
                           value: 0,
                           child: Text(
                             language!.STRING_ADD_TO_NOW_PLAYING,
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: 1,
+                          child: Text(
+                            language!.STRING_SHARE,
                             style: Theme.of(context).textTheme.headline4,
                           ),
                         ),
