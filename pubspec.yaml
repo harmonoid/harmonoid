@@ -51,18 +51,6 @@ flutter:
   assets:
     - assets/images/about-header.jpg
     - assets/images/collection-album.jpg
-    - assets/images/credits-albums.jpg
-    - assets/images/credits-tracks.jpg
-    - assets/images/credits-artists.jpg
-    - assets/images/credits-exception.jpg
-    - assets/images/discover-albums.jpg
-    - assets/images/discover-tracks.jpg
-    - assets/images/discover-artists.jpg
-    - assets/images/exception.jpg
-    - assets/images/credits-album-art-0.jpg
-    - assets/images/credits-album-art-1.jpg
-    - assets/images/credits-album-art-2.jpg
-    - assets/images/credits-album-art-3.jpg
 
   fonts:
     - family: "Roboto"
