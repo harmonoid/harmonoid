@@ -54,12 +54,7 @@ class Settings extends StatelessWidget {
               IndexingSetting(),
               ThemeSetting(),
               AccentSetting(),
-              // TODO: Server is no longer necessary.
-              // ServerSetting(),
               LanguageSetting(),
-              // TODO: Fix scrolling bug in CollectionTabs widget & implement saving configuration.
-              // CollectionTabs(),
-              // TODO: Removed miscellaneous settings until we decide which ones are important.
               MiscellaneousSetting(),
               VersionSetting(),
               SizedBox(

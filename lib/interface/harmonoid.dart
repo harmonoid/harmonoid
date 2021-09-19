@@ -27,6 +27,12 @@ class Harmonoid extends StatelessWidget {
           darkTheme: visuals.darkTheme,
           themeMode: visuals.themeMode,
           navigatorKey: key,
+          builder: (context, child) {
+            return ScrollConfiguration(
+              behavior: CustomScrollBehavior(),
+              child: child!,
+            );
+          },
           home: FractionallyScaledWidget(
             child: Home(),
           ),

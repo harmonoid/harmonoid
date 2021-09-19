@@ -46,19 +46,31 @@ class CustomListView extends StatelessWidget {
       this.scrollDirection,
       this.shrinkWrap,
       this.padding}) {
-    if (Platform.isWindows || Platform.isLinux) {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       scroller.addListener(
         () {
-          ScrollDirection scrollDirection =
-              scroller.position.userScrollDirection;
+          var scrollDirection = scroller.position.userScrollDirection;
           if (scrollDirection != ScrollDirection.idle) {
-            double scrollEnd = scroller.offset +
+            var scrollEnd = scroller.offset +
                 (scrollDirection == ScrollDirection.reverse
                     ? velocity
                     : -velocity);
             scrollEnd = math.min(scroller.position.maxScrollExtent,
                 math.max(scroller.position.minScrollExtent, scrollEnd));
             scroller.jumpTo(scrollEnd);
+          }
+        },
+      );
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      scroller.addListener(
+        () {
+          var scrollDirection = scroller.position.userScrollDirection;
+          if (scrollDirection != ScrollDirection.forward) {
+            nowPlayingBar.height = 0.0;
+          }
+          if (scrollDirection != ScrollDirection.reverse) {
+            if (nowPlaying.tracks.isNotEmpty) nowPlayingBar.height = 72.0;
           }
         },
       );
@@ -253,7 +265,7 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
               this.tween = Tween<double>(begin: 0, end: this.turns);
               await Provider.of<Collection>(context, listen: false).refresh(
                   onProgress: (progress, total, isCompleted) {
-                Provider.of<CollectionRefresh>(context, listen: false)
+                Provider.of<CollectionRefreshController>(context, listen: false)
                     .set(progress, total);
                 this.setState(() => this.lock = !isCompleted);
               });
@@ -646,28 +658,25 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
         ),
       );
 
-    return Padding(
-      padding: EdgeInsets.all(4.0),
-      child: InkWell(
-        onTap: widget.enabled ? showButtonMenu : null,
-        borderRadius: BorderRadius.all(
-          Radius.circular(8.0),
+    return InkWell(
+      onTap: widget.enabled ? showButtonMenu : null,
+      borderRadius: BorderRadius.all(
+        Radius.circular(8.0),
+      ),
+      child: Container(
+        height: 40.0,
+        width: 40.0,
+        decoration: BoxDecoration(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white.withOpacity(0.08)
+              : Colors.black.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(8.0),
         ),
-        child: Container(
-          height: 40.0,
-          width: 40.0,
-          decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.08)
-                : Colors.black.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: widget.icon ??
-              Icon(
-                FluentIcons.more_vertical_20_regular,
-                size: 20.0,
-              ),
-        ),
+        child: widget.icon ??
+            Icon(
+              FluentIcons.more_vertical_20_regular,
+              size: 20.0,
+            ),
       ),
     );
   }
@@ -972,5 +981,13 @@ class CollectionTrackContextMenu extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class CustomScrollBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
   }
 }
