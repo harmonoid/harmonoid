@@ -25,7 +25,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
-    YouTubeState youtube = Provider.of<YouTubeState>(
+    YouTubeStateController youtube = Provider.of<YouTubeStateController>(
       context,
       listen: false,
     );
@@ -41,7 +41,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
   }
 
   Future<void> play(Track track) async {
-    currentlyPlaying.isBuffering = true;
+    nowPlaying.isBuffering = true;
     await track.attachAudioStream();
     if (track.filePath != null) {
       await Playback.play(
@@ -50,7 +50,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
           track,
         ],
       );
-      currentlyPlaying.isBuffering = false;
+      nowPlaying.isBuffering = false;
       await configuration.save(
         discoverRecent: [
           track.trackId!,
@@ -170,7 +170,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                 (elementsPerRow - 1) * 8) /
             elementsPerRow;
     double tileHeight = tileWidth * 246.0 / 156;
-    return Consumer<YouTubeState>(
+    return Consumer<YouTubeStateController>(
       builder: (context, youtube, _) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

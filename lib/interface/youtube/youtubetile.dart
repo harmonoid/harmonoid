@@ -60,7 +60,7 @@ class YouTubeTile extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(2.0),
+                    padding: EdgeInsets.all(8.0),
                     child: ContextMenuButton(
                       elevation: 0.0,
                       onSelected: (index) async {

@@ -47,7 +47,7 @@ abstract class Utils {
         ),
       ),
     );
-    currentlyPlaying.isBuffering = false;
+    nowPlaying.isBuffering = false;
   }
 
   static Future<void> handleInvalidLink() async {
@@ -148,6 +148,7 @@ abstract class Utils {
         ),
       ),
       splashFactory: InkRipple.splashFactory,
+      splashColor: Platform.isAndroid ? null : Colors.transparent,
       primaryColorLight: accentColor,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(

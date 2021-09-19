@@ -8,9 +8,10 @@ import 'package:harmonoid/core/youtubemusic.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/utils.dart';
 
-CurrentlyPlaying currentlyPlaying = CurrentlyPlaying();
+var nowPlaying = NowPlayingController();
+var nowPlayingBar = NowPlayingBarController();
 
-class CurrentlyPlaying extends ChangeNotifier {
+class NowPlayingController extends ChangeNotifier {
   int? get index => _index;
   List<Track> get tracks => _tracks;
   bool get isPlaying => _isPlaying;
@@ -87,7 +88,20 @@ class CurrentlyPlaying extends ChangeNotifier {
   String _state = language!.STRING_BUFFERING;
 }
 
-class CollectionRefresh extends ChangeNotifier {
+class NowPlayingBarController extends ChangeNotifier {
+  double _height = 0.0;
+
+  double get height {
+    return this._height;
+  }
+
+  set height(double value) {
+    this._height = value;
+    this.notifyListeners();
+  }
+}
+
+class CollectionRefreshController extends ChangeNotifier {
   int progress = 0;
   int total = 0;
 
@@ -146,7 +160,7 @@ class Visuals extends ChangeNotifier {
       );
 }
 
-class YouTubeState extends ChangeNotifier {
+class YouTubeStateController extends ChangeNotifier {
   List<Track> recommendations = <Track>[];
   String? recommendation;
   bool exception = false;
@@ -171,17 +185,10 @@ class YouTubeState extends ChangeNotifier {
   }
 }
 
-class Accent {
-  final Color light;
-  final Color dark;
-
-  Accent({required this.light, required this.dark});
-}
-
-class NotificationLyrics extends ChangeNotifier {
+class NotificationLyricsController extends ChangeNotifier {
   late bool enabled;
 
-  NotificationLyrics({required this.enabled});
+  NotificationLyricsController({required this.enabled});
 
   void update({required bool enabled}) {
     this.enabled = enabled;
@@ -190,22 +197,18 @@ class NotificationLyrics extends ChangeNotifier {
   }
 }
 
-class Server extends ChangeNotifier {
-  String? homeAddress;
+class Accent {
+  final Color light;
+  final Color dark;
 
-  Server({required this.homeAddress});
-
-  void update({required String? homeAddress}) {
-    this.homeAddress = homeAddress;
-    this.notifyListeners();
-    configuration.save(homeAddress: homeAddress);
-  }
+  Accent({required this.light, required this.dark});
 }
 
 List<Accent?> accents = [
   Accent(
-      light: Colors.deepPurpleAccent.shade400,
-      dark: Colors.deepPurpleAccent.shade200),
+    light: Colors.deepPurpleAccent.shade400,
+    dark: Colors.deepPurpleAccent.shade200,
+  ),
   Accent(light: Color(0xFFFF0000), dark: Color(0xFFFF0000)),
   Accent(light: Color(0xFF4285F4), dark: Color(0xFF82B1FF)),
   Accent(light: Color(0xFFF4B400), dark: Color(0xFFFFE57F)),

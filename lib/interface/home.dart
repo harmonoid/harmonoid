@@ -84,11 +84,14 @@ class HomeState extends State<Home>
           ChangeNotifierProvider<Lyrics>(
             create: (context) => Lyrics.get(),
           ),
-          ChangeNotifierProvider<CurrentlyPlaying>(
-            create: (context) => currentlyPlaying,
+          ChangeNotifierProvider<NowPlayingController>(
+            create: (context) => nowPlaying,
           ),
-          ChangeNotifierProvider<YouTubeState>(
-            create: (context) => YouTubeState(),
+          ChangeNotifierProvider<NowPlayingBarController>(
+            create: (context) => nowPlayingBar,
+          ),
+          ChangeNotifierProvider<YouTubeStateController>(
+            create: (context) => YouTubeStateController(),
           ),
           Provider<DiscordRPC>(
             create: (context) => discordRPC,
@@ -114,7 +117,8 @@ class HomeState extends State<Home>
                             builder: (BuildContext context) =>
                                 ChangeNotifierProvider(
                               child: const CollectionMusic(),
-                              create: (context) => CollectionRefresh(),
+                              create: (context) =>
+                                  CollectionRefreshController(),
                               builder: (context, child) => child!,
                             ),
                           );
