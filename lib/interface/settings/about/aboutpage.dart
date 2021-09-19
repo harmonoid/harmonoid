@@ -23,7 +23,7 @@ class AboutPageState extends State<AboutPage> {
   void initState() {
     super.initState();
     http
-        .get(Uri.parse('https://api.github.com/repos/alexmercerind/harmonoid'))
+        .get(Uri.parse('https://api.github.com/repos/harmonoid/harmonoid'))
         .then(
       (response) {
         this.setState(

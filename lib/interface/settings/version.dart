@@ -20,7 +20,7 @@ class VersionState extends State<VersionSetting> {
     super.initState();
     http
         .get(Uri.parse(
-            'https://api.github.com/repos/alexmercerind/harmonoid/releases'))
+            'https://api.github.com/repos/harmonoid/harmonoid/releases'))
         .then((http.Response response) {
       this.setState(() {
         List<dynamic> json = convert.jsonDecode(response.body);
