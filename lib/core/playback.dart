@@ -14,7 +14,7 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/constants/language.dart';
 
-/// Never listen to event Streams of any audio playback backend but use [CurrentlyPlaying] notifier.
+/// Never listen to event Streams of any audio playback backend but use [nowPlaying] notifier.
 /// This wil improve `Platform.isX` calls all around & keep code stream subscription cleaner.
 /// It will also make things look more cross-platform on the surface & in the UI code.
 ///
@@ -24,24 +24,24 @@ import 'package:harmonoid/constants/language.dart';
 
 final LIBWINMEDIA.Player player = LIBWINMEDIA.Player(id: 0)
   ..streams.index.listen((index) {
-    currentlyPlaying.index = index;
+    nowPlaying.index = index;
     onTrackChange();
   })
   ..streams.medias.listen((medias) {
-    currentlyPlaying.tracks = medias
+    nowPlaying.tracks = medias
         .map(
           (media) => Track.fromMap(media.extras)!,
         )
         .toList();
   })
   ..streams.isPlaying.listen((isPlaying) {
-    currentlyPlaying.isPlaying = isPlaying;
+    nowPlaying.isPlaying = isPlaying;
   })
   ..streams.isBuffering.listen((isBuffering) {
-    currentlyPlaying.isBuffering = isBuffering;
+    nowPlaying.isBuffering = isBuffering;
   })
   ..streams.isCompleted.listen((isCompleted) async {
-    currentlyPlaying.isCompleted = isCompleted;
+    nowPlaying.isCompleted = isCompleted;
     if (!isCompleted) {
       onTrackChange();
     }
@@ -50,10 +50,10 @@ final LIBWINMEDIA.Player player = LIBWINMEDIA.Player(id: 0)
     }
   })
   ..streams.position.listen((position) {
-    currentlyPlaying.position = position;
+    nowPlaying.position = position;
   })
   ..streams.duration.listen((duration) {
-    currentlyPlaying.duration = duration;
+    nowPlaying.duration = duration;
   })
   ..volume = 1.0;
 
@@ -61,9 +61,17 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
     AssetsAudioPlayer.AssetsAudioPlayer.withId('harmonoid')
       ..current.listen((AssetsAudioPlayer.Playing? current) async {
         if (current != null) {
+          nowPlayingBar.height = 72.0;
+          nowPlaying.tracks = current.playlist.audios
+              .map(
+                (audio) => Track.fromMap(audio.metas.extra)!,
+              )
+              .toList();
+          nowPlaying.index = current.index;
+          nowPlaying.duration = current.audio.duration;
           try {
             await lyrics.fromName(current.audio.audio.metas.title! +
-                ' - ' +
+                ' ' +
                 current.audio.audio.metas.artist!);
             const AndroidNotificationDetails settings =
                 AndroidNotificationDetails(
@@ -81,7 +89,7 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
               indeterminate: true,
             );
             await notification.show(
-              100000,
+              69420,
               lyrics.query,
               language!.STRING_LYRICS_RETRIEVING,
               NotificationDetails(android: settings),
@@ -90,7 +98,7 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
             Future.delayed(
               Duration(seconds: 2),
               () => notification.cancel(
-                100000,
+                69420,
               ),
             );
           }
@@ -100,6 +108,7 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
         if (lyrics.current.isNotEmpty &&
             position != null &&
             configuration.notificationLyrics!) {
+          nowPlaying.position = position;
           for (Lyric lyric in lyrics.current)
             if (lyric.time ~/ 1000 == position.inSeconds) {
               const AndroidNotificationDetails settings =
@@ -124,6 +133,12 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
               break;
             }
         }
+      })
+      ..isPlaying.listen((isPlaying) {
+        nowPlaying.isPlaying = isPlaying;
+      })
+      ..isBuffering.listen((isBuffering) {
+        nowPlaying.isBuffering = isBuffering;
       });
 
 abstract class Playback {
@@ -156,17 +171,26 @@ abstract class Playback {
     if (Platform.isWindows || Platform.isLinux) {
       player.back();
     }
+    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
+      assetsAudioPlayer.previous();
+    }
   }
 
   static Future<void> next() async {
     if (Platform.isWindows || Platform.isLinux) {
       player.next();
     }
+    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
+      assetsAudioPlayer.next();
+    }
   }
 
   static Future<void> seek(Duration position) async {
     if (Platform.isWindows || Platform.isLinux) {
       player.seek(position);
+    }
+    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
+      assetsAudioPlayer.seek(position);
     }
   }
 
@@ -176,6 +200,9 @@ abstract class Playback {
         player.pause();
       else
         player.play();
+    }
+    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
+      assetsAudioPlayer.playOrPause();
     }
   }
 
@@ -198,28 +225,38 @@ abstract class Playback {
       player.play();
     }
     // assets_audio_player
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
       assetsAudioPlayer.open(
         AssetsAudioPlayer.Playlist(
           audios: _tracks
               .map(
-                (track) => AssetsAudioPlayer.Audio.network(
-                  track.filePath!,
-                  metas: AssetsAudioPlayer.Metas(
-                    id: track.trackId,
-                    image: track.networkAlbumArt == null
-                        ? AssetsAudioPlayer.MetasImage.file(
-                            track.albumArt.path,
-                          )
-                        : AssetsAudioPlayer.MetasImage.network(
+                (track) => track.filePath!.startsWith('http')
+                    ? AssetsAudioPlayer.Audio.network(
+                        track.filePath!,
+                        metas: AssetsAudioPlayer.Metas(
+                          id: track.trackId,
+                          image: AssetsAudioPlayer.MetasImage.network(
                             track.networkAlbumArt!,
                           ),
-                    title: track.trackName!,
-                    album: track.albumName!,
-                    artist: track.trackArtistNames!.join(', '),
-                    extra: track.toMap(),
-                  ),
-                ),
+                          title: track.trackName!,
+                          album: track.albumName!,
+                          artist: track.trackArtistNames!.join(', '),
+                          extra: track.toMap(),
+                        ),
+                      )
+                    : AssetsAudioPlayer.Audio.file(
+                        track.filePath!,
+                        metas: AssetsAudioPlayer.Metas(
+                          id: track.trackId,
+                          image: AssetsAudioPlayer.MetasImage.file(
+                            track.albumArt.path,
+                          ),
+                          title: track.trackName!,
+                          album: track.albumName!,
+                          artist: track.trackArtistNames!.join(', '),
+                          extra: track.toMap(),
+                        ),
+                      ),
               )
               .toList()
               .cast(),
