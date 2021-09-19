@@ -43,13 +43,14 @@ class HomeState extends State<Home>
       showDialog(
         context: context,
         builder: (subContext) => AlertDialog(
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           title: Text(
             language!.STRING_EXIT_TITLE,
             style: Theme.of(subContext).textTheme.headline1,
           ),
           content: Text(
             language!.STRING_EXIT_SUBTITLE,
-            style: Theme.of(subContext).textTheme.headline5,
+            style: Theme.of(subContext).textTheme.headline3,
           ),
           actions: [
             MaterialButton(

@@ -23,6 +23,7 @@ class ThemeSetting extends StatelessWidget {
                 groupValue: visuals.themeMode,
                 onChanged: (dynamic themeMode) => visuals.update(
                   themeMode: themeMode,
+                  context: context,
                 ),
               ),
               RadioListTile(
@@ -34,6 +35,7 @@ class ThemeSetting extends StatelessWidget {
                 groupValue: visuals.themeMode,
                 onChanged: (dynamic themeMode) => visuals.update(
                   themeMode: themeMode,
+                  context: context,
                 ),
               ),
               RadioListTile(
@@ -45,6 +47,7 @@ class ThemeSetting extends StatelessWidget {
                 groupValue: visuals.themeMode,
                 onChanged: (dynamic themeMode) => visuals.update(
                   themeMode: themeMode,
+                  context: context,
                 ),
               ),
             ],

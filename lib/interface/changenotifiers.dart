@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -129,7 +130,10 @@ class Visuals extends ChangeNotifier {
   Visuals({required this.accent, required this.themeMode});
 
   void update(
-      {Accent? accent, ThemeMode? themeMode, TargetPlatform? platform}) {
+      {Accent? accent,
+      ThemeMode? themeMode,
+      TargetPlatform? platform,
+      BuildContext? context}) {
     this.accent = accent ?? this.accent;
     this.themeMode = themeMode ?? this.themeMode;
     if (Platform.isWindows) {
@@ -140,6 +144,14 @@ class Visuals extends ChangeNotifier {
         gradientColor: this.themeMode == ThemeMode.light
             ? Colors.white70
             : Color(0xCC222222),
+      );
+    }
+    if (Platform.isAndroid || Platform.isIOS && context != null) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context!).brightness,
+          statusBarIconBrightness: Theme.of(context).brightness,
+        ),
       );
     }
     this.notifyListeners();
