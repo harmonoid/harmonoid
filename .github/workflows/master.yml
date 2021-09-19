@@ -67,8 +67,8 @@ jobs:
 
       - name: Build .deb executable
         run: |
-          mkdir linux/debian/usr/local
-          cp -fr build/linux/x64/release/bundle linux/debian/usr/local/bin
+          mkdir linux/debian/usr
+          cp -fr build/linux/x64/release/bundle linux/debian/usr/bin
           dpkg-deb --build --root-owner-group linux/debian
           cp linux/*.deb harmonoid-linux-x86_64.deb
 
@@ -76,7 +76,7 @@ jobs:
         run: |
           mkdir -p AppDir/
           cp -r linux/debian/usr AppDir/
-          ln -sr AppDir/usr/local/bin/harmonoid AppDir/harmonoid
+          ln -sr AppDir/usr/bin/harmonoid AppDir/harmonoid
           tar czf harmonoid-linux-x86_64.tar.gz -C AppDir/ .
 
       - name: Build AppImage
