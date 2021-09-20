@@ -1,5 +1,5 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
-<h4 align="center">A music app with a beautiful UI to play local music & YouTube music.</h4>
+<h4 align="center">Elegant music app to play local music & YouTube music.</h4>
 
 <h4 align="center"><a href='#download'>Download Now</a></h4>
 
@@ -70,7 +70,7 @@ Thanks to [@prateekmedia](https://github.com/prateekmedia) for creating AppImage
 
 ## License
 
-Copyright (C) 2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>
+Copyright (C) 2021, [Hitesh Kumar Saini](https://github.com/alexmercerind) <saini123hitesh@gmail.com>
 
 GNU General Public License v3
 

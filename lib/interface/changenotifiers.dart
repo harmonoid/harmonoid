@@ -146,7 +146,7 @@ class Visuals extends ChangeNotifier {
             : Color(0xCC222222),
       );
     }
-    if (Platform.isAndroid || Platform.isIOS && context != null) {
+    if ((Platform.isAndroid || Platform.isIOS) && context != null) {
       SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(
           statusBarBrightness: Theme.of(context!).brightness,

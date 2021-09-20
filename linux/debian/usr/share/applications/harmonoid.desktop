@@ -2,7 +2,7 @@
 Version=1.0
 Type=Application
 Name=Harmonoid
-Comment=A music app with a beautiful UI to play local music & YouTube music. Distributes music into albums & artists. Has playlists & lyrics.
+Comment=Elegant music app to play local music & YouTube music. Distributes music into albums & artists. Has playlists & lyrics.
 Icon=harmonoid
 Exec=harmonoid
 StartupWMClass=harmonoid

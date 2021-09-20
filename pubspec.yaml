@@ -1,5 +1,5 @@
 name: harmonoid
-description: A beautiful app to play all your music.
+description: Elegant music app to play local music & YouTube music. Distributes music into albums & artists. Has playlists & lyrics.
 publish_to: "none"
 version: 0.1.6+5003
 
