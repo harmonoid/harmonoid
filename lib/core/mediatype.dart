@@ -20,6 +20,7 @@ class Track extends MediaType with Comparable {
   int? trackDuration;
   String? trackId;
   String? albumId;
+  dynamic extras;
   File get albumArt {
     File albumArtFile = File(path.join(
         configuration.cacheDirectory!.path,

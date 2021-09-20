@@ -57,11 +57,19 @@ final LIBWINMEDIA.Player player = LIBWINMEDIA.Player(id: 0)
   })
   ..volume = 1.0;
 
+List<AssetsAudioPlayer.Audio> assetsAudioPlayerBuffer =
+    <AssetsAudioPlayer.Audio>[];
+List<AssetsAudioPlayer.Audio> assetsAudioPlayerCurrent =
+    <AssetsAudioPlayer.Audio>[];
+int assetsAudioPlayerIndex = 0;
+
 final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
     AssetsAudioPlayer.AssetsAudioPlayer.withId('harmonoid')
       ..current.listen((AssetsAudioPlayer.Playing? current) async {
         if (current != null) {
           nowPlayingBar.height = 72.0;
+          assetsAudioPlayerCurrent = current.playlist.audios;
+          assetsAudioPlayerIndex = current.index;
           nowPlaying.tracks = current.playlist.audios
               .map(
                 (audio) => Track.fromMap(audio.metas.extra)!,
@@ -105,33 +113,37 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
         }
       })
       ..currentPosition.listen((Duration? position) async {
+        if (position != null) {
+          nowPlaying.position = position;
+        }
         if (lyrics.current.isNotEmpty &&
             position != null &&
             configuration.notificationLyrics!) {
-          nowPlaying.position = position;
-          for (Lyric lyric in lyrics.current)
-            if (lyric.time ~/ 1000 == position.inSeconds) {
-              const AndroidNotificationDetails settings =
-                  AndroidNotificationDetails(
-                'com.alexmercerind.harmonoid',
-                'Harmonoid',
-                '',
-                icon: 'mipmap/ic_launcher',
-                importance: Importance.high,
-                priority: Priority.high,
-                showWhen: false,
-                onlyAlertOnce: true,
-                playSound: false,
-                enableVibration: false,
-              );
-              await notification.show(
-                100000,
-                lyrics.query,
-                lyric.words,
-                NotificationDetails(android: settings),
-              );
-              break;
-            }
+          if (Platform.isAndroid) {
+            for (Lyric lyric in lyrics.current)
+              if (lyric.time ~/ 1000 == position.inSeconds) {
+                const AndroidNotificationDetails settings =
+                    AndroidNotificationDetails(
+                  'com.alexmercerind.harmonoid',
+                  'Harmonoid',
+                  '',
+                  icon: 'mipmap/ic_launcher',
+                  importance: Importance.high,
+                  priority: Priority.high,
+                  showWhen: false,
+                  onlyAlertOnce: true,
+                  playSound: false,
+                  enableVibration: false,
+                );
+                await notification.show(
+                  69420,
+                  lyrics.query,
+                  lyric.words,
+                  NotificationDetails(android: settings),
+                );
+                break;
+              }
+          }
         }
       })
       ..isPlaying.listen((isPlaying) {
@@ -139,6 +151,40 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
       })
       ..isBuffering.listen((isBuffering) {
         nowPlaying.isBuffering = isBuffering;
+      })
+      ..playlistAudioFinished.listen((playing) async {
+        if (assetsAudioPlayerBuffer.isNotEmpty) {
+          for (var key
+              in AssetsAudioPlayer.AssetsAudioPlayer.allPlayers().keys) {
+            await AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]
+                ?.pause();
+            if (AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]?.id !=
+                'harmonoid')
+              await AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]
+                  ?.dispose();
+          }
+          List<AssetsAudioPlayer.Audio> audios = [
+            ...playing.playlist.audios,
+            ...assetsAudioPlayerBuffer,
+          ];
+          assetsAudioPlayerBuffer.clear();
+          assetsAudioPlayerIndex = playing.index + 1;
+          await assetsAudioPlayer.open(
+            AssetsAudioPlayer.Playlist(
+              audios: audios,
+              startIndex: assetsAudioPlayerIndex,
+            ),
+            showNotification: true,
+            loopMode: AssetsAudioPlayer.LoopMode.none,
+            notificationSettings: AssetsAudioPlayer.NotificationSettings(
+              playPauseEnabled: true,
+              nextEnabled: true,
+              prevEnabled: true,
+              seekBarEnabled: true,
+              stopEnabled: false,
+            ),
+          );
+        }
       });
 
 abstract class Playback {
@@ -153,17 +199,57 @@ abstract class Playback {
         );
       });
     }
+    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
+      assetsAudioPlayerBuffer = tracks
+          .map(
+            (track) => track.filePath!.startsWith('http')
+                ? AssetsAudioPlayer.Audio.network(
+                    track.filePath!,
+                    metas: AssetsAudioPlayer.Metas(
+                      id: track.trackId,
+                      image: AssetsAudioPlayer.MetasImage.network(
+                        track.networkAlbumArt!,
+                      ),
+                      title: track.trackName!,
+                      album: track.albumName!,
+                      artist: track.trackArtistNames!.join(', '),
+                      extra: track.toMap(),
+                    ),
+                  )
+                : AssetsAudioPlayer.Audio.file(
+                    track.filePath!,
+                    metas: AssetsAudioPlayer.Metas(
+                      id: track.trackId,
+                      image: AssetsAudioPlayer.MetasImage.file(
+                        track.albumArt.path,
+                      ),
+                      title: track.trackName!,
+                      album: track.albumName!,
+                      artist: track.trackArtistNames!.join(', '),
+                      extra: track.toMap(),
+                    ),
+                  ),
+          )
+          .toList()
+          .cast();
+    }
   }
 
   static Future<void> setRate(double rate) async {
     if (Platform.isWindows || Platform.isLinux) {
       player.rate = rate;
     }
+    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
+      assetsAudioPlayer.setPlaySpeed(rate);
+    }
   }
 
   static Future<void> setVolume(double volume) async {
     if (Platform.isWindows || Platform.isLinux) {
       player.volume = volume;
+    }
+    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
+      assetsAudioPlayer.setVolume(volume);
     }
   }
 
@@ -172,7 +258,36 @@ abstract class Playback {
       player.back();
     }
     if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
-      assetsAudioPlayer.previous();
+      if (assetsAudioPlayerBuffer.isNotEmpty) {
+        for (var key in AssetsAudioPlayer.AssetsAudioPlayer.allPlayers().keys) {
+          await AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]?.pause();
+          if (AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]?.id !=
+              'harmonoid')
+            await AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]
+                ?.dispose();
+        }
+        List<AssetsAudioPlayer.Audio> audios = [
+          ...assetsAudioPlayerCurrent,
+          ...assetsAudioPlayerBuffer,
+        ];
+        assetsAudioPlayerBuffer.clear();
+        await assetsAudioPlayer.open(
+          AssetsAudioPlayer.Playlist(
+            audios: audios,
+            startIndex: assetsAudioPlayerIndex - 1,
+          ),
+          showNotification: true,
+          loopMode: AssetsAudioPlayer.LoopMode.none,
+          notificationSettings: AssetsAudioPlayer.NotificationSettings(
+            playPauseEnabled: true,
+            nextEnabled: true,
+            prevEnabled: true,
+            seekBarEnabled: true,
+            stopEnabled: false,
+          ),
+        );
+      } else
+        assetsAudioPlayer.previous();
     }
   }
 
@@ -181,7 +296,36 @@ abstract class Playback {
       player.next();
     }
     if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
-      assetsAudioPlayer.next();
+      if (assetsAudioPlayerBuffer.isNotEmpty) {
+        for (var key in AssetsAudioPlayer.AssetsAudioPlayer.allPlayers().keys) {
+          await AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]?.pause();
+          if (AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]?.id !=
+              'harmonoid')
+            await AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]
+                ?.dispose();
+        }
+        List<AssetsAudioPlayer.Audio> audios = [
+          ...assetsAudioPlayerCurrent,
+          ...assetsAudioPlayerBuffer,
+        ];
+        assetsAudioPlayerBuffer.clear();
+        await assetsAudioPlayer.open(
+          AssetsAudioPlayer.Playlist(
+            audios: audios,
+            startIndex: assetsAudioPlayerIndex + 1,
+          ),
+          showNotification: true,
+          loopMode: AssetsAudioPlayer.LoopMode.none,
+          notificationSettings: AssetsAudioPlayer.NotificationSettings(
+            playPauseEnabled: true,
+            nextEnabled: true,
+            prevEnabled: true,
+            seekBarEnabled: true,
+            stopEnabled: false,
+          ),
+        );
+      } else
+        assetsAudioPlayer.next();
     }
   }
 
@@ -263,7 +407,7 @@ abstract class Playback {
           startIndex: index,
         ),
         showNotification: true,
-        loopMode: AssetsAudioPlayer.LoopMode.playlist,
+        loopMode: AssetsAudioPlayer.LoopMode.none,
         notificationSettings: AssetsAudioPlayer.NotificationSettings(
           playPauseEnabled: true,
           nextEnabled: true,
