@@ -14,7 +14,6 @@ late Configuration configuration;
 abstract class ConfigurationKeys {
   List<Directory>? collectionDirectories;
   Directory? cacheDirectory;
-  String? homeAddress;
   LanguageRegion? languageRegion;
   Accent? accent;
   ThemeMode? themeMode;
@@ -27,6 +26,7 @@ abstract class ConfigurationKeys {
   List<String>? discoverRecent;
 }
 
+// ignore: non_constant_identifier_names
 Map<String, dynamic> DEFAULT_CONFIGURATION = {
   'collectionDirectories': <String>[
     {
@@ -35,16 +35,12 @@ Map<String, dynamic> DEFAULT_CONFIGURATION = {
       'android': () => '/storage/emulated/0/Music',
     }[Platform.operatingSystem]!(),
   ],
-  // TODO: Remove this.
-  'homeAddress': '',
   'languageRegion': 0,
   'accent': 0,
   'themeMode': 2,
   'collectionSortType': 0,
   'automaticAccent': false,
   'notificationLyrics': true,
-  // TODO: Remove this.
-  // TODO: Remove this.
   'acrylicEnabled': false,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
@@ -92,7 +88,6 @@ class Configuration extends ConfigurationKeys {
 
   Future<void> save({
     List<Directory>? collectionDirectories,
-    String? homeAddress,
     LanguageRegion? languageRegion,
     Accent? accent,
     ThemeMode? themeMode,
@@ -107,9 +102,6 @@ class Configuration extends ConfigurationKeys {
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
-    }
-    if (homeAddress != null) {
-      this.homeAddress = homeAddress;
     }
     if (languageRegion != null) {
       this.languageRegion = languageRegion;
@@ -147,7 +139,6 @@ class Configuration extends ConfigurationKeys {
           .map((directory) => directory.path)
           .toList()
           .cast<String>(),
-      'homeAddress': this.homeAddress,
       'languageRegion': this.languageRegion!.index,
       'accent': accents.indexOf(this.accent),
       'themeMode': this.themeMode!.index,
@@ -173,7 +164,6 @@ class Configuration extends ConfigurationKeys {
         .map((directory) => Directory(directory))
         .toList()
         .cast<Directory>();
-    this.homeAddress = currentConfiguration['homeAddress'];
     this.languageRegion =
         LanguageRegion.values[currentConfiguration['languageRegion']];
     this.accent = accents[currentConfiguration['accent']];

@@ -253,8 +253,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         this.STRING_TRANSFERS                                       = 'Transfers';
         this.STRING_THEME_MODE_SYSTEM                               = 'Follow system theme';
-        this.STRING_SETTING_INDEXING_TITLE                          = 'Indexing';
-        this.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
+        this.STRING_SETTING_INDEXING_TITLE                          = 'Collection';
+        this.STRING_SETTING_INDEXING_SUBTITLE                       = 'Select folders to search for music or reindex';
         this.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
         this.STRING_SETTING_INDEXING_DONE                           = 'Indexed';
         this.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process.';
@@ -1144,8 +1144,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Here are the tracks in this playlist';
         this.STRING_TRANSFERS                                       = 'Transfers';
         this.STRING_THEME_MODE_SYSTEM                               = 'Follow system theme';
-        this.STRING_SETTING_INDEXING_TITLE                          = 'Indexing';
-        this.STRING_SETTING_INDEXING_SUBTITLE                       = 'Reindex your music collection';
+        this.STRING_SETTING_INDEXING_TITLE                          = 'Collection';
+        this.STRING_SETTING_INDEXING_SUBTITLE                       = 'Select folders to search for music or reindex';
         this.STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR      = 'Indexed NUMBER_STRING of TOTAL_STRING tracks...';
         this.STRING_SETTING_INDEXING_DONE                           = 'Indexed';
         this.STRING_SETTING_INDEXING_WARNING                        = 'Do not interrupt the process.';
