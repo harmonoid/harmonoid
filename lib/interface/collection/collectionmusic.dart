@@ -28,7 +28,7 @@ class CollectionMusic extends StatefulWidget {
 
 class CollectionMusicState extends State<CollectionMusic>
     with AutomaticKeepAliveClientMixin {
-  int index = 5;
+  int index = 0;
 
   @override
   bool get wantKeepAlive => true;
@@ -75,6 +75,87 @@ class CollectionMusicState extends State<CollectionMusic>
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
                             children: [
+                              InkWell(
+                                borderRadius: BorderRadius.circular(8.0),
+                                onTap: () =>
+                                    this.setState(() => this.index = 0),
+                                child: Container(
+                                  height: 40.0,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    language!.STRING_ALBUM.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: this.index == 0
+                                          ? FontWeight.w600
+                                          : FontWeight.w300,
+                                      color: (Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black)
+                                          .withOpacity(
+                                              this.index == 0 ? 1.0 : 0.67),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(8.0),
+                                onTap: () =>
+                                    this.setState(() => this.index = 1),
+                                child: Container(
+                                  height: 40.0,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    language!.STRING_TRACK.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: this.index == 1
+                                          ? FontWeight.w600
+                                          : FontWeight.w300,
+                                      color: (Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black)
+                                          .withOpacity(
+                                              this.index == 1 ? 1.0 : 0.67),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(8.0),
+                                onTap: () =>
+                                    this.setState(() => this.index = 2),
+                                child: Container(
+                                  height: 40.0,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    language!.STRING_ARTIST.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: this.index == 2
+                                          ? FontWeight.w600
+                                          : FontWeight.w300,
+                                      color: (Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black)
+                                          .withOpacity(
+                                              this.index == 2 ? 1.0 : 0.67),
+                                    ),
+                                  ),
+                                ),
+                              ),
                               InkWell(
                                 borderRadius: BorderRadius.circular(8.0),
                                 onTap: () =>
@@ -132,87 +213,6 @@ class CollectionMusicState extends State<CollectionMusic>
                               InkWell(
                                 borderRadius: BorderRadius.circular(8.0),
                                 onTap: () =>
-                                    this.setState(() => this.index = 2),
-                                child: Container(
-                                  height: 40.0,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    language!.STRING_ARTIST.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: this.index == 2
-                                          ? FontWeight.w600
-                                          : FontWeight.w300,
-                                      color: (Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black)
-                                          .withOpacity(
-                                              this.index == 2 ? 1.0 : 0.67),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(8.0),
-                                onTap: () =>
-                                    this.setState(() => this.index = 1),
-                                child: Container(
-                                  height: 40.0,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    language!.STRING_TRACK.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: this.index == 1
-                                          ? FontWeight.w600
-                                          : FontWeight.w300,
-                                      color: (Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black)
-                                          .withOpacity(
-                                              this.index == 1 ? 1.0 : 0.67),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(8.0),
-                                onTap: () =>
-                                    this.setState(() => this.index = 0),
-                                child: Container(
-                                  height: 40.0,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    language!.STRING_ALBUM.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: this.index == 0
-                                          ? FontWeight.w600
-                                          : FontWeight.w300,
-                                      color: (Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black)
-                                          .withOpacity(
-                                              this.index == 0 ? 1.0 : 0.67),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(8.0),
-                                onTap: () =>
                                     this.setState(() => this.index = 5),
                                 child: Container(
                                   height: 40.0,
@@ -237,7 +237,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                   ),
                                 ),
                               ),
-                            ].reversed.toList(),
+                            ],
                           ),
                         ),
                       ),
@@ -330,6 +330,168 @@ class CollectionMusicState extends State<CollectionMusic>
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
                             children: [
+                              InkWell(
+                                borderRadius: BorderRadius.circular(8.0),
+                                onTap: () =>
+                                    this.setState(() => this.index = 0),
+                                child: Container(
+                                  height: 40.0,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    language!.STRING_ALBUM.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: this.index == 0
+                                          ? FontWeight.w600
+                                          : FontWeight.w300,
+                                      color: (Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black)
+                                          .withOpacity(
+                                              this.index == 0 ? 1.0 : 0.67),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(8.0),
+                                onTap: () =>
+                                    this.setState(() => this.index = 1),
+                                child: Container(
+                                  height: 40.0,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    language!.STRING_TRACK.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: this.index == 1
+                                          ? FontWeight.w600
+                                          : FontWeight.w300,
+                                      color: (Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black)
+                                          .withOpacity(
+                                              this.index == 1 ? 1.0 : 0.67),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(8.0),
+                                onTap: () =>
+                                    this.setState(() => this.index = 2),
+                                child: Container(
+                                  height: 40.0,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    language!.STRING_ARTIST.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: this.index == 2
+                                          ? FontWeight.w600
+                                          : FontWeight.w300,
+                                      color: (Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black)
+                                          .withOpacity(
+                                              this.index == 2 ? 1.0 : 0.67),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(8.0),
+                                onTap: () =>
+                                    this.setState(() => this.index = 4),
+                                child: Container(
+                                  height: 40.0,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    language!.STRING_SEARCH.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: this.index == 4
+                                          ? FontWeight.w600
+                                          : FontWeight.w300,
+                                      color: (Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black)
+                                          .withOpacity(
+                                              this.index == 4 ? 1.0 : 0.67),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(8.0),
+                                onTap: () =>
+                                    this.setState(() => this.index = 3),
+                                child: Container(
+                                  height: 40.0,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    language!.STRING_PLAYLISTS.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: this.index == 3
+                                          ? FontWeight.w600
+                                          : FontWeight.w300,
+                                      color: (Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black)
+                                          .withOpacity(
+                                              this.index == 3 ? 1.0 : 0.67),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(8.0),
+                                onTap: () =>
+                                    this.setState(() => this.index = 5),
+                                child: Container(
+                                  height: 40.0,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Text(
+                                    'YouTube'.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: this.index == 5
+                                          ? FontWeight.w600
+                                          : FontWeight.w300,
+                                      color: (Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black)
+                                          .withOpacity(
+                                              this.index == 5 ? 1.0 : 0.67),
+                                    ),
+                                  ),
+                                ),
+                              ),
                               Container(
                                 padding: EdgeInsets.symmetric(vertical: 2.0),
                                 child: InkWell(
@@ -413,169 +575,7 @@ class CollectionMusicState extends State<CollectionMusic>
                               SizedBox(
                                 width: 8.0,
                               ),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(8.0),
-                                onTap: () =>
-                                    this.setState(() => this.index = 4),
-                                child: Container(
-                                  height: 48.0,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    language!.STRING_SEARCH.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: this.index == 4
-                                          ? FontWeight.w600
-                                          : FontWeight.w300,
-                                      color: (Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black)
-                                          .withOpacity(
-                                              this.index == 4 ? 1.0 : 0.67),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(8.0),
-                                onTap: () =>
-                                    this.setState(() => this.index = 3),
-                                child: Container(
-                                  height: 40.0,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    language!.STRING_PLAYLISTS.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: this.index == 3
-                                          ? FontWeight.w600
-                                          : FontWeight.w300,
-                                      color: (Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black)
-                                          .withOpacity(
-                                              this.index == 3 ? 1.0 : 0.67),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(8.0),
-                                onTap: () =>
-                                    this.setState(() => this.index = 2),
-                                child: Container(
-                                  height: 40.0,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    language!.STRING_ARTIST.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: this.index == 2
-                                          ? FontWeight.w600
-                                          : FontWeight.w300,
-                                      color: (Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black)
-                                          .withOpacity(
-                                              this.index == 2 ? 1.0 : 0.67),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(8.0),
-                                onTap: () =>
-                                    this.setState(() => this.index = 1),
-                                child: Container(
-                                  height: 40.0,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    language!.STRING_TRACK.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: this.index == 1
-                                          ? FontWeight.w600
-                                          : FontWeight.w300,
-                                      color: (Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black)
-                                          .withOpacity(
-                                              this.index == 1 ? 1.0 : 0.67),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(8.0),
-                                onTap: () =>
-                                    this.setState(() => this.index = 0),
-                                child: Container(
-                                  height: 40.0,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    language!.STRING_ALBUM.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: this.index == 0
-                                          ? FontWeight.w600
-                                          : FontWeight.w300,
-                                      color: (Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black)
-                                          .withOpacity(
-                                              this.index == 0 ? 1.0 : 0.67),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(8.0),
-                                onTap: () =>
-                                    this.setState(() => this.index = 5),
-                                child: Container(
-                                  height: 40.0,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    'YouTube'.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: this.index == 5
-                                          ? FontWeight.w600
-                                          : FontWeight.w300,
-                                      color: (Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black)
-                                          .withOpacity(
-                                              this.index == 5 ? 1.0 : 0.67),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ].reversed.toList(),
+                            ],
                           ),
                         ),
                       ),

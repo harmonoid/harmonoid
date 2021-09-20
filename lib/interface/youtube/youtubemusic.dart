@@ -51,11 +51,6 @@ class YouTubeMusicState extends State<YouTubeMusic> {
         ],
       );
       nowPlaying.isBuffering = false;
-      await configuration.save(
-        discoverRecent: [
-          track.trackId!,
-        ],
-      );
     }
   }
 
@@ -87,9 +82,22 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                   (track) => Material(
                     color: Colors.transparent,
                     child: ListTile(
-                      onTap: () => this.play(
-                        track,
-                      ),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    FadeThroughTransition(
+                              fillColor: Colors.transparent,
+                              animation: animation,
+                              secondaryAnimation: secondaryAnimation,
+                              child: YouTube(
+                                track: track,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                       leading: CircleAvatar(
                         backgroundImage: NetworkImage(track.networkAlbumArt!),
                       ),
@@ -103,46 +111,6 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                             ' • ${track.albumName}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                      ),
-                      trailing: ContextMenuButton(
-                        elevation: 0.0,
-                        onSelected: (index) async {
-                          switch (index) {
-                            case 0:
-                              {
-                                await track.attachAudioStream();
-                                await Playback.add(
-                                  [
-                                    track,
-                                  ],
-                                );
-                                break;
-                              }
-                            case 1:
-                              {
-                                await Share.share(
-                                  'https://youtu.be/${track.trackId}',
-                                );
-                                break;
-                              }
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 0,
-                            child: Text(
-                              language!.STRING_ADD_TO_NOW_PLAYING,
-                              style: Theme.of(context).textTheme.headline4,
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 1,
-                            child: Text(
-                              language!.STRING_SHARE,
-                              style: Theme.of(context).textTheme.headline4,
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ),
@@ -377,9 +345,6 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                                 height: tileHeight,
                                 width: tileWidth,
                                 track: youtube.recommendations[index],
-                                action: () => this.play(
-                                  youtube.recommendations[index],
-                                ),
                               ),
                             ),
                           )
