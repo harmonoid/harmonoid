@@ -492,6 +492,9 @@ class CollectionMusicState extends State<CollectionMusic>
                                   ),
                                 ),
                               ),
+                              SizedBox(
+                                width: 8.0,
+                              ),
                               Container(
                                 padding: EdgeInsets.symmetric(vertical: 2.0),
                                 child: InkWell(
@@ -571,9 +574,6 @@ class CollectionMusicState extends State<CollectionMusic>
                                     ),
                                   ],
                                 ),
-                              ),
-                              SizedBox(
-                                width: 8.0,
                               ),
                             ],
                           ),
