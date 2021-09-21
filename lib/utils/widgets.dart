@@ -693,8 +693,8 @@ class WindowTitleBar extends StatelessWidget {
       return Container(
         height: MediaQuery.of(context).padding.top,
         color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white.withOpacity(0.12)
-            : Colors.black.withOpacity(0.12),
+            ? Colors.white.withOpacity(0.10)
+            : Colors.black.withOpacity(0.10),
       );
     return Platform.isWindows
         ? Container(
@@ -702,8 +702,8 @@ class WindowTitleBar extends StatelessWidget {
                 (Platform.isLinux ? 0.75 : 1.0)),
             height: 32.0,
             color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.12)
-                : Colors.black.withOpacity(0.12),
+                ? Colors.white.withOpacity(0.10)
+                : Colors.black.withOpacity(0.10),
             child: MoveWindow(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
