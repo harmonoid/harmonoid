@@ -1,17 +1,18 @@
 import 'dart:math';
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 
 const double HORIZONTAL_BREAKPOINT = 720.0;
 
 class NowPlayingBar extends StatefulWidget {
-  const NowPlayingBar({Key? key}) : super(key: key);
+  final void Function()? launch;
+  NowPlayingBar({Key? key, this.launch}) : super(key: key);
   @override
   NowPlayingBarState createState() => NowPlayingBarState();
 }
@@ -27,136 +28,148 @@ class NowPlayingBarState extends State<NowPlayingBar> {
             curve: Curves.easeInOut,
             height: container.height,
             color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.08)
-                : Colors.black.withOpacity(0.08),
+                ? Colors.white.withOpacity(0.10)
+                : Colors.black.withOpacity(0.10),
             child: SingleChildScrollView(
               child: (nowPlaying.index != null &&
                       nowPlaying.tracks.length >
                           (nowPlaying.index ?? double.infinity) &&
                       0 <= (nowPlaying.index ?? double.infinity))
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 2.0,
-                          width: MediaQuery.of(context).size.width *
-                              nowPlaying.position.inMilliseconds /
-                              nowPlaying.duration.inMilliseconds,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
+                  ? Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          widget.launch?.call();
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 2.0,
+                              width: MediaQuery.of(context).size.width *
+                                  nowPlaying.position.inMilliseconds /
+                                  nowPlaying.duration.inMilliseconds,
+                              color: Theme.of(context).brightness ==
+                                      Brightness.light
                                   ? Colors.black
                                   : Colors.white,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            nowPlaying.tracks[nowPlaying.index!]
-                                        .networkAlbumArt !=
-                                    null
-                                ? Image.network(
-                                    nowPlaying.tracks[nowPlaying.index!]
-                                        .networkAlbumArt!,
-                                    height: 70.0,
-                                    width: 70.0,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Image.file(
-                                    nowPlaying
-                                        .tracks[nowPlaying.index!].albumArt,
-                                    height: 70.0,
-                                    width: 70.0,
-                                    fit: BoxFit.cover,
-                                  ),
-                            SizedBox(
-                              width: 12.0,
                             ),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    nowPlaying.tracks[nowPlaying.index!]
-                                            .trackName ??
-                                        '',
-                                    style:
-                                        Theme.of(context).textTheme.headline1,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                nowPlaying.tracks[nowPlaying.index!]
+                                            .networkAlbumArt !=
+                                        null
+                                    ? Image.network(
+                                        nowPlaying.tracks[nowPlaying.index!]
+                                            .networkAlbumArt!,
+                                        height: 70.0,
+                                        width: 70.0,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.file(
+                                        nowPlaying
+                                            .tracks[nowPlaying.index!].albumArt,
+                                        height: 70.0,
+                                        width: 70.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                SizedBox(
+                                  width: 12.0,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        nowPlaying.tracks[nowPlaying.index!]
+                                                .trackName ??
+                                            '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline1,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        nowPlaying.tracks[nowPlaying.index!]
+                                                .trackArtistNames
+                                                ?.join(', ') ??
+                                            '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        '(${nowPlaying.tracks[nowPlaying.index!].year ?? 'Unknown Year'})',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    nowPlaying.tracks[nowPlaying.index!]
-                                            .trackArtistNames
-                                            ?.join(', ') ??
-                                        '',
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    '(${nowPlaying.tracks[nowPlaying.index!].year ?? 'Unknown Year'})',
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: Playback.back,
-                              iconSize: 24.0,
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                              splashRadius: 18.0,
-                              icon: Icon(
-                                Icons.skip_previous,
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
+                                ),
+                                IconButton(
+                                  onPressed: Playback.back,
+                                  iconSize: 24.0,
                                   color: Theme.of(context).brightness ==
                                           Brightness.dark
-                                      ? Colors.white.withOpacity(0.8)
-                                      : Colors.black.withOpacity(0.8),
-                                  width: 1.0,
+                                      ? Colors.white
+                                      : Colors.black,
+                                  splashRadius: 18.0,
+                                  icon: Icon(
+                                    Icons.skip_previous,
+                                  ),
                                 ),
-                                borderRadius: BorderRadius.circular(32.0),
-                              ),
-                              child: IconButton(
-                                onPressed: Playback.playOrPause,
-                                iconSize: 32.0,
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                                splashRadius: 24.0,
-                                icon: Icon(
-                                  nowPlaying.isPlaying
-                                      ? Icons.pause
-                                      : Icons.play_arrow,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white.withOpacity(0.8)
+                                          : Colors.black.withOpacity(0.8),
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(32.0),
+                                  ),
+                                  child: IconButton(
+                                    onPressed: Playback.playOrPause,
+                                    iconSize: 32.0,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black,
+                                    splashRadius: 24.0,
+                                    icon: Icon(
+                                      nowPlaying.isPlaying
+                                          ? Icons.pause
+                                          : Icons.play_arrow,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: Playback.next,
-                              iconSize: 24.0,
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                              splashRadius: 18.0,
-                              icon: Icon(
-                                Icons.skip_next,
-                              ),
+                                IconButton(
+                                  onPressed: Playback.next,
+                                  iconSize: 24.0,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
+                                  splashRadius: 18.0,
+                                  icon: Icon(
+                                    Icons.skip_next,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
-                        )
-                      ],
+                        ),
+                      ),
                     )
                   : Container(),
             ),
@@ -167,8 +180,8 @@ class NowPlayingBarState extends State<NowPlayingBar> {
       builder: (context, nowPlaying, _) => Container(
         height: 84.0,
         color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white.withOpacity(0.08)
-            : Colors.black.withOpacity(0.08),
+            ? Colors.white.withOpacity(0.10)
+            : Colors.black.withOpacity(0.10),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,

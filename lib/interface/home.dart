@@ -39,6 +39,7 @@ class HomeState extends State<Home>
 
   @override
   Future<bool> didPopRoute() async {
+    if (nowPlayingBar.maximized) nowPlayingBar.maximized = false;
     if (this.navigatorKey.currentState!.canPop()) {
       this.navigatorKey.currentState!.pop();
     } else {

@@ -23,6 +23,8 @@ class NowPlayingController extends ChangeNotifier {
   Duration get position => _position;
   Duration get duration => _duration;
   String get state => _state;
+  bool get isShuffling => _isShuffling;
+  bool get isRepeating => _isRepeating;
 
   double volumeBeforeMute = 1.0;
 
@@ -77,6 +79,16 @@ class NowPlayingController extends ChangeNotifier {
     this.notifyListeners();
   }
 
+  set isShuffling(bool isShuffling) {
+    this._isShuffling = isShuffling;
+    this.notifyListeners();
+  }
+
+  set isRepeating(bool isRepeating) {
+    this._isRepeating = isRepeating;
+    this.notifyListeners();
+  }
+
   int? _index;
   List<Track> _tracks = <Track>[];
   bool _isPlaying = false;
@@ -87,6 +99,8 @@ class NowPlayingController extends ChangeNotifier {
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
   String _state = language!.STRING_BUFFERING;
+  bool _isShuffling = false;
+  bool _isRepeating = false;
 }
 
 class NowPlayingBarController extends ChangeNotifier {
@@ -98,6 +112,7 @@ class NowPlayingBarController extends ChangeNotifier {
   }
 
   set height(double value) {
+    if (maximized) return;
     this._height = value;
     this.notifyListeners();
   }
