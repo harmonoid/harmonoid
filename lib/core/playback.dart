@@ -376,6 +376,24 @@ abstract class Playback {
     }
   }
 
+  static Future<void> repeat() async {
+    nowPlaying.isRepeating = !nowPlaying.isRepeating;
+    if (Platform.isWindows || Platform.isLinux) {}
+    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
+      assetsAudioPlayer.setLoopMode(nowPlaying.isRepeating
+          ? AssetsAudioPlayer.LoopMode.single
+          : AssetsAudioPlayer.LoopMode.none);
+    }
+  }
+
+  static Future<void> shuffle() async {
+    nowPlaying.isShuffling = !nowPlaying.isShuffling;
+    if (Platform.isWindows || Platform.isLinux) {}
+    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
+      assetsAudioPlayer.toggleShuffle();
+    }
+  }
+
   static Future<void> playOrPause() async {
     if (Platform.isWindows || Platform.isLinux) {
       if (player.state.isPlaying)
