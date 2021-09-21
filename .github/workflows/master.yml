@@ -103,3 +103,44 @@ jobs:
             harmonoid-linux-x86_64.tar.gz
             harmonoid-linux-x86_64.AppImage
           token: ${{ secrets.GITHUB_TOKEN }}
+    
+  build_android:
+    name: Harmonoid Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "beta"
+
+      - name: Create Key Store
+        id: create_key_store
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: "keystore.pfx"
+          encodedString: ${{ secrets.KEY_STORE }}
+      
+      - name: Create Key Properties
+        id: create_key_properties
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: "key.properties"
+          encodedString: ${{ secrets.KEY_PROPERTIES }}
+
+      - run: cp "${{ steps.create_key_store.outputs.filePath }}" android/app/keystore.jks
+      - run: cp "${{ steps.create_key_properties.outputs.filePath }}" android/key.properties
+      
+      - run: flutter pub get
+      - run: flutter build apk --verbose
+      - run: cp build/app/outputs/flutter-apk/app-release.apk harmonoid-android.apk
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          prerelease: false
+          body: ""
+          tag_name: "vnext"
+          files: |
+            harmonoid-android.apk
+          token: ${{ secrets.GITHUB_TOKEN }}
