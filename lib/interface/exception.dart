@@ -155,6 +155,12 @@ class ExceptionApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
     return FractionallyScaledWidget(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -167,12 +173,46 @@ class ExceptionApp extends StatelessWidget {
           body: Column(
             children: [
               WindowTitleBar(),
+              Container(
+                height: 56.0,
+                color: Colors.white.withOpacity(0.12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 40.0,
+                        width: 40.0,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          size: 20.0,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 24.0,
+                    ),
+                    Text(
+                      'Exception',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Expanded(
                 child: ListView(
+                  padding: EdgeInsets.symmetric(vertical: 4.0),
                   children: [
-                    SizedBox(
-                      height: 8.0,
-                    ),
                     SettingsTile(
                       title: 'Exception occured',
                       subtitle: 'Something wrong has happened.',
@@ -195,13 +235,9 @@ class ExceptionApp extends StatelessWidget {
                               fontWeight: FontWeights.thin(false),
                             ),
                           ),
-                          Divider(
-                            color: Colors.transparent,
-                            height: 16.0,
-                          ),
                         ],
                       ),
-                      margin: EdgeInsets.all(16.0),
+                      margin: EdgeInsets.symmetric(horizontal: 16.0),
                     ),
                   ],
                 ),
@@ -213,11 +249,12 @@ class ExceptionApp extends StatelessWidget {
                       backgroundColor: MaterialStateProperty.all(
                         Colors.deepPurpleAccent.shade200,
                       ),
+                      elevation: MaterialStateProperty.all(0.0),
                     ),
                     onPressed: () => UrlLauncher.launch(
                         'https://github.com/alexmercerind/harmonoid/issues'),
                     child: Text(
-                      'REPORT ISSUE',
+                      'Report',
                     ),
                   ),
                   ElevatedButton(
@@ -225,10 +262,11 @@ class ExceptionApp extends StatelessWidget {
                       backgroundColor: MaterialStateProperty.all(
                         Colors.deepPurpleAccent.shade200,
                       ),
+                      elevation: MaterialStateProperty.all(0.0),
                     ),
                     onPressed: SystemNavigator.pop,
                     child: Text(
-                      'EXIT APP',
+                      'Exit',
                     ),
                   ),
                 ],

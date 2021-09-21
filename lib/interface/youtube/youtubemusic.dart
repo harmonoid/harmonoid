@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/rendering.dart';
 
@@ -173,8 +172,8 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                               decoration: BoxDecoration(
                                 color: Theme.of(context).brightness ==
                                         Brightness.dark
-                                    ? Colors.white.withOpacity(0.04)
-                                    : Colors.black.withOpacity(0.04),
+                                    ? Colors.white.withOpacity(0.08)
+                                    : Colors.black.withOpacity(0.08),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               child: Icon(

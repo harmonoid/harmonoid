@@ -43,8 +43,8 @@ class AboutPageState extends State<AboutPage> {
           Container(
             height: 56.0,
             color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.08)
-                : Colors.black.withOpacity(0.08),
+                ? Colors.white.withOpacity(0.10)
+                : Colors.black.withOpacity(0.10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,

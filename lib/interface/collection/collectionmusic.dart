@@ -37,6 +37,7 @@ class CollectionMusicState extends State<CollectionMusic>
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!initialized) {
+      Provider.of<Visuals>(context).updateAppBar(context);
       intent.play();
       Provider.of<Collection>(context, listen: false).refresh(
           onProgress: (progress, total, _) {
@@ -61,8 +62,8 @@ class CollectionMusicState extends State<CollectionMusic>
                 ? EdgeInsets.symmetric(horizontal: 8.0)
                 : EdgeInsets.zero,
             color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.08)
-                : Colors.black.withOpacity(0.08),
+                ? Colors.white.withOpacity(0.10)
+                : Colors.black.withOpacity(0.10),
             child: Platform.isWindows || Platform.isLinux || Platform.isMacOS
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -301,8 +302,8 @@ class CollectionMusicState extends State<CollectionMusic>
                             decoration: BoxDecoration(
                               color: Theme.of(context).brightness ==
                                       Brightness.dark
-                                  ? Colors.white.withOpacity(0.08)
-                                  : Colors.black.withOpacity(0.08),
+                                  ? Colors.white.withOpacity(0.10)
+                                  : Colors.black.withOpacity(0.10),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Icon(
@@ -497,47 +498,6 @@ class CollectionMusicState extends State<CollectionMusic>
                               ),
                               Container(
                                 padding: EdgeInsets.symmetric(vertical: 2.0),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation,
-                                                secondaryAnimation) =>
-                                            FadeThroughTransition(
-                                          fillColor: Colors.transparent,
-                                          animation: animation,
-                                          secondaryAnimation:
-                                              secondaryAnimation,
-                                          child: Settings(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
-                                  child: Container(
-                                    height: 40.0,
-                                    width: 40.0,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white.withOpacity(0.08)
-                                          : Colors.black.withOpacity(0.08),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    child: Icon(
-                                      FluentIcons.settings_20_regular,
-                                      size: 20.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 8.0,
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 2.0),
                                 child: ContextMenuButton<CollectionSort>(
                                   offset: Offset.fromDirection(pi / 2, 64.0),
                                   icon: Icon(
@@ -573,6 +533,47 @@ class CollectionMusicState extends State<CollectionMusic>
                                       ),
                                     ),
                                   ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 2.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            FadeThroughTransition(
+                                          fillColor: Colors.transparent,
+                                          animation: animation,
+                                          secondaryAnimation:
+                                              secondaryAnimation,
+                                          child: Settings(),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                  child: Container(
+                                    height: 40.0,
+                                    width: 40.0,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white.withOpacity(0.08)
+                                          : Colors.black.withOpacity(0.08),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Icon(
+                                      FluentIcons.settings_20_regular,
+                                      size: 20.0,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],

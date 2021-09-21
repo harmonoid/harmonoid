@@ -248,9 +248,7 @@ class CollectionArtist extends StatelessWidget {
     return Consumer<Collection>(
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white.withOpacity(0.04)
-              : Colors.black.withOpacity(0.04),
+          color: Theme.of(context).cardColor,
         ),
         height: MediaQuery.of(context).size.width > HORIZONTAL_BREAKPOINT
             ? MediaQuery.of(context).size.height
@@ -313,8 +311,8 @@ class CollectionArtist extends StatelessWidget {
                       padding: EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withOpacity(0.04)
-                            : Colors.black.withOpacity(0.04),
+                            ? Colors.white.withOpacity(0.06)
+                            : Colors.black.withOpacity(0.06),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Column(

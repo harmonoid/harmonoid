@@ -276,9 +276,7 @@ class CollectionAlbum extends StatelessWidget {
     return Consumer<Collection>(
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white.withOpacity(0.04)
-              : Colors.black.withOpacity(0.04),
+          color: Theme.of(context).cardColor,
         ),
         height: MediaQuery.of(context).size.width > HORIZONTAL_BREAKPOINT
             ? MediaQuery.of(context).size.height

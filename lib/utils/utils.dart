@@ -162,8 +162,8 @@ abstract class Utils {
           : (isLight ? Colors.white : Color(0xFF121212)),
       toggleableActiveColor: accentColor,
       cardColor: isLight
-          ? Colors.black.withOpacity(0.04)
-          : Colors.white.withOpacity(0.04),
+          ? Colors.black.withOpacity(0.06)
+          : Colors.white.withOpacity(0.06),
       backgroundColor: accentColor.withOpacity(0.24),
       dividerColor: isLight ? Colors.black12 : Colors.white24,
       disabledColor: isLight ? Colors.black38 : Colors.white38,

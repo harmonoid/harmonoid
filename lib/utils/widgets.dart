@@ -66,11 +66,13 @@ class CustomListView extends StatelessWidget {
       scroller.addListener(
         () {
           var scrollDirection = scroller.position.userScrollDirection;
-          if (scrollDirection != ScrollDirection.forward) {
-            nowPlayingBar.height = 0.0;
-          }
-          if (scrollDirection != ScrollDirection.reverse) {
-            if (nowPlaying.tracks.isNotEmpty) nowPlayingBar.height = 72.0;
+          if (!nowPlayingBar.maximized) {
+            if (scrollDirection != ScrollDirection.forward) {
+              nowPlayingBar.height = 0.0;
+            }
+            if (scrollDirection != ScrollDirection.reverse) {
+              if (nowPlaying.tracks.isNotEmpty) nowPlayingBar.height = 72.0;
+            }
           }
         },
       );
@@ -206,8 +208,8 @@ class NavigatorPopButton extends StatelessWidget {
           width: 40.0,
           decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.04)
-                : Colors.black.withOpacity(0.04),
+                ? Colors.white.withOpacity(0.08)
+                : Colors.black.withOpacity(0.08),
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Icon(
@@ -687,9 +689,12 @@ class WindowTitleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid)
+    if (Platform.isAndroid || Platform.isIOS)
       return Container(
         height: MediaQuery.of(context).padding.top,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.white.withOpacity(0.12)
+            : Colors.black.withOpacity(0.12),
       );
     return Platform.isWindows
         ? Container(
@@ -697,8 +702,8 @@ class WindowTitleBar extends StatelessWidget {
                 (Platform.isLinux ? 0.75 : 1.0)),
             height: 32.0,
             color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.08)
-                : Colors.black.withOpacity(0.08),
+                ? Colors.white.withOpacity(0.12)
+                : Colors.black.withOpacity(0.12),
             child: MoveWindow(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,

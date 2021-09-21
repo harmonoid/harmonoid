@@ -1,15 +1,17 @@
 import 'dart:async';
-import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/discordrpc.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
-import 'package:harmonoid/interface/nowplayingbar.dart';
-import 'package:harmonoid/utils/widgets.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/core/lyrics.dart';
+import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
+import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/discordrpc.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:harmonoid/interface/nowplaying.dart';
+import 'package:harmonoid/interface/nowplayingbar.dart';
+import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/interface/collection/collectionmusic.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -70,6 +72,21 @@ class HomeState extends State<Home>
     return true;
   }
 
+  void showNowPlaying() {
+    nowPlayingBar.maximized = true;
+    navigatorKey.currentState?.push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            FadeThroughTransition(
+          fillColor: Colors.transparent,
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          child: NowPlayingScreen(),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,51 +145,12 @@ class HomeState extends State<Home>
                       },
                     ),
                   ),
-                  // bottomNavigationBar: BottomNavigationBar(
-                  //   type: BottomNavigationBarType.shifting,
-                  //   currentIndex: this.index!,
-                  //   onTap: (int index) => this.setState(() => this.index = index),
-                  //   items: <BottomNavigationBarItem>[
-                  //         BottomNavigationBarItem(
-                  //           icon: Icon(Icons.play_arrow),
-                  //           label: language!.STRING_NOW_PLAYING,
-                  //           backgroundColor: Theme.of(context)
-                  //               .bottomNavigationBarTheme
-                  //               .backgroundColor,
-                  //         ),
-                  //         BottomNavigationBarItem(
-                  //           icon: Icon(Icons.library_music),
-                  //           label: language!.STRING_COLLECTION,
-                  //           backgroundColor: Theme.of(context)
-                  //               .bottomNavigationBarTheme
-                  //               .backgroundColor,
-                  //         ),
-                  //       ] +
-                  //       (configuration.homeAddress != ''
-                  //           ? <BottomNavigationBarItem>[
-                  //               BottomNavigationBarItem(
-                  //                 icon: Icon(Icons.search),
-                  //                 label: language!.STRING_DISCOVER,
-                  //                 backgroundColor: Theme.of(context)
-                  //                     .bottomNavigationBarTheme
-                  //                     .backgroundColor,
-                  //               ),
-                  //             ]
-                  //           : <BottomNavigationBarItem>[]) +
-                  //       <BottomNavigationBarItem>[
-                  //         BottomNavigationBarItem(
-                  //           icon: Icon(Icons.settings),
-                  //           label: language!.STRING_SETTING,
-                  //           backgroundColor: Theme.of(context)
-                  //               .bottomNavigationBarTheme
-                  //               .backgroundColor,
-                  //         ),
-                  //       ],
-                  // ),
                 ),
               ),
             ),
-            const NowPlayingBar(),
+            NowPlayingBar(
+              launch: this.showNowPlaying,
+            ),
           ],
         ),
       ),

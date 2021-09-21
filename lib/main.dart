@@ -53,8 +53,6 @@ Future<void> main(List<String> args) async {
     }
     if (Platform.isAndroid) {
       WidgetsFlutterBinding.ensureInitialized();
-      SystemChrome.setSystemUIOverlayStyle(
-          SystemUiOverlayStyle(statusBarColor: Colors.transparent));
       if (Platform.isAndroid) if (await Permission.storage.isDenied) {
         PermissionStatus storagePermissionState =
             await Permission.storage.request();

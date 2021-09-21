@@ -91,6 +91,7 @@ class NowPlayingController extends ChangeNotifier {
 
 class NowPlayingBarController extends ChangeNotifier {
   double _height = 0.0;
+  bool _maximized = false;
 
   double get height {
     return this._height;
@@ -98,6 +99,19 @@ class NowPlayingBarController extends ChangeNotifier {
 
   set height(double value) {
     this._height = value;
+    this.notifyListeners();
+  }
+
+  bool get maximized {
+    return this._maximized;
+  }
+
+  set maximized(bool value) {
+    if (value)
+      this._height = 0.0;
+    else
+      this._height = 72.0;
+    this._maximized = value;
     this.notifyListeners();
   }
 }
@@ -126,8 +140,10 @@ class CollectionRefreshController extends ChangeNotifier {
 class Visuals extends ChangeNotifier {
   Accent? accent;
   ThemeMode? themeMode;
+  BuildContext? context;
 
-  Visuals({required this.accent, required this.themeMode});
+  Visuals(
+      {required this.accent, required this.themeMode, required this.context});
 
   void update(
       {Accent? accent,
@@ -149,6 +165,9 @@ class Visuals extends ChangeNotifier {
     if ((Platform.isAndroid || Platform.isIOS) && context != null) {
       SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(
+          statusBarColor: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white54
+              : Colors.black38,
           statusBarBrightness: Theme.of(context).brightness,
           statusBarIconBrightness: Theme.of(context).brightness,
         ),
@@ -158,6 +177,22 @@ class Visuals extends ChangeNotifier {
     configuration.save(
       accent: this.accent,
       themeMode: this.themeMode,
+    );
+  }
+
+  void updateAppBar(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.black38
+            : Colors.white54,
+        statusBarBrightness: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+      ),
     );
   }
 

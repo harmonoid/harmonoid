@@ -149,9 +149,7 @@ class YouTubeState extends State<YouTube> {
     return Consumer<Collection>(
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white.withOpacity(0.04)
-              : Colors.black.withOpacity(0.04),
+          color: Theme.of(context).cardColor,
         ),
         height: MediaQuery.of(context).size.width > HORIZONTAL_BREAKPOINT
             ? MediaQuery.of(context).size.height
@@ -214,8 +212,8 @@ class YouTubeState extends State<YouTube> {
                       padding: EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withOpacity(0.04)
-                            : Colors.black.withOpacity(0.04),
+                            ? Colors.white.withOpacity(0.08)
+                            : Colors.black.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Column(

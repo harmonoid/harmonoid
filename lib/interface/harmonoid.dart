@@ -20,6 +20,7 @@ class Harmonoid extends StatelessWidget {
       create: (context) => Visuals(
         accent: configuration.accent,
         themeMode: configuration.themeMode,
+        context: context,
       ),
       builder: (context, _) => Consumer<Visuals>(
         builder: (context, visuals, _) => MaterialApp(
