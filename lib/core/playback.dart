@@ -329,6 +329,44 @@ abstract class Playback {
     }
   }
 
+  static Future<void> jump(int index) async {
+    if (Platform.isWindows || Platform.isLinux) {
+      player.jump(index);
+    }
+    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
+      if (assetsAudioPlayerBuffer.isNotEmpty) {
+        for (var key in AssetsAudioPlayer.AssetsAudioPlayer.allPlayers().keys) {
+          await AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]?.pause();
+          if (AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]?.id !=
+              'harmonoid')
+            await AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]
+                ?.dispose();
+        }
+        List<AssetsAudioPlayer.Audio> audios = [
+          ...assetsAudioPlayerCurrent,
+          ...assetsAudioPlayerBuffer,
+        ];
+        assetsAudioPlayerBuffer.clear();
+        await assetsAudioPlayer.open(
+          AssetsAudioPlayer.Playlist(
+            audios: audios,
+            startIndex: index,
+          ),
+          showNotification: true,
+          loopMode: AssetsAudioPlayer.LoopMode.none,
+          notificationSettings: AssetsAudioPlayer.NotificationSettings(
+            playPauseEnabled: true,
+            nextEnabled: true,
+            prevEnabled: true,
+            seekBarEnabled: true,
+            stopEnabled: false,
+          ),
+        );
+      } else
+        assetsAudioPlayer.playlistPlayAtIndex(index);
+    }
+  }
+
   static Future<void> seek(Duration position) async {
     if (Platform.isWindows || Platform.isLinux) {
       player.seek(position);
