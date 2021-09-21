@@ -53,7 +53,12 @@ class CollectionMusicState extends State<CollectionMusic>
     super.build(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: index != 5 ? RefreshCollectionButton() : null,
+      floatingActionButton: Consumer<CollectionRefreshController>(
+        builder: (context, refresh, _) =>
+            (index != 5 && refresh.progress == refresh.total)
+                ? RefreshCollectionButton()
+                : Container(),
+      ),
       body: Column(
         children: [
           Container(
