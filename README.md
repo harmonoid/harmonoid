@@ -22,25 +22,23 @@
 - [Setup Installer](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-windows-setup.exe) (13.2 MB) _Recommended. Automatically links with various file extensions_
 - [Portable EXE](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-windows-exe.zip) (15.7 MB)
 
+#### **Android**
+
+- [APK](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-android.apk) (25.2 MB)
+
 #### **Linux**
 
 - [DEB Package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-debian.deb) (9.96 MB) _e.g. Ubuntu, Debian, elementaryOS, KDE Neon etc._
-- [RPM Package](#) _Coming Soon_
 - [AppImage](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.AppImage) (12.9 MB)
 - [Raw Executable](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.tar.gz) (13.2 MB)
-
-You might need to run `sudo apt-get install libmediainfo-dev gstreamer1.0-libav libwebkit2gtk-4.0-dev` on Ubuntu or Debian.
-
-
-#### **Android**
-
-Older release
-
-- [APK](https://github.com/harmonoid/harmonoid/releases/download/v0.0.8/harmonoid-v0.0.8.apk) (25.2 MB)
+- [RPM Package](#) _Coming Soon_
 
 Thanks to [@raitonoberu](https://github.com/raitonoberu) for creating INNO installer for Windows.
 
 Thanks to [@prateekmedia](https://github.com/prateekmedia) for creating AppImage for Linux.
+
+Thanks to [@mytja](https://github.com/mytja) for WinGet publishing. (`winget install Harmonoid.Harmonoid` 😉)
+
 
 ## Features
 
@@ -69,7 +67,7 @@ Thanks to [@prateekmedia](https://github.com/prateekmedia) for creating AppImage
 
 ## License
 
-Copyright (C) 2021, [Hitesh Kumar Saini](https://github.com/alexmercerind) <saini123hitesh@gmail.com>
+Copyright © 2021, [Hitesh Kumar Saini](https://github.com/alexmercerind) <[saini123hitesh@gmail.com](mailto:saini123hitesh@gmail.com)>
 
 GNU General Public License v3
 
