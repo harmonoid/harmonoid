@@ -295,7 +295,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
-        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app.';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close the app.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Search for music or give a link';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
@@ -473,7 +473,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
-        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app.';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close the app.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Search for music or give a link';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
@@ -652,7 +652,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
-        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app.';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close the app.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Search for music or give a link';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
@@ -830,7 +830,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
-        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app.';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close the app.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Search for music or give a link';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
@@ -1008,7 +1008,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
-        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app.';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close the app.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Search for music or give a link';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
@@ -1351,7 +1351,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
-        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app.';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close the app.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Search for music or give a link';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
@@ -1529,7 +1529,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
-        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app.';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close the app.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Search for music or give a link';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
@@ -1707,7 +1707,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
         this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
         this.STRING_SEARCH                                          = 'Search';
-        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close app.';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close the app.';
         this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
         this.STRING_YOUTUBE_WELCOME                                 = 'Search for music or give a link';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
