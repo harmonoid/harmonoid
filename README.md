@@ -1,5 +1,5 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
-<h3 align="center">Elegant music app to play local music & YouTube music.</h3>
+<h4 align="center">Elegant music app to play local music & YouTube music.</h4>
 
 <h4 align="center"><a href='#download'>Download Now</a></h4>
 
