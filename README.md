@@ -28,7 +28,7 @@
 
 #### **Linux**
 
-- [DEB Package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-debian.deb) (9.96 MB) _e.g. Ubuntu, Debian, elementaryOS, KDE Neon etc._
+- [DEB Package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.deb) (9.96 MB) _e.g. Ubuntu, Debian, elementaryOS, KDE Neon etc._
 - [AppImage](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.AppImage) (12.9 MB)
 - [Raw Executable](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.tar.gz) (13.2 MB)
 - [RPM Package](#) _Coming Soon_
