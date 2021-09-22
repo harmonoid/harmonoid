@@ -232,46 +232,54 @@ class RefreshCollectionButton extends StatefulWidget {
 
 class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
   bool lock = false;
-  late double turns;
+  final double turns = 2 * math.pi;
   late Tween<double> tween;
 
   @override
   void initState() {
     super.initState();
-    this.turns = 0;
     this.tween = Tween<double>(begin: 0, end: this.turns);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      backgroundColor: Theme.of(context).colorScheme.secondary,
-      child: TweenAnimationBuilder(
-        child: Icon(
-          Icons.refresh,
-          color: Colors.white,
-        ),
-        tween: this.tween,
-        duration: Duration(milliseconds: 800),
-        builder: (_, dynamic value, child) => Transform.rotate(
-          alignment: Alignment.center,
-          angle: value,
-          child: child,
-        ),
-      ),
-      onPressed: this.lock
-          ? () {}
-          : () async {
-              this.setState(() => this.lock = true);
-              this.turns += 2 * math.pi;
-              this.tween = Tween<double>(begin: 0, end: this.turns);
-              await Provider.of<Collection>(context, listen: false).refresh(
-                  onProgress: (progress, total, isCompleted) {
-                Provider.of<CollectionRefreshController>(context, listen: false)
-                    .set(progress, total);
-                this.setState(() => this.lock = !isCompleted);
-              });
-            },
+    return Consumer<CollectionRefreshController>(
+      builder: (context, refresh, _) => refresh.progress == refresh.total
+          ? FloatingActionButton(
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              child: TweenAnimationBuilder(
+                child: Icon(
+                  Icons.refresh,
+                  color: Colors.white,
+                ),
+                tween: this.tween,
+                duration: Duration(milliseconds: 800),
+                builder: (_, dynamic value, child) => Transform.rotate(
+                  alignment: Alignment.center,
+                  angle: value,
+                  child: child,
+                ),
+              ),
+              onPressed: () {
+                if (this.lock) return;
+                this.setState(() {
+                  this.lock = true;
+                });
+                this.tween = Tween<double>(begin: 0, end: this.turns);
+                Provider.of<Collection>(context, listen: false).refresh(
+                    onProgress: (progress, total, isCompleted) {
+                  Provider.of<CollectionRefreshController>(context,
+                          listen: false)
+                      .set(progress, total);
+                  if (isCompleted) {
+                    this.setState(() {
+                      this.lock = false;
+                    });
+                  }
+                });
+              },
+            )
+          : Container(),
     );
   }
 }

@@ -19,7 +19,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: harmonoid-windows-unsigned
+          name: windows-unsigned
           path: build/windows/runner/Release
 
   build_linux:
@@ -40,5 +40,24 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: harmonoid-linux-unsigned
+          name: linux-unsigned
           path: build/linux/x64/release/bundle
+
+  build_android:
+    name: Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "beta"
+
+      - run: mv -f android/app/build.gradle.debug android/app/build.gradle
+
+      - run: flutter pub get
+      - run: flutter build apk --verbose
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: android-unsigned
+          path: build/app/outputs/flutter-apk/app-release.apk

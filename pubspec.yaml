@@ -1,7 +1,7 @@
 name: harmonoid
 description: Elegant music app to play local music & YouTube music. Distributes music into albums & artists. Has playlists & lyrics.
 publish_to: "none"
-version: 0.1.6+5003
+version: 0.1.7+5003
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -15,7 +15,7 @@ dependencies:
   flutter_media_metadata:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
-      ref: 7dd8e7e0a6f5934e10cb6261f030ae2170df3fc6
+      ref: 0443eb9bcdf9216ae7a899966e46196badd08ad8
   flutter_acrylic: ^0.0.2
   dart_discord_rpc: ^0.0.2
   fluentui_system_icons: ^1.1.136
@@ -68,7 +68,7 @@ flutter:
         - asset: fonts/Roboto/Roboto-Black.ttf
 
 msix_config:
-  msix_version: 0.1.6.0
+  msix_version: 0.1.7.0
   display_name: Harmonoid
   identity_name: com.alexmercerind.harmonoid
   file_extension: ogg, ogx, aac, m4a, mp3, wma, wav, aiff, flac, opus
@@ -77,6 +77,6 @@ msix_config:
   capabilities: broadFileSystemAccess, musicLibrary
   vs_generated_images_folder_path: ./windows/msix/assets
   publisher_display_name: Hitesh Kumar Saini
-  publisher: E=saini123hitesh@gmail.com, CN=Hitesh Kumar Saini, OU=com.alexmercerind, O=com.alexmercerind, L=Dehradun, S=Uttarakhand, C=IN
+  publisher: E=github.com/alexmercerind, CN=Hitesh Kumar Saini, OU=com.alexmercerind, O=com.alexmercerind, L=Dehradun, S=Uttarakhand, C=IN
   certificate_path: ./windows/msix/certificate.pfx
   store: false

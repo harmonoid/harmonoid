@@ -247,7 +247,7 @@ class AboutPageState extends State<AboutPage> {
                       style: Theme.of(context).textTheme.headline2,
                     ),
                     subtitle: Text(
-                      'Deals with playback & metadata parsing of music files. Maintains core C++ plugins for project. Writes UI code, state management & lifcycle.',
+                      'Deals with playback & parsing of music. Maintains core C++ plugins. Writes & designs UI, state management & lifcycle.',
                       style: Theme.of(context).textTheme.headline3,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -311,7 +311,7 @@ class AboutPageState extends State<AboutPage> {
                         'https://github.com/mytja',
                         'https://avatars.githubusercontent.com/u/52399966?s=80&v=4',
                         'mytja',
-                        'Bug reports. Slovenian translation.',
+                        'WinGet package. Bug reports. Slovenian translation.',
                       ],
                       [
                         'https://github.com/prateekmedia',
