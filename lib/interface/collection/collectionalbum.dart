@@ -171,6 +171,8 @@ class LeadingCollectionAlbumTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<Collection>(context, listen: false).lastAlbum == null)
+      return Container();
     return Container(
       margin: EdgeInsets.only(left: 8, right: 8, bottom: 4.0),
       child: Material(

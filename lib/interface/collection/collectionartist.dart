@@ -67,6 +67,8 @@ class LeadingCollectionArtistTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<Collection>(context, listen: false).lastArtist == null)
+      return Container();
     return Consumer<Collection>(
       builder: (context, collection, _) => Container(
         margin: EdgeInsets.only(

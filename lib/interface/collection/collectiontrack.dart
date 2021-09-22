@@ -103,12 +103,12 @@ class CollectionTrackTile extends StatelessWidget {
 class LeadingCollectionTrackTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(8.0),
-        ),
+    if (Provider.of<Collection>(context, listen: false).lastTrack == null)
+      return Container();
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(8.0),
       ),
       clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
