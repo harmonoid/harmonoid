@@ -74,8 +74,9 @@ class Configuration extends ConfigurationKeys {
     );
     if (!await configuration.configurationFile.exists()) {
       await configuration.configurationFile.create(recursive: true);
-      await configuration.configurationFile
-          .writeAsString(convert.jsonEncode(DEFAULT_CONFIGURATION));
+      await configuration.configurationFile.writeAsString(
+        convert.JsonEncoder.withIndent('    ').convert(DEFAULT_CONFIGURATION),
+      );
     }
     await configuration.read();
     configuration.cacheDirectory = Directory(

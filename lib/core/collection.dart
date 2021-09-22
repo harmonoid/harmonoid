@@ -387,8 +387,10 @@ class Collection extends ChangeNotifier {
                 file: file,
               );
             }
-            onProgress?.call(
-                index + 1, collectionDirectoriesContent.length, false);
+            try {
+              onProgress?.call(
+                  index + 1, collectionDirectoriesContent.length, false);
+            } catch (exception) {}
           }
         }
         for (Album album in this._albums) {
@@ -406,8 +408,10 @@ class Collection extends ChangeNotifier {
                 .add(album);
           }
         }
-        onProgress?.call(collectionDirectoriesContent.length,
-            collectionDirectoriesContent.length, true);
+        try {
+          onProgress?.call(collectionDirectoriesContent.length,
+              collectionDirectoriesContent.length, true);
+        } catch (exception) {}
       } catch (exception, stacktrace) {
         print(exception);
         print(stacktrace);
@@ -415,11 +419,6 @@ class Collection extends ChangeNotifier {
         // to user exiting the application in middle of indexing or editing/saving the cache file.
         this.index(onProgress: onProgress);
       }
-    }
-    if (this._tracks.isNotEmpty) {
-      this.lastAlbum = this._albums.last;
-      this.lastTrack = this._tracks.last;
-      this.lastArtist = this._artists.last;
     }
     await this.saveToCache();
     await this.playlistsGetFromCache();
@@ -498,7 +497,9 @@ class Collection extends ChangeNotifier {
           print(stacktrace);
         }
       }
-      onProgress?.call(index + 1, directory.length, true);
+      try {
+        onProgress?.call(index + 1, directory.length, true);
+      } catch (exception) {}
     }
     for (Album album in this._albums) {
       List<String> allAlbumArtistNames = <String>[];
@@ -512,14 +513,11 @@ class Collection extends ChangeNotifier {
         this._artists[this._foundArtists.indexOf(artistName)].albums.add(album);
       }
     }
-    if (this._tracks.isNotEmpty) {
-      this.lastAlbum = this._albums.last;
-      this.lastTrack = this._tracks.last;
-      this.lastArtist = this._artists.last;
-    }
     await this.sort(type: this.collectionSortType);
     await this.saveToCache();
-    onProgress?.call(directory.length, directory.length, true);
+    try {
+      onProgress?.call(directory.length, directory.length, true);
+    } catch (exception) {}
     await this.playlistsGetFromCache();
     this.notifyListeners();
   }
@@ -693,6 +691,11 @@ class Collection extends ChangeNotifier {
             filePath: track.filePath,
           ),
         );
+    if (this._tracks.isNotEmpty) {
+      this.lastAlbum = this._albums.last;
+      this.lastTrack = this._tracks.last;
+      this.lastArtist = this._artists.last;
+    }
   }
 
   List<Album> _albums = <Album>[];
