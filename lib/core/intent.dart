@@ -14,7 +14,7 @@ class Intent {
 
   Intent({this.file});
 
-  static Future<void> init({List<String> args: const []}) async {
+  static Future<void> initialize({List<String> args: const []}) async {
     if (Platform.isAndroid) {
       try {
         File file = await Intent.openFile;
@@ -50,7 +50,7 @@ class Intent {
   Future<void> play() async {
     if (file != null) {
       Metadata metadata = await MetadataRetriever.fromFile(this.file!);
-      Track track = Track.fromMap(metadata.toMap())!;
+      Track track = Track.fromMap(metadata.toMap());
       if (track.trackName == 'Unknown Track') {
         track.trackName = path.basename(this.file!.path).split('.').first;
       }
