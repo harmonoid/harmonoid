@@ -12,7 +12,9 @@ enum CollectionSort { dateAdded, aToZ }
 
 enum CollectionOrder { ascending, descending }
 
-const List<String> SUPPORTED_FILE_TYPES = [
+enum CollectionRefreshType { soft, hard }
+
+const List<String> supported_file_types = [
   'OGG',
   'OGA',
   'OGX',
@@ -26,6 +28,8 @@ const List<String> SUPPORTED_FILE_TYPES = [
   'AIFF',
 ];
 
+/// Collection
+/// ----------
 /// This music sorting logic & class is part of [Harmonoid](https://github.com/harmonoid/harmonoid) project, and it
 /// is written by [Hitesh Kumar Saini](https://github.com/alexmercerind).
 /// This text can serve as an introduction to contributors.
@@ -56,23 +60,20 @@ const List<String> SUPPORTED_FILE_TYPES = [
 /// The class also contains some playlist related methods at the end, which is also one of the available features.
 ///
 class Collection extends ChangeNotifier {
-  static Collection? get() => _collection;
-
-  static Future<void> init(
+  static Future<void> initialize(
       {required List<Directory> collectionDirectories,
       required Directory cacheDirectory,
       required CollectionSort collectionSortType}) async {
-    _collection = Collection();
-    _collection.collectionDirectories = collectionDirectories;
-    _collection.cacheDirectory = cacheDirectory;
-    _collection.collectionSortType = collectionSortType;
+    collection = Collection();
+    collection.collectionDirectories = collectionDirectories;
+    collection.cacheDirectory = cacheDirectory;
+    collection.collectionSortType = collectionSortType;
     for (Directory directory in collectionDirectories) {
       if (!await directory.exists()) await directory.create(recursive: true);
     }
-    if (!await Directory(
-            path.join(_collection.cacheDirectory.path, 'albumArts'))
+    if (!await Directory(path.join(collection.cacheDirectory.path, 'albumArts'))
         .exists()) {
-      await Directory(path.join(_collection.cacheDirectory.path, 'albumArts'))
+      await Directory(path.join(collection.cacheDirectory.path, 'albumArts'))
           .create(recursive: true);
       await File(
         path.join(cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG'),
@@ -86,6 +87,7 @@ class Collection extends ChangeNotifier {
   late List<Directory> collectionDirectories;
   late Directory cacheDirectory;
   late CollectionSort collectionSortType;
+  CollectionRefreshType collectionRefreshType = CollectionRefreshType.hard;
   List<Playlist> playlists = <Playlist>[];
   List<Album> albums = <Album>[];
   List<Track> tracks = <Track>[];
@@ -98,15 +100,14 @@ class Collection extends ChangeNotifier {
       {required List<Directory>? collectionDirectories,
       required Directory? cacheDirectory,
       void Function(int, int, bool)? onProgress}) async {
-    _collection.collectionDirectories = collectionDirectories!;
-    _collection.cacheDirectory = cacheDirectory!;
+    collection.collectionDirectories = collectionDirectories!;
+    collection.cacheDirectory = cacheDirectory!;
     for (Directory directory in collectionDirectories) {
       if (!await directory.exists()) await directory.create(recursive: true);
     }
-    if (!await Directory(
-            path.join(_collection.cacheDirectory.path, 'albumArts'))
+    if (!await Directory(path.join(collection.cacheDirectory.path, 'albumArts'))
         .exists()) {
-      await Directory(path.join(_collection.cacheDirectory.path, 'albumArts'))
+      await Directory(path.join(collection.cacheDirectory.path, 'albumArts'))
           .create(recursive: true);
       await File(
         path.join(cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG'),
@@ -115,7 +116,7 @@ class Collection extends ChangeNotifier {
               .buffer
               .asUint8List());
     }
-    await _collection.refresh(onProgress: onProgress);
+    await collection.refresh(onProgress: onProgress);
     this.notifyListeners();
   }
 
@@ -156,15 +157,14 @@ class Collection extends ChangeNotifier {
       }
     }
     if (file is File &&
-        SUPPORTED_FILE_TYPES
-            .contains(file.path.split('.').last.toUpperCase()) &&
+        supported_file_types.contains(file.extension) &&
         !isAlreadyPresent) {
       try {
         Metadata metadata = await MetadataRetriever.fromFile(file);
-        Track track = Track.fromMap(metadata.toMap())!;
+        Track track = Track.fromMap(metadata.toMap());
         track.filePath = file.path;
-        if (track.trackName == 'Unknown Track') {
-          track.trackName = path.basename(file.path).split('.').first;
+        if ([null, ''].contains(track.trackName)) {
+          track.trackName = path.basename(file.path);
         }
         Future<void> albumArtMethod() async {
           if (metadata.albumArt != null) {
@@ -324,15 +324,21 @@ class Collection extends ChangeNotifier {
 
   Future<void> saveToCache() async {
     convert.JsonEncoder encoder = convert.JsonEncoder.withIndent('    ');
-    List<Map<String, dynamic>> tracks = <Map<String, dynamic>>[];
-    this._tracks.forEach((element) => tracks.add(element.toMap()));
     await File(path.join(this.cacheDirectory.path, 'collection.JSON'))
-        .writeAsString(encoder.convert({'tracks': tracks}));
+        .writeAsString(
+      encoder.convert(
+        {
+          'tracks': this._tracks.map((track) => track.toMap()).toList(),
+        },
+      ),
+    );
   }
 
   Future<void> refresh(
       {void Function(int completed, int total, bool isCompleted)? onProgress,
       bool respectChangedDirectories: false}) async {
+    this.collectionRefreshType = CollectionRefreshType.soft;
+    this.notifyListeners();
     if (!await this.cacheDirectory.exists())
       await this.cacheDirectory.create(recursive: true);
     for (Directory directory in collectionDirectories) {
@@ -351,8 +357,8 @@ class Collection extends ChangeNotifier {
         Map<String, dynamic> collection = convert.jsonDecode(
             await File(path.join(this.cacheDirectory.path, 'collection.JSON'))
                 .readAsString());
-        for (Map<String, dynamic> trackMap in collection['tracks']) {
-          Track track = Track.fromMap(trackMap)!;
+        for (Map<String, dynamic> map in collection['tracks']) {
+          Track track = Track.fromMap(map);
           bool presentInCollectionDirectories = true;
           if (await File(track.filePath!).exists() &&
               presentInCollectionDirectories) {
@@ -364,33 +370,9 @@ class Collection extends ChangeNotifier {
           for (FileSystemEntity object
               in collectionDirectory.listSync(recursive: true)) {
             if (object is File &&
-                SUPPORTED_FILE_TYPES
-                    .contains(object.path.split('.').last.toUpperCase())) {
+                supported_file_types.contains(object.extension)) {
               collectionDirectoriesContent.add(object);
             }
-          }
-        }
-        if (collectionDirectoriesContent.length != this._tracks.length) {
-          for (int index = 0;
-              index < collectionDirectoriesContent.length;
-              index++) {
-            File file = collectionDirectoriesContent[index];
-            bool isTrackAdded = false;
-            for (Track track in this._tracks) {
-              if (track.filePath == file.path) {
-                isTrackAdded = true;
-                break;
-              }
-            }
-            if (!isTrackAdded) {
-              await this.add(
-                file: file,
-              );
-            }
-            try {
-              onProgress?.call(
-                  index + 1, collectionDirectoriesContent.length, false);
-            } catch (exception) {}
           }
         }
         for (Album album in this._albums) {
@@ -407,6 +389,27 @@ class Collection extends ChangeNotifier {
                 .albums
                 .add(album);
           }
+        }
+        for (int index = 0;
+            index < collectionDirectoriesContent.length;
+            index++) {
+          File file = collectionDirectoriesContent[index];
+          bool isTrackAdded = false;
+          for (Track track in this._tracks) {
+            if (track.filePath == file.path) {
+              isTrackAdded = true;
+              break;
+            }
+          }
+          if (!isTrackAdded) {
+            await this.add(
+              file: file,
+            );
+          }
+          try {
+            onProgress?.call(
+                index + 1, collectionDirectoriesContent.length, false);
+          } catch (exception) {}
         }
         try {
           onProgress?.call(collectionDirectoriesContent.length,
@@ -458,6 +461,8 @@ class Collection extends ChangeNotifier {
   Future<void> index(
       {void Function(int completed, int total, bool isCompleted)?
           onProgress}) async {
+    this.collectionRefreshType = CollectionRefreshType.hard;
+    this.notifyListeners();
     this._albums = <Album>[];
     this._tracks = <Track>[];
     this._artists = <Artist>[];
@@ -469,14 +474,12 @@ class Collection extends ChangeNotifier {
       directory.addAll(collectionDirectory.listSync());
     for (int index = 0; index < directory.length; index++) {
       FileSystemEntity object = directory[index];
-      if (object is File &&
-          SUPPORTED_FILE_TYPES
-              .contains(object.path.split('.').last.toUpperCase())) {
+      if (object is File && supported_file_types.contains(object.extension)) {
         try {
           Metadata metadata = await MetadataRetriever.fromFile(object);
-          Track track = Track.fromMap(metadata.toMap())!;
-          if (track.trackName == 'Unknown Track') {
-            track.trackName = path.basename(object.path).split('.').first;
+          Track track = Track.fromMap(metadata.toMap());
+          if ([null, ''].contains(track.trackName)) {
+            track.trackName = path.basename(object.path);
           }
           track.filePath = object.path;
           Future<void> albumArtMethod() async {
@@ -602,7 +605,7 @@ class Collection extends ChangeNotifier {
               playlistId: playlist['playlistId'],
             ));
         for (dynamic track in playlist['tracks']) {
-          this.playlists.last.tracks.add(Track.fromMap(track)!);
+          this.playlists.last.tracks.add(Track.fromMap(track));
         }
       }
     }
@@ -623,30 +626,13 @@ class Collection extends ChangeNotifier {
               albumName: track.albumName,
               year: track.year,
               albumArtistName: track.albumArtistName,
-            )..tracks.add(
-                Track(
-                  albumName: track.albumName,
-                  year: track.year,
-                  albumArtistName: track.albumArtistName,
-                  trackArtistNames: track.trackArtistNames,
-                  trackName: track.trackName,
-                  trackNumber: track.trackNumber,
-                  filePath: track.filePath,
-                ),
-              ),
+            )..tracks.add(track),
           );
     } else {
-      this._albums[this._foundAlbums.indexOf(track.albumName!)].tracks.add(
-            Track(
-              albumName: track.albumName,
-              year: track.year,
-              albumArtistName: track.albumArtistName,
-              trackArtistNames: track.trackArtistNames,
-              trackName: track.trackName,
-              trackNumber: track.trackNumber,
-              filePath: track.filePath,
-            ),
-          );
+      this
+          ._albums[this._foundAlbums.indexOf(track.albumName!)]
+          .tracks
+          .add(track);
     }
     for (String artistName in track.trackArtistNames as List<String>) {
       if (!this._foundArtists.contains(artistName)) {
@@ -654,48 +640,23 @@ class Collection extends ChangeNotifier {
         this._artists.add(
               Artist(
                 artistName: artistName,
-              )..tracks.add(
-                  Track(
-                    albumName: track.albumName,
-                    year: track.year,
-                    albumArtistName: track.albumArtistName,
-                    trackArtistNames: track.trackArtistNames,
-                    trackName: track.trackName,
-                    trackNumber: track.trackNumber,
-                    filePath: track.filePath,
-                  ),
-                ),
+              )..tracks.add(track),
             );
       } else {
-        this._artists[this._foundArtists.indexOf(artistName)].tracks.add(
-              Track(
-                albumName: track.albumName,
-                year: track.year,
-                albumArtistName: track.albumArtistName,
-                trackArtistNames: track.trackArtistNames,
-                trackName: track.trackName,
-                trackNumber: track.trackNumber,
-                filePath: track.filePath,
-              ),
-            );
+        this._artists[this._foundArtists.indexOf(artistName)].tracks.add(track);
       }
     }
-    this._tracks.add(
-          Track(
-            albumName: track.albumName,
-            year: track.year,
-            albumArtistName: track.albumArtistName,
-            trackArtistNames: track.trackArtistNames,
-            trackName: track.trackName,
-            trackNumber: track.trackNumber,
-            filePath: track.filePath,
-          ),
-        );
+    this._tracks.add(track);
     if (this._tracks.isNotEmpty) {
       this.lastAlbum = this._albums.last;
       this.lastTrack = this._tracks.last;
       this.lastArtist = this._artists.last;
     }
+  }
+
+  void redraw() async {
+    await collection.sort(type: collection.collectionSortType);
+    this.notifyListeners();
   }
 
   List<Album> _albums = <Album>[];
@@ -705,4 +666,8 @@ class Collection extends ChangeNotifier {
   List<String> _foundArtists = <String>[];
 }
 
-late Collection _collection;
+late Collection collection;
+
+extension on FileSystemEntity {
+  String get extension => this.path.split('.').last.toUpperCase();
+}
