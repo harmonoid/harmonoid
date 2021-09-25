@@ -177,4 +177,6 @@ class Strings {
   late String STRING_RETRIEVING_LINK;
   late String STRING_STARTING_PLAYBACK;
   late String STRING_BUFFERING;
+  late String STRING_WARNING;
+  late String STRING_LAST_COLLECTION_DIRECTORY_REMOVED;
 }
