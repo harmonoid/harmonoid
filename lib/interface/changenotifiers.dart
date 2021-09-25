@@ -1,16 +1,19 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
-import 'package:harmonoid/constants/language.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/youtubemusic.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/utils.dart';
+import 'package:harmonoid/constants/language.dart';
 
 var nowPlaying = NowPlayingController();
 var nowPlayingBar = NowPlayingBarController();
+var collectionRefresh = CollectionRefreshController();
 
 class NowPlayingController extends ChangeNotifier {
   int? get index => _index;
@@ -25,8 +28,6 @@ class NowPlayingController extends ChangeNotifier {
   String get state => _state;
   bool get isShuffling => _isShuffling;
   bool get isRepeating => _isRepeating;
-
-  double volumeBeforeMute = 1.0;
 
   set index(int? index) {
     this._index = index;
@@ -133,22 +134,29 @@ class NowPlayingBarController extends ChangeNotifier {
 
 class CollectionRefreshController extends ChangeNotifier {
   int progress = 0;
-  int total = 0;
-
-  void setProgress(int progress) {
-    this.progress = progress;
-    this.notifyListeners();
-  }
-
-  void setTotal(int total) {
-    this.total = total;
-    this.notifyListeners();
-  }
+  int total = 1;
+  Timer? timer;
 
   void set(int progress, int total) {
     this.progress = progress;
     this.total = total;
-    this.notifyListeners();
+    if (this.timer == null) {
+      collection.redraw();
+      this.notifyListeners();
+      this.timer = Timer.periodic(
+        Duration(seconds: 1),
+        (_) {
+          collection.redraw();
+          this.notifyListeners();
+        },
+      );
+    }
+    if (this.progress == this.total) {
+      collection.redraw();
+      this.notifyListeners();
+      this.timer?.cancel();
+      this.timer = null;
+    }
   }
 }
 
@@ -246,6 +254,12 @@ class YouTubeStateController extends ChangeNotifier {
     this.notifyListeners();
   }
 }
+
+final FlutterLocalNotificationsPlugin notification =
+    FlutterLocalNotificationsPlugin();
+final InitializationSettings notificationSettings = InitializationSettings(
+  android: AndroidInitializationSettings('mipmap/ic_launcher'),
+);
 
 class NotificationLyricsController extends ChangeNotifier {
   late bool enabled;
