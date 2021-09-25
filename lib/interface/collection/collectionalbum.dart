@@ -432,9 +432,9 @@ class CollectionAlbum extends StatelessWidget {
                             language!.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER,
                           ),
                         ] +
-                        this
-                            .album!
-                            .tracks
+                        (this.album!.tracks
+                              ..sort((first, second) => first.trackNumber!
+                                  .compareTo(second.trackNumber!)))
                             .map(
                               (Track track) => Container(
                                 color:
@@ -456,7 +456,14 @@ class CollectionAlbum extends StatelessWidget {
                                       softWrap: false,
                                     ),
                                     subtitle: Text(
-                                      track.trackArtistNames!.join(', '),
+                                      (track.trackDuration != null
+                                              ? (Duration(
+                                                          milliseconds: track
+                                                              .trackDuration!)
+                                                      .label +
+                                                  ' • ')
+                                              : '0:00') +
+                                          track.trackArtistNames!.join(', '),
                                       overflow: TextOverflow.fade,
                                       maxLines: 1,
                                       softWrap: false,
@@ -749,5 +756,15 @@ class CollectionAlbum extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension on Duration {
+  String get label {
+    int minutes = inSeconds ~/ 60;
+    String seconds = inSeconds - (minutes * 60) > 9
+        ? '${inSeconds - (minutes * 60)}'
+        : '0${inSeconds - (minutes * 60)}';
+    return '$minutes:$seconds';
   }
 }

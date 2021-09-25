@@ -202,6 +202,62 @@ class AboutPageState extends State<AboutPage> {
                                 ),
                               ),
                       ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+                      Divider(
+                        color: Theme.of(context).dividerColor,
+                        thickness: 1.0,
+                        indent: 16.0,
+                        endIndent: 16.0,
+                        height: 1.0,
+                      ),
+                      SizedBox(
+                        height: 12.0,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Lead Developer',
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                            Divider(color: Colors.transparent, height: 4.0),
+                            Text(
+                              'Maintainer & creator of the project.',
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(color: Colors.transparent, height: 8.0),
+                      ListTile(
+                        onTap: () => launch(
+                          'https://github.com/alexmercerind',
+                        ),
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            'https://avatars.githubusercontent.com/u/28951144?s=80&v=4',
+                          ),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        title: Text(
+                          'Hitesh Kumar Saini',
+                          style: Theme.of(context).textTheme.headline2,
+                        ),
+                        subtitle: Text(
+                          'Deals with playback & parsing of music. Maintains core C++ plugins. Writes UI, state management & lifecycle code.',
+                          style: Theme.of(context).textTheme.headline3,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Icon(
+                          FluentIcons.link_24_regular,
+                          size: 22.0,
+                        ),
+                      ),
                       Divider(
                         color: Theme.of(context).dividerColor,
                         thickness: 1.0,
@@ -215,10 +271,32 @@ class AboutPageState extends State<AboutPage> {
                         children: [
                           MaterialButton(
                             onPressed: () => launch(
-                              'https://github.com/alexmercerind/harmonoid/blob/master/README.md',
+                              'https://github.com/alexmercerind',
                             ),
                             child: Text(
-                              language!.STRING_SETTING_STAR_GITHUB,
+                              'GITHUB',
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
+                            ),
+                          ),
+                          MaterialButton(
+                            onPressed: () => launch(
+                              'https://twitter.com/alexmercerind',
+                            ),
+                            child: Text(
+                              'TWITTER',
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
+                            ),
+                          ),
+                          MaterialButton(
+                            onPressed: () => launch(
+                              'https://www.linkedin.com/in/hitesh-kumar-saini-78b4a3209',
+                            ),
+                            child: Text(
+                              'LINKEDIN',
                               style: TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.secondary),
@@ -230,69 +308,9 @@ class AboutPageState extends State<AboutPage> {
                   ),
                 ),
                 SettingsTile(
-                  title: 'Lead Developer',
-                  subtitle: 'Maintainer & creator of the project.',
-                  child: ListTile(
-                    onTap: () => launch(
-                      'https://github.com/alexmercerind',
-                    ),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        'https://avatars.githubusercontent.com/u/28951144?s=80&v=4',
-                      ),
-                      backgroundColor: Colors.transparent,
-                    ),
-                    title: Text(
-                      'Hitesh Kumar Saini',
-                      style: Theme.of(context).textTheme.headline2,
-                    ),
-                    subtitle: Text(
-                      'Deals with playback & parsing of music. Maintains core C++ plugins. Writes & designs UI, state management & lifcycle.',
-                      style: Theme.of(context).textTheme.headline3,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: Icon(
-                      Icons.open_in_new_sharp,
-                      size: 18.0,
-                    ),
-                  ),
-                  actions: [
-                    MaterialButton(
-                      onPressed: () => launch(
-                        'https://github.com/alexmercerind',
-                      ),
-                      child: Text(
-                        'GITHUB',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary),
-                      ),
-                    ),
-                    MaterialButton(
-                      onPressed: () => launch(
-                        'https://twitter.com/alexmercerind',
-                      ),
-                      child: Text(
-                        'TWITTER',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary),
-                      ),
-                    ),
-                    MaterialButton(
-                      onPressed: () => launch(
-                        'https://www.linkedin.com/in/hitesh-kumar-saini-78b4a3209',
-                      ),
-                      child: Text(
-                        'LINKEDIN',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary),
-                      ),
-                    ),
-                  ],
-                ),
-                SettingsTile(
                   title: 'Contributors',
-                  subtitle: 'People who are working or worked on this project.',
+                  subtitle:
+                      'People who are currently working or worked on this project in the past.',
                   child: Column(
                     children: <List<String>>[
                       [
@@ -397,8 +415,8 @@ class AboutPageState extends State<AboutPage> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             trailing: Icon(
-                              Icons.open_in_new_sharp,
-                              size: 18.0,
+                              FluentIcons.link_24_regular,
+                              size: 22.0,
                             ),
                           ),
                         )

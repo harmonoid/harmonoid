@@ -7,6 +7,7 @@ import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:harmonoid/constants/language.dart';
 
 const double HORIZONTAL_BREAKPOINT = 720.0;
 
@@ -148,8 +149,8 @@ class NowPlayingBarState extends State<NowPlayingBar> {
                                     splashRadius: 24.0,
                                     icon: Icon(
                                       nowPlaying.isPlaying
-                                          ? Icons.pause
-                                          : Icons.play_arrow,
+                                          ? Icons.pause_rounded
+                                          : Icons.play_arrow_rounded,
                                     ),
                                   ),
                                 ),
@@ -502,16 +503,7 @@ class NowPlayingBarState extends State<NowPlayingBar> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {
-                          Playback.setVolume(
-                            nowPlaying.volume > 0.0
-                                ? 0.0
-                                : nowPlaying.volumeBeforeMute,
-                          );
-                          nowPlaying.volume = nowPlaying.volume > 0.0
-                              ? 0.0
-                              : nowPlaying.volumeBeforeMute;
-                        },
+                        onPressed: Playback.toggleMute,
                         iconSize: 20.0,
                         color: Theme.of(context).brightness == Brightness.dark
                             ? Colors.white
@@ -550,7 +542,6 @@ class NowPlayingBarState extends State<NowPlayingBar> {
                             onChanged: (value) {
                               Playback.setVolume(value);
                               nowPlaying.volume = value;
-                              nowPlaying.volumeBeforeMute = value;
                             },
                             max: 1.0,
                             min: 0.0,
@@ -571,9 +562,7 @@ class NowPlayingBarState extends State<NowPlayingBar> {
                             nowPlaying.tracks.length >
                                 (nowPlaying.index ?? double.infinity) &&
                             0 <= (nowPlaying.index ?? double.infinity))
-                        ? () async {
-                            await lyrics.fromName(
-                                '${nowPlaying.tracks[nowPlaying.index!].trackName!} ${nowPlaying.tracks[nowPlaying.index!].albumArtistName!}');
+                        ? () {
                             showDialog(
                               context: context,
                               builder: (context) => FractionallyScaledWidget(
@@ -587,16 +576,25 @@ class NowPlayingBarState extends State<NowPlayingBar> {
                                   ),
                                   titlePadding: EdgeInsets.all(16.0),
                                   contentPadding: EdgeInsets.all(16.0),
-                                  children: lyrics.current
-                                      .map(
-                                        (lyric) => Text(
-                                          lyric.words,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline4,
-                                        ),
-                                      )
-                                      .toList(),
+                                  children: lyrics.current.isNotEmpty
+                                      ? lyrics.current
+                                          .map(
+                                            (lyric) => Text(
+                                              lyric.words,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4,
+                                            ),
+                                          )
+                                          .toList()
+                                      : [
+                                          Text(
+                                            language!.STRING_LYRICS_NOT_FOUND,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                          ),
+                                        ],
                                 ),
                               ),
                             );

@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
+import 'package:libwinmedia/libwinmedia.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:libwinmedia/libwinmedia.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -13,9 +13,11 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
 
 const String TITLE = 'Harmonoid';
-const String VERSION = '0.1.7';
+const String VERSION = '0.1.8';
 const String AUTHOR = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String LICENSE = 'GPL-3.0';
 
@@ -23,7 +25,7 @@ Future<void> main(List<String> args) async {
   try {
     if (Platform.isWindows) {
       WidgetsFlutterBinding.ensureInitialized();
-      await Configuration.init();
+      await Configuration.initialize();
       await Acrylic.initialize();
       await Acrylic.setEffect(
         effect: configuration.acrylicEnabled!
@@ -35,7 +37,8 @@ Future<void> main(List<String> args) async {
       );
       LWM.initialize();
       DiscordRPC.initialize();
-      await Intent.init(args: args);
+      await Intent.initialize(args: args);
+      await HotKeys.initialize();
       doWhenWindowReady(() {
         appWindow.minSize = Size(854, 640);
         appWindow.size = Size(1024, 640);
@@ -45,11 +48,12 @@ Future<void> main(List<String> args) async {
     }
     if (Platform.isLinux) {
       WidgetsFlutterBinding.ensureInitialized();
-      await Configuration.init();
+      await Configuration.initialize();
       await Acrylic.initialize();
       LWM.initialize();
       DiscordRPC.initialize();
-      await Intent.init(args: args);
+      await Intent.initialize(args: args);
+      await HotKeys.initialize();
     }
     if (Platform.isAndroid) {
       WidgetsFlutterBinding.ensureInitialized();
@@ -62,15 +66,18 @@ Future<void> main(List<String> args) async {
           );
         }
       }
-      await Configuration.init();
-      await Intent.init();
+      await Configuration.initialize();
+      await Intent.initialize();
     }
-    await Collection.init(
+    await Collection.initialize(
       collectionDirectories: configuration.collectionDirectories!,
       cacheDirectory: configuration.cacheDirectory!,
       collectionSortType: configuration.collectionSortType!,
     );
-    await Language.init(
+    collection.refresh(onProgress: (progress, total, _) {
+      collectionRefresh.set(progress, total);
+    });
+    await Language.initialize(
       languageRegion: configuration.languageRegion!,
     );
     runApp(

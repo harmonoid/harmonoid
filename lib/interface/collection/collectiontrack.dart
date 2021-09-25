@@ -82,7 +82,11 @@ class CollectionTrackTile extends StatelessWidget {
             softWrap: false,
           ),
           subtitle: Text(
-            this.track.albumName! +
+            (this.track.trackDuration != null
+                    ? (Duration(milliseconds: this.track.trackDuration!).label +
+                        ' • ')
+                    : '0:00') +
+                this.track.albumName! +
                 ' • ' +
                 (this.track.trackArtistNames!.length < 2
                     ? this.track.trackArtistNames!.join(', ')
@@ -122,8 +126,8 @@ class LeadingCollectionTrackTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Ink.image(
-                image: FileImage(collection.lastTrack!.albumArt),
+              Image.file(
+                collection.lastTrack!.albumArt,
                 fit: BoxFit.fitWidth,
                 alignment: Alignment.center,
                 height: 156.0,
@@ -204,5 +208,15 @@ class LeadingCollectionTrackTile extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension on Duration {
+  String get label {
+    int minutes = inSeconds ~/ 60;
+    String seconds = inSeconds - (minutes * 60) > 9
+        ? '${inSeconds - (minutes * 60)}'
+        : '0${inSeconds - (minutes * 60)}';
+    return '$minutes:$seconds';
   }
 }

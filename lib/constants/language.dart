@@ -121,7 +121,7 @@ class Language extends Strings with ChangeNotifier {
 
   static Language? get() => language;
 
-  static Future<void> init({required LanguageRegion languageRegion}) async {
+  static Future<void> initialize({required LanguageRegion languageRegion}) async {
     language = new Language();
     await language!.set(languageRegion: languageRegion);
   }
@@ -304,6 +304,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
         this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
         this.STRING_BUFFERING                                       = 'Buffering...';
+        this.STRING_WARNING                                         = 'Warning';
+        this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -482,6 +484,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
         this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
         this.STRING_BUFFERING                                       = 'Buffering...';
+        this.STRING_WARNING                                         = 'Warning';
+        this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
       }
       break;
       case LanguageRegion.slSi: {
@@ -661,6 +665,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
         this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
         this.STRING_BUFFERING                                       = 'Buffering...';
+        this.STRING_WARNING                                         = 'Warning';
+        this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -839,6 +845,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
         this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
         this.STRING_BUFFERING                                       = 'Buffering...';
+        this.STRING_WARNING                                         = 'Warning';
+        this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -1017,6 +1025,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
         this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
         this.STRING_BUFFERING                                       = 'Buffering...';
+        this.STRING_WARNING                                         = 'Warning';
+        this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
       }
       break;
       case LanguageRegion.deDe: {
@@ -1360,6 +1370,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
         this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
         this.STRING_BUFFERING                                       = 'Buffering...';
+        this.STRING_WARNING                                         = 'Warning';
+        this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
       }
       break;
       case LanguageRegion.svSe: {
@@ -1538,6 +1550,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RETRIEVING_LINK                                 = 'Hämtar stream';
         this.STRING_STARTING_PLAYBACK                               = 'Startar uppspelning';
         this.STRING_BUFFERING                                       = 'Buffrar...';
+        this.STRING_WARNING                                         = 'Warning';
+        this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
       }
       break;
       case LanguageRegion.frFr: {
@@ -1716,6 +1730,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
         this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
         this.STRING_BUFFERING                                       = 'Buffering...';
+        this.STRING_WARNING                                         = 'Warning';
+        this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
       }
       break;
       case LanguageRegion.huHu: {
@@ -1894,6 +1910,8 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_RETRIEVING_LINK                                 = 'Adatfolyam betöltése...';
         this.STRING_STARTING_PLAYBACK                               = 'Lejátszás indítása...';
         this.STRING_BUFFERING                                       = 'Betöltés...';
+        this.STRING_WARNING                                         = 'Warning';
+        this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
       }
       break;
     }

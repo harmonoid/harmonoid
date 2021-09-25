@@ -9,7 +9,6 @@ import 'package:libwinmedia/libwinmedia.dart' as LIBWINMEDIA;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/download.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -24,13 +23,13 @@ import 'package:harmonoid/constants/language.dart';
 
 final LIBWINMEDIA.Player player = LIBWINMEDIA.Player(id: 0)
   ..streams.index.listen((index) {
-    nowPlaying.index = index;
     onTrackChange();
+    nowPlaying.index = index;
   })
   ..streams.medias.listen((medias) {
     nowPlaying.tracks = medias
         .map(
-          (media) => Track.fromMap(media.extras)!,
+          (media) => Track.fromMap(media.extras),
         )
         .toList();
   })
@@ -72,7 +71,7 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
           assetsAudioPlayerIndex = current.index;
           nowPlaying.tracks = current.playlist.audios
               .map(
-                (audio) => Track.fromMap(audio.metas.extra)!,
+                (audio) => Track.fromMap(audio.metas.extra!),
               )
               .toList();
           nowPlaying.index = current.index;
@@ -187,6 +186,8 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
         }
       });
 
+double volumeBeforeMute = 1.0;
+
 abstract class Playback {
   static Future<void> add(List<Track> tracks) async {
     if (Platform.isWindows || Platform.isLinux) {
@@ -250,6 +251,29 @@ abstract class Playback {
     }
     if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
       assetsAudioPlayer.setVolume(volume);
+    }
+  }
+
+  static Future<void> toggleMute() async {
+    if (Platform.isWindows || Platform.isLinux) {
+      if (player.volume != 0.0) {
+        volumeBeforeMute = nowPlaying.volume;
+        player.volume = 0.0;
+        nowPlaying.volume = 0.0;
+      } else {
+        player.volume = volumeBeforeMute;
+        nowPlaying.volume = volumeBeforeMute;
+      }
+    }
+    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
+      if (player.volume != 0.0) {
+        volumeBeforeMute = nowPlaying.volume;
+        assetsAudioPlayer.setVolume(0.0);
+        nowPlaying.volume = 0.0;
+      } else {
+        assetsAudioPlayer.setVolume(volumeBeforeMute);
+        nowPlaying.volume = volumeBeforeMute;
+      }
     }
   }
 
@@ -378,6 +402,7 @@ abstract class Playback {
 
   static Future<void> repeat() async {
     nowPlaying.isRepeating = !nowPlaying.isRepeating;
+    // TODO (alexmercerind): Add Windows & Linux support.
     if (Platform.isWindows || Platform.isLinux) {}
     if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
       assetsAudioPlayer.setLoopMode(nowPlaying.isRepeating
@@ -388,6 +413,7 @@ abstract class Playback {
 
   static Future<void> shuffle() async {
     nowPlaying.isShuffling = !nowPlaying.isShuffling;
+    // TODO (alexmercerind): Add Windows & Linux support.
     if (Platform.isWindows || Platform.isLinux) {}
     if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
       assetsAudioPlayer.toggleShuffle();
@@ -421,7 +447,9 @@ abstract class Playback {
             )
             .toList(),
       );
+      if (index != 0) await Future.delayed(Duration(milliseconds: 100));
       player.jump(index);
+      if (index != 0) await Future.delayed(Duration(milliseconds: 100));
       player.play();
     }
     // assets_audio_player
@@ -481,7 +509,12 @@ void onTrackChange() {
   try {
     List<LIBWINMEDIA.Media> medias = player.state.medias;
     int index = player.state.index;
-    Track track = Track.fromMap(medias[index].extras)!;
+    Track track = Track.fromMap(medias[index].extras);
+    try {
+      // Avoids additional requests from being made.
+      if (nowPlaying.index != index)
+        lyrics.fromName(track.trackName! + ' ' + track.albumArtistName!);
+    } catch (exception) {}
     // TODO (alexmercerind): SMTC only working on Windows.
     if (Platform.isWindows) {
       player.nativeControls.update(
@@ -501,7 +534,7 @@ void onTrackChange() {
         details: '${track.trackName} - ${track.albumArtistName}',
         startTimeStamp: DateTime.now().millisecondsSinceEpoch,
         largeImageKey: '52f61nfzmwl51',
-        largeImageText: 'Listening to music. 💜',
+        largeImageText: 'Listening to music 💜',
         smallImageKey: '32f61n5ghl51',
         smallImageText: 'Harmonoid',
       ),

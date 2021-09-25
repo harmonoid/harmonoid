@@ -63,7 +63,7 @@ class Configuration extends ConfigurationKeys {
     }
   }
 
-  static Future<void> init() async {
+  static Future<void> initialize() async {
     configuration = Configuration();
     configuration.configurationFile = File(
       path.join(
@@ -134,7 +134,8 @@ class Configuration extends ConfigurationKeys {
     if (acrylicEnabled != null) {
       this.acrylicEnabled = acrylicEnabled;
     }
-    await configuration.configurationFile.writeAsString(convert.jsonEncode({
+    await configuration.configurationFile
+        .writeAsString(convert.JsonEncoder.withIndent('    ').convert({
       'collectionDirectories': this
           .collectionDirectories!
           .map((directory) => directory.path)
