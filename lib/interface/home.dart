@@ -95,13 +95,10 @@ class HomeState extends State<Home>
       body: MultiProvider(
         providers: [
           ChangeNotifierProvider<Collection>(
-            create: (context) => Collection.get()!,
+            create: (context) => collection,
           ),
-          ChangeNotifierProvider<Language>(
-            create: (context) => Language.get()!,
-          ),
-          ChangeNotifierProvider<Lyrics>(
-            create: (context) => Lyrics.get(),
+          ChangeNotifierProvider(
+            create: (context) => collectionRefresh,
           ),
           ChangeNotifierProvider<NowPlayingController>(
             create: (context) => nowPlaying,
@@ -109,11 +106,17 @@ class HomeState extends State<Home>
           ChangeNotifierProvider<NowPlayingBarController>(
             create: (context) => nowPlayingBar,
           ),
+          Provider<DiscordRPC>(
+            create: (context) => discordRPC,
+          ),
           ChangeNotifierProvider<YouTubeStateController>(
             create: (context) => YouTubeStateController(),
           ),
-          Provider<DiscordRPC>(
-            create: (context) => discordRPC,
+          ChangeNotifierProvider<Language>(
+            create: (context) => Language.get()!,
+          ),
+          ChangeNotifierProvider<Lyrics>(
+            create: (context) => Lyrics.get(),
           ),
         ],
         builder: (context, _) => Column(
@@ -134,12 +137,7 @@ class HomeState extends State<Home>
                         if (routeSettings.name == 'collection') {
                           route = MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                ChangeNotifierProvider(
-                              child: const CollectionMusic(),
-                              create: (context) =>
-                                  CollectionRefreshController(),
-                              builder: (context, child) => child!,
-                            ),
+                                const CollectionMusic(),
                           );
                         }
                         return route;
