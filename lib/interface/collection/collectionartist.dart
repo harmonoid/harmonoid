@@ -450,7 +450,14 @@ class CollectionArtist extends StatelessWidget {
                                       softWrap: false,
                                     ),
                                     subtitle: Text(
-                                      track.trackArtistNames!.join(', '),
+                                      (track.trackDuration != null
+                                              ? (Duration(
+                                                          milliseconds: track
+                                                              .trackDuration!)
+                                                      .label +
+                                                  ' • ')
+                                              : '0:00') +
+                                          track.trackArtistNames!.join(', '),
                                       overflow: TextOverflow.fade,
                                       maxLines: 1,
                                       softWrap: false,
@@ -745,5 +752,15 @@ class CollectionArtist extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension on Duration {
+  String get label {
+    int minutes = inSeconds ~/ 60;
+    String seconds = inSeconds - (minutes * 60) > 9
+        ? '${inSeconds - (minutes * 60)}'
+        : '0${inSeconds - (minutes * 60)}';
+    return '$minutes:$seconds';
   }
 }

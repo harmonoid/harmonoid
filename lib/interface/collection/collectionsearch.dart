@@ -78,8 +78,8 @@ class CollectionSearchState extends State<CollectionSearch> {
                         List<Widget> albums = <Widget>[];
                         List<Widget> tracks = <Widget>[];
                         List<Widget> artists = <Widget>[];
-                        for (dynamic collectionItem in resultCollection) {
-                          if (collectionItem is Album) {
+                        for (dynamic item in resultCollection) {
+                          if (item is Album) {
                             albums.add(
                               Container(
                                 margin: EdgeInsets.only(
@@ -87,12 +87,12 @@ class CollectionSearchState extends State<CollectionSearch> {
                                 child: CollectionAlbumTile(
                                   height: tileHeightAlbum,
                                   width: tileWidthAlbum,
-                                  album: collectionItem,
+                                  album: item,
                                 ),
                               ),
                             );
                           }
-                          if (collectionItem is Artist) {
+                          if (item is Artist) {
                             artists.add(
                               Container(
                                 margin: EdgeInsets.only(
@@ -100,14 +100,15 @@ class CollectionSearchState extends State<CollectionSearch> {
                                 child: CollectionArtistTile(
                                   height: tileHeightArtist,
                                   width: tileWidthArtist,
-                                  artist: collectionItem,
+                                  artist: item,
                                 ),
                               ),
                             );
-                          } else if (collectionItem is Track) {
+                          } else if (item is Track) {
                             tracks.add(
                               CollectionTrackTile(
-                                track: collectionItem,
+                                track: item,
+                                index: collection.tracks.indexOf(item),
                               ),
                             );
                           }

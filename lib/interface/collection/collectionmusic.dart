@@ -17,7 +17,6 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/collection/collectionsearch.dart';
-import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
@@ -34,18 +33,9 @@ class CollectionMusicState extends State<CollectionMusic>
   bool get wantKeepAlive => true;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!initialized) {
-      Provider.of<Visuals>(context).updateAppBar(context);
-      intent.play();
-      Provider.of<Collection>(context, listen: false).refresh(
-          onProgress: (progress, total, _) {
-        Provider.of<CollectionRefreshController>(context, listen: false)
-            .set(progress, total);
-      });
-      initialized = true;
-    }
+  void initState() {
+    super.initState();
+    intent.play();
   }
 
   @override
@@ -588,40 +578,35 @@ class CollectionMusicState extends State<CollectionMusic>
               builder: (context, refresh, __) => Stack(
                 alignment: Alignment.bottomLeft,
                 children: <Widget>[
-                      PageTransitionSwitcher(
-                        child: [
-                          Builder(
-                            key: PageStorageKey(new Album().type),
-                            builder: (context) => CollectionAlbumTab(),
-                          ),
-                          Builder(
-                            key: PageStorageKey(new Track().type),
-                            builder: (context) => CollectionTrackTab(),
-                          ),
-                          Builder(
-                            key: PageStorageKey(new Artist().type),
-                            builder: (context) => CollectionArtistTab(),
-                          ),
-                          Builder(
-                            key: PageStorageKey(new Playlist().type),
-                            builder: (context) => CollectionPlaylistTab(),
-                          ),
-                          Builder(
-                            key: PageStorageKey('Search'),
-                            builder: (context) => CollectionSearch(),
-                          ),
-                          YouTubeMusic(),
-                        ][this.index],
-                        transitionBuilder:
-                            (child, animation, secondaryAnimation) =>
-                                SharedAxisTransition(
-                          fillColor: Colors.transparent,
-                          animation: animation,
-                          secondaryAnimation: secondaryAnimation,
-                          transitionType: SharedAxisTransitionType.vertical,
-                          child: child,
-                        ),
-                      ),
+                      (refresh.progress != refresh.total &&
+                              collection.collectionRefreshType ==
+                                  CollectionRefreshType.soft)
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                    Theme.of(context).colorScheme.secondary),
+                              ),
+                            )
+                          : PageTransitionSwitcher(
+                              child: [
+                                CollectionAlbumTab(),
+                                CollectionTrackTab(),
+                                CollectionArtistTab(),
+                                CollectionPlaylistTab(),
+                                CollectionSearch(),
+                                YouTubeMusic(),
+                              ][this.index],
+                              transitionBuilder:
+                                  (child, animation, secondaryAnimation) =>
+                                      SharedAxisTransition(
+                                fillColor: Colors.transparent,
+                                animation: animation,
+                                secondaryAnimation: secondaryAnimation,
+                                transitionType:
+                                    SharedAxisTransitionType.vertical,
+                                child: child,
+                              ),
+                            ),
                     ] +
                     (refresh.progress == refresh.total
                         ? <Widget>[]
@@ -629,27 +614,56 @@ class CollectionMusicState extends State<CollectionMusic>
                             Container(
                               decoration: BoxDecoration(
                                 color: Color(0xFF242424),
-                                borderRadius: BorderRadius.circular(8.0),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(8.0),
+                                  bottomRight: Radius.circular(8.0),
+                                ),
+                                border: Border.all(
+                                    color: Theme.of(context).dividerColor,
+                                    width: 1.0),
                               ),
                               margin: EdgeInsets.all(12.0),
-                              padding: EdgeInsets.all(16.0),
-                              child: Row(
+                              child: Column(
                                 mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  CircularProgressIndicator(
+                                  LinearProgressIndicator(
                                     value: refresh.progress / refresh.total,
                                     valueColor: AlwaysStoppedAnimation(
-                                        Theme.of(context).primaryColor),
+                                      Theme.of(context).primaryColor,
+                                    ),
+                                    backgroundColor: Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.4),
                                   ),
-                                  SizedBox(
-                                    width: 16.0,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      language!
-                                          .STRING_COLLECTION_INDEXING_LABEL,
-                                      overflow: TextOverflow.ellipsis,
+                                  Container(
+                                    padding: EdgeInsets.all(12.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 16.0,
+                                        ),
+                                        Text(
+                                          '${refresh.progress}/${refresh.total}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline2,
+                                        ),
+                                        SizedBox(
+                                          width: 16.0,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            language!
+                                                .STRING_COLLECTION_INDEXING_LABEL,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
