@@ -1238,7 +1238,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_TITLE         = 'Het nummer kon niet opgeslagen wordenThe track could not be saved';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_NETWORK_SUBTITLE      = 'We raden u sterk aan uw internet verbinding te controleren en het over een tijdje nogmaals te proberen.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_TITLE            = 'We hebben allemaal slechte dagen';
-        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Er is een error opgetreden tijdens het opslaan van dit nummer. Dit betekent meestal dat u uw server moet controleren en updaten. Deze error heeft niets te maken met dit programma.';
+        this.STRING_ALBUM_VIEW_DOWNLOAD_ERROR_RATE_SUBTITLE         = 'Er is een fout opgetreden tijdens het opslaan van dit nummer. Dit betekent meestal dat u uw server moet controleren en updaten. Deze error heeft niets te maken met dit programma.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_TITLE                = 'Wacht';
         this.STRING_ALBUM_VIEW_DOWNLOAD_DOUBLE_SUBTITLE             = 'Dit nummer wordt al gedownload.';
         this.STRING_ALBUM_VIEW_DOWNLOAD_ALREADY_SAVED_TITLE         = 'Dit nummer is al opgeslagen.';
