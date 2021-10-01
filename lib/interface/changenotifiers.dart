@@ -1,3 +1,22 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -141,23 +160,25 @@ class CollectionRefreshController extends ChangeNotifier {
     this.progress = progress;
     this.total = total;
     if (this.timer == null) {
-      collection.redraw();
       this.notifyListeners();
+      collection.redraw();
       this.timer = Timer.periodic(
         Duration(seconds: 1),
         (_) {
-          collection.redraw();
           this.notifyListeners();
+          collection.redraw();
         },
       );
     }
     if (this.progress == this.total) {
-      collection.redraw();
       this.notifyListeners();
+      collection.redraw();
       this.timer?.cancel();
       this.timer = null;
     }
   }
+
+  void redraw() => this.notifyListeners();
 }
 
 class Visuals extends ChangeNotifier {
@@ -181,7 +202,7 @@ class Visuals extends ChangeNotifier {
             ? AcrylicEffect.acrylic
             : AcrylicEffect.disabled,
         gradientColor: this.themeMode == ThemeMode.light
-            ? Colors.white70
+            ? Color(0xCCCCCCCC)
             : Color(0xCC222222),
       );
     }
@@ -285,7 +306,7 @@ List<Accent?> accents = [
     light: Colors.deepPurpleAccent.shade400,
     dark: Colors.deepPurpleAccent.shade200,
   ),
-  Accent(light: Color(0xFFFF0000), dark: Color(0xFFFF0000)),
+  Accent(light: Color(0xFFE53935), dark: Color(0xFFE53935)),
   Accent(light: Color(0xFF4285F4), dark: Color(0xFF82B1FF)),
   Accent(light: Color(0xFFF4B400), dark: Color(0xFFFFE57F)),
   Accent(light: Color(0xFF0F9D58), dark: Color(0xFF0F9D58)),
