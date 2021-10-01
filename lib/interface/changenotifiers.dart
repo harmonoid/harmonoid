@@ -137,7 +137,11 @@ class NowPlayingController extends ChangeNotifier {
   String _state = language!.STRING_BUFFERING;
   bool _isShuffling = false;
   bool _isRepeating = false;
-  Color? _dominantColor = null;
+  Color? _dominantColor;
+  
+  @override
+  // ignore: must_call_super
+  void dispose() {}
 }
 
 class NowPlayingBarController extends ChangeNotifier {
@@ -166,6 +170,10 @@ class NowPlayingBarController extends ChangeNotifier {
     this._maximized = value;
     this.notifyListeners();
   }
+
+  @override
+  // ignore: must_call_super
+  void dispose() {}
 }
 
 class CollectionRefreshController extends ChangeNotifier {
@@ -196,6 +204,10 @@ class CollectionRefreshController extends ChangeNotifier {
   }
 
   void redraw() => this.notifyListeners();
+
+  @override
+  // ignore: must_call_super
+  void dispose() {}
 }
 
 class Visuals extends ChangeNotifier {
