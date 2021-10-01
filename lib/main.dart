@@ -1,3 +1,22 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'dart:io';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
@@ -32,7 +51,7 @@ Future<void> main(List<String> args) async {
             ? AcrylicEffect.acrylic
             : AcrylicEffect.solid,
         gradientColor: configuration.themeMode! == ThemeMode.light
-            ? Colors.white
+            ? Color(0xCCCCCCCC)
             : Color(0xCC222222),
       );
       LWM.initialize();
@@ -49,7 +68,6 @@ Future<void> main(List<String> args) async {
     if (Platform.isLinux) {
       WidgetsFlutterBinding.ensureInitialized();
       await Configuration.initialize();
-      await Acrylic.initialize();
       LWM.initialize();
       DiscordRPC.initialize();
       await Intent.initialize(args: args);
@@ -74,7 +92,7 @@ Future<void> main(List<String> args) async {
       cacheDirectory: configuration.cacheDirectory!,
       collectionSortType: configuration.collectionSortType!,
     );
-    collection.refresh(onProgress: (progress, total, _) {
+    await collection.refresh(onProgress: (progress, total, _) {
       collectionRefresh.set(progress, total);
     });
     await Language.initialize(

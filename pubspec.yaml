@@ -53,8 +53,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/about-header.jpg
-    - assets/images/collection-album.jpg
+    - assets/images/about_header.jpg
+    - assets/images/default_album_art.jpg
 
   fonts:
     - family: "Roboto"

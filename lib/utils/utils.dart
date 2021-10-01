@@ -1,28 +1,33 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 
 abstract class Utils {
-  static String? mediaTypeToLanguage(MediaType mediaType) {
-    if (mediaType is Album)
-      return language!.STRING_ALBUM;
-    else if (mediaType is Track)
-      return language!.STRING_TRACK;
-    else if (mediaType is Artist)
-      return language!.STRING_ARTIST;
-    else if (mediaType is Playlist)
-      return language!.STRING_PLAYLIST;
-    else
-      return null;
-  }
-
   static Future<void> handleYouTubeFailure() async {
     showDialog(
       context: key.currentState!.overlay!.context,
@@ -132,8 +137,37 @@ abstract class Utils {
         fontSize: 14.0,
         fontWeight: FontWeights.thin(isLight),
       ),
+      button: Platform.isLinux
+          ? TextStyle(
+              color: accentColor,
+              fontSize: 14.0,
+              fontWeight: FontWeights.thick(isLight),
+            )
+          : null,
     );
     return ThemeData(
+      chipTheme: Platform.isLinux
+          ? ChipThemeData(
+              backgroundColor: accentColor,
+              disabledColor: accentColor.withOpacity(0.2),
+              selectedColor: accentColor,
+              secondarySelectedColor: accentColor,
+              padding: EdgeInsets.zero,
+              labelStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0,
+                fontFamily: Platform.isLinux ? 'Roboto' : null,
+                fontWeight: FontWeights.thin(isLight),
+              ),
+              secondaryLabelStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0,
+                fontFamily: Platform.isLinux ? 'Roboto' : null,
+                fontWeight: FontWeights.thin(isLight),
+              ),
+              brightness: Brightness.dark,
+            )
+          : null,
       fontFamily: Platform.isLinux ? 'Roboto' : null,
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: accentColor,
