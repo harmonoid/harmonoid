@@ -1203,6 +1203,22 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
         this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
         this.STRING_PLAY_NOW                                        = 'Play now';
+        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Lookup in your collection';
+        this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
+        this.STRING_SEARCH                                          = 'Search';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close the app.';
+        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Search for music or give a link';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
+        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info';
+        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
+        this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
+        this.STRING_BUFFERING                                       = 'Buffering...';
+        this.STRING_WARNING                                         = 'Warning';
+        this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
+        this.STRING_ENABLE_125_SCALING                              = 'Enable 125% scaling.';
       } 
       break;
       case LanguageRegion.nlNl: {
@@ -1938,6 +1954,10 @@ class Language extends Strings with ChangeNotifier {
     this.current = languageRegion;
     this.notifyListeners();
   }
+
+  @override
+  // ignore: must_call_super
+  void dispose() {}
 }
 
 Language? language;
