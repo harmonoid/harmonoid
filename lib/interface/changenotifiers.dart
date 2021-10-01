@@ -22,6 +22,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -47,9 +48,20 @@ class NowPlayingController extends ChangeNotifier {
   String get state => _state;
   bool get isShuffling => _isShuffling;
   bool get isRepeating => _isRepeating;
+  Color? get dominantColor => _dominantColor;
 
   set index(int? index) {
     this._index = index;
+    () async {
+      var palette = await PaletteGenerator.fromImageProvider(
+        this._tracks[this._index!].networkAlbumArt == null
+            ? FileImage(this._tracks[this._index!].albumArt)
+            : NetworkImage(this._tracks[this._index!].networkAlbumArt!)
+                as ImageProvider,
+      );
+      this._dominantColor = palette.dominantColor?.color;
+      this.notifyListeners();
+    }();
     this.notifyListeners();
   }
 
@@ -121,6 +133,7 @@ class NowPlayingController extends ChangeNotifier {
   String _state = language!.STRING_BUFFERING;
   bool _isShuffling = false;
   bool _isRepeating = false;
+  Color? _dominantColor = null;
 }
 
 class NowPlayingBarController extends ChangeNotifier {
