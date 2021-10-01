@@ -307,6 +307,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_BUFFERING                                       = 'Buffering...';
         this.STRING_WARNING                                         = 'Warning';
         this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
+        this.STRING_ENABLE_125_SCALING                              = 'Enable 125% scaling.';
       }
       break;
       case LanguageRegion.ruRu: {
@@ -488,6 +489,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_BUFFERING                                       = 'Buffering...';
         this.STRING_WARNING                                         = 'Warning';
         this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
+        this.STRING_ENABLE_125_SCALING                              = 'Enable 125% scaling.';
       }
       break;
       case LanguageRegion.slSi: {
@@ -670,6 +672,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_BUFFERING                                       = 'Buffering...';
         this.STRING_WARNING                                         = 'Warning';
         this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
+        this.STRING_ENABLE_125_SCALING                              = 'Enable 125% scaling.';
       }
       break;
       case LanguageRegion.ptBr: {
@@ -851,6 +854,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_BUFFERING                                       = 'Buffering...';
         this.STRING_WARNING                                         = 'Warning';
         this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
+        this.STRING_ENABLE_125_SCALING                              = 'Enable 125% scaling.';
       }
       break;
       case LanguageRegion.hiIn: {
@@ -1032,6 +1036,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_BUFFERING                                       = 'Buffering...';
         this.STRING_WARNING                                         = 'Warning';
         this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
+        this.STRING_ENABLE_125_SCALING                              = 'Enable 125% scaling.';
       }
       break;
       case LanguageRegion.deDe: {
@@ -1379,6 +1384,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_BUFFERING                                       = 'Bufferen...';
         this.STRING_WARNING                                         = 'Waarschuwing';
         this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Er moet ten minste één map in uw collectie blijven.';
+        this.STRING_ENABLE_125_SCALING                              = 'Enable 125% scaling.';
       }
       break;
       case LanguageRegion.svSe: {
@@ -1560,6 +1566,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_BUFFERING                                       = 'Buffrar...';
         this.STRING_WARNING                                         = 'Warning';
         this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
+        this.STRING_ENABLE_125_SCALING                              = 'Enable 125% scaling.';
       }
       break;
       case LanguageRegion.frFr: {
@@ -1741,6 +1748,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_BUFFERING                                       = 'Buffering...';
         this.STRING_WARNING                                         = 'Warning';
         this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
+        this.STRING_ENABLE_125_SCALING                              = 'Enable 125% scaling.';
       }
       break;
       case LanguageRegion.huHu: {
@@ -1922,6 +1930,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_BUFFERING                                       = 'Betöltés...';
         this.STRING_WARNING                                         = 'Warning';
         this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
+        this.STRING_ENABLE_125_SCALING                              = 'Enable 125% scaling.';
       }
       break;
     }

@@ -180,4 +180,5 @@ class Strings {
   late String STRING_BUFFERING;
   late String STRING_WARNING;
   late String STRING_LAST_COLLECTION_DIRECTORY_REMOVED;
+  late String STRING_ENABLE_125_SCALING;
 }
