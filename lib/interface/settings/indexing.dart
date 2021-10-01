@@ -1,3 +1,22 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
@@ -55,7 +74,13 @@ class IndexingState extends State<IndexingSetting> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(directory.path),
+                            Expanded(
+                              child: Text(
+                                directory.path,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                             MaterialButton(
                               onPressed: () async {
                                 if (configuration
@@ -157,10 +182,10 @@ class IndexingState extends State<IndexingSetting> {
                                     Container(
                                       margin: EdgeInsets.only(top: 6.0),
                                       height: 4.0,
-                                      width: (MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              (Platform.isLinux ? 0.8 : 1.0)) -
+                                      width: MediaQuery.of(context)
+                                              .size
+                                              .width
+                                              .normalized -
                                           32.0,
                                       child: LinearProgressIndicator(
                                         value: value,

@@ -1,9 +1,27 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'dart:io';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/interface/collection/collectionartist.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/rendering.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/interface/collection/collectionalbum.dart';
@@ -35,14 +53,12 @@ class CollectionSearchState extends State<CollectionSearch> {
     /// But their dimensions do not get recalculated because they are now part of mutable list.
     /// Thus, overflow happens if someone resizes the window. Unlike other tabs.
     int elementsPerRow =
-        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) ~/
-            (156 + 8);
-    double tileWidthAlbum =
-        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) -
-                16 -
-                (elementsPerRow - 1) * 8) /
-            elementsPerRow;
-    double tileHeightAlbum = tileWidthAlbum * 260.0 / 156;
+        MediaQuery.of(context).size.width.normalized ~/ (156 + 8);
+    double tileWidthAlbum = (MediaQuery.of(context).size.width.normalized -
+            16 -
+            (elementsPerRow - 1) * 8) /
+        elementsPerRow;
+    double tileHeightAlbum = tileWidthAlbum * 246.0 / 156;
     double tileWidthArtist = tileWidthAlbum;
     double tileHeightArtist = tileWidthArtist + 36.0;
     return Consumer<Collection>(
@@ -190,8 +206,10 @@ class CollectionSearchState extends State<CollectionSearch> {
                                 : Container(
                                     margin: EdgeInsets.only(left: 8.0),
                                     height: tileHeightAlbum + 16.0,
-                                    width: (MediaQuery.of(context).size.width *
-                                        (Platform.isLinux ? 0.75 : 1.0)),
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width
+                                        .normalized,
                                     child: CustomListView(
                                       scrollDirection: Axis.horizontal,
                                       children: _albums,
@@ -205,8 +223,10 @@ class CollectionSearchState extends State<CollectionSearch> {
                                 : Container(
                                     margin: EdgeInsets.only(left: 8.0),
                                     height: tileHeightArtist + 16.0,
-                                    width: (MediaQuery.of(context).size.width *
-                                        (Platform.isLinux ? 0.75 : 1.0)),
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width
+                                        .normalized,
                                     child: CustomListView(
                                       scrollDirection: Axis.horizontal,
                                       children: _artists,

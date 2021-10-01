@@ -1,3 +1,22 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
@@ -27,13 +46,14 @@ class YouTubeTile extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-      height: this.height,
-      width: this.width,
+      height: this.height! - 2.0,
+      width: this.width! - 2.0,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(8.0),
-        ),
         color: Theme.of(context).cardColor,
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withOpacity(0.12),
+        ),
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Material(
         color: Colors.transparent,
@@ -69,15 +89,15 @@ class YouTubeTile extends StatelessWidget {
                   child: Image.network(
                     this.track.networkAlbumArt!,
                     fit: BoxFit.cover,
-                    height: this.width,
-                    width: this.width,
+                    height: this.width! - 2.0,
+                    width: this.width! - 2.0,
                   ),
                 ),
               ),
               Container(
                 padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                height: this.height! - this.width!,
-                width: this.width,
+                height: this.height! - this.width! - 2.0,
+                width: this.width! - 2.0,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,12 +171,11 @@ class YouTubeState extends State<YouTube> {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
         ),
-        height: MediaQuery.of(context).size.width > HORIZONTAL_BREAKPOINT
-            ? MediaQuery.of(context).size.height
-            : MediaQuery.of(context).size.width + 128.0,
-        width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.75 : 1.0)) /
-            3,
+        height:
+            MediaQuery.of(context).size.width.normalized > HORIZONTAL_BREAKPOINT
+                ? MediaQuery.of(context).size.height.normalized
+                : MediaQuery.of(context).size.width.normalized + 128.0,
+        width: MediaQuery.of(context).size.width.normalized / 3,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -349,9 +368,8 @@ class YouTubeState extends State<YouTube> {
       builder: (context, collection, child) => Scaffold(
         body: LayoutBuilder(
           builder: (context, constraints) => Container(
-            height: MediaQuery.of(context).size.height,
-            width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.75 : 1.0)),
+            height: MediaQuery.of(context).size.height.normalized,
+            width: MediaQuery.of(context).size.width.normalized,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

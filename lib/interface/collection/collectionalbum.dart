@@ -1,8 +1,24 @@
-import 'dart:io';
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:share_plus/share_plus.dart';
@@ -12,21 +28,17 @@ import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/constants/language.dart';
 
-const double HORIZONTAL_BREAKPOINT = 720.0;
-
 class CollectionAlbumTab extends StatelessWidget {
   static const velocity = 60;
 
   Widget build(BuildContext context) {
     int elementsPerRow =
-        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) ~/
-            (156 + 8);
-    double tileWidth =
-        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) -
-                16 -
-                (elementsPerRow - 1) * 8) /
-            elementsPerRow;
-    double tileHeight = tileWidth * 260.0 / 156;
+        MediaQuery.of(context).size.width.normalized ~/ (156 + 8);
+    double tileWidth = (MediaQuery.of(context).size.width.normalized -
+            16 -
+            (elementsPerRow - 1) * 8) /
+        elementsPerRow;
+    double tileHeight = tileWidth * 246.0 / 156;
 
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
@@ -79,12 +91,14 @@ class CollectionAlbumTile extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-      height: this.height,
-      width: this.width,
+      height: this.height! - 2.0,
+      width: this.width! - 2.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(
           Radius.circular(8.0),
         ),
+        border:
+            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.12)),
         color: Theme.of(context).cardColor,
       ),
       child: Material(
@@ -113,7 +127,8 @@ class CollectionAlbumTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Hero(
-                tag: 'album_art_${this.album.albumName}',
+                tag:
+                    'album_art_${this.album.albumName}_${this.album.albumArtistName}',
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(
                     Radius.circular(8.0),
@@ -121,15 +136,15 @@ class CollectionAlbumTile extends StatelessWidget {
                   child: Image.file(
                     this.album.albumArt,
                     fit: BoxFit.cover,
-                    height: this.width,
-                    width: this.width,
+                    height: this.width! - 2.0,
+                    width: this.width! - 2.0,
                   ),
                 ),
               ),
               Container(
                 padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                height: this.height! - this.width!,
-                width: this.width,
+                height: this.height! - this.width! - 2.0,
+                width: this.width! - 2.0,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,6 +189,11 @@ class LeadingCollectionAlbumTile extends StatelessWidget {
     if (Provider.of<Collection>(context, listen: false).lastAlbum == null)
       return Container();
     return Container(
+      decoration: BoxDecoration(
+        border:
+            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.12)),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       margin: EdgeInsets.only(left: 8, right: 8, bottom: 4.0),
       child: Material(
         color: Colors.transparent,
@@ -194,43 +214,32 @@ class LeadingCollectionAlbumTile extends StatelessWidget {
               ),
             );
           },
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
-          ),
+          borderRadius: BorderRadius.circular(8.0),
           child: Container(
-            height: this.height,
+            height: this.height - 2.0,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
               color: Theme.of(context).cardColor,
             ),
-            width: (MediaQuery.of(context).size.width *
-                    (Platform.isLinux ? 0.75 : 1.0)) -
-                16,
+            width: MediaQuery.of(context).size.width.normalized - 16,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Hero(
-                    tag:
-                        'album_art_${Provider.of<Collection>(context, listen: false).lastAlbum!.albumName!}',
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image(
-                        image: FileImage(
-                            Provider.of<Collection>(context, listen: false)
-                                .lastAlbum!
-                                .albumArt),
-                        fit: BoxFit.cover,
-                        height: this.height,
-                        width: this.height,
-                      ),
-                    )),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image(
+                    image: FileImage(
+                        Provider.of<Collection>(context, listen: false)
+                            .lastAlbum!
+                            .albumArt),
+                    fit: BoxFit.cover,
+                    height: this.height - 2.0,
+                    width: this.height - 2.0,
+                  ),
+                ),
                 Container(
                   margin: EdgeInsets.only(left: 8, right: 8),
-                  width: (MediaQuery.of(context).size.width *
-                          (Platform.isLinux ? 0.75 : 1.0)) -
-                      32 -
-                      this.height,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -280,12 +289,11 @@ class CollectionAlbum extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
         ),
-        height: MediaQuery.of(context).size.width > HORIZONTAL_BREAKPOINT
-            ? MediaQuery.of(context).size.height
-            : MediaQuery.of(context).size.width + 128.0,
-        width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.75 : 1.0)) /
-            3,
+        height:
+            MediaQuery.of(context).size.width.normalized > HORIZONTAL_BREAKPOINT
+                ? MediaQuery.of(context).size.height.normalized
+                : MediaQuery.of(context).size.width.normalized + 128.0,
+        width: MediaQuery.of(context).size.width.normalized / 3,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -321,7 +329,8 @@ class CollectionAlbum extends StatelessWidget {
                             maxHeight: 256.0,
                           ),
                           child: Hero(
-                            tag: 'album_art_${this.album!.albumName}',
+                            tag:
+                                'album_art_${this.album!.albumName}_${this.album!.albumArtistName}',
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(12.0),
                               child: Image.file(
@@ -413,9 +422,8 @@ class CollectionAlbum extends StatelessWidget {
       builder: (context, collection, child) => Scaffold(
         body: LayoutBuilder(
           builder: (context, constraints) => Container(
-            height: MediaQuery.of(context).size.height,
-            width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.75 : 1.0)),
+            height: MediaQuery.of(context).size.height.normalized,
+            width: MediaQuery.of(context).size.width.normalized,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -433,8 +441,8 @@ class CollectionAlbum extends StatelessWidget {
                           ),
                         ] +
                         (this.album!.tracks
-                              ..sort((first, second) => first.trackNumber!
-                                  .compareTo(second.trackNumber!)))
+                              ..sort((first, second) => (first.trackNumber ?? 1)
+                                  .compareTo(second.trackNumber ?? 1)))
                             .map(
                               (Track track) => Container(
                                 color:
@@ -462,7 +470,7 @@ class CollectionAlbum extends StatelessWidget {
                                                               .trackDuration!)
                                                       .label +
                                                   ' • ')
-                                              : '0:00') +
+                                              : '0:00 • ') +
                                           track.trackArtistNames!.join(', '),
                                       overflow: TextOverflow.fade,
                                       maxLines: 1,
@@ -563,6 +571,10 @@ class CollectionAlbum extends StatelessWidget {
                                                 builder: (subContext) =>
                                                     FractionallyScaledWidget(
                                                   child: AlertDialog(
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .appBarTheme
+                                                            .backgroundColor,
                                                     contentPadding:
                                                         EdgeInsets.zero,
                                                     actionsPadding:
@@ -605,21 +617,6 @@ class CollectionAlbum extends StatelessWidget {
                                                           Container(
                                                             height: 236,
                                                             width: 280,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                    border:
-                                                                        Border(
-                                                              top: BorderSide(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .dividerColor,
-                                                                  width: 1),
-                                                              bottom: BorderSide(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .dividerColor,
-                                                                  width: 1),
-                                                            )),
                                                             child: ListView
                                                                 .builder(
                                                               shrinkWrap: true,

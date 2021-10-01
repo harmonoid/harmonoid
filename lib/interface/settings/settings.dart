@@ -1,3 +1,22 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'package:flutter/material.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -19,9 +38,15 @@ class Settings extends StatelessWidget {
       children: [
         Container(
           height: 56.0,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white.withOpacity(0.10)
-              : Colors.black.withOpacity(0.10),
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withOpacity(0.10)
+                : Colors.black.withOpacity(0.10),
+            border: Border(
+              bottom: BorderSide(
+                  color: Theme.of(context).dividerColor.withOpacity(0.12)),
+            ),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,6 +119,8 @@ class SettingsTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(8.0),
+        border:
+            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.12)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

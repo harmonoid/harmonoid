@@ -1,9 +1,27 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'dart:io';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/rendering.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
@@ -129,13 +147,11 @@ class YouTubeMusicState extends State<YouTubeMusic> {
   @override
   Widget build(BuildContext context) {
     int elementsPerRow =
-        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) ~/
-            (156 + 8);
-    double tileWidth =
-        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) -
-                16 -
-                (elementsPerRow - 1) * 8) /
-            elementsPerRow;
+        MediaQuery.of(context).size.width.normalized ~/ (156 + 8);
+    double tileWidth = (MediaQuery.of(context).size.width.normalized -
+            16 -
+            (elementsPerRow - 1) * 8) /
+        elementsPerRow;
     double tileHeight = tileWidth * 246.0 / 156;
     return Consumer<YouTubeStateController>(
       builder: (context, youtube, _) => Column(
@@ -194,8 +210,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                         (context, callback, Iterable<String> values) =>
                             Container(
                       margin: EdgeInsets.only(right: 16.0),
-                      width: (MediaQuery.of(context).size.width *
-                              (Platform.isLinux ? 0.75 : 1.0)) -
+                      width: MediaQuery.of(context).size.width.normalized -
                           16.0 -
                           56.0,
                       child: Align(
@@ -208,20 +223,24 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                               },
                               child: Container(
                                 color: Colors.transparent,
-                                width: MediaQuery.of(context).size.width *
-                                    (Platform.isLinux ? 0.75 : 1.0),
-                                height: MediaQuery.of(context).size.height *
-                                    (Platform.isLinux ? 0.75 : 1.0),
+                                width: MediaQuery.of(context)
+                                    .size
+                                    .width
+                                    .normalized,
+                                height: MediaQuery.of(context)
+                                    .size
+                                    .height
+                                    .normalized,
                               ),
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 4.0),
                               height: 236.0,
-                              width: (MediaQuery.of(context).size.width *
-                                      (Platform.isLinux ? 0.75 : 1.0)) -
-                                  2 * 16.0 -
-                                  56.0 -
-                                  16.0,
+                              width:
+                                  MediaQuery.of(context).size.width.normalized -
+                                      2 * 16.0 -
+                                      56.0 -
+                                      16.0,
                               child: Material(
                                 color: Theme.of(context).brightness ==
                                         Brightness.dark
@@ -230,8 +249,10 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                                 elevation: 2.0,
                                 child: Container(
                                   height: 236.0,
-                                  width: (MediaQuery.of(context).size.width *
-                                          (Platform.isLinux ? 0.75 : 1.0)) -
+                                  width: MediaQuery.of(context)
+                                          .size
+                                          .width
+                                          .normalized -
                                       2 * 16.0 -
                                       56.0 -
                                       16.0,
@@ -366,11 +387,6 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                                     Padding(
                                       padding: EdgeInsets.all(12.0),
                                       child: MaterialButton(
-                                        color: Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white.withOpacity(0.08)
-                                            : Colors.black.withOpacity(0.08),
-                                        elevation: 0.0,
                                         onPressed: () {
                                           youtube.updateRecommendations(
                                             Track(
@@ -379,7 +395,14 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                                             ),
                                           );
                                         },
-                                        child: Text(language!.STRING_REFRESH),
+                                        child: Text(
+                                          language!.STRING_REFRESH,
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -399,8 +422,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                         secondaryAnimation: secondaryAnimation,
                         transitionType: SharedAxisTransitionType.vertical,
                         child: Container(
-                          width: (MediaQuery.of(context).size.width *
-                              (Platform.isLinux ? 0.75 : 1.0)),
+                          width: MediaQuery.of(context).size.width.normalized,
                           child: child,
                         ))),
           ),

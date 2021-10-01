@@ -31,6 +31,7 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:harmonoid/core/configuration.dart';
 
 const double HORIZONTAL_BREAKPOINT = 720.0;
 
@@ -41,7 +42,7 @@ class FractionallyScaledWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isLinux)
+    if (configuration.enable125Scaling!)
       return FractionallySizedBox(
         heightFactor: 0.8,
         widthFactor: 0.8,
@@ -214,14 +215,18 @@ class SubHeader extends StatelessWidget {
 }
 
 class NavigatorPopButton extends StatelessWidget {
-  const NavigatorPopButton({Key? key}) : super(key: key);
+  final void Function()? onTap;
+  NavigatorPopButton({Key? key, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: InkWell(
-        onTap: Navigator.of(context).pop,
+        onTap: () {
+          Navigator.of(context).pop();
+          onTap?.call();
+        },
         borderRadius: BorderRadius.all(
           Radius.circular(8.0),
         ),
@@ -730,8 +735,7 @@ class WindowTitleBar extends StatelessWidget {
       );
     return Platform.isWindows
         ? Container(
-            width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.8 : 1.0)),
+            width: MediaQuery.of(context).size.width.normalized,
             height: 32.0,
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.white.withOpacity(0.10)
@@ -904,6 +908,8 @@ class CollectionTrackContextMenu extends StatelessWidget {
                 context: context,
                 builder: (subContext) => FractionallyScaledWidget(
                   child: AlertDialog(
+                    backgroundColor:
+                        Theme.of(context).appBarTheme.backgroundColor,
                     contentPadding: EdgeInsets.zero,
                     actionsPadding: EdgeInsets.zero,
                     title: Text(
@@ -927,14 +933,6 @@ class CollectionTrackContextMenu extends StatelessWidget {
                           Container(
                             height: 236,
                             width: 280,
-                            decoration: BoxDecoration(
-                              border: Border.symmetric(
-                                vertical: BorderSide(
-                                  color: Theme.of(context).dividerColor,
-                                  width: 1,
-                                ),
-                              ),
-                            ),
                             child: ListView.builder(
                               shrinkWrap: true,
                               itemCount: collection.playlists.length,
@@ -1026,5 +1024,11 @@ class CustomScrollBehavior extends ScrollBehavior {
   Widget buildViewportChrome(
       BuildContext context, Widget child, AxisDirection axisDirection) {
     return child;
+  }
+}
+
+extension ScalingExtension on double {
+  double get normalized {
+    return this * (configuration.enable125Scaling! ? 0.8 : 1.0);
   }
 }

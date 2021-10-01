@@ -17,7 +17,6 @@
  *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
@@ -33,13 +32,11 @@ import 'package:harmonoid/interface/collection/collectionalbum.dart';
 class CollectionArtistTab extends StatelessWidget {
   Widget build(BuildContext context) {
     int elementsPerRow =
-        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) ~/
-            (156 + 8);
-    double tileWidth =
-        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) -
-                16 -
-                (elementsPerRow - 1) * 8) /
-            elementsPerRow;
+        MediaQuery.of(context).size.width.normalized ~/ (156 + 8);
+    double tileWidth = (MediaQuery.of(context).size.width.normalized -
+            16 -
+            (elementsPerRow - 1) * 8) /
+        elementsPerRow;
     double tileHeight = tileWidth + 36.0;
 
     return Consumer<Collection>(
@@ -265,12 +262,11 @@ class CollectionArtist extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
         ),
-        height: MediaQuery.of(context).size.width > HORIZONTAL_BREAKPOINT
-            ? MediaQuery.of(context).size.height
-            : MediaQuery.of(context).size.width + 128.0,
-        width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.8 : 1.0)) /
-            3,
+        height:
+            MediaQuery.of(context).size.width.normalized > HORIZONTAL_BREAKPOINT
+                ? MediaQuery.of(context).size.height.normalized
+                : MediaQuery.of(context).size.width.normalized + 128.0,
+        width: MediaQuery.of(context).size.width.normalized / 3,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -391,9 +387,8 @@ class CollectionArtist extends StatelessWidget {
       builder: (context, collection, child) => Scaffold(
         body: LayoutBuilder(
           builder: (context, constraints) => Container(
-            height: MediaQuery.of(context).size.height,
-            width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.8 : 1.0)),
+            height: MediaQuery.of(context).size.height.normalized,
+            width: MediaQuery.of(context).size.width.normalized,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -572,6 +567,10 @@ class CollectionArtist extends StatelessWidget {
                                                 builder: (subContext) =>
                                                     FractionallyScaledWidget(
                                                   child: AlertDialog(
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .appBarTheme
+                                                            .backgroundColor,
                                                     contentPadding:
                                                         EdgeInsets.zero,
                                                     actionsPadding:
@@ -614,21 +613,6 @@ class CollectionArtist extends StatelessWidget {
                                                           Container(
                                                             height: 236,
                                                             width: 280,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                    border:
-                                                                        Border(
-                                                              top: BorderSide(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .dividerColor,
-                                                                  width: 1),
-                                                              bottom: BorderSide(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .dividerColor,
-                                                                  width: 1),
-                                                            )),
                                                             child: ListView
                                                                 .builder(
                                                               shrinkWrap: true,
