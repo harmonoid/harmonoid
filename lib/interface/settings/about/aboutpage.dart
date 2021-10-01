@@ -1,3 +1,22 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
@@ -42,9 +61,15 @@ class AboutPageState extends State<AboutPage> {
         children: [
           Container(
             height: 56.0,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.10)
-                : Colors.black.withOpacity(0.10),
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white.withOpacity(0.10)
+                  : Colors.black.withOpacity(0.10),
+              border: Border(
+                bottom: BorderSide(
+                    color: Theme.of(context).dividerColor.withOpacity(0.12)),
+              ),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,18 +106,20 @@ class AboutPageState extends State<AboutPage> {
                   decoration: BoxDecoration(
                     color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(
+                      color: Theme.of(context).dividerColor.withOpacity(0.12),
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image.asset(
-                        'assets/images/about-header.jpg',
+                        'assets/images/about_header.jpg',
                         fit: BoxFit.fitWidth,
                         alignment: Alignment.center,
                         height: 192,
-                        width: (MediaQuery.of(context).size.width *
-                                (Platform.isLinux ? 0.8 : 1.0)) -
-                            16.0,
+                        width:
+                            MediaQuery.of(context).size.width.normalized - 16.0,
                       ),
                       Divider(
                         height: 1.0,
@@ -182,11 +209,11 @@ class AboutPageState extends State<AboutPage> {
                         child: (this.repository == null ||
                                 this.repository!.containsKey('message'))
                             ? Text(
-                                '🎵 The music app you always dreamt.',
+                                '🎵 Elegant music app to play local music & YouTube music. Distributes music into albums & artists. Has playlists & lyrics.',
                                 style: TextStyle(
                                   color: Theme.of(context).brightness ==
                                           Brightness.dark
-                                      ? Colors.white.withOpacity(0.8)
+                                      ? Colors.white.withOpacity(1.0)
                                       : Colors.black.withOpacity(0.8),
                                   fontSize: 14.0,
                                 ),
@@ -248,7 +275,7 @@ class AboutPageState extends State<AboutPage> {
                           style: Theme.of(context).textTheme.headline2,
                         ),
                         subtitle: Text(
-                          'Deals with playback & parsing of music. Maintains core C++ plugins. Writes UI, state management & lifecycle code.',
+                          'Deals with playback & parsing of music. Writes UI, state management & lifecycle code. Maintains core C++ plugins.',
                           style: Theme.of(context).textTheme.headline3,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -314,6 +341,12 @@ class AboutPageState extends State<AboutPage> {
                   child: Column(
                     children: <List<String>>[
                       [
+                        'https://github.com/alexmercerind',
+                        'https://avatars.githubusercontent.com/u/28951144?s=80&v=4',
+                        'Hitesh Kumar Saini',
+                        'Lead developer. Deals with playback & parsing of music. Writes UI, state management & lifecycle code. Maintains core C++ plugins.',
+                      ],
+                      [
                         'https://github.com/raitonoberu',
                         'https://avatars.githubusercontent.com/u/64320078?s=80&v=4',
                         'Denis',
@@ -335,7 +368,7 @@ class AboutPageState extends State<AboutPage> {
                         'https://github.com/prateekmedia',
                         'https://avatars.githubusercontent.com/u/41370460?s=80&v=4',
                         'Prateek SU',
-                        'AppImage & Flatpak installers. Bug reports.',
+                        'AppImage & Flatpak installers. Bug reports. Hindi translation.',
                       ],
                       [
                         'https://github.com/gaetan1903',
@@ -385,6 +418,12 @@ class AboutPageState extends State<AboutPage> {
                         'Ankit Rana',
                         'Testing & bug reports.',
                       ],
+                      [
+                        'https://github.com/LeonHoog',
+                        'https://avatars.githubusercontent.com/u/75587960?s=80&v=4',
+                        'Leon',
+                        'Dutch translation.'
+                      ]
                     ]
                         .map(
                           (contributor) => ListTile(
