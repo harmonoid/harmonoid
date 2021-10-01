@@ -1,25 +1,42 @@
-import 'dart:io';
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
 
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/interface/collection/collectionalbum.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/interface/collection/collectionalbum.dart';
 
 class CollectionArtistTab extends StatelessWidget {
   Widget build(BuildContext context) {
     int elementsPerRow =
-        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) ~/
+        (MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) ~/
             (156 + 8);
     double tileWidth =
-        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.75 : 1.0)) -
+        ((MediaQuery.of(context).size.width * (Platform.isLinux ? 0.8 : 1.0)) -
                 16 -
                 (elementsPerRow - 1) * 8) /
             elementsPerRow;
@@ -77,12 +94,14 @@ class LeadingCollectionArtistTile extends StatelessWidget {
           bottom: 4.0,
           top: 2.0,
         ),
-        height: this.height,
+        height: this.height - 2.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(
             Radius.circular(8.0),
           ),
           color: Theme.of(context).cardColor,
+          border: Border.all(
+              color: Theme.of(context).dividerColor.withOpacity(0.12)),
         ),
         child: Material(
           color: Colors.transparent,
@@ -106,34 +125,24 @@ class LeadingCollectionArtistTile extends StatelessWidget {
                 );
               },
               child: Container(
-                height: this.height,
-                width: (MediaQuery.of(context).size.width *
-                        (Platform.isLinux ? 0.75 : 1.0)) -
-                    16,
+                height: this.height - 2.0,
                 child: InkWell(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Hero(
-                        tag: 'artist_art_${collection.lastArtist!.artistName}',
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image(
-                            image: FileImage(
-                                collection.lastArtist!.tracks.last.albumArt),
-                            fit: BoxFit.fill,
-                            height: this.height,
-                            width: this.height,
-                          ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image(
+                          image: FileImage(
+                              collection.lastArtist!.tracks.last.albumArt),
+                          fit: BoxFit.fill,
+                          height: this.height - 2.0,
+                          width: this.height - 2.0,
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(left: 8, right: 8),
-                        width: (MediaQuery.of(context).size.width *
-                                (Platform.isLinux ? 0.75 : 1.0)) -
-                            32 -
-                            this.height,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -173,13 +182,15 @@ class CollectionArtistTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: this.height,
-      width: this.width,
+      height: this.height - 2.0,
+      width: this.width - 2.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(
           Radius.circular(8.0),
         ),
         color: Theme.of(context).cardColor,
+        border:
+            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.12)),
       ),
       child: Material(
         color: Colors.transparent,
@@ -213,21 +224,23 @@ class CollectionArtistTile extends StatelessWidget {
                   child: Image(
                     image: FileImage(this.artist.tracks.last.albumArt),
                     fit: BoxFit.fill,
-                    height: this.width,
-                    width: this.width,
+                    height: this.width - 2.0,
+                    width: this.width - 2.0,
                   ),
                 ),
               ),
-              Container(
-                height: 36.0,
-                width: this.width,
-                alignment: Alignment.topLeft,
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  this.artist.artistName!,
-                  style: Theme.of(context).textTheme.headline2,
-                  textAlign: TextAlign.left,
-                  maxLines: 1,
+              Expanded(
+                child: Container(
+                  height: 36.0,
+                  width: this.width - 2.0,
+                  alignment: Alignment.topLeft,
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    this.artist.artistName!,
+                    style: Theme.of(context).textTheme.headline2,
+                    textAlign: TextAlign.left,
+                    maxLines: 1,
+                  ),
                 ),
               ),
             ],
@@ -256,7 +269,7 @@ class CollectionArtist extends StatelessWidget {
             ? MediaQuery.of(context).size.height
             : MediaQuery.of(context).size.width + 128.0,
         width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.75 : 1.0)) /
+                (Platform.isLinux ? 0.8 : 1.0)) /
             3,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -380,7 +393,7 @@ class CollectionArtist extends StatelessWidget {
           builder: (context, constraints) => Container(
             height: MediaQuery.of(context).size.height,
             width: (MediaQuery.of(context).size.width *
-                (Platform.isLinux ? 0.75 : 1.0)),
+                (Platform.isLinux ? 0.8 : 1.0)),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -456,7 +469,7 @@ class CollectionArtist extends StatelessWidget {
                                                               .trackDuration!)
                                                       .label +
                                                   ' • ')
-                                              : '0:00') +
+                                              : '0:00 • ') +
                                           track.trackArtistNames!.join(', '),
                                       overflow: TextOverflow.fade,
                                       maxLines: 1,
