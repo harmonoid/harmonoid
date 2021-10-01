@@ -53,14 +53,18 @@ class NowPlayingController extends ChangeNotifier {
   set index(int? index) {
     this._index = index;
     () async {
-      var palette = await PaletteGenerator.fromImageProvider(
-        this._tracks[this._index!].networkAlbumArt == null
-            ? FileImage(this._tracks[this._index!].albumArt)
-            : NetworkImage(this._tracks[this._index!].networkAlbumArt!)
-                as ImageProvider,
-      );
-      this._dominantColor = palette.dominantColor?.color;
-      this.notifyListeners();
+      if (this._index != null &&
+          (this._index ?? -1) >= 0 &&
+          (this.index ?? double.infinity) < this.tracks.length) {
+        var palette = await PaletteGenerator.fromImageProvider(
+          this._tracks[this._index!].networkAlbumArt == null
+              ? FileImage(this._tracks[this._index!].albumArt)
+              : NetworkImage(this._tracks[this._index!].networkAlbumArt!)
+                  as ImageProvider,
+        );
+        this._dominantColor = palette.dominantColor?.color;
+        this.notifyListeners();
+      }
     }();
     this.notifyListeners();
   }
