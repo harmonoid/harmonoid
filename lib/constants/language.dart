@@ -1005,7 +1005,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_LYRICS                                          = 'गाने के बोल';
         this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'गाने के बोल की अधिसूचना';
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'अधिसूचना में गाने के बोल दिखाएं।';
-        this.STRING_LYRICS_RETRIEVING                               = 'गीत के बोल पुनः प्राप्त किये जा रहे है...';
+        this.STRING_LYRICS_RETRIEVING                               = 'गाने के बोल पुनः प्राप्त किये जा रहे है...';
         this.STRING_LYRICS_NOT_FOUND                                = 'गाने के बोल नहीं मिले';
         this.STRING_COMING_UP                                       = 'अगला आनेवाला';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
