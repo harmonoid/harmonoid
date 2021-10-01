@@ -414,7 +414,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SubHeader(
-                                  'Lyrics',
+                                  language!.STRING_LYRICS,
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(
@@ -431,7 +431,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                             ),
                           ),
                           SubHeader(
-                            'Coming Up',
+                            language!.STRING_COMING_UP,
                           ),
                         ] +
                         segment

@@ -40,7 +40,7 @@ dependencies:
   google_fonts: ^2.1.0
   hotkey_manager:
     git:
-      url: https://github.com/leanflutter/hotkey_manager.git
+      url: https://github.com/alexmercerind/hotkey_manager.git
       ref: main
   implicitly_animated_reorderable_list: ^0.4.0-dev+4
 

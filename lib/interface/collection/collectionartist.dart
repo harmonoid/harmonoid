@@ -362,7 +362,7 @@ class CollectionArtist extends StatelessWidget {
                           ),
                           onPressed: () {},
                           child: Text(
-                            'Play Now',
+                            language!.STRING_PLAY_NOW,
                           ),
                         ),
                         SizedBox(
@@ -376,7 +376,7 @@ class CollectionArtist extends StatelessWidget {
                           ),
                           onPressed: () {},
                           child: Text(
-                            'Add to Now Playing',
+                            language!.STRING_ADD_TO_NOW_PLAYING,
                           ),
                         ),
                       ],
