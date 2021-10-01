@@ -282,6 +282,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_COMING_UP                                       = 'Coming Up';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
         this.STRING_TRACK_SINGLE                                    = 'Track';
         this.STRING_ARTIST_SINGLE                                   = 'Artist';
@@ -462,6 +463,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_COMING_UP                                       = 'Coming Up';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
         this.STRING_TRACK_SINGLE                                    = 'Track';
         this.STRING_ARTIST_SINGLE                                   = 'Artist';
@@ -643,6 +645,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_COMING_UP                                       = 'Coming Up';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
         this.STRING_TRACK_SINGLE                                    = 'Track';
         this.STRING_ARTIST_SINGLE                                   = 'Artist';
@@ -823,6 +826,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Mostrar letras numa notificação.';
         this.STRING_LYRICS_RETRIEVING                               = 'Baixando letras...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Letras não disponíveis.';
+        this.STRING_COMING_UP                                       = 'Coming Up';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
         this.STRING_TRACK_SINGLE                                    = 'Track';
         this.STRING_ARTIST_SINGLE                                   = 'Artist';
@@ -1003,6 +1007,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_COMING_UP                                       = 'Coming Up';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
         this.STRING_TRACK_SINGLE                                    = 'Track';
         this.STRING_ARTIST_SINGLE                                   = 'Artist';
@@ -1183,6 +1188,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
+        this.STRING_COMING_UP                                       = 'Coming Up';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
         this.STRING_TRACK_SINGLE                                    = 'Track';
         this.STRING_ARTIST_SINGLE                                   = 'Artist';
@@ -1247,11 +1253,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_ALBUM_VIEW_TRACKS_SUBHEADER                     = 'Hier zijn de nummers uit dit album';
         this.STRING_ALBUM_VIEW_INFO_SUBHEADER                       = 'Een aantal inzichten in het album';
         this.STRING_LOCAL_TOP_BODY_ALBUM_EMPTY                      = 'Zoek- en sla muziek op om het hier te zien. Klik op vernieuwen om nieuwe dingen te zien.';
-        this.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Laatste album';
+        this.STRING_LOCAL_TOP_SUBHEADER_ALBUM                       = 'Vorige album';
         this.STRING_LOCAL_OTHER_SUBHEADER_ALBUM                     = 'Meer albums';
-        this.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Laatste nummer';
+        this.STRING_LOCAL_TOP_SUBHEADER_TRACK                       = 'Vorige nummer';
         this.STRING_LOCAL_OTHER_SUBHEADER_TRACK                     = 'Meer nummers';
-        this.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Laatste artiest';
+        this.STRING_LOCAL_TOP_SUBHEADER_ARTIST                      = 'Vorige artiest';
         this.STRING_LOCAL_OTHER_SUBHEADER_ARTIST                    = 'Meer artiesten';
         this.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER               = 'Hier zijn de nummers die u opgeslagen heeft';
         this.STRING_LOCAL_ALBUM_VIEW_INFO_SUBHEADER                 = 'Enkele inzichten in het album';
@@ -1297,11 +1303,11 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_MENU                                            = 'Menu';
         this.STRING_SEARCH_COLLECTION                               = 'Zoek Collectie';
         this.STRING_SWITCH_THEME                                    = 'Wissel Thema';
-        this.STRING_PLAY                                            = 'Speel';
+        this.STRING_PLAY                                            = 'Afspelen';
         this.STRING_PAUSE                                           = 'Pauze';
-        this.STRING_DELETE                                          = 'Verwijder';
+        this.STRING_DELETE                                          = 'Verwijderen';
         this.STRING_SHARE                                           = 'Delen';
-        this.STRING_ADD_TO_PLAYLIST                                 = 'Voeg toe aan afspeellijst';
+        this.STRING_ADD_TO_PLAYLIST                                 = 'Toevoegen aan afspeellijst';
         this.STRING_SAVE_TO_DOWNLOADS                               = 'Sla op in downloads';
         this.STRING_LOCAL_SEARCH_WELCOME                            = 'Voer iets in om uw collectie te doorzoeken';
         this.STRING_LOCAL_SEARCH_NO_RESULTS                         = 'Dat kon niet in uw collectie gevonden worden';
@@ -1314,7 +1320,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER  = 'Weet u het zeker?';
         this.STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY    = 'Wilt u deze afspeellijst van uw apparaat verwijderen?';
         this.STRING_CANCEL                                          = 'ANNULEER';
-        this.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Voeg toe aan afspeellijst';
+        this.STRING_PLAYLIST_ADD_DIALOG_TITLE                       = 'Toevoegen aan afspeellijst';
         this.STRING_PLAYLIST_ADD_DIALOG_BODY                        = 'Selecteer een afspeellijst en voeg dit nummer toe';
         this.STRING_PLAYLIST_TRACKS_SUBHEADER                       = 'Hier zijn de nummers in deze afspeellijst';
         this.STRING_TRANSFERS                                       = 'Overdrachten';
@@ -1336,7 +1342,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_EXIT_TITLE                                      = 'Afsluiten';
         this.STRING_EXIT_SUBTITLE                                   = 'Wilt u Harmonoid afsluiten?';
         this.STRING_A_TO_Z                                          = 'A tot Z';
-        this.STRING_DATE_ADDED                                      = 'Date Toegevoegd';
+        this.STRING_DATE_ADDED                                      = 'Datum Toegevoegd';
         this.STRING_SETTING_ACCENT_COLOR_AUTOMATIC                  = 'Automatisch Accent';
         this.STRING_SETTING_MISCELLANEOUS_TITLE                     = 'Diversen';
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Overige instellingen in de app';
@@ -1348,6 +1354,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Songteksten weergeven in notficaties';
         this.STRING_LYRICS_RETRIEVING                               = 'Songteksten ophalen...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Songteksten niet gevonden.';
+        this.STRING_COMING_UP                                       = 'Volgende';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
         this.STRING_TRACK_SINGLE                                    = 'Track';
         this.STRING_ARTIST_SINGLE                                   = 'Artiest';
@@ -1363,7 +1370,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SEARCH                                          = 'Zoeken';
         this.STRING_COLLECTION_INDEXING_LABEL                       = 'Je lokale muziek wordt gesynchroniseerd. Het is niet een goed idee om de app te sluiten.';
         this.STRING_RECOMMENDATIONS                                 = 'Aanbevelingen';
-        this.STRING_YOUTUBE_WELCOME                                 = 'Zoek naar muziek of geen een link';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Zoek naar muziek of geef een link';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Zoiets was niet te vinden.';
         this.STRING_YOUTUBE_INTERNET_ERROR                          = 'We spelen wat lokale muziek af, totdat je terug online bent.';
         this.STRING_RETRIEVING_INFO                                 = 'Info ophalen';
@@ -1528,6 +1535,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Visa låttexter i en avisering.';
         this.STRING_LYRICS_RETRIEVING                               = 'Hämtar låttexter...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Låttexter inte funna.';
+        this.STRING_COMING_UP                                       = 'Coming Up';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
         this.STRING_TRACK_SINGLE                                    = 'Låt';
         this.STRING_ARTIST_SINGLE                                   = 'Artist';
@@ -1708,6 +1716,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Afficher les paroles dans une notification.';
         this.STRING_LYRICS_RETRIEVING                               = 'Récupération des paroles ...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Paroles non trouvées.';
+        this.STRING_COMING_UP                                       = 'Coming Up';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
         this.STRING_TRACK_SINGLE                                    = 'Track';
         this.STRING_ARTIST_SINGLE                                   = 'Artist';
@@ -1888,6 +1897,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Énekszöveg megjelenítése értesítésként.';
         this.STRING_LYRICS_RETRIEVING                               = 'Énekszöveg betöltése...';
         this.STRING_LYRICS_NOT_FOUND                                = 'Nem található énekszöveg.';
+        this.STRING_COMING_UP                                       = 'Coming Up';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
         this.STRING_TRACK_SINGLE                                    = 'Szám';
         this.STRING_ARTIST_SINGLE                                   = 'Előadó';
