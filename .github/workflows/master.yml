@@ -60,7 +60,7 @@ jobs:
         with:
           channel: "beta"
       - run: sudo apt-get update
-      - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev libwebkit2gtk-4.0-dev libmediainfo-dev dpkg-dev
+      - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev libwebkit2gtk-4.0-dev libmediainfo-dev dpkg-dev alien
       - run: flutter config --enable-linux-desktop
       - run: flutter pub get
       - run: flutter build linux --verbose
@@ -70,6 +70,9 @@ jobs:
           cp -fr build/linux/x64/release/bundle linux/debian/usr/bin
           dpkg-deb --build --root-owner-group linux/debian
           cp linux/*.deb harmonoid-linux-x86_64.deb
+          
+      - name: Build .rpm executable
+        run: alien -r harmonoid-linux-x86_64.deb
 
       - name: Build Tarball
         run: |
@@ -99,6 +102,7 @@ jobs:
           tag_name: "vnext"
           files: |
             harmonoid-linux-x86_64.deb
+            harmonoid-linux-x86_64.rpm
             harmonoid-linux-x86_64.tar.gz
             harmonoid-linux-x86_64.AppImage
           token: ${{ secrets.GITHUB_TOKEN }}
