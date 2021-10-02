@@ -73,7 +73,9 @@ jobs:
           cp linux/*.deb harmonoid-linux-x86_64.deb
           
       - name: Build .rpm executable
-        run: alien -r harmonoid-linux-x86_64.deb
+        run: |
+          alien -r harmonoid-linux-x86_64.deb
+          mv harmonoid*.rpm harmonoid-linux-x86_64.rpm
 
       - name: Build Tarball
         run: |
@@ -101,11 +103,7 @@ jobs:
           prerelease: false
           body: ""
           tag_name: "vnext"
-          files: |
-            harmonoid-linux-x86_64.deb
-            harmonoid-linux-x86_64.rpm
-            harmonoid-linux-x86_64.tar.gz
-            harmonoid-linux-x86_64.AppImage
+          files: harmonoid-linux-*
           token: ${{ secrets.GITHUB_TOKEN }}
     
   build_android:
