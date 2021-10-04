@@ -1,7 +1,25 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -51,9 +69,16 @@ class CollectionMusicState extends State<CollectionMusic>
             padding: Platform.isWindows || Platform.isLinux || Platform.isMacOS
                 ? EdgeInsets.symmetric(horizontal: 8.0)
                 : EdgeInsets.zero,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.10)
-                : Colors.black.withOpacity(0.10),
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white.withOpacity(0.10)
+                  : Colors.black.withOpacity(0.10),
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).dividerColor.withOpacity(0.12),
+                ),
+              ),
+            ),
             child: Platform.isWindows || Platform.isLinux || Platform.isMacOS
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -578,42 +603,35 @@ class CollectionMusicState extends State<CollectionMusic>
               builder: (context, refresh, __) => Stack(
                 alignment: Alignment.bottomLeft,
                 children: <Widget>[
-                      (refresh.progress != refresh.total &&
-                              collection.collectionRefreshType ==
-                                  CollectionRefreshType.soft)
-                          ? Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation(
-                                    Theme.of(context).colorScheme.secondary),
-                              ),
-                            )
-                          : PageTransitionSwitcher(
-                              child: [
-                                CollectionAlbumTab(),
-                                CollectionTrackTab(),
-                                CollectionArtistTab(),
-                                CollectionPlaylistTab(),
-                                CollectionSearch(),
-                                YouTubeMusic(),
-                              ][this.index],
-                              transitionBuilder:
-                                  (child, animation, secondaryAnimation) =>
-                                      SharedAxisTransition(
-                                fillColor: Colors.transparent,
-                                animation: animation,
-                                secondaryAnimation: secondaryAnimation,
-                                transitionType:
-                                    SharedAxisTransitionType.vertical,
-                                child: child,
-                              ),
-                            ),
+                      PageTransitionSwitcher(
+                        child: [
+                          CollectionAlbumTab(),
+                          CollectionTrackTab(),
+                          CollectionArtistTab(),
+                          CollectionPlaylistTab(),
+                          CollectionSearch(),
+                          YouTubeMusic(),
+                        ][this.index],
+                        transitionBuilder:
+                            (child, animation, secondaryAnimation) =>
+                                SharedAxisTransition(
+                          fillColor: Colors.transparent,
+                          animation: animation,
+                          secondaryAnimation: secondaryAnimation,
+                          transitionType: SharedAxisTransitionType.vertical,
+                          child: child,
+                        ),
+                      ),
                     ] +
                     (refresh.progress == refresh.total
                         ? <Widget>[]
                         : <Widget>[
                             Container(
                               decoration: BoxDecoration(
-                                color: Color(0xFF242424),
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Color(0xFF242424)
+                                    : Color(0xFFFFFFFF),
                                 borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(8.0),
                                   bottomRight: Radius.circular(8.0),

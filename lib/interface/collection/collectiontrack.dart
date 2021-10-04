@@ -1,3 +1,22 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -85,7 +104,7 @@ class CollectionTrackTile extends StatelessWidget {
             (this.track.trackDuration != null
                     ? (Duration(milliseconds: this.track.trackDuration!).label +
                         ' • ')
-                    : '0:00') +
+                    : '0:00 • ') +
                 this.track.albumName! +
                 ' • ' +
                 (this.track.trackArtistNames!.length < 2
@@ -112,6 +131,8 @@ class LeadingCollectionTrackTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
+        border:
+            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.12)),
         borderRadius: BorderRadius.circular(8.0),
       ),
       clipBehavior: Clip.antiAlias,
@@ -131,9 +152,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                 fit: BoxFit.fitWidth,
                 alignment: Alignment.center,
                 height: 156.0,
-                width: (MediaQuery.of(context).size.width *
-                        (Platform.isLinux ? 0.75 : 1.0)) -
-                    16.0,
+                width: MediaQuery.of(context).size.width.normalized - 16.0,
               ),
               Padding(
                 padding: EdgeInsets.only(top: 8.0, bottom: 12.0),

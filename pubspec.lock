@@ -86,7 +86,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   charcode:
     dependency: transitive
     description:
@@ -253,8 +253,8 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "8b1181b12a37ba0f966f5ce0d6a0e013496c397b"
-      url: "https://github.com/leanflutter/hotkey_manager.git"
+      resolved-ref: bab9d3c47176be01c19f6947dd57afbf78eb8d28
+      url: "https://github.com/alexmercerind/hotkey_manager.git"
     source: git
     version: "0.1.2"
   http:
@@ -305,7 +305,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0"
+    version: "1.7.0"
   mime:
     dependency: transitive
     description:

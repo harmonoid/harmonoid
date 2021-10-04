@@ -1,27 +1,38 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'dart:math';
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
-import 'package:harmonoid/constants/language.dart';
 
-const double HORIZONTAL_BREAKPOINT = 720.0;
-
-class NowPlayingBar extends StatefulWidget {
+class NowPlayingBar extends StatelessWidget {
   final void Function()? launch;
-  NowPlayingBar({Key? key, this.launch}) : super(key: key);
-  @override
-  NowPlayingBarState createState() => NowPlayingBarState();
-}
-
-class NowPlayingBarState extends State<NowPlayingBar> {
+  final void Function()? exit;
+  NowPlayingBar({Key? key, this.launch, this.exit}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    if (HORIZONTAL_BREAKPOINT >= MediaQuery.of(context).size.width)
+    if (HORIZONTAL_BREAKPOINT >= MediaQuery.of(context).size.width.normalized)
       return Consumer<NowPlayingController>(
         builder: (context, nowPlaying, _) => Consumer<NowPlayingBarController>(
           builder: (context, container, _) => AnimatedContainer(
@@ -40,16 +51,17 @@ class NowPlayingBarState extends State<NowPlayingBar> {
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () {
-                          widget.launch?.call();
+                          this.launch?.call();
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               height: 2.0,
-                              width: MediaQuery.of(context).size.width *
-                                  nowPlaying.position.inMilliseconds /
-                                  nowPlaying.duration.inMilliseconds,
+                              width:
+                                  MediaQuery.of(context).size.width.normalized *
+                                      nowPlaying.position.inMilliseconds /
+                                      nowPlaying.duration.inMilliseconds,
                               color: Theme.of(context).brightness ==
                                       Brightness.light
                                   ? Colors.black
@@ -180,9 +192,15 @@ class NowPlayingBarState extends State<NowPlayingBar> {
     return Consumer<NowPlayingController>(
       builder: (context, nowPlaying, _) => Container(
         height: 84.0,
-        color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white.withOpacity(0.10)
-            : Colors.black.withOpacity(0.10),
+        decoration: BoxDecoration(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white.withOpacity(0.10)
+              : Colors.black.withOpacity(0.10),
+          border: Border(
+            top: BorderSide(
+                color: Theme.of(context).dividerColor.withOpacity(0.12)),
+          ),
+        ),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -195,7 +213,7 @@ class NowPlayingBarState extends State<NowPlayingBar> {
                               (nowPlaying.index ?? double.infinity) &&
                           0 <= (nowPlaying.index ?? double.infinity) &&
                           HORIZONTAL_BREAKPOINT <
-                              MediaQuery.of(context).size.width)
+                              MediaQuery.of(context).size.width.normalized)
                       ? Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
@@ -367,19 +385,23 @@ class NowPlayingBarState extends State<NowPlayingBar> {
                         ),
                         Container(
                           width: 480.0,
-                          child: Slider(
-                            value:
-                                nowPlaying.position.inMilliseconds.toDouble(),
-                            onChanged: (value) {
-                              Playback.seek(
-                                Duration(
-                                  milliseconds: value.toInt(),
-                                ),
-                              );
-                            },
-                            max: nowPlaying.duration.inMilliseconds.toDouble(),
-                            min: 0.0,
-                          ),
+                          child: nowPlaying.position.inMilliseconds <=
+                                  nowPlaying.duration.inMilliseconds
+                              ? Slider(
+                                  value: nowPlaying.position.inMilliseconds
+                                      .toDouble(),
+                                  onChanged: (value) {
+                                    Playback.seek(
+                                      Duration(
+                                        milliseconds: value.toInt(),
+                                      ),
+                                    );
+                                  },
+                                  max: nowPlaying.duration.inMilliseconds
+                                      .toDouble(),
+                                  min: 0.0,
+                                )
+                              : Container(),
                         ),
                         SizedBox(
                           width: 12.0,
@@ -402,7 +424,7 @@ class NowPlayingBarState extends State<NowPlayingBar> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 8.0, bottom: 28.0),
+                  margin: EdgeInsets.only(top: 8.0, bottom: 26.0),
                   child: Row(
                     children: [
                       Transform.rotate(
@@ -557,70 +579,79 @@ class NowPlayingBarState extends State<NowPlayingBar> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  IconButton(
-                    onPressed: (nowPlaying.index != null &&
-                            nowPlaying.tracks.length >
-                                (nowPlaying.index ?? double.infinity) &&
-                            0 <= (nowPlaying.index ?? double.infinity))
-                        ? () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => FractionallyScaledWidget(
-                                child: SimpleDialog(
-                                  backgroundColor: Theme.of(context)
-                                      .appBarTheme
-                                      .backgroundColor,
-                                  title: Text(
-                                    nowPlaying
-                                        .tracks[nowPlaying.index!].trackName!,
-                                  ),
-                                  titlePadding: EdgeInsets.all(16.0),
-                                  contentPadding: EdgeInsets.all(16.0),
-                                  children: lyrics.current.isNotEmpty
-                                      ? lyrics.current
-                                          .map(
-                                            (lyric) => Text(
-                                              lyric.words,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          )
-                                          .toList()
-                                      : [
-                                          Text(
-                                            language!.STRING_LYRICS_NOT_FOUND,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline4,
-                                          ),
-                                        ],
-                                ),
-                              ),
-                            );
-                          }
-                        : null,
-                    iconSize: 24.0,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    splashRadius: 18.0,
-                    icon: Icon(
-                      Icons.short_text,
-                    ),
-                  ),
-                  // TODO: Maybe add now playing screen or any way to see currently playing songs.
                   // IconButton(
-                  //   onPressed: () {},
+                  //   onPressed: (nowPlaying.index != null &&
+                  //           nowPlaying.tracks.length >
+                  //               (nowPlaying.index ?? double.infinity) &&
+                  //           0 <= (nowPlaying.index ?? double.infinity))
+                  //       ? () {
+                  //           showDialog(
+                  //             context: context,
+                  //             builder: (context) => FractionallyScaledWidget(
+                  //               child: SimpleDialog(
+                  //                 backgroundColor: Theme.of(context)
+                  //                     .appBarTheme
+                  //                     .backgroundColor,
+                  //                 title: Text(
+                  //                   nowPlaying
+                  //                       .tracks[nowPlaying.index!].trackName!,
+                  //                 ),
+                  //                 titlePadding: EdgeInsets.all(16.0),
+                  //                 contentPadding: EdgeInsets.all(16.0),
+                  //                 children: lyrics.current.isNotEmpty
+                  //                     ? lyrics.current
+                  //                         .map(
+                  //                           (lyric) => Text(
+                  //                             lyric.words,
+                  //                             style: Theme.of(context)
+                  //                                 .textTheme
+                  //                                 .headline4,
+                  //                           ),
+                  //                         )
+                  //                         .toList()
+                  //                     : [
+                  //                         Text(
+                  //                           language!.STRING_LYRICS_NOT_FOUND,
+                  //                           style: Theme.of(context)
+                  //                               .textTheme
+                  //                               .headline4,
+                  //                         ),
+                  //                       ],
+                  //               ),
+                  //             ),
+                  //           );
+                  //         }
+                  //       : null,
                   //   iconSize: 24.0,
                   //   color: Theme.of(context).brightness == Brightness.dark
                   //       ? Colors.white
                   //       : Colors.black,
                   //   splashRadius: 18.0,
                   //   icon: Icon(
-                  //     Icons.expand_more,
+                  //     Icons.short_text,
                   //   ),
                   // ),
+                  Consumer<NowPlayingBarController>(
+                    builder: (context, controller, _) => IconButton(
+                      onPressed: controller.maximized
+                          ? () {
+                              this.exit?.call();
+                            }
+                          : () {
+                              this.launch?.call();
+                            },
+                      iconSize: 24.0,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                      splashRadius: 18.0,
+                      icon: Icon(
+                        controller.maximized
+                            ? Icons.expand_more
+                            : Icons.expand_less,
+                      ),
+                    ),
+                  ),
                   SizedBox(
                     width: 12.0,
                   ),
