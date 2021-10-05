@@ -23,17 +23,16 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
         builder: (context, visuals, _) => Column(
           children: [
             // TODO: Re-implement automatic accent colors using Provider.
-            /*
-            SwitchListTile(
-              value: Hive.box('configuration').get('automaticAccent') ?? defaultAutomaticAccent,
-              onChanged: (bool isChecked) async {
-                await Hive.box('configuration').put('automaticAccent', isChecked);
-                this.setState(() {});
-                },
-              title: Text(language!.STRING_SETTING_ACCENT_COLOR_AUTOMATIC),
-            ),
-             */
-
+            // SwitchListTile(
+            //   value: configuration.automaticAccent!,
+            //   onChanged: (bool isChecked) async {
+            //     await configuration.save(
+            //       automaticAccent: isChecked,
+            //     );
+            //     this.setState(() {});
+            //   },
+            //   title: Text(language!.STRING_SETTING_ACCENT_COLOR_AUTOMATIC),
+            // ),
             Padding(
               padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
               child: GridView.extent(
@@ -43,14 +42,14 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                 childAspectRatio: 1.0,
                 children: accents.map((accent) {
                   this.animationControllers.add(
-                        AnimationController(
-                          vsync: this,
-                          duration: Duration(milliseconds: 200),
-                          reverseDuration: Duration(milliseconds: 200),
-                          lowerBound: 0.0,
-                          upperBound: 1.0,
-                        ),
-                      );
+                    AnimationController(
+                      vsync: this,
+                      duration: Duration(milliseconds: 200),
+                      reverseDuration: Duration(milliseconds: 200),
+                      lowerBound: 0.0,
+                      upperBound: 1.0,
+                    ),
+                  );
                   if (accent == visuals.accent)
                     this.animationControllers.last.forward();
                   return Container(
@@ -84,21 +83,21 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                             child: InkWell(
                               onTap: () async {
                                 this.animationControllers.asMap().forEach(
-                                    (int controllerIndex,
+                                        (int controllerIndex,
                                         AnimationController controller) {
-                                  if (accents.indexOf(accent) ==
-                                      controllerIndex) {
-                                    this
-                                        .animationControllers[controllerIndex]
-                                        .forward();
-                                    visuals.update(
-                                      accent: accent,
-                                    );
-                                  } else
-                                    this
-                                        .animationControllers[controllerIndex]
-                                        .reverse();
-                                });
+                                      if (accents.indexOf(accent) ==
+                                          controllerIndex) {
+                                        this
+                                            .animationControllers[controllerIndex]
+                                            .forward();
+                                        visuals.update(
+                                          accent: accent,
+                                        );
+                                      } else
+                                        this
+                                            .animationControllers[controllerIndex]
+                                            .reverse();
+                                    });
                               },
                               child: ScaleTransition(
                                 scale: this.animationControllers.last,

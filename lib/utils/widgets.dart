@@ -21,7 +21,6 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -43,7 +42,7 @@ class FractionallyScaledWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Hive.box('configuration').get('enable125Scaling') ?? defaultEnable125Scaling)
+    if (configuration.enable125Scaling!)
       return FractionallySizedBox(
         heightFactor: 0.8,
         widthFactor: 0.8,
@@ -66,12 +65,12 @@ class CustomListView extends StatelessWidget {
 
   CustomListView(
       {required this.children,
-      this.scrollDirection,
-      this.shrinkWrap,
-      this.padding}) {
+        this.scrollDirection,
+        this.shrinkWrap,
+        this.padding}) {
     if (Platform.isWindows) {
       scroller.addListener(
-        () {
+            () {
           var scrollDirection = scroller.position.userScrollDirection;
           if (scrollDirection != ScrollDirection.idle) {
             var scrollEnd = scroller.offset +
@@ -88,7 +87,7 @@ class CustomListView extends StatelessWidget {
     if (HORIZONTAL_BREAKPOINT <
         MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size.width.normalized) {
       scroller.addListener(
-        () {
+            () {
           var scrollDirection = scroller.position.userScrollDirection;
           if (!nowPlayingBar.maximized) {
             if (scrollDirection != ScrollDirection.forward) {
@@ -161,15 +160,15 @@ List<Widget> tileGridListWidgets({
   if (widgetCount % elementsPerRow != 0) {
     rowChildren = <Widget>[];
     for (int index = widgetCount - (widgetCount % elementsPerRow);
-        index < widgetCount;
-        index++) {
+    index < widgetCount;
+    index++) {
       rowChildren.add(
         builder(context, index),
       );
     }
     for (int index = 0;
-        index < elementsPerRow - (widgetCount % elementsPerRow);
-        index++) {
+    index < elementsPerRow - (widgetCount % elementsPerRow);
+    index++) {
       rowChildren.add(
         Container(
           height: tileHeight,
@@ -203,14 +202,14 @@ class SubHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return text != null
         ? Container(
-            alignment: Alignment.centerLeft,
-            height: 48,
-            padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
-            child: Text(
-              text!,
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-          )
+      alignment: Alignment.centerLeft,
+      height: 48,
+      padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
+      child: Text(
+        text!,
+        style: Theme.of(context).textTheme.subtitle1,
+      ),
+    )
         : Container();
   }
 }
@@ -274,39 +273,39 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
     return Consumer<CollectionRefreshController>(
       builder: (context, refresh, _) => refresh.progress == refresh.total
           ? FloatingActionButton(
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              child: TweenAnimationBuilder(
-                child: Icon(
-                  Icons.refresh,
-                  color: Colors.white,
-                ),
-                tween: this.tween,
-                duration: Duration(milliseconds: 800),
-                builder: (_, dynamic value, child) => Transform.rotate(
-                  alignment: Alignment.center,
-                  angle: value,
-                  child: child,
-                ),
-              ),
-              onPressed: () {
-                if (this.lock) return;
-                this.setState(() {
-                  this.lock = true;
-                });
-                this.tween = Tween<double>(begin: 0, end: this.turns);
-                Provider.of<Collection>(context, listen: false).refresh(
-                    onProgress: (progress, total, isCompleted) {
-                  Provider.of<CollectionRefreshController>(context,
-                          listen: false)
-                      .set(progress, total);
-                  if (isCompleted) {
-                    this.setState(() {
-                      this.lock = false;
-                    });
-                  }
-                });
-              },
-            )
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        child: TweenAnimationBuilder(
+          child: Icon(
+            Icons.refresh,
+            color: Colors.white,
+          ),
+          tween: this.tween,
+          duration: Duration(milliseconds: 800),
+          builder: (_, dynamic value, child) => Transform.rotate(
+            alignment: Alignment.center,
+            angle: value,
+            child: child,
+          ),
+        ),
+        onPressed: () {
+          if (this.lock) return;
+          this.setState(() {
+            this.lock = true;
+          });
+          this.tween = Tween<double>(begin: 0, end: this.turns);
+          Provider.of<Collection>(context, listen: false).refresh(
+              onProgress: (progress, total, isCompleted) {
+                Provider.of<CollectionRefreshController>(context,
+                    listen: false)
+                    .set(progress, total);
+                if (isCompleted) {
+                  this.setState(() {
+                    this.lock = false;
+                  });
+                }
+              });
+        },
+      )
           : Container(),
     );
   }
@@ -316,7 +315,7 @@ class FadeFutureBuilder extends StatefulWidget {
   final Future<Object> Function() future;
   final Widget Function(BuildContext context) initialWidgetBuilder;
   final Widget Function(BuildContext context, Object? object)
-      finalWidgetBuilder;
+  finalWidgetBuilder;
   final Widget Function(BuildContext context, Object object) errorWidgetBuilder;
   final Duration transitionDuration;
 
@@ -521,9 +520,9 @@ class ClosedTile extends StatelessWidget {
   final String? subtitle;
   const ClosedTile(
       {Key? key,
-      required this.open,
-      required this.title,
-      required this.subtitle})
+        required this.open,
+        required this.title,
+        required this.subtitle})
       : super(key: key);
 
   final Function open;
@@ -539,7 +538,7 @@ class ClosedTile extends StatelessWidget {
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(8.0),
         border:
-            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.12)),
+        Border.all(color: Theme.of(context).dividerColor.withOpacity(0.12)),
       ),
       child: ListTile(
         title: Text(
@@ -586,9 +585,9 @@ class ContextMenuButton<T> extends StatefulWidget {
     this.color,
     this.enableFeedback,
   })  : assert(
-          !(child != null && icon != null),
-          'You can only pass [child] or [icon], not both.',
-        ),
+  !(child != null && icon != null),
+  'You can only pass [child] or [icon], not both.',
+  ),
         super(key: key);
 
   final PopupMenuItemBuilder<T> itemBuilder;
@@ -630,7 +629,7 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
     final PopupMenuThemeData popupMenuTheme = PopupMenuTheme.of(context);
     final RenderBox button = context.findRenderObject()! as RenderBox;
     final RenderBox overlay =
-        Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
+    Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
         button.localToGlobal(widget.offset, ancestor: overlay),
@@ -689,7 +688,7 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
     if (widget.child != null)
       return Tooltip(
         message:
-            widget.tooltip ?? MaterialLocalizations.of(context).showMenuTooltip,
+        widget.tooltip ?? MaterialLocalizations.of(context).showMenuTooltip,
         child: InkWell(
           onTap: widget.enabled ? showButtonMenu : null,
           canRequestFocus: _canRequestFocus,
@@ -736,113 +735,113 @@ class WindowTitleBar extends StatelessWidget {
       );
     return Platform.isWindows
         ? Container(
-            width: MediaQuery.of(context).size.width.normalized,
-            height: 32.0,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.10)
-                : Colors.black.withOpacity(0.10),
-            child: MoveWindow(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 14.0,
-                  ),
-                  Text(
-                    'Harmonoid Music',
-                    style: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : Colors.black,
-                      fontSize: 12.0,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(),
-                  ),
-                  MinimizeWindowButton(
-                    colors: WindowButtonColors(
-                      iconNormal:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      iconMouseDown:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      iconMouseOver:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      normal: Colors.transparent,
-                      mouseOver:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black.withOpacity(0.04)
-                              : Colors.white.withOpacity(0.04),
-                      mouseDown:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black.withOpacity(0.08)
-                              : Colors.white.withOpacity(0.08),
-                    ),
-                  ),
-                  MaximizeWindowButton(
-                    colors: WindowButtonColors(
-                      iconNormal:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      iconMouseDown:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      iconMouseOver:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      normal: Colors.transparent,
-                      mouseOver:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black.withOpacity(0.04)
-                              : Colors.white.withOpacity(0.04),
-                      mouseDown:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black.withOpacity(0.08)
-                              : Colors.white.withOpacity(0.08),
-                    ),
-                  ),
-                  CloseWindowButton(
-                    onPressed: () {
-                      if (Platform.isWindows) player.dispose();
-                      appWindow.close();
-                    },
-                    colors: WindowButtonColors(
-                      iconNormal:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      iconMouseDown:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      iconMouseOver:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      normal: Colors.transparent,
-                      mouseOver:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black.withOpacity(0.04)
-                              : Colors.white.withOpacity(0.04),
-                      mouseDown:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black.withOpacity(0.08)
-                              : Colors.white.withOpacity(0.08),
-                    ),
-                  ),
-                ],
+      width: MediaQuery.of(context).size.width.normalized,
+      height: 32.0,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? Colors.white.withOpacity(0.10)
+          : Colors.black.withOpacity(0.10),
+      child: MoveWindow(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 14.0,
+            ),
+            Text(
+              'Harmonoid Music',
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+                fontSize: 12.0,
               ),
             ),
-          )
+            Expanded(
+              child: Container(),
+            ),
+            MinimizeWindowButton(
+              colors: WindowButtonColors(
+                iconNormal:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseDown:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseOver:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                normal: Colors.transparent,
+                mouseOver:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.04)
+                    : Colors.white.withOpacity(0.04),
+                mouseDown:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.08)
+                    : Colors.white.withOpacity(0.08),
+              ),
+            ),
+            MaximizeWindowButton(
+              colors: WindowButtonColors(
+                iconNormal:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseDown:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseOver:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                normal: Colors.transparent,
+                mouseOver:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.04)
+                    : Colors.white.withOpacity(0.04),
+                mouseDown:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.08)
+                    : Colors.white.withOpacity(0.08),
+              ),
+            ),
+            CloseWindowButton(
+              onPressed: () {
+                if (Platform.isWindows) player.dispose();
+                appWindow.close();
+              },
+              colors: WindowButtonColors(
+                iconNormal:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseDown:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                iconMouseOver:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                normal: Colors.transparent,
+                mouseOver:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.04)
+                    : Colors.white.withOpacity(0.04),
+                mouseDown:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.08)
+                    : Colors.white.withOpacity(0.08),
+              ),
+            ),
+          ],
+        ),
+      ),
+    )
         : Container();
   }
 }
@@ -867,7 +866,7 @@ class CollectionTrackContextMenu extends StatelessWidget {
                 builder: (subContext) => FractionallyScaledWidget(
                   child: AlertDialog(
                     backgroundColor:
-                        Theme.of(context).appBarTheme.backgroundColor,
+                    Theme.of(context).appBarTheme.backgroundColor,
                     title: Text(
                       language!
                           .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
@@ -901,7 +900,7 @@ class CollectionTrackContextMenu extends StatelessWidget {
               Share.shareFiles(
                 [track.filePath!],
                 subject:
-                    '${track.trackName} • ${track.albumName}. Shared using Harmonoid!',
+                '${track.trackName} • ${track.albumName}. Shared using Harmonoid!',
               );
               break;
             case 2:
@@ -910,7 +909,7 @@ class CollectionTrackContextMenu extends StatelessWidget {
                 builder: (subContext) => FractionallyScaledWidget(
                   child: AlertDialog(
                     backgroundColor:
-                        Theme.of(context).appBarTheme.backgroundColor,
+                    Theme.of(context).appBarTheme.backgroundColor,
                     contentPadding: EdgeInsets.zero,
                     actionsPadding: EdgeInsets.zero,
                     title: Text(
@@ -943,7 +942,7 @@ class CollectionTrackContextMenu extends StatelessWidget {
                                     collection
                                         .playlists[playlistIndex].playlistName!,
                                     style:
-                                        Theme.of(context).textTheme.headline2,
+                                    Theme.of(context).textTheme.headline2,
                                   ),
                                   leading: Icon(
                                     Icons.queue_music,
@@ -1030,6 +1029,6 @@ class CustomScrollBehavior extends ScrollBehavior {
 
 extension ScalingExtension on double {
   double get normalized {
-    return this * ((Hive.box('configuration').get('enable125Scaling') ?? defaultEnable125Scaling) ? 0.8 : 1.0);
+    return this * (configuration.enable125Scaling! ? 0.8 : 1.0);
   }
 }

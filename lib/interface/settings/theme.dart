@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/interface/changenotifiers.dart';
@@ -21,7 +20,7 @@ class ThemeSetting extends StatelessWidget {
                   language!.STRING_THEME_MODE_SYSTEM,
                   style: Theme.of(context).textTheme.headline4,
                 ),
-                groupValue: Hive.box('configuration').get('themeMode'),
+                groupValue: visuals.themeMode,
                 onChanged: (dynamic themeMode) => visuals.update(
                   themeMode: themeMode,
                   context: context,
@@ -33,7 +32,7 @@ class ThemeSetting extends StatelessWidget {
                   language!.STRING_THEME_MODE_LIGHT,
                   style: Theme.of(context).textTheme.headline4,
                 ),
-                groupValue: Hive.box('configuration').get('themeMode'),
+                groupValue: visuals.themeMode,
                 onChanged: (dynamic themeMode) => visuals.update(
                   themeMode: themeMode,
                   context: context,
@@ -45,7 +44,7 @@ class ThemeSetting extends StatelessWidget {
                   language!.STRING_THEME_MODE_DARK,
                   style: Theme.of(context).textTheme.headline4,
                 ),
-                groupValue: Hive.box('configuration').get('themeMode'),
+                groupValue: visuals.themeMode,
                 onChanged: (dynamic themeMode) => visuals.update(
                   themeMode: themeMode,
                   context: context,

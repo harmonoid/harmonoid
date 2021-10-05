@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/interface/changenotifiers.dart';
@@ -16,7 +15,7 @@ class Harmonoid extends StatelessWidget {
     return ChangeNotifierProvider<Visuals>(
       create: (context) => Visuals(
         accent: configuration.accent,
-        themeMode: Hive.box('configuration').get('themeMode') ?? defaultThemeMode,
+        themeMode: configuration.themeMode,
         context: context,
       ),
       builder: (context, _) => Consumer<Visuals>(
@@ -24,7 +23,7 @@ class Harmonoid extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: visuals.theme,
           darkTheme: visuals.darkTheme,
-          themeMode: ThemeMode.values[Hive.box('configuration').get('themeMode') ?? defaultThemeMode],
+          themeMode: ThemeMode.values[visuals.themeMode!],
           navigatorKey: key,
           builder: (context, child) {
             if (Platform.isAndroid)

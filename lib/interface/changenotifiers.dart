@@ -22,7 +22,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
-import 'package:hive/hive.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -53,7 +52,7 @@ class NowPlayingController extends ChangeNotifier {
 
   set index(int? index) {
     this._index = index;
-    () async {
+        () async {
       if (this._index != null &&
           (this._index ?? -1) >= 0 &&
           (this.index ?? double.infinity) < this.tracks.length) {
@@ -61,7 +60,7 @@ class NowPlayingController extends ChangeNotifier {
           this._tracks[this._index!].networkAlbumArt == null
               ? FileImage(this._tracks[this._index!].albumArt)
               : NetworkImage(this._tracks[this._index!].networkAlbumArt!)
-                  as ImageProvider,
+          as ImageProvider,
         );
         this._dominantColor = palette.dominantColor?.color;
         this.notifyListeners();
@@ -139,7 +138,7 @@ class NowPlayingController extends ChangeNotifier {
   bool _isShuffling = false;
   bool _isRepeating = false;
   Color? _dominantColor;
-  
+
   @override
   // ignore: must_call_super
   void dispose() {}
@@ -190,7 +189,7 @@ class CollectionRefreshController extends ChangeNotifier {
       collection.redraw();
       this.timer = Timer.periodic(
         Duration(seconds: 1),
-        (_) {
+            (_) {
           this.notifyListeners();
           collection.redraw();
         },
@@ -221,17 +220,17 @@ class Visuals extends ChangeNotifier {
 
   void update(
       {Accent? accent,
-      int? themeMode,
-      TargetPlatform? platform,
-      BuildContext? context}) {
+        int? themeMode,
+        TargetPlatform? platform,
+        BuildContext? context}) {
     this.accent = accent ?? this.accent;
     this.themeMode = themeMode ?? this.themeMode;
     if (Platform.isWindows) {
       Acrylic.setEffect(
-        effect: (Hive.box('configuration').get('acrylicEnabled') ?? defaultAcrylicEnabled)
+        effect: configuration.acrylicEnabled!
             ? AcrylicEffect.acrylic
             : AcrylicEffect.disabled,
-        gradientColor: (Hive.box('configuration').get('themeMode') ?? defaultThemeMode) == ThemeMode.light
+        gradientColor: ThemeMode.values[this.themeMode!] == ThemeMode.light
             ? Color(0xCCCCCCCC)
             : Color(0xCC222222),
       );
@@ -250,8 +249,8 @@ class Visuals extends ChangeNotifier {
     this.notifyListeners();
     configuration.save(
       accent: this.accent,
+      themeMode: this.themeMode,
     );
-    Hive.box('configuration').put('themeMode', this.themeMode);
   }
 
   void updateAppBar(BuildContext context) {
@@ -271,14 +270,14 @@ class Visuals extends ChangeNotifier {
   }
 
   ThemeData get theme => Utils.getTheme(
-        accentColor: this.accent!.light,
-        themeMode: ThemeMode.light,
-      );
+    accentColor: this.accent!.light,
+    themeMode: ThemeMode.light,
+  );
 
   ThemeData get darkTheme => Utils.getTheme(
-        accentColor: this.accent!.dark,
-        themeMode: ThemeMode.dark,
-      );
+    accentColor: this.accent!.dark,
+    themeMode: ThemeMode.dark,
+  );
 }
 
 class YouTubeStateController extends ChangeNotifier {
@@ -307,7 +306,7 @@ class YouTubeStateController extends ChangeNotifier {
 }
 
 final FlutterLocalNotificationsPlugin notification =
-    FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin();
 final InitializationSettings notificationSettings = InitializationSettings(
   android: AndroidInitializationSettings('mipmap/ic_launcher'),
 );
@@ -317,10 +316,10 @@ class NotificationLyricsController extends ChangeNotifier {
 
   NotificationLyricsController({required this.enabled});
 
-  void update({required bool enabled}) async {
+  void update({required bool enabled}) {
     this.enabled = enabled;
     this.notifyListeners();
-    await Hive.box('configuration').put('notificationLyrics', enabled);
+    configuration.save(notificationLyrics: enabled);
   }
 }
 

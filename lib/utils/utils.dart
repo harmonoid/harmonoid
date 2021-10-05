@@ -26,7 +26,6 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
-import 'package:hive/hive.dart';
 
 abstract class Utils {
   static Future<void> handleYouTubeFailure() async {
@@ -140,34 +139,34 @@ abstract class Utils {
       ),
       button: Platform.isLinux
           ? TextStyle(
-              color: accentColor,
-              fontSize: 14.0,
-              fontWeight: FontWeights.thick(isLight),
-            )
+        color: accentColor,
+        fontSize: 14.0,
+        fontWeight: FontWeights.thick(isLight),
+      )
           : null,
     );
     return ThemeData(
       chipTheme: Platform.isLinux
           ? ChipThemeData(
-              backgroundColor: accentColor,
-              disabledColor: accentColor.withOpacity(0.2),
-              selectedColor: accentColor,
-              secondarySelectedColor: accentColor,
-              padding: EdgeInsets.zero,
-              labelStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 14.0,
-                fontFamily: Platform.isLinux ? 'Roboto' : null,
-                fontWeight: FontWeights.thin(isLight),
-              ),
-              secondaryLabelStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 14.0,
-                fontFamily: Platform.isLinux ? 'Roboto' : null,
-                fontWeight: FontWeights.thin(isLight),
-              ),
-              brightness: Brightness.dark,
-            )
+        backgroundColor: accentColor,
+        disabledColor: accentColor.withOpacity(0.2),
+        selectedColor: accentColor,
+        secondarySelectedColor: accentColor,
+        padding: EdgeInsets.zero,
+        labelStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 14.0,
+          fontFamily: Platform.isLinux ? 'Roboto' : null,
+          fontWeight: FontWeights.thin(isLight),
+        ),
+        secondaryLabelStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 14.0,
+          fontFamily: Platform.isLinux ? 'Roboto' : null,
+          fontWeight: FontWeights.thin(isLight),
+        ),
+        brightness: Brightness.dark,
+      )
           : null,
       fontFamily: Platform.isLinux ? 'Roboto' : null,
       textSelectionTheme: TextSelectionThemeData(
@@ -192,7 +191,7 @@ abstract class Utils {
       ),
       primaryColor: accentColor,
       primaryColorDark: accentColor,
-      scaffoldBackgroundColor: (Hive.box('configuration').get('acrylicEnabled') ?? defaultAcrylicEnabled)
+      scaffoldBackgroundColor: configuration.acrylicEnabled!
           ? Colors.transparent
           : (isLight ? Colors.white : Color(0xFF121212)),
       toggleableActiveColor: accentColor,
@@ -205,7 +204,7 @@ abstract class Utils {
       tabBarTheme: TabBarTheme(
         labelColor: accentColor,
         unselectedLabelColor:
-            isLight ? Colors.black54 : Colors.white.withOpacity(0.67),
+        isLight ? Colors.black54 : Colors.white.withOpacity(0.67),
       ),
       popupMenuTheme: PopupMenuThemeData(
         elevation: 2.0,
@@ -214,7 +213,7 @@ abstract class Utils {
       appBarTheme: AppBarTheme(
         color: isLight ? Colors.white : Color(0xFF292929),
         systemOverlayStyle:
-            isLight ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+        isLight ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
         elevation: 4.0,
         iconTheme: IconThemeData(
           color: isLight ? Colors.black54 : Colors.white.withOpacity(0.87),

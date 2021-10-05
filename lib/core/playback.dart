@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:assets_audio_player/assets_audio_player.dart'
-    as AssetsAudioPlayer;
+as AssetsAudioPlayer;
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:harmonoid/core/discordrpc.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
-import 'package:hive/hive.dart';
 import 'package:libwinmedia/libwinmedia.dart' as LIBWINMEDIA;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -21,7 +20,6 @@ import 'package:harmonoid/constants/language.dart';
 /// For handling different platform specific calls, add methods inside the [Playback]
 /// class below & then map within the UI code.
 ///
-
 final LIBWINMEDIA.Player player = LIBWINMEDIA.Player(id: 0)
   ..streams.index.listen((index) {
     onTrackChange();
@@ -31,7 +29,7 @@ final LIBWINMEDIA.Player player = LIBWINMEDIA.Player(id: 0)
     nowPlaying.tracks = medias
         .map(
           (media) => Track.fromMap(media.extras),
-        )
+    )
         .toList();
   })
   ..streams.isPlaying.listen((isPlaying) {
@@ -58,134 +56,134 @@ final LIBWINMEDIA.Player player = LIBWINMEDIA.Player(id: 0)
   ..volume = 1.0;
 
 List<AssetsAudioPlayer.Audio> assetsAudioPlayerBuffer =
-    <AssetsAudioPlayer.Audio>[];
+<AssetsAudioPlayer.Audio>[];
 List<AssetsAudioPlayer.Audio> assetsAudioPlayerCurrent =
-    <AssetsAudioPlayer.Audio>[];
+<AssetsAudioPlayer.Audio>[];
 int assetsAudioPlayerIndex = 0;
 
 final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
-    AssetsAudioPlayer.AssetsAudioPlayer.withId('harmonoid')
-      ..current.listen((AssetsAudioPlayer.Playing? current) async {
-        if (current != null) {
-          nowPlayingBar.height = 72.0;
-          assetsAudioPlayerCurrent = current.playlist.audios;
-          assetsAudioPlayerIndex = current.index;
-          nowPlaying.tracks = current.playlist.audios
-              .map(
-                (audio) => Track.fromMap(audio.metas.extra!),
-              )
-              .toList();
-          nowPlaying.index = current.index;
-          nowPlaying.duration = current.audio.duration;
-          try {
-            await lyrics.fromName(current.audio.audio.metas.title! +
-                ' ' +
-                current.audio.audio.metas.artist!);
+AssetsAudioPlayer.AssetsAudioPlayer.withId('harmonoid')
+  ..current.listen((AssetsAudioPlayer.Playing? current) async {
+    if (current != null) {
+      nowPlayingBar.height = 72.0;
+      assetsAudioPlayerCurrent = current.playlist.audios;
+      assetsAudioPlayerIndex = current.index;
+      nowPlaying.tracks = current.playlist.audios
+          .map(
+            (audio) => Track.fromMap(audio.metas.extra!),
+      )
+          .toList();
+      nowPlaying.index = current.index;
+      nowPlaying.duration = current.audio.duration;
+      try {
+        await lyrics.fromName(current.audio.audio.metas.title! +
+            ' ' +
+            current.audio.audio.metas.artist!);
+        const AndroidNotificationDetails settings =
+        AndroidNotificationDetails(
+          'com.alexmercerind.harmonoid',
+          'Harmonoid',
+          '',
+          icon: 'mipmap/ic_launcher',
+          importance: Importance.max,
+          priority: Priority.max,
+          showWhen: false,
+          onlyAlertOnce: true,
+          playSound: false,
+          enableVibration: false,
+          showProgress: true,
+          indeterminate: true,
+        );
+        await notification.show(
+          69420,
+          lyrics.query,
+          language!.STRING_LYRICS_RETRIEVING,
+          NotificationDetails(android: settings),
+        );
+      } catch (exception) {
+        Future.delayed(
+          Duration(seconds: 2),
+              () => notification.cancel(
+            69420,
+          ),
+        );
+      }
+    }
+  })
+  ..currentPosition.listen((Duration? position) async {
+    if (position != null) {
+      nowPlaying.position = position;
+    }
+    if (lyrics.current.isNotEmpty &&
+        position != null &&
+        configuration.notificationLyrics!) {
+      if (Platform.isAndroid) {
+        for (Lyric lyric in lyrics.current)
+          if (lyric.time ~/ 1000 == position.inSeconds) {
             const AndroidNotificationDetails settings =
-                AndroidNotificationDetails(
+            AndroidNotificationDetails(
               'com.alexmercerind.harmonoid',
               'Harmonoid',
               '',
               icon: 'mipmap/ic_launcher',
-              importance: Importance.max,
-              priority: Priority.max,
+              importance: Importance.high,
+              priority: Priority.high,
               showWhen: false,
               onlyAlertOnce: true,
               playSound: false,
               enableVibration: false,
-              showProgress: true,
-              indeterminate: true,
             );
             await notification.show(
               69420,
               lyrics.query,
-              language!.STRING_LYRICS_RETRIEVING,
+              lyric.words,
               NotificationDetails(android: settings),
             );
-          } catch (exception) {
-            Future.delayed(
-              Duration(seconds: 2),
-              () => notification.cancel(
-                69420,
-              ),
-            );
+            break;
           }
-        }
-      })
-      ..currentPosition.listen((Duration? position) async {
-        if (position != null) {
-          nowPlaying.position = position;
-        }
-        if (lyrics.current.isNotEmpty &&
-            position != null &&
-            (Hive.box('configuration').get('notificationLyrics') ?? defaultNotificationLyrics)) {
-          if (Platform.isAndroid) {
-            for (Lyric lyric in lyrics.current)
-              if (lyric.time ~/ 1000 == position.inSeconds) {
-                const AndroidNotificationDetails settings =
-                    AndroidNotificationDetails(
-                  'com.alexmercerind.harmonoid',
-                  'Harmonoid',
-                  '',
-                  icon: 'mipmap/ic_launcher',
-                  importance: Importance.high,
-                  priority: Priority.high,
-                  showWhen: false,
-                  onlyAlertOnce: true,
-                  playSound: false,
-                  enableVibration: false,
-                );
-                await notification.show(
-                  69420,
-                  lyrics.query,
-                  lyric.words,
-                  NotificationDetails(android: settings),
-                );
-                break;
-              }
-          }
-        }
-      })
-      ..isPlaying.listen((isPlaying) {
-        nowPlaying.isPlaying = isPlaying;
-      })
-      ..isBuffering.listen((isBuffering) {
-        nowPlaying.isBuffering = isBuffering;
-      })
-      ..playlistAudioFinished.listen((playing) async {
-        if (assetsAudioPlayerBuffer.isNotEmpty) {
-          for (var key
-              in AssetsAudioPlayer.AssetsAudioPlayer.allPlayers().keys) {
-            await AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]
-                ?.pause();
-            if (AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]?.id !=
-                'harmonoid')
-              await AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]
-                  ?.dispose();
-          }
-          List<AssetsAudioPlayer.Audio> audios = [
-            ...playing.playlist.audios,
-            ...assetsAudioPlayerBuffer,
-          ];
-          assetsAudioPlayerBuffer.clear();
-          assetsAudioPlayerIndex = playing.index + 1;
-          await assetsAudioPlayer.open(
-            AssetsAudioPlayer.Playlist(
-              audios: audios,
-              startIndex: assetsAudioPlayerIndex,
-            ),
-            showNotification: true,
-            loopMode: AssetsAudioPlayer.LoopMode.none,
-            notificationSettings: AssetsAudioPlayer.NotificationSettings(
-              playPauseEnabled: true,
-              nextEnabled: true,
-              prevEnabled: true,
-              seekBarEnabled: true,
-              stopEnabled: false,
-            ),
-          );
-        }
-      });
+      }
+    }
+  })
+  ..isPlaying.listen((isPlaying) {
+    nowPlaying.isPlaying = isPlaying;
+  })
+  ..isBuffering.listen((isBuffering) {
+    nowPlaying.isBuffering = isBuffering;
+  })
+  ..playlistAudioFinished.listen((playing) async {
+    if (assetsAudioPlayerBuffer.isNotEmpty) {
+      for (var key
+      in AssetsAudioPlayer.AssetsAudioPlayer.allPlayers().keys) {
+        await AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]
+            ?.pause();
+        if (AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]?.id !=
+            'harmonoid')
+          await AssetsAudioPlayer.AssetsAudioPlayer.allPlayers()[key]
+              ?.dispose();
+      }
+      List<AssetsAudioPlayer.Audio> audios = [
+        ...playing.playlist.audios,
+        ...assetsAudioPlayerBuffer,
+      ];
+      assetsAudioPlayerBuffer.clear();
+      assetsAudioPlayerIndex = playing.index + 1;
+      await assetsAudioPlayer.open(
+        AssetsAudioPlayer.Playlist(
+          audios: audios,
+          startIndex: assetsAudioPlayerIndex,
+        ),
+        showNotification: true,
+        loopMode: AssetsAudioPlayer.LoopMode.none,
+        notificationSettings: AssetsAudioPlayer.NotificationSettings(
+          playPauseEnabled: true,
+          nextEnabled: true,
+          prevEnabled: true,
+          seekBarEnabled: true,
+          stopEnabled: false,
+        ),
+      );
+    }
+  });
 
 double volumeBeforeMute = 1.0;
 
@@ -205,33 +203,33 @@ abstract class Playback {
       assetsAudioPlayerBuffer = tracks
           .map(
             (track) => track.filePath!.startsWith('http')
-                ? AssetsAudioPlayer.Audio.network(
-                    track.filePath!,
-                    metas: AssetsAudioPlayer.Metas(
-                      id: track.trackId,
-                      image: AssetsAudioPlayer.MetasImage.network(
-                        track.networkAlbumArt!,
-                      ),
-                      title: track.trackName!,
-                      album: track.albumName!,
-                      artist: track.trackArtistNames!.join(', '),
-                      extra: track.toMap(),
-                    ),
-                  )
-                : AssetsAudioPlayer.Audio.file(
-                    track.filePath!,
-                    metas: AssetsAudioPlayer.Metas(
-                      id: track.trackId,
-                      image: AssetsAudioPlayer.MetasImage.file(
-                        track.albumArt.path,
-                      ),
-                      title: track.trackName!,
-                      album: track.albumName!,
-                      artist: track.trackArtistNames!.join(', '),
-                      extra: track.toMap(),
-                    ),
-                  ),
-          )
+            ? AssetsAudioPlayer.Audio.network(
+          track.filePath!,
+          metas: AssetsAudioPlayer.Metas(
+            id: track.trackId,
+            image: AssetsAudioPlayer.MetasImage.network(
+              track.networkAlbumArt!,
+            ),
+            title: track.trackName!,
+            album: track.albumName!,
+            artist: track.trackArtistNames!.join(', '),
+            extra: track.toMap(),
+          ),
+        )
+            : AssetsAudioPlayer.Audio.file(
+          track.filePath!,
+          metas: AssetsAudioPlayer.Metas(
+            id: track.trackId,
+            image: AssetsAudioPlayer.MetasImage.file(
+              track.albumArt.path,
+            ),
+            title: track.trackName!,
+            album: track.albumName!,
+            artist: track.trackArtistNames!.join(', '),
+            extra: track.toMap(),
+          ),
+        ),
+      )
           .toList()
           .cast();
     }
@@ -442,10 +440,10 @@ abstract class Playback {
         _tracks
             .map(
               (track) => LIBWINMEDIA.Media(
-                uri: track.filePath!,
-                extras: track.toMap(),
-              ),
-            )
+            uri: track.filePath!,
+            extras: track.toMap(),
+          ),
+        )
             .toList(),
       );
       if (index != 0) await Future.delayed(Duration(milliseconds: 100));
@@ -460,33 +458,33 @@ abstract class Playback {
           audios: _tracks
               .map(
                 (track) => track.filePath!.startsWith('http')
-                    ? AssetsAudioPlayer.Audio.network(
-                        track.filePath!,
-                        metas: AssetsAudioPlayer.Metas(
-                          id: track.trackId,
-                          image: AssetsAudioPlayer.MetasImage.network(
-                            track.networkAlbumArt!,
-                          ),
-                          title: track.trackName!,
-                          album: track.albumName!,
-                          artist: track.trackArtistNames!.join(', '),
-                          extra: track.toMap(),
-                        ),
-                      )
-                    : AssetsAudioPlayer.Audio.file(
-                        track.filePath!,
-                        metas: AssetsAudioPlayer.Metas(
-                          id: track.trackId,
-                          image: AssetsAudioPlayer.MetasImage.file(
-                            track.albumArt.path,
-                          ),
-                          title: track.trackName!,
-                          album: track.albumName!,
-                          artist: track.trackArtistNames!.join(', '),
-                          extra: track.toMap(),
-                        ),
-                      ),
-              )
+                ? AssetsAudioPlayer.Audio.network(
+              track.filePath!,
+              metas: AssetsAudioPlayer.Metas(
+                id: track.trackId,
+                image: AssetsAudioPlayer.MetasImage.network(
+                  track.networkAlbumArt!,
+                ),
+                title: track.trackName!,
+                album: track.albumName!,
+                artist: track.trackArtistNames!.join(', '),
+                extra: track.toMap(),
+              ),
+            )
+                : AssetsAudioPlayer.Audio.file(
+              track.filePath!,
+              metas: AssetsAudioPlayer.Metas(
+                id: track.trackId,
+                image: AssetsAudioPlayer.MetasImage.file(
+                  track.albumArt.path,
+                ),
+                title: track.trackName!,
+                album: track.albumName!,
+                artist: track.trackArtistNames!.join(', '),
+                extra: track.toMap(),
+              ),
+            ),
+          )
               .toList()
               .cast(),
           startIndex: index,
