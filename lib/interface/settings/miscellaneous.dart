@@ -20,6 +20,7 @@
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/interface/settings/settings.dart';
@@ -42,11 +43,9 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               language!.STRING_ENABLE_ACRYLIC_BLUR,
               style: Theme.of(context).textTheme.headline4,
             ),
-            value: configuration.acrylicEnabled!,
+            value: (Hive.box('configuration').get('acrylicEnabled') ?? defaultAcrylicEnabled),
             onChanged: (bool enabled) async {
-              await configuration.save(
-                acrylicEnabled: enabled,
-              );
+              await Hive.box('configuration').put('acrylicEnabled', enabled);
               // Causes scaffoldBackgroundColor to update.
               Provider.of<Visuals>(context, listen: false).update();
             },
@@ -56,11 +55,9 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               language!.STRING_NOTIFICATION_LYRICS_TITLE,
               style: Theme.of(context).textTheme.headline4,
             ),
-            value: configuration.notificationLyrics!,
+            value: Hive.box('configuration').get('notificationLyrics') ?? defaultNotificationLyrics,
             onChanged: (bool enabled) async {
-              await configuration.save(
-                notificationLyrics: enabled,
-              );
+              await Hive.box('configuration').put('notificationLyrics', enabled);
               this.setState(() {});
             },
           ),
@@ -69,11 +66,9 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
               language!.STRING_ENABLE_125_SCALING,
               style: Theme.of(context).textTheme.headline4,
             ),
-            value: configuration.enable125Scaling!,
+            value: Hive.box('configuration').get('enable125Scaling') ?? defaultEnable125Scaling,
             onChanged: (bool enabled) async {
-              await configuration.save(
-                enable125Scaling: enabled,
-              );
+              await Hive.box('configuration').put('enable125Scaling', enabled);
               Provider.of<Visuals>(context, listen: false).update();
             },
           ),

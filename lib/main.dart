@@ -20,6 +20,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:libwinmedia/libwinmedia.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -41,16 +42,18 @@ const String AUTHOR = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String LICENSE = 'GPL-3.0';
 
 Future<void> main(List<String> args) async {
+  await Hive.initFlutter();
+  var configurationBox = await Hive.openBox('configuration');
   try {
     if (Platform.isWindows) {
       WidgetsFlutterBinding.ensureInitialized();
       await Configuration.initialize();
       await Acrylic.initialize();
       await Acrylic.setEffect(
-        effect: configuration.acrylicEnabled!
+        effect: (configurationBox.get('acrylicEnabled') ?? defaultAcrylicEnabled)
             ? AcrylicEffect.acrylic
             : AcrylicEffect.solid,
-        gradientColor: configuration.themeMode! == ThemeMode.light
+        gradientColor: ThemeMode.values[(configurationBox.get('themeMode') ?? defaultThemeMode)] == ThemeMode.light
             ? Color(0xCCCCCCCC)
             : Color(0xCC222222),
       );
@@ -76,8 +79,7 @@ Future<void> main(List<String> args) async {
     if (Platform.isAndroid) {
       WidgetsFlutterBinding.ensureInitialized();
       if (Platform.isAndroid) if (await Permission.storage.isDenied) {
-        PermissionStatus storagePermissionState =
-            await Permission.storage.request();
+        PermissionStatus storagePermissionState = await Permission.storage.request();
         if (!storagePermissionState.isGranted) {
           SystemNavigator.pop(
             animated: true,
@@ -92,7 +94,7 @@ Future<void> main(List<String> args) async {
       cacheDirectory: configuration.cacheDirectory!,
       collectionSortType: configuration.collectionSortType!,
     );
-    await collection.refresh(onProgress: (progress, total, _) {
+    collection.refresh(onProgress: (progress, total, _) {
       collectionRefresh.set(progress, total);
     });
     await Language.initialize(

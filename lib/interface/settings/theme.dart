@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/interface/changenotifiers.dart';
@@ -15,36 +16,36 @@ class ThemeSetting extends StatelessWidget {
           builder: (context, visuals, _) => Column(
             children: [
               RadioListTile(
-                value: ThemeMode.system,
+                value: 0,
                 title: Text(
                   language!.STRING_THEME_MODE_SYSTEM,
                   style: Theme.of(context).textTheme.headline4,
                 ),
-                groupValue: visuals.themeMode,
+                groupValue: Hive.box('configuration').get('themeMode'),
                 onChanged: (dynamic themeMode) => visuals.update(
                   themeMode: themeMode,
                   context: context,
                 ),
               ),
               RadioListTile(
-                value: ThemeMode.light,
+                value: 1,
                 title: Text(
                   language!.STRING_THEME_MODE_LIGHT,
                   style: Theme.of(context).textTheme.headline4,
                 ),
-                groupValue: visuals.themeMode,
+                groupValue: Hive.box('configuration').get('themeMode'),
                 onChanged: (dynamic themeMode) => visuals.update(
                   themeMode: themeMode,
                   context: context,
                 ),
               ),
               RadioListTile(
-                value: ThemeMode.dark,
+                value: 2,
                 title: Text(
                   language!.STRING_THEME_MODE_DARK,
                   style: Theme.of(context).textTheme.headline4,
                 ),
-                groupValue: visuals.themeMode,
+                groupValue: Hive.box('configuration').get('themeMode'),
                 onChanged: (dynamic themeMode) => visuals.update(
                   themeMode: themeMode,
                   context: context,

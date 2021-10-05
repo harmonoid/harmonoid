@@ -21,6 +21,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -42,7 +43,7 @@ class FractionallyScaledWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (configuration.enable125Scaling!)
+    if (Hive.box('configuration').get('enable125Scaling') ?? defaultEnable125Scaling)
       return FractionallySizedBox(
         heightFactor: 0.8,
         widthFactor: 0.8,
@@ -1029,6 +1030,6 @@ class CustomScrollBehavior extends ScrollBehavior {
 
 extension ScalingExtension on double {
   double get normalized {
-    return this * (configuration.enable125Scaling! ? 0.8 : 1.0);
+    return this * ((Hive.box('configuration').get('enable125Scaling') ?? defaultEnable125Scaling) ? 0.8 : 1.0);
   }
 }

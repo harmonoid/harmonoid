@@ -5,6 +5,7 @@ import 'package:assets_audio_player/assets_audio_player.dart'
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:harmonoid/core/discordrpc.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:hive/hive.dart';
 import 'package:libwinmedia/libwinmedia.dart' as LIBWINMEDIA;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -117,7 +118,7 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
         }
         if (lyrics.current.isNotEmpty &&
             position != null &&
-            configuration.notificationLyrics!) {
+            (Hive.box('configuration').get('notificationLyrics') ?? defaultNotificationLyrics)) {
           if (Platform.isAndroid) {
             for (Lyric lyric in lyrics.current)
               if (lyric.time ~/ 1000 == position.inSeconds) {

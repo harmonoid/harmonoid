@@ -22,6 +22,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:hive/hive.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -212,7 +213,7 @@ class CollectionRefreshController extends ChangeNotifier {
 
 class Visuals extends ChangeNotifier {
   Accent? accent;
-  ThemeMode? themeMode;
+  int? themeMode;
   BuildContext? context;
 
   Visuals(
@@ -220,17 +221,17 @@ class Visuals extends ChangeNotifier {
 
   void update(
       {Accent? accent,
-      ThemeMode? themeMode,
+      int? themeMode,
       TargetPlatform? platform,
       BuildContext? context}) {
     this.accent = accent ?? this.accent;
     this.themeMode = themeMode ?? this.themeMode;
     if (Platform.isWindows) {
       Acrylic.setEffect(
-        effect: configuration.acrylicEnabled!
+        effect: (Hive.box('configuration').get('acrylicEnabled') ?? defaultAcrylicEnabled)
             ? AcrylicEffect.acrylic
             : AcrylicEffect.disabled,
-        gradientColor: this.themeMode == ThemeMode.light
+        gradientColor: (Hive.box('configuration').get('themeMode') ?? defaultThemeMode) == ThemeMode.light
             ? Color(0xCCCCCCCC)
             : Color(0xCC222222),
       );
@@ -249,8 +250,8 @@ class Visuals extends ChangeNotifier {
     this.notifyListeners();
     configuration.save(
       accent: this.accent,
-      themeMode: this.themeMode,
     );
+    Hive.box('configuration').put('themeMode', this.themeMode);
   }
 
   void updateAppBar(BuildContext context) {
@@ -316,10 +317,10 @@ class NotificationLyricsController extends ChangeNotifier {
 
   NotificationLyricsController({required this.enabled});
 
-  void update({required bool enabled}) {
+  void update({required bool enabled}) async {
     this.enabled = enabled;
     this.notifyListeners();
-    configuration.save(notificationLyrics: enabled);
+    await Hive.box('configuration').put('notificationLyrics', enabled);
   }
 }
 

@@ -17,12 +17,10 @@
  *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:palette_generator/palette_generator.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/lyrics.dart';

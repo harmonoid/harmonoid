@@ -26,6 +26,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
+import 'package:hive/hive.dart';
 
 abstract class Utils {
   static Future<void> handleYouTubeFailure() async {
@@ -191,7 +192,7 @@ abstract class Utils {
       ),
       primaryColor: accentColor,
       primaryColorDark: accentColor,
-      scaffoldBackgroundColor: configuration.acrylicEnabled!
+      scaffoldBackgroundColor: (Hive.box('configuration').get('acrylicEnabled') ?? defaultAcrylicEnabled)
           ? Colors.transparent
           : (isLight ? Colors.white : Color(0xFF121212)),
       toggleableActiveColor: accentColor,

@@ -78,7 +78,7 @@ class Collection extends ChangeNotifier {
       await File(
         path.join(cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG'),
       ).writeAsBytes(
-          (await rootBundle.load('assets/images/collection-album.jpg'))
+          (await rootBundle.load('assets/images/default_album_art.jpg'))
               .buffer
               .asUint8List());
     }
@@ -112,7 +112,7 @@ class Collection extends ChangeNotifier {
       await File(
         path.join(cacheDirectory.path, 'albumArts', 'defaultAlbumArt' + '.PNG'),
       ).writeAsBytes(
-          (await rootBundle.load('assets/images/collection-album.jpg'))
+          (await rootBundle.load('assets/images/default_album_art.jpg'))
               .buffer
               .asUint8List());
     }

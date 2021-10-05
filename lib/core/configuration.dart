@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:convert' as convert;
-import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path;
 
@@ -16,11 +15,7 @@ abstract class ConfigurationKeys {
   Directory? cacheDirectory;
   LanguageRegion? languageRegion;
   Accent? accent;
-  ThemeMode? themeMode;
   CollectionSort? collectionSortType;
-  bool? automaticAccent;
-  bool? notificationLyrics;
-  bool? acrylicEnabled;
   List<String>? collectionSearchRecent;
   List<String>? discoverSearchRecent;
   List<String>? discoverRecent;
@@ -37,11 +32,7 @@ Map<String, dynamic> DEFAULT_CONFIGURATION = {
   ],
   'languageRegion': 0,
   'accent': 0,
-  'themeMode': 2,
   'collectionSortType': 0,
-  'automaticAccent': false,
-  'notificationLyrics': true,
-  'acrylicEnabled': false,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
   'discoverRecent': ['XfEMj-z3TtA'],
@@ -91,12 +82,8 @@ class Configuration extends ConfigurationKeys {
     List<Directory>? collectionDirectories,
     LanguageRegion? languageRegion,
     Accent? accent,
-    ThemeMode? themeMode,
     bool? showOutOfBoxExperience,
     CollectionSort? collectionSortType,
-    bool? automaticAccent,
-    bool? notificationLyrics,
-    bool? acrylicEnabled,
     List<String>? collectionSearchRecent,
     List<String>? discoverSearchRecent,
     List<String>? discoverRecent,
@@ -106,9 +93,6 @@ class Configuration extends ConfigurationKeys {
     }
     if (languageRegion != null) {
       this.languageRegion = languageRegion;
-    }
-    if (themeMode != null) {
-      this.themeMode = themeMode;
     }
     if (accent != null) {
       this.accent = accent;
@@ -125,15 +109,6 @@ class Configuration extends ConfigurationKeys {
     if (discoverRecent != null) {
       this.discoverRecent = discoverRecent;
     }
-    if (automaticAccent != null) {
-      this.automaticAccent = automaticAccent;
-    }
-    if (notificationLyrics != null) {
-      this.notificationLyrics = notificationLyrics;
-    }
-    if (acrylicEnabled != null) {
-      this.acrylicEnabled = acrylicEnabled;
-    }
     await configuration.configurationFile
         .writeAsString(convert.JsonEncoder.withIndent('    ').convert({
       'collectionDirectories': this
@@ -143,11 +118,7 @@ class Configuration extends ConfigurationKeys {
           .cast<String>(),
       'languageRegion': this.languageRegion!.index,
       'accent': accents.indexOf(this.accent),
-      'themeMode': this.themeMode!.index,
       'collectionSortType': this.collectionSortType!.index,
-      'automaticAccent': this.automaticAccent,
-      'notificationLyrics': this.notificationLyrics,
-      'acrylicEnabled': this.acrylicEnabled,
       'collectionSearchRecent': this.collectionSearchRecent,
       'discoverSearchRecent': this.discoverSearchRecent,
       'discoverRecent': this.discoverRecent,
@@ -155,8 +126,7 @@ class Configuration extends ConfigurationKeys {
   }
 
   Future<dynamic> read() async {
-    Map<String, dynamic> currentConfiguration =
-        convert.jsonDecode(await this.configurationFile.readAsString());
+    Map<String, dynamic> currentConfiguration = convert.jsonDecode(await this.configurationFile.readAsString());
     DEFAULT_CONFIGURATION.keys.forEach((String key) {
       if (!currentConfiguration.containsKey(key)) {
         currentConfiguration[key] = DEFAULT_CONFIGURATION[key];
@@ -166,19 +136,19 @@ class Configuration extends ConfigurationKeys {
         .map((directory) => Directory(directory))
         .toList()
         .cast<Directory>();
-    this.languageRegion =
-        LanguageRegion.values[currentConfiguration['languageRegion']];
+    this.languageRegion = LanguageRegion.values[currentConfiguration['languageRegion']];
     this.accent = accents[currentConfiguration['accent']];
-    this.themeMode = ThemeMode.values[currentConfiguration['themeMode']];
-    this.collectionSortType =
-        CollectionSort.values[currentConfiguration['collectionSortType']];
-    this.automaticAccent = currentConfiguration['automaticAccent'];
-    this.notificationLyrics = currentConfiguration['notificationLyrics'];
-    this.acrylicEnabled = currentConfiguration['acrylicEnabled'];
-    this.collectionSearchRecent =
-        currentConfiguration['collectionSearchRecent'].cast<String>();
-    this.discoverSearchRecent =
-        currentConfiguration['discoverSearchRecent'].cast<String>();
+    this.collectionSortType = CollectionSort.values[currentConfiguration['collectionSortType']];
+    this.collectionSearchRecent = currentConfiguration['collectionSearchRecent'].cast<String>();
+    this.discoverSearchRecent = currentConfiguration['discoverSearchRecent'].cast<String>();
     this.discoverRecent = currentConfiguration['discoverRecent'].cast<String>();
   }
 }
+
+//DEFAULT VALUES
+bool defaultEnable125Scaling = false;
+bool defaultNotificationLyrics = true;
+bool defaultAcrylicEnabled = false;
+bool defaultAutomaticAccent = false;
+
+int defaultThemeMode = 2;

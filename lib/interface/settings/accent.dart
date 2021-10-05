@@ -23,16 +23,17 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
         builder: (context, visuals, _) => Column(
           children: [
             // TODO: Re-implement automatic accent colors using Provider.
-            // SwitchListTile(
-            //   value: configuration.automaticAccent!,
-            //   onChanged: (bool isChecked) async {
-            //     await configuration.save(
-            //       automaticAccent: isChecked,
-            //     );
-            //     this.setState(() {});
-            //   },
-            //   title: Text(language!.STRING_SETTING_ACCENT_COLOR_AUTOMATIC),
-            // ),
+            /*
+            SwitchListTile(
+              value: Hive.box('configuration').get('automaticAccent') ?? defaultAutomaticAccent,
+              onChanged: (bool isChecked) async {
+                await Hive.box('configuration').put('automaticAccent', isChecked);
+                this.setState(() {});
+                },
+              title: Text(language!.STRING_SETTING_ACCENT_COLOR_AUTOMATIC),
+            ),
+             */
+
             Padding(
               padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
               child: GridView.extent(
