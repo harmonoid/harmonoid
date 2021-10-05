@@ -1377,7 +1377,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_LYRICS_NOT_FOUND                                = 'Songteksten niet gevonden.';
         this.STRING_COMING_UP                                       = 'Volgende';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
-        this.STRING_TRACK_SINGLE                                    = 'Track';
+        this.STRING_TRACK_SINGLE                                    = 'Nummer';
         this.STRING_ARTIST_SINGLE                                   = 'Artiest';
         this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums van deze artiest';
         this.STRING_TRACKS_FROM_ARTIST                              = 'Nummers van deze artiest.';
@@ -1387,9 +1387,9 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_PLAY_NOW                                        = 'Nu afspelen';
         this.STRING_COLLECTION_SEARCH_LABEL                         = 'Zoek in je collectie';
         this.STRING_SELECTED_DIRECTORIES                            = 'Geselecteerde mappen:';
-        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Windows Acrylvervaging inschakelen.';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Windows Acrylvervaging inschakelen';
         this.STRING_SEARCH                                          = 'Zoeken';
-        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Je lokale muziek wordt gesynchroniseerd. Het is niet een goed idee om de app te sluiten.';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Je lokale muziek wordt gesynchroniseerd. Sluit de app niet af.';
         this.STRING_RECOMMENDATIONS                                 = 'Aanbevelingen';
         this.STRING_YOUTUBE_WELCOME                                 = 'Zoek naar muziek of geef een link';
         this.STRING_YOUTUBE_NO_RESULTS                              = 'Zoiets was niet te vinden.';
@@ -1400,7 +1400,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_BUFFERING                                       = 'Bufferen...';
         this.STRING_WARNING                                         = 'Waarschuwing';
         this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Er moet ten minste één map in uw collectie blijven.';
-        this.STRING_ENABLE_125_SCALING                              = 'Enable 125% scaling.';
+        this.STRING_ENABLE_125_SCALING                              = 'Vergroting (125%) inschakelen';
       }
       break;
       case LanguageRegion.svSe: {

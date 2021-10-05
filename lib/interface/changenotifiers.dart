@@ -212,7 +212,7 @@ class CollectionRefreshController extends ChangeNotifier {
 
 class Visuals extends ChangeNotifier {
   Accent? accent;
-  ThemeMode? themeMode;
+  int? themeMode;
   BuildContext? context;
 
   Visuals(
@@ -220,7 +220,7 @@ class Visuals extends ChangeNotifier {
 
   void update(
       {Accent? accent,
-      ThemeMode? themeMode,
+      int? themeMode,
       TargetPlatform? platform,
       BuildContext? context}) {
     this.accent = accent ?? this.accent;
@@ -230,7 +230,7 @@ class Visuals extends ChangeNotifier {
         effect: configuration.acrylicEnabled!
             ? AcrylicEffect.acrylic
             : AcrylicEffect.disabled,
-        gradientColor: this.themeMode == ThemeMode.light
+        gradientColor: ThemeMode.values[this.themeMode!] == ThemeMode.light
             ? Color(0xCCCCCCCC)
             : Color(0xCC222222),
       );

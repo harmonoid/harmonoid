@@ -23,7 +23,7 @@ class Harmonoid extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: visuals.theme,
           darkTheme: visuals.darkTheme,
-          themeMode: visuals.themeMode,
+          themeMode: ThemeMode.values[visuals.themeMode!],
           navigatorKey: key,
           builder: (context, child) {
             if (Platform.isAndroid)
