@@ -475,6 +475,19 @@ class NowPlayingBar extends StatelessWidget {
                         splashRadius: 18.0,
                         icon: Icon(
                           Icons.speed,
+                          size: 20.0,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        iconSize: 24.0,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                        splashRadius: 18.0,
+                        icon: Icon(
+                          Icons.shuffle,
+                          size: 20.0,
                         ),
                       ),
                       IconButton(
@@ -486,6 +499,7 @@ class NowPlayingBar extends StatelessWidget {
                         splashRadius: 18.0,
                         icon: Icon(
                           Icons.skip_previous,
+                          size: 24.0,
                         ),
                       ),
                       Container(
@@ -522,6 +536,19 @@ class NowPlayingBar extends StatelessWidget {
                         splashRadius: 18.0,
                         icon: Icon(
                           Icons.skip_next,
+                          size: 24.0,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        iconSize: 24.0,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                        splashRadius: 18.0,
+                        icon: Icon(
+                          Icons.repeat,
+                          size: 20.0,
                         ),
                       ),
                       IconButton(
@@ -535,6 +562,7 @@ class NowPlayingBar extends StatelessWidget {
                           nowPlaying.volume == 0.0
                               ? Icons.volume_off
                               : Icons.volume_up,
+                          size: 20.0,
                         ),
                       ),
                       SizedBox(
