@@ -1,3 +1,22 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/core/configuration.dart';
@@ -7,13 +26,21 @@ import 'package:path/path.dart' as path;
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 
-late Intent intent;
-
+/// Intent
+/// ------
+///
+/// Handles the opened audio file from file explorer.
+/// Primary purpose being to retrieve the path, saving metadata & playback of the possibly opened file.
+///
 class Intent {
+  /// The opened audio file from file explorer.
+  /// `null` if no file was opened.
   File? file;
 
   Intent({this.file});
 
+  /// Initializes the intent & checks for possibly opened file.
+  ///
   static Future<void> initialize({List<String> args: const []}) async {
     if (Platform.isAndroid) {
       try {
@@ -35,6 +62,8 @@ class Intent {
     }
   }
 
+  /// Returns the opened file on Android.
+  ///
   static Future<File> get openFile async {
     String? response =
         await MethodChannel('com.alexmercerind.harmonoid/openFile')
@@ -47,25 +76,20 @@ class Intent {
       throw Exception();
   }
 
+  /// Starts playing the possibly opened file & saves its metdaata.
+  ///
   Future<void> play() async {
     if (file != null) {
-      Metadata metadata = await MetadataRetriever.fromFile(this.file!);
-      Track track = Track.fromMap(metadata.toMap());
-      if (track.trackName == 'Unknown Track') {
-        track.trackName = path.basename(this.file!.path).split('.').first;
-      }
+      var metadata = await MetadataRetriever.fromFile(this.file!);
+      var track = Track.fromMap(
+          metadata.toMap()..putIfAbsent('filePath', () => this.file!.path));
       track.filePath = this.file!.path;
       if (metadata.albumArt != null) {
-        File albumArtFile = File(
-          path.join(
-            configuration.cacheDirectory!.path,
-            'albumArts',
-            '${track.albumArtistName}_${track.albumName}'
-                    .replaceAll(RegExp(r'[^\s\w]'), ' ') +
-                '.PNG',
-          ),
-        );
-        await albumArtFile.writeAsBytes(metadata.albumArt!);
+        await File(path.join(
+          configuration.cacheDirectory!.path,
+          'AlbumArts',
+          track.albumArtBasename,
+        )).writeAsBytes(metadata.albumArt!);
       }
       Playback.play(
         tracks: <Track>[track],
@@ -74,3 +98,6 @@ class Intent {
     }
   }
 }
+
+/// Late initialized intent object instance.
+late Intent intent;
