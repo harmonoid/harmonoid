@@ -274,7 +274,7 @@ class IndexingState extends State<IndexingSetting> {
                     }
                   },
             child: Text(
-              'ADD NEW FOLDER',
+              language!.STRING_ADD_NEW_FOLDER,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
               ),
