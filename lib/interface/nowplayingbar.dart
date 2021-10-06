@@ -447,7 +447,7 @@ class NowPlayingBar extends StatelessWidget {
                                     : Colors.black.withOpacity(0.4),
                           ),
                           child: Container(
-                            width: 96.0,
+                            width: 84.0,
                             child: Slider(
                               value: nowPlaying.rate,
                               onChanged: (value) {
@@ -475,20 +475,39 @@ class NowPlayingBar extends StatelessWidget {
                         splashRadius: 18.0,
                         icon: Icon(
                           Icons.speed,
-                          size: 20.0,
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        iconSize: 24.0,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-                        splashRadius: 18.0,
-                        icon: Icon(
-                          Icons.shuffle,
-                          size: 20.0,
-                        ),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            height: 32.0,
+                            width: 32.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              border: nowPlaying.isShuffling
+                                  ? Border.all(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
+                                    )
+                                  : null,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: Playback.shuffle,
+                            iconSize: 20.0,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                            splashRadius: 18.0,
+                            icon: Icon(
+                              Icons.shuffle,
+                            ),
+                          ),
+                        ],
                       ),
                       IconButton(
                         onPressed: Playback.back,
@@ -499,7 +518,6 @@ class NowPlayingBar extends StatelessWidget {
                         splashRadius: 18.0,
                         icon: Icon(
                           Icons.skip_previous,
-                          size: 24.0,
                         ),
                       ),
                       Container(
@@ -536,20 +554,54 @@ class NowPlayingBar extends StatelessWidget {
                         splashRadius: 18.0,
                         icon: Icon(
                           Icons.skip_next,
-                          size: 24.0,
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        iconSize: 24.0,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-                        splashRadius: 18.0,
-                        icon: Icon(
-                          Icons.repeat,
-                          size: 20.0,
-                        ),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            height: 32.0,
+                            width: 32.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              border:
+                                  nowPlaying.playlistMode != PlaylistMode.none
+                                      ? Border.all(
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black,
+                                        )
+                                      : null,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              if (nowPlaying.playlistMode ==
+                                  PlaylistMode.loop) {
+                                Playback.setPlaylistMode(
+                                  PlaylistMode.none,
+                                );
+                                return;
+                              }
+                              Playback.setPlaylistMode(
+                                PlaylistMode
+                                    .values[nowPlaying.playlistMode.index + 1],
+                              );
+                            },
+                            iconSize: 20.0,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                            splashRadius: 18.0,
+                            icon: Icon(
+                              nowPlaying.playlistMode == PlaylistMode.single
+                                  ? Icons.repeat_one
+                                  : Icons.repeat,
+                            ),
+                          ),
+                        ],
                       ),
                       IconButton(
                         onPressed: Playback.toggleMute,
@@ -562,7 +614,6 @@ class NowPlayingBar extends StatelessWidget {
                           nowPlaying.volume == 0.0
                               ? Icons.volume_off
                               : Icons.volume_up,
-                          size: 20.0,
                         ),
                       ),
                       SizedBox(
@@ -586,7 +637,7 @@ class NowPlayingBar extends StatelessWidget {
                                   : Colors.black.withOpacity(0.4),
                         ),
                         child: Container(
-                          width: 96.0,
+                          width: 84.0,
                           child: Slider(
                             value: nowPlaying.volume,
                             onChanged: (value) {

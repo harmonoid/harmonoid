@@ -25,6 +25,7 @@ import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/youtubemusic.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/utils.dart';
@@ -46,7 +47,7 @@ class NowPlayingController extends ChangeNotifier {
   Duration get duration => _duration;
   String get state => _state;
   bool get isShuffling => _isShuffling;
-  bool get isRepeating => _isRepeating;
+  PlaylistMode get playlistMode => _playlistMode;
 
   set index(int? index) {
     this._index = index;
@@ -104,8 +105,8 @@ class NowPlayingController extends ChangeNotifier {
     this.notifyListeners();
   }
 
-  set isRepeating(bool isRepeating) {
-    this._isRepeating = isRepeating;
+  void setPlaylistMode(PlaylistMode mode) {
+    this._playlistMode = mode;
     this.notifyListeners();
   }
 
@@ -120,7 +121,7 @@ class NowPlayingController extends ChangeNotifier {
   Duration _duration = Duration.zero;
   String _state = language!.STRING_BUFFERING;
   bool _isShuffling = false;
-  bool _isRepeating = false;
+  PlaylistMode _playlistMode = PlaylistMode.none;
 
   @override
   // ignore: must_call_super
