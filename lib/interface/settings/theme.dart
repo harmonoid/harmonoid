@@ -1,3 +1,23 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,20 +34,21 @@ class ThemeSetting extends StatelessWidget {
         child: Consumer<Visuals>(
           builder: (context, visuals, _) => Column(
             children: [
-              RadioListTile(
-                value: 0,
-                title: Text(
-                  language!.STRING_THEME_MODE_SYSTEM,
-                  style: Theme.of(context).textTheme.headline4,
+              if (Platform.isAndroid || Platform.isIOS)
+                RadioListTile(
+                  value: ThemeMode.system,
+                  title: Text(
+                    language!.STRING_THEME_MODE_SYSTEM,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                  groupValue: visuals.themeMode,
+                  onChanged: (dynamic themeMode) => visuals.update(
+                    themeMode: themeMode,
+                    context: context,
+                  ),
                 ),
-                groupValue: visuals.themeMode,
-                onChanged: (dynamic themeMode) => visuals.update(
-                  themeMode: themeMode,
-                  context: context,
-                ),
-              ),
               RadioListTile(
-                value: 1,
+                value: ThemeMode.light,
                 title: Text(
                   language!.STRING_THEME_MODE_LIGHT,
                   style: Theme.of(context).textTheme.headline4,
@@ -39,7 +60,7 @@ class ThemeSetting extends StatelessWidget {
                 ),
               ),
               RadioListTile(
-                value: 2,
+                value: ThemeMode.dark,
                 title: Text(
                   language!.STRING_THEME_MODE_DARK,
                   style: Theme.of(context).textTheme.headline4,

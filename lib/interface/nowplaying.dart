@@ -532,8 +532,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                       ),
                       Expanded(
                         child: Container(
-                          color: nowPlaying.dominantColor?.withOpacity(0.2) ??
-                              Colors.transparent,
+                          color: Colors.transparent,
                           child: Row(
                             children: [
                               Container(

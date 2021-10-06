@@ -22,7 +22,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -48,24 +47,9 @@ class NowPlayingController extends ChangeNotifier {
   String get state => _state;
   bool get isShuffling => _isShuffling;
   bool get isRepeating => _isRepeating;
-  Color? get dominantColor => _dominantColor;
 
   set index(int? index) {
     this._index = index;
-    () async {
-      if (this._index != null &&
-          (this._index ?? -1) >= 0 &&
-          (this.index ?? double.infinity) < this.tracks.length) {
-        var palette = await PaletteGenerator.fromImageProvider(
-          this._tracks[this._index!].networkAlbumArt == null
-              ? FileImage(this._tracks[this._index!].albumArt)
-              : NetworkImage(this._tracks[this._index!].networkAlbumArt!)
-                  as ImageProvider,
-        );
-        this._dominantColor = palette.dominantColor?.color;
-        this.notifyListeners();
-      }
-    }();
     this.notifyListeners();
   }
 
@@ -137,8 +121,7 @@ class NowPlayingController extends ChangeNotifier {
   String _state = language!.STRING_BUFFERING;
   bool _isShuffling = false;
   bool _isRepeating = false;
-  Color? _dominantColor;
-  
+
   @override
   // ignore: must_call_super
   void dispose() {}
@@ -203,8 +186,6 @@ class CollectionRefreshController extends ChangeNotifier {
     }
   }
 
-  void redraw() => this.notifyListeners();
-
   @override
   // ignore: must_call_super
   void dispose() {}
@@ -212,7 +193,7 @@ class CollectionRefreshController extends ChangeNotifier {
 
 class Visuals extends ChangeNotifier {
   Accent? accent;
-  int? themeMode;
+  ThemeMode? themeMode;
   BuildContext? context;
 
   Visuals(
@@ -220,7 +201,7 @@ class Visuals extends ChangeNotifier {
 
   void update(
       {Accent? accent,
-      int? themeMode,
+      ThemeMode? themeMode,
       TargetPlatform? platform,
       BuildContext? context}) {
     this.accent = accent ?? this.accent;
@@ -230,8 +211,8 @@ class Visuals extends ChangeNotifier {
         effect: configuration.acrylicEnabled!
             ? AcrylicEffect.acrylic
             : AcrylicEffect.disabled,
-        gradientColor: ThemeMode.values[this.themeMode!] == ThemeMode.light
-            ? Color(0xCCCCCCCC)
+        gradientColor: this.themeMode == ThemeMode.light
+            ? Color(0x22DDDDDD)
             : Color(0xCC222222),
       );
     }
