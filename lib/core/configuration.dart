@@ -213,7 +213,8 @@ Map<String, dynamic> default_configuration = {
   'collectionDirectories': <String>[
     {
       'windows': () => path.join(Platform.environment['USERPROFILE']!, 'Music'),
-      'linux': () => path.join(Platform.environment['HOME']!, Process.runSync('xdg-user-dir', ['MUSIC']).stdout.toString()),
+      'linux': () =>
+          Process.runSync('xdg-user-dir', ['MUSIC']).stdout.toString(),
       'android': () => '/storage/emulated/0/Music',
     }[Platform.operatingSystem]!(),
   ],
@@ -223,11 +224,11 @@ Map<String, dynamic> default_configuration = {
   'collectionSortType': 0,
   'automaticAccent': false,
   'notificationLyrics': true,
-  'acrylicEnabled': true,
+  'acrylicEnabled': Platform.isWindows,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
   'discoverRecent': ['XfEMj-z3TtA'],
-  'enable125Scaling': false,
+  'enable125Scaling': Platform.isLinux,
 };
 
 /// Late initialized configuration object instance.
