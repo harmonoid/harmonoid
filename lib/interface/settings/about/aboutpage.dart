@@ -204,7 +204,11 @@ class AboutPageState extends State<AboutPage> {
                         ),
                       Padding(
                         padding: EdgeInsets.only(
-                            left: 16.0, right: 16.0, bottom: 8.0),
+                          left: 16.0,
+                          right: 16.0,
+                          bottom: 8.0,
+                          top: 2.0,
+                        ),
                         child: (this.repository == null ||
                                 this.repository!.containsKey('message'))
                             ? Text(
@@ -373,7 +377,7 @@ class AboutPageState extends State<AboutPage> {
                         'https://github.com/gaetan1903',
                         'https://avatars.githubusercontent.com/u/43904633?s=80&v=4',
                         'Gaetan Jonathan BAKARY',
-                        'French translation.',
+                        'Linux related bug-fixes. French translation.',
                       ],
                       [
                         'https://github.com/RedyAu',
@@ -421,7 +425,7 @@ class AboutPageState extends State<AboutPage> {
                         'https://github.com/LeonHoog',
                         'https://avatars.githubusercontent.com/u/75587960?s=80&v=4',
                         'Leon',
-                        'Dutch translation.'
+                        'User interface fixes, app persistence improvements. Dutch translation.'
                       ]
                     ]
                         .map(

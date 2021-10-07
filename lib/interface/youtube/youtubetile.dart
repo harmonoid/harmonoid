@@ -18,16 +18,16 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/youtubemusic.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:harmonoid/core/configuration.dart';
 
 const double HORIZONTAL_BREAKPOINT = 720.0;
 

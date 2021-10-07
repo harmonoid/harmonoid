@@ -11,7 +11,7 @@ dependencies:
     sdk: flutter
   animations: ^2.0.0
   provider: ^5.0.0
-  libwinmedia: 0.0.4
+  libwinmedia: 0.0.7
   flutter_media_metadata:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
@@ -33,7 +33,6 @@ dependencies:
   file_picker: ^3.0.0
   permission_handler: ^6.1.1
   share_plus: ^2.1.4
-  palette_generator: ^0.3.0
   http: ^0.13.0
   path: ^1.8.0
   url_launcher: ^6.0.3

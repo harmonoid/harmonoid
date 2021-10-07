@@ -86,7 +86,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   charcode:
     dependency: transitive
     description:
@@ -241,20 +241,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  hive:
+  google_fonts:
     dependency: "direct main"
     description:
-      name: hive
+      name: google_fonts
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
-  hive_flutter:
-    dependency: "direct main"
-    description:
-      name: hive_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
+    version: "2.1.0"
   hotkey_manager:
     dependency: "direct main"
     description:
@@ -305,7 +298,7 @@ packages:
       name: libwinmedia
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4"
+    version: "0.0.7"
   meta:
     dependency: transitive
     description:
@@ -343,13 +336,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  palette_generator:
-    dependency: "direct main"
-    description:
-      name: palette_generator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0"
   path:
     dependency: "direct main"
     description:

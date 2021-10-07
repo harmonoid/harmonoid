@@ -377,7 +377,8 @@ class NowPlayingState extends State<NowPlayingScreen>
                                       decoration: BoxDecoration(
                                         borderRadius:
                                             BorderRadius.circular(24.0),
-                                        border: nowPlaying.isRepeating
+                                        border: nowPlaying.playlistMode !=
+                                                PlaylistMode.none
                                             ? Border.all(
                                                 color: Theme.of(context)
                                                             .brightness ==
@@ -388,7 +389,20 @@ class NowPlayingState extends State<NowPlayingScreen>
                                             : null,
                                       ),
                                       child: IconButton(
-                                        onPressed: Playback.repeat,
+                                        onPressed: () {
+                                          if (nowPlaying.playlistMode ==
+                                              PlaylistMode.loop) {
+                                            Playback.setPlaylistMode(
+                                              PlaylistMode.none,
+                                            );
+                                            return;
+                                          }
+                                          Playback.setPlaylistMode(
+                                            PlaylistMode.values[
+                                                nowPlaying.playlistMode.index +
+                                                    1],
+                                          );
+                                        },
                                         iconSize: 24.0,
                                         color: Theme.of(context).brightness ==
                                                 Brightness.dark
@@ -396,7 +410,10 @@ class NowPlayingState extends State<NowPlayingScreen>
                                             : Colors.black,
                                         splashRadius: 18.0,
                                         icon: Icon(
-                                          Icons.repeat,
+                                          nowPlaying.playlistMode ==
+                                                  PlaylistMode.single
+                                              ? Icons.repeat_one
+                                              : Icons.repeat,
                                         ),
                                       ),
                                     ),
@@ -532,8 +549,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                       ),
                       Expanded(
                         child: Container(
-                          color: nowPlaying.dominantColor?.withOpacity(0.2) ??
-                              Colors.transparent,
+                          color: Colors.transparent,
                           child: Row(
                             children: [
                               Container(
@@ -547,23 +563,33 @@ class NowPlayingState extends State<NowPlayingScreen>
                                     Expanded(
                                       child: Padding(
                                         padding: EdgeInsets.all(48.0),
-                                        child: Image(
-                                          image: (nowPlaying.index == null
-                                              ? AssetImage(
-                                                  'assets/images/default_album_art.jpg')
-                                              : (nowPlaying
-                                                          .tracks[
-                                                              nowPlaying.index!]
-                                                          .networkAlbumArt !=
-                                                      null
-                                                  ? NetworkImage(nowPlaying
-                                                      .tracks[nowPlaying.index!]
-                                                      .networkAlbumArt!)
-                                                  : FileImage(nowPlaying
-                                                      .tracks[nowPlaying.index!]
-                                                      .albumArt))) as ImageProvider<
-                                              Object>,
-                                          fit: BoxFit.contain,
+                                        child: ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                            maxWidth: 512.0,
+                                            maxHeight: 512.0,
+                                          ),
+                                          child: Image(
+                                            image: (nowPlaying.index == null
+                                                ? AssetImage(
+                                                    'assets/images/default_album_art.jpg')
+                                                : (nowPlaying
+                                                            .tracks[nowPlaying
+                                                                .index!]
+                                                            .networkAlbumArt !=
+                                                        null
+                                                    ? NetworkImage(nowPlaying
+                                                        .tracks[
+                                                            nowPlaying.index!]
+                                                        .networkAlbumArt!)
+                                                    : FileImage(
+                                                        nowPlaying
+                                                            .tracks[nowPlaying
+                                                                .index!]
+                                                            .albumArt,
+                                                      ))) as ImageProvider<
+                                                Object>,
+                                            fit: BoxFit.contain,
+                                          ),
                                         ),
                                       ),
                                     ),

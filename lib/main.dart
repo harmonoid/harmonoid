@@ -50,8 +50,8 @@ Future<void> main(List<String> args) async {
         effect: configuration.acrylicEnabled!
             ? AcrylicEffect.acrylic
             : AcrylicEffect.solid,
-        gradientColor: ThemeMode.values[configuration.themeMode!] == ThemeMode.light
-            ? Color(0xCCCCCCCC)
+        gradientColor: configuration.themeMode! == ThemeMode.light
+            ? Color(0x22DDDDDD)
             : Color(0xCC222222),
       );
       LWM.initialize();
@@ -76,7 +76,8 @@ Future<void> main(List<String> args) async {
     if (Platform.isAndroid) {
       WidgetsFlutterBinding.ensureInitialized();
       if (Platform.isAndroid) if (await Permission.storage.isDenied) {
-        PermissionStatus storagePermissionState = await Permission.storage.request();
+        PermissionStatus storagePermissionState =
+            await Permission.storage.request();
         if (!storagePermissionState.isGranted) {
           SystemNavigator.pop(
             animated: true,
@@ -91,7 +92,7 @@ Future<void> main(List<String> args) async {
       cacheDirectory: configuration.cacheDirectory!,
       collectionSortType: configuration.collectionSortType!,
     );
-    collection.refresh(onProgress: (progress, total, _) {
+    await collection.refresh(onProgress: (progress, total, _) {
       collectionRefresh.set(progress, total);
     });
     await Language.initialize(
