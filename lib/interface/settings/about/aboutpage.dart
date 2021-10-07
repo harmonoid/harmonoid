@@ -377,7 +377,7 @@ class AboutPageState extends State<AboutPage> {
                         'https://github.com/gaetan1903',
                         'https://avatars.githubusercontent.com/u/43904633?s=80&v=4',
                         'Gaetan Jonathan BAKARY',
-                        'French translation.',
+                        'Linux related bug-fixes. French translation.',
                       ],
                       [
                         'https://github.com/RedyAu',

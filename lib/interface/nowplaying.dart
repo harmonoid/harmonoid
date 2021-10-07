@@ -563,23 +563,33 @@ class NowPlayingState extends State<NowPlayingScreen>
                                     Expanded(
                                       child: Padding(
                                         padding: EdgeInsets.all(48.0),
-                                        child: Image(
-                                          image: (nowPlaying.index == null
-                                              ? AssetImage(
-                                                  'assets/images/default_album_art.jpg')
-                                              : (nowPlaying
-                                                          .tracks[
-                                                              nowPlaying.index!]
-                                                          .networkAlbumArt !=
-                                                      null
-                                                  ? NetworkImage(nowPlaying
-                                                      .tracks[nowPlaying.index!]
-                                                      .networkAlbumArt!)
-                                                  : FileImage(nowPlaying
-                                                      .tracks[nowPlaying.index!]
-                                                      .albumArt))) as ImageProvider<
-                                              Object>,
-                                          fit: BoxFit.contain,
+                                        child: ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                            maxWidth: 512.0,
+                                            maxHeight: 512.0,
+                                          ),
+                                          child: Image(
+                                            image: (nowPlaying.index == null
+                                                ? AssetImage(
+                                                    'assets/images/default_album_art.jpg')
+                                                : (nowPlaying
+                                                            .tracks[nowPlaying
+                                                                .index!]
+                                                            .networkAlbumArt !=
+                                                        null
+                                                    ? NetworkImage(nowPlaying
+                                                        .tracks[
+                                                            nowPlaying.index!]
+                                                        .networkAlbumArt!)
+                                                    : FileImage(
+                                                        nowPlaying
+                                                            .tracks[nowPlaying
+                                                                .index!]
+                                                            .albumArt,
+                                                      ))) as ImageProvider<
+                                                Object>,
+                                            fit: BoxFit.contain,
+                                          ),
                                         ),
                                       ),
                                     ),
