@@ -84,7 +84,7 @@ class CustomListView extends StatelessWidget {
         },
       );
     }
-    if (HORIZONTAL_BREAKPOINT <
+    if (HORIZONTAL_BREAKPOINT >
         MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size.width.normalized) {
       scroller.addListener(
         () {
