@@ -39,8 +39,8 @@ class LanguageRegion {
   static const slSi = LanguageRegion(
     code: 'sl',
     countryCode: 'SI',
-    name: 'Slovenija',
-    country: 'Slovenščina',
+    name: 'slovenščina',
+    country: 'Slovenija',
     translator: 'mytja',
     github: 'https://github.com/mytja',
   );
@@ -628,7 +628,7 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_NO_INTERNET_TITLE                               = 'Ni interneta';
         this.STRING_NO_INTERNET_SUBTITLE                            = 'Preveri internetno povezavo';
         this.STRING_NO_COLLECTION_TITLE                             = 'Prazna kolekcija';
-        this.STRING_NO_COLLECTION_SUBTITLE                          = 'Nič glasbe ni najdene';
+        this.STRING_NO_COLLECTION_SUBTITLE                          = 'Nič glasbe ni bilo najdene';
         this.STRING_DOWNLOAD_COMPLETED                              = 'Prenos končan.';
         this.STRING_DOWNLOAD_FAILED                                 = 'Prenos ni uspel.';
         this.STRING_DISCORD                                         = 'DISCORD STREŽNIK';
@@ -641,38 +641,38 @@ class Language extends Strings with ChangeNotifier {
         this.STRING_SETTING_MISCELLANEOUS_SUBTITLE                  = 'Ostale nastavitve aplikacije';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE          = 'Vključi iOS uporabniški vmesnik';
         this.STRING_SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE       = 'Nastavi platformo na TargetPlatform.iOS';
-        this.STRING_SELECTED_DIRECTORY                              = 'Selected directory:';
-        this.STRING_LYRICS                                          = 'Lyrics';
-        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Notification lyrics';
-        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Show lyrics in a notification.';
-        this.STRING_LYRICS_RETRIEVING                               = 'Retrieving lyrics...';
-        this.STRING_LYRICS_NOT_FOUND                                = 'Lyrics not found.';
-        this.STRING_COMING_UP                                       = 'Coming Up';
+        this.STRING_SELECTED_DIRECTORY                              = 'Izbran direktorij:';
+        this.STRING_LYRICS                                          = 'Besedilo pesmi';
+        this.STRING_NOTIFICATION_LYRICS_TITLE                       = 'Besedilo pesmi v obvestilu';
+        this.STRING_NOTIFICATION_LYRICS_SUBTITLE                    = 'Pokaži besedilo pesmi v obvestilih.';
+        this.STRING_LYRICS_RETRIEVING                               = 'Pridobivanje besedila pesmi...';
+        this.STRING_LYRICS_NOT_FOUND                                = 'Besedilo pesmi ni bilo najdeno.';
+        this.STRING_COMING_UP                                       = 'Naslednje';
         this.STRING_ALBUM_SINGLE                                    = 'Album';
-        this.STRING_TRACK_SINGLE                                    = 'Track';
-        this.STRING_ARTIST_SINGLE                                   = 'Artist';
-        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albums from this artist.';
-        this.STRING_TRACKS_FROM_ARTIST                              = 'Tracks from this artist.';
-        this.STRING_REMOVE                                          = 'REMOVE';
-        this.STRING_ADD_NEW_FOLDER                                  = 'ADD NEW FOLDER';
-        this.STRING_ADD_TO_NOW_PLAYING                              = 'Add to now playing';
-        this.STRING_PLAY_NOW                                        = 'Play now';
-        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Lookup in your collection';
-        this.STRING_SELECTED_DIRECTORIES                            = 'Selected directories:';
-        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Enable Windows acrylic blur.';
-        this.STRING_SEARCH                                          = 'Search';
-        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Your local music is being synced.\nIt\'s not a good idea to close the app.';
-        this.STRING_RECOMMENDATIONS                                 = 'Recommendations';
-        this.STRING_YOUTUBE_WELCOME                                 = 'Search for music or give a link';
-        this.STRING_YOUTUBE_NO_RESULTS                              = 'Nothing like that could be found.';
-        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Let\'s play your local music, while you get back online.';
-        this.STRING_RETRIEVING_INFO                                 = 'Retrieving info';
-        this.STRING_RETRIEVING_LINK                                 = 'Retrieving stream';
-        this.STRING_STARTING_PLAYBACK                               = 'Starting playback';
-        this.STRING_BUFFERING                                       = 'Buffering...';
-        this.STRING_WARNING                                         = 'Warning';
-        this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Atleast one folder needs to stay in your collection.';
-        this.STRING_ENABLE_125_SCALING                              = 'Enable 125% scaling.';
+        this.STRING_TRACK_SINGLE                                    = 'Pesem';
+        this.STRING_ARTIST_SINGLE                                   = 'Ustvarjalec';
+        this.STRING_ALBUMS_FROM_ARTIST                              = 'Albumi od tega ustvarjalca.';
+        this.STRING_TRACKS_FROM_ARTIST                              = 'Pesmi od tega ustvarjalca.';
+        this.STRING_REMOVE                                          = 'ODSTRANI';
+        this.STRING_ADD_NEW_FOLDER                                  = 'DODAJ NOV DIREKTORIJ';
+        this.STRING_ADD_TO_NOW_PLAYING                              = 'Dodaj v seznam predvajanja';
+        this.STRING_PLAY_NOW                                        = 'Predvajaj zdaj';
+        this.STRING_COLLECTION_SEARCH_LABEL                         = 'Pogled v tvojo zbirko';
+        this.STRING_SELECTED_DIRECTORIES                            = 'Izbrani direktoriji:';
+        this.STRING_ENABLE_ACRYLIC_BLUR                             = 'Vključi Windows Acrylic blur.';
+        this.STRING_SEARCH                                          = 'Išči';
+        this.STRING_COLLECTION_INDEXING_LABEL                       = 'Tvoja kolekcija se sinhronizira z aplikacijo.\nNi dobra ideja, da zapreš aplikacijo.';
+        this.STRING_RECOMMENDATIONS                                 = 'Priporočeno';
+        this.STRING_YOUTUBE_WELCOME                                 = 'Išči za glasbo ali pa vpiši povezavo';
+        this.STRING_YOUTUBE_NO_RESULTS                              = 'Iskali smo širno, a tega nismo mogli najti.';
+        this.STRING_YOUTUBE_INTERNET_ERROR                          = 'Predvajajmo lokalno glasbo, medtem ko ni internetne povezave.';
+        this.STRING_RETRIEVING_INFO                                 = 'Pridobivanje informacij o pesmi';
+        this.STRING_RETRIEVING_LINK                                 = 'Pridobivanje toka pesmi';
+        this.STRING_STARTING_PLAYBACK                               = 'Začenjam predvajanje';
+        this.STRING_BUFFERING                                       = 'Bufferanje...';
+        this.STRING_WARNING                                         = 'Opozorilo';
+        this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED               = 'Vsaj en direktorij mora ostati v tvoji zbirki.';
+        this.STRING_ENABLE_125_SCALING                              = 'Vključi 125% povečavo.';
       }
       break;
       case LanguageRegion.ptBr: {
