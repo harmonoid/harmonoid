@@ -1833,7 +1833,7 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED =
               'Er moet ten minste één map in uw collectie blijven.';
           this.STRING_ENABLE_125_SCALING = 'Vergroting (125%) inschakelen';
-          this.STRING_REPORT = 'Rapporteren';
+          this.STRING_REPORT = 'RAPPORTEREN';
         }
         break;
       case LanguageRegion.svSe:
