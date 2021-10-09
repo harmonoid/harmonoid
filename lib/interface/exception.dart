@@ -21,6 +21,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
@@ -267,7 +268,7 @@ class ExceptionApp extends StatelessWidget {
                     onPressed: () => UrlLauncher.launch(
                         'https://github.com/alexmercerind/harmonoid/issues'),
                     child: Text(
-                      'REPORT',
+                      language!.STRING_REPORT,
                       style: TextStyle(
                         color: Colors.deepPurpleAccent.shade200,
                       ),
@@ -276,7 +277,7 @@ class ExceptionApp extends StatelessWidget {
                   MaterialButton(
                     onPressed: SystemNavigator.pop,
                     child: Text(
-                      'EXIT',
+                      language!.STRING_EXIT_TITLE,
                       style: TextStyle(
                         color: Colors.deepPurpleAccent.shade200,
                       ),

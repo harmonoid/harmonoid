@@ -20,6 +20,7 @@
 import 'dart:io';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/hotkeys.dart';
 import 'package:provider/provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
@@ -100,6 +101,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                     color: Colors.transparent,
                     child: ListTile(
                       onTap: () {
+                        HotKeys.enableSpaceHotKey();
                         Navigator.of(context).push(
                           PageRouteBuilder(
                             pageBuilder:
@@ -297,7 +299,19 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                       ),
                     ),
                     fieldViewBuilder: (context, controller, node, callback) =>
-                        TextField(
+                        Focus(
+                          onFocusChange: (hasFocus) {
+                            if(!hasFocus) {
+                              HotKeys.enableSpaceHotKey();
+                            }
+                          },
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if(hasFocus) {
+                                HotKeys.disableSpaceHotKey();
+                              }else{HotKeys.enableSpaceHotKey();}
+                            },
+                            child: TextField(
                       autofocus: Platform.isWindows ||
                           Platform.isLinux ||
                           Platform.isMacOS,
@@ -337,7 +351,9 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                               width: 1.0),
                         ),
                       ),
-                    ),
+                            ),
+                          ),
+                        ),
                   ),
                 ),
                 SizedBox(

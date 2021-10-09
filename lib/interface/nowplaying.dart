@@ -17,6 +17,7 @@
  *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -491,6 +492,14 @@ class NowPlayingState extends State<NowPlayingScreen>
                               ),
                             )
                             .toList(),
+                  ),
+                  Builder(
+                    builder: (context){
+                      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+                        //This is a fix to an issue where the WindowTitleBar doesn't show up.
+                        return Positioned(child: SizedBox(), top: -40,);
+                      }return SizedBox();
+                    },
                   ),
                 ],
               ),

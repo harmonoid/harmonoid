@@ -59,7 +59,7 @@ Future<void> main(List<String> args) async {
       await Intent.initialize(args: args);
       await HotKeys.initialize();
       doWhenWindowReady(() {
-        appWindow.minSize = Size(854, 640);
+        appWindow.minSize = Size(320, 590);
         appWindow.size = Size(1024, 640);
         appWindow.alignment = Alignment.center;
         appWindow.show();
