@@ -54,7 +54,7 @@ class IndexingState extends State<IndexingSetting> {
                     height: 8.0,
                   ),
                   Text(
-                    'Selected directories:',
+                    language!.STRING_SELECTED_DIRECTORIES,
                     style: TextStyle(
                       color: Theme.of(context).brightness == Brightness.dark
                           ? Colors.white
@@ -135,7 +135,7 @@ class IndexingState extends State<IndexingSetting> {
                                 );
                               },
                               child: Text(
-                                'REMOVE',
+                                language!.STRING_REMOVE,
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                 ),

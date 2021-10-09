@@ -18,6 +18,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/hotkeys.dart';
 import 'package:provider/provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
@@ -86,50 +87,57 @@ class CollectionPlaylistTab extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(
-                                child: TextField(
-                                  controller: this._textFieldController,
-                                  style: Theme.of(context).textTheme.headline4,
-                                  cursorWidth: 1,
-                                  autofocus: true,
-                                  autocorrect: true,
-                                  onSubmitted: (String value) async {
-                                    if (value != '') {
-                                      FocusScope.of(context).unfocus();
-                                      await collection.playlistAdd(
-                                          new Playlist(playlistName: value));
-                                      this._textFieldController.clear();
-                                    }
+                                child: Focus(
+                                  onFocusChange: (hasFocus) {
+                                    if(hasFocus) {
+                                      HotKeys.disableSpaceHotKey();
+                                    }else{HotKeys.enableSpaceHotKey();}
                                   },
-                                  decoration: InputDecoration(
-                                    labelText: language!
-                                        .STRING_PLAYLISTS_TEXT_FIELD_LABEL,
-                                    hintText: language!
-                                        .STRING_PLAYLISTS_TEXT_FIELD_HINT,
-                                    hintStyle:
-                                        Theme.of(context).textTheme.headline3,
-                                    labelStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
+                                  child: TextField(
+                                    controller: this._textFieldController,
+                                    style: Theme.of(context).textTheme.headline4,
+                                    cursorWidth: 1,
+                                    autofocus: true,
+                                    autocorrect: true,
+                                    onSubmitted: (String value) async {
+                                      if (value != '') {
+                                        FocusScope.of(context).unfocus();
+                                        await collection.playlistAdd(
+                                            new Playlist(playlistName: value));
+                                        this._textFieldController.clear();
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                      labelText: language!
+                                          .STRING_PLAYLISTS_TEXT_FIELD_LABEL,
+                                      hintText: language!
+                                          .STRING_PLAYLISTS_TEXT_FIELD_HINT,
+                                      hintStyle:
+                                          Theme.of(context).textTheme.headline3,
+                                      labelStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
+                                              width: 1)),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
+                                              width: 1)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
+                                              width: 1)),
                                     ),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                            width: 1)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                            width: 1)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                            width: 1)),
                                   ),
                                 ),
                               ),

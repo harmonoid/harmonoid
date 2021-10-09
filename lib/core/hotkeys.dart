@@ -27,16 +27,16 @@ import 'package:harmonoid/interface/changenotifiers.dart';
 ///
 /// Hotkey mappings.
 ///
+HotKey spaceHotKey = HotKey(
+  KeyCode.space,
+  scope: HotKeyScope.inapp,
+);
 class HotKeys {
   static Future<void> initialize() async {
     await Future.wait(
       [
         HotKeyManager.instance.register(
-          HotKey(
-            KeyCode.space,
-            modifiers: [KeyModifier.alt],
-            scope: HotKeyScope.inapp,
-          ),
+          spaceHotKey,
           keyDownHandler: (_) => Playback.playOrPause(),
         ),
         HotKeyManager.instance.register(
@@ -114,4 +114,13 @@ class HotKeys {
       ],
     );
   }
+  static Future<void> disableSpaceHotKey() async{
+    await HotKeyManager.instance.unregister(spaceHotKey);
+  }
+  static Future<void> enableSpaceHotKey() async{
+    await HotKeyManager.instance.register(
+      spaceHotKey,
+      keyDownHandler: (_) => Playback.playOrPause(),
+    );
+}
 }

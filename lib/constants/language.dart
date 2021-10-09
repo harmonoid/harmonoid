@@ -378,6 +378,7 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED =
               'Atleast one folder needs to stay in your collection.';
           this.STRING_ENABLE_125_SCALING = 'Enable 125% scaling.';
+          this.STRING_REPORT = 'REPORT';
         }
         break;
       case LanguageRegion.ruRu:
@@ -603,6 +604,7 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED =
               'Atleast one folder needs to stay in your collection.';
           this.STRING_ENABLE_125_SCALING = 'Enable 125% scaling.';
+          this.STRING_REPORT = 'REPORT';
         }
         break;
       case LanguageRegion.slSi:
@@ -846,6 +848,7 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED =
               'Vsaj en direktorij mora ostati v tvoji zbirki.';
           this.STRING_ENABLE_125_SCALING = 'Vključi 125% povečavo.';
+          this.STRING_REPORT = 'REPORT';
         }
         break;
       case LanguageRegion.ptBr:
@@ -1097,6 +1100,7 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED =
               'Atleast one folder needs to stay in your collection.';
           this.STRING_ENABLE_125_SCALING = 'Enable 125% scaling.';
+          this.STRING_REPORT = 'REPORT';
         }
         break;
       case LanguageRegion.hiIn:
@@ -1323,6 +1327,7 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED =
               'आपके कलेक्शन में कम से कम एक फ़ोल्डर रहने की आवश्यकता है।';
           this.STRING_ENABLE_125_SCALING = 'Enable 125% scaling.';
+          this.STRING_REPORT = 'REPORT';
         }
         break;
       case LanguageRegion.deDe:
@@ -1534,6 +1539,7 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_DISCORD = 'DISCORD SERVER';
           this.STRING_EXIT_TITLE = 'Exit';
           this.STRING_EXIT_SUBTITLE = 'Do you want to exit Harmonoid?';
+
           this.STRING_A_TO_Z = 'A to Z';
           this.STRING_DATE_ADDED = 'Date Added';
           this.STRING_SETTING_ACCENT_COLOR_AUTOMATIC = 'Automatic Accent';
@@ -1580,6 +1586,7 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED =
               'Atleast one folder needs to stay in your collection.';
           this.STRING_ENABLE_125_SCALING = 'Enable 125% scaling.';
+          this.STRING_REPORT = 'REPORT';
         }
         break;
       case LanguageRegion.nlNl:
@@ -1826,6 +1833,7 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED =
               'Er moet ten minste één map in uw collectie blijven.';
           this.STRING_ENABLE_125_SCALING = 'Vergroting (125%) inschakelen';
+          this.STRING_REPORT = 'Rapporteren';
         }
         break;
       case LanguageRegion.svSe:
@@ -2063,6 +2071,7 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED =
               'Atleast one folder needs to stay in your collection.';
           this.STRING_ENABLE_125_SCALING = 'Enable 125% scaling.';
+          this.STRING_REPORT = 'REPORT';
         }
         break;
       case LanguageRegion.frFr:
@@ -2318,6 +2327,7 @@ class Language extends Strings with ChangeNotifier {
               'Au moins un dosser doit rester dans votre collection.';
           this.STRING_ENABLE_125_SCALING =
               'Activer la mise en echelle de 125%.';
+          this.STRING_REPORT = 'REPORT';
         }
         break;
       case LanguageRegion.huHu:
@@ -2556,6 +2566,7 @@ class Language extends Strings with ChangeNotifier {
           this.STRING_LAST_COLLECTION_DIRECTORY_REMOVED =
               'Atleast one folder needs to stay in your collection.';
           this.STRING_ENABLE_125_SCALING = 'Enable 125% scaling.';
+          this.STRING_REPORT = 'REPORT';
         }
         break;
       case LanguageRegion.mg:
@@ -2816,6 +2827,7 @@ class Language extends Strings with ChangeNotifier {
               'Farafahakeliny rakitra iray tsy maintsy mijanona ao amin\'ny fanangonana.';
           this.STRING_ENABLE_125_SCALING =
               'Ampandehano ny tohatra manisa 125%.';
+          this.STRING_REPORT = 'REPORT';
         }
         break;
     }

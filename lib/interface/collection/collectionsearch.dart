@@ -20,6 +20,7 @@
 import 'dart:io';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/interface/collection/collectionartist.dart';
 import 'package:provider/provider.dart';
 
@@ -81,82 +82,89 @@ class CollectionSearchState extends State<CollectionSearch> {
                     ),
                   ),
                   Expanded(
-                    child: TextField(
-                      autofocus: Platform.isWindows ||
-                          Platform.isLinux ||
-                          Platform.isMacOS,
-                      controller: controller,
-                      onChanged: (String query) async {
-                        int localIndex = globalIndex;
-                        globalIndex++;
-                        List<dynamic> resultCollection =
-                            await collection.search(query);
-                        List<Widget> albums = <Widget>[];
-                        List<Widget> tracks = <Widget>[];
-                        List<Widget> artists = <Widget>[];
-                        for (dynamic item in resultCollection) {
-                          if (item is Album) {
-                            albums.add(
-                              Container(
-                                margin: EdgeInsets.only(
-                                    top: 8.0, bottom: 8.0, right: 8.0),
-                                child: CollectionAlbumTile(
-                                  height: tileHeightAlbum,
-                                  width: tileWidthAlbum,
-                                  album: item,
-                                ),
-                              ),
-                            );
-                          }
-                          if (item is Artist) {
-                            artists.add(
-                              Container(
-                                margin: EdgeInsets.only(
-                                    top: 8.0, bottom: 8.0, right: 8.0),
-                                child: CollectionArtistTile(
-                                  height: tileHeightArtist,
-                                  width: tileWidthArtist,
-                                  artist: item,
-                                ),
-                              ),
-                            );
-                          } else if (item is Track) {
-                            tracks.add(
-                              CollectionTrackTile(
-                                track: item,
-                                index: collection.tracks.indexOf(item),
-                              ),
-                            );
-                          }
-                        }
-                        if (localIndex == globalIndex - 1) {
-                          _albums = albums;
-                          _artists = artists;
-                          _tracks = tracks;
-                          setState(() {});
-                        }
+                    child: Focus(
+                      onFocusChange: (hasFocus) {
+                        if(hasFocus) {
+                          HotKeys.disableSpaceHotKey();
+                        }else{HotKeys.enableSpaceHotKey();}
                       },
-                      style: Theme.of(context).textTheme.headline4,
-                      cursorWidth: 1.0,
-                      decoration: InputDecoration(
-                        hintText: language!.STRING_COLLECTION_SEARCH_LABEL,
-                        hintStyle: Theme.of(context).textTheme.headline3,
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.secondary,
-                            width: 1.0,
+                      child: TextField(
+                        autofocus: Platform.isWindows ||
+                            Platform.isLinux ||
+                            Platform.isMacOS,
+                        controller: controller,
+                        onChanged: (String query) async {
+                          int localIndex = globalIndex;
+                          globalIndex++;
+                          List<dynamic> resultCollection =
+                              await collection.search(query);
+                          List<Widget> albums = <Widget>[];
+                          List<Widget> tracks = <Widget>[];
+                          List<Widget> artists = <Widget>[];
+                          for (dynamic item in resultCollection) {
+                            if (item is Album) {
+                              albums.add(
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      top: 8.0, bottom: 8.0, right: 8.0),
+                                  child: CollectionAlbumTile(
+                                    height: tileHeightAlbum,
+                                    width: tileWidthAlbum,
+                                    album: item,
+                                  ),
+                                ),
+                              );
+                            }
+                            if (item is Artist) {
+                              artists.add(
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      top: 8.0, bottom: 8.0, right: 8.0),
+                                  child: CollectionArtistTile(
+                                    height: tileHeightArtist,
+                                    width: tileWidthArtist,
+                                    artist: item,
+                                  ),
+                                ),
+                              );
+                            } else if (item is Track) {
+                              tracks.add(
+                                CollectionTrackTile(
+                                  track: item,
+                                  index: collection.tracks.indexOf(item),
+                                ),
+                              );
+                            }
+                          }
+                          if (localIndex == globalIndex - 1) {
+                            _albums = albums;
+                            _artists = artists;
+                            _tracks = tracks;
+                            setState(() {});
+                          }
+                        },
+                        style: Theme.of(context).textTheme.headline4,
+                        cursorWidth: 1.0,
+                        decoration: InputDecoration(
+                          hintText: language!.STRING_COLLECTION_SEARCH_LABEL,
+                          hintStyle: Theme.of(context).textTheme.headline3,
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary,
+                              width: 1.0,
+                            ),
                           ),
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Theme.of(context).dividerColor,
-                            width: 1.0,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Theme.of(context).dividerColor,
+                              width: 1.0,
+                            ),
                           ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.secondary,
-                            width: 1.0,
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary,
+                              width: 1.0,
+                            ),
                           ),
                         ),
                       ),
