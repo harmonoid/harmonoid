@@ -1,7 +1,7 @@
 name: harmonoid
 description: Elegant music app to play local music & YouTube music. Distributes music into albums & artists. Has playlists & lyrics.
 publish_to: "none"
-version: 0.1.8+5003
+version: 0.1.9+5003
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -16,6 +16,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
       ref: 1d1deae09d6ee622d118013b28f3d6bfbabb6b9c
+  dbus: ^0.6.3
   flutter_acrylic: ^0.0.2
   dart_discord_rpc: ^0.0.2
   fluentui_system_icons: ^1.1.136
@@ -54,24 +55,35 @@ flutter:
   assets:
     - assets/images/about_header.jpg
     - assets/images/default_album_art.jpg
+    - assets/translations/de_DE.json
+    - assets/translations/en_US.json
+    - assets/translations/fr_FR.json
+    - assets/translations/hi_IN.json
+    - assets/translations/hu_HU.json
+    - assets/translations/mg_MG.json
+    - assets/translations/nl_NL.json
+    - assets/translations/pt_BR.json
+    - assets/translations/ru_RU.json
+    - assets/translations/sl_SI.json
+    - assets/translations/sv_SE.json
 
   fonts:
     - family: "Roboto"
       fonts:
-        - asset: fonts/Roboto/Roboto-Thin.ttf
+        - asset: assets/fonts/Roboto/Roboto-Thin.ttf
           weight: 100
-        - asset: fonts/Roboto/Roboto-Light.ttf
+        - asset: assets/fonts/Roboto/Roboto-Light.ttf
           weight: 300
-        - asset: fonts/Roboto/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
           weight: 400
-        - asset: fonts/Roboto/Roboto-Medium.ttf
+        - asset: assets/fonts/Roboto/Roboto-Medium.ttf
           weight: 500
-        - asset: fonts/Roboto/Roboto-Bold.ttf
+        - asset: assets/fonts/Roboto/Roboto-Bold.ttf
           weight: 700
-        - asset: fonts/Roboto/Roboto-Black.ttf
+        - asset: assets/fonts/Roboto/Roboto-Black.ttf
 
 msix_config:
-  msix_version: 0.1.8.0
+  msix_version: 0.1.9.0
   display_name: Harmonoid
   identity_name: com.alexmercerind.harmonoid
   file_extension: ogg, ogx, aac, m4a, mp3, wma, wav, aiff, flac, opus
