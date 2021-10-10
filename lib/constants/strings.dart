@@ -1,7 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
 class Strings {
-  late String STRING_HOME_URL;
   late String STRING_INTERNET_ERROR;
   late String STRING_SEARCH_HEADER;
   late String STRING_SEARCH_MODE_SUBHEADER;

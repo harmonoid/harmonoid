@@ -36,7 +36,7 @@ import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 
 const String TITLE = 'Harmonoid';
-const String VERSION = '0.1.8';
+const String VERSION = '0.1.9';
 const String AUTHOR = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String LICENSE = 'GPL-3.0';
 
