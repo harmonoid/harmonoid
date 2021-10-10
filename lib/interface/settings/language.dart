@@ -150,8 +150,11 @@ class LanguageSetting extends StatelessWidget {
           ),
         ),
         groupValue: configuration.languageRegion,
-        onChanged: (languageRegion) async =>
-            await language.set(languageRegion: languageRegion),
+        onChanged: (languageRegion) async {
+          if (languageRegion != null) {
+            await language.set(languageRegion: languageRegion);
+          }
+        },
       ),
     );
   }
