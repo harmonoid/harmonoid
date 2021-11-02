@@ -17,7 +17,7 @@ dependencies:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
       ref: 1d1deae09d6ee622d118013b28f3d6bfbabb6b9c
   dbus: ^0.6.3
-  flutter_acrylic: ^0.0.2
+  flutter_acrylic: 0.0.2
   dart_discord_rpc: ^0.0.2
   fluentui_system_icons: ^1.1.136
   assets_audio_player:
@@ -66,6 +66,7 @@ flutter:
     - assets/translations/ru_RU.json
     - assets/translations/sl_SI.json
     - assets/translations/sv_SE.json
+    - assets/translations/zh_CN.json
 
   fonts:
     - family: "Roboto"
