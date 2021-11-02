@@ -325,9 +325,9 @@ abstract class Playback {
             )
             .toList(),
       );
-      // if (Platform.isWindows) await Future.delayed(Duration(milliseconds: 100));
+      if (Platform.isWindows) await Future.delayed(Duration(milliseconds: 100));
       player.jump(index);
-      // if (Platform.isWindows) await Future.delayed(Duration(milliseconds: 100));
+      if (Platform.isWindows) await Future.delayed(Duration(milliseconds: 100));
       player.play();
     }
     // assets_audio_player
@@ -491,7 +491,7 @@ final AssetsAudioPlayer.AssetsAudioPlayer assetsAudioPlayer =
             await notification.show(
               69420,
               lyrics.query,
-              language!.STRING_LYRICS_RETRIEVING,
+              language.LYRICS_RETRIEVING,
               NotificationDetails(android: settings),
             );
           } catch (exception) {
