@@ -186,14 +186,15 @@ abstract class Utils {
       primaryColorLight: accentColor,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          elevation: MaterialStateProperty.all(0.0),
+          shadowColor: MaterialStateProperty.all(accentColor),
+          elevation: MaterialStateProperty.all(8.0),
         ),
       ),
       primaryColor: accentColor,
       primaryColorDark: accentColor,
       scaffoldBackgroundColor: configuration.acrylicEnabled!
           ? Colors.transparent
-          : (isLight ? Colors.white : Color(0xFF121212)),
+          : (isLight ? Colors.white : Color(0xFF202020)),
       toggleableActiveColor: accentColor,
       cardColor: isLight
           ? Colors.black.withOpacity(0.06)
@@ -216,16 +217,16 @@ abstract class Utils {
             isLight ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
         elevation: 4.0,
         iconTheme: IconThemeData(
-          color: isLight ? Colors.black54 : Colors.white.withOpacity(0.87),
+          color: isLight ? Colors.black : Colors.white,
           size: 24,
         ),
         actionsIconTheme: IconThemeData(
-          color: isLight ? Colors.black54 : Colors.white.withOpacity(0.87),
+          color: isLight ? Colors.black : Colors.white,
           size: 24,
         ),
       ),
       iconTheme: IconThemeData(
-        color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
+        color: isLight ? Colors.black : Colors.white,
         size: 24,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
