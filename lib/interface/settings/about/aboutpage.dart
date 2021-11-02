@@ -78,7 +78,7 @@ class AboutPageState extends State<AboutPage> {
                   width: 24.0,
                 ),
                 Text(
-                  language!.STRING_ABOUT_TITLE,
+                  language.ABOUT_TITLE,
                   style: TextStyle(
                     color: Theme.of(context).brightness == Brightness.dark
                         ? Colors.white

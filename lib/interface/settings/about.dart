@@ -19,8 +19,8 @@ class AboutSetting extends StatelessWidget {
       openElevation: 0.0,
       closedBuilder: (context, open) => ClosedTile(
         open: open,
-        title: language!.STRING_ABOUT_TITLE,
-        subtitle: language!.STRING_ABOUT_SUBTITLE,
+        title: language.ABOUT_TITLE,
+        subtitle: language.ABOUT_SUBTITLE,
       ),
       openBuilder: (context, _) => AboutPage(),
     );

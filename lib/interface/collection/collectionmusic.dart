@@ -102,7 +102,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
-                                    language!.STRING_ALBUM.toUpperCase(),
+                                    language.ALBUM.toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: this.index == 0
@@ -129,7 +129,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
-                                    language!.STRING_TRACK.toUpperCase(),
+                                    language.TRACK.toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: this.index == 1
@@ -156,7 +156,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
-                                    language!.STRING_ARTIST.toUpperCase(),
+                                    language.ARTIST.toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: this.index == 2
@@ -183,7 +183,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
-                                    language!.STRING_SEARCH.toUpperCase(),
+                                    language.SEARCH.toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: this.index == 4
@@ -210,7 +210,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
-                                    language!.STRING_PLAYLISTS.toUpperCase(),
+                                    language.PLAYLISTS.toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: this.index == 3
@@ -266,7 +266,7 @@ class CollectionMusicState extends State<CollectionMusic>
                           FluentIcons.more_vertical_20_regular,
                           size: 20.0,
                         ),
-                        elevation: 0.0,
+                        elevation: 4.0,
                         onSelected: (value) async {
                           Provider.of<Collection>(context, listen: false)
                               .sort(type: value);
@@ -276,16 +276,23 @@ class CollectionMusicState extends State<CollectionMusic>
                         },
                         itemBuilder: (context) => [
                           PopupMenuItem(
-                            value: CollectionSort.dateAdded,
+                            value: CollectionSort.aToZ,
                             child: Text(
-                              language!.STRING_DATE_ADDED,
+                              language.A_TO_Z,
                               style: Theme.of(context).textTheme.headline4,
                             ),
                           ),
                           PopupMenuItem(
-                            value: CollectionSort.aToZ,
+                            value: CollectionSort.dateAdded,
                             child: Text(
-                              language!.STRING_A_TO_Z,
+                              language.DATE_ADDED,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: CollectionSort.year,
+                            child: Text(
+                              language.YEAR,
                               style: Theme.of(context).textTheme.headline4,
                             ),
                           ),
@@ -315,10 +322,6 @@ class CollectionMusicState extends State<CollectionMusic>
                             height: 40.0,
                             width: 40.0,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white.withOpacity(0.10)
-                                  : Colors.black.withOpacity(0.10),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Icon(
@@ -357,7 +360,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
-                                    language!.STRING_ALBUM.toUpperCase(),
+                                    language.ALBUM.toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: this.index == 0
@@ -384,7 +387,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
-                                    language!.STRING_TRACK.toUpperCase(),
+                                    language.TRACK.toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: this.index == 1
@@ -411,7 +414,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
-                                    language!.STRING_ARTIST.toUpperCase(),
+                                    language.ARTIST.toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: this.index == 2
@@ -438,7 +441,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
-                                    language!.STRING_SEARCH.toUpperCase(),
+                                    language.SEARCH.toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: this.index == 4
@@ -465,7 +468,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
-                                    language!.STRING_PLAYLISTS.toUpperCase(),
+                                    language.PLAYLISTS.toUpperCase(),
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: this.index == 3
@@ -519,7 +522,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                     FluentIcons.more_vertical_20_regular,
                                     size: 20.0,
                                   ),
-                                  elevation: 0.0,
+                                  elevation: 4.0,
                                   onSelected: (value) async {
                                     Provider.of<Collection>(context,
                                             listen: false)
@@ -532,7 +535,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                     PopupMenuItem(
                                       value: CollectionSort.dateAdded,
                                       child: Text(
-                                        language!.STRING_DATE_ADDED,
+                                        language.DATE_ADDED,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline4,
@@ -541,7 +544,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                     PopupMenuItem(
                                       value: CollectionSort.aToZ,
                                       child: Text(
-                                        language!.STRING_A_TO_Z,
+                                        language.A_TO_Z,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline4,
@@ -578,14 +581,11 @@ class CollectionMusicState extends State<CollectionMusic>
                                     height: 40.0,
                                     width: 40.0,
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white.withOpacity(0.08)
-                                          : Colors.black.withOpacity(0.08),
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
                                     child: Icon(
                                       FluentIcons.settings_20_regular,
+                                      color: Colors.white,
                                       size: 20.0,
                                     ),
                                   ),
@@ -615,7 +615,10 @@ class CollectionMusicState extends State<CollectionMusic>
                         transitionBuilder:
                             (child, animation, secondaryAnimation) =>
                                 SharedAxisTransition(
-                          fillColor: Colors.transparent,
+                          fillColor:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.white
+                                  : Color(0xFF202020),
                           animation: animation,
                           secondaryAnimation: secondaryAnimation,
                           transitionType: SharedAxisTransitionType.vertical,
@@ -676,8 +679,7 @@ class CollectionMusicState extends State<CollectionMusic>
                                         ),
                                         Expanded(
                                           child: Text(
-                                            language!
-                                                .STRING_COLLECTION_INDEXING_LABEL,
+                                            language.COLLECTION_INDEXING_LABEL,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),

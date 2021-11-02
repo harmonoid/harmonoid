@@ -69,12 +69,12 @@ class LanguageSetting extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          language.STRING_SETTING_LANGUAGE_TITLE,
+                          language.SETTING_LANGUAGE_TITLE,
                           style: Theme.of(context).textTheme.headline2,
                         ),
                         Divider(color: Colors.transparent, height: 4.0),
                         Text(
-                          language.STRING_SETTING_LANGUAGE_SUBTITLE,
+                          language.SETTING_LANGUAGE_SUBTITLE,
                           style: Theme.of(context).textTheme.headline3,
                         ),
                         Divider(color: Colors.transparent, height: 8.0),

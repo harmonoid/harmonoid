@@ -138,7 +138,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
           )
         : Center(
             child: Text(
-              language!.STRING_YOUTUBE_NO_RESULTS,
+              language.YOUTUBE_NO_RESULTS,
             ),
           );
     this.setState(() {});
@@ -300,60 +300,64 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                     ),
                     fieldViewBuilder: (context, controller, node, callback) =>
                         Focus(
-                          onFocusChange: (hasFocus) {
-                            if(!hasFocus) {
-                              HotKeys.enableSpaceHotKey();
-                            }
-                          },
-                          child: Focus(
-                            onFocusChange: (hasFocus) {
-                              if(hasFocus) {
-                                HotKeys.disableSpaceHotKey();
-                              }else{HotKeys.enableSpaceHotKey();}
-                            },
-                            child: TextField(
-                      autofocus: Platform.isWindows ||
-                          Platform.isLinux ||
-                          Platform.isMacOS,
-                      controller: controller,
-                      focusNode: node,
-                      onChanged: (value) async {
-                        if (value.isEmpty) {
-                          this.suggestions = [];
-                          this.setState(() {});
-                          return;
+                      onFocusChange: (hasFocus) {
+                        if (!hasFocus) {
+                          HotKeys.enableSpaceHotKey();
                         }
-                        this.suggestions = await YTM.suggestions(value);
-                        this.setState(() {});
                       },
-                      style: Theme.of(context).textTheme.headline4,
-                      onSubmitted: (value) {
-                        this.search(value);
-                      },
-                      cursorWidth: 1.0,
-                      decoration: InputDecoration(
-                        hintText: language!.STRING_YOUTUBE_WELCOME,
-                        hintStyle: Theme.of(context).textTheme.headline3,
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary,
-                              width: 1.0),
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Theme.of(context).dividerColor,
-                            width: 1.0,
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary,
-                              width: 1.0),
-                        ),
-                      ),
+                      child: Focus(
+                        onFocusChange: (hasFocus) {
+                          if (hasFocus) {
+                            HotKeys.disableSpaceHotKey();
+                          } else {
+                            HotKeys.enableSpaceHotKey();
+                          }
+                        },
+                        child: TextField(
+                          autofocus: Platform.isWindows ||
+                              Platform.isLinux ||
+                              Platform.isMacOS,
+                          controller: controller,
+                          focusNode: node,
+                          onChanged: (value) async {
+                            if (value.isEmpty) {
+                              this.suggestions = [];
+                              this.setState(() {});
+                              return;
+                            }
+                            this.suggestions = await YTM.suggestions(value);
+                            this.setState(() {});
+                          },
+                          style: Theme.of(context).textTheme.headline4,
+                          onSubmitted: (value) {
+                            this.search(value);
+                          },
+                          cursorWidth: 1.0,
+                          decoration: InputDecoration(
+                            hintText: language.YOUTUBE_WELCOME,
+                            hintStyle: Theme.of(context).textTheme.headline3,
+                            border: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  width: 1.0),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).dividerColor,
+                                width: 1.0,
+                              ),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  width: 1.0),
                             ),
                           ),
                         ),
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -372,7 +376,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                               tileHeight: tileHeight,
                               tileWidth: tileWidth,
                               elementsPerRow: elementsPerRow,
-                              subHeader: language!.STRING_RECOMMENDATIONS,
+                              subHeader: language.RECOMMENDATIONS,
                               leadingSubHeader: null,
                               widgetCount: youtube.recommendations.length,
                               leadingWidget: Container(),
@@ -393,12 +397,10 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                                     ExceptionWidget(
                                       width: 420.0,
                                       margin: EdgeInsets.zero,
-                                      title: language!.STRING_NO_INTERNET_TITLE,
-                                      subtitle: language!
-                                              .STRING_NO_INTERNET_SUBTITLE +
+                                      title: language.NO_INTERNET_TITLE,
+                                      subtitle: language.NO_INTERNET_SUBTITLE +
                                           '\n' +
-                                          language!
-                                              .STRING_YOUTUBE_INTERNET_ERROR,
+                                          language.YOUTUBE_INTERNET_ERROR,
                                     ),
                                     Padding(
                                       padding: EdgeInsets.all(12.0),
@@ -412,7 +414,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                                           );
                                         },
                                         child: Text(
-                                          language!.STRING_REFRESH,
+                                          language.REFRESH,
                                           style: TextStyle(
                                             color: Theme.of(context)
                                                 .colorScheme

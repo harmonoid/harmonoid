@@ -43,8 +43,8 @@ class IndexingState extends State<IndexingSetting> {
   Widget build(BuildContext context) {
     return Consumer<CollectionRefreshController>(
       builder: (context, controller, _) => SettingsTile(
-        title: language!.STRING_SETTING_INDEXING_TITLE,
-        subtitle: language!.STRING_SETTING_INDEXING_SUBTITLE,
+        title: language.SETTING_INDEXING_TITLE,
+        subtitle: language.SETTING_INDEXING_SUBTITLE,
         child: Container(
           margin: EdgeInsets.only(left: 16, right: 16),
           child: Column(
@@ -54,7 +54,7 @@ class IndexingState extends State<IndexingSetting> {
                     height: 8.0,
                   ),
                   Text(
-                    language!.STRING_SELECTED_DIRECTORIES,
+                    language.SELECTED_DIRECTORIES,
                     style: TextStyle(
                       color: Theme.of(context).brightness == Brightness.dark
                           ? Colors.white
@@ -95,14 +95,14 @@ class IndexingState extends State<IndexingSetting> {
                                             .appBarTheme
                                             .backgroundColor,
                                         title: Text(
-                                          language!.STRING_WARNING,
+                                          language.WARNING,
                                           style: Theme.of(subContext)
                                               .textTheme
                                               .headline1,
                                         ),
                                         content: Text(
-                                          language!
-                                              .STRING_LAST_COLLECTION_DIRECTORY_REMOVED,
+                                          language
+                                              .LAST_COLLECTION_DIRECTORY_REMOVED,
                                           style: Theme.of(subContext)
                                               .textTheme
                                               .headline5,
@@ -114,7 +114,7 @@ class IndexingState extends State<IndexingSetting> {
                                             onPressed: () async {
                                               Navigator.of(subContext).pop();
                                             },
-                                            child: Text(language!.STRING_OK),
+                                            child: Text(language.OK),
                                           ),
                                         ],
                                       ),
@@ -135,7 +135,7 @@ class IndexingState extends State<IndexingSetting> {
                                 );
                               },
                               child: Text(
-                                language!.STRING_REMOVE,
+                                language.REMOVE,
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                 ),
@@ -164,8 +164,8 @@ class IndexingState extends State<IndexingSetting> {
                                 ),
                                 duration: Duration(milliseconds: 400),
                                 child: Text(
-                                  (language!
-                                      .STRING_SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
+                                  (language
+                                      .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
                                       .replaceAll(
                                     'NUMBER_STRING',
                                     controller.progress.toString(),
@@ -206,7 +206,7 @@ class IndexingState extends State<IndexingSetting> {
                                 height: 12.0,
                               ),
                               Text(
-                                language!.STRING_COLLECTION_INDEXING_LABEL,
+                                language.COLLECTION_INDEXING_LABEL,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
@@ -220,7 +220,7 @@ class IndexingState extends State<IndexingSetting> {
                               color: Colors.white,
                             ),
                             label: Text(
-                              language!.STRING_SETTING_INDEXING_DONE,
+                              language.SETTING_INDEXING_DONE,
                               style: TextStyle(
                                 color: Colors.white,
                               ),
@@ -229,7 +229,7 @@ class IndexingState extends State<IndexingSetting> {
                   ),
                   // No longer necessary.
                   // Text(
-                  //   language!.STRING_SETTING_INDEXING_WARNING,
+                  //   language.SETTING_INDEXING_WARNING,
                   //   style: Theme.of(context).textTheme.headline4,
                   // ),
                 ],
@@ -274,7 +274,7 @@ class IndexingState extends State<IndexingSetting> {
                     }
                   },
             child: Text(
-              language!.STRING_ADD_NEW_FOLDER,
+              language.ADD_NEW_FOLDER,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
               ),
@@ -291,7 +291,7 @@ class IndexingState extends State<IndexingSetting> {
                     );
                   },
             child: Text(
-              language!.STRING_REFRESH,
+              language.REFRESH,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
               ),

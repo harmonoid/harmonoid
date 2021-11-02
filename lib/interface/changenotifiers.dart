@@ -66,7 +66,7 @@ class NowPlayingController extends ChangeNotifier {
 
   set isBuffering(bool isBuffering) {
     this._isBuffering = isBuffering;
-    if (!this._isBuffering) this._state = language!.STRING_BUFFERING;
+    if (!this._isBuffering) this._state = language.BUFFERING;
     this.notifyListeners();
   }
 
@@ -119,7 +119,7 @@ class NowPlayingController extends ChangeNotifier {
   double _rate = 1.0;
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
-  String _state = language!.STRING_BUFFERING;
+  String _state = language.BUFFERING;
   bool _isShuffling = false;
   PlaylistMode _playlistMode = PlaylistMode.none;
 
@@ -322,7 +322,7 @@ List<Accent?> accents = [
   Accent(light: Color(0xFFF4B400), dark: Color(0xFFFFE57F)),
   Accent(light: Color(0xFF0F9D58), dark: Color(0xFF0F9D58)),
   Accent(light: Color(0xFFFF3D00), dark: Color(0xFFFF9E80)),
-  Accent(light: Color(0xFF1DB954), dark: Color(0xFF1DB954)),
+  Accent(light: Color(0xFF8CD2D5), dark: Color(0xFF8CD2D5)),
   Accent(light: Color(0xFF5B51D8), dark: Color(0xFFD1C4E9)),
   Accent(light: Color(0xFFF50057), dark: Color(0xFFFF80AB)),
   Accent(light: Color(0xFF424242), dark: Colors.grey.shade600),

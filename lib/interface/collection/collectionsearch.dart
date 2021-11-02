@@ -84,9 +84,11 @@ class CollectionSearchState extends State<CollectionSearch> {
                   Expanded(
                     child: Focus(
                       onFocusChange: (hasFocus) {
-                        if(hasFocus) {
+                        if (hasFocus) {
                           HotKeys.disableSpaceHotKey();
-                        }else{HotKeys.enableSpaceHotKey();}
+                        } else {
+                          HotKeys.enableSpaceHotKey();
+                        }
                       },
                       child: TextField(
                         autofocus: Platform.isWindows ||
@@ -146,7 +148,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                         style: Theme.of(context).textTheme.headline4,
                         cursorWidth: 1.0,
                         decoration: InputDecoration(
-                          hintText: language!.STRING_COLLECTION_SEARCH_LABEL,
+                          hintText: language.COLLECTION_SEARCH_LABEL,
                           hintStyle: Theme.of(context).textTheme.headline3,
                           border: UnderlineInputBorder(
                             borderSide: BorderSide(
@@ -198,7 +200,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                                 height: 12.0,
                               ),
                               Text(
-                                language!.STRING_LOCAL_SEARCH_NO_RESULTS,
+                                language.COLLECTION_SEARCH_NO_RESULTS,
                                 style: Theme.of(context).textTheme.headline3,
                               )
                             ],
@@ -206,9 +208,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                         ))
                   : CustomListView(
                       children: <Widget>[
-                            albums
-                                ? Container()
-                                : SubHeader(language!.STRING_ALBUM),
+                            albums ? Container() : SubHeader(language.ALBUM),
                             albums
                                 ? Container()
                                 : Container(
@@ -223,9 +223,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                                       children: _albums,
                                     ),
                                   ),
-                            artists
-                                ? Container()
-                                : SubHeader(language!.STRING_ARTIST),
+                            artists ? Container() : SubHeader(language.ARTIST),
                             artists
                                 ? Container()
                                 : Container(
@@ -240,9 +238,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                                       children: _artists,
                                     ),
                                   ),
-                            tracks
-                                ? Container()
-                                : SubHeader(language!.STRING_TRACK),
+                            tracks ? Container() : SubHeader(language.TRACK),
                           ] +
                           (tracks
                               ? [

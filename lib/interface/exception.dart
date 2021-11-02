@@ -200,21 +200,6 @@ class ExceptionApp extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 40.0,
-                        width: 40.0,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.08),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Icon(
-                          Icons.close,
-                          size: 20.0,
-                        ),
-                      ),
-                    ),
                     SizedBox(
                       width: 24.0,
                     ),
@@ -268,7 +253,7 @@ class ExceptionApp extends StatelessWidget {
                     onPressed: () => UrlLauncher.launch(
                         'https://github.com/alexmercerind/harmonoid/issues'),
                     child: Text(
-                      language!.STRING_REPORT,
+                      'REPORT',
                       style: TextStyle(
                         color: Colors.deepPurpleAccent.shade200,
                       ),
@@ -277,7 +262,7 @@ class ExceptionApp extends StatelessWidget {
                   MaterialButton(
                     onPressed: SystemNavigator.pop,
                     child: Text(
-                      language!.STRING_EXIT_TITLE,
+                      'EXIT',
                       style: TextStyle(
                         color: Colors.deepPurpleAccent.shade200,
                       ),

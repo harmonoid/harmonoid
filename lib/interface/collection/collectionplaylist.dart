@@ -46,12 +46,12 @@ class CollectionPlaylistTab extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          language!.STRING_PLAYLISTS,
+                          language.PLAYLISTS,
                           style: Theme.of(context).textTheme.headline1,
                           textAlign: TextAlign.start,
                         ),
                         Text(
-                          language!.STRING_PLAYLISTS_SUBHEADER,
+                          language.PLAYLISTS_SUBHEADER,
                           style: Theme.of(context).textTheme.headline3,
                         ),
                       ],
@@ -78,7 +78,7 @@ class CollectionPlaylistTab extends StatelessWidget {
                           color: Theme.of(context).iconTheme.color,
                         ),
                         title: Text(
-                          language!.STRING_PLAYLISTS_CREATE,
+                          language.PLAYLISTS_CREATE,
                           style: Theme.of(context).textTheme.headline4,
                         ),
                         children: [
@@ -89,13 +89,16 @@ class CollectionPlaylistTab extends StatelessWidget {
                               Expanded(
                                 child: Focus(
                                   onFocusChange: (hasFocus) {
-                                    if(hasFocus) {
+                                    if (hasFocus) {
                                       HotKeys.disableSpaceHotKey();
-                                    }else{HotKeys.enableSpaceHotKey();}
+                                    } else {
+                                      HotKeys.enableSpaceHotKey();
+                                    }
                                   },
                                   child: TextField(
                                     controller: this._textFieldController,
-                                    style: Theme.of(context).textTheme.headline4,
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
                                     cursorWidth: 1,
                                     autofocus: true,
                                     autocorrect: true,
@@ -108,10 +111,10 @@ class CollectionPlaylistTab extends StatelessWidget {
                                       }
                                     },
                                     decoration: InputDecoration(
-                                      labelText: language!
-                                          .STRING_PLAYLISTS_TEXT_FIELD_LABEL,
-                                      hintText: language!
-                                          .STRING_PLAYLISTS_TEXT_FIELD_HINT,
+                                      labelText:
+                                          language.PLAYLISTS_TEXT_FIELD_LABEL,
+                                      hintText:
+                                          language.PLAYLISTS_TEXT_FIELD_HINT,
                                       hintStyle:
                                           Theme.of(context).textTheme.headline3,
                                       labelStyle: TextStyle(
@@ -191,13 +194,13 @@ class CollectionPlaylistTab extends StatelessWidget {
                           builder: (subContext) => FractionallyScaledWidget(
                             child: AlertDialog(
                               title: Text(
-                                language!
-                                    .STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_HEADER,
+                                language
+                                    .COLLECTION_ALBUM_PLAYLIST_DELETE_DIALOG_HEADER,
                                 style: Theme.of(subContext).textTheme.headline1,
                               ),
                               content: Text(
-                                language!
-                                    .STRING_LOCAL_ALBUM_VIEW_PLAYLIST_DELETE_DIALOG_BODY,
+                                language
+                                    .COLLECTION_ALBUM_PLAYLIST_DELETE_DIALOG_BODY,
                                 style: Theme.of(subContext).textTheme.headline5,
                               ),
                               actions: [
@@ -207,12 +210,12 @@ class CollectionPlaylistTab extends StatelessWidget {
                                     await collection.playlistRemove(playlist);
                                     Navigator.of(subContext).pop();
                                   },
-                                  child: Text(language!.STRING_YES),
+                                  child: Text(language.YES),
                                 ),
                                 MaterialButton(
                                   textColor: Theme.of(context).primaryColor,
                                   onPressed: Navigator.of(subContext).pop,
-                                  child: Text(language!.STRING_NO),
+                                  child: Text(language.NO),
                                 ),
                               ],
                             ),
@@ -289,7 +292,7 @@ class CollectionPlaylist extends StatelessWidget {
             Expanded(
               child: CustomListView(
                 children: <Widget>[
-                      SubHeader(language!.STRING_PLAYLIST_TRACKS_SUBHEADER),
+                      SubHeader(language.PLAYLIST_TRACKS_SUBHEADER),
                     ] +
                     (this.playlist.tracks.map((Track track) {
                       return ListTile(

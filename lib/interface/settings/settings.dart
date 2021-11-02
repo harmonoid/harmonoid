@@ -56,7 +56,7 @@ class Settings extends StatelessWidget {
                 width: 24.0,
               ),
               Text(
-                language!.STRING_SETTING,
+                language.SETTING,
                 style: TextStyle(
                   color: Theme.of(context).brightness == Brightness.dark
                       ? Colors.white

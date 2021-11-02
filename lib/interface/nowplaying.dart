@@ -434,7 +434,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SubHeader(
-                                  language!.STRING_LYRICS,
+                                  language.LYRICS,
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(
@@ -451,7 +451,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                             ),
                           ),
                           SubHeader(
-                            language!.STRING_COMING_UP,
+                            language.COMING_UP,
                           ),
                         ] +
                         segment
@@ -494,11 +494,17 @@ class NowPlayingState extends State<NowPlayingScreen>
                             .toList(),
                   ),
                   Builder(
-                    builder: (context){
-                      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+                    builder: (context) {
+                      if (Platform.isWindows ||
+                          Platform.isLinux ||
+                          Platform.isMacOS) {
                         //This is a fix to an issue where the WindowTitleBar doesn't show up.
-                        return Positioned(child: SizedBox(), top: -40,);
-                      }return SizedBox();
+                        return Positioned(
+                          child: SizedBox(),
+                          top: -40,
+                        );
+                      }
+                      return SizedBox();
                     },
                   ),
                 ],
@@ -543,7 +549,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                               width: 24.0,
                             ),
                             Text(
-                              language!.STRING_NOW_PLAYING,
+                              language.NOW_PLAYING,
                               style: TextStyle(
                                 color: Theme.of(context).brightness ==
                                         Brightness.dark
@@ -639,12 +645,12 @@ class NowPlayingState extends State<NowPlayingScreen>
                                                   : Colors.white,
                                           tabs: [
                                             Tab(
-                                              text: language!.STRING_COMING_UP
+                                              text: language.COMING_UP
                                                   .toUpperCase(),
                                             ),
                                             Tab(
-                                              text: language!.STRING_LYRICS
-                                                  .toUpperCase(),
+                                              text:
+                                                  language.LYRICS.toUpperCase(),
                                             ),
                                           ],
                                         ),
@@ -731,8 +737,8 @@ class NowPlayingState extends State<NowPlayingScreen>
                                                       .toList()
                                                   : [
                                                       Text(
-                                                        language!
-                                                            .STRING_LYRICS_NOT_FOUND,
+                                                        language
+                                                            .LYRICS_NOT_FOUND,
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline4,
@@ -756,10 +762,8 @@ class NowPlayingState extends State<NowPlayingScreen>
                   ),
                 )
               : Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(
-                      Theme.of(context).colorScheme.secondary,
-                    ),
+                  child: Text(
+                    language.NOW_PLAYING_NOT_PLAYING_TITLE,
                   ),
                 )),
     );
@@ -786,12 +790,12 @@ extension on Duration {
   }
 
   String get lyric {
-    if (lyrics.current.isEmpty) return language!.STRING_LYRICS_NOT_FOUND;
+    if (lyrics.current.isEmpty) return language.LYRICS_NOT_FOUND;
     for (var lyric in lyrics.current.reversed) {
       if (lyric.time ~/ 1000 <= inSeconds) {
         return lyric.words;
       }
     }
-    return language!.STRING_LYRICS_NOT_FOUND;
+    return language.LYRICS_NOT_FOUND;
   }
 }

@@ -17,6 +17,7 @@
  *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
+import 'dart:ui';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,44 +34,41 @@ class CollectionAlbumTab extends StatelessWidget {
 
   Widget build(BuildContext context) {
     int elementsPerRow =
-        MediaQuery.of(context).size.width.normalized ~/ (156 + 8);
+        MediaQuery.of(context).size.width.normalized ~/ (172.0 + 8.0);
     double tileWidth = (MediaQuery.of(context).size.width.normalized -
             16 -
             (elementsPerRow - 1) * 8) /
         elementsPerRow;
-    double tileHeight = tileWidth * 246.0 / 156;
+    double tileHeight = tileWidth * 224.0 / 172.0;
 
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
-          ? Container(
-              child: CustomListView(
-                children: tileGridListWidgets(
-                  context: context,
-                  tileHeight: tileHeight,
-                  tileWidth: tileWidth,
-                  elementsPerRow: elementsPerRow,
-                  subHeader: language!.STRING_LOCAL_OTHER_SUBHEADER_ALBUM,
-                  leadingSubHeader: language!.STRING_LOCAL_TOP_SUBHEADER_ALBUM,
-                  widgetCount: collection.albums.length,
-                  leadingWidget: LeadingCollectionAlbumTile(
-                    height: tileWidth,
-                  ),
-                  builder: (BuildContext context, int index) =>
-                      CollectionAlbumTile(
-                    height: tileHeight,
-                    width: tileWidth,
-                    album: collection.albums[index],
-                  ),
+          ? CustomListView(
+              padding: EdgeInsets.only(top: 24.0),
+              children: tileGridListWidgets(
+                context: context,
+                tileHeight: tileHeight,
+                tileWidth: tileWidth,
+                elementsPerRow: elementsPerRow,
+                subHeader: null,
+                leadingSubHeader: null,
+                widgetCount: collection.albums.length,
+                leadingWidget: Container(),
+                builder: (BuildContext context, int index) =>
+                    CollectionAlbumTile(
+                  height: tileHeight,
+                  width: tileWidth,
+                  album: collection.albums[index],
                 ),
               ),
             )
           : Center(
               child: ExceptionWidget(
-                height: 256.0,
+                height: 284.0,
                 width: 420.0,
                 margin: EdgeInsets.zero,
-                title: language!.STRING_NO_COLLECTION_TITLE,
-                subtitle: language!.STRING_NO_COLLECTION_SUBTITLE,
+                title: language.NO_COLLECTION_TITLE,
+                subtitle: language.NO_COLLECTION_SUBTITLE,
               ),
             ),
     );
@@ -91,88 +89,126 @@ class CollectionAlbumTile extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-      height: this.height! - 2.0,
-      width: this.width! - 2.0,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(8.0),
-        ),
-        border:
-            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.12)),
-        color: Theme.of(context).cardColor,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
-          ),
-          onTap: () {
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    FadeThroughTransition(
-                  fillColor: Colors.transparent,
-                  animation: animation,
-                  secondaryAnimation: secondaryAnimation,
-                  child: CollectionAlbum(
-                    album: this.album,
+      height: this.height,
+      width: this.width,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          ScaleOnHover(
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                Positioned(
+                  top: -10.0,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Image.file(
+                        this.album.albumArt,
+                        height: this.width! - 44.0,
+                        width: this.width! - 44.0,
+                      ),
+                      Container(
+                        color: Colors.black.withOpacity(
+                            Theme.of(context).brightness == Brightness.light
+                                ? 0.1
+                                : 0.6),
+                        height: this.width! - 44.0,
+                        width: this.width! - 44.0,
+                      ),
+                      ClipRect(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(
+                            sigmaX: 8.0,
+                            sigmaY: 8.0,
+                          ),
+                          child: Container(
+                            height: this.width!,
+                            width: this.width!,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            );
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Hero(
-                tag:
-                    'album_art_${this.album.albumName}_${this.album.albumArtistName}',
-                child: ClipRRect(
+                InkWell(
                   borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
+                    Radius.circular(4.0),
                   ),
-                  child: Image.file(
-                    this.album.albumArt,
-                    fit: BoxFit.cover,
-                    height: this.width! - 2.0,
-                    width: this.width! - 2.0,
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                height: this.height! - this.width! - 2.0,
-                width: this.width! - 2.0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 4),
-                      child: Text(
-                        this.album.albumName!,
-                        style: Theme.of(context).textTheme.headline2,
-                        textAlign: TextAlign.left,
-                        maxLines: 2,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            FadeThroughTransition(
+                          fillColor: Colors.transparent,
+                          animation: animation,
+                          secondaryAnimation: secondaryAnimation,
+                          child: CollectionAlbum(
+                            album: this.album,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Hero(
+                    tag:
+                        'album_art_${this.album.albumName}_${this.album.albumArtistName}',
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(4.0),
+                      ),
+                      child: Image.file(
+                        this.album.albumArt,
+                        fit: BoxFit.cover,
+                        height: this.width! - 48.0,
+                        width: this.width! - 48.0,
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 2),
-                      child: Text(
-                        '${this.album.albumArtistName}\n(${this.album.year ?? 'Unknown Year'})',
-                        style: Theme.of(context).textTheme.headline3,
-                        maxLines: 2,
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          Positioned(
+            bottom: 20.0,
+            child: Container(
+              width: this.width,
+              padding: EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    this.album.albumName!,
+                    style: Theme.of(context).textTheme.headline2,
+                    textAlign: TextAlign.left,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 2),
+                    child: Text(
+                      '${this.album.albumArtistName}',
+                      style: Theme.of(context).textTheme.headline3,
+                      maxLines: 1,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  Text(
+                    '(${this.album.year ?? 'Unknown Year'})',
+                    style: Theme.of(context).textTheme.headline3,
+                    maxLines: 2,
+                    textAlign: TextAlign.left,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -305,7 +341,7 @@ class CollectionAlbum extends StatelessWidget {
                   width: 24.0,
                 ),
                 Text(
-                  language!.STRING_ALBUM_SINGLE,
+                  language.ALBUM_SINGLE,
                   style: Theme.of(context).textTheme.headline1,
                 )
               ],
@@ -325,21 +361,71 @@ class CollectionAlbum extends StatelessWidget {
                         alignment: Alignment.center,
                         child: Container(
                           constraints: BoxConstraints(
-                            maxWidth: 256.0,
-                            maxHeight: 256.0,
+                            maxWidth: 282.0,
+                            maxHeight: 282.0,
                           ),
-                          child: Hero(
-                            tag:
-                                'album_art_${this.album!.albumName}_${this.album!.albumArtistName}',
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12.0),
-                              child: Image.file(
-                                this.album!.albumArt,
-                                fit: BoxFit.contain,
-                                alignment: Alignment.center,
-                                filterQuality: FilterQuality.low,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            alignment: Alignment.topCenter,
+                            children: [
+                              Positioned.fill(
+                                bottom: -20.0,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(32.0),
+                                          child: Image.file(
+                                            this.album!.albumArt,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(32.0),
+                                          child: Container(
+                                            color: Colors.black.withOpacity(
+                                                Theme.of(context).brightness ==
+                                                        Brightness.light
+                                                    ? 0.1
+                                                    : 0.4),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    ClipRect(
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                          sigmaX: 8.0,
+                                          sigmaY: 8.0,
+                                        ),
+                                        child: Container(
+                                          height: 284.0,
+                                          width: 284.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
+                              Padding(
+                                padding: EdgeInsets.all(34.0),
+                                child: Hero(
+                                  tag:
+                                      'album_art_${this.album?.albumName}_${this.album?.albumArtistName}',
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(4.0),
+                                    ),
+                                    child: Image.file(
+                                      this.album!.albumArt,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -391,7 +477,7 @@ class CollectionAlbum extends StatelessWidget {
                             );
                           },
                           child: Text(
-                            language!.STRING_PLAY_NOW,
+                            language.PLAY_NOW,
                           ),
                         ),
                         SizedBox(
@@ -407,11 +493,12 @@ class CollectionAlbum extends StatelessWidget {
                             Playback.add(album!.tracks);
                           },
                           child: Text(
-                            language!.STRING_ADD_TO_NOW_PLAYING,
+                            language.ADD_TO_NOW_PLAYING,
                           ),
                         ),
                       ],
                     ),
+                    SizedBox(height: 18.0),
                   ],
                 ),
               ),
@@ -437,7 +524,7 @@ class CollectionAlbum extends StatelessWidget {
                               ? Container()
                               : child!,
                           SubHeader(
-                            language!.STRING_LOCAL_ALBUM_VIEW_TRACKS_SUBHEADER,
+                            language.COLLECTION_ALBUM_TRACKS_SUBHEADER,
                           ),
                         ] +
                         (this.album!.tracks
@@ -500,16 +587,16 @@ class CollectionAlbum extends StatelessWidget {
                                                             .appBarTheme
                                                             .backgroundColor,
                                                     title: Text(
-                                                      language!
-                                                          .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
+                                                      language
+                                                          .COLLECTION_ALBUM_TRACK_DELETE_DIALOG_HEADER,
                                                       style:
                                                           Theme.of(subContext)
                                                               .textTheme
                                                               .headline1,
                                                     ),
                                                     content: Text(
-                                                      language!
-                                                          .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
+                                                      language
+                                                          .COLLECTION_ALBUM_TRACK_DELETE_DIALOG_BODY,
                                                       style:
                                                           Theme.of(subContext)
                                                               .textTheme
@@ -536,8 +623,8 @@ class CollectionAlbum extends StatelessWidget {
                                                                   .pop();
                                                           }
                                                         },
-                                                        child: Text(language!
-                                                            .STRING_YES),
+                                                        child:
+                                                            Text(language.YES),
                                                       ),
                                                       MaterialButton(
                                                         textColor:
@@ -546,8 +633,8 @@ class CollectionAlbum extends StatelessWidget {
                                                         onPressed: Navigator.of(
                                                                 subContext)
                                                             .pop,
-                                                        child: Text(language!
-                                                            .STRING_NO),
+                                                        child:
+                                                            Text(language.NO),
                                                       ),
                                                     ],
                                                   ),
@@ -580,8 +667,8 @@ class CollectionAlbum extends StatelessWidget {
                                                     actionsPadding:
                                                         EdgeInsets.zero,
                                                     title: Text(
-                                                      language!
-                                                          .STRING_PLAYLIST_ADD_DIALOG_TITLE,
+                                                      language
+                                                          .PLAYLIST_ADD_DIALOG_TITLE,
                                                       style:
                                                           Theme.of(subContext)
                                                               .textTheme
@@ -606,8 +693,8 @@ class CollectionAlbum extends StatelessWidget {
                                                                     top: 8,
                                                                     bottom: 16),
                                                             child: Text(
-                                                              language!
-                                                                  .STRING_PLAYLIST_ADD_DIALOG_BODY,
+                                                              language
+                                                                  .PLAYLIST_ADD_DIALOG_BODY,
                                                               style: Theme.of(
                                                                       subContext)
                                                                   .textTheme
@@ -676,8 +763,8 @@ class CollectionAlbum extends StatelessWidget {
                                                         onPressed: Navigator.of(
                                                                 subContext)
                                                             .pop,
-                                                        child: Text(language!
-                                                            .STRING_CANCEL),
+                                                        child: Text(
+                                                            language.CANCEL),
                                                       ),
                                                     ],
                                                   ),
@@ -700,12 +787,12 @@ class CollectionAlbum extends StatelessWidget {
                                             Theme.of(context).iconTheme.color,
                                         size: 20.0,
                                       ),
-                                      tooltip: language!.STRING_OPTIONS,
+                                      tooltip: language.OPTIONS,
                                       itemBuilder: (_) => <PopupMenuEntry>[
                                         PopupMenuItem(
                                           value: 0,
                                           child: Text(
-                                            language!.STRING_DELETE,
+                                            language.DELETE,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4,
@@ -714,7 +801,7 @@ class CollectionAlbum extends StatelessWidget {
                                         PopupMenuItem(
                                           value: 1,
                                           child: Text(
-                                            language!.STRING_SHARE,
+                                            language.SHARE,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4,
@@ -723,7 +810,7 @@ class CollectionAlbum extends StatelessWidget {
                                         PopupMenuItem(
                                           value: 2,
                                           child: Text(
-                                            language!.STRING_ADD_TO_PLAYLIST,
+                                            language.ADD_TO_PLAYLIST,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4,
@@ -732,7 +819,7 @@ class CollectionAlbum extends StatelessWidget {
                                         PopupMenuItem(
                                           value: 3,
                                           child: Text(
-                                            language!.STRING_ADD_TO_NOW_PLAYING,
+                                            language.ADD_TO_NOW_PLAYING,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4,

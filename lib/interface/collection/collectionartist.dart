@@ -47,8 +47,8 @@ class CollectionArtistTab extends StatelessWidget {
                 tileHeight: tileHeight,
                 tileWidth: tileWidth,
                 elementsPerRow: elementsPerRow,
-                subHeader: language!.STRING_LOCAL_OTHER_SUBHEADER_ARTIST,
-                leadingSubHeader: language!.STRING_LOCAL_TOP_SUBHEADER_ARTIST,
+                subHeader: language.COLLECTION_OTHER_SUBHEADER_ARTIST,
+                leadingSubHeader: language.COLLECTION_TOP_SUBHEADER_ARTIST,
                 widgetCount: collection.artists.length,
                 leadingWidget: LeadingCollectionArtistTile(
                   height: tileWidth,
@@ -66,8 +66,8 @@ class CollectionArtistTab extends StatelessWidget {
                 height: 256.0,
                 width: 420.0,
                 margin: EdgeInsets.zero,
-                title: language!.STRING_NO_COLLECTION_TITLE,
-                subtitle: language!.STRING_NO_COLLECTION_SUBTITLE,
+                title: language.NO_COLLECTION_TITLE,
+                subtitle: language.NO_COLLECTION_SUBTITLE,
               ),
             ),
     );
@@ -278,7 +278,7 @@ class CollectionArtist extends StatelessWidget {
                   width: 24.0,
                 ),
                 Text(
-                  language!.STRING_ARTIST_SINGLE,
+                  language.ARTIST_SINGLE,
                   style: Theme.of(context).textTheme.headline1,
                 )
               ],
@@ -358,7 +358,7 @@ class CollectionArtist extends StatelessWidget {
                           ),
                           onPressed: () {},
                           child: Text(
-                            language!.STRING_PLAY_NOW,
+                            language.PLAY_NOW,
                           ),
                         ),
                         SizedBox(
@@ -372,7 +372,7 @@ class CollectionArtist extends StatelessWidget {
                           ),
                           onPressed: () {},
                           child: Text(
-                            language!.STRING_ADD_TO_NOW_PLAYING,
+                            language.ADD_TO_NOW_PLAYING,
                           ),
                         ),
                       ],
@@ -403,7 +403,7 @@ class CollectionArtist extends StatelessWidget {
                               ? Container()
                               : child!,
                           SubHeader(
-                            language!.STRING_ALBUMS_FROM_ARTIST,
+                            language.ALBUMS_FROM_ARTIST,
                           ),
                           Container(
                             height: tileHeight + 16.0,
@@ -431,7 +431,7 @@ class CollectionArtist extends StatelessWidget {
                             ),
                           ),
                           SubHeader(
-                            language!.STRING_TRACKS_FROM_ARTIST,
+                            language.TRACKS_FROM_ARTIST,
                           ),
                         ] +
                         this
@@ -494,16 +494,16 @@ class CollectionArtist extends StatelessWidget {
                                                             .appBarTheme
                                                             .backgroundColor,
                                                     title: Text(
-                                                      language!
-                                                          .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_HEADER,
+                                                      language
+                                                          .COLLECTION_ALBUM_TRACK_DELETE_DIALOG_HEADER,
                                                       style:
                                                           Theme.of(subContext)
                                                               .textTheme
                                                               .headline1,
                                                     ),
                                                     content: Text(
-                                                      language!
-                                                          .STRING_LOCAL_ALBUM_VIEW_TRACK_DELETE_DIALOG_BODY,
+                                                      language
+                                                          .COLLECTION_ALBUM_TRACK_DELETE_DIALOG_BODY,
                                                       style:
                                                           Theme.of(subContext)
                                                               .textTheme
@@ -532,8 +532,8 @@ class CollectionArtist extends StatelessWidget {
                                                                   .pop();
                                                           }
                                                         },
-                                                        child: Text(language!
-                                                            .STRING_YES),
+                                                        child:
+                                                            Text(language.YES),
                                                       ),
                                                       MaterialButton(
                                                         textColor:
@@ -542,8 +542,8 @@ class CollectionArtist extends StatelessWidget {
                                                         onPressed: Navigator.of(
                                                                 subContext)
                                                             .pop,
-                                                        child: Text(language!
-                                                            .STRING_NO),
+                                                        child:
+                                                            Text(language.NO),
                                                       ),
                                                     ],
                                                   ),
@@ -576,8 +576,8 @@ class CollectionArtist extends StatelessWidget {
                                                     actionsPadding:
                                                         EdgeInsets.zero,
                                                     title: Text(
-                                                      language!
-                                                          .STRING_PLAYLIST_ADD_DIALOG_TITLE,
+                                                      language
+                                                          .PLAYLIST_ADD_DIALOG_TITLE,
                                                       style:
                                                           Theme.of(subContext)
                                                               .textTheme
@@ -602,8 +602,8 @@ class CollectionArtist extends StatelessWidget {
                                                                     top: 8,
                                                                     bottom: 16),
                                                             child: Text(
-                                                              language!
-                                                                  .STRING_PLAYLIST_ADD_DIALOG_BODY,
+                                                              language
+                                                                  .PLAYLIST_ADD_DIALOG_BODY,
                                                               style: Theme.of(
                                                                       subContext)
                                                                   .textTheme
@@ -672,8 +672,8 @@ class CollectionArtist extends StatelessWidget {
                                                         onPressed: Navigator.of(
                                                                 subContext)
                                                             .pop,
-                                                        child: Text(language!
-                                                            .STRING_CANCEL),
+                                                        child: Text(
+                                                            language.CANCEL),
                                                       ),
                                                     ],
                                                   ),
@@ -696,12 +696,12 @@ class CollectionArtist extends StatelessWidget {
                                             Theme.of(context).iconTheme.color,
                                         size: 20.0,
                                       ),
-                                      tooltip: language!.STRING_OPTIONS,
+                                      tooltip: language.OPTIONS,
                                       itemBuilder: (_) => <PopupMenuEntry>[
                                         PopupMenuItem(
                                           value: 0,
                                           child: Text(
-                                            language!.STRING_DELETE,
+                                            language.DELETE,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4,
@@ -710,7 +710,7 @@ class CollectionArtist extends StatelessWidget {
                                         PopupMenuItem(
                                           value: 1,
                                           child: Text(
-                                            language!.STRING_SHARE,
+                                            language.SHARE,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4,
@@ -719,7 +719,7 @@ class CollectionArtist extends StatelessWidget {
                                         PopupMenuItem(
                                           value: 2,
                                           child: Text(
-                                            language!.STRING_ADD_TO_PLAYLIST,
+                                            language.ADD_TO_PLAYLIST,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4,
@@ -728,7 +728,7 @@ class CollectionArtist extends StatelessWidget {
                                         PopupMenuItem(
                                           value: 3,
                                           child: Text(
-                                            language!.STRING_ADD_TO_NOW_PLAYING,
+                                            language.ADD_TO_NOW_PLAYING,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4,

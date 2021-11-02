@@ -33,13 +33,13 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
-      title: language!.STRING_SETTING_MISCELLANEOUS_TITLE,
-      subtitle: language!.STRING_SETTING_MISCELLANEOUS_SUBTITLE,
+      title: language.SETTING_MISCELLANEOUS_TITLE,
+      subtitle: language.SETTING_MISCELLANEOUS_SUBTITLE,
       child: Column(
         children: [
           SwitchListTile(
             title: Text(
-              language!.STRING_ENABLE_ACRYLIC_BLUR,
+              language.ENABLE_ACRYLIC_BLUR,
               style: Theme.of(context).textTheme.headline4,
             ),
             value: configuration.acrylicEnabled!,
@@ -53,7 +53,7 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
           ),
           SwitchListTile(
             title: Text(
-              language!.STRING_NOTIFICATION_LYRICS_TITLE,
+              language.NOTIFICATION_LYRICS_TITLE,
               style: Theme.of(context).textTheme.headline4,
             ),
             value: configuration.notificationLyrics!,
@@ -66,7 +66,7 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
           ),
           SwitchListTile(
             title: Text(
-              language!.STRING_ENABLE_125_SCALING,
+              language.ENABLE_125_SCALING,
               style: Theme.of(context).textTheme.headline4,
             ),
             value: configuration.enable125Scaling!,

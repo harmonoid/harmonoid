@@ -34,9 +34,9 @@ class CollectionTrackTab extends StatelessWidget {
               children: () {
                 List<Widget> children = <Widget>[];
                 children.addAll([
-                  SubHeader(language!.STRING_LOCAL_TOP_SUBHEADER_TRACK),
+                  SubHeader(language.COLLECTION_TOP_SUBHEADER_TRACK),
                   LeadingCollectionTrackTile(),
-                  SubHeader(language!.STRING_LOCAL_OTHER_SUBHEADER_TRACK)
+                  SubHeader(language.COLLECTION_OTHER_SUBHEADER_TRACK)
                 ]);
                 collection.tracks.asMap().forEach((int index, _) {
                   children.add(
@@ -54,8 +54,8 @@ class CollectionTrackTab extends StatelessWidget {
                 height: 256.0,
                 width: 420.0,
                 margin: EdgeInsets.zero,
-                title: language!.STRING_NO_COLLECTION_TITLE,
-                subtitle: language!.STRING_NO_COLLECTION_SUBTITLE,
+                title: language.NO_COLLECTION_TITLE,
+                subtitle: language.NO_COLLECTION_SUBTITLE,
               ),
             ),
     );

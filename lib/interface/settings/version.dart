@@ -32,21 +32,21 @@ class VersionState extends State<VersionSetting> {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
-      title: language!.STRING_SETTING_APP_VERSION_TITLE,
-      subtitle: language!.STRING_SETTING_APP_VERSION_SUBTITLE,
+      title: language.SETTING_APP_VERSION_TITLE,
+      subtitle: language.SETTING_APP_VERSION_SUBTITLE,
       child: Column(
         children: [
           Table(
             children: [
               TableRow(
                 children: [
-                  Text(language!.STRING_SETTING_APP_VERSION_INSTALLED),
+                  Text(language.SETTING_APP_VERSION_INSTALLED),
                   Text('v' + VERSION),
                 ],
               ),
               TableRow(children: [
-                Text(language!.STRING_SETTING_APP_VERSION_LATEST),
-                Text(this.version ?? language!.STRING_NO_INTERNET_TITLE),
+                Text(language.SETTING_APP_VERSION_LATEST),
+                Text(this.version ?? language.NO_INTERNET_TITLE),
               ]),
             ],
           ),
@@ -60,7 +60,7 @@ class VersionState extends State<VersionSetting> {
                 onPressed: () =>
                     launch('https://github.com/harmonoid/harmonoid/releases'),
                 child: Text(
-                  language!.STRING_DOWNLOAD_UPDATE,
+                  language.DOWNLOAD_UPDATE,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                   ),

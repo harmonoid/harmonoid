@@ -29,8 +29,8 @@ class ThemeSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
-        title: language!.STRING_SETTING_THEME_TITLE,
-        subtitle: language!.STRING_SETTING_THEME_SUBTITLE,
+        title: language.SETTING_THEME_TITLE,
+        subtitle: language.SETTING_THEME_SUBTITLE,
         child: Consumer<Visuals>(
           builder: (context, visuals, _) => Column(
             children: [
@@ -38,7 +38,7 @@ class ThemeSetting extends StatelessWidget {
                 RadioListTile(
                   value: ThemeMode.system,
                   title: Text(
-                    language!.STRING_THEME_MODE_SYSTEM,
+                    language.THEME_MODE_SYSTEM,
                     style: Theme.of(context).textTheme.headline4,
                   ),
                   groupValue: visuals.themeMode,
@@ -50,7 +50,7 @@ class ThemeSetting extends StatelessWidget {
               RadioListTile(
                 value: ThemeMode.light,
                 title: Text(
-                  language!.STRING_THEME_MODE_LIGHT,
+                  language.THEME_MODE_LIGHT,
                   style: Theme.of(context).textTheme.headline4,
                 ),
                 groupValue: visuals.themeMode,
@@ -62,7 +62,7 @@ class ThemeSetting extends StatelessWidget {
               RadioListTile(
                 value: ThemeMode.dark,
                 title: Text(
-                  language!.STRING_THEME_MODE_DARK,
+                  language.THEME_MODE_DARK,
                   style: Theme.of(context).textTheme.headline4,
                 ),
                 groupValue: visuals.themeMode,

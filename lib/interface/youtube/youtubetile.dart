@@ -264,7 +264,7 @@ class YouTubeState extends State<YouTube> {
                     SizedBox(height: 18.0),
                     Container(
                       alignment: Alignment.topCenter,
-                      height: 32.0,
+                      height: 64.0,
                       child: this.description == null
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -287,6 +287,7 @@ class YouTubeState extends State<YouTube> {
                           : Center(
                               child: ListView(
                                 shrinkWrap: true,
+                                padding: EdgeInsets.all(16.0),
                                 scrollDirection: Axis.horizontal,
                                 children: [
                                   ElevatedButton(
@@ -310,7 +311,7 @@ class YouTubeState extends State<YouTube> {
                                       );
                                     },
                                     child: Text(
-                                      language!.STRING_PLAY_NOW,
+                                      language.PLAY_NOW,
                                     ),
                                   ),
                                   SizedBox(
@@ -331,7 +332,7 @@ class YouTubeState extends State<YouTube> {
                                       );
                                     },
                                     child: Text(
-                                      language!.STRING_ADD_TO_NOW_PLAYING,
+                                      language.ADD_TO_NOW_PLAYING,
                                     ),
                                   ),
                                   SizedBox(
@@ -350,7 +351,7 @@ class YouTubeState extends State<YouTube> {
                                       );
                                     },
                                     child: Text(
-                                      language!.STRING_SHARE,
+                                      language.SHARE,
                                     ),
                                   ),
                                 ],
@@ -391,7 +392,7 @@ class YouTubeState extends State<YouTube> {
                                     ? Container()
                                     : child!,
                                 SubHeader(
-                                  language!.STRING_ABOUT_TITLE,
+                                  language.ABOUT_TITLE,
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(18.0),
@@ -419,7 +420,7 @@ class YouTubeState extends State<YouTube> {
                                 ? Container()
                                 : child!,
                             SubHeader(
-                              language!.STRING_ABOUT_TITLE,
+                              language.ABOUT_TITLE,
                             ),
                             this.description == null
                                 ? Center(
