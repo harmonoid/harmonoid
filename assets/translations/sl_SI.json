@@ -130,5 +130,6 @@
   "BUFFERING": "Bufferanje...",
   "WARNING": "Opozorilo",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Vsaj en direktorij mora ostati v tvoji zbirki.",
-  "ENABLE_125_SCALING": "Vključi 125% povečavo."
+  "ENABLE_125_SCALING": "Vključi 125% povečavo.",
+  "YEAR": "Year"
 }

@@ -140,4 +140,5 @@ class Strings {
   late String WARNING;
   late String LAST_COLLECTION_DIRECTORY_REMOVED;
   late String ENABLE_125_SCALING;
+  late String YEAR;
 }

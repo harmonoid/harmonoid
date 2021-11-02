@@ -311,6 +311,7 @@ class Language extends Strings with ChangeNotifier {
     this.LAST_COLLECTION_DIRECTORY_REMOVED =
         asset['LAST_COLLECTION_DIRECTORY_REMOVED']!;
     this.ENABLE_125_SCALING = asset['ENABLE_125_SCALING']!;
+    this.YEAR = asset['YEAR']!;
     configuration.save(languageRegion: languageRegion);
     this.current = languageRegion;
     this.notifyListeners();

@@ -130,5 +130,6 @@
   "BUFFERING": "Bufferen...",
   "WARNING": "Waarschuwing",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Er moet ten minste één map in uw collectie blijven.",
-  "ENABLE_125_SCALING": "Vergroting (125%) inschakelen"
+  "ENABLE_125_SCALING": "Vergroting (125%) inschakelen",
+  "YEAR": "Year"
 }

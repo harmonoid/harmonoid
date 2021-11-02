@@ -130,5 +130,6 @@
   "BUFFERING": "Buffering...",
   "WARNING": "Warning",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Atleast one folder needs to stay in your collection.",
-  "ENABLE_125_SCALING": "Enable 125% scaling."
+  "ENABLE_125_SCALING": "Enable 125% scaling.",
+  "YEAR": "Year"
 }

@@ -130,5 +130,6 @@
   "BUFFERING": "Tampon...",
   "WARNING": "Attention",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Au moins un dosser doit rester dans votre collection.",
-  "ENABLE_125_SCALING": "Activer la mise en echelle de 125%."
+  "ENABLE_125_SCALING": "Activer la mise en echelle de 125%.",
+  "YEAR": "Year"
 }
