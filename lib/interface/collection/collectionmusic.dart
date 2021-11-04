@@ -20,6 +20,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/hotkeys.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -46,6 +47,10 @@ class CollectionMusic extends StatefulWidget {
 class CollectionMusicState extends State<CollectionMusic>
     with AutomaticKeepAliveClientMixin {
   int index = 0;
+  // Class attributes related to the search field.
+  final FocusNode node = FocusNode();
+  final ValueNotifier<String> query = ValueNotifier<String>('');
+  String string = '';
 
   @override
   bool get wantKeepAlive => true;
@@ -70,9 +75,11 @@ class CollectionMusicState extends State<CollectionMusic>
                 ? EdgeInsets.symmetric(horizontal: 8.0)
                 : EdgeInsets.zero,
             decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white.withOpacity(0.10)
-                  : Colors.black.withOpacity(0.10),
+              color: configuration.acrylicEnabled!
+                  ? Colors.transparent
+                  : (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white.withOpacity(0.10)
+                      : Colors.black.withOpacity(0.10)),
               border: Border(
                 bottom: BorderSide(
                   color: Theme.of(context).dividerColor.withOpacity(0.12),
@@ -172,33 +179,34 @@ class CollectionMusicState extends State<CollectionMusic>
                                   ),
                                 ),
                               ),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(8.0),
-                                onTap: () =>
-                                    this.setState(() => this.index = 4),
-                                child: Container(
-                                  height: 40.0,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    language.SEARCH.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: this.index == 4
-                                          ? FontWeight.w600
-                                          : FontWeight.w300,
-                                      color: (Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : Colors.black)
-                                          .withOpacity(
-                                              this.index == 4 ? 1.0 : 0.67),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              // Removed in favor of new search field.
+                              // InkWell(
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              //   onTap: () =>
+                              //       this.setState(() => this.index = 4),
+                              //   child: Container(
+                              //     height: 40.0,
+                              //     padding:
+                              //         EdgeInsets.symmetric(horizontal: 4.0),
+                              //     alignment: Alignment.center,
+                              //     margin: EdgeInsets.symmetric(horizontal: 8.0),
+                              //     child: Text(
+                              //       language.SEARCH.toUpperCase(),
+                              //       style: TextStyle(
+                              //         fontSize: 20.0,
+                              //         fontWeight: this.index == 4
+                              //             ? FontWeight.w600
+                              //             : FontWeight.w300,
+                              //         color: (Theme.of(context).brightness ==
+                              //                     Brightness.dark
+                              //                 ? Colors.white
+                              //                 : Colors.black)
+                              //             .withOpacity(
+                              //                 this.index == 4 ? 1.0 : 0.67),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
                               InkWell(
                                 borderRadius: BorderRadius.circular(8.0),
                                 onTap: () =>
@@ -257,8 +265,116 @@ class CollectionMusicState extends State<CollectionMusic>
                           ),
                         ),
                       ),
+                      Container(
+                        height: 42.0,
+                        width: 280.0,
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+                        padding: EdgeInsets.only(top: 2.0),
+                        child: Focus(
+                          onFocusChange: (hasFocus) {
+                            if (hasFocus) {
+                              HotKeys.disableSpaceHotKey();
+                            } else {
+                              HotKeys.enableSpaceHotKey();
+                            }
+                          },
+                          child: TextField(
+                            focusNode: this.node,
+                            cursorWidth: 1.0,
+                            onChanged: (value) {
+                              string = value;
+                            },
+                            onSubmitted: (value) {
+                              query.value = value;
+                              if (string.isNotEmpty)
+                                this.setState(() {
+                                  this.index = 4;
+                                });
+                              this.node.requestFocus();
+                            },
+                            cursorColor:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                            textAlignVertical: TextAlignVertical.bottom,
+                            style: Theme.of(context).textTheme.headline4,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                onPressed: () {
+                                  query.value = string;
+                                  if (string.isNotEmpty)
+                                    this.setState(() {
+                                      this.index = 4;
+                                    });
+                                  this.node.requestFocus();
+                                },
+                                icon: Transform.rotate(
+                                  angle: pi / 2,
+                                  child: Icon(
+                                    FluentIcons.search_12_regular,
+                                    size: 17.0,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? Colors.black87
+                                        : Colors.white.withOpacity(0.87),
+                                  ),
+                                ),
+                              ),
+                              contentPadding:
+                                  EdgeInsets.only(left: 10.0, bottom: 14.0),
+                              hintText: language.COLLECTION_SEARCH_WELCOME,
+                              hintStyle: Theme.of(context)
+                                  .textTheme
+                                  .headline3
+                                  ?.copyWith(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? Colors.black.withOpacity(0.6)
+                                        : Colors.white60,
+                                  ),
+                              filled: true,
+                              fillColor: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.white
+                                  : Color(0xFF202020),
+                              hoverColor: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.white
+                                  : Color(0xFF202020),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .dividerColor
+                                      .withOpacity(0.32),
+                                  width: 0.6,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .dividerColor
+                                      .withOpacity(0.32),
+                                  width: 0.6,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .dividerColor
+                                      .withOpacity(0.32),
+                                  width: 0.6,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                       SizedBox(
-                        width: 8.0,
+                        width: 24.0,
                       ),
                       ContextMenuButton<CollectionSort>(
                         offset: Offset.fromDirection(pi / 2, 64.0),
@@ -275,21 +391,30 @@ class CollectionMusicState extends State<CollectionMusic>
                           );
                         },
                         itemBuilder: (context) => [
-                          PopupMenuItem(
+                          CheckedPopupMenuItem(
+                            padding: EdgeInsets.zero,
+                            checked: collection.collectionSortType ==
+                                CollectionSort.aToZ,
                             value: CollectionSort.aToZ,
                             child: Text(
                               language.A_TO_Z,
                               style: Theme.of(context).textTheme.headline4,
                             ),
                           ),
-                          PopupMenuItem(
+                          CheckedPopupMenuItem(
+                            padding: EdgeInsets.zero,
+                            checked: collection.collectionSortType ==
+                                CollectionSort.dateAdded,
                             value: CollectionSort.dateAdded,
                             child: Text(
                               language.DATE_ADDED,
                               style: Theme.of(context).textTheme.headline4,
                             ),
                           ),
-                          PopupMenuItem(
+                          CheckedPopupMenuItem(
+                            padding: EdgeInsets.zero,
+                            checked: collection.collectionSortType ==
+                                CollectionSort.year,
                             value: CollectionSort.year,
                             child: Text(
                               language.YEAR,
@@ -609,7 +734,7 @@ class CollectionMusicState extends State<CollectionMusic>
                           CollectionTrackTab(),
                           CollectionArtistTab(),
                           CollectionPlaylistTab(),
-                          CollectionSearch(),
+                          CollectionSearch(query: query),
                           YouTubeMusic(),
                         ][this.index],
                         transitionBuilder:
