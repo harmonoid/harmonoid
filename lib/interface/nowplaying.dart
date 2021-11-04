@@ -564,7 +564,9 @@ class NowPlayingState extends State<NowPlayingScreen>
                       ),
                       Expanded(
                         child: Container(
-                          color: Colors.transparent,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Color(0xFF242424)
+                              : Color(0xFFFFFFFF),
                           child: Row(
                             children: [
                               Container(
@@ -574,37 +576,119 @@ class NowPlayingState extends State<NowPlayingScreen>
                                         .normalized /
                                     2,
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(48.0),
-                                        child: ConstrainedBox(
-                                          constraints: BoxConstraints(
-                                            maxWidth: 512.0,
-                                            maxHeight: 512.0,
-                                          ),
-                                          child: Image(
-                                            image: (nowPlaying.index == null
-                                                ? AssetImage(
-                                                    'assets/images/default_album_art.jpg')
-                                                : (nowPlaying
-                                                            .tracks[nowPlaying
-                                                                .index!]
-                                                            .networkAlbumArt !=
-                                                        null
-                                                    ? NetworkImage(nowPlaying
-                                                        .tracks[
-                                                            nowPlaying.index!]
-                                                        .networkAlbumArt!)
-                                                    : FileImage(
-                                                        nowPlaying
-                                                            .tracks[nowPlaying
-                                                                .index!]
-                                                            .albumArt,
-                                                      ))) as ImageProvider<
-                                                Object>,
-                                            fit: BoxFit.contain,
-                                          ),
+                                    Padding(
+                                      padding: EdgeInsets.all(48.0),
+                                      child: Container(
+                                        constraints: BoxConstraints(
+                                          maxWidth: 382.0,
+                                          maxHeight: 382.0,
+                                        ),
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Positioned.fill(
+                                              bottom: -20.0,
+                                              child: Stack(
+                                                alignment: Alignment.center,
+                                                children: [
+                                                  Stack(
+                                                    alignment: Alignment.center,
+                                                    children: [
+                                                      Padding(
+                                                        padding: EdgeInsets.all(
+                                                            32.0),
+                                                        child: Image(
+                                                          image: (nowPlaying
+                                                                      .index ==
+                                                                  null
+                                                              ? AssetImage(
+                                                                  'assets/images/default_album_art.jpg')
+                                                              : (nowPlaying
+                                                                          .tracks[nowPlaying
+                                                                              .index!]
+                                                                          .networkAlbumArt !=
+                                                                      null
+                                                                  ? NetworkImage(nowPlaying
+                                                                      .tracks[nowPlaying
+                                                                          .index!]
+                                                                      .networkAlbumArt!)
+                                                                  : FileImage(
+                                                                      nowPlaying
+                                                                          .tracks[
+                                                                              nowPlaying.index!]
+                                                                          .albumArt,
+                                                                    ))) as ImageProvider<
+                                                              Object>,
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsets.all(
+                                                            32.0),
+                                                        child: Container(
+                                                          color: Colors.black.withOpacity(
+                                                              Theme.of(context)
+                                                                          .brightness ==
+                                                                      Brightness
+                                                                          .light
+                                                                  ? 0.1
+                                                                  : 0.4),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  ClipRect(
+                                                    child: BackdropFilter(
+                                                      filter: ImageFilter.blur(
+                                                        sigmaX: 8.0,
+                                                        sigmaY: 8.0,
+                                                      ),
+                                                      child: Container(
+                                                        height: 382.0,
+                                                        width: 382.0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(34.0),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(4.0),
+                                                ),
+                                                child: Image(
+                                                  image: (nowPlaying.index ==
+                                                          null
+                                                      ? AssetImage(
+                                                          'assets/images/default_album_art.jpg')
+                                                      : (nowPlaying
+                                                                  .tracks[
+                                                                      nowPlaying
+                                                                          .index!]
+                                                                  .networkAlbumArt !=
+                                                              null
+                                                          ? NetworkImage(nowPlaying
+                                                              .tracks[nowPlaying
+                                                                  .index!]
+                                                              .networkAlbumArt!)
+                                                          : FileImage(
+                                                              nowPlaying
+                                                                  .tracks[
+                                                                      nowPlaying
+                                                                          .index!]
+                                                                  .albumArt,
+                                                            ))) as ImageProvider<
+                                                      Object>,
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
