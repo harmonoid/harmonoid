@@ -17,6 +17,8 @@
  *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
@@ -32,27 +34,26 @@ import 'package:harmonoid/interface/collection/collectionalbum.dart';
 class CollectionArtistTab extends StatelessWidget {
   Widget build(BuildContext context) {
     int elementsPerRow =
-        MediaQuery.of(context).size.width.normalized ~/ (156 + 8);
+        MediaQuery.of(context).size.width.normalized ~/ (172 + 8);
     double tileWidth = (MediaQuery.of(context).size.width.normalized -
             16 -
             (elementsPerRow - 1) * 8) /
         elementsPerRow;
-    double tileHeight = tileWidth + 36.0;
+    double tileHeight = tileWidth + 18.0;
 
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
           ? CustomListView(
+              padding: EdgeInsets.only(top: 24.0),
               children: tileGridListWidgets(
                 context: context,
                 tileHeight: tileHeight,
                 tileWidth: tileWidth,
                 elementsPerRow: elementsPerRow,
-                subHeader: language.COLLECTION_OTHER_SUBHEADER_ARTIST,
-                leadingSubHeader: language.COLLECTION_TOP_SUBHEADER_ARTIST,
+                subHeader: null,
+                leadingSubHeader: null,
                 widgetCount: collection.artists.length,
-                leadingWidget: LeadingCollectionArtistTile(
-                  height: tileWidth,
-                ),
+                leadingWidget: Container(),
                 builder: (BuildContext context, int index) =>
                     CollectionArtistTile(
                   height: tileHeight,
@@ -179,70 +180,110 @@ class CollectionArtistTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: this.height - 2.0,
-      width: this.width - 2.0,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(8.0),
-        ),
-        color: Theme.of(context).cardColor,
-        border:
-            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.12)),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
+      height: this.height,
+      width: this.width,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          ScaleOnHover(
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                Positioned(
+                  top: -10.0,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Image.file(
+                        this.artist.tracks.last.albumArt,
+                        height: this.width - 44.0,
+                        width: this.width - 44.0,
+                      ),
+                      Container(
+                        color: Colors.black.withOpacity(
+                            Theme.of(context).brightness == Brightness.light
+                                ? 0.1
+                                : 0.6),
+                        height: this.width - 44.0,
+                        width: this.width - 44.0,
+                      ),
+                      ClipRect(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(
+                            sigmaX: 8.0,
+                            sigmaY: 8.0,
+                          ),
+                          child: Container(
+                            height: this.width,
+                            width: this.width,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(4.0),
+                  ),
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            FadeThroughTransition(
+                          fillColor: Colors.transparent,
+                          animation: animation,
+                          secondaryAnimation: secondaryAnimation,
+                          child: CollectionArtist(
+                            artist: this.artist,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Hero(
+                    tag: 'artist_art_${this.artist.artistName!}',
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(4.0),
+                      ),
+                      child: Image.file(
+                        this.artist.tracks.last.albumArt,
+                        fit: BoxFit.cover,
+                        height: this.width - 48.0,
+                        width: this.width - 48.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          onTap: () {
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    FadeThroughTransition(
-                  fillColor: Colors.transparent,
-                  animation: animation,
-                  secondaryAnimation: secondaryAnimation,
-                  child: CollectionArtist(
-                    artist: this.artist,
-                  ),
-                ),
-              ),
-            );
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Hero(
-                tag: 'artist_art_${this.artist.artistName!}',
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image(
-                    image: FileImage(this.artist.tracks.last.albumArt),
-                    fit: BoxFit.fill,
-                    height: this.width - 2.0,
-                    width: this.width - 2.0,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  height: 36.0,
-                  width: this.width - 2.0,
-                  alignment: Alignment.topLeft,
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
+          Positioned(
+            bottom: 20.0,
+            child: Container(
+              width: this.width,
+              padding: EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
                     this.artist.artistName!,
                     style: Theme.of(context).textTheme.headline2,
                     textAlign: TextAlign.left,
                     maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

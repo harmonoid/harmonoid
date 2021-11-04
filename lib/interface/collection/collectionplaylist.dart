@@ -20,6 +20,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:provider/provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -313,16 +314,18 @@ class CollectionPlaylist extends StatelessWidget {
           children: [
             Container(
               height: 56.0,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white.withOpacity(0.08)
-                  : Colors.black.withOpacity(0.08),
+              color: configuration.acrylicEnabled!
+                  ? Colors.transparent
+                  : Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white.withOpacity(0.08)
+                      : Colors.black.withOpacity(0.08),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   NavigatorPopButton(),
                   SizedBox(
-                    width: 24.0,
+                    width: 16.0,
                   ),
                   Text(
                     this.playlist.playlistName!,
@@ -332,45 +335,58 @@ class CollectionPlaylist extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: CustomListView(
-                children: <Widget>[
-                      SubHeader(language.PLAYLIST_TRACKS_SUBHEADER),
-                    ] +
-                    (this.playlist.tracks.map((Track track) {
-                      return ListTile(
-                        onTap: () => Playback.play(
-                          index: this.playlist.tracks.indexOf(track),
-                          tracks: this.playlist.tracks,
+              child: Container(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.white
+                    : Color(0xFF202020),
+                child: this.playlist.tracks.isNotEmpty
+                    ? CustomListView(
+                        children: <Widget>[
+                              SubHeader(language.PLAYLIST_TRACKS_SUBHEADER),
+                            ] +
+                            (this.playlist.tracks.map((Track track) {
+                              return ListTile(
+                                onTap: () => Playback.play(
+                                  index: this.playlist.tracks.indexOf(track),
+                                  tracks: this.playlist.tracks,
+                                ),
+                                isThreeLine: true,
+                                leading: CircleAvatar(
+                                  child: Text('${track.trackNumber ?? 1}'),
+                                  backgroundImage: FileImage(track.albumArt),
+                                ),
+                                title: Text(track.trackName!),
+                                subtitle: Text(
+                                  track.albumName! +
+                                      '\n' +
+                                      (track.trackArtistNames!.length < 2
+                                          ? track.trackArtistNames!.join(', ')
+                                          : track.trackArtistNames!
+                                              .sublist(0, 2)
+                                              .join(', ')),
+                                ),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    collection.playlistRemoveTrack(
+                                        this.playlist, track);
+                                  },
+                                  icon: Icon(
+                                    FluentIcons.subtract_circle_20_regular,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                  iconSize: 20.0,
+                                  splashRadius:
+                                      Theme.of(context).iconTheme.size! - 8,
+                                ),
+                              );
+                            }).toList()),
+                      )
+                    : Center(
+                        child: Text(
+                          'This playlist is empty.',
+                          style: Theme.of(context).textTheme.headline4,
                         ),
-                        isThreeLine: true,
-                        leading: CircleAvatar(
-                          child: Text('${track.trackNumber ?? 1}'),
-                          backgroundImage: FileImage(track.albumArt),
-                        ),
-                        title: Text(track.trackName!),
-                        subtitle: Text(
-                          track.albumName! +
-                              '\n' +
-                              (track.trackArtistNames!.length < 2
-                                  ? track.trackArtistNames!.join(', ')
-                                  : track.trackArtistNames!
-                                      .sublist(0, 2)
-                                      .join(', ')),
-                        ),
-                        trailing: IconButton(
-                          onPressed: () {
-                            collection.playlistRemoveTrack(
-                                this.playlist, track);
-                          },
-                          icon: Icon(
-                            FluentIcons.subtract_circle_20_regular,
-                            color: Theme.of(context).iconTheme.color,
-                          ),
-                          iconSize: 20.0,
-                          splashRadius: Theme.of(context).iconTheme.size! - 8,
-                        ),
-                      );
-                    }).toList()),
+                      ),
               ),
             ),
           ],
