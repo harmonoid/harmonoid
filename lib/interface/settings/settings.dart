@@ -19,6 +19,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/core/configuration.dart';
 
 import 'package:harmonoid/interface/settings/accent.dart';
 import 'package:harmonoid/interface/settings/about.dart';
@@ -39,9 +40,11 @@ class Settings extends StatelessWidget {
         Container(
           height: 56.0,
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.10)
-                : Colors.black.withOpacity(0.10),
+            color: configuration.acrylicEnabled!
+                ? Colors.transparent
+                : Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white.withOpacity(0.10)
+                    : Colors.black.withOpacity(0.10),
             border: Border(
               bottom: BorderSide(
                   color: Theme.of(context).dividerColor.withOpacity(0.12)),
@@ -69,23 +72,28 @@ class Settings extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: CustomListView(
-            shrinkWrap: true,
-            children: [
-              SizedBox(
-                height: 4.0,
-              ),
-              AboutSetting(),
-              IndexingSetting(),
-              ThemeSetting(),
-              AccentSetting(),
-              LanguageSetting(),
-              MiscellaneousSetting(),
-              VersionSetting(),
-              SizedBox(
-                height: 4.0,
-              ),
-            ],
+          child: Container(
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.white
+                : Color(0xFF202020),
+            child: CustomListView(
+              shrinkWrap: true,
+              children: [
+                SizedBox(
+                  height: 4.0,
+                ),
+                IndexingSetting(),
+                ThemeSetting(),
+                AccentSetting(),
+                LanguageSetting(),
+                MiscellaneousSetting(),
+                AboutSetting(),
+                VersionSetting(),
+                SizedBox(
+                  height: 8.0,
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -114,13 +122,7 @@ class SettingsTile extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: 8.0,
-        vertical: 4.0,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(8.0),
-        border:
-            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.12)),
+        vertical: 0.0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,19 +143,21 @@ class SettingsTile extends StatelessWidget {
               children: [
                 Text(
                   this.title!,
-                  style: Theme.of(context).textTheme.headline2,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline2
+                      ?.copyWith(fontSize: 24.0),
                 ),
-                Divider(color: Colors.transparent, height: 4.0),
+                SizedBox(height: 2.0),
                 Text(
                   this.subtitle!,
                   style: Theme.of(context).textTheme.headline3,
                 ),
-                Divider(color: Colors.transparent, height: 8.0),
-                Divider(
-                  color: Theme.of(context).dividerColor,
-                  thickness: 1.0,
-                  height: 1.0,
-                ),
+                // Divider(
+                //   color: Theme.of(context).dividerColor,
+                //   thickness: 1.0,
+                //   height: 1.0,
+                // ),
               ],
             ),
           ),
@@ -161,19 +165,21 @@ class SettingsTile extends StatelessWidget {
             margin: this.margin ?? EdgeInsets.zero,
             child: this.child,
           ),
-          Divider(color: Colors.transparent, height: 8.0),
           if (this.actions != null) ...[
-            Divider(
-              color: Theme.of(context).dividerColor,
-              thickness: 1.0,
-              indent: 16.0,
-              endIndent: 16.0,
-              height: 1.0,
-            ),
-            ButtonBar(
-              alignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.max,
-              children: this.actions!,
+            // Divider(
+            //   color: Theme.of(context).dividerColor,
+            //   thickness: 1.0,
+            //   indent: 16.0,
+            //   endIndent: 16.0,
+            //   height: 1.0,
+            // ),
+            Padding(
+              padding: EdgeInsets.only(left: 8.0),
+              child: ButtonBar(
+                alignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: this.actions!,
+              ),
             ),
           ],
         ],
