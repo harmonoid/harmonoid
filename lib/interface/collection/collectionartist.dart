@@ -254,8 +254,8 @@ class CollectionArtist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double tileWidth = 156.0;
-    double tileHeight = 260.0;
+    double tileWidth = 192.0;
+    double tileHeight = 248.0;
 
     return Consumer<Collection>(
       child: Container(
@@ -407,7 +407,7 @@ class CollectionArtist extends StatelessWidget {
                           ),
                           Container(
                             height: tileHeight + 16.0,
-                            alignment: Alignment.centerLeft,
+                            alignment: Alignment.bottomLeft,
                             child: CustomListView(
                               padding: EdgeInsets.symmetric(horizontal: 16.0),
                               scrollDirection: Axis.horizontal,

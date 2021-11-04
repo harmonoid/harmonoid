@@ -699,7 +699,7 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
         shape: widget.shape ??
             RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(8.0),
+                Radius.circular(4.0),
               ),
             ),
         color: widget.color ?? popupMenuTheme.color,

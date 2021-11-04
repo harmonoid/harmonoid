@@ -33,11 +33,11 @@ class CollectionTrackTab extends StatelessWidget {
           ? CustomListView(
               children: () {
                 List<Widget> children = <Widget>[];
-                children.addAll([
-                  SubHeader(language.COLLECTION_TOP_SUBHEADER_TRACK),
-                  LeadingCollectionTrackTile(),
-                  SubHeader(language.COLLECTION_OTHER_SUBHEADER_TRACK)
-                ]);
+                // children.addAll([
+                //   SubHeader(language.COLLECTION_TOP_SUBHEADER_TRACK),
+                //   LeadingCollectionTrackTile(),
+                //   SubHeader(language.COLLECTION_OTHER_SUBHEADER_TRACK)
+                // ]);
                 collection.tracks.asMap().forEach((int index, _) {
                   children.add(
                     CollectionTrackTile(

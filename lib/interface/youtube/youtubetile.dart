@@ -338,22 +338,22 @@ class YouTubeState extends State<YouTube> {
                                   SizedBox(
                                     width: 12.0,
                                   ),
-                                  ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                        Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Share.share(
-                                        'https://youtu.be/${widget.track.trackId!}',
-                                      );
-                                    },
-                                    child: Text(
-                                      language.SHARE,
-                                    ),
-                                  ),
+                                  // ElevatedButton(
+                                  //   style: ButtonStyle(
+                                  //     backgroundColor:
+                                  //         MaterialStateProperty.all(
+                                  //       Theme.of(context).primaryColor,
+                                  //     ),
+                                  //   ),
+                                  //   onPressed: () {
+                                  //     Share.share(
+                                  //       'https://youtu.be/${widget.track.trackId!}',
+                                  //     );
+                                  //   },
+                                  //   child: Text(
+                                  //     language.SHARE,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
