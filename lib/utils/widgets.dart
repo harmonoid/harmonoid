@@ -33,7 +33,7 @@ import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:harmonoid/core/configuration.dart';
 
-const double HORIZONTAL_BREAKPOINT = 720.0;
+const double HORIZONTAL_BREAKPOINT = 762.0;
 
 class FractionallyScaledWidget extends StatelessWidget {
   final Widget child;
@@ -261,7 +261,10 @@ class SubHeader extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
             child: Text(
               text!,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1
+                  ?.copyWith(fontSize: 16.0),
             ),
           )
         : Container();

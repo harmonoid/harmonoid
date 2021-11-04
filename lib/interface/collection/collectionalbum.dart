@@ -336,9 +336,16 @@ class CollectionAlbumState extends State<CollectionAlbum> {
         height:
             MediaQuery.of(context).size.width.normalized > HORIZONTAL_BREAKPOINT
                 ? MediaQuery.of(context).size.height.normalized
-                : MediaQuery.of(context).size.width.normalized + 128.0,
+                : 324.0 + 128.0,
         width: MediaQuery.of(context).size.width.normalized / 3,
-        child: Padding(
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              right: BorderSide(
+                color: Theme.of(context).dividerColor,
+              ),
+            ),
+          ),
           padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -348,8 +355,8 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                   alignment: Alignment.center,
                   child: Container(
                     constraints: BoxConstraints(
-                      maxWidth: 282.0,
-                      maxHeight: 282.0,
+                      maxWidth: 324.0,
+                      maxHeight: 324.0,
                     ),
                     child: Stack(
                       clipBehavior: Clip.none,
@@ -364,13 +371,13 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                                 alignment: Alignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.all(32.0),
+                                    padding: EdgeInsets.all(44.0),
                                     child: Image.file(
                                       widget.album!.albumArt,
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.all(32.0),
+                                    padding: EdgeInsets.all(44.0),
                                     child: Container(
                                       color: Colors.black.withOpacity(
                                           Theme.of(context).brightness ==
@@ -397,7 +404,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(34.0),
+                          padding: EdgeInsets.all(48.0),
                           child: Hero(
                             tag:
                                 'album_art_${widget.album?.albumName}_${widget.album?.albumArtistName}',
@@ -417,30 +424,33 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                   ),
                 ),
               ),
-              SizedBox(height: 18.0),
+              SizedBox(height: 0.0),
               Container(
-                margin: EdgeInsets.all(8.0),
-                padding: EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white.withOpacity(0.04)
-                      : Colors.black.withOpacity(0.04),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
+                margin: EdgeInsets.all(0.0),
+                padding: EdgeInsets.all(0.0),
+                // decoration: BoxDecoration(
+                //   color: Theme.of(context).brightness == Brightness.dark
+                //       ? Colors.white.withOpacity(0.04)
+                //       : Colors.black.withOpacity(0.04),
+                //   borderRadius: BorderRadius.circular(8.0),
+                // ),
                 child: Column(
                   children: [
                     Text(
                       widget.album!.albumName!,
-                      style: Theme.of(context).textTheme.headline1,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline1
+                          ?.copyWith(fontSize: 24.0),
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 4.0),
                     Text(
-                      '${widget.album!.albumArtistName}\n(${widget.album!.year ?? 'Unknown Year'})',
+                      '${widget.album!.albumArtistName}\n(${widget.album!.year ?? 'Unknown Year'})\n${widget.album!.tracks.length} ${language.TRACK.toLowerCase()}',
                       style: Theme.of(context).textTheme.headline3,
-                      maxLines: 1,
+                      maxLines: 3,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                     ),
