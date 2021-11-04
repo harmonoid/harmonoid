@@ -56,7 +56,7 @@ class Settings extends StatelessWidget {
             children: [
               NavigatorPopButton(),
               SizedBox(
-                width: 24.0,
+                width: 16.0,
               ),
               Text(
                 language.SETTING,

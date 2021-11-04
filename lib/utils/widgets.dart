@@ -134,6 +134,7 @@ List<Widget> tileGridListWidgets({
     SubHeader(leadingSubHeader),
     leadingWidget,
     SubHeader(subHeader),
+    if (subHeader != null) SizedBox(height: 4.0),
   ]);
   int rowIndex = 0;
   List<Widget> rowChildren = <Widget>[];
@@ -289,7 +290,7 @@ class NavigatorPopButton extends StatelessWidget {
             height: 40.0,
             width: 40.0,
             child: Icon(
-              FluentIcons.arrow_left_20_filled,
+              FluentIcons.arrow_left_32_regular,
               size: 20.0,
             ),
           ),

@@ -17,6 +17,8 @@
  *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:provider/provider.dart';
@@ -47,8 +49,14 @@ class CollectionPlaylistTab extends StatelessWidget {
                       children: [
                         Text(
                           language.PLAYLISTS,
-                          style: Theme.of(context).textTheme.headline1,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline1
+                              ?.copyWith(fontSize: 24.0),
                           textAlign: TextAlign.start,
+                        ),
+                        SizedBox(
+                          height: 2.0,
                         ),
                         Text(
                           language.PLAYLISTS_SUBHEADER,
@@ -95,75 +103,109 @@ class CollectionPlaylistTab extends StatelessWidget {
                                       HotKeys.enableSpaceHotKey();
                                     }
                                   },
-                                  child: TextField(
-                                    controller: this._textFieldController,
-                                    style:
-                                        Theme.of(context).textTheme.headline4,
-                                    cursorWidth: 1,
-                                    autofocus: true,
-                                    autocorrect: true,
-                                    onSubmitted: (String value) async {
-                                      if (value != '') {
-                                        FocusScope.of(context).unfocus();
-                                        await collection.playlistAdd(
-                                            new Playlist(playlistName: value));
-                                        this._textFieldController.clear();
-                                      }
-                                    },
-                                    decoration: InputDecoration(
-                                      labelText:
-                                          language.PLAYLISTS_TEXT_FIELD_LABEL,
-                                      hintText:
-                                          language.PLAYLISTS_TEXT_FIELD_HINT,
-                                      hintStyle:
-                                          Theme.of(context).textTheme.headline3,
-                                      labelStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
+                                  child: Container(
+                                    height: 45.0,
+                                    child: TextField(
+                                      controller: this._textFieldController,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                      cursorWidth: 1,
+                                      autofocus: true,
+                                      autocorrect: true,
+                                      onSubmitted: (String value) async {
+                                        if (value != '') {
+                                          FocusScope.of(context).unfocus();
+                                          await collection.playlistAdd(
+                                              new Playlist(
+                                                  playlistName: value));
+                                          this._textFieldController.clear();
+                                        }
+                                      },
+                                      cursorColor:
+                                          Theme.of(context).brightness ==
+                                                  Brightness.light
+                                              ? Colors.black
+                                              : Colors.white,
+                                      textAlignVertical:
+                                          TextAlignVertical.bottom,
+                                      decoration: InputDecoration(
+                                        suffixIcon: IconButton(
+                                          splashColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          onPressed: () async {
+                                            if (this
+                                                    ._textFieldController
+                                                    .text !=
+                                                '') {
+                                              FocusScope.of(context).unfocus();
+                                              await collection.playlistAdd(
+                                                  new Playlist(
+                                                      playlistName: this
+                                                          ._textFieldController
+                                                          .text));
+                                              this._textFieldController.clear();
+                                            }
+                                          },
+                                          icon: Transform.rotate(
+                                            angle: pi / 2,
+                                            child: Icon(
+                                              FluentIcons.search_12_regular,
+                                              size: 17.0,
+                                              color: Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.light
+                                                  ? Colors.black87
+                                                  : Colors.white
+                                                      .withOpacity(0.87),
+                                            ),
+                                          ),
+                                        ),
+                                        contentPadding: EdgeInsets.only(
+                                            left: 10.0, bottom: 16.0),
+                                        hintText:
+                                            language.PLAYLISTS_TEXT_FIELD_HINT,
+                                        hintStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline3,
+                                        filled: true,
+                                        fillColor:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.light
+                                                ? Colors.white
+                                                : Color(0xFF202020),
+                                        hoverColor:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.light
+                                                ? Colors.white
+                                                : Color(0xFF202020),
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .dividerColor
+                                                .withOpacity(0.32),
+                                            width: 0.6,
+                                          ),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .dividerColor
+                                                .withOpacity(0.32),
+                                            width: 0.6,
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .dividerColor
+                                                .withOpacity(0.32),
+                                            width: 0.6,
+                                          ),
+                                        ),
                                       ),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                              width: 1)),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                              width: 1)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                              width: 1)),
                                     ),
                                   ),
-                                ),
-                              ),
-                              Container(
-                                height: 56,
-                                width: 56,
-                                alignment: Alignment.center,
-                                child: IconButton(
-                                  onPressed: () async {
-                                    if (this._textFieldController.text != '') {
-                                      FocusScope.of(context).unfocus();
-                                      await collection.playlistAdd(new Playlist(
-                                          playlistName:
-                                              this._textFieldController.text));
-                                      this._textFieldController.clear();
-                                    }
-                                  },
-                                  icon: Icon(
-                                    FluentIcons.checkmark_12_regular,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  iconSize: 24.0,
-                                  splashRadius: 20,
                                 ),
                               ),
                             ],

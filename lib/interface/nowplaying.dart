@@ -549,7 +549,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                               },
                             ),
                             SizedBox(
-                              width: 24.0,
+                              width: 16.0,
                             ),
                             Text(
                               language.NOW_PLAYING,

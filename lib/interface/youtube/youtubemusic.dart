@@ -193,7 +193,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
                                 child: Icon(
-                                  FluentIcons.arrow_left_20_filled,
+                                  FluentIcons.arrow_left_32_regular,
                                   size: 20.0,
                                 ),
                               ),
