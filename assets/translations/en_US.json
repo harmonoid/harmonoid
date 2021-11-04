@@ -62,7 +62,7 @@
   "SHARE": "Share",
   "ADD_TO_PLAYLIST": "Add to playlist",
   "SAVE_TO_DOWNLOADS": "Save to downloads",
-  "COLLECTION_SEARCH_WELCOME": "Search albums, tracks, or artists...",
+  "COLLECTION_SEARCH_WELCOME": "Search albums, tracks or artists...",
   "COLLECTION_SEARCH_NO_RESULTS": "Nothing like that could be found in your collection",
   "PLAYLISTS": "Playlists",
   "PLAYLIST": "Playlist",
@@ -78,7 +78,7 @@
   "PLAYLIST_TRACKS_SUBHEADER": "Here are the tracks in this playlist",
   "TRANSFERS": "Transfers",
   "SETTING_INDEXING_TITLE": "Collection",
-  "SETTING_INDEXING_SUBTITLE": "Select folders to search for music or reindex",
+  "SETTING_INDEXING_SUBTITLE": "Include more folders in your collection",
   "SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR": "Indexed NUMBER_STRING of TOTAL_STRING tracks...",
   "SETTING_INDEXING_DONE": "Indexed",
   "SETTING_INDEXING_WARNING": "Do not interrupt the process.",
@@ -116,7 +116,7 @@
   "ADD_TO_NOW_PLAYING": "Add to now playing",
   "PLAY_NOW": "Play now",
   "COLLECTION_SEARCH_LABEL": "Lookup in your collection",
-  "SELECTED_DIRECTORIES": "Selected directories:",
+  "SELECTED_DIRECTORIES": "Here's a list of what we've found so far",
   "ENABLE_ACRYLIC_BLUR": "Enable Windows acrylic blur.",
   "COLLECTION_INDEXING_LABEL": "Your local music is being synced.\nIt's not a good idea to close the app.",
   "RECOMMENDATIONS": "Recommendations",
@@ -130,5 +130,6 @@
   "WARNING": "Warning",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Atleast one folder needs to stay in your collection.",
   "ENABLE_125_SCALING": "Enable 125% scaling.",
-  "YEAR": "Year"
+  "YEAR": "Year",
+  "KNOW_MORE": "KNOW MORE"
 }
