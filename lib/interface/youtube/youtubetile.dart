@@ -17,10 +17,11 @@
  *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
-import 'package:share_plus/share_plus.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/youtubemusic.dart';
@@ -45,100 +46,120 @@ class YouTubeTile extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-      height: this.height! - 2.0,
-      width: this.width! - 2.0,
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        border: Border.all(
-          color: Theme.of(context).dividerColor.withOpacity(0.12),
-        ),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
-          ),
-          onTap: () {
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    FadeThroughTransition(
-                  fillColor: Colors.transparent,
-                  animation: animation,
-                  secondaryAnimation: secondaryAnimation,
-                  child: YouTube(
-                    track: this.track,
+      height: this.height,
+      width: this.width,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          ScaleOnHover(
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                Positioned(
+                  top: -10.0,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Image.network(
+                        this.track.networkAlbumArt!,
+                        height: this.width! - 44.0,
+                        width: this.width! - 44.0,
+                      ),
+                      Container(
+                        color: Colors.black.withOpacity(
+                            Theme.of(context).brightness == Brightness.light
+                                ? 0.1
+                                : 0.6),
+                        height: this.width! - 44.0,
+                        width: this.width! - 44.0,
+                      ),
+                      ClipRect(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(
+                            sigmaX: 8.0,
+                            sigmaY: 8.0,
+                          ),
+                          child: Container(
+                            height: this.width!,
+                            width: this.width!,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            );
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Hero(
-                tag: 'track_art_${this.track.trackName}',
-                child: ClipRRect(
+                InkWell(
                   borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
+                    Radius.circular(4.0),
                   ),
-                  child: Image.network(
-                    this.track.networkAlbumArt!,
-                    fit: BoxFit.cover,
-                    height: this.width! - 2.0,
-                    width: this.width! - 2.0,
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                height: this.height! - this.width! - 2.0,
-                width: this.width! - 2.0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 4),
-                      child: Text(
-                        this.track.trackName!,
-                        style: Theme.of(context).textTheme.headline2,
-                        textAlign: TextAlign.left,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            FadeThroughTransition(
+                          fillColor: Colors.transparent,
+                          animation: animation,
+                          secondaryAnimation: secondaryAnimation,
+                          child: YouTube(
+                            track: this.track,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Hero(
+                    tag: 'track_art_${this.track.trackName}',
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(4.0),
+                      ),
+                      child: Image.network(
+                        this.track.networkAlbumArt!,
+                        fit: BoxFit.cover,
+                        height: this.width! - 48.0,
+                        width: this.width! - 48.0,
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 2),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${this.track.trackArtistNames!.join(', ')}',
-                            style: Theme.of(context).textTheme.headline3,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.left,
-                          ),
-                          Text(
-                            '${this.track.albumName}',
-                            style: Theme.of(context).textTheme.headline3,
-                            maxLines: 1,
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          Positioned(
+            bottom: 20.0,
+            child: Container(
+              width: this.width,
+              padding: EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${this.track.trackName}',
+                    style: Theme.of(context).textTheme.headline2,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                  ),
+                  SizedBox(
+                    height: 2.0,
+                  ),
+                  Text(
+                    '${this.track.trackArtistNames!.join(', ')}',
+                    style: Theme.of(context).textTheme.headline3,
+                    maxLines: 1,
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -206,20 +227,70 @@ class YouTubeState extends State<YouTube> {
                         alignment: Alignment.center,
                         child: Container(
                           constraints: BoxConstraints(
-                            maxWidth: 256.0,
-                            maxHeight: 256.0,
+                            maxWidth: 282.0,
+                            maxHeight: 282.0,
                           ),
-                          child: Hero(
-                            tag: 'track_art_${widget.track.trackName}',
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12.0),
-                              child: Image.network(
-                                widget.track.networkAlbumArt!,
-                                fit: BoxFit.contain,
-                                alignment: Alignment.center,
-                                filterQuality: FilterQuality.low,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            alignment: Alignment.topCenter,
+                            children: [
+                              Positioned.fill(
+                                bottom: -20.0,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(32.0),
+                                          child: Image.network(
+                                            widget.track.networkAlbumArt!,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(32.0),
+                                          child: Container(
+                                            color: Colors.black.withOpacity(
+                                                Theme.of(context).brightness ==
+                                                        Brightness.light
+                                                    ? 0.1
+                                                    : 0.4),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    ClipRect(
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                          sigmaX: 8.0,
+                                          sigmaY: 8.0,
+                                        ),
+                                        child: Container(
+                                          height: 284.0,
+                                          width: 284.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
+                              Padding(
+                                padding: EdgeInsets.all(34.0),
+                                child: Hero(
+                                  tag: 'track_art_${widget.track.trackName}',
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(4.0),
+                                    ),
+                                    child: Image.network(
+                                      widget.track.networkAlbumArt!,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -368,6 +439,9 @@ class YouTubeState extends State<YouTube> {
       builder: (context, collection, child) => Scaffold(
         body: LayoutBuilder(
           builder: (context, constraints) => Container(
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.white
+                : Color(0xFF202020),
             height: MediaQuery.of(context).size.height.normalized,
             width: MediaQuery.of(context).size.width.normalized,
             child: Row(
