@@ -322,7 +322,7 @@ List<Accent?> accents = [
   Accent(light: Color(0xFFF4B400), dark: Color(0xFFFFE57F)),
   Accent(light: Color(0xFF0F9D58), dark: Color(0xFF0F9D58)),
   Accent(light: Color(0xFFFF3D00), dark: Color(0xFFFF9E80)),
-  Accent(light: Color(0xFF8CD2D5), dark: Color(0xFF8CD2D5)),
+  Accent(light: Color(0xFF89CDD0), dark: Color(0xFF89CDD0)),
   Accent(light: Color(0xFF5B51D8), dark: Color(0xFFD1C4E9)),
   Accent(light: Color(0xFFF50057), dark: Color(0xFFFF80AB)),
   Accent(light: Color(0xFF424242), dark: Colors.grey.shade600),

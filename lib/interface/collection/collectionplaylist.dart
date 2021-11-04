@@ -201,7 +201,7 @@ class CollectionPlaylistTab extends StatelessWidget {
                               content: Text(
                                 language
                                     .COLLECTION_ALBUM_PLAYLIST_DELETE_DIALOG_BODY,
-                                style: Theme.of(subContext).textTheme.headline5,
+                                style: Theme.of(subContext).textTheme.headline3,
                               ),
                               actions: [
                                 MaterialButton(

@@ -275,20 +275,23 @@ class NavigatorPopButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).pop();
-          onTap?.call();
-        },
-        borderRadius: BorderRadius.all(
-          Radius.circular(8.0),
-        ),
-        child: Container(
-          height: 40.0,
-          width: 40.0,
-          child: Icon(
-            FluentIcons.arrow_left_20_filled,
-            size: 20.0,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).pop();
+            onTap?.call();
+          },
+          borderRadius: BorderRadius.all(
+            Radius.circular(8.0),
+          ),
+          child: Container(
+            height: 40.0,
+            width: 40.0,
+            child: Icon(
+              FluentIcons.arrow_left_20_filled,
+              size: 20.0,
+            ),
           ),
         ),
       ),
@@ -578,15 +581,10 @@ class ClosedTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: 8.0,
-        vertical: 4.0,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(8.0),
-        border:
-            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.12)),
+      margin: EdgeInsets.only(
+        left: 8.0,
+        right: 8.0,
+        top: 12.0,
       ),
       child: ListTile(
         title: Text(
@@ -596,7 +594,7 @@ class ClosedTile extends StatelessWidget {
                 ? Colors.white
                 : Colors.black,
             fontWeight: FontWeight.w600,
-            fontSize: 14.0,
+            fontSize: 24.0,
           ),
         ),
         subtitle: Text(
@@ -783,9 +781,11 @@ class WindowTitleBar extends StatelessWidget {
         ? Container(
             width: MediaQuery.of(context).size.width.normalized,
             height: 32.0,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.10)
-                : Colors.black.withOpacity(0.10),
+            color: configuration.acrylicEnabled!
+                ? Colors.transparent
+                : Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white.withOpacity(0.10)
+                    : Colors.black.withOpacity(0.10),
             child: MoveWindow(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -903,7 +903,7 @@ class CollectionTrackContextMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Collection>(
       builder: (context, collection, _) => ContextMenuButton(
-        elevation: 0,
+        elevation: 4.0,
         onSelected: (index) {
           switch (index) {
             case 0:
@@ -919,7 +919,7 @@ class CollectionTrackContextMenu extends StatelessWidget {
                     ),
                     content: Text(
                       language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_BODY,
-                      style: Theme.of(subContext).textTheme.headline5,
+                      style: Theme.of(subContext).textTheme.headline3,
                     ),
                     actions: [
                       MaterialButton(
@@ -971,7 +971,7 @@ class CollectionTrackContextMenu extends StatelessWidget {
                             padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
                             child: Text(
                               language.PLAYLIST_ADD_DIALOG_BODY,
-                              style: Theme.of(subContext).textTheme.headline5,
+                              style: Theme.of(subContext).textTheme.headline3,
                             ),
                           ),
                           Container(
@@ -1030,31 +1030,47 @@ class CollectionTrackContextMenu extends StatelessWidget {
         tooltip: language.OPTIONS,
         itemBuilder: (_) => <PopupMenuEntry>[
           PopupMenuItem(
+            padding: EdgeInsets.zero,
             value: 0,
-            child: Text(
-              language.DELETE,
-              style: Theme.of(context).textTheme.headline4,
+            child: ListTile(
+              leading: Icon(FluentIcons.delete_16_regular),
+              title: Text(
+                language.DELETE,
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ),
           ),
           PopupMenuItem(
+            padding: EdgeInsets.zero,
             value: 1,
-            child: Text(
-              language.SHARE,
-              style: Theme.of(context).textTheme.headline4,
+            child: ListTile(
+              leading: Icon(FluentIcons.share_16_regular),
+              title: Text(
+                language.SHARE,
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ),
           ),
           PopupMenuItem(
+            padding: EdgeInsets.zero,
             value: 2,
-            child: Text(
-              language.ADD_TO_PLAYLIST,
-              style: Theme.of(context).textTheme.headline4,
+            child: ListTile(
+              leading: Icon(FluentIcons.list_16_regular),
+              title: Text(
+                language.ADD_TO_PLAYLIST,
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ),
           ),
           PopupMenuItem(
+            padding: EdgeInsets.zero,
             value: 3,
-            child: Text(
-              language.ADD_TO_NOW_PLAYING,
-              style: Theme.of(context).textTheme.headline4,
+            child: ListTile(
+              leading: Icon(FluentIcons.music_note_2_16_regular),
+              title: Text(
+                language.ADD_TO_NOW_PLAYING,
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ),
           ),
         ],

@@ -507,7 +507,7 @@ class CollectionArtist extends StatelessWidget {
                                                       style:
                                                           Theme.of(subContext)
                                                               .textTheme
-                                                              .headline5,
+                                                              .headline3,
                                                     ),
                                                     actions: [
                                                       MaterialButton(
@@ -607,7 +607,7 @@ class CollectionArtist extends StatelessWidget {
                                                               style: Theme.of(
                                                                       subContext)
                                                                   .textTheme
-                                                                  .headline5,
+                                                                  .headline3,
                                                             ),
                                                           ),
                                                           Container(

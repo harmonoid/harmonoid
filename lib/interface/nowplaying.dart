@@ -20,6 +20,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -524,9 +525,11 @@ class NowPlayingState extends State<NowPlayingScreen>
                       Container(
                         height: 56.0,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white.withOpacity(0.10)
-                              : Colors.black.withOpacity(0.10),
+                          color: configuration.acrylicEnabled!
+                              ? Colors.transparent
+                              : Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white.withOpacity(0.10)
+                                  : Colors.black.withOpacity(0.10),
                           border: Border(
                             bottom: BorderSide(
                                 color: Theme.of(context)
