@@ -131,9 +131,9 @@ List<Widget> tileGridListWidgets({
 }) {
   List<Widget> widgets = <Widget>[];
   widgets.addAll([
-    SubHeader(leadingSubHeader),
-    leadingWidget,
-    SubHeader(subHeader),
+    if (leadingSubHeader != null) SubHeader(leadingSubHeader),
+    if (!(leadingWidget is Container)) leadingWidget,
+    if (subHeader != null) SubHeader(subHeader),
     if (subHeader != null) SizedBox(height: 4.0),
   ]);
   int rowIndex = 0;

@@ -180,6 +180,7 @@ abstract class Utils {
               ? Colors.black.withOpacity(0.4)
               : Colors.white.withOpacity(0.4),
         ),
+        radius: Radius.zero,
       ),
       splashFactory: InkRipple.splashFactory,
       splashColor: Platform.isAndroid ? null : Colors.transparent,
