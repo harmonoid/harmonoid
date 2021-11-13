@@ -322,49 +322,64 @@ class YouTubeState extends State<YouTube> {
                 ),
               ),
               SizedBox(height: 18.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).primaryColor,
+              widget.track.filePath == null
+                  ? Container(
+                      height: 28.0,
+                      margin: EdgeInsets.symmetric(horizontal: 48.0),
+                      child: Center(
+                        child: LinearProgressIndicator(
+                          backgroundColor: Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withOpacity(0.2),
+                          valueColor: AlwaysStoppedAnimation(
+                              Theme.of(context).colorScheme.secondary),
+                        ),
                       ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          onPressed: () {
+                            Playback.play(
+                              index: 0,
+                              tracks: [
+                                widget.track,
+                              ],
+                            );
+                          },
+                          child: Text(
+                            language.PLAY_NOW,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 12.0,
+                        ),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          onPressed: () {
+                            Playback.add(
+                              [
+                                widget.track,
+                              ],
+                            );
+                          },
+                          child: Text(
+                            language.ADD_TO_NOW_PLAYING,
+                          ),
+                        ),
+                      ],
                     ),
-                    onPressed: () {
-                      Playback.play(
-                        index: 0,
-                        tracks: [
-                          widget.track,
-                        ],
-                      );
-                    },
-                    child: Text(
-                      language.PLAY_NOW,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 12.0,
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    onPressed: () {
-                      Playback.add(
-                        [
-                          widget.track,
-                        ],
-                      );
-                    },
-                    child: Text(
-                      language.ADD_TO_NOW_PLAYING,
-                    ),
-                  ),
-                ],
-              ),
               SizedBox(height: 18.0),
             ],
           ),
