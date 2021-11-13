@@ -448,7 +448,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                     ),
                     SizedBox(height: 4.0),
                     Text(
-                      '${widget.album!.albumArtistName}\n(${widget.album!.year ?? 'Unknown Year'})\n${widget.album!.tracks.length} ${language.TRACK.toLowerCase()}',
+                      '${widget.album!.albumArtistName}\n${widget.album!.year ?? 'Unknown Year'}\n${widget.album!.tracks.length} ${language.TRACK.toLowerCase()}',
                       style: Theme.of(context).textTheme.headline3,
                       maxLines: 3,
                       textAlign: TextAlign.center,

@@ -418,6 +418,7 @@ class CollectionArtist extends StatelessWidget {
                         ),
                       ],
                     ),
+                    SizedBox(height: 18.0),
                   ],
                 ),
               ),
