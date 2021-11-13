@@ -164,7 +164,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
         children: [
           Container(
             margin:
-                EdgeInsets.only(left: 84.0, right: 84.0, top: 8.0, bottom: 8.0),
+                EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
             child: Row(
               children: [
                 Padding(
@@ -174,7 +174,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                           width: 56.0,
                         )
                       : Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
@@ -210,10 +210,11 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                     optionsViewBuilder:
                         (context, callback, Iterable<String> values) =>
                             Container(
-                      margin: EdgeInsets.only(right: 16.0),
+                      margin: EdgeInsets.only(right: 4 * 16.0 + 2 * 56.0 - 8.0),
                       width: MediaQuery.of(context).size.width.normalized -
-                          16.0 -
-                          56.0,
+                          4 * 16.0 -
+                          2 * 56.0 -
+                          8.0,
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Stack(
@@ -413,102 +414,104 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                   ),
                 ),
                 SizedBox(
-                  width: 56.0 + 8.0,
+                  width: 56.0 + 16.0,
                 )
               ],
             ),
           ),
           Expanded(
             child: PageTransitionSwitcher(
-                child: this.result ??
-                    (youtube.recommendations.isNotEmpty
-                        ? CustomListView(
-                            padding: EdgeInsets.only(top: 16.0),
-                            children: <Widget>[
-                                  Container(
-                                    padding: EdgeInsets.only(left: 28.0),
-                                    height: 56.0,
-                                    child: Text(
-                                      language.RECOMMENDATIONS,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline2
-                                          ?.copyWith(fontSize: 24.0),
-                                    ),
-                                  ),
-                                ] +
-                                tileGridListWidgets(
-                                  context: context,
-                                  tileHeight: tileHeight,
-                                  tileWidth: tileWidth,
-                                  elementsPerRow: elementsPerRow,
-                                  subHeader: null,
-                                  leadingSubHeader: null,
-                                  widgetCount: youtube.recommendations.length,
-                                  leadingWidget: Container(),
-                                  builder: (BuildContext context, int index) =>
-                                      YouTubeTile(
-                                    height: tileHeight,
-                                    width: tileWidth,
-                                    track: youtube.recommendations[index],
+              child: this.result ??
+                  (youtube.recommendations.isNotEmpty
+                      ? CustomListView(
+                          padding: EdgeInsets.only(top: 16.0),
+                          children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.only(left: 28.0),
+                                  height: 56.0,
+                                  child: Text(
+                                    language.RECOMMENDATIONS,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline2
+                                        ?.copyWith(fontSize: 24.0),
                                   ),
                                 ),
-                          )
-                        : (youtube.exception
-                            ? Center(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ExceptionWidget(
-                                      width: 420.0,
-                                      margin: EdgeInsets.zero,
-                                      title: language.NO_INTERNET_TITLE,
-                                      subtitle: language.NO_INTERNET_SUBTITLE +
-                                          '\n' +
-                                          language.YOUTUBE_INTERNET_ERROR,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(12.0),
-                                      child: MaterialButton(
-                                        onPressed: () {
-                                          youtube.updateRecommendations(
-                                            Track(
-                                              trackId: configuration
-                                                  .discoverRecent!.first,
-                                            ),
-                                          );
-                                        },
-                                        child: Text(
-                                          language.REFRESH,
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
+                              ] +
+                              tileGridListWidgets(
+                                context: context,
+                                tileHeight: tileHeight,
+                                tileWidth: tileWidth,
+                                elementsPerRow: elementsPerRow,
+                                subHeader: null,
+                                leadingSubHeader: null,
+                                widgetCount: youtube.recommendations.length,
+                                leadingWidget: Container(),
+                                builder: (BuildContext context, int index) =>
+                                    YouTubeTile(
+                                  height: tileHeight,
+                                  width: tileWidth,
+                                  track: youtube.recommendations[index],
+                                ),
+                              ),
+                        )
+                      : (youtube.exception
+                          ? Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ExceptionWidget(
+                                    width: 420.0,
+                                    margin: EdgeInsets.zero,
+                                    title: language.NO_INTERNET_TITLE,
+                                    subtitle: language.NO_INTERNET_SUBTITLE +
+                                        '\n' +
+                                        language.YOUTUBE_INTERNET_ERROR,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(12.0),
+                                    child: MaterialButton(
+                                      onPressed: () {
+                                        youtube.updateRecommendations(
+                                          Track(
+                                            trackId: configuration
+                                                .discoverRecent!.first,
                                           ),
+                                        );
+                                      },
+                                      child: Text(
+                                        language.REFRESH,
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              )
-                            : Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation(
-                                    Theme.of(context).primaryColor,
                                   ),
+                                ],
+                              ),
+                            )
+                          : Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                  Theme.of(context).primaryColor,
                                 ),
-                              ))),
-                transitionBuilder: (child, animation, secondaryAnimation) =>
-                    SharedAxisTransition(
-                        fillColor: Colors.transparent,
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        transitionType: SharedAxisTransitionType.vertical,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width.normalized,
-                          child: child,
-                        ))),
+                              ),
+                            ))),
+              transitionBuilder: (child, animation, secondaryAnimation) =>
+                  SharedAxisTransition(
+                fillColor: Colors.transparent,
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                transitionType: SharedAxisTransitionType.vertical,
+                child: Container(
+                  width: MediaQuery.of(context).size.width.normalized,
+                  child: child,
+                ),
+              ),
+            ),
           ),
         ],
       ),

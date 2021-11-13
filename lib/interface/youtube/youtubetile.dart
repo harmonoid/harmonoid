@@ -194,338 +194,324 @@ class YouTubeState extends State<YouTube> {
         height:
             MediaQuery.of(context).size.width.normalized > HORIZONTAL_BREAKPOINT
                 ? MediaQuery.of(context).size.height.normalized
-                : MediaQuery.of(context).size.width.normalized + 128.0,
+                : 324.0 + 128.0,
         width: MediaQuery.of(context).size.width.normalized / 3,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                NavigatorPopButton(),
-                SizedBox(
-                  width: 24.0,
-                ),
-                Text(
-                  'YouTube',
-                  style: Theme.of(context).textTheme.headline1,
-                )
-              ],
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              right: BorderSide(
+                color: Theme.of(context).dividerColor,
+              ),
             ),
-            Divider(
-              height: 1.0,
-              thickness: 1.0,
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: 282.0,
-                            maxHeight: 282.0,
-                          ),
+          ),
+          padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxWidth: 324.0,
+                      maxHeight: 324.0,
+                    ),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      alignment: Alignment.topCenter,
+                      children: [
+                        Positioned.fill(
+                          bottom: -20.0,
                           child: Stack(
-                            clipBehavior: Clip.none,
-                            alignment: Alignment.topCenter,
+                            alignment: Alignment.center,
                             children: [
-                              Positioned.fill(
-                                bottom: -20.0,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(32.0),
-                                          child: Image.network(
-                                            widget.track.networkAlbumArt!,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(32.0),
-                                          child: Container(
-                                            color: Colors.black.withOpacity(
-                                                Theme.of(context).brightness ==
-                                                        Brightness.light
-                                                    ? 0.1
-                                                    : 0.4),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    ClipRect(
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                          sigmaX: 8.0,
-                                          sigmaY: 8.0,
-                                        ),
-                                        child: Container(
-                                          height: 284.0,
-                                          width: 284.0,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(34.0),
-                                child: Hero(
-                                  tag: 'track_art_${widget.track.trackName}',
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(4.0),
-                                    ),
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(44.0),
                                     child: Image.network(
                                       widget.track.networkAlbumArt!,
-                                      fit: BoxFit.contain,
                                     ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(44.0),
+                                    child: Container(
+                                      color: Colors.black.withOpacity(
+                                          Theme.of(context).brightness ==
+                                                  Brightness.light
+                                              ? 0.1
+                                              : 0.4),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              ClipRect(
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(
+                                    sigmaX: 8.0,
+                                    sigmaY: 8.0,
+                                  ),
+                                  child: Container(
+                                    height: 284.0,
+                                    width: 284.0,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 18.0),
-                    Container(
-                      margin: EdgeInsets.all(8.0),
-                      padding: EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withOpacity(0.08)
-                            : Colors.black.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            widget.track.trackName!,
-                            style: Theme.of(context).textTheme.headline1,
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 4.0),
-                          Text(
-                            widget.track.albumName!,
-                            style: Theme.of(context).textTheme.headline3,
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            '${widget.track.albumArtistName}\n(${widget.track.year ?? 'Unknown Year'})',
-                            style: Theme.of(context).textTheme.headline3,
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 18.0),
-                    Container(
-                      alignment: Alignment.topCenter,
-                      height: 64.0,
-                      child: this.description == null
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 4.0,
-                                  width: 192.0,
-                                  child: LinearProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation(
-                                      Theme.of(context).colorScheme.secondary,
-                                    ),
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .secondary
-                                        .withOpacity(0.4),
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Center(
-                              child: ListView(
-                                shrinkWrap: true,
-                                padding: EdgeInsets.all(16.0),
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                        Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      await Playback.play(
-                                        index: 0,
-                                        tracks: [
-                                          widget.track,
-                                        ],
-                                      );
-                                      await configuration.save(
-                                        discoverRecent: [
-                                          widget.track.trackId!,
-                                        ],
-                                      );
-                                    },
-                                    child: Text(
-                                      language.PLAY_NOW,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 12.0,
-                                  ),
-                                  ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                        Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Playback.add(
-                                        [
-                                          widget.track,
-                                        ],
-                                      );
-                                    },
-                                    child: Text(
-                                      language.ADD_TO_NOW_PLAYING,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 12.0,
-                                  ),
-                                  // ElevatedButton(
-                                  //   style: ButtonStyle(
-                                  //     backgroundColor:
-                                  //         MaterialStateProperty.all(
-                                  //       Theme.of(context).primaryColor,
-                                  //     ),
-                                  //   ),
-                                  //   onPressed: () {
-                                  //     Share.share(
-                                  //       'https://youtu.be/${widget.track.trackId!}',
-                                  //     );
-                                  //   },
-                                  //   child: Text(
-                                  //     language.SHARE,
-                                  //   ),
-                                  // ),
-                                ],
+                        Padding(
+                          padding: EdgeInsets.all(48.0),
+                          child: Hero(
+                            tag: 'track_art_${widget.track.trackName}',
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(4.0),
+                              ),
+                              child: Image.network(
+                                widget.track.networkAlbumArt!,
+                                fit: BoxFit.contain,
                               ),
                             ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 0.0),
+              Container(
+                margin: EdgeInsets.all(0.0),
+                padding: EdgeInsets.all(0.0),
+                // decoration: BoxDecoration(
+                //   color: Theme.of(context).brightness == Brightness.dark
+                //       ? Colors.white.withOpacity(0.08)
+                //       : Colors.black.withOpacity(0.08),
+                //   borderRadius: BorderRadius.circular(8.0),
+                // ),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.track.trackName!,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline1
+                          ?.copyWith(fontSize: 24.0),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4.0),
+                    Text(
+                      widget.track.albumName!,
+                      style: Theme.of(context).textTheme.headline3,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      '${widget.track.albumArtistName}\n(${widget.track.year ?? 'Unknown Year'})',
+                      style: Theme.of(context).textTheme.headline3,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: 18.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    onPressed: () {
+                      Playback.play(
+                        index: 0,
+                        tracks: [
+                          widget.track,
+                        ],
+                      );
+                    },
+                    child: Text(
+                      language.PLAY_NOW,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 12.0,
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    onPressed: () {
+                      Playback.add(
+                        [
+                          widget.track,
+                        ],
+                      );
+                    },
+                    child: Text(
+                      language.ADD_TO_NOW_PLAYING,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 18.0),
+            ],
+          ),
         ),
       ),
       builder: (context, collection, child) => Scaffold(
         body: LayoutBuilder(
           builder: (context, constraints) => Container(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.white
-                : Color(0xFF202020),
             height: MediaQuery.of(context).size.height.normalized,
             width: MediaQuery.of(context).size.width.normalized,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
               children: [
-                constraints.maxWidth > HORIZONTAL_BREAKPOINT
-                    ? child!
-                    : Container(),
+                Container(
+                  height: 56.0,
+                  decoration: BoxDecoration(
+                    color: configuration.acrylicEnabled!
+                        ? Colors.transparent
+                        : Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white.withOpacity(0.10)
+                            : Colors.black.withOpacity(0.10),
+                    border: Border(
+                      bottom: BorderSide(
+                          color:
+                              Theme.of(context).dividerColor.withOpacity(0.12)),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      NavigatorPopButton(),
+                      SizedBox(
+                        width: 16.0,
+                      ),
+                      Text(
+                        'YouTube',
+                        style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Expanded(
-                  child: constraints.maxWidth > HORIZONTAL_BREAKPOINT
-                      ? (this.description == null
-                          ? Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation(
-                                  Theme.of(context).colorScheme.secondary,
-                                ),
-                              ),
-                            )
-                          : CustomListView(
-                              children: <Widget>[
-                                constraints.maxWidth > HORIZONTAL_BREAKPOINT
-                                    ? Container()
-                                    : child!,
-                                SubHeader(
-                                  language.ABOUT_TITLE,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.all(18.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: this.description == null
-                                        ? CrossAxisAlignment.center
-                                        : CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        this.description!,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline4,
+                  child: Container(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : Color(0xFF202020),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        constraints.maxWidth > HORIZONTAL_BREAKPOINT
+                            ? child!
+                            : Container(),
+                        Expanded(
+                          child: constraints.maxWidth > HORIZONTAL_BREAKPOINT
+                              ? (this.description == null
+                                  ? Center(
+                                      child: CircularProgressIndicator(
+                                        valueColor: AlwaysStoppedAnimation(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ))
-                      : CustomListView(
-                          children: <Widget>[
-                            constraints.maxWidth > HORIZONTAL_BREAKPOINT
-                                ? Container()
-                                : child!,
-                            SubHeader(
-                              language.ABOUT_TITLE,
-                            ),
-                            this.description == null
-                                ? Center(
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation(
-                                        Theme.of(context).colorScheme.secondary,
-                                      ),
-                                    ),
-                                  )
-                                : Padding(
-                                    padding: EdgeInsets.all(18.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          this.description == null
-                                              ? CrossAxisAlignment.center
-                                              : CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          this.description!,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline4,
+                                    )
+                                  : CustomListView(
+                                      children: <Widget>[
+                                        constraints.maxWidth >
+                                                HORIZONTAL_BREAKPOINT
+                                            ? Container()
+                                            : child!,
+                                        SubHeader(
+                                          language.ABOUT_TITLE,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(18.0),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                this.description == null
+                                                    ? CrossAxisAlignment.center
+                                                    : CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                this.description!,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline4,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
+                                    ))
+                              : CustomListView(
+                                  children: <Widget>[
+                                    constraints.maxWidth > HORIZONTAL_BREAKPOINT
+                                        ? Container()
+                                        : child!,
+                                    SubHeader(
+                                      language.ABOUT_TITLE,
                                     ),
-                                  ),
-                          ],
+                                    this.description == null
+                                        ? Center(
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .secondary,
+                                              ),
+                                            ),
+                                          )
+                                        : Padding(
+                                            padding: EdgeInsets.all(18.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment: this
+                                                          .description ==
+                                                      null
+                                                  ? CrossAxisAlignment.center
+                                                  : CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  this.description!,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline4,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                  ],
+                                ),
                         ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
