@@ -40,7 +40,7 @@ abstract class Utils {
           ),
           content: Text(
             'Please report the issue on the repository. Possibly something changed on YouTube\'s website.\nLet\'s play your local music till then.',
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headline3,
           ),
           actions: [
             MaterialButton(
@@ -67,7 +67,7 @@ abstract class Utils {
           ),
           content: Text(
             'Please give us correct link to the media.\nIf you think this is a false result, please report at the repository.',
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headline3,
           ),
           actions: [
             MaterialButton(
@@ -177,27 +177,29 @@ abstract class Utils {
         thickness: MaterialStateProperty.all(8.0),
         thumbColor: MaterialStateProperty.all(
           isLight
-              ? Colors.black.withOpacity(0.2)
-              : Colors.white.withOpacity(0.2),
+              ? Colors.black.withOpacity(0.4)
+              : Colors.white.withOpacity(0.4),
         ),
+        radius: Radius.zero,
       ),
       splashFactory: InkRipple.splashFactory,
       splashColor: Platform.isAndroid ? null : Colors.transparent,
       primaryColorLight: accentColor,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          elevation: MaterialStateProperty.all(0.0),
+          backgroundColor: MaterialStateProperty.all(accentColor),
+          foregroundColor: MaterialStateProperty.all(Colors.white),
+          shadowColor: MaterialStateProperty.all(accentColor),
+          elevation: MaterialStateProperty.all(8.0),
         ),
       ),
       primaryColor: accentColor,
       primaryColorDark: accentColor,
       scaffoldBackgroundColor: configuration.acrylicEnabled!
           ? Colors.transparent
-          : (isLight ? Colors.white : Color(0xFF121212)),
+          : (isLight ? Colors.white : Color(0xFF202020)),
       toggleableActiveColor: accentColor,
-      cardColor: isLight
-          ? Colors.black.withOpacity(0.06)
-          : Colors.white.withOpacity(0.06),
+      cardColor: isLight ? Colors.white : Color(0xFF202020),
       backgroundColor: accentColor.withOpacity(0.24),
       dividerColor: isLight ? Colors.black12 : Colors.white24,
       disabledColor: isLight ? Colors.black38 : Colors.white38,
@@ -216,16 +218,16 @@ abstract class Utils {
             isLight ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
         elevation: 4.0,
         iconTheme: IconThemeData(
-          color: isLight ? Colors.black54 : Colors.white.withOpacity(0.87),
+          color: isLight ? Colors.black : Colors.white,
           size: 24,
         ),
         actionsIconTheme: IconThemeData(
-          color: isLight ? Colors.black54 : Colors.white.withOpacity(0.87),
+          color: isLight ? Colors.black : Colors.white,
           size: 24,
         ),
       ),
       iconTheme: IconThemeData(
-        color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
+        color: isLight ? Colors.black : Colors.white,
         size: 24,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(

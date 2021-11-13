@@ -18,6 +18,7 @@
  */
 
 import 'dart:io';
+import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/hotkeys.dart';
@@ -138,7 +139,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
           )
         : Center(
             child: Text(
-              language!.STRING_YOUTUBE_NO_RESULTS,
+              language.YOUTUBE_NO_RESULTS,
             ),
           );
     this.setState(() {});
@@ -146,57 +147,55 @@ class YouTubeMusicState extends State<YouTubeMusic> {
 
   Widget? result;
   List<String> suggestions = [];
+  String query = '';
+
   @override
   Widget build(BuildContext context) {
     int elementsPerRow =
-        MediaQuery.of(context).size.width.normalized ~/ (156 + 8);
+        MediaQuery.of(context).size.width.normalized ~/ (172.0 + 8.0);
     double tileWidth = (MediaQuery.of(context).size.width.normalized -
             16 -
             (elementsPerRow - 1) * 8) /
         elementsPerRow;
-    double tileHeight = tileWidth * 246.0 / 156;
+    double tileHeight = tileWidth * 212.0 / 172.0;
     return Consumer<YouTubeStateController>(
       builder: (context, youtube, _) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            margin: EdgeInsets.all(8.0),
+            margin:
+                EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
             child: Row(
               children: [
                 Padding(
                   padding: EdgeInsets.only(right: 8.0),
                   child: this.result == null
-                      ? Container(
+                      ? SizedBox(
                           width: 56.0,
-                          child: Icon(
-                            FluentIcons.search_24_regular,
-                            size: 24.0,
-                          ),
                         )
                       : Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: InkWell(
-                            onTap: () {
-                              this.setState(
-                                () => this.result = null,
-                              );
-                            },
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                            child: Container(
-                              height: 40.0,
-                              width: 40.0,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white.withOpacity(0.08)
-                                    : Colors.black.withOpacity(0.08),
-                                borderRadius: BorderRadius.circular(8.0),
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                this.setState(
+                                  () => this.result = null,
+                                );
+                              },
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
                               ),
-                              child: Icon(
-                                FluentIcons.arrow_left_20_filled,
-                                size: 20.0,
+                              child: Container(
+                                height: 40.0,
+                                width: 40.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Icon(
+                                  FluentIcons.arrow_left_32_regular,
+                                  size: 20.0,
+                                ),
                               ),
                             ),
                           ),
@@ -211,10 +210,11 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                     optionsViewBuilder:
                         (context, callback, Iterable<String> values) =>
                             Container(
-                      margin: EdgeInsets.only(right: 16.0),
+                      margin: EdgeInsets.only(right: 4 * 16.0 + 2 * 56.0 - 8.0),
                       width: MediaQuery.of(context).size.width.normalized -
-                          16.0 -
-                          56.0,
+                          4 * 16.0 -
+                          2 * 56.0 -
+                          8.0,
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Stack(
@@ -279,13 +279,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                                             option,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline5
-                                                ?.copyWith(
-                                                    color: Theme.of(context)
-                                                                .brightness ==
-                                                            Brightness.dark
-                                                        ? Colors.white
-                                                        : Colors.black),
+                                                .headline5,
                                           ),
                                         ),
                                       );
@@ -300,147 +294,224 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                     ),
                     fieldViewBuilder: (context, controller, node, callback) =>
                         Focus(
+                      onFocusChange: (hasFocus) {
+                        if (!hasFocus) {
+                          HotKeys.enableSpaceHotKey();
+                        }
+                      },
+                      child: Focus(
                           onFocusChange: (hasFocus) {
-                            if(!hasFocus) {
+                            if (hasFocus) {
+                              HotKeys.disableSpaceHotKey();
+                            } else {
                               HotKeys.enableSpaceHotKey();
                             }
                           },
-                          child: Focus(
-                            onFocusChange: (hasFocus) {
-                              if(hasFocus) {
-                                HotKeys.disableSpaceHotKey();
-                              }else{HotKeys.enableSpaceHotKey();}
-                            },
+                          child: Container(
+                            height: 44.0,
                             child: TextField(
-                      autofocus: Platform.isWindows ||
-                          Platform.isLinux ||
-                          Platform.isMacOS,
-                      controller: controller,
-                      focusNode: node,
-                      onChanged: (value) async {
-                        if (value.isEmpty) {
-                          this.suggestions = [];
-                          this.setState(() {});
-                          return;
-                        }
-                        this.suggestions = await YTM.suggestions(value);
-                        this.setState(() {});
-                      },
-                      style: Theme.of(context).textTheme.headline4,
-                      onSubmitted: (value) {
-                        this.search(value);
-                      },
-                      cursorWidth: 1.0,
-                      decoration: InputDecoration(
-                        hintText: language!.STRING_YOUTUBE_WELCOME,
-                        hintStyle: Theme.of(context).textTheme.headline3,
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary,
-                              width: 1.0),
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Theme.of(context).dividerColor,
-                            width: 1.0,
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.secondary,
-                              width: 1.0),
-                        ),
-                      ),
+                              autofocus: Platform.isWindows ||
+                                  Platform.isLinux ||
+                                  Platform.isMacOS,
+                              cursorWidth: 1.0,
+                              focusNode: node,
+                              controller: controller,
+                              onChanged: (value) async {
+                                query = value;
+                                if (query.isEmpty) {
+                                  this.suggestions = [];
+                                  this.setState(() {});
+                                  return;
+                                }
+                                this.suggestions = await YTM.suggestions(query);
+                                this.setState(() {});
+                              },
+                              onSubmitted: (value) {
+                                this.search(value);
+                              },
+                              cursorColor: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.black
+                                  : Colors.white,
+                              textAlignVertical: TextAlignVertical.bottom,
+                              style: Theme.of(context).textTheme.headline4,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  onPressed: () async {
+                                    if (query.isEmpty) {
+                                      this.suggestions = [];
+                                      this.setState(() {});
+                                      return;
+                                    }
+                                    this.suggestions =
+                                        await YTM.suggestions(query);
+                                    this.setState(() {});
+                                  },
+                                  icon: Transform.rotate(
+                                    angle: pi / 2,
+                                    child: Icon(
+                                      FluentIcons.search_12_regular,
+                                      size: 17.0,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.light
+                                          ? Colors.black87
+                                          : Colors.white.withOpacity(0.87),
+                                    ),
+                                  ),
+                                ),
+                                contentPadding:
+                                    EdgeInsets.only(left: 10.0, bottom: 16.0),
+                                hintText: language.YOUTUBE_WELCOME,
+                                hintStyle: Theme.of(context)
+                                    .textTheme
+                                    .headline3
+                                    ?.copyWith(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.light
+                                          ? Colors.black.withOpacity(0.6)
+                                          : Colors.white60,
+                                    ),
+                                filled: true,
+                                fillColor: Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.white
+                                    : Color(0xFF202020),
+                                hoverColor: Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.white
+                                    : Color(0xFF202020),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .dividerColor
+                                        .withOpacity(0.32),
+                                    width: 0.6,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .dividerColor
+                                        .withOpacity(0.32),
+                                    width: 0.6,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .dividerColor
+                                        .withOpacity(0.32),
+                                    width: 0.6,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          )),
+                    ),
                   ),
                 ),
                 SizedBox(
-                  width: 24.0,
-                ),
+                  width: 56.0 + 16.0,
+                )
               ],
             ),
           ),
           Expanded(
             child: PageTransitionSwitcher(
-                child: this.result ??
-                    (youtube.recommendations.isNotEmpty
-                        ? CustomListView(
-                            children: tileGridListWidgets(
-                              context: context,
-                              tileHeight: tileHeight,
-                              tileWidth: tileWidth,
-                              elementsPerRow: elementsPerRow,
-                              subHeader: language!.STRING_RECOMMENDATIONS,
-                              leadingSubHeader: null,
-                              widgetCount: youtube.recommendations.length,
-                              leadingWidget: Container(),
-                              builder: (BuildContext context, int index) =>
-                                  YouTubeTile(
-                                height: tileHeight,
-                                width: tileWidth,
-                                track: youtube.recommendations[index],
+              child: this.result ??
+                  (youtube.recommendations.isNotEmpty
+                      ? CustomListView(
+                          padding: EdgeInsets.only(top: 16.0),
+                          children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.only(left: 28.0),
+                                  height: 56.0,
+                                  child: Text(
+                                    language.RECOMMENDATIONS,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline2
+                                        ?.copyWith(fontSize: 24.0),
+                                  ),
+                                ),
+                              ] +
+                              tileGridListWidgets(
+                                context: context,
+                                tileHeight: tileHeight,
+                                tileWidth: tileWidth,
+                                elementsPerRow: elementsPerRow,
+                                subHeader: null,
+                                leadingSubHeader: null,
+                                widgetCount: youtube.recommendations.length,
+                                leadingWidget: Container(),
+                                builder: (BuildContext context, int index) =>
+                                    YouTubeTile(
+                                  height: tileHeight,
+                                  width: tileWidth,
+                                  track: youtube.recommendations[index],
+                                ),
                               ),
-                            ),
-                          )
-                        : (youtube.exception
-                            ? Center(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ExceptionWidget(
-                                      width: 420.0,
-                                      margin: EdgeInsets.zero,
-                                      title: language!.STRING_NO_INTERNET_TITLE,
-                                      subtitle: language!
-                                              .STRING_NO_INTERNET_SUBTITLE +
-                                          '\n' +
-                                          language!
-                                              .STRING_YOUTUBE_INTERNET_ERROR,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(12.0),
-                                      child: MaterialButton(
-                                        onPressed: () {
-                                          youtube.updateRecommendations(
-                                            Track(
-                                              trackId: configuration
-                                                  .discoverRecent!.first,
-                                            ),
-                                          );
-                                        },
-                                        child: Text(
-                                          language!.STRING_REFRESH,
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
+                        )
+                      : (youtube.exception
+                          ? Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ExceptionWidget(
+                                    width: 420.0,
+                                    margin: EdgeInsets.zero,
+                                    title: language.NO_INTERNET_TITLE,
+                                    subtitle: language.NO_INTERNET_SUBTITLE +
+                                        '\n' +
+                                        language.YOUTUBE_INTERNET_ERROR,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(12.0),
+                                    child: MaterialButton(
+                                      onPressed: () {
+                                        youtube.updateRecommendations(
+                                          Track(
+                                            trackId: configuration
+                                                .discoverRecent!.first,
                                           ),
+                                        );
+                                      },
+                                      child: Text(
+                                        language.REFRESH,
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              )
-                            : Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation(
-                                    Theme.of(context).primaryColor,
                                   ),
+                                ],
+                              ),
+                            )
+                          : Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                  Theme.of(context).primaryColor,
                                 ),
-                              ))),
-                transitionBuilder: (child, animation, secondaryAnimation) =>
-                    SharedAxisTransition(
-                        fillColor: Colors.transparent,
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        transitionType: SharedAxisTransitionType.vertical,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width.normalized,
-                          child: child,
-                        ))),
+                              ),
+                            ))),
+              transitionBuilder: (child, animation, secondaryAnimation) =>
+                  SharedAxisTransition(
+                fillColor: Colors.transparent,
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                transitionType: SharedAxisTransitionType.vertical,
+                child: Container(
+                  width: MediaQuery.of(context).size.width.normalized,
+                  child: child,
+                ),
+              ),
+            ),
           ),
         ],
       ),

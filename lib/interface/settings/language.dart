@@ -39,12 +39,6 @@ class LanguageSetting extends StatelessWidget {
           horizontal: 8.0,
           vertical: 4.0,
         ),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(
-              color: Theme.of(context).dividerColor.withOpacity(0.12)),
-        ),
         child: Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: ExpansionTile(
@@ -69,15 +63,19 @@ class LanguageSetting extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          language.STRING_SETTING_LANGUAGE_TITLE,
-                          style: Theme.of(context).textTheme.headline2,
+                          language.SETTING_LANGUAGE_TITLE,
+                          style:
+                              Theme.of(context).textTheme.headline2?.copyWith(
+                                    fontSize: 24.0,
+                                  ),
                         ),
-                        Divider(color: Colors.transparent, height: 4.0),
+                        SizedBox(
+                          height: 2.0,
+                        ),
                         Text(
-                          language.STRING_SETTING_LANGUAGE_SUBTITLE,
+                          language.SETTING_LANGUAGE_SUBTITLE,
                           style: Theme.of(context).textTheme.headline3,
                         ),
-                        Divider(color: Colors.transparent, height: 8.0),
                       ],
                     ),
                   ),
@@ -92,11 +90,6 @@ class LanguageSetting extends StatelessWidget {
                     ),
                   ),
                 ]),
-                Divider(
-                  color: Theme.of(context).dividerColor,
-                  thickness: 1.0,
-                  height: 1.0,
-                ),
               ],
             ),
             fixedChild: AnimatedSwitcher(

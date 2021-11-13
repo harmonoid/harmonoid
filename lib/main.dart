@@ -59,7 +59,7 @@ Future<void> main(List<String> args) async {
       await Intent.initialize(args: args);
       await HotKeys.initialize();
       doWhenWindowReady(() {
-        appWindow.minSize = Size(320, 590);
+        appWindow.minSize = Size(960, 640);
         appWindow.size = Size(1024, 640);
         appWindow.alignment = Alignment.center;
         appWindow.show();
@@ -95,9 +95,7 @@ Future<void> main(List<String> args) async {
     await collection.refresh(onProgress: (progress, total, _) {
       collectionRefresh.set(progress, total);
     });
-    await Language.initialize(
-      languageRegion: configuration.languageRegion!,
-    );
+    await Language.initialize();
     runApp(
       Harmonoid(),
     );

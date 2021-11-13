@@ -427,6 +427,14 @@ class Collection extends ChangeNotifier {
       this.artists.sort(
           (first, second) => first.artistName!.compareTo(second.artistName!));
     }
+    if (type == CollectionSort.year) {
+      this.tracks.sort(
+          (first, second) => (second.year ?? -1).compareTo(first.year ?? -1));
+      this.albums.sort(
+          (first, second) => (second.year ?? -1).compareTo(first.year ?? -1));
+      this.artists.sort((first, second) => (second.tracks.last.year ?? -1)
+          .compareTo(first.tracks.last.year ?? -1));
+    }
     this.notifyListeners();
   }
 
@@ -689,7 +697,7 @@ class Collection extends ChangeNotifier {
 
 /// Types of sorts available.
 ///
-enum CollectionSort { dateAdded, aToZ }
+enum CollectionSort { dateAdded, aToZ, year }
 
 /// Types of orders available.
 /// TODO (alexmercerind): Not yet exposed.

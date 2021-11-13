@@ -220,7 +220,7 @@ Map<String, dynamic> default_configuration = {
   ],
   'languageRegion': 0,
   'accent': 0,
-  'themeMode': 2,
+  'themeMode': 1,
   'collectionSortType': 0,
   'automaticAccent': false,
   'notificationLyrics': true,
@@ -228,7 +228,7 @@ Map<String, dynamic> default_configuration = {
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
   'discoverRecent': ['XfEMj-z3TtA'],
-  'enable125Scaling': Platform.isLinux,
+  'enable125Scaling': false,
 };
 
 /// Late initialized configuration object instance.

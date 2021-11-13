@@ -17,8 +17,8 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
-      title: language!.STRING_SETTING_ACCENT_COLOR_TITLE,
-      subtitle: language!.STRING_SETTING_ACCENT_COLOR_SUBTITLE,
+      title: language.SETTING_ACCENT_COLOR_TITLE,
+      subtitle: language.SETTING_ACCENT_COLOR_SUBTITLE,
       child: Consumer<Visuals>(
         builder: (context, visuals, _) => Column(
           children: [
@@ -32,7 +32,7 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                  );
                  this.setState(() {});
                },
-               title: Text(language!.STRING_SETTING_ACCENT_COLOR_AUTOMATIC),
+               title: Text(language.SETTING_ACCENT_COLOR_AUTOMATIC),
              ),
              */
             Padding(

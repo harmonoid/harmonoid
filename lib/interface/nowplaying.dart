@@ -20,6 +20,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -434,7 +435,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SubHeader(
-                                  language!.STRING_LYRICS,
+                                  language.LYRICS,
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(
@@ -451,7 +452,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                             ),
                           ),
                           SubHeader(
-                            language!.STRING_COMING_UP,
+                            language.COMING_UP,
                           ),
                         ] +
                         segment
@@ -494,11 +495,17 @@ class NowPlayingState extends State<NowPlayingScreen>
                             .toList(),
                   ),
                   Builder(
-                    builder: (context){
-                      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+                    builder: (context) {
+                      if (Platform.isWindows ||
+                          Platform.isLinux ||
+                          Platform.isMacOS) {
                         //This is a fix to an issue where the WindowTitleBar doesn't show up.
-                        return Positioned(child: SizedBox(), top: -40,);
-                      }return SizedBox();
+                        return Positioned(
+                          child: SizedBox(),
+                          top: -40,
+                        );
+                      }
+                      return SizedBox();
                     },
                   ),
                 ],
@@ -518,9 +525,11 @@ class NowPlayingState extends State<NowPlayingScreen>
                       Container(
                         height: 56.0,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white.withOpacity(0.10)
-                              : Colors.black.withOpacity(0.10),
+                          color: configuration.acrylicEnabled!
+                              ? Colors.transparent
+                              : Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white.withOpacity(0.10)
+                                  : Colors.black.withOpacity(0.10),
                           border: Border(
                             bottom: BorderSide(
                                 color: Theme.of(context)
@@ -540,10 +549,10 @@ class NowPlayingState extends State<NowPlayingScreen>
                               },
                             ),
                             SizedBox(
-                              width: 24.0,
+                              width: 16.0,
                             ),
                             Text(
-                              language!.STRING_NOW_PLAYING,
+                              language.NOW_PLAYING,
                               style: TextStyle(
                                 color: Theme.of(context).brightness ==
                                         Brightness.dark
@@ -558,7 +567,9 @@ class NowPlayingState extends State<NowPlayingScreen>
                       ),
                       Expanded(
                         child: Container(
-                          color: Colors.transparent,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Color(0xFF242424)
+                              : Color(0xFFFFFFFF),
                           child: Row(
                             children: [
                               Container(
@@ -568,37 +579,119 @@ class NowPlayingState extends State<NowPlayingScreen>
                                         .normalized /
                                     2,
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(48.0),
-                                        child: ConstrainedBox(
-                                          constraints: BoxConstraints(
-                                            maxWidth: 512.0,
-                                            maxHeight: 512.0,
-                                          ),
-                                          child: Image(
-                                            image: (nowPlaying.index == null
-                                                ? AssetImage(
-                                                    'assets/images/default_album_art.jpg')
-                                                : (nowPlaying
-                                                            .tracks[nowPlaying
-                                                                .index!]
-                                                            .networkAlbumArt !=
-                                                        null
-                                                    ? NetworkImage(nowPlaying
-                                                        .tracks[
-                                                            nowPlaying.index!]
-                                                        .networkAlbumArt!)
-                                                    : FileImage(
-                                                        nowPlaying
-                                                            .tracks[nowPlaying
-                                                                .index!]
-                                                            .albumArt,
-                                                      ))) as ImageProvider<
-                                                Object>,
-                                            fit: BoxFit.contain,
-                                          ),
+                                    Padding(
+                                      padding: EdgeInsets.all(48.0),
+                                      child: Container(
+                                        constraints: BoxConstraints(
+                                          maxWidth: 382.0,
+                                          maxHeight: 382.0,
+                                        ),
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Positioned.fill(
+                                              bottom: -20.0,
+                                              child: Stack(
+                                                alignment: Alignment.center,
+                                                children: [
+                                                  Stack(
+                                                    alignment: Alignment.center,
+                                                    children: [
+                                                      Padding(
+                                                        padding: EdgeInsets.all(
+                                                            32.0),
+                                                        child: Image(
+                                                          image: (nowPlaying
+                                                                      .index ==
+                                                                  null
+                                                              ? AssetImage(
+                                                                  'assets/images/default_album_art.jpg')
+                                                              : (nowPlaying
+                                                                          .tracks[nowPlaying
+                                                                              .index!]
+                                                                          .networkAlbumArt !=
+                                                                      null
+                                                                  ? NetworkImage(nowPlaying
+                                                                      .tracks[nowPlaying
+                                                                          .index!]
+                                                                      .networkAlbumArt!)
+                                                                  : FileImage(
+                                                                      nowPlaying
+                                                                          .tracks[
+                                                                              nowPlaying.index!]
+                                                                          .albumArt,
+                                                                    ))) as ImageProvider<
+                                                              Object>,
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsets.all(
+                                                            32.0),
+                                                        child: Container(
+                                                          color: Colors.black.withOpacity(
+                                                              Theme.of(context)
+                                                                          .brightness ==
+                                                                      Brightness
+                                                                          .light
+                                                                  ? 0.1
+                                                                  : 0.4),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  ClipRect(
+                                                    child: BackdropFilter(
+                                                      filter: ImageFilter.blur(
+                                                        sigmaX: 8.0,
+                                                        sigmaY: 8.0,
+                                                      ),
+                                                      child: Container(
+                                                        height: 382.0,
+                                                        width: 382.0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(34.0),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(4.0),
+                                                ),
+                                                child: Image(
+                                                  image: (nowPlaying.index ==
+                                                          null
+                                                      ? AssetImage(
+                                                          'assets/images/default_album_art.jpg')
+                                                      : (nowPlaying
+                                                                  .tracks[
+                                                                      nowPlaying
+                                                                          .index!]
+                                                                  .networkAlbumArt !=
+                                                              null
+                                                          ? NetworkImage(nowPlaying
+                                                              .tracks[nowPlaying
+                                                                  .index!]
+                                                              .networkAlbumArt!)
+                                                          : FileImage(
+                                                              nowPlaying
+                                                                  .tracks[
+                                                                      nowPlaying
+                                                                          .index!]
+                                                                  .albumArt,
+                                                            ))) as ImageProvider<
+                                                      Object>,
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -639,12 +732,12 @@ class NowPlayingState extends State<NowPlayingScreen>
                                                   : Colors.white,
                                           tabs: [
                                             Tab(
-                                              text: language!.STRING_COMING_UP
+                                              text: language.COMING_UP
                                                   .toUpperCase(),
                                             ),
                                             Tab(
-                                              text: language!.STRING_LYRICS
-                                                  .toUpperCase(),
+                                              text:
+                                                  language.LYRICS.toUpperCase(),
                                             ),
                                           ],
                                         ),
@@ -731,8 +824,8 @@ class NowPlayingState extends State<NowPlayingScreen>
                                                       .toList()
                                                   : [
                                                       Text(
-                                                        language!
-                                                            .STRING_LYRICS_NOT_FOUND,
+                                                        language
+                                                            .LYRICS_NOT_FOUND,
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline4,
@@ -756,10 +849,8 @@ class NowPlayingState extends State<NowPlayingScreen>
                   ),
                 )
               : Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(
-                      Theme.of(context).colorScheme.secondary,
-                    ),
+                  child: Text(
+                    language.NOW_PLAYING_NOT_PLAYING_TITLE,
                   ),
                 )),
     );
@@ -786,12 +877,12 @@ extension on Duration {
   }
 
   String get lyric {
-    if (lyrics.current.isEmpty) return language!.STRING_LYRICS_NOT_FOUND;
+    if (lyrics.current.isEmpty) return language.LYRICS_NOT_FOUND;
     for (var lyric in lyrics.current.reversed) {
       if (lyric.time ~/ 1000 <= inSeconds) {
         return lyric.words;
       }
     }
-    return language!.STRING_LYRICS_NOT_FOUND;
+    return language.LYRICS_NOT_FOUND;
   }
 }
