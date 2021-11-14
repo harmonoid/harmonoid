@@ -314,11 +314,17 @@ class CollectionPlaylist extends StatelessWidget {
           children: [
             Container(
               height: 56.0,
-              color: configuration.acrylicEnabled!
-                  ? Colors.transparent
-                  : Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white.withOpacity(0.08)
-                      : Colors.black.withOpacity(0.08),
+              decoration: BoxDecoration(
+                color: configuration.acrylicEnabled!
+                    ? Colors.transparent
+                    : Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white.withOpacity(0.10)
+                        : Colors.black.withOpacity(0.10),
+                border: Border(
+                  bottom: BorderSide(
+                      color: Theme.of(context).dividerColor.withOpacity(0.12)),
+                ),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -328,7 +334,7 @@ class CollectionPlaylist extends StatelessWidget {
                     width: 16.0,
                   ),
                   Text(
-                    this.playlist.playlistName!,
+                    language.PLAYLIST,
                     style: Theme.of(context).textTheme.headline1,
                   ),
                 ],
@@ -336,58 +342,88 @@ class CollectionPlaylist extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.white
-                    : Color(0xFF202020),
-                child: this.playlist.tracks.isNotEmpty
-                    ? CustomListView(
-                        children: <Widget>[
-                              SubHeader(language.PLAYLIST_TRACKS_SUBHEADER),
-                            ] +
-                            (this.playlist.tracks.map((Track track) {
-                              return ListTile(
-                                onTap: () => Playback.play(
-                                  index: this.playlist.tracks.indexOf(track),
-                                  tracks: this.playlist.tracks,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.white
+                      : Color(0xFF202020),
+                  child: CustomListView(
+                    children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: 16.0,
+                              left: 16.0,
+                              right: 16.0,
+                              bottom: 8.0,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  this.playlist.playlistName!,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline2
+                                      ?.copyWith(fontSize: 24.0),
                                 ),
-                                isThreeLine: true,
-                                leading: CircleAvatar(
-                                  child: Text('${track.trackNumber ?? 1}'),
-                                  backgroundImage: FileImage(track.albumArt),
+                                SizedBox(height: 2.0),
+                                Text(
+                                  language.PLAYLIST_TRACKS_SUBHEADER,
+                                  style: Theme.of(context).textTheme.headline3,
                                 ),
-                                title: Text(track.trackName!),
-                                subtitle: Text(
-                                  track.albumName! +
-                                      '\n' +
-                                      (track.trackArtistNames!.length < 2
-                                          ? track.trackArtistNames!.join(', ')
-                                          : track.trackArtistNames!
-                                              .sublist(0, 2)
-                                              .join(', ')),
-                                ),
-                                trailing: IconButton(
-                                  onPressed: () {
-                                    collection.playlistRemoveTrack(
-                                        this.playlist, track);
-                                  },
-                                  icon: Icon(
-                                    FluentIcons.subtract_circle_20_regular,
-                                    color: Theme.of(context).iconTheme.color,
-                                  ),
-                                  iconSize: 20.0,
-                                  splashRadius:
-                                      Theme.of(context).iconTheme.size! - 8,
-                                ),
-                              );
-                            }).toList()),
-                      )
-                    : Center(
-                        child: Text(
-                          'This playlist is empty.',
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ),
-              ),
+                                // Divider(
+                                //   color: Theme.of(context).dividerColor,
+                                //   thickness: 1.0,
+                                //   height: 1.0,
+                                // ),
+                              ],
+                            ),
+                          ),
+                        ] +
+                        (this.playlist.tracks.map((Track track) {
+                          return ListTile(
+                            onTap: () => Playback.play(
+                              index: this.playlist.tracks.indexOf(track),
+                              tracks: this.playlist.tracks,
+                            ),
+                            isThreeLine: true,
+                            leading: CircleAvatar(
+                              child: Text('${track.trackNumber ?? 1}'),
+                              backgroundImage: FileImage(track.albumArt),
+                            ),
+                            title: Text(track.trackName!),
+                            subtitle: Text(
+                              track.albumName! +
+                                  '\n' +
+                                  (track.trackArtistNames!.length < 2
+                                      ? track.trackArtistNames!.join(', ')
+                                      : track.trackArtistNames!
+                                          .sublist(0, 2)
+                                          .join(', ')),
+                            ),
+                            trailing: IconButton(
+                              onPressed: () {
+                                collection.playlistRemoveTrack(
+                                    this.playlist, track);
+                              },
+                              icon: Icon(
+                                FluentIcons.subtract_circle_20_regular,
+                                color: Theme.of(context).iconTheme.color,
+                              ),
+                              iconSize: 20.0,
+                              splashRadius:
+                                  Theme.of(context).iconTheme.size! - 8,
+                            ),
+                          );
+                        }).toList()),
+                  )
+                  // : Center(
+                  //     child: Text(
+                  //       'This playlist is empty.',
+                  //       style: Theme.of(context).textTheme.headline4,
+                  //     ),
+                  //   ),
+                  ),
             ),
           ],
         ),
