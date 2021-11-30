@@ -100,7 +100,7 @@
   "SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE": "Set platform to TargetPlatform.iOS",
   "SELECTED_DIRECTORY": "Selected directory:",
   "LYRICS": "Lyrics",
-  "NOTIFICATION_LYRICS_TITLE": "Notification lyrics",
+  "NOTIFICATION_LYRICS_TITLE": "Notification lyrics.",
   "NOTIFICATION_LYRICS_SUBTITLE": "Show lyrics in a notification.",
   "LYRICS_RETRIEVING": "Retrieving lyrics...",
   "LYRICS_NOT_FOUND": "Lyrics not found.",
