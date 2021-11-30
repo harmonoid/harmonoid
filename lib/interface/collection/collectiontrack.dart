@@ -154,8 +154,6 @@ class CollectionTrackTileState extends State<CollectionTrackTile> {
                     context: context,
                     builder: (subContext) => FractionallyScaledWidget(
                       child: AlertDialog(
-                        backgroundColor:
-                            Theme.of(context).appBarTheme.backgroundColor,
                         title: Text(
                           language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_HEADER,
                           style: Theme.of(subContext).textTheme.headline1,
@@ -195,8 +193,6 @@ class CollectionTrackTileState extends State<CollectionTrackTile> {
                     context: context,
                     builder: (subContext) => FractionallyScaledWidget(
                       child: AlertDialog(
-                        backgroundColor:
-                            Theme.of(context).appBarTheme.backgroundColor,
                         contentPadding: EdgeInsets.zero,
                         actionsPadding: EdgeInsets.zero,
                         title: Text(

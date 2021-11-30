@@ -70,6 +70,12 @@ class YouTubeMusicState extends State<YouTubeMusic> {
         ],
       );
       nowPlaying.isBuffering = false;
+      Provider.of<YouTubeStateController>(
+        context,
+        listen: false,
+      ).updateRecommendations(
+        track,
+      );
     }
   }
 
@@ -151,12 +157,9 @@ class YouTubeMusicState extends State<YouTubeMusic> {
 
   @override
   Widget build(BuildContext context) {
-    int elementsPerRow =
-        MediaQuery.of(context).size.width.normalized ~/ (172.0 + 8.0);
-    double tileWidth = (MediaQuery.of(context).size.width.normalized -
-            16 -
-            (elementsPerRow - 1) * 8) /
-        elementsPerRow;
+    int elementsPerRow = MediaQuery.of(context).size.width.normalized ~/ 172.0;
+    double tileWidth =
+        MediaQuery.of(context).size.width.normalized / elementsPerRow;
     double tileHeight = tileWidth * 212.0 / 172.0;
     return Consumer<YouTubeStateController>(
       builder: (context, youtube, _) => Column(
@@ -238,11 +241,11 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                             Container(
                               margin: EdgeInsets.only(top: 4.0),
                               height: 236.0,
-                              width:
-                                  MediaQuery.of(context).size.width.normalized -
-                                      2 * 16.0 -
-                                      56.0 -
-                                      16.0,
+                              // width:
+                              //     MediaQuery.of(context).size.width.normalized -
+                              //         2 * 16.0 -
+                              //         56.0 -
+                              //         16.0,
                               child: Material(
                                 color: Theme.of(context).brightness ==
                                         Brightness.dark
@@ -251,13 +254,13 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                                 elevation: 2.0,
                                 child: Container(
                                   height: 236.0,
-                                  width: MediaQuery.of(context)
-                                          .size
-                                          .width
-                                          .normalized -
-                                      2 * 16.0 -
-                                      56.0 -
-                                      16.0,
+                                  // width: MediaQuery.of(context)
+                                  //         .size
+                                  //         .width
+                                  //         .normalized -
+                                  //     2 * 16.0 -
+                                  //     56.0 -
+                                  //     16.0,
                                   child: ListView.builder(
                                     keyboardDismissBehavior:
                                         ScrollViewKeyboardDismissBehavior
@@ -424,10 +427,10 @@ class YouTubeMusicState extends State<YouTubeMusic> {
               child: this.result ??
                   (youtube.recommendations.isNotEmpty
                       ? CustomListView(
-                          padding: EdgeInsets.only(top: 16.0),
+                          padding: EdgeInsets.only(top: 8.0),
                           children: <Widget>[
                                 Container(
-                                  padding: EdgeInsets.only(left: 28.0),
+                                  padding: EdgeInsets.only(left: 24.0),
                                   height: 56.0,
                                   child: Text(
                                     language.RECOMMENDATIONS,

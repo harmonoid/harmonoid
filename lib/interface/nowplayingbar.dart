@@ -39,9 +39,7 @@ class NowPlayingBar extends StatelessWidget {
             duration: Duration(milliseconds: 200),
             curve: Curves.easeInOut,
             height: container.height,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white.withOpacity(0.10)
-                : Colors.black.withOpacity(0.10),
+            color: Theme.of(context).appBarTheme.backgroundColor,
             child: SingleChildScrollView(
               child: (nowPlaying.index != null &&
                       nowPlaying.tracks.length >
@@ -193,9 +191,7 @@ class NowPlayingBar extends StatelessWidget {
       builder: (context, nowPlaying, _) => Container(
         height: 84.0,
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white.withOpacity(0.10)
-              : Colors.black.withOpacity(0.10),
+          color: Theme.of(context).appBarTheme.backgroundColor,
           border: Border(
             top: BorderSide(
                 color: Theme.of(context).dividerColor.withOpacity(0.12)),

@@ -37,7 +37,6 @@ class CollectionSearch extends StatefulWidget {
 }
 
 class CollectionSearchState extends State<CollectionSearch> {
-  int elementsPerRow = 2;
   TextEditingController controller = new TextEditingController();
   bool get search =>
       _albums.length == 0 && _tracks.length == 0 && _artists.length == 0;
@@ -63,25 +62,19 @@ class CollectionSearchState extends State<CollectionSearch> {
         for (dynamic item in resultCollection) {
           if (item is Album) {
             albums.add(
-              Container(
-                margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
-                child: CollectionAlbumTile(
-                  height: 248.0,
-                  width: 192.0,
-                  album: item,
-                ),
+              CollectionAlbumTile(
+                height: 224.0,
+                width: 172.0,
+                album: item,
               ),
             );
           }
           if (item is Artist) {
             artists.add(
-              Container(
-                margin: EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
-                child: CollectionArtistTile(
-                  height: 248.0,
-                  width: 192.0,
-                  artist: item,
-                ),
+              CollectionArtistTile(
+                height: 172.0 + 18.0,
+                width: 172.0,
+                artist: item,
               ),
             );
           } else if (item is Track) {
@@ -111,15 +104,6 @@ class CollectionSearchState extends State<CollectionSearch> {
 
   @override
   Widget build(BuildContext context) {
-    /// TODO: These elements get added to a [List] for rendering.
-    /// But their dimensions do not get recalculated because they are now part of mutable list.
-    /// Thus, overflow happens if someone resizes the window. Unlike other tabs.
-    int elementsPerRow =
-        MediaQuery.of(context).size.width.normalized ~/ (156 + 8);
-    double tileWidthAlbum = 172.0;
-    double tileHeightAlbum = 248.0;
-    double tileWidthArtist = 176.0;
-    double tileHeightArtist = 248.0;
     return Consumer<Collection>(
       builder: (context, collection, _) => Scaffold(
         resizeToAvoidBottomInset: false,
@@ -131,7 +115,9 @@ class CollectionSearchState extends State<CollectionSearch> {
                 child: Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(right: 8.0),
+                      padding: EdgeInsets.only(
+                        right: 8.0,
+                      ),
                       child: Container(
                         width: 56.0,
                         child: Icon(
@@ -169,8 +155,8 @@ class CollectionSearchState extends State<CollectionSearch> {
                                     margin: EdgeInsets.only(
                                         top: 8.0, bottom: 8.0, right: 8.0),
                                     child: CollectionAlbumTile(
-                                      height: tileHeightAlbum,
-                                      width: tileWidthAlbum,
+                                      height: 224.0,
+                                      width: 172.0,
                                       album: item,
                                     ),
                                   ),
@@ -182,8 +168,8 @@ class CollectionSearchState extends State<CollectionSearch> {
                                     margin: EdgeInsets.only(
                                         top: 8.0, bottom: 8.0, right: 8.0),
                                     child: CollectionArtistTile(
-                                      height: tileHeightArtist,
-                                      width: tileWidthArtist,
+                                      height: 172.0 + 24.0,
+                                      width: 172.0,
                                       artist: item,
                                     ),
                                   ),
@@ -267,12 +253,17 @@ class CollectionSearchState extends State<CollectionSearch> {
                         ))
                   : CustomListView(
                       children: <Widget>[
-                            albums ? Container() : SubHeader(language.ALBUM),
+                            albums
+                                ? Container()
+                                : Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 8.0, bottom: 8.0),
+                                    child: SubHeader(language.ALBUM),
+                                  ),
                             albums
                                 ? Container()
                                 : Container(
-                                    margin: EdgeInsets.only(left: 8.0),
-                                    height: tileHeightAlbum + 16.0,
+                                    height: 224.0,
                                     width: MediaQuery.of(context)
                                         .size
                                         .width
@@ -282,12 +273,17 @@ class CollectionSearchState extends State<CollectionSearch> {
                                       children: _albums,
                                     ),
                                   ),
-                            artists ? Container() : SubHeader(language.ARTIST),
+                            artists
+                                ? Container()
+                                : Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 8.0, bottom: 8.0),
+                                    child: SubHeader(language.ARTIST),
+                                  ),
                             artists
                                 ? Container()
                                 : Container(
-                                    margin: EdgeInsets.only(left: 8.0),
-                                    height: tileHeightArtist + 16.0,
+                                    height: 172.0 + 18.0,
                                     width: MediaQuery.of(context)
                                         .size
                                         .width
@@ -297,7 +293,13 @@ class CollectionSearchState extends State<CollectionSearch> {
                                       children: _artists,
                                     ),
                                   ),
-                            tracks ? Container() : SubHeader(language.TRACK),
+                            tracks
+                                ? Container()
+                                : Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 8.0, bottom: 8.0),
+                                    child: SubHeader(language.TRACK),
+                                  ),
                           ] +
                           (tracks
                               ? [

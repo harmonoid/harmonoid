@@ -33,7 +33,6 @@ abstract class Utils {
       context: key.currentState!.overlay!.context,
       builder: (context) => FractionallyScaledWidget(
         child: AlertDialog(
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           title: Text(
             'Could not fetch the YouTube audio stream.',
             style: Theme.of(context).textTheme.headline1,
@@ -60,7 +59,6 @@ abstract class Utils {
       context: key.currentState!.overlay!.context,
       builder: (context) => FractionallyScaledWidget(
         child: AlertDialog(
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           title: Text(
             'Invalid link.',
             style: Theme.of(context).textTheme.headline1,
@@ -156,19 +154,19 @@ abstract class Utils {
               labelStyle: TextStyle(
                 color: Colors.white,
                 fontSize: 14.0,
-                fontFamily: Platform.isLinux ? 'Roboto' : null,
+                fontFamily: Platform.isLinux ? 'Ubuntu' : null,
                 fontWeight: FontWeights.thin(isLight),
               ),
               secondaryLabelStyle: TextStyle(
                 color: Colors.white,
                 fontSize: 14.0,
-                fontFamily: Platform.isLinux ? 'Roboto' : null,
+                fontFamily: Platform.isLinux ? 'Ubuntu' : null,
                 fontWeight: FontWeights.thin(isLight),
               ),
               brightness: Brightness.dark,
             )
           : null,
-      fontFamily: Platform.isLinux ? 'Roboto' : null,
+      fontFamily: Platform.isLinux ? 'Ubuntu' : null,
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: accentColor,
         selectionColor: accentColor.withOpacity(0.2),
@@ -213,7 +211,11 @@ abstract class Utils {
         color: isLight ? Colors.white : Color(0xFF242424),
       ),
       appBarTheme: AppBarTheme(
-        color: isLight ? Colors.white : Color(0xFF292929),
+        backgroundColor: configuration.acrylicEnabled! || !Platform.isWindows
+            ? Colors.transparent
+            : isLight
+                ? Colors.black.withOpacity(0.10)
+                : Colors.white.withOpacity(0.10),
         systemOverlayStyle:
             isLight ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
         elevation: 4.0,
@@ -230,6 +232,7 @@ abstract class Utils {
         color: isLight ? Colors.black : Colors.white,
         size: 24,
       ),
+      dialogBackgroundColor: isLight ? Colors.white : Color(0xFF202020),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: isLight ? accentColor : Color(0xFF292929),
         selectedItemColor: Colors.white.withOpacity(0.87),
@@ -259,7 +262,7 @@ abstract class Utils {
 class FontWeights {
   static FontWeight thick(bool isLight) {
     if (Platform.isLinux) {
-      return FontWeight.w400;
+      return FontWeight.w500;
     }
     return FontWeight.w600;
   }

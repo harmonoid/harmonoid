@@ -473,7 +473,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                   ),
                                   title: Text(
                                     track.trackName!,
-                                    overflow: TextOverflow.fade,
+                                    overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     softWrap: false,
                                   ),
@@ -485,7 +485,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                             : track.trackArtistNames!
                                                 .sublist(0, 2)
                                                 .join(', ')),
-                                    overflow: TextOverflow.fade,
+                                    overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     softWrap: false,
                                   ),
@@ -525,11 +525,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                       Container(
                         height: 56.0,
                         decoration: BoxDecoration(
-                          color: configuration.acrylicEnabled!
-                              ? Colors.transparent
-                              : Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white.withOpacity(0.10)
-                                  : Colors.black.withOpacity(0.10),
+                          color: Theme.of(context).appBarTheme.backgroundColor,
                           border: Border(
                             bottom: BorderSide(
                                 color: Theme.of(context)
@@ -773,8 +769,8 @@ class NowPlayingState extends State<NowPlayingScreen>
                                                         ),
                                                         title: Text(
                                                           track.trackName!,
-                                                          overflow:
-                                                              TextOverflow.fade,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                           maxLines: 1,
                                                           softWrap: false,
                                                         ),
@@ -794,8 +790,8 @@ class NowPlayingState extends State<NowPlayingScreen>
                                                                           0, 2)
                                                                       .join(
                                                                           ', ')),
-                                                          overflow:
-                                                              TextOverflow.fade,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                           maxLines: 1,
                                                           softWrap: false,
                                                         ),

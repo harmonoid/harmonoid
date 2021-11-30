@@ -270,7 +270,6 @@ class YouTubeStateController extends ChangeNotifier {
     this.recommendation = track.trackId!;
     try {
       this.recommendations = await track.recommendations;
-      // TODO (alexmercerind): Sometimes recommendations are not fetched & we're stuck so retrying is the best option for now. Improve in future.
       if (this.recommendations.length == 1) {
         this.recommendations = await track.recommendations;
       }
@@ -321,7 +320,7 @@ List<Accent?> accents = [
   Accent(light: Color(0xFF4285F4), dark: Color(0xFF82B1FF)),
   Accent(light: Color(0xFFF4B400), dark: Color(0xFFFFE57F)),
   Accent(light: Color(0xFF0F9D58), dark: Color(0xFF0F9D58)),
-  Accent(light: Color(0xFFFF3D00), dark: Color(0xFFFF9E80)),
+  Accent(light: Color(0xFFE95420), dark: Color(0xFFE95420)),
   Accent(light: Color(0xFF89CDD0), dark: Color(0xFF89CDD0)),
   Accent(light: Color(0xFF5B51D8), dark: Color(0xFFD1C4E9)),
   Accent(light: Color(0xFFF50057), dark: Color(0xFFFF80AB)),

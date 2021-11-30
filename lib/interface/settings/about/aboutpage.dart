@@ -62,11 +62,7 @@ class AboutPageState extends State<AboutPage> {
           Container(
             height: 56.0,
             decoration: BoxDecoration(
-              color: configuration.acrylicEnabled!
-                  ? Colors.transparent
-                  : Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white.withOpacity(0.10)
-                      : Colors.black.withOpacity(0.10),
+              color: Theme.of(context).appBarTheme.backgroundColor,
               border: Border(
                 bottom: BorderSide(
                     color: Theme.of(context).dividerColor.withOpacity(0.12)),

@@ -151,9 +151,6 @@ class IndexingState extends State<IndexingSetting> {
                                           builder: (subContext) =>
                                               FractionallyScaledWidget(
                                             child: AlertDialog(
-                                              backgroundColor: Theme.of(context)
-                                                  .appBarTheme
-                                                  .backgroundColor,
                                               title: Text(
                                                 language.WARNING,
                                                 style: Theme.of(subContext)

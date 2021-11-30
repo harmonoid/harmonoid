@@ -22,7 +22,6 @@ import 'dart:ui';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:share_plus/share_plus.dart';
@@ -36,12 +35,9 @@ class CollectionAlbumTab extends StatelessWidget {
   static const velocity = 60;
 
   Widget build(BuildContext context) {
-    int elementsPerRow =
-        MediaQuery.of(context).size.width.normalized ~/ (172.0 + 8.0);
-    double tileWidth = (MediaQuery.of(context).size.width.normalized -
-            16 -
-            (elementsPerRow - 1) * 8) /
-        elementsPerRow;
+    int elementsPerRow = MediaQuery.of(context).size.width.normalized ~/ 172.0;
+    double tileWidth =
+        MediaQuery.of(context).size.width.normalized / elementsPerRow;
     double tileHeight = tileWidth * 224.0 / 172.0;
 
     return Consumer<Collection>(
@@ -427,7 +423,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
               SizedBox(height: 0.0),
               Container(
                 margin: EdgeInsets.all(0.0),
-                padding: EdgeInsets.all(0.0),
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
                 // decoration: BoxDecoration(
                 //   color: Theme.of(context).brightness == Brightness.dark
                 //       ? Colors.white.withOpacity(0.04)
@@ -510,11 +506,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                 Container(
                   height: 56.0,
                   decoration: BoxDecoration(
-                    color: configuration.acrylicEnabled!
-                        ? Colors.transparent
-                        : Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withOpacity(0.10)
-                            : Colors.black.withOpacity(0.10),
+                    color: Theme.of(context).appBarTheme.backgroundColor,
                     border: Border(
                       bottom: BorderSide(
                           color:
@@ -658,10 +650,6 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                                                   builder: (subContext) =>
                                                       FractionallyScaledWidget(
                                                     child: AlertDialog(
-                                                      backgroundColor:
-                                                          Theme.of(context)
-                                                              .appBarTheme
-                                                              .backgroundColor,
                                                       title: Text(
                                                         language
                                                             .COLLECTION_ALBUM_TRACK_DELETE_DIALOG_HEADER,
@@ -733,10 +721,6 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                                                   builder: (subContext) =>
                                                       FractionallyScaledWidget(
                                                     child: AlertDialog(
-                                                      backgroundColor:
-                                                          Theme.of(context)
-                                                              .appBarTheme
-                                                              .backgroundColor,
                                                       contentPadding:
                                                           EdgeInsets.zero,
                                                       actionsPadding:
@@ -923,10 +907,6 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                                                                           FractionallyScaledWidget(
                                                                     child:
                                                                         AlertDialog(
-                                                                      backgroundColor: Theme.of(
-                                                                              context)
-                                                                          .appBarTheme
-                                                                          .backgroundColor,
                                                                       title:
                                                                           Text(
                                                                         language
@@ -996,10 +976,6 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                                                                           FractionallyScaledWidget(
                                                                     child:
                                                                         AlertDialog(
-                                                                      backgroundColor: Theme.of(
-                                                                              context)
-                                                                          .appBarTheme
-                                                                          .backgroundColor,
                                                                       contentPadding:
                                                                           EdgeInsets
                                                                               .zero,

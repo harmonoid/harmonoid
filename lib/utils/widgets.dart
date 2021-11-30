@@ -146,8 +146,8 @@ List<Widget> tileGridListWidgets({
     if (rowIndex > elementsPerRow - 1) {
       widgets.add(
         new Container(
-          height: tileHeight + 8.0,
-          margin: EdgeInsets.only(left: 8.0, right: 8.0),
+          height: tileHeight + 0.0,
+          margin: EdgeInsets.only(left: 0.0, right: 0.0),
           alignment: Alignment.topCenter,
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -168,7 +168,7 @@ List<Widget> tileGridListWidgets({
         index++) {
       rowChildren.add(
         Padding(
-          padding: EdgeInsets.only(left: 4.0, right: 4.0),
+          padding: EdgeInsets.only(left: 0.0, right: 0.0),
           child: builder(context, index),
         ),
       );
@@ -185,8 +185,8 @@ List<Widget> tileGridListWidgets({
     }
     widgets.add(
       new Container(
-        height: tileHeight + 8.0,
-        margin: EdgeInsets.only(left: 8.0, right: 8.0),
+        height: tileHeight + 0.0,
+        margin: EdgeInsets.only(left: 0.0, right: 0.0),
         alignment: Alignment.topCenter,
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -694,7 +694,7 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
     if (items.isNotEmpty) {
       showMenu<T?>(
         context: context,
-        elevation: widget.elevation ?? popupMenuTheme.elevation,
+        elevation: 4.0,
         items: items,
         initialValue: widget.initialValue,
         position: position,
@@ -704,7 +704,7 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
                 Radius.circular(4.0),
               ),
             ),
-        color: widget.color ?? popupMenuTheme.color,
+        color: Theme.of(context).dialogBackgroundColor,
       ).then<void>((T? newValue) {
         if (!mounted) return null;
         if (newValue == null) {

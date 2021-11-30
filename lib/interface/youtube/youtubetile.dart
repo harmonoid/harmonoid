@@ -18,8 +18,8 @@
  */
 
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 
@@ -177,11 +177,14 @@ class YouTubeState extends State<YouTube> {
   @override
   void initState() {
     super.initState();
-    widget.track.attachAudioStream().then(
-          (_) => this.setState(
-            () => this.description = widget.track.extras,
-          ),
+    this.description = widget.track.extras;
+    widget.track.attachAudioStream(
+      onDone: () {
+        this.setState(
+          () => this.description = widget.track.extras,
         );
+      },
+    );
   }
 
   @override
@@ -353,6 +356,12 @@ class YouTubeState extends State<YouTube> {
                                 widget.track,
                               ],
                             );
+                            Provider.of<YouTubeStateController>(
+                              context,
+                              listen: false,
+                            ).updateRecommendations(
+                              widget.track,
+                            );
                           },
                           child: Text(
                             language.PLAY_NOW,
@@ -395,11 +404,7 @@ class YouTubeState extends State<YouTube> {
                 Container(
                   height: 56.0,
                   decoration: BoxDecoration(
-                    color: configuration.acrylicEnabled!
-                        ? Colors.transparent
-                        : Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withOpacity(0.10)
-                            : Colors.black.withOpacity(0.10),
+                    color: Theme.of(context).appBarTheme.backgroundColor,
                     border: Border(
                       bottom: BorderSide(
                           color:
