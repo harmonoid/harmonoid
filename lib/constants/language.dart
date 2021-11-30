@@ -117,6 +117,14 @@ class LanguageRegion {
     translator: 'stonegate',
     github: 'https://github.com/stonega',
   );
+  static const jaJP = LanguageRegion(
+    code: 'ja',
+    countryCode: 'JP',
+    name: '日本語',
+    country: '日本',
+    translator: 'さぶうぇい',
+    github: 'https://github.com/HiSubway',
+  );
 
   static const values = <LanguageRegion>[
     enUs,
@@ -131,6 +139,7 @@ class LanguageRegion {
     huHu,
     mgMG,
     zhCN,
+    jaJP
   ];
 
   int get index => values.indexOf(this);

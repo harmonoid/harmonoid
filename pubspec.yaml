@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   animations: ^2.0.0
-  provider: ^5.0.0
+  provider: ^6.0.1
   libwinmedia: 0.0.7
   flutter_media_metadata:
     git:
@@ -43,6 +43,7 @@ dependencies:
       url: https://github.com/alexmercerind/hotkey_manager.git
       ref: main
   implicitly_animated_reorderable_list: ^0.4.0-dev+4
+  device_preview: ^1.0.0-alpha.15
 
 dev_dependencies:
   msix:
@@ -67,6 +68,7 @@ flutter:
     - assets/translations/sl_SI.json
     - assets/translations/sv_SE.json
     - assets/translations/zh_CN.json
+    - assets/translations/ja_JP.json
 
 msix_config:
   msix_version: 0.1.9.0
