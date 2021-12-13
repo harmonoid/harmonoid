@@ -56,8 +56,8 @@ class FractionallyScaledWidget extends StatelessWidget {
 }
 
 class CustomListView extends StatelessWidget {
-  final ScrollController scroller = ScrollController();
-  final int velocity = 80;
+  final ScrollController controller = ScrollController();
+  final int velocity = 20;
   final List<Widget> children;
   final Axis? scrollDirection;
   final bool? shrinkWrap;
@@ -69,17 +69,17 @@ class CustomListView extends StatelessWidget {
       this.shrinkWrap,
       this.padding}) {
     if (Platform.isWindows) {
-      scroller.addListener(
+      controller.addListener(
         () {
-          var scrollDirection = scroller.position.userScrollDirection;
+          var scrollDirection = controller.position.userScrollDirection;
           if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = scroller.offset +
+            var scrollEnd = controller.offset +
                 (scrollDirection == ScrollDirection.reverse
                     ? velocity
                     : -velocity);
-            scrollEnd = math.min(scroller.position.maxScrollExtent,
-                math.max(scroller.position.minScrollExtent, scrollEnd));
-            scroller.jumpTo(scrollEnd);
+            scrollEnd = math.min(controller.position.maxScrollExtent,
+                math.max(controller.position.minScrollExtent, scrollEnd));
+            controller.jumpTo(scrollEnd);
           }
         },
       );
@@ -89,9 +89,9 @@ class CustomListView extends StatelessWidget {
             .size
             .width
             .normalized) {
-      scroller.addListener(
+      controller.addListener(
         () {
-          var scrollDirection = scroller.position.userScrollDirection;
+          var scrollDirection = controller.position.userScrollDirection;
           if (!nowPlayingBar.maximized) {
             if (scrollDirection != ScrollDirection.forward) {
               nowPlayingBar.height = 0.0;
@@ -110,7 +110,7 @@ class CustomListView extends StatelessWidget {
     return ListView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       padding: this.padding ?? EdgeInsets.zero,
-      controller: this.scroller,
+      controller: this.controller,
       scrollDirection: this.scrollDirection ?? Axis.vertical,
       shrinkWrap: this.shrinkWrap ?? false,
       children: this.children,
@@ -126,32 +126,36 @@ List<Widget> tileGridListWidgets({
   required int widgetCount,
   required Widget Function(BuildContext context, int index) builder,
   required String? leadingSubHeader,
-  required Widget leadingWidget,
+  required Widget? leadingWidget,
   required int elementsPerRow,
 }) {
   List<Widget> widgets = <Widget>[];
   widgets.addAll([
     if (leadingSubHeader != null) SubHeader(leadingSubHeader),
-    if (!(leadingWidget is Container)) leadingWidget,
+    if (leadingWidget != null) leadingWidget,
     if (subHeader != null) SubHeader(subHeader),
-    if (subHeader != null) SizedBox(height: 4.0),
   ]);
   int rowIndex = 0;
   List<Widget> rowChildren = <Widget>[];
   for (int index = 0; index < widgetCount; index++) {
     rowChildren.add(
-      builder(context, index),
+      Container(
+        child: builder(context, index),
+        margin: EdgeInsets.symmetric(
+          horizontal: 8.0,
+        ),
+      ),
     );
     rowIndex++;
     if (rowIndex > elementsPerRow - 1) {
       widgets.add(
         new Container(
-          height: tileHeight + 0.0,
-          margin: EdgeInsets.only(left: 0.0, right: 0.0),
+          height: tileHeight + 16.0,
+          margin: EdgeInsets.only(left: 8.0, right: 8.0),
           alignment: Alignment.topCenter,
           child: Row(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: rowChildren,
           ),
@@ -167,9 +171,11 @@ List<Widget> tileGridListWidgets({
         index < widgetCount;
         index++) {
       rowChildren.add(
-        Padding(
-          padding: EdgeInsets.only(left: 0.0, right: 0.0),
+        Container(
           child: builder(context, index),
+          margin: EdgeInsets.symmetric(
+            horizontal: 8.0,
+          ),
         ),
       );
     }
@@ -178,19 +184,20 @@ List<Widget> tileGridListWidgets({
         index++) {
       rowChildren.add(
         Container(
-          height: tileHeight,
+          height: tileHeight + 16.0,
           width: tileWidth,
+          margin: EdgeInsets.only(left: 8.0, right: 8.0),
         ),
       );
     }
     widgets.add(
       new Container(
-        height: tileHeight + 0.0,
-        margin: EdgeInsets.only(left: 0.0, right: 0.0),
+        height: tileHeight + 16.0,
+        margin: EdgeInsets.only(left: 8.0, right: 8.0),
         alignment: Alignment.topCenter,
         child: Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: rowChildren,
         ),
@@ -213,37 +220,20 @@ class _ScaleOnHoverState extends State<ScaleOnHover> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (e) => _mouseEnter(true),
-      onExit: (e) => _mouseEnter(false),
-      child: GestureDetector(
-        onTapDown: (_) {
-          setState(() {
-            scale = 1.05;
-          });
+      onEnter: (e) => setState(() {
+        this.scale = 1.05;
+      }),
+      onExit: (e) => setState(() {
+        this.scale = 1.00;
+      }),
+      child: TweenAnimationBuilder(
+        duration: const Duration(milliseconds: 100),
+        tween: Tween<double>(begin: 1.0, end: scale),
+        builder: (BuildContext context, double value, _) {
+          return Transform.scale(scale: value, child: widget.child);
         },
-        onTapUp: (_) {
-          setState(() {
-            scale = 1.03;
-          });
-        },
-        child: TweenAnimationBuilder(
-          duration: const Duration(milliseconds: 100),
-          tween: Tween<double>(begin: 1.0, end: scale),
-          builder: (BuildContext context, double value, _) {
-            return Transform.scale(scale: value, child: widget.child);
-          },
-        ),
       ),
     );
-  }
-
-  void _mouseEnter(bool hover) {
-    setState(() {
-      if (hover)
-        scale = 1.03;
-      else
-        scale = 1.0;
-    });
   }
 }
 
@@ -777,19 +767,13 @@ class WindowTitleBar extends StatelessWidget {
     if (Platform.isAndroid || Platform.isIOS)
       return Container(
         height: MediaQuery.of(context).padding.top,
-        color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white.withOpacity(0.10)
-            : Colors.black.withOpacity(0.10),
+        color: Theme.of(context).appBarTheme.backgroundColor,
       );
     return Platform.isWindows
         ? Container(
             width: MediaQuery.of(context).size.width.normalized,
             height: 32.0,
-            color: configuration.acrylicEnabled!
-                ? Colors.transparent
-                : Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white.withOpacity(0.10)
-                    : Colors.black.withOpacity(0.10),
+            color: Theme.of(context).appBarTheme.backgroundColor,
             child: MoveWindow(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
