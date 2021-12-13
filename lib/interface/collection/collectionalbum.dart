@@ -32,18 +32,16 @@ import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class CollectionAlbumTab extends StatelessWidget {
-  static const velocity = 60;
-
   Widget build(BuildContext context) {
-    int elementsPerRow = MediaQuery.of(context).size.width.normalized ~/ 172.0;
-    double tileWidth =
-        MediaQuery.of(context).size.width.normalized / elementsPerRow;
-    double tileHeight = tileWidth * 224.0 / 172.0;
+    int elementsPerRow =
+        (MediaQuery.of(context).size.width.normalized - 32.0) ~/ (156.0 + 16.0);
+    double tileWidth = 156.0;
+    double tileHeight = 156.0 + 58.0;
 
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
           ? CustomListView(
-              padding: EdgeInsets.only(top: 24.0),
+              padding: EdgeInsets.only(top: 16.0),
               children: tileGridListWidgets(
                 context: context,
                 tileHeight: tileHeight,
@@ -75,8 +73,8 @@ class CollectionAlbumTab extends StatelessWidget {
 }
 
 class CollectionAlbumTile extends StatelessWidget {
-  final double? height;
-  final double? width;
+  final double height;
+  final double width;
   final Album album;
 
   const CollectionAlbumTile({
@@ -87,127 +85,83 @@ class CollectionAlbumTile extends StatelessWidget {
   }) : super(key: key);
 
   Widget build(BuildContext context) {
-    return Container(
-      height: this.height,
-      width: this.width,
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          ScaleOnHover(
-            child: Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.topCenter,
-              children: [
-                Positioned(
-                  top: -10.0,
-                  child: Stack(
-                    alignment: Alignment.center,
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      elevation: 4.0,
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  FadeThroughTransition(
+                fillColor: Colors.transparent,
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                child: CollectionAlbum(
+                  album: this.album,
+                ),
+              ),
+            ),
+          );
+        },
+        child: Container(
+          height: this.height,
+          width: this.width,
+          child: Column(
+            children: [
+              ClipRect(
+                child: ScaleOnHover(
+                  child: Hero(
+                    tag:
+                        'album_art_${this.album.albumName}_${this.album.albumArtistName}',
+                    child: Image.file(
+                      this.album.albumArt,
+                      fit: BoxFit.cover,
+                      height: this.width,
+                      width: this.width,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                  ),
+                  width: this.width,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.file(
-                        this.album.albumArt,
-                        height: this.width! - 44.0,
-                        width: this.width! - 44.0,
+                      Text(
+                        this.album.albumName!,
+                        style: Theme.of(context).textTheme.headline2,
+                        textAlign: TextAlign.left,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      Container(
-                        color: Colors.black.withOpacity(
-                            Theme.of(context).brightness == Brightness.light
-                                ? 0.1
-                                : 0.6),
-                        height: this.width! - 44.0,
-                        width: this.width! - 44.0,
-                      ),
-                      ClipRect(
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(
-                            sigmaX: 8.0,
-                            sigmaY: 8.0,
-                          ),
-                          child: Container(
-                            height: this.width!,
-                            width: this.width!,
-                          ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 2),
+                        child: Text(
+                          '${this.album.albumArtistName} ${this.album.year != null ? ' • ' : ''} ${this.album.year ?? ''}',
+                          style:
+                              Theme.of(context).textTheme.headline3?.copyWith(
+                                    fontSize: 12.0,
+                                  ),
+                          maxLines: 1,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
                   ),
                 ),
-                InkWell(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(4.0),
-                  ),
-                  hoverColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () {
-                    Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            FadeThroughTransition(
-                          fillColor: Colors.transparent,
-                          animation: animation,
-                          secondaryAnimation: secondaryAnimation,
-                          child: CollectionAlbum(
-                            album: this.album,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  child: Hero(
-                    tag:
-                        'album_art_${this.album.albumName}_${this.album.albumArtistName}',
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(4.0),
-                      ),
-                      child: Image.file(
-                        this.album.albumArt,
-                        fit: BoxFit.cover,
-                        height: this.width! - 48.0,
-                        width: this.width! - 48.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 20.0,
-            child: Container(
-              width: this.width,
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    this.album.albumName!,
-                    style: Theme.of(context).textTheme.headline2,
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 2),
-                    child: Text(
-                      '${this.album.albumArtistName}',
-                      style: Theme.of(context).textTheme.headline3,
-                      maxLines: 1,
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  Text(
-                    '(${this.album.year ?? 'Unknown Year'})',
-                    style: Theme.of(context).textTheme.headline3,
-                    maxLines: 2,
-                    textAlign: TextAlign.left,
-                  ),
-                ],
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

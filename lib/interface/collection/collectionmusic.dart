@@ -736,10 +736,6 @@ class CollectionMusicState extends State<CollectionMusic>
                         transitionBuilder:
                             (child, animation, secondaryAnimation) =>
                                 SharedAxisTransition(
-                          fillColor:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? Colors.white
-                                  : Color(0xFF202020),
                           animation: animation,
                           secondaryAnimation: secondaryAnimation,
                           transitionType: SharedAxisTransitionType.vertical,
