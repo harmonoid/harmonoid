@@ -154,48 +154,43 @@ abstract class Utils {
               labelStyle: TextStyle(
                 color: Colors.white,
                 fontSize: 14.0,
-                fontFamily: Platform.isLinux ? 'Ubuntu' : null,
                 fontWeight: FontWeights.thin(isLight),
               ),
               secondaryLabelStyle: TextStyle(
                 color: Colors.white,
                 fontSize: 14.0,
-                fontFamily: Platform.isLinux ? 'Ubuntu' : null,
                 fontWeight: FontWeights.thin(isLight),
               ),
               brightness: Brightness.dark,
             )
           : null,
-      fontFamily: Platform.isLinux ? 'Ubuntu' : null,
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: accentColor,
         selectionColor: accentColor.withOpacity(0.2),
       ),
       scrollbarTheme: ScrollbarThemeData(
-        thickness: MaterialStateProperty.all(8.0),
-        thumbColor: MaterialStateProperty.all(
-          isLight
-              ? Colors.black.withOpacity(0.4)
-              : Colors.white.withOpacity(0.4),
-        ),
+        isAlwaysShown: true,
+        thickness: MaterialStateProperty.resolveWith((states) {
+          if ([
+            MaterialState.hovered,
+            MaterialState.dragged,
+            MaterialState.focused,
+            MaterialState.pressed,
+          ].fold(false, (val, el) => val || states.contains(el))) {
+            return 8;
+          } else {
+            return 4;
+          }
+        }),
+        crossAxisMargin: 0,
         radius: Radius.zero,
       ),
       splashFactory: InkRipple.splashFactory,
-      splashColor: Platform.isAndroid ? null : Colors.transparent,
       primaryColorLight: accentColor,
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(accentColor),
-          foregroundColor: MaterialStateProperty.all(Colors.white),
-          shadowColor: MaterialStateProperty.all(accentColor),
-          elevation: MaterialStateProperty.all(8.0),
-        ),
-      ),
       primaryColor: accentColor,
       primaryColorDark: accentColor,
-      scaffoldBackgroundColor: configuration.acrylicEnabled!
-          ? Colors.transparent
-          : (isLight ? Colors.white : Color(0xFF202020)),
+      scaffoldBackgroundColor:
+          isLight ? Colors.grey.shade100 : Color(0xFF121212),
       toggleableActiveColor: accentColor,
       cardColor: isLight ? Colors.white : Color(0xFF202020),
       backgroundColor: accentColor.withOpacity(0.24),
@@ -211,30 +206,26 @@ abstract class Utils {
         color: isLight ? Colors.white : Color(0xFF242424),
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: configuration.acrylicEnabled! || !Platform.isWindows
-            ? Colors.transparent
-            : isLight
-                ? Colors.black.withOpacity(0.10)
-                : Colors.white.withOpacity(0.10),
+        backgroundColor: isLight ? Colors.white : Color(0xFF272727),
         systemOverlayStyle:
             isLight ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
         elevation: 4.0,
         iconTheme: IconThemeData(
-          color: isLight ? Colors.black : Colors.white,
-          size: 24,
+          color: isLight ? Colors.black54 : Colors.white54,
+          size: 24.0,
         ),
         actionsIconTheme: IconThemeData(
-          color: isLight ? Colors.black : Colors.white,
-          size: 24,
+          color: isLight ? Colors.black54 : Colors.white54,
+          size: 24.0,
         ),
       ),
       iconTheme: IconThemeData(
-        color: isLight ? Colors.black : Colors.white,
+        color: isLight ? Colors.black54 : Colors.white54,
         size: 24,
       ),
       dialogBackgroundColor: isLight ? Colors.white : Color(0xFF202020),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: isLight ? accentColor : Color(0xFF292929),
+        backgroundColor: isLight ? accentColor : Color(0xFF272727),
         selectedItemColor: Colors.white.withOpacity(0.87),
         unselectedItemColor: Colors.white54,
       ),

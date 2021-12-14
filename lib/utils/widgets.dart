@@ -21,6 +21,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -32,8 +33,6 @@ import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:harmonoid/core/configuration.dart';
-
-const double HORIZONTAL_BREAKPOINT = 762.0;
 
 class FractionallyScaledWidget extends StatelessWidget {
   final Widget child;
@@ -84,7 +83,7 @@ class CustomListView extends StatelessWidget {
         },
       );
     }
-    if (HORIZONTAL_BREAKPOINT >
+    if (kHorizontalBreakPoint >
         MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
             .size
             .width
@@ -116,95 +115,6 @@ class CustomListView extends StatelessWidget {
       children: this.children,
     );
   }
-}
-
-List<Widget> tileGridListWidgets({
-  required double tileHeight,
-  required double tileWidth,
-  required String? subHeader,
-  required BuildContext context,
-  required int widgetCount,
-  required Widget Function(BuildContext context, int index) builder,
-  required String? leadingSubHeader,
-  required Widget? leadingWidget,
-  required int elementsPerRow,
-}) {
-  List<Widget> widgets = <Widget>[];
-  widgets.addAll([
-    if (leadingSubHeader != null) SubHeader(leadingSubHeader),
-    if (leadingWidget != null) leadingWidget,
-    if (subHeader != null) SubHeader(subHeader),
-  ]);
-  int rowIndex = 0;
-  List<Widget> rowChildren = <Widget>[];
-  for (int index = 0; index < widgetCount; index++) {
-    rowChildren.add(
-      Container(
-        child: builder(context, index),
-        margin: EdgeInsets.symmetric(
-          horizontal: 8.0,
-        ),
-      ),
-    );
-    rowIndex++;
-    if (rowIndex > elementsPerRow - 1) {
-      widgets.add(
-        new Container(
-          height: tileHeight + 16.0,
-          margin: EdgeInsets.only(left: 8.0, right: 8.0),
-          alignment: Alignment.topCenter,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: rowChildren,
-          ),
-        ),
-      );
-      rowIndex = 0;
-      rowChildren = <Widget>[];
-    }
-  }
-  if (widgetCount % elementsPerRow != 0) {
-    rowChildren = <Widget>[];
-    for (int index = widgetCount - (widgetCount % elementsPerRow);
-        index < widgetCount;
-        index++) {
-      rowChildren.add(
-        Container(
-          child: builder(context, index),
-          margin: EdgeInsets.symmetric(
-            horizontal: 8.0,
-          ),
-        ),
-      );
-    }
-    for (int index = 0;
-        index < elementsPerRow - (widgetCount % elementsPerRow);
-        index++) {
-      rowChildren.add(
-        Container(
-          height: tileHeight + 16.0,
-          width: tileWidth,
-          margin: EdgeInsets.only(left: 8.0, right: 8.0),
-        ),
-      );
-    }
-    widgets.add(
-      new Container(
-        height: tileHeight + 16.0,
-        margin: EdgeInsets.only(left: 8.0, right: 8.0),
-        alignment: Alignment.topCenter,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: rowChildren,
-        ),
-      ),
-    );
-  }
-  return widgets;
 }
 
 class ScaleOnHover extends StatefulWidget {
@@ -276,14 +186,12 @@ class NavigatorPopButton extends StatelessWidget {
             Navigator.of(context).pop();
             onTap?.call();
           },
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
-          ),
+          borderRadius: BorderRadius.circular(20.0),
           child: Container(
             height: 40.0,
             width: 40.0,
             child: Icon(
-              FluentIcons.arrow_left_32_regular,
+              Icons.arrow_back,
               size: 20.0,
             ),
           ),
@@ -666,7 +574,6 @@ class ContextMenuButton<T> extends StatefulWidget {
 
 class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
   void showButtonMenu() {
-    final PopupMenuThemeData popupMenuTheme = PopupMenuTheme.of(context);
     final RenderBox button = context.findRenderObject()! as RenderBox;
     final RenderBox overlay =
         Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
@@ -739,18 +646,16 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
 
     return InkWell(
       onTap: widget.enabled ? showButtonMenu : null,
-      borderRadius: BorderRadius.all(
-        Radius.circular(8.0),
-      ),
+      borderRadius: BorderRadius.circular(20.0),
       child: Container(
         height: 40.0,
         width: 40.0,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(20.0),
         ),
         child: widget.icon ??
             Icon(
-              FluentIcons.more_vertical_20_regular,
+              Icons.more_vert,
               size: 20.0,
               color: Colors.black,
             ),
@@ -772,7 +677,7 @@ class WindowTitleBar extends StatelessWidget {
     return Platform.isWindows
         ? Container(
             width: MediaQuery.of(context).size.width.normalized,
-            height: 32.0,
+            height: kTitleBarHeight,
             color: Theme.of(context).appBarTheme.backgroundColor,
             child: MoveWindow(
               child: Row(
