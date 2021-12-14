@@ -22,6 +22,7 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 

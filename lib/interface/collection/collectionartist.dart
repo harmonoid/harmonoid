@@ -22,6 +22,8 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:share_plus/share_plus.dart';
@@ -309,7 +311,7 @@ class CollectionArtistState extends State<CollectionArtist> {
           color: Theme.of(context).cardColor,
         ),
         height:
-            MediaQuery.of(context).size.width.normalized > HORIZONTAL_BREAKPOINT
+            MediaQuery.of(context).size.width.normalized > kHorizontalBreakPoint
                 ? MediaQuery.of(context).size.height.normalized
                 : 324.0 + 128.0,
         width: MediaQuery.of(context).size.width.normalized / 3,
@@ -514,14 +516,14 @@ class CollectionArtistState extends State<CollectionArtist> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        constraints.maxWidth > HORIZONTAL_BREAKPOINT
+                        constraints.maxWidth > kHorizontalBreakPoint
                             ? child!
                             : Container(),
                         Expanded(
                           child: CustomListView(
                             shrinkWrap: true,
                             children: <Widget>[
-                                  constraints.maxWidth > HORIZONTAL_BREAKPOINT
+                                  constraints.maxWidth > kHorizontalBreakPoint
                                       ? Container()
                                       : child!,
                                   SubHeader(

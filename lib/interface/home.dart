@@ -20,6 +20,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
@@ -144,11 +145,19 @@ class HomeState extends State<Home>
             create: (context) => Lyrics.get(),
           ),
         ],
-        builder: (context, _) => Column(
-          mainAxisSize: MainAxisSize.min,
+        builder: (context, _) => Stack(
+          alignment: Alignment.bottomCenter,
           children: [
-            const WindowTitleBar(),
-            Expanded(
+            const Positioned(
+              left: 0.0,
+              top: 0.0,
+              child: const WindowTitleBar(),
+            ),
+            Container(
+              padding: EdgeInsets.only(
+                top: kTitleBarHeight,
+                bottom: kNowPlayingBarHeight,
+              ),
               child: Consumer<Language>(
                 builder: (context, _, __) => Scaffold(
                   resizeToAvoidBottomInset: false,

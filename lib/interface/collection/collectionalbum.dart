@@ -22,6 +22,8 @@ import 'dart:ui';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:share_plus/share_plus.dart';
@@ -34,7 +36,7 @@ import 'package:harmonoid/constants/language.dart';
 class CollectionAlbumTab extends StatelessWidget {
   Widget build(BuildContext context) {
     int elementsPerRow =
-        (MediaQuery.of(context).size.width.normalized - 32.0) ~/ (156.0 + 16.0);
+        (MediaQuery.of(context).size.width.normalized - 16.0) ~/ (156.0 + 16.0);
     double tileWidth = 156.0;
     double tileHeight = 156.0 + 58.0;
 
@@ -284,7 +286,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
           color: Theme.of(context).cardColor,
         ),
         height:
-            MediaQuery.of(context).size.width.normalized > HORIZONTAL_BREAKPOINT
+            MediaQuery.of(context).size.width.normalized > kHorizontalBreakPoint
                 ? MediaQuery.of(context).size.height.normalized
                 : 324.0 + 128.0,
         width: MediaQuery.of(context).size.width.normalized / 3,
@@ -496,13 +498,13 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        constraints.maxWidth > HORIZONTAL_BREAKPOINT
+                        constraints.maxWidth > kHorizontalBreakPoint
                             ? child!
                             : Container(),
                         Expanded(
                           child: CustomListView(
                             children: <Widget>[
-                                  constraints.maxWidth > HORIZONTAL_BREAKPOINT
+                                  constraints.maxWidth > kHorizontalBreakPoint
                                       ? Container()
                                       : child!,
                                   SubHeader(
