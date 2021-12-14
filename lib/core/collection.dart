@@ -140,7 +140,7 @@ class Collection extends ChangeNotifier {
         break;
       }
     }
-    if (supported_file_types.contains(file.extension) && !isAlreadyPresent) {
+    if (kSupportedFileTypes.contains(file.extension) && !isAlreadyPresent) {
       try {
         var metadata = await MetadataRetriever.fromFile(file);
         var track = Track.fromMap(
@@ -358,7 +358,7 @@ class Collection extends ChangeNotifier {
             for (FileSystemEntity object
                 in collectionDirectory.listSync(recursive: true)) {
               if (object is File &&
-                  supported_file_types.contains(object.extension)) {
+                  kSupportedFileTypes.contains(object.extension)) {
                 directory.add(object);
               }
             }
@@ -458,7 +458,7 @@ class Collection extends ChangeNotifier {
         second.lastModifiedSync().compareTo(first.lastModifiedSync()));
     for (var index = 0; index < directory.length; index++) {
       var object = directory[index];
-      if (supported_file_types.contains(object.extension)) {
+      if (kSupportedFileTypes.contains(object.extension)) {
         try {
           var metadata = await MetadataRetriever.fromFile(object);
           var track = Track.fromMap(
@@ -608,11 +608,13 @@ class Collection extends ChangeNotifier {
   /// Indexes a track into album & artist models.
   ///
   void _arrange(Track track, Future<void> Function() extractAlbumArt) async {
-    if (this.tracks.includes(track)) return;
-    if (!this.albums.includes(
+    if (this.tracks.contains(track)) return;
+    if (!this.albums.contains(
           Album(
-              albumName: track.albumName,
-              albumArtistName: track.albumArtistName),
+            albumName: track.albumName,
+            albumArtistName: track.albumArtistName,
+            year: track.year,
+          ),
         )) {
       // Run as asynchronous suspension.
       extractAlbumArt();
@@ -625,16 +627,18 @@ class Collection extends ChangeNotifier {
           );
     } else {
       this
-          .albums[this.albums.index(
+          .albums[this.albums.indexOf(
                 Album(
-                    albumName: track.albumName,
-                    albumArtistName: track.albumArtistName),
+                  albumName: track.albumName,
+                  albumArtistName: track.albumArtistName,
+                  year: track.year,
+                ),
               )]
           .tracks
           .add(track);
     }
     for (String artistName in track.trackArtistNames!) {
-      if (!this.artists.includes(Artist(artistName: artistName))) {
+      if (!this.artists.contains(Artist(artistName: artistName))) {
         this.artists.add(
               Artist(
                 artistName: artistName,
@@ -642,7 +646,7 @@ class Collection extends ChangeNotifier {
             );
       } else {
         this
-            .artists[this.artists.index(
+            .artists[this.artists.indexOf(
                   Artist(artistName: artistName),
                 )]
             .tracks
@@ -671,11 +675,11 @@ class Collection extends ChangeNotifier {
       });
       for (String artistName in allAlbumArtistNames) {
         if (!this
-            .artists[this.artists.index(Artist(artistName: artistName))]
+            .artists[this.artists.indexOf(Artist(artistName: artistName))]
             .albums
-            .includes(album))
+            .contains(album))
           this
-              .artists[this.artists.index(Artist(artistName: artistName))]
+              .artists[this.artists.indexOf(Artist(artistName: artistName))]
               .albums
               .add(album);
       }
@@ -707,7 +711,7 @@ enum CollectionOrder { ascending, descending }
 /// Supported file extensions.
 /// Used for identifying the audio files during indexing the collection.
 ///
-const List<String> supported_file_types = [
+const List<String> kSupportedFileTypes = [
   'OGG',
   'OGA',
   'OGX',
@@ -725,25 +729,6 @@ const List<String> supported_file_types = [
 ///
 extension on FileSystemEntity {
   String get extension => this.path.split('.').last.toUpperCase();
-}
-
-/// Extension on List, local to the [Collection] class.
-///
-extension on List<Media> {
-  /// Checks whether a [List<Media>] contains a particular [Media] by calling the overridden [Comparable.compareTo] method.
-  /// An equivalent of [Iterable.contains].
-  bool includes(Media media) => index(media) >= 0;
-
-  /// Returns the index of a particular [Media] in [List<Media>] by calling the overridden [Comparable.compareTo] method.
-  /// An equivalent of [List.indexOf].
-  int index(Media media) {
-    for (int index = 0; index < length; index++) {
-      if (this[index].compareTo(media) == 0) {
-        return index;
-      }
-    }
-    return -1;
-  }
 }
 
 /// Late initialized [Collection] ojbect instance.
