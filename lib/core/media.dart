@@ -30,6 +30,14 @@ abstract class Media with Comparable {
   int compareTo(dynamic track) => -1;
 
   Map<String, dynamic> toMap();
+
+  @override
+  bool operator ==(Object media) {
+    throw UnimplementedError();
+  }
+
+  @override
+  int get hashCode => throw UnimplementedError();
 }
 
 /// Track
@@ -135,6 +143,18 @@ class Track extends Media {
     return -1;
   }
 
+  @override
+  bool operator ==(Object media) {
+    if (media is Track) {
+      return media.trackName == this.trackName &&
+          media.albumArtistName == this.albumArtistName;
+    }
+    throw FormatException();
+  }
+
+  @override
+  int get hashCode => this.trackName.hashCode + this.albumArtistName.hashCode;
+
   String get albumArtBasename =>
       '${this.albumName}${this.albumArtistName}'
           .replaceAll(RegExp(r'[\\/:*?""<>| ]'), '') +
@@ -234,10 +254,27 @@ class Album extends Media {
   });
 
   @override
+  bool operator ==(Object media) {
+    if (media is Album) {
+      return media.albumName == this.albumName &&
+          media.albumArtistName == this.albumArtistName &&
+          media.year == this.year;
+    }
+    throw FormatException();
+  }
+
+  @override
+  int get hashCode =>
+      this.albumName.hashCode +
+      this.albumArtistName.hashCode +
+      this.year.hashCode;
+
+  @override
   int compareTo(dynamic album) {
     if (album is Album) {
       return this.albumName!.compareTo(album.albumName!).abs() +
-          this.albumArtistName!.compareTo(album.albumArtistName!).abs();
+          this.albumArtistName!.compareTo(album.albumArtistName!).abs() +
+          (this.year ?? -1).compareTo(album.year ?? -1);
     }
     return -1;
   }
@@ -278,6 +315,17 @@ class Artist extends Media {
   factory Artist.fromMap(Map<String, dynamic> artistMap) => Artist(
         artistName: artistMap['artistName'],
       );
+
+  @override
+  bool operator ==(Object media) {
+    if (media is Artist) {
+      return media.artistName == this.artistName;
+    }
+    throw FormatException();
+  }
+
+  @override
+  int get hashCode => this.artistName.hashCode;
 
   @override
   int compareTo(dynamic artist) {
