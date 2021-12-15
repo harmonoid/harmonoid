@@ -20,11 +20,11 @@
 import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path;
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/constants/language.dart';
 
 /// Configuration
@@ -142,7 +142,7 @@ class Configuration extends ConfigurationKeys {
               .toList()
               .cast<String>(),
           'languageRegion': this.languageRegion!.index,
-          'accent': accents.indexOf(this.accent),
+          'accent': kAccents.indexOf(this.accent),
           'themeMode': this.themeMode!.index,
           'collectionSortType': this.collectionSortType!.index,
           'automaticAccent': this.automaticAccent,
@@ -176,7 +176,7 @@ class Configuration extends ConfigurationKeys {
         .toList()
         .cast<Directory>();
     this.languageRegion = LanguageRegion.values[current['languageRegion']];
-    this.accent = accents[current['accent']];
+    this.accent = kAccents[current['accent']];
     this.themeMode = ThemeMode.values[current['themeMode']];
     this.collectionSortType =
         CollectionSort.values[current['collectionSortType']];
