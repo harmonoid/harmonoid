@@ -19,11 +19,9 @@
 
 import 'dart:io';
 import 'dart:math';
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/hotkeys.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/playback.dart';
@@ -32,9 +30,11 @@ import 'package:harmonoid/core/youtubemusic.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/youtube/youtubetile.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/utils/utils.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/interface/harmonoid.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class YouTubeMusic extends StatefulWidget {
   const YouTubeMusic({Key? key}) : super(key: key);
@@ -88,7 +88,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
         return;
       }
     } catch (exception) {
-      Utils.handleInvalidLink();
+      Exceptions.invalidLink();
       return;
     }
     this.setState(() {

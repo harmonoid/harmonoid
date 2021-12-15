@@ -55,7 +55,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
 
   @override
   Widget build(BuildContext context) {
-    if (kHorizontalBreakPoint >= MediaQuery.of(context).size.width.normalized)
+    if (kDesktopHorizontalBreakPoint >=
+        MediaQuery.of(context).size.width.normalized)
       return Consumer<NowPlayingController>(
         builder: (context, nowPlaying, _) => Consumer<NowPlayingBarController>(
           builder: (context, container, _) => AnimatedContainer(
@@ -231,7 +232,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                 nowPlaying.tracks.length >
                                     (nowPlaying.index ?? double.infinity) &&
                                 0 <= (nowPlaying.index ?? double.infinity) &&
-                                kHorizontalBreakPoint <
+                                kDesktopHorizontalBreakPoint <
                                     MediaQuery.of(context)
                                         .size
                                         .width
@@ -287,7 +288,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               '',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5,
+                                              .headline3,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -295,7 +296,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           '(${nowPlaying.tracks[nowPlaying.index!].year ?? 'Unknown Year'})',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5,
+                                              .headline3,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -393,7 +394,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                             inactiveTrackColor:
                                 Theme.of(context).brightness == Brightness.dark
                                     ? Colors.white.withOpacity(0.4)
-                                    : Colors.black.withOpacity(0.4),
+                                    : Colors.black.withOpacity(0.2),
                           ),
                           child: Row(
                             children: [
@@ -481,7 +482,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                       Theme.of(context).brightness ==
                                               Brightness.dark
                                           ? Colors.white.withOpacity(0.4)
-                                          : Colors.black.withOpacity(0.4),
+                                          : Colors.black.withOpacity(0.2),
                                 ),
                                 child: Container(
                                   width: 84.0,
@@ -508,8 +509,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                               iconSize: 20.0,
                               color: Theme.of(context).brightness ==
                                       Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                                  ? Colors.white.withOpacity(0.87)
+                                  : Colors.black87,
                               splashRadius: 18.0,
                               icon: Icon(
                                 Icons.speed,
@@ -525,11 +526,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     borderRadius: BorderRadius.circular(20.0),
                                     border: nowPlaying.isShuffling
                                         ? Border.all(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
+                                            color: Theme.of(context)
+                                                        .brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white.withOpacity(0.87)
+                                                : Colors.black87,
                                           )
                                         : null,
                                   ),
@@ -539,8 +540,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                   iconSize: 20.0,
                                   color: Theme.of(context).brightness ==
                                           Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black,
+                                      ? Colors.white.withOpacity(0.87)
+                                      : Colors.black87,
                                   splashRadius: 18.0,
                                   icon: Icon(
                                     Icons.shuffle,
@@ -553,8 +554,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                               iconSize: 24.0,
                               color: Theme.of(context).brightness ==
                                       Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                                  ? Colors.white.withOpacity(0.87)
+                                  : Colors.black87,
                               splashRadius: 18.0,
                               icon: Icon(
                                 Icons.skip_previous,
@@ -575,8 +576,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                               iconSize: 24.0,
                               color: Theme.of(context).brightness ==
                                       Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                                  ? Colors.white.withOpacity(0.87)
+                                  : Colors.black87,
                               splashRadius: 18.0,
                               icon: Icon(
                                 Icons.skip_next,
@@ -593,11 +594,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     border: nowPlaying.playlistMode !=
                                             PlaylistMode.none
                                         ? Border.all(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
+                                            color: Theme.of(context)
+                                                        .brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white.withOpacity(0.87)
+                                                : Colors.black87,
                                           )
                                         : null,
                                   ),
@@ -619,8 +620,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                   iconSize: 20.0,
                                   color: Theme.of(context).brightness ==
                                           Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black,
+                                      ? Colors.white.withOpacity(0.87)
+                                      : Colors.black87,
                                   splashRadius: 18.0,
                                   icon: Icon(
                                     nowPlaying.playlistMode ==
@@ -636,8 +637,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                               iconSize: 20.0,
                               color: Theme.of(context).brightness ==
                                       Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                                  ? Colors.white.withOpacity(0.87)
+                                  : Colors.black87,
                               splashRadius: 18.0,
                               icon: Icon(
                                 nowPlaying.volume == 0.0
@@ -669,7 +670,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     Theme.of(context).brightness ==
                                             Brightness.dark
                                         ? Colors.white.withOpacity(0.4)
-                                        : Colors.black.withOpacity(0.4),
+                                        : Colors.black.withOpacity(0.2),
                               ),
                               child: Container(
                                 width: 84.0,
@@ -693,58 +694,6 @@ class NowPlayingBarState extends State<NowPlayingBar>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        // IconButton(
-                        //   onPressed: (nowPlaying.index != null &&
-                        //           nowPlaying.tracks.length >
-                        //               (nowPlaying.index ?? double.infinity) &&
-                        //           0 <= (nowPlaying.index ?? double.infinity))
-                        //       ? () {
-                        //           showDialog(
-                        //             context: context,
-                        //             builder: (context) => FractionallyScaledWidget(
-                        //               child: SimpleDialog(
-                        //                 backgroundColor: Theme.of(context)
-                        //                     .appBarTheme
-                        //                     .backgroundColor,
-                        //                 title: Text(
-                        //                   nowPlaying
-                        //                       .tracks[nowPlaying.index!].trackName!,
-                        //                 ),
-                        //                 titlePadding: EdgeInsets.all(16.0),
-                        //                 contentPadding: EdgeInsets.all(16.0),
-                        //                 children: lyrics.current.isNotEmpty
-                        //                     ? lyrics.current
-                        //                         .map(
-                        //                           (lyric) => Text(
-                        //                             lyric.words,
-                        //                             style: Theme.of(context)
-                        //                                 .textTheme
-                        //                                 .headline4,
-                        //                           ),
-                        //                         )
-                        //                         .toList()
-                        //                     : [
-                        //                         Text(
-                        //                           language!.STRING_LYRICS_NOT_FOUND,
-                        //                           style: Theme.of(context)
-                        //                               .textTheme
-                        //                               .headline4,
-                        //                         ),
-                        //                       ],
-                        //               ),
-                        //             ),
-                        //           );
-                        //         }
-                        //       : null,
-                        //   iconSize: 24.0,
-                        //   color: Theme.of(context).brightness == Brightness.dark
-                        //       ? Colors.white
-                        //       : Colors.black,
-                        //   splashRadius: 18.0,
-                        //   icon: Icon(
-                        //     Icons.short_text,
-                        //   ),
-                        // ),
                         Consumer<NowPlayingBarController>(
                           builder: (context, controller, _) => IconButton(
                             onPressed: controller.maximized

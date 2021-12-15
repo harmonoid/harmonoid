@@ -20,7 +20,6 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +45,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                   .size
                   .width
                   .normalized <
-              kHorizontalBreakPoint
+              kDesktopHorizontalBreakPoint
           ? Scaffold(
               body: Stack(
                 children: [
@@ -500,7 +499,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                       if (Platform.isWindows ||
                           Platform.isLinux ||
                           Platform.isMacOS) {
-                        //This is a fix to an issue where the WindowTitleBar doesn't show up.
+                        // This is a fix to an issue where the [WindowTitleBar] doesn't show up.
                         return Positioned(
                           child: SizedBox(),
                           top: -40,
@@ -517,7 +516,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                   nowPlaying.tracks.length >
                       (nowPlaying.index ?? double.infinity) &&
                   0 <= (nowPlaying.index ?? double.negativeInfinity) &&
-                  kHorizontalBreakPoint <
+                  kDesktopHorizontalBreakPoint <
                       MediaQuery.of(context).size.width.normalized
               ? Scaffold(
                   body: Column(

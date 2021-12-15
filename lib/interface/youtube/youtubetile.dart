@@ -20,6 +20,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 
@@ -28,9 +29,6 @@ import 'package:harmonoid/core/youtubemusic.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/core/configuration.dart';
-
-const double HORIZONTAL_BREAKPOINT = 720.0;
 
 class YouTubeTile extends StatelessWidget {
   final double? height;
@@ -194,10 +192,10 @@ class YouTubeState extends State<YouTube> {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
         ),
-        height:
-            MediaQuery.of(context).size.width.normalized > HORIZONTAL_BREAKPOINT
-                ? MediaQuery.of(context).size.height.normalized
-                : 324.0 + 128.0,
+        height: MediaQuery.of(context).size.width.normalized >
+                kDesktopHorizontalBreakPoint
+            ? MediaQuery.of(context).size.height.normalized
+            : 324.0 + 128.0,
         width: MediaQuery.of(context).size.width.normalized / 3,
         child: Container(
           decoration: BoxDecoration(
@@ -440,11 +438,12 @@ class YouTubeState extends State<YouTube> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        constraints.maxWidth > HORIZONTAL_BREAKPOINT
+                        constraints.maxWidth > kDesktopHorizontalBreakPoint
                             ? child!
                             : Container(),
                         Expanded(
-                          child: constraints.maxWidth > HORIZONTAL_BREAKPOINT
+                          child: constraints.maxWidth >
+                                  kDesktopHorizontalBreakPoint
                               ? (this.description == null
                                   ? Center(
                                       child: CircularProgressIndicator(
@@ -458,7 +457,7 @@ class YouTubeState extends State<YouTube> {
                                   : CustomListView(
                                       children: <Widget>[
                                         constraints.maxWidth >
-                                                HORIZONTAL_BREAKPOINT
+                                                kDesktopHorizontalBreakPoint
                                             ? Container()
                                             : child!,
                                         SubHeader(
@@ -488,7 +487,8 @@ class YouTubeState extends State<YouTube> {
                                     ))
                               : CustomListView(
                                   children: <Widget>[
-                                    constraints.maxWidth > HORIZONTAL_BREAKPOINT
+                                    constraints.maxWidth >
+                                            kDesktopHorizontalBreakPoint
                                         ? Container()
                                         : child!,
                                     SubHeader(
