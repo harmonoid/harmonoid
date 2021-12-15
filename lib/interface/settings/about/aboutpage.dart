@@ -18,7 +18,7 @@
  */
 
 import 'dart:convert' as convert;
-import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -57,43 +57,16 @@ class AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
-          Container(
-            height: 56.0,
-            decoration: BoxDecoration(
-              color: Theme.of(context).appBarTheme.backgroundColor,
-              border: Border(
-                bottom: BorderSide(
-                    color: Theme.of(context).dividerColor.withOpacity(0.12)),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                NavigatorPopButton(),
-                SizedBox(
-                  width: 24.0,
-                ),
-                Text(
-                  language.ABOUT_TITLE,
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.0,
-                  ),
-                ),
-              ],
-            ),
+          DesktopAppBar(
+            title: language.ABOUT_TITLE,
           ),
-          Expanded(
+          Container(
+            margin: EdgeInsets.only(
+              top: kDesktopAppBarHeight,
+            ),
             child: Container(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.white
-                  : Color(0xFF202020),
               child: CustomListView(
                 padding: EdgeInsets.symmetric(vertical: 4.0),
                 children: [
@@ -107,19 +80,6 @@ class AboutPageState extends State<AboutPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Image.asset(
-                        //   'assets/images/about_header.jpg',
-                        //   fit: BoxFit.fitWidth,
-                        //   alignment: Alignment.center,
-                        //   height: 192,
-                        //   width: MediaQuery.of(context).size.width.normalized -
-                        //       16.0,
-                        // ),
-                        // Divider(
-                        //   height: 1.0,
-                        //   thickness: 1.0,
-                        //   color: Theme.of(context).dividerColor,
-                        // ),
                         Padding(
                           padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                           child: Row(
@@ -322,7 +282,7 @@ class AboutPageState extends State<AboutPage> {
                               ),
                               MaterialButton(
                                 onPressed: () => launch(
-                                  'https://www.linkedin.com/in/hitesh-kumar-saini-78b4a3209',
+                                  'https://www.linkedin.com/in/hitesh-kumar-saini',
                                 ),
                                 child: Text(
                                   'LINKEDIN',
@@ -433,6 +393,12 @@ class AboutPageState extends State<AboutPage> {
                           'https://avatars.githubusercontent.com/u/2262007?s=80&v=4',
                           'stonegate',
                           'Mandarin translation & bug reports.'
+                        ],
+                        [
+                          'https://github.com/HiSubway',
+                          'https://avatars.githubusercontent.com/u/66313777?s=80&v=4',
+                          'さぶうぇい',
+                          'Japanese translation.'
                         ]
                       ]
                           .map(
