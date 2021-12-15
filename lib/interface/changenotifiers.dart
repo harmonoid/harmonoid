@@ -28,7 +28,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/youtubemusic.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/utils/utils.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/constants/language.dart';
 
 var nowPlaying = NowPlayingController();
@@ -251,12 +251,12 @@ class Visuals extends ChangeNotifier {
     );
   }
 
-  ThemeData get theme => Utils.getTheme(
+  ThemeData get theme => createTheme(
         accentColor: this.accent!.light,
         themeMode: ThemeMode.light,
       );
 
-  ThemeData get darkTheme => Utils.getTheme(
+  ThemeData get darkTheme => createTheme(
         accentColor: this.accent!.dark,
         themeMode: ThemeMode.dark,
       );
@@ -303,26 +303,3 @@ class NotificationLyricsController extends ChangeNotifier {
     configuration.save(notificationLyrics: enabled);
   }
 }
-
-class Accent {
-  final Color light;
-  final Color dark;
-
-  Accent({required this.light, required this.dark});
-}
-
-List<Accent?> accents = [
-  Accent(
-    light: Colors.deepPurpleAccent.shade400,
-    dark: Colors.deepPurpleAccent.shade200,
-  ),
-  Accent(light: Color(0xFFE53935), dark: Color(0xFFE53935)),
-  Accent(light: Color(0xFF4285F4), dark: Color(0xFF82B1FF)),
-  Accent(light: Color(0xFFF4B400), dark: Color(0xFFFFE57F)),
-  Accent(light: Color(0xFF0F9D58), dark: Color(0xFF0F9D58)),
-  Accent(light: Color(0xFFE95420), dark: Color(0xFFE95420)),
-  Accent(light: Color(0xFF89CDD0), dark: Color(0xFF89CDD0)),
-  Accent(light: Color(0xFF5B51D8), dark: Color(0xFFD1C4E9)),
-  Accent(light: Color(0xFFF50057), dark: Color(0xFFFF80AB)),
-  Accent(light: Color(0xFF424242), dark: Colors.grey.shade600),
-];

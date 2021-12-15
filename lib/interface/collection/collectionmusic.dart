@@ -23,7 +23,6 @@ import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/intent.dart';
@@ -71,7 +70,7 @@ class CollectionMusicState extends State<CollectionMusic>
           Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.only(top: kAppBarHeight),
+            padding: EdgeInsets.only(top: kDesktopAppBarHeight),
             child: Consumer<CollectionRefreshController>(
               builder: (context, refresh, __) => Stack(
                 alignment: Alignment.bottomLeft,
@@ -157,7 +156,7 @@ class CollectionMusicState extends State<CollectionMusic>
           ClipRect(
             clipBehavior: Clip.antiAlias,
             child: Container(
-              height: kAppBarHeight + 8.0,
+              height: kDesktopAppBarHeight + 8.0,
               padding: EdgeInsets.only(bottom: 8.0),
               child: Material(
                 elevation: 4.0,
@@ -353,12 +352,9 @@ class CollectionMusicState extends State<CollectionMusic>
                               icon: Transform.rotate(
                                 angle: pi / 2,
                                 child: Icon(
-                                  FluentIcons.search_12_regular,
-                                  size: 17.0,
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.light
-                                      ? Colors.black87
-                                      : Colors.white.withOpacity(0.87),
+                                  Icons.search,
+                                  size: 20.0,
+                                  color: Theme.of(context).iconTheme.color,
                                 ),
                               ),
                             ),

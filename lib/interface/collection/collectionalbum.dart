@@ -35,10 +35,11 @@ import 'package:harmonoid/constants/language.dart';
 
 class CollectionAlbumTab extends StatelessWidget {
   Widget build(BuildContext context) {
-    int elementsPerRow =
-        (MediaQuery.of(context).size.width.normalized - 16.0) ~/ (156.0 + 16.0);
     double tileWidth = 156.0;
     double tileHeight = 156.0 + 58.0;
+    int elementsPerRow =
+        (MediaQuery.of(context).size.width.normalized - 16.0) ~/
+            (tileWidth + 16.0);
 
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
@@ -285,10 +286,10 @@ class CollectionAlbumState extends State<CollectionAlbum> {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
         ),
-        height:
-            MediaQuery.of(context).size.width.normalized > kHorizontalBreakPoint
-                ? MediaQuery.of(context).size.height.normalized
-                : 324.0 + 128.0,
+        height: MediaQuery.of(context).size.width.normalized >
+                kDesktopHorizontalBreakPoint
+            ? MediaQuery.of(context).size.height.normalized
+            : 324.0 + 128.0,
         width: MediaQuery.of(context).size.width.normalized / 3,
         child: Container(
           decoration: BoxDecoration(
@@ -459,37 +460,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
             width: MediaQuery.of(context).size.width.normalized,
             child: Column(
               children: [
-                Container(
-                  height: 56.0,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).appBarTheme.backgroundColor,
-                    border: Border(
-                      bottom: BorderSide(
-                          color:
-                              Theme.of(context).dividerColor.withOpacity(0.12)),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      NavigatorPopButton(),
-                      SizedBox(
-                        width: 16.0,
-                      ),
-                      Text(
-                        language.ALBUM_SINGLE,
-                        style: TextStyle(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                DesktopAppBar(title: language.ALBUM),
                 Expanded(
                   child: Container(
                     color: Theme.of(context).brightness == Brightness.light
@@ -498,13 +469,14 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        constraints.maxWidth > kHorizontalBreakPoint
+                        constraints.maxWidth > kDesktopHorizontalBreakPoint
                             ? child!
                             : Container(),
                         Expanded(
                           child: CustomListView(
                             children: <Widget>[
-                                  constraints.maxWidth > kHorizontalBreakPoint
+                                  constraints.maxWidth >
+                                          kDesktopHorizontalBreakPoint
                                       ? Container()
                                       : child!,
                                   SubHeader(

@@ -18,41 +18,104 @@
  */
 
 import 'dart:io';
-
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/gestures.dart';
+import 'package:desktop/desktop.dart' as desktop;
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:share_plus/share_plus.dart';
 
 class CollectionTrackTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
-          ? CustomListView(
-              children: () {
-                List<Widget> children = <Widget>[];
-                // children.addAll([
-                //   SubHeader(language.COLLECTION_TOP_SUBHEADER_TRACK),
-                //   LeadingCollectionTrackTile(),
-                //   SubHeader(language.COLLECTION_OTHER_SUBHEADER_TRACK)
-                // ]);
-                collection.tracks.asMap().forEach((int index, _) {
-                  children.add(
-                    CollectionTrackTile(
-                      track: collection.tracks[index],
-                      index: index,
-                    ),
+          ? desktop.ListTableTheme(
+              data: desktop.ListTableThemeData(
+                highlightColor: Theme.of(context).dividerColor.withOpacity(0.4),
+                hoverColor: Theme.of(context).dividerColor.withOpacity(0.2),
+                borderHighlightColor: Theme.of(context).colorScheme.secondary,
+                borderIndicatorColor: Theme.of(context).colorScheme.secondary,
+                borderHoverColor: Theme.of(context).colorScheme.secondary,
+              ),
+              child: desktop.ListTable(
+                onPressed: (index, _) {
+                  Playback.play(
+                    index: index,
+                    tracks: collection.tracks,
                   );
-                });
-                return children;
-              }(),
+                },
+                onSecondaryPress: (index, position) async {
+                  var result = await showMenu(
+                    context: context,
+                    position: position.shift(Offset(0.0, -20.0)),
+                    items: trackPopupMenuItems(context),
+                  );
+                  await trackPopupMenuHandle(
+                    context,
+                    collection.tracks[index],
+                    result,
+                  );
+                },
+                colCount: 5,
+                headerColumnBorder: BorderSide(
+                  color: Theme.of(context).dividerColor,
+                  width: 1.0,
+                ),
+                tableBorder: desktop.TableBorder(
+                  verticalInside: BorderSide(
+                    color: Theme.of(context).dividerColor,
+                  ),
+                  top: BorderSide(
+                    color: Theme.of(context).dividerColor,
+                  ),
+                ),
+                itemCount: collection.tracks.length,
+                colFraction: {
+                  0: 36.0 / MediaQuery.of(context).size.width.normalized,
+                  1: 0.36,
+                  4: 128.0 / MediaQuery.of(context).size.width.normalized,
+                },
+                tableHeaderBuilder: (context, index, constraints) => Container(
+                  height: 36.0,
+                  alignment: Alignment.center,
+                  child: Text(
+                    [
+                      '#',
+                      language.TRACK_SINGLE,
+                      language.ARTIST,
+                      language.ALBUM_SINGLE,
+                      language.YEAR
+                    ][index],
+                    style: Theme.of(context).textTheme.headline2,
+                  ),
+                ),
+                tableRowBuilder: (context, index, property, constraints) =>
+                    Container(
+                  constraints: constraints,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                  ),
+                  alignment:
+                      property == 0 ? Alignment.center : Alignment.centerLeft,
+                  child: Text(
+                    [
+                      '${collection.tracks[index].trackNumber ?? 0}',
+                      collection.tracks[index].trackName ?? 'Unknown Track',
+                      collection.tracks[index].trackArtistNames?.join(', ') ??
+                          'Unknown Artist',
+                      collection.tracks[index].albumName ?? 'Unknown Album',
+                      collection.tracks[index].year?.toString() ??
+                          'Unknown Year',
+                    ][property],
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                ),
+              ),
             )
           : Center(
               child: ExceptionWidget(
@@ -76,245 +139,55 @@ class CollectionTrackTile extends StatefulWidget {
 }
 
 class CollectionTrackTileState extends State<CollectionTrackTile> {
-  bool shouldReact = false;
-
   @override
   Widget build(BuildContext context) {
     return Consumer<Collection>(
       builder: (context, collection, _) => Material(
         color: Colors.transparent,
-        child: Listener(
-          onPointerDown: (e) {
-            shouldReact = e.kind == PointerDeviceKind.mouse &&
-                e.buttons == kSecondaryMouseButton;
-          },
-          onPointerUp: (e) async {
-            if (!shouldReact) return;
-            final RenderObject? overlay =
-                Overlay.of(context)!.context.findRenderObject();
-            shouldReact = false;
-            int? result = await showMenu(
-              elevation: 4.0,
-              context: context,
-              position: RelativeRect.fromRect(
-                Offset(e.position.dx, e.position.dy - 20.0) & Size.zero,
-                overlay!.semanticBounds,
+        child: ListTile(
+          onTap: () => widget.index != null
+              ? Playback.play(
+                  index: widget.index!,
+                  tracks: collection.tracks,
+                )
+              : Playback.play(
+                  index: 0,
+                  tracks: <Track>[widget.track],
+                ),
+          dense: false,
+          leading: CircleAvatar(
+            child: Text(
+              '${widget.track.trackNumber ?? 1}',
+              style: TextStyle(
+                color: Colors.white,
               ),
-              items: [
-                PopupMenuItem(
-                  padding: EdgeInsets.zero,
-                  value: 0,
-                  child: ListTile(
-                    leading: Icon(FluentIcons.delete_16_regular),
-                    title: Text(
-                      language.DELETE,
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                  ),
-                ),
-                PopupMenuItem(
-                  padding: EdgeInsets.zero,
-                  value: 1,
-                  child: ListTile(
-                    leading: Icon(FluentIcons.share_16_regular),
-                    title: Text(
-                      language.SHARE,
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                  ),
-                ),
-                PopupMenuItem(
-                  padding: EdgeInsets.zero,
-                  value: 2,
-                  child: ListTile(
-                    leading: Icon(FluentIcons.list_16_regular),
-                    title: Text(
-                      language.ADD_TO_PLAYLIST,
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                  ),
-                ),
-                PopupMenuItem(
-                  padding: EdgeInsets.zero,
-                  value: 3,
-                  child: ListTile(
-                    leading: Icon(FluentIcons.music_note_2_16_regular),
-                    title: Text(
-                      language.ADD_TO_NOW_PLAYING,
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                  ),
-                ),
-              ],
-            );
-            if (result != null) {
-              switch (result) {
-                case 0:
-                  showDialog(
-                    context: context,
-                    builder: (subContext) => FractionallyScaledWidget(
-                      child: AlertDialog(
-                        title: Text(
-                          language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_HEADER,
-                          style: Theme.of(subContext).textTheme.headline1,
-                        ),
-                        content: Text(
-                          language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_BODY,
-                          style: Theme.of(subContext).textTheme.headline3,
-                        ),
-                        actions: [
-                          MaterialButton(
-                            textColor: Theme.of(context).primaryColor,
-                            onPressed: () async {
-                              await collection.delete(widget.track);
-                              Navigator.of(subContext).pop();
-                            },
-                            child: Text(language.YES),
-                          ),
-                          MaterialButton(
-                            textColor: Theme.of(context).primaryColor,
-                            onPressed: Navigator.of(subContext).pop,
-                            child: Text(language.NO),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                  break;
-                case 1:
-                  Share.shareFiles(
-                    [widget.track.filePath!],
-                    subject:
-                        '${widget.track.trackName} • ${widget.track.albumName}. Shared using Harmonoid!',
-                  );
-                  break;
-                case 2:
-                  showDialog(
-                    context: context,
-                    builder: (subContext) => FractionallyScaledWidget(
-                      child: AlertDialog(
-                        contentPadding: EdgeInsets.zero,
-                        actionsPadding: EdgeInsets.zero,
-                        title: Text(
-                          language.PLAYLIST_ADD_DIALOG_TITLE,
-                          style: Theme.of(subContext).textTheme.headline1,
-                        ),
-                        content: Container(
-                          height: 280,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
-                                child: Text(
-                                  language.PLAYLIST_ADD_DIALOG_BODY,
-                                  style:
-                                      Theme.of(subContext).textTheme.headline3,
-                                ),
-                              ),
-                              Container(
-                                height: 236,
-                                width: 280,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: collection.playlists.length,
-                                  itemBuilder: (context, playlistIndex) {
-                                    return ListTile(
-                                      title: Text(
-                                        collection.playlists[playlistIndex]
-                                            .playlistName!,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline2,
-                                      ),
-                                      leading: Icon(
-                                        Icons.queue_music,
-                                        size: Theme.of(context).iconTheme.size,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
-                                      ),
-                                      onTap: () async {
-                                        await collection.playlistAddTrack(
-                                          collection.playlists[playlistIndex],
-                                          widget.track,
-                                        );
-                                        Navigator.of(subContext).pop();
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        actions: [
-                          MaterialButton(
-                            textColor: Theme.of(context).primaryColor,
-                            onPressed: Navigator.of(subContext).pop,
-                            child: Text(language.CANCEL),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                  break;
-                case 3:
-                  Playback.add(
-                    [
-                      widget.track,
-                    ],
-                  );
-                  break;
-              }
-            }
-          },
-          child: ListTile(
-            onTap: () => widget.index != null
-                ? Playback.play(
-                    index: widget.index!,
-                    tracks: collection.tracks,
-                  )
-                : Playback.play(
-                    index: 0,
-                    tracks: <Track>[widget.track],
-                  ),
-            dense: false,
-            leading: CircleAvatar(
-              child: Text(
-                '${widget.track.trackNumber ?? 1}',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              backgroundImage: FileImage(widget.track.albumArt),
             ),
-            title: Text(
-              widget.track.trackName!,
-              overflow: TextOverflow.fade,
-              maxLines: 1,
-              softWrap: false,
-            ),
-            subtitle: Text(
-              (widget.track.trackDuration != null
-                      ? (Duration(milliseconds: widget.track.trackDuration!)
-                              .label +
-                          ' • ')
-                      : '0:00 • ') +
-                  widget.track.albumName! +
-                  ' • ' +
-                  widget.track.trackArtistNames!.take(2).join(', '),
-              overflow: TextOverflow.fade,
-              maxLines: 1,
-              softWrap: false,
-            ),
-            trailing: (Platform.isAndroid || Platform.isIOS)
-                ? CollectionTrackContextMenu(
-                    track: widget.track,
-                  )
-                : null,
+            backgroundImage: FileImage(widget.track.albumArt),
           ),
+          title: Text(
+            widget.track.trackName!,
+            overflow: TextOverflow.fade,
+            maxLines: 1,
+            softWrap: false,
+          ),
+          subtitle: Text(
+            (widget.track.trackDuration != null
+                    ? (Duration(milliseconds: widget.track.trackDuration!)
+                            .label +
+                        ' • ')
+                    : '0:00 • ') +
+                widget.track.albumName! +
+                ' • ' +
+                widget.track.trackArtistNames!.take(2).join(', '),
+            overflow: TextOverflow.fade,
+            maxLines: 1,
+            softWrap: false,
+          ),
+          trailing: (Platform.isAndroid || Platform.isIOS)
+              ? CollectionTrackContextMenu(
+                  track: widget.track,
+                )
+              : null,
         ),
       ),
     );

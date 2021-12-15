@@ -155,8 +155,8 @@ class HomeState extends State<Home>
             ),
             Container(
               padding: EdgeInsets.only(
-                top: kTitleBarHeight,
-                bottom: kNowPlayingBarHeight,
+                top: kDesktopTitleBarHeight,
+                bottom: kDesktopNowPlayingBarHeight,
               ),
               child: Consumer<Language>(
                 builder: (context, _, __) => Scaffold(
