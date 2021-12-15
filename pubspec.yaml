@@ -29,7 +29,10 @@ dependencies:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/file_selector/file_selector_linux
-  bitsdojo_window: ^0.1.1+1
+  bitsdojo_window:
+    git:
+      url: https://github.com/alexmercerind/bitsdojo_window.git
+      path: bitsdojo_window
   flutter_local_notifications: ^5.0.0
   file_picker: ^3.0.0
   permission_handler: ^6.1.1
@@ -43,13 +46,24 @@ dependencies:
       url: https://github.com/alexmercerind/hotkey_manager.git
       ref: main
   implicitly_animated_reorderable_list: ^0.4.0-dev+4
-  device_preview: ^1.0.0-alpha.15
+  desktop:
+    git:
+      url: https://github.com/alexmercerind/desktop.git
+      path: desktop
+  palette_generator: ^0.3.2
+
+dependency_overrides:
+  bitsdojo_window_windows:
+    git:
+      url: https://github.com/alexmercerind/bitsdojo_window.git
+      path: bitsdojo_window_windows
 
 dev_dependencies:
   msix:
     git:
       url: git://github.com/alexmercerind/msix.git
       ref: a2c15a8662dd346b2738ea89538179f532d4f437
+  device_preview: ^1.0.0-alpha.15
 
 flutter:
   uses-material-design: true

@@ -48,9 +48,11 @@ packages:
   bitsdojo_window:
     dependency: "direct main"
     description:
-      name: bitsdojo_window
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: bitsdojo_window
+      ref: HEAD
+      resolved-ref: "7c1e6ad8b65faf03a492c089d2d07c39c726abdd"
+      url: "https://github.com/alexmercerind/bitsdojo_window.git"
+    source: git
     version: "0.1.1+1"
   bitsdojo_window_linux:
     dependency: transitive
@@ -74,11 +76,13 @@ packages:
     source: hosted
     version: "0.1.0"
   bitsdojo_window_windows:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: bitsdojo_window_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: bitsdojo_window_windows
+      ref: HEAD
+      resolved-ref: "7c1e6ad8b65faf03a492c089d2d07c39c726abdd"
+      url: "https://github.com/alexmercerind/bitsdojo_window.git"
+    source: git
     version: "0.1.0"
   characters:
     dependency: transitive
@@ -143,6 +147,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3"
+  desktop:
+    dependency: "direct main"
+    description:
+      path: desktop
+      ref: HEAD
+      resolved-ref: "39f16b6159f1040c60e0f31b294285a79c129c24"
+      url: "https://github.com/alexmercerind/desktop.git"
+    source: git
+    version: "3.0.1"
   device_frame:
     dependency: transitive
     description:
@@ -151,7 +164,7 @@ packages:
     source: hosted
     version: "1.0.0-alpha.2"
   device_preview:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: device_preview
       url: "https://pub.dartlang.org"
@@ -390,6 +403,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  palette_generator:
+    dependency: "direct main"
+    description:
+      name: palette_generator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.2"
   path:
     dependency: "direct main"
     description:
