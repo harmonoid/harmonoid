@@ -1,5 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/interface/changenotifiers.dart';
@@ -42,7 +43,7 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 childAspectRatio: 1.0,
-                children: accents.map((accent) {
+                children: kAccents.map((accent) {
                   this.animationControllers.add(
                         AnimationController(
                           vsync: this,
@@ -87,7 +88,7 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                                 this.animationControllers.asMap().forEach(
                                     (int controllerIndex,
                                         AnimationController controller) {
-                                  if (accents.indexOf(accent) ==
+                                  if (kAccents.indexOf(accent) ==
                                       controllerIndex) {
                                     this
                                         .animationControllers[controllerIndex]

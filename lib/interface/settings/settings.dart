@@ -19,7 +19,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/core/configuration.dart';
 
 import 'package:harmonoid/interface/settings/accent.dart';
 import 'package:harmonoid/interface/settings/about.dart';
@@ -28,68 +27,39 @@ import 'package:harmonoid/interface/settings/language.dart';
 import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/version.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      mainAxisSize: MainAxisSize.min,
+        body: Stack(
       children: [
+        DesktopAppBar(
+          title: language.SETTING,
+        ),
         Container(
-          height: 56.0,
-          decoration: BoxDecoration(
-            color: Theme.of(context).appBarTheme.backgroundColor,
-            border: Border(
-              bottom: BorderSide(
-                  color: Theme.of(context).dividerColor.withOpacity(0.12)),
-            ),
+          margin: EdgeInsets.only(
+            top: kDesktopAppBarHeight,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: CustomListView(
+            shrinkWrap: true,
             children: [
-              NavigatorPopButton(),
               SizedBox(
-                width: 16.0,
+                height: 4.0,
               ),
-              Text(
-                language.SETTING,
-                style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16.0,
-                ),
+              IndexingSetting(),
+              ThemeSetting(),
+              AccentSetting(),
+              LanguageSetting(),
+              MiscellaneousSetting(),
+              AboutSetting(),
+              VersionSetting(),
+              SizedBox(
+                height: 8.0,
               ),
             ],
-          ),
-        ),
-        Expanded(
-          child: Container(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.white
-                : Color(0xFF202020),
-            child: CustomListView(
-              shrinkWrap: true,
-              children: [
-                SizedBox(
-                  height: 4.0,
-                ),
-                IndexingSetting(),
-                ThemeSetting(),
-                AccentSetting(),
-                LanguageSetting(),
-                MiscellaneousSetting(),
-                AboutSetting(),
-                VersionSetting(),
-                SizedBox(
-                  height: 8.0,
-                ),
-              ],
-            ),
           ),
         ),
       ],
