@@ -17,7 +17,7 @@
  *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
-const double kAppBarHeight = 64.0;
-const double kTitleBarHeight = 32.0;
-const double kNowPlayingBarHeight = 84.0;
-const double kHorizontalBreakPoint = 762.0;
+const double kDesktopAppBarHeight = 64.0;
+const double kDesktopTitleBarHeight = 32.0;
+const double kDesktopNowPlayingBarHeight = 84.0;
+const double kDesktopHorizontalBreakPoint = 762.0;
