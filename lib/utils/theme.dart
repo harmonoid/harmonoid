@@ -187,6 +187,19 @@ ThemeData createTheme({required Color accentColor, ThemeMode? themeMode}) {
       secondary: accentColor,
       brightness: isLight ? Brightness.light : Brightness.dark,
     ),
+    tooltipTheme: TooltipThemeData(
+      textStyle: TextStyle(
+        fontSize: 14.0,
+        color: isLight ? Colors.white : Colors.black,
+      ),
+      verticalOffset: Platform.isWindows || Platform.isLinux || Platform.isMacOS
+          ? 36.0
+          : null,
+      preferBelow: Platform.isWindows || Platform.isLinux || Platform.isMacOS
+          ? true
+          : null,
+      waitDuration: Duration(seconds: 1),
+    ),
   );
 }
 

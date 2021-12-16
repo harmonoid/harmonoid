@@ -172,8 +172,9 @@ class SubHeader extends StatelessWidget {
 }
 
 class NavigatorPopButton extends StatelessWidget {
+  final Color? color;
   final void Function()? onTap;
-  NavigatorPopButton({Key? key, this.onTap}) : super(key: key);
+  NavigatorPopButton({Key? key, this.onTap, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -193,6 +194,7 @@ class NavigatorPopButton extends StatelessWidget {
             child: Icon(
               Icons.arrow_back,
               size: 20.0,
+              color: this.color,
             ),
           ),
         ),
@@ -202,44 +204,82 @@ class NavigatorPopButton extends StatelessWidget {
 }
 
 class DesktopAppBar extends StatelessWidget {
-  final String title;
+  final String? title;
+  final Color? color;
   final Widget? leading;
+  final double? height;
+  final double? elevation;
+
   const DesktopAppBar({
     Key? key,
-    required this.title,
+    this.title,
+    this.color,
     this.leading,
+    this.height,
+    this.elevation,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ClipRect(
-      child: ClipRect(
-        clipBehavior: Clip.antiAlias,
-        child: Container(
-          height: kDesktopAppBarHeight + 8.0,
-          padding: EdgeInsets.only(bottom: 8.0),
-          child: Material(
-            elevation: 4.0,
-            color: Theme.of(context).appBarTheme.backgroundColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                this.leading ?? NavigatorPopButton(),
-                SizedBox(
-                  width: 16.0,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        DesktopTitleBar(
+          color: this.color,
+        ),
+        ClipRect(
+          child: ClipRect(
+            clipBehavior: Clip.antiAlias,
+            child: Container(
+              height: (this.height ?? kDesktopAppBarHeight) + 8.0,
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.only(bottom: 8.0),
+              child: Material(
+                elevation: this.elevation ?? 4.0,
+                color:
+                    this.color ?? Theme.of(context).appBarTheme.backgroundColor,
+                child: Container(
+                  height: double.infinity,
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    height: kDesktopAppBarHeight,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        this.leading ??
+                            NavigatorPopButton(
+                              color: this.color != null
+                                  ? this.isDark
+                                      ? Colors.white
+                                      : Colors.black
+                                  : null,
+                            ),
+                        SizedBox(
+                          width: 16.0,
+                        ),
+                        if (this.title != null)
+                          Text(
+                            this.title!,
+                            style: Theme.of(context).textTheme.headline1,
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
-                Text(
-                  this.title,
-                  style: Theme.of(context).textTheme.headline1,
-                ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
+
+  bool get isDark =>
+      (0.299 * (this.color?.red ?? 256.0)) +
+          (0.587 * (this.color?.green ?? 256.0)) +
+          (0.114 * (this.color?.blue ?? 256.0)) <
+      128.0;
 }
 
 class RefreshCollectionButton extends StatefulWidget {
@@ -705,21 +745,22 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
   }
 }
 
-class WindowTitleBar extends StatelessWidget {
-  const WindowTitleBar({Key? key}) : super(key: key);
+class DesktopTitleBar extends StatelessWidget {
+  final Color? color;
+  const DesktopTitleBar({Key? key, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (Platform.isAndroid || Platform.isIOS)
       return Container(
         height: MediaQuery.of(context).padding.top,
-        color: Theme.of(context).appBarTheme.backgroundColor,
+        color: this.color ?? Theme.of(context).appBarTheme.backgroundColor,
       );
     return Platform.isWindows
         ? Container(
             width: MediaQuery.of(context).size.width.normalized,
             height: kDesktopTitleBarHeight,
-            color: Theme.of(context).appBarTheme.backgroundColor,
+            color: this.color ?? Theme.of(context).appBarTheme.backgroundColor,
             child: MoveWindow(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -730,7 +771,9 @@ class WindowTitleBar extends StatelessWidget {
                   Text(
                     'Harmonoid Music',
                     style: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.dark
+                      color: (this.color == null
+                              ? Theme.of(context).brightness == Brightness.dark
+                              : isDark)
                           ? Colors.white
                           : Colors.black,
                       fontSize: 12.0,
@@ -740,109 +783,22 @@ class WindowTitleBar extends StatelessWidget {
                     child: Container(),
                   ),
                   MinimizeWindowButton(
-                    colors: WindowButtonColors(
-                      iconNormal:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      iconMouseDown:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      iconMouseOver:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      normal: Colors.transparent,
-                      mouseOver:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black.withOpacity(0.04)
-                              : Colors.white.withOpacity(0.04),
-                      mouseDown:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black.withOpacity(0.08)
-                              : Colors.white.withOpacity(0.08),
-                    ),
+                    colors: this.windowButtonColors(context),
                   ),
                   appWindow.isMaximized
                       ? RestoreWindowButton(
-                          colors: WindowButtonColors(
-                            iconNormal:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black
-                                    : Colors.white,
-                            iconMouseDown:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black
-                                    : Colors.white,
-                            iconMouseOver:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black
-                                    : Colors.white,
-                            normal: Colors.transparent,
-                            mouseOver:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black.withOpacity(0.04)
-                                    : Colors.white.withOpacity(0.04),
-                            mouseDown:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black.withOpacity(0.08)
-                                    : Colors.white.withOpacity(0.08),
-                          ),
+                          colors: this.windowButtonColors(context),
                         )
                       : MaximizeWindowButton(
-                          colors: WindowButtonColors(
-                            iconNormal:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black
-                                    : Colors.white,
-                            iconMouseDown:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black
-                                    : Colors.white,
-                            iconMouseOver:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black
-                                    : Colors.white,
-                            normal: Colors.transparent,
-                            mouseOver:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black.withOpacity(0.04)
-                                    : Colors.white.withOpacity(0.04),
-                            mouseDown:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black.withOpacity(0.08)
-                                    : Colors.white.withOpacity(0.08),
-                          ),
+                          colors: this.windowButtonColors(context),
                         ),
                   CloseWindowButton(
                     onPressed: () {
+                      /// Properly dispose `winrt::Windows::Media::Playback::MediaPlayer` before closing the window to avoid `SIGTERM`.
                       if (Platform.isWindows) player.dispose();
                       appWindow.close();
                     },
-                    colors: WindowButtonColors(
-                      iconNormal:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      iconMouseDown:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      iconMouseOver:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white,
-                      normal: Colors.transparent,
-                      mouseOver:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black.withOpacity(0.04)
-                              : Colors.white.withOpacity(0.04),
-                      mouseDown:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.black.withOpacity(0.08)
-                              : Colors.white.withOpacity(0.08),
-                    ),
+                    colors: this.windowButtonColors(context),
                   ),
                 ],
               ),
@@ -850,6 +806,42 @@ class WindowTitleBar extends StatelessWidget {
           )
         : Container();
   }
+
+  bool get isDark =>
+      (0.299 * (this.color?.red ?? 256.0)) +
+          (0.587 * (this.color?.green ?? 256.0)) +
+          (0.114 * (this.color?.blue ?? 256.0)) <
+      128.0;
+
+  WindowButtonColors windowButtonColors(BuildContext context) =>
+      WindowButtonColors(
+        iconNormal: (this.color == null
+                ? Theme.of(context).brightness == Brightness.dark
+                : isDark)
+            ? Colors.white
+            : Colors.black,
+        iconMouseDown: (this.color == null
+                ? Theme.of(context).brightness == Brightness.dark
+                : isDark)
+            ? Colors.white
+            : Colors.black,
+        iconMouseOver: (this.color == null
+                ? Theme.of(context).brightness == Brightness.dark
+                : isDark)
+            ? Colors.white
+            : Colors.black,
+        normal: Colors.transparent,
+        mouseOver: (this.color == null
+                ? Theme.of(context).brightness == Brightness.dark
+                : isDark)
+            ? Colors.white.withOpacity(0.04)
+            : Colors.black.withOpacity(0.04),
+        mouseDown: (this.color == null
+                ? Theme.of(context).brightness == Brightness.dark
+                : isDark)
+            ? Colors.white.withOpacity(0.04)
+            : Colors.black.withOpacity(0.04),
+      );
 }
 
 class CollectionTrackContextMenu extends StatelessWidget {
@@ -1036,14 +1028,6 @@ class CollectionTrackContextMenu extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class CustomScrollBehavior extends ScrollBehavior {
-  @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
-    return child;
   }
 }
 
