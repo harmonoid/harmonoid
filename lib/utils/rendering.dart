@@ -190,9 +190,8 @@ Future<void> trackPopupMenuHandle(
                   textColor: Theme.of(context).primaryColor,
                   onPressed: () async {
                     await collection.delete(track);
-                    if (recursivelyPopNavigatorOnDeleteIf == null)
-                      Navigator.of(subContext).pop();
-                    else {
+                    Navigator.of(subContext).pop();
+                    if (recursivelyPopNavigatorOnDeleteIf != null) {
                       if (recursivelyPopNavigatorOnDeleteIf()) {
                         while (Navigator.of(context).canPop())
                           Navigator.of(context).pop();
