@@ -191,7 +191,7 @@ class ExceptionApp extends StatelessWidget {
         home: Scaffold(
           body: Column(
             children: [
-              WindowTitleBar(),
+              DesktopTitleBar(),
               Container(
                 height: 56.0,
                 color: Colors.white.withOpacity(0.10),

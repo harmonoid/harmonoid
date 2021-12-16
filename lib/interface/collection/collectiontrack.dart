@@ -51,7 +51,7 @@ class CollectionTrackTab extends StatelessWidget {
                 onSecondaryPress: (index, position) async {
                   var result = await showMenu(
                     context: context,
-                    position: position.shift(Offset(0.0, -20.0)),
+                    position: position,
                     items: trackPopupMenuItems(context),
                   );
                   await trackPopupMenuHandle(

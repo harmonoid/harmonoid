@@ -64,7 +64,7 @@ class AboutPageState extends State<AboutPage> {
           ),
           Container(
             margin: EdgeInsets.only(
-              top: kDesktopAppBarHeight,
+              top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
             ),
             child: Container(
               child: CustomListView(

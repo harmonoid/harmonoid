@@ -93,7 +93,7 @@ class HomeState extends State<Home>
     return true;
   }
 
-  void showNowPlaying() {
+  void launch() {
     nowPlayingBar.maximized = true;
     navigatorKey.currentState?.push(
       PageRouteBuilder(
@@ -109,7 +109,7 @@ class HomeState extends State<Home>
     );
   }
 
-  void hideNowPlaying() {
+  void exit() {
     nowPlayingBar.maximized = false;
     navigatorKey.currentState?.maybePop();
   }
@@ -148,14 +148,8 @@ class HomeState extends State<Home>
         builder: (context, _) => Stack(
           alignment: Alignment.bottomCenter,
           children: [
-            const Positioned(
-              left: 0.0,
-              top: 0.0,
-              child: const WindowTitleBar(),
-            ),
             Container(
               padding: EdgeInsets.only(
-                top: kDesktopTitleBarHeight,
                 bottom: kDesktopNowPlayingBarHeight,
               ),
               child: Consumer<Language>(
@@ -182,8 +176,8 @@ class HomeState extends State<Home>
               ),
             ),
             NowPlayingBar(
-              launch: this.showNowPlaying,
-              exit: this.hideNowPlaying,
+              launch: this.launch,
+              exit: this.exit,
             ),
           ],
         ),

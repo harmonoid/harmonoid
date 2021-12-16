@@ -34,36 +34,37 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        DesktopAppBar(
-          title: language.SETTING,
-        ),
-        Container(
-          margin: EdgeInsets.only(
-            top: kDesktopAppBarHeight,
+      body: Stack(
+        children: [
+          DesktopAppBar(
+            title: language.SETTING,
           ),
-          child: CustomListView(
-            shrinkWrap: true,
-            children: [
-              SizedBox(
-                height: 4.0,
-              ),
-              IndexingSetting(),
-              ThemeSetting(),
-              AccentSetting(),
-              LanguageSetting(),
-              MiscellaneousSetting(),
-              AboutSetting(),
-              VersionSetting(),
-              SizedBox(
-                height: 8.0,
-              ),
-            ],
+          Container(
+            margin: EdgeInsets.only(
+              top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
+            ),
+            child: CustomListView(
+              shrinkWrap: true,
+              children: [
+                SizedBox(
+                  height: 4.0,
+                ),
+                IndexingSetting(),
+                ThemeSetting(),
+                AccentSetting(),
+                LanguageSetting(),
+                MiscellaneousSetting(),
+                AboutSetting(),
+                VersionSetting(),
+                SizedBox(
+                  height: 8.0,
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 }
 

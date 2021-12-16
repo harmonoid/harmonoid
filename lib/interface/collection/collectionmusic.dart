@@ -70,7 +70,9 @@ class CollectionMusicState extends State<CollectionMusic>
           Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.only(top: kDesktopAppBarHeight),
+            padding: EdgeInsets.only(
+              top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
+            ),
             child: Consumer<CollectionRefreshController>(
               builder: (context, refresh, __) => Stack(
                 alignment: Alignment.bottomLeft,
@@ -153,343 +155,365 @@ class CollectionMusicState extends State<CollectionMusic>
               ),
             ),
           ),
-          ClipRect(
-            clipBehavior: Clip.antiAlias,
-            child: Container(
-              height: kDesktopAppBarHeight + 8.0,
-              padding: EdgeInsets.only(bottom: 8.0),
-              child: Material(
-                elevation: 4.0,
-                color: Theme.of(context).appBarTheme.backgroundColor,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 44.0,
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          children: [
-                            InkWell(
-                              borderRadius: BorderRadius.circular(8.0),
-                              onTap: () => this.setState(() => this.index = 0),
-                              child: Container(
-                                height: 40.0,
-                                padding: EdgeInsets.symmetric(horizontal: 4.0),
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                  language.ALBUM.toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: this.index == 0
-                                        ? FontWeight.w600
-                                        : FontWeight.w300,
-                                    color: (Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white
-                                            : Colors.black)
-                                        .withOpacity(
-                                            this.index == 0 ? 1.0 : 0.67),
+          Column(
+            children: [
+              DesktopTitleBar(),
+              ClipRect(
+                clipBehavior: Clip.antiAlias,
+                child: Container(
+                  height: kDesktopAppBarHeight + 8.0,
+                  padding: EdgeInsets.only(bottom: 8.0),
+                  child: Material(
+                    elevation: 4.0,
+                    color: Theme.of(context).appBarTheme.backgroundColor,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 44.0,
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              children: [
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  onTap: () =>
+                                      this.setState(() => this.index = 0),
+                                  child: Container(
+                                    height: 40.0,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    alignment: Alignment.center,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      language.ALBUM.toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: this.index == 0
+                                            ? FontWeight.w600
+                                            : FontWeight.w300,
+                                        color: (Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white
+                                                : Colors.black)
+                                            .withOpacity(
+                                                this.index == 0 ? 1.0 : 0.67),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            InkWell(
-                              borderRadius: BorderRadius.circular(8.0),
-                              onTap: () => this.setState(() => this.index = 1),
-                              child: Container(
-                                height: 40.0,
-                                padding: EdgeInsets.symmetric(horizontal: 4.0),
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                  language.TRACK.toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: this.index == 1
-                                        ? FontWeight.w600
-                                        : FontWeight.w300,
-                                    color: (Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white
-                                            : Colors.black)
-                                        .withOpacity(
-                                            this.index == 1 ? 1.0 : 0.67),
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  onTap: () =>
+                                      this.setState(() => this.index = 1),
+                                  child: Container(
+                                    height: 40.0,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    alignment: Alignment.center,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      language.TRACK.toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: this.index == 1
+                                            ? FontWeight.w600
+                                            : FontWeight.w300,
+                                        color: (Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white
+                                                : Colors.black)
+                                            .withOpacity(
+                                                this.index == 1 ? 1.0 : 0.67),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            InkWell(
-                              borderRadius: BorderRadius.circular(8.0),
-                              onTap: () => this.setState(() => this.index = 2),
-                              child: Container(
-                                height: 40.0,
-                                padding: EdgeInsets.symmetric(horizontal: 4.0),
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                  language.ARTIST.toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: this.index == 2
-                                        ? FontWeight.w600
-                                        : FontWeight.w300,
-                                    color: (Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white
-                                            : Colors.black)
-                                        .withOpacity(
-                                            this.index == 2 ? 1.0 : 0.67),
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  onTap: () =>
+                                      this.setState(() => this.index = 2),
+                                  child: Container(
+                                    height: 40.0,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    alignment: Alignment.center,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      language.ARTIST.toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: this.index == 2
+                                            ? FontWeight.w600
+                                            : FontWeight.w300,
+                                        color: (Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white
+                                                : Colors.black)
+                                            .withOpacity(
+                                                this.index == 2 ? 1.0 : 0.67),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            InkWell(
-                              borderRadius: BorderRadius.circular(8.0),
-                              onTap: () => this.setState(() => this.index = 3),
-                              child: Container(
-                                height: 40.0,
-                                padding: EdgeInsets.symmetric(horizontal: 4.0),
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                  language.PLAYLISTS.toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: this.index == 3
-                                        ? FontWeight.w600
-                                        : FontWeight.w300,
-                                    color: (Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white
-                                            : Colors.black)
-                                        .withOpacity(
-                                            this.index == 3 ? 1.0 : 0.67),
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  onTap: () =>
+                                      this.setState(() => this.index = 3),
+                                  child: Container(
+                                    height: 40.0,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    alignment: Alignment.center,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      language.PLAYLISTS.toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: this.index == 3
+                                            ? FontWeight.w600
+                                            : FontWeight.w300,
+                                        color: (Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white
+                                                : Colors.black)
+                                            .withOpacity(
+                                                this.index == 3 ? 1.0 : 0.67),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            InkWell(
-                              borderRadius: BorderRadius.circular(8.0),
-                              onTap: () => this.setState(() => this.index = 5),
-                              child: Container(
-                                height: 40.0,
-                                padding: EdgeInsets.symmetric(horizontal: 4.0),
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                  'YouTube'.toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: this.index == 5
-                                        ? FontWeight.w600
-                                        : FontWeight.w300,
-                                    color: (Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.white
-                                            : Colors.black)
-                                        .withOpacity(
-                                            this.index == 5 ? 1.0 : 0.67),
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  onTap: () =>
+                                      this.setState(() => this.index = 5),
+                                  child: Container(
+                                    height: 40.0,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    alignment: Alignment.center,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      'YouTube'.toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: this.index == 5
+                                            ? FontWeight.w600
+                                            : FontWeight.w300,
+                                        color: (Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white
+                                                : Colors.black)
+                                            .withOpacity(
+                                                this.index == 5 ? 1.0 : 0.67),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      height: 42.0,
-                      width: 280.0,
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
-                      padding: EdgeInsets.only(top: 2.0),
-                      child: Focus(
-                        onFocusChange: (hasFocus) {
-                          if (hasFocus) {
-                            HotKeys.disableSpaceHotKey();
-                          } else {
-                            HotKeys.enableSpaceHotKey();
-                          }
-                        },
-                        child: TextField(
-                          focusNode: this.node,
-                          cursorWidth: 1.0,
-                          onChanged: (value) {
-                            string = value;
-                          },
-                          onSubmitted: (value) {
-                            query.value = value;
-                            if (string.isNotEmpty)
-                              this.setState(() {
-                                this.index = 4;
-                              });
-                            this.node.requestFocus();
-                          },
-                          cursorColor:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? Colors.black
-                                  : Colors.white,
-                          textAlignVertical: TextAlignVertical.bottom,
-                          style: Theme.of(context).textTheme.headline4,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              onPressed: () {
-                                query.value = string;
+                        Container(
+                          height: 42.0,
+                          width: 280.0,
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+                          padding: EdgeInsets.only(top: 2.0),
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (hasFocus) {
+                                HotKeys.disableSpaceHotKey();
+                              } else {
+                                HotKeys.enableSpaceHotKey();
+                              }
+                            },
+                            child: TextField(
+                              focusNode: this.node,
+                              cursorWidth: 1.0,
+                              onChanged: (value) {
+                                string = value;
+                              },
+                              onSubmitted: (value) {
+                                query.value = value;
                                 if (string.isNotEmpty)
                                   this.setState(() {
                                     this.index = 4;
                                   });
                                 this.node.requestFocus();
                               },
-                              icon: Transform.rotate(
-                                angle: pi / 2,
-                                child: Icon(
-                                  Icons.search,
-                                  size: 20.0,
-                                  color: Theme.of(context).iconTheme.color,
+                              cursorColor: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.black
+                                  : Colors.white,
+                              textAlignVertical: TextAlignVertical.bottom,
+                              style: Theme.of(context).textTheme.headline4,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  onPressed: () {
+                                    query.value = string;
+                                    if (string.isNotEmpty)
+                                      this.setState(() {
+                                        this.index = 4;
+                                      });
+                                    this.node.requestFocus();
+                                  },
+                                  icon: Transform.rotate(
+                                    angle: pi / 2,
+                                    child: Icon(
+                                      Icons.search,
+                                      size: 20.0,
+                                      color: Theme.of(context).iconTheme.color,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            contentPadding:
-                                EdgeInsets.only(left: 10.0, bottom: 14.0),
-                            hintText: language.COLLECTION_SEARCH_WELCOME,
-                            hintStyle:
-                                Theme.of(context).textTheme.headline3?.copyWith(
+                                contentPadding:
+                                    EdgeInsets.only(left: 10.0, bottom: 14.0),
+                                hintText: language.COLLECTION_SEARCH_WELCOME,
+                                hintStyle: Theme.of(context)
+                                    .textTheme
+                                    .headline3
+                                    ?.copyWith(
                                       color: Theme.of(context).brightness ==
                                               Brightness.light
                                           ? Colors.black.withOpacity(0.6)
                                           : Colors.white60,
                                     ),
-                            filled: true,
-                            fillColor:
-                                Theme.of(context).brightness == Brightness.light
+                                filled: true,
+                                fillColor: Theme.of(context).brightness ==
+                                        Brightness.light
                                     ? Colors.white
                                     : Color(0xFF202020),
-                            hoverColor:
-                                Theme.of(context).brightness == Brightness.light
+                                hoverColor: Theme.of(context).brightness ==
+                                        Brightness.light
                                     ? Colors.white
                                     : Color(0xFF202020),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .dividerColor
-                                    .withOpacity(0.32),
-                                width: 0.6,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .dividerColor
-                                    .withOpacity(0.32),
-                                width: 0.6,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .dividerColor
-                                    .withOpacity(0.32),
-                                width: 0.6,
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .dividerColor
+                                        .withOpacity(0.32),
+                                    width: 0.6,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .dividerColor
+                                        .withOpacity(0.32),
+                                    width: 0.6,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context)
+                                        .dividerColor
+                                        .withOpacity(0.32),
+                                    width: 0.6,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 24.0,
-                    ),
-                    ContextMenuButton<CollectionSort>(
-                      offset: Offset.fromDirection(pi / 2, 64.0),
-                      icon: Icon(
-                        Icons.sort,
-                        size: 20.0,
-                      ),
-                      elevation: 4.0,
-                      onSelected: (value) async {
-                        Provider.of<Collection>(context, listen: false)
-                            .sort(type: value);
-                        await configuration.save(
-                          collectionSortType: value,
-                        );
-                      },
-                      itemBuilder: (context) => [
-                        CheckedPopupMenuItem(
-                          padding: EdgeInsets.zero,
-                          checked: collection.collectionSortType ==
-                              CollectionSort.aToZ,
-                          value: CollectionSort.aToZ,
-                          child: Text(
-                            language.A_TO_Z,
-                            style: Theme.of(context).textTheme.headline4,
+                        SizedBox(
+                          width: 24.0,
+                        ),
+                        ContextMenuButton<CollectionSort>(
+                          offset: Offset.fromDirection(pi / 2, 64.0),
+                          icon: Icon(
+                            Icons.sort,
+                            size: 20.0,
+                          ),
+                          elevation: 4.0,
+                          onSelected: (value) async {
+                            Provider.of<Collection>(context, listen: false)
+                                .sort(type: value);
+                            await configuration.save(
+                              collectionSortType: value,
+                            );
+                          },
+                          itemBuilder: (context) => [
+                            CheckedPopupMenuItem(
+                              padding: EdgeInsets.zero,
+                              checked: collection.collectionSortType ==
+                                  CollectionSort.aToZ,
+                              value: CollectionSort.aToZ,
+                              child: Text(
+                                language.A_TO_Z,
+                                style: Theme.of(context).textTheme.headline4,
+                              ),
+                            ),
+                            CheckedPopupMenuItem(
+                              padding: EdgeInsets.zero,
+                              checked: collection.collectionSortType ==
+                                  CollectionSort.dateAdded,
+                              value: CollectionSort.dateAdded,
+                              child: Text(
+                                language.DATE_ADDED,
+                                style: Theme.of(context).textTheme.headline4,
+                              ),
+                            ),
+                            CheckedPopupMenuItem(
+                              padding: EdgeInsets.zero,
+                              checked: collection.collectionSortType ==
+                                  CollectionSort.year,
+                              value: CollectionSort.year,
+                              child: Text(
+                                language.YEAR,
+                                style: Theme.of(context).textTheme.headline4,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      FadeThroughTransition(
+                                    fillColor: Colors.transparent,
+                                    animation: animation,
+                                    secondaryAnimation: secondaryAnimation,
+                                    child: Settings(),
+                                  ),
+                                ),
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(20.0),
+                            child: Container(
+                              height: 40.0,
+                              width: 40.0,
+                              child: Icon(
+                                Icons.settings,
+                                size: 20.0,
+                              ),
+                            ),
                           ),
                         ),
-                        CheckedPopupMenuItem(
-                          padding: EdgeInsets.zero,
-                          checked: collection.collectionSortType ==
-                              CollectionSort.dateAdded,
-                          value: CollectionSort.dateAdded,
-                          child: Text(
-                            language.DATE_ADDED,
-                            style: Theme.of(context).textTheme.headline4,
-                          ),
-                        ),
-                        CheckedPopupMenuItem(
-                          padding: EdgeInsets.zero,
-                          checked: collection.collectionSortType ==
-                              CollectionSort.year,
-                          value: CollectionSort.year,
-                          child: Text(
-                            language.YEAR,
-                            style: Theme.of(context).textTheme.headline4,
-                          ),
+                        SizedBox(
+                          width: 8.0,
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      FadeThroughTransition(
-                                fillColor: Colors.transparent,
-                                animation: animation,
-                                secondaryAnimation: secondaryAnimation,
-                                child: Settings(),
-                              ),
-                            ),
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(20.0),
-                        child: Container(
-                          height: 40.0,
-                          width: 40.0,
-                          child: Icon(
-                            Icons.settings,
-                            size: 20.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 8.0,
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ],
       ),
