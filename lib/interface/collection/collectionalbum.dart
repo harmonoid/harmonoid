@@ -18,6 +18,7 @@
  */
 
 import 'dart:ui';
+import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -102,6 +103,8 @@ class CollectionAlbumTile extends StatelessWidget {
                   album: this.album,
                 ),
               ),
+              transitionDuration: Duration(milliseconds: 400),
+              reverseTransitionDuration: Duration(milliseconds: 400),
             ),
           );
         },
@@ -181,12 +184,17 @@ class CollectionAlbumState extends State<CollectionAlbum> {
   @override
   void initState() {
     super.initState();
-    PaletteGenerator.fromImageProvider(FileImage(widget.album!.albumArt))
-        .then((palette) {
-      this.setState(() {
-        this.color = palette.colors.first;
-      });
-    });
+    Timer(
+      Duration(milliseconds: 500),
+      () {
+        PaletteGenerator.fromImageProvider(FileImage(widget.album!.albumArt))
+            .then((palette) {
+          this.setState(() {
+            this.color = palette.colors.first;
+          });
+        });
+      },
+    );
   }
 
   @override
@@ -197,10 +205,22 @@ class CollectionAlbumState extends State<CollectionAlbum> {
               height: MediaQuery.of(context).size.height,
               child: Stack(
                 children: [
-                  DesktopAppBar(
-                    height: MediaQuery.of(context).size.height / 3,
-                    elevation: 4.0,
-                    color: this.color,
+                  TweenAnimationBuilder(
+                    tween: ColorTween(
+                      begin: Theme.of(context).appBarTheme.backgroundColor,
+                      end: this.color == null
+                          ? Theme.of(context).appBarTheme.backgroundColor
+                          : this.color!,
+                    ),
+                    curve: Curves.easeOut,
+                    duration: Duration(
+                      milliseconds: 400,
+                    ),
+                    builder: (context, color, _) => DesktopAppBar(
+                      height: MediaQuery.of(context).size.height / 3,
+                      elevation: 4.0,
+                      color: color as Color? ?? Colors.transparent,
+                    ),
                   ),
                   Container(
                     height: MediaQuery.of(context).size.height -
