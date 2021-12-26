@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -36,6 +37,7 @@ List<Widget> tileGridListWidgets({
   required String? leadingSubHeader,
   required Widget? leadingWidget,
   required int elementsPerRow,
+  double tileMargin: kTileMargin,
 }) {
   List<Widget> widgets = <Widget>[];
   widgets.addAll([
@@ -50,7 +52,7 @@ List<Widget> tileGridListWidgets({
       Container(
         child: builder(context, index),
         margin: EdgeInsets.symmetric(
-          horizontal: 8.0,
+          horizontal: tileMargin / 2.0,
         ),
       ),
     );
@@ -58,8 +60,9 @@ List<Widget> tileGridListWidgets({
     if (rowIndex > elementsPerRow - 1) {
       widgets.add(
         new Container(
-          height: tileHeight + 16.0,
-          margin: EdgeInsets.only(left: 8.0, right: 8.0),
+          height: tileHeight + tileMargin,
+          margin:
+              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
           alignment: Alignment.topCenter,
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -82,7 +85,7 @@ List<Widget> tileGridListWidgets({
         Container(
           child: builder(context, index),
           margin: EdgeInsets.symmetric(
-            horizontal: 8.0,
+            horizontal: tileMargin / 2.0,
           ),
         ),
       );
@@ -92,16 +95,18 @@ List<Widget> tileGridListWidgets({
         index++) {
       rowChildren.add(
         Container(
-          height: tileHeight + 16.0,
+          height: tileHeight + tileMargin,
           width: tileWidth,
-          margin: EdgeInsets.only(left: 8.0, right: 8.0),
+          margin:
+              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
         ),
       );
     }
     widgets.add(
       new Container(
-        height: tileHeight + 16.0,
-        margin: EdgeInsets.only(left: 8.0, right: 8.0),
+        height: tileHeight + tileMargin,
+        margin:
+            EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
         alignment: Alignment.topCenter,
         child: Row(
           mainAxisSize: MainAxisSize.max,

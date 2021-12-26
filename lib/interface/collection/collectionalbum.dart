@@ -34,20 +34,18 @@ import 'package:url_launcher/url_launcher.dart';
 
 class CollectionAlbumTab extends StatelessWidget {
   Widget build(BuildContext context) {
-    double tileWidth = 156.0;
-    double tileHeight = 156.0 + 58.0;
     int elementsPerRow =
-        (MediaQuery.of(context).size.width.normalized - 16.0) ~/
-            (tileWidth + 16.0);
+        (MediaQuery.of(context).size.width.normalized - kTileMargin) ~/
+            (kAlbumTileWidth + kTileMargin);
 
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
           ? CustomListView(
-              padding: EdgeInsets.only(top: 16.0),
+              padding: EdgeInsets.only(top: kTileMargin),
               children: tileGridListWidgets(
                 context: context,
-                tileHeight: tileHeight,
-                tileWidth: tileWidth,
+                tileHeight: kAlbumTileHeight,
+                tileWidth: kAlbumTileWidth,
                 elementsPerRow: elementsPerRow,
                 subHeader: null,
                 leadingSubHeader: null,
@@ -55,8 +53,8 @@ class CollectionAlbumTab extends StatelessWidget {
                 leadingWidget: Container(),
                 builder: (BuildContext context, int index) =>
                     CollectionAlbumTile(
-                  height: tileHeight,
-                  width: tileWidth,
+                  height: kAlbumTileHeight,
+                  width: kAlbumTileWidth,
                   album: collection.albums[index],
                 ),
               ),
