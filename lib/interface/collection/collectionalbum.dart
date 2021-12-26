@@ -17,18 +17,14 @@
  *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
-import 'dart:io';
 import 'dart:ui';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
-import 'package:share_plus/share_plus.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -216,7 +212,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                       alignment: Alignment.center,
                       child: Card(
                         clipBehavior: Clip.antiAlias,
-                        margin: EdgeInsets.only(top: 96.0),
+                        margin: EdgeInsets.only(top: 72.0),
                         elevation: 4.0,
                         child: Container(
                           constraints: BoxConstraints(
@@ -224,7 +220,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                             maxHeight: 720.0,
                           ),
                           width: MediaQuery.of(context).size.width - 136.0,
-                          height: MediaQuery.of(context).size.height - 256.0,
+                          height: MediaQuery.of(context).size.height - 192.0,
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -439,24 +435,34 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                                                       onPointerUp: (e) async {
                                                         if (!reactToSecondaryPress)
                                                           return;
-                                                        final RenderObject?
-                                                            overlay =
-                                                            Overlay.of(context)!
-                                                                .context
-                                                                .findRenderObject();
                                                         var result =
                                                             await showMenu(
                                                           elevation: 4.0,
                                                           context: context,
-                                                          position: RelativeRect.fromRect(
-                                                              Offset(
-                                                                      e.position
-                                                                          .dx,
-                                                                      e.position
-                                                                          .dy) &
-                                                                  Size.zero,
-                                                              overlay!
-                                                                  .semanticBounds),
+                                                          position: RelativeRect
+                                                              .fromRect(
+                                                            Offset(
+                                                                    e.position
+                                                                        .dx,
+                                                                    e.position
+                                                                        .dy) &
+                                                                Size(228.0,
+                                                                    320.0),
+                                                            Rect.fromLTWH(
+                                                              0,
+                                                              0,
+                                                              MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width
+                                                                  .normalized,
+                                                              MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height
+                                                                  .normalized,
+                                                            ),
+                                                          ),
                                                           items:
                                                               trackPopupMenuItems(
                                                             context,
