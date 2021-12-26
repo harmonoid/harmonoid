@@ -36,10 +36,9 @@ import 'package:harmonoid/interface/collection/collectionalbum.dart';
 
 class CollectionArtistTab extends StatelessWidget {
   Widget build(BuildContext context) {
-    int elementsPerRow = MediaQuery.of(context).size.width.normalized ~/ 172.0;
-    double tileWidth =
-        MediaQuery.of(context).size.width.normalized / elementsPerRow;
-    double tileHeight = tileWidth + 18.0;
+    int elementsPerRow =
+        (MediaQuery.of(context).size.width.normalized - kTileMargin) ~/
+            (kArtistTileWidth + kTileMargin);
 
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
@@ -47,8 +46,8 @@ class CollectionArtistTab extends StatelessWidget {
               padding: EdgeInsets.only(top: 24.0),
               children: tileGridListWidgets(
                 context: context,
-                tileHeight: tileHeight,
-                tileWidth: tileWidth,
+                tileHeight: kArtistTileHeight,
+                tileWidth: kArtistTileWidth,
                 elementsPerRow: elementsPerRow,
                 subHeader: null,
                 leadingSubHeader: null,
@@ -56,8 +55,8 @@ class CollectionArtistTab extends StatelessWidget {
                 leadingWidget: Container(),
                 builder: (BuildContext context, int index) =>
                     CollectionArtistTile(
-                  height: tileHeight,
-                  width: tileWidth,
+                  height: kArtistTileHeight,
+                  width: kArtistTileWidth,
                   artist: collection.artists[index],
                 ),
               ),
@@ -75,213 +74,71 @@ class CollectionArtistTab extends StatelessWidget {
   }
 }
 
-class LeadingCollectionArtistTile extends StatelessWidget {
-  final double height;
-  const LeadingCollectionArtistTile({Key? key, required this.height})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (Provider.of<Collection>(context, listen: false).lastArtist == null)
-      return Container();
-    return Consumer<Collection>(
-      builder: (context, collection, _) => Container(
-        margin: EdgeInsets.only(
-          left: 8.0,
-          right: 8.0,
-          bottom: 4.0,
-          top: 2.0,
-        ),
-        height: this.height - 2.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
-          ),
-          color: Theme.of(context).cardColor,
-          border: Border.all(
-              color: Theme.of(context).dividerColor.withOpacity(0.12)),
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.all(
-                Radius.circular(8.0),
-              ),
-              onTap: () {
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      fillColor: Colors.transparent,
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: CollectionArtist(artist: collection.lastArtist),
-                    ),
-                  ),
-                );
-              },
-              child: Container(
-                height: this.height - 2.0,
-                child: InkWell(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image(
-                          image: FileImage(
-                              collection.lastArtist!.tracks.last.albumArt),
-                          fit: BoxFit.fill,
-                          height: this.height - 2.0,
-                          width: this.height - 2.0,
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: 8, right: 8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              collection.lastArtist!.artistName!,
-                              style: Theme.of(context).textTheme.headline1,
-                              textAlign: TextAlign.start,
-                              maxLines: 1,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class CollectionArtistTile extends StatelessWidget {
   final double height;
   final double width;
   final Artist artist;
-  const CollectionArtistTile(
-      {Key? key,
-      required this.height,
-      required this.width,
-      required this.artist})
-      : super(key: key);
+  const CollectionArtistTile({
+    Key? key,
+    required this.height,
+    required this.width,
+    required this.artist,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: this.height,
-      width: this.width,
-      child: Stack(
-        alignment: Alignment.topCenter,
+      height: kArtistTileHeight,
+      width: kArtistTileWidth,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
         children: [
-          ScaleOnHover(
+          Card(
+            clipBehavior: Clip.antiAlias,
+            margin: EdgeInsets.zero,
+            elevation: 4.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                kArtistTileWidth / 2.0,
+              ),
+            ),
             child: Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.topCenter,
+              alignment: Alignment.center,
               children: [
-                Positioned(
-                  top: -10.0,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Image.file(
-                        this.artist.tracks.last.albumArt,
-                        height: this.width - 44.0,
-                        width: this.width - 44.0,
-                      ),
-                      Container(
-                        color: Colors.black.withOpacity(
-                            Theme.of(context).brightness == Brightness.light
-                                ? 0.1
-                                : 0.6),
-                        height: this.width - 44.0,
-                        width: this.width - 44.0,
-                      ),
-                      ClipRect(
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(
-                            sigmaX: 8.0,
-                            sigmaY: 8.0,
-                          ),
-                          child: Container(
-                            height: this.width,
-                            width: this.width,
-                          ),
-                        ),
-                      ),
-                    ],
+                ClipOval(
+                  child: Image.file(
+                    artist.tracks.last.albumArt,
+                    height: kArtistTileWidth - 8.0,
+                    width: kArtistTileWidth - 8.0,
                   ),
                 ),
-                InkWell(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(4.0),
+                Material(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      kArtistTileWidth / 2.0,
+                    ),
                   ),
-                  hoverColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () {
-                    Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            FadeThroughTransition(
-                          fillColor: Colors.transparent,
-                          animation: animation,
-                          secondaryAnimation: secondaryAnimation,
-                          child: CollectionArtist(
-                            artist: this.artist,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  child: Hero(
-                    tag: 'artist_art_${this.artist.artistName!}',
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(4.0),
-                      ),
-                      child: Image.file(
-                        this.artist.tracks.last.albumArt,
-                        fit: BoxFit.cover,
-                        height: this.width - 48.0,
-                        width: this.width - 48.0,
-                      ),
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {},
+                    child: Container(
+                      height: kArtistTileWidth,
+                      width: kArtistTileWidth,
+                      padding: EdgeInsets.all(4.0),
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          Positioned(
-            bottom: 20.0,
-            child: Container(
-              width: this.width,
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    this.artist.artistName!,
-                    style: Theme.of(context).textTheme.headline2,
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
+          Spacer(),
+          Text(
+            this.artist.artistName!,
+            style: Theme.of(context).textTheme.headline2,
+            textAlign: TextAlign.left,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -299,9 +156,6 @@ class CollectionArtist extends StatefulWidget {
 class CollectionArtistState extends State<CollectionArtist> {
   @override
   Widget build(BuildContext context) {
-    double tileWidth = 192.0;
-    double tileHeight = 248.0;
-
     bool shouldReact = true;
 
     return Consumer<Collection>(
@@ -530,7 +384,7 @@ class CollectionArtistState extends State<CollectionArtist> {
                                     language.ALBUMS_FROM_ARTIST,
                                   ),
                                   Container(
-                                    height: tileHeight + 16.0,
+                                    height: kAlbumTileHeight + 16.0,
                                     alignment: Alignment.bottomLeft,
                                     child: CustomListView(
                                       padding:
@@ -545,8 +399,8 @@ class CollectionArtistState extends State<CollectionArtist> {
                                               ),
                                               child: CollectionAlbumTile(
                                                 album: album,
-                                                height: tileHeight,
-                                                width: tileWidth,
+                                                height: kAlbumTileHeight,
+                                                width: kAlbumTileWidth,
                                               ),
                                             ),
                                           )
