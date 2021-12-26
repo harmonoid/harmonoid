@@ -17,6 +17,11 @@
  *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
+const double kTileMargin = 16.0;
+const double kAlbumTileWidth = 156.0;
+const double kAlbumTileHeight = 156.0 + 58.0;
+const double kArtistTileWidth = 142.0;
+const double kArtistTileHeight = 142.0 + 28.0;
 const double kDesktopAppBarHeight = 64.0;
 const double kDesktopTitleBarHeight = 32.0;
 const double kDesktopNowPlayingBarHeight = 84.0;
