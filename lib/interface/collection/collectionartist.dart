@@ -23,9 +23,9 @@ import 'dart:async';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:harmonoid/interface/collection/collectionalbum.dart';
 import 'package:provider/provider.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
@@ -240,47 +240,110 @@ class CollectionArtistState extends State<CollectionArtist> {
                           children: [
                             Expanded(
                               flex: 6,
-                              child: LayoutBuilder(
-                                  builder: (context, constraints) {
-                                var dimension = min(constraints.maxWidth,
-                                    constraints.maxHeight);
-                                return SizedBox.square(
-                                  dimension: dimension,
-                                  child: Container(
-                                    height: dimension,
-                                    width: dimension,
-                                    margin: EdgeInsets.all(24.0),
-                                    alignment: Alignment.center,
-                                    child: Hero(
-                                      tag:
-                                          'artist_art_${this.widget.artist.artistName}',
-                                      child: Card(
-                                          clipBehavior: Clip.antiAlias,
-                                          margin: EdgeInsets.zero,
-                                          elevation: 4.0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              (dimension - 48.0) / 2.0,
-                                            ),
-                                          ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(4.0),
-                                            width: dimension - 48.0,
-                                            height: dimension - 48.0,
-                                            child: ClipOval(
-                                              child: Image.file(
-                                                widget.artist.tracks.last
-                                                    .albumArt,
-                                                fit: BoxFit.cover,
-                                                height: dimension - 56.0,
-                                                width: dimension - 56.0,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: LayoutBuilder(
+                                        builder: (context, constraints) {
+                                      var dimension = min(
+                                        constraints.maxWidth,
+                                        constraints.maxHeight,
+                                      );
+                                      return SizedBox.square(
+                                        dimension: dimension,
+                                        child: Container(
+                                          height: dimension,
+                                          width: dimension,
+                                          margin: EdgeInsets.all(24.0),
+                                          alignment: Alignment.center,
+                                          child: Hero(
+                                            tag:
+                                                'artist_art_${this.widget.artist.artistName}',
+                                            child: Card(
+                                              clipBehavior: Clip.antiAlias,
+                                              margin: EdgeInsets.zero,
+                                              elevation: 4.0,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  (dimension - 48.0) / 2.0,
+                                                ),
+                                              ),
+                                              child: Container(
+                                                padding: EdgeInsets.all(4.0),
+                                                width: dimension - 48.0,
+                                                height: dimension - 48.0,
+                                                child: ClipOval(
+                                                  child: Image.file(
+                                                    widget.artist.tracks.last
+                                                        .albumArt,
+                                                    fit: BoxFit.cover,
+                                                    height: dimension - 56.0,
+                                                    width: dimension - 56.0,
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          )),
-                                    ),
+                                          ),
+                                        ),
+                                      );
+                                    }),
                                   ),
-                                );
-                              }),
+                                  if (widget.artist.albums.length > 1)
+                                    Container(
+                                      height:
+                                          kAlbumTileHeight + 3 * kTileMargin,
+                                      child: Card(
+                                        clipBehavior: Clip.antiAlias,
+                                        elevation: 4.0,
+                                        child: Stack(
+                                          alignment: Alignment.centerRight,
+                                          children: [
+                                            CustomListView(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8.0),
+                                              scrollDirection: Axis.horizontal,
+                                              children: widget.artist.albums
+                                                  .map(
+                                                    (album) => Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      margin: EdgeInsets.only(
+                                                        left: 8.0,
+                                                        right: 8.0,
+                                                        bottom: kTileMargin,
+                                                      ),
+                                                      height: kAlbumTileHeight,
+                                                      width: kAlbumTileWidth,
+                                                      child:
+                                                          CollectionAlbumTile(
+                                                        album: album,
+                                                        height:
+                                                            kAlbumTileHeight,
+                                                        width: kAlbumTileWidth,
+                                                      ),
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                            ),
+                                            Container(
+                                              width: 72.0,
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.white
+                                                        .withOpacity(0.0),
+                                                    Colors.white,
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
                             Expanded(
                               flex: 7,

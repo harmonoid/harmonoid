@@ -106,7 +106,7 @@ class CustomListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    var listview = ListView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       padding: this.padding ?? EdgeInsets.zero,
       controller: this.controller,
@@ -114,6 +114,12 @@ class CustomListView extends StatelessWidget {
       shrinkWrap: this.shrinkWrap ?? false,
       children: this.children,
     );
+    return Platform.isWindows && this.scrollDirection == Axis.horizontal
+        ? Scrollbar(
+            controller: this.controller,
+            child: listview,
+          )
+        : listview;
   }
 }
 
