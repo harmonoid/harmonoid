@@ -165,12 +165,18 @@ print(
       <li>User interface fixes, app persistence improvements. Dutch translation.</li>
     </ul>
   </li>
+  <li>
+    <img src='https://avatars.githubusercontent.com/u/66313777?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/HiSubway'>さぶうぇい</a></strong>
+    <ul>
+      <li>Japanese translation.</li>
+    </ul>
+  </li>
 </ul>
 
 
 ## License
 
-Copyright © 2021, [Hitesh Kumar Saini](https://github.com/alexmercerind) <[saini123hitesh@gmail.com](mailto:saini123hitesh@gmail.com)>
+Copyright © 2020 - 2022, [Hitesh Kumar Saini](https://github.com/alexmercerind) <[saini123hitesh@gmail.com](mailto:saini123hitesh@gmail.com)>
 
 GNU General Public License v3
 
