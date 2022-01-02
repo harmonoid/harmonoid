@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'package:flutter/material.dart';
@@ -112,19 +112,14 @@ class SettingsTile extends StatelessWidget {
                   this.title!,
                   style: Theme.of(context)
                       .textTheme
-                      .headline2
-                      ?.copyWith(fontSize: 24.0),
+                      .headline1
+                      ?.copyWith(fontSize: 20.0),
                 ),
                 SizedBox(height: 2.0),
                 Text(
                   this.subtitle!,
                   style: Theme.of(context).textTheme.headline3,
                 ),
-                // Divider(
-                //   color: Theme.of(context).dividerColor,
-                //   thickness: 1.0,
-                //   height: 1.0,
-                // ),
               ],
             ),
           ),

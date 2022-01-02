@@ -65,8 +65,8 @@ class LanguageSetting extends StatelessWidget {
                         Text(
                           language.SETTING_LANGUAGE_TITLE,
                           style:
-                              Theme.of(context).textTheme.headline2?.copyWith(
-                                    fontSize: 24.0,
+                              Theme.of(context).textTheme.headline1?.copyWith(
+                                    fontSize: 20.0,
                                   ),
                         ),
                         SizedBox(

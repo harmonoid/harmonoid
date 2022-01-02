@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:convert' as convert;
@@ -326,7 +326,7 @@ class AboutPageState extends State<AboutPage> {
                           'https://github.com/mytja',
                           'https://avatars.githubusercontent.com/u/52399966?s=80&v=4',
                           'mytja',
-                          'WinGet package. Bug reports. Slovenian translation.',
+                          'WinGet package. Bug reports. CI. Slovenian translation.',
                         ],
                         [
                           'https://github.com/prateekmedia',
