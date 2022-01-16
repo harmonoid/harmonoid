@@ -210,7 +210,7 @@ class AboutPageState extends State<AboutPage> {
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline2
-                                    ?.copyWith(fontSize: 24.0),
+                                    ?.copyWith(fontSize: 20.0),
                               ),
                               Divider(color: Colors.transparent, height: 4.0),
                               Text(
