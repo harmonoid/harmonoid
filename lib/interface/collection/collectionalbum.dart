@@ -90,81 +90,91 @@ class CollectionAlbumTile extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       elevation: 4.0,
       margin: EdgeInsets.zero,
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  FadeThroughTransition(
-                fillColor: Colors.transparent,
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                child: CollectionAlbum(
-                  album: this.album,
-                ),
-              ),
-              transitionDuration: Duration(milliseconds: 400),
-              reverseTransitionDuration: Duration(milliseconds: 400),
-            ),
-          );
-        },
-        child: Container(
-          height: this.height,
-          width: this.width,
-          child: Column(
-            children: [
-              ClipRect(
-                child: ScaleOnHover(
-                  child: Hero(
-                    tag:
-                        'album_art_${this.album.albumName}_${this.album.albumArtistName}',
-                    child: Image.file(
-                      this.album.albumArt,
-                      fit: BoxFit.cover,
-                      height: this.width,
-                      width: this.width,
+      child: Stack(
+        children: [
+          Container(
+            height: this.height,
+            width: this.width,
+            child: Column(
+              children: [
+                ClipRect(
+                  child: ScaleOnHover(
+                    child: Hero(
+                      tag:
+                          'album_art_${this.album.albumName}_${this.album.albumArtistName}',
+                      child: Image.file(
+                        this.album.albumArt,
+                        fit: BoxFit.cover,
+                        height: this.width,
+                        width: this.width,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                  ),
-                  width: this.width,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        this.album.albumName!,
-                        style: Theme.of(context).textTheme.headline2,
-                        textAlign: TextAlign.left,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 2),
-                        child: Text(
-                          '${this.album.albumArtistName} ${this.album.year != null ? ' • ' : ''} ${this.album.year ?? ''}',
-                          style:
-                              Theme.of(context).textTheme.headline3?.copyWith(
-                                    fontSize: 12.0,
-                                  ),
-                          maxLines: 1,
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                    ),
+                    width: this.width,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          this.album.albumName!,
+                          style: Theme.of(context).textTheme.headline2,
                           textAlign: TextAlign.left,
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(
+                            '${this.album.albumArtistName} ${this.album.year != null ? ' • ' : ''} ${this.album.year ?? ''}',
+                            style:
+                                Theme.of(context).textTheme.headline3?.copyWith(
+                                      fontSize: 12.0,
+                                    ),
+                            maxLines: 1,
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          FadeThroughTransition(
+                        fillColor: Colors.transparent,
+                        animation: animation,
+                        secondaryAnimation: secondaryAnimation,
+                        child: CollectionAlbum(
+                          album: this.album,
+                        ),
+                      ),
+                      transitionDuration: Duration(milliseconds: 200),
+                      reverseTransitionDuration: Duration(milliseconds: 200),
+                    ),
+                  );
+                },
+                child: Container(),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -185,7 +195,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
   void initState() {
     super.initState();
     Timer(
-      Duration(milliseconds: 500),
+      Duration(milliseconds: 300),
       () {
         PaletteGenerator.fromImageProvider(FileImage(widget.album!.albumArt))
             .then((palette) {
@@ -214,7 +224,7 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                     ),
                     curve: Curves.easeOut,
                     duration: Duration(
-                      milliseconds: 400,
+                      milliseconds: 200,
                     ),
                     builder: (context, color, _) => DesktopAppBar(
                       height: MediaQuery.of(context).size.height / 3,

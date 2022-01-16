@@ -21,7 +21,6 @@ import 'dart:io';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:libwinmedia/libwinmedia.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -45,15 +44,6 @@ Future<void> main(List<String> args) async {
     if (Platform.isWindows) {
       WidgetsFlutterBinding.ensureInitialized();
       await Configuration.initialize();
-      await Acrylic.initialize();
-      await Acrylic.setEffect(
-        effect: configuration.acrylicEnabled!
-            ? AcrylicEffect.acrylic
-            : AcrylicEffect.solid,
-        gradientColor: configuration.themeMode! == ThemeMode.light
-            ? Color(0x22DDDDDD)
-            : Color(0xCC222222),
-      );
       LWM.initialize();
       DiscordRPC.initialize();
       await Intent.initialize(args: args);

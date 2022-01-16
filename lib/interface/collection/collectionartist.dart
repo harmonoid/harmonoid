@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:math';
@@ -23,7 +23,6 @@ import 'dart:async';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:harmonoid/interface/collection/collectionalbum.dart';
 import 'package:provider/provider.dart';
 import 'package:palette_generator/palette_generator.dart';
 
@@ -135,9 +134,9 @@ class CollectionArtistTile extends StatelessWidget {
                                 artist: artist,
                               ),
                             ),
-                            transitionDuration: Duration(milliseconds: 400),
+                            transitionDuration: Duration(milliseconds: 200),
                             reverseTransitionDuration:
-                                Duration(milliseconds: 400),
+                                Duration(milliseconds: 200),
                           ),
                         );
                       },
@@ -182,7 +181,7 @@ class CollectionArtistState extends State<CollectionArtist> {
   void initState() {
     super.initState();
     Timer(
-      Duration(milliseconds: 500),
+      Duration(milliseconds: 300),
       () {
         PaletteGenerator.fromImageProvider(
                 FileImage(widget.artist.tracks.last.albumArt))
@@ -212,7 +211,7 @@ class CollectionArtistState extends State<CollectionArtist> {
                     ),
                     curve: Curves.easeOut,
                     duration: Duration(
-                      milliseconds: 400,
+                      milliseconds: 200,
                     ),
                     builder: (context, color, _) => DesktopAppBar(
                       height: MediaQuery.of(context).size.height / 3,
@@ -289,59 +288,6 @@ class CollectionArtistState extends State<CollectionArtist> {
                                       );
                                     }),
                                   ),
-                                  if (widget.artist.albums.length > 1)
-                                    Container(
-                                      height:
-                                          kAlbumTileHeight + 3 * kTileMargin,
-                                      child: Card(
-                                        clipBehavior: Clip.antiAlias,
-                                        elevation: 4.0,
-                                        child: Stack(
-                                          alignment: Alignment.centerRight,
-                                          children: [
-                                            CustomListView(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 8.0),
-                                              scrollDirection: Axis.horizontal,
-                                              children: widget.artist.albums
-                                                  .map(
-                                                    (album) => Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      margin: EdgeInsets.only(
-                                                        left: 8.0,
-                                                        right: 8.0,
-                                                        bottom: kTileMargin,
-                                                      ),
-                                                      height: kAlbumTileHeight,
-                                                      width: kAlbumTileWidth,
-                                                      child:
-                                                          CollectionAlbumTile(
-                                                        album: album,
-                                                        height:
-                                                            kAlbumTileHeight,
-                                                        width: kAlbumTileWidth,
-                                                      ),
-                                                    ),
-                                                  )
-                                                  .toList(),
-                                            ),
-                                            Container(
-                                              width: 72.0,
-                                              decoration: BoxDecoration(
-                                                gradient: LinearGradient(
-                                                  colors: [
-                                                    Colors.white
-                                                        .withOpacity(0.0),
-                                                    Colors.white,
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
                                 ],
                               ),
                             ),

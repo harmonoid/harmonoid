@@ -207,16 +207,6 @@ class Visuals extends ChangeNotifier {
       BuildContext? context}) {
     this.accent = accent ?? this.accent;
     this.themeMode = themeMode ?? this.themeMode;
-    if (Platform.isWindows) {
-      Acrylic.setEffect(
-        effect: configuration.acrylicEnabled!
-            ? AcrylicEffect.acrylic
-            : AcrylicEffect.disabled,
-        gradientColor: this.themeMode == ThemeMode.light
-            ? Color(0x22DDDDDD)
-            : Color(0xCC222222),
-      );
-    }
     if ((Platform.isAndroid || Platform.isIOS) && context != null) {
       SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(
