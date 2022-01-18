@@ -56,8 +56,8 @@ class CollectionTrackTab extends StatelessWidget {
                       Rect.fromLTWH(
                         0,
                         0,
-                        MediaQuery.of(context).size.width.normalized,
-                        MediaQuery.of(context).size.height.normalized,
+                        MediaQuery.of(context).size.width,
+                        MediaQuery.of(context).size.height,
                       ),
                     ),
                     items: trackPopupMenuItems(context),
@@ -83,9 +83,9 @@ class CollectionTrackTab extends StatelessWidget {
                 ),
                 itemCount: collection.tracks.length,
                 colFraction: {
-                  0: 36.0 / MediaQuery.of(context).size.width.normalized,
+                  0: 36.0 / MediaQuery.of(context).size.width,
                   1: 0.36,
-                  4: 128.0 / MediaQuery.of(context).size.width.normalized,
+                  4: 128.0 / MediaQuery.of(context).size.width,
                 },
                 tableHeaderBuilder: (context, index, constraints) => Container(
                   height: 36.0,
@@ -231,7 +231,7 @@ class LeadingCollectionTrackTile extends StatelessWidget {
                 fit: BoxFit.fitWidth,
                 alignment: Alignment.center,
                 height: 156.0,
-                width: MediaQuery.of(context).size.width.normalized - 16.0,
+                width: MediaQuery.of(context).size.width - 16.0,
               ),
               Padding(
                 padding: EdgeInsets.only(top: 8.0, bottom: 12.0),

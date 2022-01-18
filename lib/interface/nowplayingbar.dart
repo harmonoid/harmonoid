@@ -55,8 +55,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
 
   @override
   Widget build(BuildContext context) {
-    if (kDesktopHorizontalBreakPoint >=
-        MediaQuery.of(context).size.width.normalized)
+    if (kDesktopHorizontalBreakPoint >= MediaQuery.of(context).size.width)
       return Consumer<NowPlayingController>(
         builder: (context, nowPlaying, _) => Consumer<NowPlayingBarController>(
           builder: (context, container, _) => AnimatedContainer(
@@ -80,10 +79,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                           children: [
                             Container(
                               height: 2.0,
-                              width:
-                                  MediaQuery.of(context).size.width.normalized *
-                                      nowPlaying.position.inMilliseconds /
-                                      nowPlaying.duration.inMilliseconds,
+                              width: MediaQuery.of(context).size.width *
+                                  nowPlaying.position.inMilliseconds /
+                                  nowPlaying.duration.inMilliseconds,
                               color: Theme.of(context).brightness ==
                                       Brightness.light
                                   ? Colors.black
@@ -233,10 +231,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     (nowPlaying.index ?? double.infinity) &&
                                 0 <= (nowPlaying.index ?? double.infinity) &&
                                 kDesktopHorizontalBreakPoint <
-                                    MediaQuery.of(context)
-                                        .size
-                                        .width
-                                        .normalized)
+                                    MediaQuery.of(context).size.width)
                             ? Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
@@ -490,7 +485,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     value: nowPlaying.rate,
                                     onChanged: (value) {
                                       Playback.setRate(value);
-                                      nowPlaying.rate = player.rate;
+                                      nowPlaying.rate = player.state.rate;
                                     },
                                     max: 2.0,
                                     min: 0.0,
@@ -504,7 +499,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                             IconButton(
                               onPressed: () {
                                 Playback.setRate(1.0);
-                                nowPlaying.rate = player.rate;
+                                nowPlaying.rate = player.state.rate;
                               },
                               iconSize: 20.0,
                               color: Theme.of(context).brightness ==
@@ -680,7 +675,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     Playback.setVolume(value);
                                     nowPlaying.volume = value;
                                   },
-                                  max: 1.0,
+                                  max: 100.0,
                                   min: 0.0,
                                 ),
                               ),

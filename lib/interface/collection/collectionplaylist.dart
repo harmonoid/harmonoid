@@ -233,34 +233,32 @@ class CollectionPlaylistTab extends StatelessWidget {
                         },
                         onLongPress: () => showDialog(
                           context: context,
-                          builder: (subContext) => FractionallyScaledWidget(
-                            child: AlertDialog(
-                              title: Text(
-                                language
-                                    .COLLECTION_ALBUM_PLAYLIST_DELETE_DIALOG_HEADER,
-                                style: Theme.of(subContext).textTheme.headline1,
-                              ),
-                              content: Text(
-                                language
-                                    .COLLECTION_ALBUM_PLAYLIST_DELETE_DIALOG_BODY,
-                                style: Theme.of(subContext).textTheme.headline3,
-                              ),
-                              actions: [
-                                MaterialButton(
-                                  textColor: Theme.of(context).primaryColor,
-                                  onPressed: () async {
-                                    await collection.playlistRemove(playlist);
-                                    Navigator.of(subContext).pop();
-                                  },
-                                  child: Text(language.YES),
-                                ),
-                                MaterialButton(
-                                  textColor: Theme.of(context).primaryColor,
-                                  onPressed: Navigator.of(subContext).pop,
-                                  child: Text(language.NO),
-                                ),
-                              ],
+                          builder: (subContext) => AlertDialog(
+                            title: Text(
+                              language
+                                  .COLLECTION_ALBUM_PLAYLIST_DELETE_DIALOG_HEADER,
+                              style: Theme.of(subContext).textTheme.headline1,
                             ),
+                            content: Text(
+                              language
+                                  .COLLECTION_ALBUM_PLAYLIST_DELETE_DIALOG_BODY,
+                              style: Theme.of(subContext).textTheme.headline3,
+                            ),
+                            actions: [
+                              MaterialButton(
+                                textColor: Theme.of(context).primaryColor,
+                                onPressed: () async {
+                                  await collection.playlistRemove(playlist);
+                                  Navigator.of(subContext).pop();
+                                },
+                                child: Text(language.YES),
+                              ),
+                              MaterialButton(
+                                textColor: Theme.of(context).primaryColor,
+                                onPressed: Navigator.of(subContext).pop,
+                                child: Text(language.NO),
+                              ),
+                            ],
                           ),
                         ),
                         leading: playlist.tracks.length != 0

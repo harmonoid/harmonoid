@@ -35,9 +35,8 @@ import 'package:harmonoid/constants/language.dart';
 
 class CollectionArtistTab extends StatelessWidget {
   Widget build(BuildContext context) {
-    int elementsPerRow =
-        (MediaQuery.of(context).size.width.normalized - kTileMargin) ~/
-            (kArtistTileWidth + kTileMargin);
+    int elementsPerRow = (MediaQuery.of(context).size.width - kTileMargin) ~/
+        (kArtistTileWidth + kTileMargin);
 
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
@@ -408,7 +407,6 @@ class CollectionArtistState extends State<CollectionArtist> {
                                                             .headline2,
                                                       ),
                                                     ),
-                                                    flex: 3,
                                                   ),
                                                   Expanded(
                                                     child: Container(
@@ -424,10 +422,6 @@ class CollectionArtistState extends State<CollectionArtist> {
                                                             .headline2,
                                                       ),
                                                     ),
-                                                    flex: 2,
-                                                  ),
-                                                  Container(
-                                                    width: 48.0,
                                                   ),
                                                 ],
                                               ),
@@ -477,13 +471,11 @@ class CollectionArtistState extends State<CollectionArtist> {
                                                               MediaQuery.of(
                                                                       context)
                                                                   .size
-                                                                  .width
-                                                                  .normalized,
+                                                                  .width,
                                                               MediaQuery.of(
                                                                       context)
                                                                   .size
-                                                                  .height
-                                                                  .normalized,
+                                                                  .height,
                                                             ),
                                                           ),
                                                           items:
@@ -577,7 +569,6 @@ class CollectionArtistState extends State<CollectionArtist> {
                                                                             .ellipsis,
                                                                   ),
                                                                 ),
-                                                                flex: 3,
                                                               ),
                                                               Expanded(
                                                                 child:
@@ -601,23 +592,6 @@ class CollectionArtistState extends State<CollectionArtist> {
                                                                         TextOverflow
                                                                             .ellipsis,
                                                                   ),
-                                                                ),
-                                                                flex: 2,
-                                                              ),
-                                                              Container(
-                                                                width: 48.0,
-                                                                child: Text(
-                                                                  Duration(
-                                                                          milliseconds:
-                                                                              track.trackDuration ?? 0)
-                                                                      .label,
-                                                                  style: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headline4,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
                                                                 ),
                                                               ),
                                                             ],

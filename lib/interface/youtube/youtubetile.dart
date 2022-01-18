@@ -153,11 +153,10 @@ class YouTubeState extends State<YouTube> {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
         ),
-        height: MediaQuery.of(context).size.width.normalized >
-                kDesktopHorizontalBreakPoint
-            ? MediaQuery.of(context).size.height.normalized
+        height: MediaQuery.of(context).size.width > kDesktopHorizontalBreakPoint
+            ? MediaQuery.of(context).size.height
             : 324.0 + 128.0,
-        width: MediaQuery.of(context).size.width.normalized / 3,
+        width: MediaQuery.of(context).size.width / 3,
         child: Container(
           decoration: BoxDecoration(
             border: Border(
@@ -350,8 +349,8 @@ class YouTubeState extends State<YouTube> {
       builder: (context, collection, child) => Scaffold(
         body: LayoutBuilder(
           builder: (context, constraints) => Container(
-            height: MediaQuery.of(context).size.height.normalized,
-            width: MediaQuery.of(context).size.width.normalized,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
                 Container(

@@ -180,38 +180,36 @@ Future<void> trackPopupMenuHandle(
       case 0:
         showDialog(
           context: context,
-          builder: (subContext) => FractionallyScaledWidget(
-            child: AlertDialog(
-              title: Text(
-                language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_HEADER,
-                style: Theme.of(subContext).textTheme.headline1,
-              ),
-              content: Text(
-                language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_BODY,
-                style: Theme.of(subContext).textTheme.headline3,
-              ),
-              actions: [
-                MaterialButton(
-                  textColor: Theme.of(context).primaryColor,
-                  onPressed: () async {
-                    await collection.delete(track);
-                    Navigator.of(subContext).pop();
-                    if (recursivelyPopNavigatorOnDeleteIf != null) {
-                      if (recursivelyPopNavigatorOnDeleteIf()) {
-                        while (Navigator.of(context).canPop())
-                          Navigator.of(context).pop();
-                      }
-                    }
-                  },
-                  child: Text(language.YES),
-                ),
-                MaterialButton(
-                  textColor: Theme.of(context).primaryColor,
-                  onPressed: Navigator.of(subContext).pop,
-                  child: Text(language.NO),
-                ),
-              ],
+          builder: (subContext) => AlertDialog(
+            title: Text(
+              language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_HEADER,
+              style: Theme.of(subContext).textTheme.headline1,
             ),
+            content: Text(
+              language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_BODY,
+              style: Theme.of(subContext).textTheme.headline3,
+            ),
+            actions: [
+              MaterialButton(
+                textColor: Theme.of(context).primaryColor,
+                onPressed: () async {
+                  await collection.delete(track);
+                  Navigator.of(subContext).pop();
+                  if (recursivelyPopNavigatorOnDeleteIf != null) {
+                    if (recursivelyPopNavigatorOnDeleteIf()) {
+                      while (Navigator.of(context).canPop())
+                        Navigator.of(context).pop();
+                    }
+                  }
+                },
+                child: Text(language.YES),
+              ),
+              MaterialButton(
+                textColor: Theme.of(context).primaryColor,
+                onPressed: Navigator.of(subContext).pop,
+                child: Text(language.NO),
+              ),
+            ],
           ),
         );
         break;
@@ -224,67 +222,65 @@ Future<void> trackPopupMenuHandle(
       case 2:
         showDialog(
           context: context,
-          builder: (subContext) => FractionallyScaledWidget(
-            child: AlertDialog(
-              contentPadding: EdgeInsets.zero,
-              actionsPadding: EdgeInsets.zero,
-              title: Text(
-                language.PLAYLIST_ADD_DIALOG_TITLE,
-                style: Theme.of(subContext).textTheme.headline1,
-              ),
-              content: Container(
-                height: 280,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
-                      child: Text(
-                        language.PLAYLIST_ADD_DIALOG_BODY,
-                        style: Theme.of(subContext).textTheme.headline3,
-                      ),
-                    ),
-                    Container(
-                      height: 236,
-                      width: 280,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: collection.playlists.length,
-                        itemBuilder: (context, playlistIndex) {
-                          return ListTile(
-                            title: Text(
-                              collection.playlists[playlistIndex].playlistName!,
-                              style: Theme.of(context).textTheme.headline2,
-                            ),
-                            leading: Icon(
-                              Icons.queue_music,
-                              size: Theme.of(context).iconTheme.size,
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                            onTap: () async {
-                              await collection.playlistAddTrack(
-                                collection.playlists[playlistIndex],
-                                track,
-                              );
-                              Navigator.of(subContext).pop();
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                MaterialButton(
-                  textColor: Theme.of(context).primaryColor,
-                  onPressed: Navigator.of(subContext).pop,
-                  child: Text(language.CANCEL),
-                ),
-              ],
+          builder: (subContext) => AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            actionsPadding: EdgeInsets.zero,
+            title: Text(
+              language.PLAYLIST_ADD_DIALOG_TITLE,
+              style: Theme.of(subContext).textTheme.headline1,
             ),
+            content: Container(
+              height: 280,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
+                    child: Text(
+                      language.PLAYLIST_ADD_DIALOG_BODY,
+                      style: Theme.of(subContext).textTheme.headline3,
+                    ),
+                  ),
+                  Container(
+                    height: 236,
+                    width: 280,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: collection.playlists.length,
+                      itemBuilder: (context, playlistIndex) {
+                        return ListTile(
+                          title: Text(
+                            collection.playlists[playlistIndex].playlistName!,
+                            style: Theme.of(context).textTheme.headline2,
+                          ),
+                          leading: Icon(
+                            Icons.queue_music,
+                            size: Theme.of(context).iconTheme.size,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                          onTap: () async {
+                            await collection.playlistAddTrack(
+                              collection.playlists[playlistIndex],
+                              track,
+                            );
+                            Navigator.of(subContext).pop();
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              MaterialButton(
+                textColor: Theme.of(context).primaryColor,
+                onPressed: Navigator.of(subContext).pop,
+                child: Text(language.CANCEL),
+              ),
+            ],
           ),
         );
         break;

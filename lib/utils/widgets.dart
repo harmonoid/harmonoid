@@ -32,27 +32,6 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:harmonoid/core/configuration.dart';
-
-class FractionallyScaledWidget extends StatelessWidget {
-  final Widget child;
-  const FractionallyScaledWidget({Key? key, required this.child})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (configuration.enable125Scaling!)
-      return FractionallySizedBox(
-        heightFactor: 0.8,
-        widthFactor: 0.8,
-        child: Transform.scale(
-          scale: 1 / 0.8,
-          child: this.child,
-        ),
-      );
-    return this.child;
-  }
-}
 
 class CustomListView extends StatelessWidget {
   final ScrollController controller = ScrollController();
@@ -84,10 +63,7 @@ class CustomListView extends StatelessWidget {
       );
     }
     if (kDesktopHorizontalBreakPoint >
-        MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
-            .size
-            .width
-            .normalized) {
+        MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size.width) {
       controller.addListener(
         () {
           var scrollDirection = controller.position.userScrollDirection;
@@ -764,7 +740,7 @@ class DesktopTitleBar extends StatelessWidget {
       );
     return Platform.isWindows
         ? Container(
-            width: MediaQuery.of(context).size.width.normalized,
+            width: MediaQuery.of(context).size.width,
             height: kDesktopTitleBarHeight,
             color: this.color ?? Theme.of(context).appBarTheme.backgroundColor,
             child: MoveWindow(
@@ -867,34 +843,32 @@ class CollectionTrackContextMenu extends StatelessWidget {
             case 0:
               showDialog(
                 context: context,
-                builder: (subContext) => FractionallyScaledWidget(
-                  child: AlertDialog(
-                    backgroundColor:
-                        Theme.of(context).appBarTheme.backgroundColor,
-                    title: Text(
-                      language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_HEADER,
-                      style: Theme.of(subContext).textTheme.headline1,
-                    ),
-                    content: Text(
-                      language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_BODY,
-                      style: Theme.of(subContext).textTheme.headline3,
-                    ),
-                    actions: [
-                      MaterialButton(
-                        textColor: Theme.of(context).primaryColor,
-                        onPressed: () async {
-                          await collection.delete(track);
-                          Navigator.of(subContext).pop();
-                        },
-                        child: Text(language.YES),
-                      ),
-                      MaterialButton(
-                        textColor: Theme.of(context).primaryColor,
-                        onPressed: Navigator.of(subContext).pop,
-                        child: Text(language.NO),
-                      ),
-                    ],
+                builder: (subContext) => AlertDialog(
+                  backgroundColor:
+                      Theme.of(context).appBarTheme.backgroundColor,
+                  title: Text(
+                    language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_HEADER,
+                    style: Theme.of(subContext).textTheme.headline1,
                   ),
+                  content: Text(
+                    language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_BODY,
+                    style: Theme.of(subContext).textTheme.headline3,
+                  ),
+                  actions: [
+                    MaterialButton(
+                      textColor: Theme.of(context).primaryColor,
+                      onPressed: () async {
+                        await collection.delete(track);
+                        Navigator.of(subContext).pop();
+                      },
+                      child: Text(language.YES),
+                    ),
+                    MaterialButton(
+                      textColor: Theme.of(context).primaryColor,
+                      onPressed: Navigator.of(subContext).pop,
+                      child: Text(language.NO),
+                    ),
+                  ],
                 ),
               );
               break;
@@ -908,71 +882,68 @@ class CollectionTrackContextMenu extends StatelessWidget {
             case 2:
               showDialog(
                 context: context,
-                builder: (subContext) => FractionallyScaledWidget(
-                  child: AlertDialog(
-                    backgroundColor:
-                        Theme.of(context).appBarTheme.backgroundColor,
-                    contentPadding: EdgeInsets.zero,
-                    actionsPadding: EdgeInsets.zero,
-                    title: Text(
-                      language.PLAYLIST_ADD_DIALOG_TITLE,
-                      style: Theme.of(subContext).textTheme.headline1,
-                    ),
-                    content: Container(
-                      height: 280,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
-                            child: Text(
-                              language.PLAYLIST_ADD_DIALOG_BODY,
-                              style: Theme.of(subContext).textTheme.headline3,
-                            ),
-                          ),
-                          Container(
-                            height: 236,
-                            width: 280,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: collection.playlists.length,
-                              itemBuilder: (context, playlistIndex) {
-                                return ListTile(
-                                  title: Text(
-                                    collection
-                                        .playlists[playlistIndex].playlistName!,
-                                    style:
-                                        Theme.of(context).textTheme.headline2,
-                                  ),
-                                  leading: Icon(
-                                    Icons.queue_music,
-                                    size: Theme.of(context).iconTheme.size,
-                                    color: Theme.of(context).iconTheme.color,
-                                  ),
-                                  onTap: () async {
-                                    await collection.playlistAddTrack(
-                                      collection.playlists[playlistIndex],
-                                      track,
-                                    );
-                                    Navigator.of(subContext).pop();
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: [
-                      MaterialButton(
-                        textColor: Theme.of(context).primaryColor,
-                        onPressed: Navigator.of(subContext).pop,
-                        child: Text(language.CANCEL),
-                      ),
-                    ],
+                builder: (subContext) => AlertDialog(
+                  backgroundColor:
+                      Theme.of(context).appBarTheme.backgroundColor,
+                  contentPadding: EdgeInsets.zero,
+                  actionsPadding: EdgeInsets.zero,
+                  title: Text(
+                    language.PLAYLIST_ADD_DIALOG_TITLE,
+                    style: Theme.of(subContext).textTheme.headline1,
                   ),
+                  content: Container(
+                    height: 280,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
+                          child: Text(
+                            language.PLAYLIST_ADD_DIALOG_BODY,
+                            style: Theme.of(subContext).textTheme.headline3,
+                          ),
+                        ),
+                        Container(
+                          height: 236,
+                          width: 280,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: collection.playlists.length,
+                            itemBuilder: (context, playlistIndex) {
+                              return ListTile(
+                                title: Text(
+                                  collection
+                                      .playlists[playlistIndex].playlistName!,
+                                  style: Theme.of(context).textTheme.headline2,
+                                ),
+                                leading: Icon(
+                                  Icons.queue_music,
+                                  size: Theme.of(context).iconTheme.size,
+                                  color: Theme.of(context).iconTheme.color,
+                                ),
+                                onTap: () async {
+                                  await collection.playlistAddTrack(
+                                    collection.playlists[playlistIndex],
+                                    track,
+                                  );
+                                  Navigator.of(subContext).pop();
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    MaterialButton(
+                      textColor: Theme.of(context).primaryColor,
+                      onPressed: Navigator.of(subContext).pop,
+                      child: Text(language.CANCEL),
+                    ),
+                  ],
                 ),
               );
               break;
@@ -1034,11 +1005,5 @@ class CollectionTrackContextMenu extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-extension ScalingExtension on double {
-  double get normalized {
-    return this * (configuration.enable125Scaling! ? 0.8 : 1.0);
   }
 }

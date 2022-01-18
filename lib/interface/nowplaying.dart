@@ -41,10 +41,7 @@ class NowPlayingState extends State<NowPlayingScreen>
     with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Consumer<NowPlayingController>(
-      builder: (context, nowPlaying, _) => MediaQuery.of(context)
-                  .size
-                  .width
-                  .normalized <
+      builder: (context, nowPlaying, _) => MediaQuery.of(context).size.width <
               kDesktopHorizontalBreakPoint
           ? Scaffold(
               body: Stack(
@@ -59,8 +56,8 @@ class NowPlayingState extends State<NowPlayingScreen>
                                 .tracks[nowPlaying.index!].networkAlbumArt!)
                             : FileImage(nowPlaying.tracks[nowPlaying.index!]
                                 .albumArt))) as ImageProvider<Object>,
-                    height: MediaQuery.of(context).size.height.normalized,
-                    width: MediaQuery.of(context).size.width.normalized,
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
                     fit: BoxFit.cover,
                   ),
                   BackdropFilter(
@@ -97,16 +94,10 @@ class NowPlayingState extends State<NowPlayingScreen>
                                               .tracks[nowPlaying.index!]
                                               .albumArt))) as ImageProvider<
                                       Object>,
-                                  height: MediaQuery.of(context)
-                                          .size
-                                          .width
-                                          .normalized -
-                                      64.0,
-                                  width: MediaQuery.of(context)
-                                          .size
-                                          .width
-                                          .normalized -
-                                      64.0,
+                                  height:
+                                      MediaQuery.of(context).size.width - 64.0,
+                                  width:
+                                      MediaQuery.of(context).size.width - 64.0,
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -119,9 +110,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                           Container(
                             margin: EdgeInsets.symmetric(
                                 vertical: 12.0, horizontal: 32.0),
-                            width:
-                                MediaQuery.of(context).size.width.normalized -
-                                    64.0,
+                            width: MediaQuery.of(context).size.width - 64.0,
                             child: nowPlaying.index != null
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -517,7 +506,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                       (nowPlaying.index ?? double.infinity) &&
                   0 <= (nowPlaying.index ?? double.negativeInfinity) &&
                   kDesktopHorizontalBreakPoint <
-                      MediaQuery.of(context).size.width.normalized
+                      MediaQuery.of(context).size.width
               ? Scaffold(
                   body: Column(
                     mainAxisSize: MainAxisSize.max,
@@ -569,11 +558,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                           child: Row(
                             children: [
                               Container(
-                                width: MediaQuery.of(context)
-                                        .size
-                                        .width
-                                        .normalized /
-                                    2,
+                                width: MediaQuery.of(context).size.width / 2,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -695,11 +680,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                 ),
                               ),
                               Container(
-                                width: MediaQuery.of(context)
-                                        .size
-                                        .width
-                                        .normalized /
-                                    2,
+                                width: MediaQuery.of(context).size.width / 2,
                                 color: Theme.of(context).brightness ==
                                         Brightness.light
                                     ? Colors.white.withOpacity(0.10)

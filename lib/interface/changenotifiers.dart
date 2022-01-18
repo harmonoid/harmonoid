@@ -21,7 +21,6 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -115,7 +114,7 @@ class NowPlayingController extends ChangeNotifier {
   bool _isPlaying = false;
   bool _isBuffering = false;
   bool _isCompleted = false;
-  double _volume = 1.0;
+  double _volume = 100.0;
   double _rate = 1.0;
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;

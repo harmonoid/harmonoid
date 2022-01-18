@@ -39,20 +39,6 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
         children: [
           SwitchListTile(
             title: Text(
-              language.ENABLE_ACRYLIC_BLUR,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            value: configuration.acrylicEnabled!,
-            onChanged: (bool enabled) async {
-              await configuration.save(
-                acrylicEnabled: enabled,
-              );
-              // Causes scaffoldBackgroundColor to update.
-              Provider.of<Visuals>(context, listen: false).update();
-            },
-          ),
-          SwitchListTile(
-            title: Text(
               language.NOTIFICATION_LYRICS_TITLE,
               style: Theme.of(context).textTheme.headline4,
             ),
@@ -62,19 +48,6 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                 notificationLyrics: enabled,
               );
               this.setState(() {});
-            },
-          ),
-          SwitchListTile(
-            title: Text(
-              language.ENABLE_125_SCALING,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            value: configuration.enable125Scaling!,
-            onChanged: (bool enabled) async {
-              await configuration.save(
-                enable125Scaling: enabled,
-              );
-              Provider.of<Visuals>(context, listen: false).update();
             },
           ),
         ],

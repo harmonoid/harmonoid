@@ -158,9 +158,8 @@ class YouTubeMusicState extends State<YouTubeMusic> {
 
   @override
   Widget build(BuildContext context) {
-    int elementsPerRow =
-        (MediaQuery.of(context).size.width.normalized - kTileMargin) ~/
-            (kAlbumTileWidth + kTileMargin);
+    int elementsPerRow = (MediaQuery.of(context).size.width - kTileMargin) ~/
+        (kAlbumTileWidth + kTileMargin);
     return Consumer<YouTubeStateController>(
       builder: (context, youtube, _) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -225,14 +224,8 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                               },
                               child: Container(
                                 color: Colors.transparent,
-                                width: MediaQuery.of(context)
-                                    .size
-                                    .width
-                                    .normalized,
-                                height: MediaQuery.of(context)
-                                    .size
-                                    .height
-                                    .normalized,
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height,
                               ),
                             ),
                             Container(
@@ -484,7 +477,7 @@ class YouTubeMusicState extends State<YouTubeMusic> {
                 secondaryAnimation: secondaryAnimation,
                 transitionType: SharedAxisTransitionType.vertical,
                 child: Container(
-                  width: MediaQuery.of(context).size.width.normalized,
+                  width: MediaQuery.of(context).size.width,
                   child: child,
                 ),
               ),

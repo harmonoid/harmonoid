@@ -264,10 +264,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                                 ? Container()
                                 : Container(
                                     height: 224.0,
-                                    width: MediaQuery.of(context)
-                                        .size
-                                        .width
-                                        .normalized,
+                                    width: MediaQuery.of(context).size.width,
                                     child: CustomListView(
                                       scrollDirection: Axis.horizontal,
                                       children: _albums,
@@ -284,10 +281,7 @@ class CollectionSearchState extends State<CollectionSearch> {
                                 ? Container()
                                 : Container(
                                     height: 172.0 + 18.0,
-                                    width: MediaQuery.of(context)
-                                        .size
-                                        .width
-                                        .normalized,
+                                    width: MediaQuery.of(context).size.width,
                                     child: CustomListView(
                                       scrollDirection: Axis.horizontal,
                                       children: _artists,

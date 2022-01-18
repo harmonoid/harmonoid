@@ -35,9 +35,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class CollectionAlbumTab extends StatelessWidget {
   Widget build(BuildContext context) {
-    int elementsPerRow =
-        (MediaQuery.of(context).size.width.normalized - kTileMargin) ~/
-            (kAlbumTileWidth + kTileMargin);
+    int elementsPerRow = (MediaQuery.of(context).size.width - kTileMargin) ~/
+        (kAlbumTileWidth + kTileMargin);
 
     return Consumer<Collection>(
       builder: (context, collection, _) => collection.tracks.isNotEmpty
@@ -90,91 +89,81 @@ class CollectionAlbumTile extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       elevation: 4.0,
       margin: EdgeInsets.zero,
-      child: Stack(
-        children: [
-          Container(
-            height: this.height,
-            width: this.width,
-            child: Column(
-              children: [
-                ClipRect(
-                  child: ScaleOnHover(
-                    child: Hero(
-                      tag:
-                          'album_art_${this.album.albumName}_${this.album.albumArtistName}',
-                      child: Image.file(
-                        this.album.albumArt,
-                        fit: BoxFit.cover,
-                        height: this.width,
-                        width: this.width,
-                      ),
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  FadeThroughTransition(
+                fillColor: Colors.transparent,
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                child: CollectionAlbum(
+                  album: this.album,
+                ),
+              ),
+              transitionDuration: Duration(milliseconds: 200),
+              reverseTransitionDuration: Duration(milliseconds: 200),
+            ),
+          );
+        },
+        child: Container(
+          height: this.height,
+          width: this.width,
+          child: Column(
+            children: [
+              ClipRect(
+                child: ScaleOnHover(
+                  child: Hero(
+                    tag:
+                        'album_art_${this.album.albumName}_${this.album.albumArtistName}',
+                    child: Image.file(
+                      this.album.albumArt,
+                      fit: BoxFit.cover,
+                      height: this.width,
+                      width: this.width,
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.0,
-                    ),
-                    width: this.width,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          this.album.albumName!,
-                          style: Theme.of(context).textTheme.headline2,
-                          textAlign: TextAlign.left,
+              ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                  ),
+                  width: this.width,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        this.album.albumName!,
+                        style: Theme.of(context).textTheme.headline2,
+                        textAlign: TextAlign.left,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 2),
+                        child: Text(
+                          '${this.album.albumArtistName} ${this.album.year != null ? ' • ' : ''} ${this.album.year ?? ''}',
+                          style:
+                              Theme.of(context).textTheme.headline3?.copyWith(
+                                    fontSize: 12.0,
+                                  ),
                           maxLines: 1,
+                          textAlign: TextAlign.left,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 2),
-                          child: Text(
-                            '${this.album.albumArtistName} ${this.album.year != null ? ' • ' : ''} ${this.album.year ?? ''}',
-                            style:
-                                Theme.of(context).textTheme.headline3?.copyWith(
-                                      fontSize: 12.0,
-                                    ),
-                            maxLines: 1,
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          Positioned.fill(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          FadeThroughTransition(
-                        fillColor: Colors.transparent,
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        child: CollectionAlbum(
-                          album: this.album,
-                        ),
-                      ),
-                      transitionDuration: Duration(milliseconds: 200),
-                      reverseTransitionDuration: Duration(milliseconds: 200),
-                    ),
-                  );
-                },
-                child: Container(),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -408,7 +397,6 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                                                             .headline2,
                                                       ),
                                                     ),
-                                                    flex: 3,
                                                   ),
                                                   Expanded(
                                                     child: Container(
@@ -424,10 +412,6 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                                                             .headline2,
                                                       ),
                                                     ),
-                                                    flex: 2,
-                                                  ),
-                                                  Container(
-                                                    width: 48.0,
                                                   ),
                                                 ],
                                               ),
@@ -482,13 +466,11 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                                                               MediaQuery.of(
                                                                       context)
                                                                   .size
-                                                                  .width
-                                                                  .normalized,
+                                                                  .width,
                                                               MediaQuery.of(
                                                                       context)
                                                                   .size
-                                                                  .height
-                                                                  .normalized,
+                                                                  .height,
                                                             ),
                                                           ),
                                                           items:
@@ -582,7 +564,6 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                                                                             .ellipsis,
                                                                   ),
                                                                 ),
-                                                                flex: 3,
                                                               ),
                                                               Expanded(
                                                                 child:
@@ -607,23 +588,6 @@ class CollectionAlbumState extends State<CollectionAlbum> {
                                                                         TextOverflow
                                                                             .ellipsis,
                                                                   ),
-                                                                ),
-                                                                flex: 2,
-                                                              ),
-                                                              Container(
-                                                                width: 48.0,
-                                                                child: Text(
-                                                                  Duration(
-                                                                          milliseconds:
-                                                                              track.trackDuration ?? 0)
-                                                                      .label,
-                                                                  style: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headline4,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
                                                                 ),
                                                               ),
                                                             ],

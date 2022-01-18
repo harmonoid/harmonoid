@@ -29,7 +29,6 @@ import 'package:provider/provider.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/changenotifiers.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -148,34 +147,31 @@ class IndexingState extends State<IndexingSetting> {
                                           1) {
                                         showDialog(
                                           context: context,
-                                          builder: (subContext) =>
-                                              FractionallyScaledWidget(
-                                            child: AlertDialog(
-                                              title: Text(
-                                                language.WARNING,
-                                                style: Theme.of(subContext)
-                                                    .textTheme
-                                                    .headline1,
-                                              ),
-                                              content: Text(
-                                                language
-                                                    .LAST_COLLECTION_DIRECTORY_REMOVED,
-                                                style: Theme.of(subContext)
-                                                    .textTheme
-                                                    .headline3,
-                                              ),
-                                              actions: [
-                                                MaterialButton(
-                                                  textColor: Theme.of(context)
-                                                      .primaryColor,
-                                                  onPressed: () async {
-                                                    Navigator.of(subContext)
-                                                        .pop();
-                                                  },
-                                                  child: Text(language.OK),
-                                                ),
-                                              ],
+                                          builder: (subContext) => AlertDialog(
+                                            title: Text(
+                                              language.WARNING,
+                                              style: Theme.of(subContext)
+                                                  .textTheme
+                                                  .headline1,
                                             ),
+                                            content: Text(
+                                              language
+                                                  .LAST_COLLECTION_DIRECTORY_REMOVED,
+                                              style: Theme.of(subContext)
+                                                  .textTheme
+                                                  .headline3,
+                                            ),
+                                            actions: [
+                                              MaterialButton(
+                                                textColor: Theme.of(context)
+                                                    .primaryColor,
+                                                onPressed: () async {
+                                                  Navigator.of(subContext)
+                                                      .pop();
+                                                },
+                                                child: Text(language.OK),
+                                              ),
+                                            ],
                                           ),
                                         );
                                         return;
@@ -248,8 +244,7 @@ class IndexingState extends State<IndexingSetting> {
                                             height: 4.0,
                                             width: MediaQuery.of(context)
                                                     .size
-                                                    .width
-                                                    .normalized -
+                                                    .width -
                                                 32.0,
                                             child: LinearProgressIndicator(
                                               value: value,
