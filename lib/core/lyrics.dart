@@ -45,7 +45,7 @@ class Lyrics extends ChangeNotifier {
       (convert.jsonDecode(response.body) as List).forEach(
         (map) {
           this.current.add(
-                Lyric.fromMap(map),
+                Lyric.fromJson(map),
               );
         },
       );
@@ -68,12 +68,12 @@ class Lyric {
     required this.words,
   });
 
-  Map<String, dynamic> toMap(dynamic map) => {
+  Map<String, dynamic> toJson(dynamic map) => {
         'time': this.time,
         'words': this.words,
       };
 
-  static Lyric fromMap(dynamic map) => Lyric(
+  static Lyric fromJson(dynamic map) => Lyric(
         time: map['time'],
         words: map['words'],
       );

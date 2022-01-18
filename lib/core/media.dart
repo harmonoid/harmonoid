@@ -29,7 +29,7 @@ abstract class Media with Comparable {
   @override
   int compareTo(dynamic track) => -1;
 
-  Map<String, dynamic> toMap();
+  Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object media) {
@@ -74,11 +74,11 @@ class Track extends Media {
       return File(path.join(path.dirname(this.filePath!), 'Folder.jpg'));
     else
       return File(path.join(
-          configuration.cacheDirectory!.path, 'AlbumArts', 'UnknownAlbum.PNG'));
+          configuration.cacheDirectory!.path, 'AlbumArts', 'UnknownAlbum.png'));
   }
 
   @override
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     var artists = ['Unknown Artist'];
     if (this.trackArtistNames != null) {
       if (this.trackArtistNames!.isNotEmpty) {
@@ -106,7 +106,7 @@ class Track extends Media {
     };
   }
 
-  factory Track.fromMap(Map<String, dynamic> map) => Track(
+  factory Track.fromJson(Map<String, dynamic> map) => Track(
         trackName: [null, ''].contains(map['trackName'])
             ? path.basename(map['filePath'])
             : map['trackName'],
@@ -134,6 +134,32 @@ class Track extends Media {
             : 0,
       );
 
+  factory Track.fromTagger(Map<String, dynamic> map) => Track(
+        trackName: [null, ''].contains(map['title'])
+            ? path.basename(map['file_path'])
+            : map['title'],
+        albumName:
+            [null, ''].contains(map['album']) ? 'Unknown Album' : map['album'],
+        trackNumber: int.tryParse(map['track'].split('/').first ?? '1'),
+        year: map['year'] ?? map['date'] == null
+            ? null
+            : int.tryParse(map['date']),
+        albumArtistName: [null, ''].contains(map['album_artist'])
+            ? 'Unknown Artist'
+            : map['album_artist'],
+        trackArtistNames:
+            (map['artist']?.split('/') ?? <String>['Unknown Artist'])
+                .cast<String>(),
+        filePath: map['file_path'],
+        trackDuration: int.tryParse(map['duration'] ?? '0')! ~/ 1000,
+        bitrate: int.tryParse(map['bitrate'] ?? '0')! ~/ 1000,
+        timeAdded: map.containsKey('file_path') &&
+                !(map['file_path']?.startsWith('http') ?? true) &&
+                File(map['file_path']).existsSync()
+            ? File(map['file_path']).lastModifiedSync().millisecondsSinceEpoch
+            : 0,
+      );
+
   @override
   int compareTo(dynamic track) {
     if (track is Track) {
@@ -158,7 +184,7 @@ class Track extends Media {
   String get albumArtBasename =>
       '${this.albumName}${this.albumArtistName}'
           .replaceAll(RegExp(r'[\\/:*?""<>| ]'), '') +
-      '.PNG';
+      '.png';
 
   Track({
     this.trackName,
@@ -207,18 +233,18 @@ class Album extends Media {
           path.join(path.dirname(this.tracks.first.filePath!), 'Folder.jpg'));
     else
       return File(path.join(
-          configuration.cacheDirectory!.path, 'AlbumArts', 'UnknownAlbum.PNG'));
+          configuration.cacheDirectory!.path, 'AlbumArts', 'UnknownAlbum.png'));
   }
 
   @override
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         'albumName': this.albumName,
         'year': this.year,
         'albumArtistName': this.albumArtistName,
         'tracks': this
             .tracks
             .map(
-              (track) => track.toMap(),
+              (track) => track.toJson(),
             )
             .toList(),
         'networkAlbumArt': this.networkAlbumArt,
@@ -232,7 +258,7 @@ class Album extends Media {
       }).timeAdded ??
       0;
 
-  factory Album.fromMap(Map<String, dynamic> map) => Album(
+  factory Album.fromJson(Map<String, dynamic> map) => Album(
         albumName: map['albumName'] ?? 'Unknown Album',
         year: map['year'],
         albumArtistName: map['albumArtistName'] ?? 'Unknown Artist',
@@ -243,7 +269,7 @@ class Album extends Media {
   String get albumArtBasename =>
       '${this.albumName}${this.albumArtistName}'
           .replaceAll(RegExp(r'[\\/:*?""<>| ]'), '') +
-      '.PNG';
+      '.png';
 
   Album({
     this.albumName,
@@ -289,18 +315,18 @@ class Artist extends Media {
   List<Track> tracks = <Track>[];
 
   @override
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         'artistName': this.artistName,
         'albums': this
             .albums
             .map(
-              (album) => album.toMap(),
+              (album) => album.toJson(),
             )
             .toList(),
         'tracks': this
             .tracks
             .map(
-              (track) => track.toMap(),
+              (track) => track.toJson(),
             )
             .toList(),
       };
@@ -312,7 +338,7 @@ class Artist extends Media {
       }).timeAdded ??
       0;
 
-  factory Artist.fromMap(Map<String, dynamic> artistMap) => Artist(
+  factory Artist.fromJson(Map<String, dynamic> artistMap) => Artist(
         artistName: artistMap['artistName'],
       );
 
@@ -349,13 +375,13 @@ class Playlist extends Media {
   List<Track> tracks = <Track>[];
 
   @override
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         'playlistName': this.playlistName,
         'playlistId': this.playlistId,
         'tracks': this
             .tracks
             .map(
-              (track) => track.toMap(),
+              (track) => track.toJson(),
             )
             .toList(),
       };

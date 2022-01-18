@@ -81,8 +81,8 @@ class Intent {
   Future<void> play() async {
     if (file != null) {
       var metadata = await MetadataRetriever.fromFile(this.file!);
-      var track = Track.fromMap(
-          metadata.toMap()..putIfAbsent('filePath', () => this.file!.path));
+      var track = Track.fromJson(
+          metadata.toJson()..putIfAbsent('filePath', () => this.file!.path));
       track.filePath = this.file!.path;
       if (metadata.albumArt != null) {
         await File(path.join(

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:io';
@@ -63,7 +63,7 @@ class Configuration extends ConfigurationKeys {
       path.join(
         await configuration.configurationDirectory,
         '.Harmonoid',
-        'Configuration.JSON',
+        'Configuration.json',
       ),
     );
     if (!await configuration.file.exists()) {
@@ -91,11 +91,9 @@ class Configuration extends ConfigurationKeys {
     CollectionSort? collectionSortType,
     bool? automaticAccent,
     bool? notificationLyrics,
-    bool? acrylicEnabled,
     List<String>? collectionSearchRecent,
     List<String>? discoverSearchRecent,
     List<String>? discoverRecent,
-    bool? enable125Scaling,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -127,12 +125,6 @@ class Configuration extends ConfigurationKeys {
     if (notificationLyrics != null) {
       this.notificationLyrics = notificationLyrics;
     }
-    if (acrylicEnabled != null) {
-      this.acrylicEnabled = acrylicEnabled;
-    }
-    if (enable125Scaling != null) {
-      this.enable125Scaling = enable125Scaling;
-    }
     await configuration.file.writeAsString(
       convert.JsonEncoder.withIndent('  ').convert(
         {
@@ -147,11 +139,9 @@ class Configuration extends ConfigurationKeys {
           'collectionSortType': this.collectionSortType!.index,
           'automaticAccent': this.automaticAccent,
           'notificationLyrics': this.notificationLyrics,
-          'acrylicEnabled': this.acrylicEnabled,
           'collectionSearchRecent': this.collectionSearchRecent,
           'discoverSearchRecent': this.discoverSearchRecent,
           'discoverRecent': this.discoverRecent,
-          'enable125Scaling': this.enable125Scaling,
         },
       ),
     );
@@ -182,13 +172,10 @@ class Configuration extends ConfigurationKeys {
         CollectionSort.values[current['collectionSortType']];
     this.automaticAccent = current['automaticAccent'];
     this.notificationLyrics = current['notificationLyrics'];
-    this.acrylicEnabled = current['acrylicEnabled'];
     this.collectionSearchRecent =
         current['collectionSearchRecent'].cast<String>();
     this.discoverSearchRecent = current['discoverSearchRecent'].cast<String>();
     this.discoverRecent = current['discoverRecent'].cast<String>();
-    this.enable125Scaling = current['enable125Scaling'] ??
-        default_configuration['enable125Scaling'];
   }
 }
 
@@ -201,15 +188,13 @@ abstract class ConfigurationKeys {
   CollectionSort? collectionSortType;
   bool? automaticAccent;
   bool? notificationLyrics;
-  bool? acrylicEnabled;
   List<String>? collectionSearchRecent;
   List<String>? discoverSearchRecent;
   List<String>? discoverRecent;
-  bool? enable125Scaling;
 }
 
 // ignore: non_constant_identifier_names
-Map<String, dynamic> default_configuration = {
+final Map<String, dynamic> default_configuration = {
   'collectionDirectories': <String>[
     {
       'windows': () => path.join(Platform.environment['USERPROFILE']!, 'Music'),
@@ -224,11 +209,9 @@ Map<String, dynamic> default_configuration = {
   'collectionSortType': 0,
   'automaticAccent': false,
   'notificationLyrics': true,
-  'acrylicEnabled': Platform.isWindows,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
   'discoverRecent': ['XfEMj-z3TtA'],
-  'enable125Scaling': false,
 };
 
 /// Late initialized configuration object instance.
