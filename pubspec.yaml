@@ -11,18 +11,25 @@ dependencies:
     sdk: flutter
   animations: ^2.0.0
   provider: ^6.0.1
-  libwinmedia: 0.0.7
+  libmpv: 
+    git:
+      url: https://github.com/alexmercerind/libmpv.dart.git
+      ref: d4b4a3a428a9744dad1ba5043d2d311321c80800
+  system_media_transport_controls:
+    git:
+      url: https://github.com/alexmercerind/smtc-win32.git
+      path: bindings/system_media_transport_controls.dart
   flutter_media_metadata:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
-      ref: 1d1deae09d6ee622d118013b28f3d6bfbabb6b9c
-  dbus: ^0.6.3
-  flutter_acrylic: 0.0.2
-  dart_discord_rpc: ^0.0.2
-  fluentui_system_icons: ^1.1.136
+      ref: a072bd97a8b05eb07896138173ab802480896ea6
   assets_audio_player:
     git:
       url: https://github.com/florent37/Flutter-AssetsAudioPlayer.git
+  windows_taskbar: ^0.0.1
+  dbus: ^0.6.3
+  dart_discord_rpc: ^0.0.2
+  fluentui_system_icons: ^1.1.136
   filepicker_windows: ^2.0.0
   file_selector: ^0.8.2
   file_selector_linux:
@@ -51,6 +58,8 @@ dependencies:
       url: https://github.com/alexmercerind/desktop.git
       path: desktop
   palette_generator: ^0.3.2
+  draggable_scrollbar: ^0.1.0
+  material_floating_search_bar: ^0.3.6
 
 dependency_overrides:
   bitsdojo_window_windows:
@@ -68,7 +77,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/about_header.jpg
+    - assets/icons/next.ico
+    - assets/icons/pause.ico
+    - assets/icons/play.ico
+    - assets/icons/previous.ico
     - assets/images/default_album_art.jpg
     - assets/translations/de_DE.json
     - assets/translations/en_US.json
