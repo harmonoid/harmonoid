@@ -17,7 +17,7 @@ Has playlists & lyrics.
 
 %install
 mkdir -p %{buildroot}/usr
-cp -fr linux/debian/usr/ %{buildroot}/usr
+cp -fr ../debian/usr/ %{buildroot}/usr
 
 %files
 /usr/bin/data/flutter_assets/AssetManifest.json
