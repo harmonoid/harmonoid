@@ -61,7 +61,7 @@ jobs:
         with:
           channel: "beta"
       - run: sudo apt-get update
-      - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev libwebkit2gtk-4.0-dev libmediainfo-dev dpkg-dev alien
+      - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev libwebkit2gtk-4.0-dev libmediainfo-dev dpkg-dev rpm
       - run: flutter config --enable-linux-desktop
       - run: flutter pub get
       - run: flutter build linux --verbose
@@ -74,7 +74,8 @@ jobs:
           
       - name: Build .rpm executable
         run: |
-          alien -r harmonoid-linux-x86_64.deb
+          rpmbuild -bb linux/rpm/harmonoid.spec
+          ls -lR
           mv harmonoid*.rpm harmonoid-linux-x86_64.rpm
 
       - name: Build Tarball
