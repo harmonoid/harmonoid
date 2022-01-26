@@ -16,8 +16,8 @@ Has playlists & lyrics.
 # already build using ci, so nothing here
 
 %install
-mkdir -p %{buildroot}/usr
-cp -fr ../debian/usr/ %{buildroot}/usr
+mkdir -p %{buildroot}
+cp -rf linux/debian/usr/ %{buildroot}
 
 %files
 /usr/bin/data/flutter_assets/AssetManifest.json
