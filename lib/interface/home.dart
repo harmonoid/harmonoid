@@ -17,7 +17,6 @@
  *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -43,11 +42,13 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-  final ValueNotifier<TabRoute> tabControllerNotifier =
-      ValueNotifier<TabRoute>(TabRoute(0, TabRouteSender.systemNavigation));
+  final ValueNotifier<TabRoute> tabControllerNotifier = ValueNotifier<TabRoute>(
+    TabRoute(isMobile ? 2 : 0, TabRouteSender.systemNavigationBackButton),
+  );
   final List<TabRoute> tabControllerRouteStack = <TabRoute>[
-    TabRoute(0, TabRouteSender.systemNavigation)
+    TabRoute(isMobile ? 2 : 0, TabRouteSender.systemNavigationBackButton),
   ];
+  bool isSystemNavigationBackButtonPressed = false;
 
   @override
   void initState() {
@@ -64,8 +65,15 @@ class HomeState extends State<Home>
   }
 
   void onTabChange() {
-    if (this.tabControllerNotifier.value.sender !=
-        TabRouteSender.systemNavigation) {
+    if (this.tabControllerNotifier.value.sender ==
+        TabRouteSender.systemNavigationBackButton) {
+      this.isSystemNavigationBackButtonPressed = true;
+    }
+    // Since [PageView] reacts to the route change caused by `TabRouteSender.systemNavigationBackButton` as well & ends up adding it to the stack, we avoid it like this.
+    else if (this.isSystemNavigationBackButtonPressed) {
+      this.isSystemNavigationBackButtonPressed = false;
+    } else if (this.tabControllerNotifier.value.sender ==
+        TabRouteSender.pageView) {
       this.tabControllerRouteStack.add(this.tabControllerNotifier.value);
     }
   }
@@ -73,21 +81,20 @@ class HomeState extends State<Home>
   @override
   Future<bool> didPopRoute() async {
     if (this.navigatorKey.currentState!.canPop()) {
-      /// Any route was pushed to nested [Navigator].
+      // Any route was pushed to nested [Navigator].
       this.navigatorKey.currentState!.pop();
     }
-
-    /// No route was left in nested [Navigator]'s stack.
+    // No route was left in nested [Navigator]'s stack.
     else {
-      /// Check for previously opened tabs & switch.
+      // Check for previously opened tabs & switch.
       if (this.tabControllerRouteStack.length > 1) {
         tabControllerRouteStack.removeLast();
         this.tabControllerNotifier.value = TabRoute(
-          tabControllerRouteStack.removeLast().index,
-          TabRouteSender.systemNavigation,
+          tabControllerRouteStack.last.index,
+          TabRouteSender.systemNavigationBackButton,
         );
       } else {
-        /// Show exist confirmation dialog.
+        // Show exist confirmation dialog.
         showDialog(
           context: context,
           builder: (subContext) => AlertDialog(
@@ -116,13 +123,12 @@ class HomeState extends State<Home>
         );
       }
     }
-
-    /// Desktop specific.
+    // Desktop specific.
     if (nowPlayingBar.maximized) nowPlayingBar.maximized = false;
     return true;
   }
 
-  /// Desktop specific.
+  // Desktop specific.
   void launch() {
     nowPlayingBar.maximized = true;
     navigatorKey.currentState?.push(

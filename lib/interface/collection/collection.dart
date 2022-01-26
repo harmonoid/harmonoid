@@ -57,9 +57,13 @@ class CollectionScreen extends StatefulWidget {
 class CollectionScreenState extends State<CollectionScreen>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   final FocusNode node = FocusNode();
-  final PageController pageController = PageController();
+  final PageController pageController = PageController(
+    initialPage: isMobile ? 2 : 0,
+  );
+  final FloatingSearchBarController floatingSearchBarController =
+      FloatingSearchBarController();
   final ValueNotifier<String> query = ValueNotifier<String>('');
-  int index = 0;
+  int index = isMobile ? 2 : 0;
   String string = '';
 
   @override
@@ -76,6 +80,9 @@ class CollectionScreenState extends State<CollectionScreen>
               curve: Curves.easeInOut,
             );
       }
+    });
+    this.pageController.addListener(() {
+      this.floatingSearchBarController.show();
     });
     intent.play();
   }
@@ -477,6 +484,7 @@ class CollectionScreenState extends State<CollectionScreen>
                   fit: StackFit.expand,
                   children: [
                     FloatingSearchBar(
+                      controller: this.floatingSearchBarController,
                       hint: refresh.progress == refresh.total
                           ? language.SEARCH_WELCOME
                           : language.COLLECTION_INDEXING_HINT,
@@ -659,16 +667,18 @@ class CollectionScreenState extends State<CollectionScreen>
                       body: FloatingSearchBarScrollNotifier(
                         child: PageView(
                           controller: this.pageController,
-                          onPageChanged: (index) {
-                            this.index = index;
-                            widget.tabControllerNotifier.value =
-                                TabRoute(index, TabRouteSender.pageView);
+                          onPageChanged: (page) {
+                            if (this.index != page) {
+                              this.index = page;
+                              widget.tabControllerNotifier.value =
+                                  TabRoute(page, TabRouteSender.pageView);
+                            }
                           },
                           children: [
-                            AlbumTab(),
-                            TrackTab(),
-                            ArtistTab(),
                             CollectionPlaylistTab(),
+                            TrackTab(),
+                            AlbumTab(),
+                            ArtistTab(),
                             YouTubeMusic(),
                           ],
                         ),

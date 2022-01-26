@@ -459,7 +459,7 @@ class TabRoute {
 enum TabRouteSender {
   pageView,
   bottomNavigationBar,
-  systemNavigation,
+  systemNavigationBackButton,
 }
 
 extension StringExtension on String {

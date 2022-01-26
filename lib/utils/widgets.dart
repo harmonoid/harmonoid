@@ -864,16 +864,18 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
         currentIndex: this._index,
         type: BottomNavigationBarType.shifting,
         onTap: (index) {
-          this.setState(() {
-            this._index = index;
+          if (index != this._index) {
             widget.tabControllerNotifier.value =
                 TabRoute(index, TabRouteSender.bottomNavigationBar);
+          }
+          this.setState(() {
+            this._index = index;
           });
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.album),
-            label: language.ALBUM,
+            icon: Icon(Icons.queue),
+            label: language.PLAYLIST,
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
@@ -882,13 +884,13 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: language.ARTIST,
+            icon: Icon(Icons.album),
+            label: language.ALBUM,
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.queue),
-            label: language.PLAYLIST,
+            icon: Icon(Icons.person),
+            label: language.ARTIST,
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
