@@ -17,12 +17,15 @@
  *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
+import 'package:animations/animations.dart';
 import 'package:desktop/desktop.dart' as desktop;
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -72,6 +75,7 @@ class TrackTab extends StatelessWidget {
                         ),
                         items: trackPopupMenuItems(context),
                       );
+
                       await trackPopupMenuHandle(
                         context,
                         collection.tracks[index],
@@ -230,12 +234,16 @@ class TrackTile extends StatefulWidget {
   final Track track;
   final int? index;
   final void Function()? onPressed;
+  final Widget? leading;
+  final List<Track>? group;
   final bool disableContextMenu;
   TrackTile({
     Key? key,
     required this.track,
     this.index,
     this.onPressed,
+    this.leading,
+    this.group,
     this.disableContextMenu = false,
   });
 
@@ -382,7 +390,7 @@ class TrackTileState extends State<TrackTile> {
                   index: widget.index ?? 0,
                   tracks: widget.index == null
                       ? <Track>[widget.track]
-                      : collection.tracks,
+                      : widget.group ?? collection.tracks,
                 ),
                 onLongPress: () async {
                   var result;
@@ -392,16 +400,59 @@ class TrackTileState extends State<TrackTile> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: trackPopupMenuItems(context)
-                            .map(
-                              (item) => PopupMenuItem(
-                                child: item.child,
-                                onTap: () => result = item.value,
+                                .map(
+                                  (item) => PopupMenuItem<int>(
+                                    child: item.child,
+                                    onTap: () => result = item.value,
+                                  ),
+                                )
+                                .toList() +
+                            <PopupMenuItem<int>>[
+                              PopupMenuItem(
+                                child: PopupMenuItem<int>(
+                                  onTap: () => result = -1,
+                                  padding: EdgeInsets.zero,
+                                  value: -1,
+                                  child: ListTile(
+                                    leading: Icon(Icons.album),
+                                    title: Text(
+                                      language.SHOW_ALBUM,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            )
-                            .toList(),
+                            ],
                       ),
                     ),
                   );
+                  print(result);
+                  if (result == -1) {
+                    late final Album album;
+                    for (final item in collection.albums) {
+                      if (item.albumName == widget.track.albumName &&
+                          item.year == widget.track.year) {
+                        album = item;
+                        break;
+                      }
+                    }
+                    final result = await PaletteGenerator.fromImageProvider(
+                        FileImage(album.albumArt));
+                    final palette = result.colors;
+                    Navigator.of(context).push(
+                      desktop.PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            FadeThroughTransition(
+                          animation: animation,
+                          secondaryAnimation: secondaryAnimation,
+                          child: AlbumScreen(
+                            album: album,
+                            palette: palette,
+                          ),
+                        ),
+                      ),
+                    );
+                    return;
+                  }
                   await trackPopupMenuHandle(
                     context,
                     widget.track,
@@ -412,7 +463,10 @@ class TrackTileState extends State<TrackTile> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Divider(height: 1.0),
+                    const Divider(
+                      height: 1.0,
+                      indent: 80.0,
+                    ),
                     Container(
                       height: 64.0,
                       alignment: Alignment.center,
@@ -421,13 +475,14 @@ class TrackTileState extends State<TrackTile> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const SizedBox(width: 12.0),
-                          Image.file(
-                            widget.track.albumArt,
-                            height: 56.0,
-                            width: 56.0,
-                            cacheHeight: 180,
-                            cacheWidth: 180,
-                          ),
+                          widget.leading ??
+                              Image.file(
+                                widget.track.albumArt,
+                                height: 56.0,
+                                width: 56.0,
+                                cacheHeight: 180,
+                                cacheWidth: 180,
+                              ),
                           const SizedBox(width: 12.0),
                           Expanded(
                             child: Column(
@@ -440,6 +495,9 @@ class TrackTileState extends State<TrackTile> {
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: Theme.of(context).textTheme.headline2,
+                                ),
+                                const SizedBox(
+                                  height: 2.0,
                                 ),
                                 Text(
                                   widget.track.albumName!.overflow +
