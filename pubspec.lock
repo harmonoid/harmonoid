@@ -384,8 +384,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: d4b4a3a428a9744dad1ba5043d2d311321c80800
-      resolved-ref: d4b4a3a428a9744dad1ba5043d2d311321c80800
+      ref: dacfab0f4e527cdcecafdf86f10d511974c980e8
+      resolved-ref: dacfab0f4e527cdcecafdf86f10d511974c980e8
       url: "https://github.com/alexmercerind/libmpv.dart.git"
     source: git
     version: "0.0.1"

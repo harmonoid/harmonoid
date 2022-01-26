@@ -14,7 +14,7 @@ dependencies:
   libmpv: 
     git:
       url: https://github.com/alexmercerind/libmpv.dart.git
-      ref: d4b4a3a428a9744dad1ba5043d2d311321c80800
+      ref: dacfab0f4e527cdcecafdf86f10d511974c980e8
   system_media_transport_controls:
     git:
       url: https://github.com/alexmercerind/smtc-win32.git
