@@ -14,9 +14,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
+import 'dart:io';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,10 @@ import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:share_plus/share_plus.dart';
+
+final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+final isMobile = Platform.isAndroid || Platform.isIOS;
+final tileMargin = isDesktop ? kDesktopTileMargin : kMobileTileMargin;
 
 List<Widget> tileGridListWidgets({
   required double tileHeight,
@@ -37,7 +42,6 @@ List<Widget> tileGridListWidgets({
   required String? leadingSubHeader,
   required Widget? leadingWidget,
   required int elementsPerRow,
-  double tileMargin: kTileMargin,
 }) {
   List<Widget> widgets = <Widget>[];
   widgets.addAll([
@@ -59,7 +63,7 @@ List<Widget> tileGridListWidgets({
     rowIndex++;
     if (rowIndex > elementsPerRow - 1) {
       widgets.add(
-        new Container(
+        Container(
           height: tileHeight + tileMargin,
           margin:
               EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
@@ -103,7 +107,7 @@ List<Widget> tileGridListWidgets({
       );
     }
     widgets.add(
-      new Container(
+      Container(
         height: tileHeight + tileMargin,
         margin:
             EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
@@ -120,16 +124,130 @@ List<Widget> tileGridListWidgets({
   return widgets;
 }
 
+class TileGridListWidgetsData {
+  /// Actual List of [Widget]s to render inside a [ListView].
+  final List<Widget> widgets;
+
+  /// Structurized data returned by the passed builder's [ValueKey].
+  final List<List<dynamic>> data;
+
+  const TileGridListWidgetsData(this.widgets, this.data);
+}
+
+TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
+  required double tileHeight,
+  required double tileWidth,
+  required String? subHeader,
+  required BuildContext context,
+  required int widgetCount,
+  required Widget Function(BuildContext context, int index) builder,
+  required String? leadingSubHeader,
+  required Widget? leadingWidget,
+  required int elementsPerRow,
+}) {
+  final widgets = <Widget>[];
+  final data = <List<dynamic>>[];
+  widgets.addAll([
+    if (leadingSubHeader != null) SubHeader(leadingSubHeader),
+    if (leadingWidget != null) leadingWidget,
+    if (subHeader != null) SubHeader(subHeader),
+  ]);
+  var rowIndex = 0;
+  var rowChildren = <Widget>[];
+  var rowData = <dynamic>[];
+  for (int index = 0; index < widgetCount; index++) {
+    final widget = builder(context, index);
+    rowChildren.add(
+      Container(
+        child: widget,
+        margin: EdgeInsets.symmetric(
+          horizontal: tileMargin / 2.0,
+        ),
+      ),
+    );
+    rowData.add((widget.key as ValueKey).value);
+    rowIndex++;
+    if (rowIndex > elementsPerRow - 1) {
+      widgets.add(
+        Container(
+          height: tileHeight + tileMargin,
+          margin:
+              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
+          alignment: Alignment.topCenter,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: rowChildren,
+          ),
+        ),
+      );
+      data.add(rowData);
+      rowIndex = 0;
+      rowChildren = <Widget>[];
+      rowData = <dynamic>[];
+    }
+  }
+  if (widgetCount % elementsPerRow != 0) {
+    rowChildren = <Widget>[];
+    for (int index = widgetCount - (widgetCount % elementsPerRow);
+        index < widgetCount;
+        index++) {
+      final widget = builder(context, index);
+      rowChildren.add(
+        Container(
+          child: widget,
+          margin: EdgeInsets.symmetric(
+            horizontal: tileMargin / 2.0,
+          ),
+        ),
+      );
+      rowData.add((widget.key as ValueKey).value);
+    }
+    for (int index = 0;
+        index < elementsPerRow - (widgetCount % elementsPerRow);
+        index++) {
+      rowChildren.add(
+        Container(
+          height: tileHeight + tileMargin,
+          width: tileWidth,
+          margin:
+              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
+        ),
+      );
+    }
+    widgets.add(
+      Container(
+        height: tileHeight + tileMargin,
+        margin:
+            EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
+        alignment: Alignment.topCenter,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: rowChildren,
+        ),
+      ),
+    );
+    data.add(rowData);
+  }
+  return TileGridListWidgetsData(
+    widgets,
+    data,
+  );
+}
+
 List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
   return [
     PopupMenuItem<int>(
       padding: EdgeInsets.zero,
       value: 0,
       child: ListTile(
-        leading: Icon(FluentIcons.delete_16_regular),
+        leading: Icon(isDesktop ? FluentIcons.delete_16_regular : Icons.delete),
         title: Text(
           language.DELETE,
-          style: Theme.of(context).textTheme.headline4,
+          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
         ),
       ),
     ),
@@ -137,10 +255,10 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
       padding: EdgeInsets.zero,
       value: 1,
       child: ListTile(
-        leading: Icon(FluentIcons.share_16_regular),
+        leading: Icon(isDesktop ? FluentIcons.share_16_regular : Icons.share),
         title: Text(
           language.SHARE,
-          style: Theme.of(context).textTheme.headline4,
+          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
         ),
       ),
     ),
@@ -148,10 +266,11 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
       padding: EdgeInsets.zero,
       value: 2,
       child: ListTile(
-        leading: Icon(FluentIcons.list_16_regular),
+        leading:
+            Icon(isDesktop ? FluentIcons.list_16_regular : Icons.queue_music),
         title: Text(
           language.ADD_TO_PLAYLIST,
-          style: Theme.of(context).textTheme.headline4,
+          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
         ),
       ),
     ),
@@ -159,10 +278,11 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
       padding: EdgeInsets.zero,
       value: 3,
       child: ListTile(
-        leading: Icon(FluentIcons.music_note_2_16_regular),
+        leading: Icon(
+            isDesktop ? FluentIcons.music_note_2_16_regular : Icons.music_note),
         title: Text(
           language.ADD_TO_NOW_PLAYING,
-          style: Theme.of(context).textTheme.headline4,
+          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
         ),
       ),
     ),
@@ -182,11 +302,14 @@ Future<void> trackPopupMenuHandle(
           context: context,
           builder: (subContext) => AlertDialog(
             title: Text(
-              language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_HEADER,
+              language.COLLECTION_TRACK_DELETE_DIALOG_HEADER,
               style: Theme.of(subContext).textTheme.headline1,
             ),
             content: Text(
-              language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_BODY,
+              language.COLLECTION_TRACK_DELETE_DIALOG_BODY.replaceAll(
+                'NAME',
+                track.trackName!,
+              ),
               style: Theme.of(subContext).textTheme.headline3,
             ),
             actions: [
@@ -227,10 +350,17 @@ Future<void> trackPopupMenuHandle(
             actionsPadding: EdgeInsets.zero,
             title: Text(
               language.PLAYLIST_ADD_DIALOG_TITLE,
-              style: Theme.of(subContext).textTheme.headline1,
+              style: Theme.of(subContext).textTheme.headline1?.copyWith(
+                    fontSize: 20.0,
+                  ),
             ),
             content: Container(
-              height: 280,
+              width: MediaQuery.of(context).size.width > kHorizontalBreakpoint
+                  ? 512.0
+                  : 280.0,
+              height: MediaQuery.of(context).size.width > kHorizontalBreakpoint
+                  ? 480.0
+                  : 280.0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -243,17 +373,27 @@ Future<void> trackPopupMenuHandle(
                       style: Theme.of(subContext).textTheme.headline3,
                     ),
                   ),
-                  Container(
-                    height: 236,
-                    width: 280,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: collection.playlists.length,
-                      itemBuilder: (context, playlistIndex) {
-                        return ListTile(
+                  Divider(
+                    height: 1.0,
+                  ),
+                  if (collection.playlists.isNotEmpty)
+                    Container(
+                      height: (MediaQuery.of(context).size.width >
+                                  kHorizontalBreakpoint
+                              ? 512.0
+                              : 280.0) -
+                          78.0,
+                      width: MediaQuery.of(context).size.width >
+                              kHorizontalBreakpoint
+                          ? 512.0
+                          : 280.0,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: collection.playlists.length,
+                        itemBuilder: (context, index) => ListTile(
                           title: Text(
-                            collection.playlists[playlistIndex].playlistName!,
-                            style: Theme.of(context).textTheme.headline2,
+                            collection.playlists[index].playlistName!,
+                            style: Theme.of(context).textTheme.headline4,
                           ),
                           leading: Icon(
                             Icons.queue_music,
@@ -262,14 +402,26 @@ Future<void> trackPopupMenuHandle(
                           ),
                           onTap: () async {
                             await collection.playlistAddTrack(
-                              collection.playlists[playlistIndex],
+                              collection.playlists[index],
                               track,
                             );
                             Navigator.of(subContext).pop();
                           },
-                        );
-                      },
+                        ),
+                      ),
                     ),
+                  if (collection.playlists.isEmpty)
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          'No playlists found.\nCreate some to see them there.',
+                          style: Theme.of(context).textTheme.headline4,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  Divider(
+                    height: 1.0,
                   ),
                 ],
               ),
@@ -293,4 +445,30 @@ Future<void> trackPopupMenuHandle(
         break;
     }
   }
+}
+
+class TabRoute {
+  final int index;
+  final TabRouteSender sender;
+  const TabRoute(
+    this.index,
+    this.sender,
+  );
+}
+
+enum TabRouteSender {
+  pageView,
+  bottomNavigationBar,
+  systemNavigation,
+}
+
+extension StringExtension on String {
+  get overflow => Characters(this)
+      .replaceAll(Characters(''), Characters('\u{200B}'))
+      .toString();
+}
+
+extension DateTimeExtension on DateTime {
+  get label =>
+      '${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-$year';
 }
