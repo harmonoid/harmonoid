@@ -16,7 +16,7 @@ Join our **[Discord server](https://discord.gg/rBFwXNJJ)** till then? Below are 
 
 ## Motion
 
-<img src='https://user-images.githubusercontent.com/28951144/151239401-be199319-0a22-4139-8bef-fe1edac2d576.gif' height='400'></img>
+![](https://user-images.githubusercontent.com/28951144/151239401-be199319-0a22-4139-8bef-fe1edac2d576.gif)
 
 _Spoilers for the next release._
 
