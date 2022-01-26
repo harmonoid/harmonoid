@@ -140,16 +140,14 @@ class Track extends Media {
             : map['title'],
         albumName:
             [null, ''].contains(map['album']) ? 'Unknown Album' : map['album'],
-        trackNumber: int.tryParse(map['track'].split('/').first ?? '1'),
-        year: map['year'] ?? map['date'] == null
-            ? null
-            : int.tryParse(map['date']),
+        trackNumber: int.tryParse(map['track']?.split('/')?.first ?? '1'),
+        year: (map['year'] == null ? null : int.tryParse(map['year'])) ??
+            (map['date'] == null ? null : int.tryParse(map['date'])),
         albumArtistName: [null, ''].contains(map['album_artist'])
             ? 'Unknown Artist'
             : map['album_artist'],
-        trackArtistNames:
-            (map['artist']?.split('/') ?? <String>['Unknown Artist'])
-                .cast<String>(),
+        trackArtistNames: map['artist']?.split('/')?.cast<String>() ??
+            <String>['Unknown Artist'],
         filePath: map['file_path'],
         trackDuration: int.tryParse(map['duration'] ?? '0')! ~/ 1000,
         bitrate: int.tryParse(map['bitrate'] ?? '0')! ~/ 1000,
@@ -179,7 +177,7 @@ class Track extends Media {
   }
 
   @override
-  int get hashCode => this.trackName.hashCode + this.albumArtistName.hashCode;
+  int get hashCode => this.trackName.hashCode ^ this.albumArtistName.hashCode;
 
   String get albumArtBasename =>
       '${this.albumName}${this.albumArtistName}'
@@ -291,8 +289,8 @@ class Album extends Media {
 
   @override
   int get hashCode =>
-      this.albumName.hashCode +
-      this.albumArtistName.hashCode +
+      this.albumName.hashCode ^
+      this.albumArtistName.hashCode ^
       this.year.hashCode;
 
   @override
