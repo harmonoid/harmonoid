@@ -73,10 +73,11 @@ jobs:
           cp linux/*.deb harmonoid-linux-x86_64.deb
           
       - name: Build .rpm executable
+
         run: |
-          rpmbuild -bb linux/rpm/harmonoid.spec
-          ls -lR
-          mv harmonoid*.rpm harmonoid-linux-x86_64.rpm
+          sed -i "s:cp -rf :cp -rf $(pwd)/:" linux/rpm/harmonoid.spec
+          rpmbuild -bb linux/rpm/harmonoid.spec -D "_topdir $(pwd)/rpmbuild"
+          mv rpmbuild/RPMS/x86_64/*.rpm harmonoid-linux-x86_64.rpm
 
       - name: Build Tarball
         run: |
