@@ -20,8 +20,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
@@ -35,6 +33,7 @@ import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/interface/collection/collection.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -65,7 +64,6 @@ class HomeState extends State<Home>
   }
 
   void onTabChange() {
-    print(this.tabControllerNotifier.value.index);
     if (this.tabControllerNotifier.value.sender !=
         TabRouteSender.systemNavigation) {
       this.tabControllerRouteStack.add(this.tabControllerNotifier.value);
@@ -75,11 +73,13 @@ class HomeState extends State<Home>
   @override
   Future<bool> didPopRoute() async {
     if (this.navigatorKey.currentState!.canPop()) {
-      // Any route was pushed to nested [Navigator].
+      /// Any route was pushed to nested [Navigator].
       this.navigatorKey.currentState!.pop();
-    } // No route was left in nested [Navigator]'s stack.
+    }
+
+    /// No route was left in nested [Navigator]'s stack.
     else {
-      // Check for previously opened tabs & switch.
+      /// Check for previously opened tabs & switch.
       if (this.tabControllerRouteStack.length > 1) {
         tabControllerRouteStack.removeLast();
         this.tabControllerNotifier.value = TabRoute(
@@ -87,7 +87,7 @@ class HomeState extends State<Home>
           TabRouteSender.systemNavigation,
         );
       } else {
-        // Show exist confirmation dialog.
+        /// Show exist confirmation dialog.
         showDialog(
           context: context,
           builder: (subContext) => AlertDialog(
@@ -191,10 +191,10 @@ class HomeState extends State<Home>
                               MaterialApp.createMaterialHeroController(),
                           child: Navigator(
                             key: this.navigatorKey,
-                            initialRoute: 'collection',
+                            initialRoute: 'collection_screen',
                             onGenerateRoute: (RouteSettings routeSettings) {
                               Route<dynamic>? route;
-                              if (routeSettings.name == 'collection') {
+                              if (routeSettings.name == 'collection_screen') {
                                 route = MaterialPageRoute(
                                   builder: (BuildContext context) =>
                                       CollectionScreen(
@@ -223,10 +223,10 @@ class HomeState extends State<Home>
                     controller: MaterialApp.createMaterialHeroController(),
                     child: Navigator(
                       key: this.navigatorKey,
-                      initialRoute: 'collection',
+                      initialRoute: 'collection_screen',
                       onGenerateRoute: (RouteSettings routeSettings) {
                         Route<dynamic>? route;
-                        if (routeSettings.name == 'collection') {
+                        if (routeSettings.name == 'collection_screen') {
                           route = MaterialPageRoute(
                             builder: (BuildContext context) => CollectionScreen(
                               tabControllerNotifier: tabControllerNotifier,
