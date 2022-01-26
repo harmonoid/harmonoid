@@ -22,6 +22,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -30,7 +31,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:harmonoid/interface/change_notifiers.dart';
 import 'package:share_plus/share_plus.dart';
 
 class CustomListView extends StatelessWidget {
@@ -62,7 +63,7 @@ class CustomListView extends StatelessWidget {
         },
       );
     }
-    if (kDesktopHorizontalBreakPoint >
+    if (kHorizontalBreakpoint >
         MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size.width) {
       controller.addListener(
         () {
@@ -139,14 +140,11 @@ class SubHeader extends StatelessWidget {
     return text != null
         ? Container(
             alignment: Alignment.centerLeft,
-            height: 48,
-            padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
+            height: 56.0,
+            padding: EdgeInsets.fromLTRB(24.0, 0, 0, 0),
             child: Text(
               text!,
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  ?.copyWith(fontSize: 16.0),
+              style: Theme.of(context).textTheme.headline1,
             ),
           )
         : Container();
@@ -432,54 +430,53 @@ class ExceptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: this.width,
-      height: this.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 4.0,
-            ),
+    return MediaQuery.of(context).size.width > kHorizontalBreakpoint
+        ? Container(
             width: this.width,
+            height: this.height,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  this.title!,
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.0,
+                Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 4.0,
                   ),
-                  textAlign: TextAlign.start,
-                ),
-                Divider(
-                  color: Colors.transparent,
-                  height: 4.0,
-                ),
-                Text(
-                  this.subtitle!,
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white.withOpacity(0.8)
-                        : Colors.black.withOpacity(0.8),
-                    fontSize: 14.0,
+                  width: this.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        this.title!,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline1
+                            ?.copyWith(fontSize: 20.0),
+                        textAlign: TextAlign.start,
+                      ),
+                      const SizedBox(
+                        height: 2.0,
+                      ),
+                      Text(
+                        this.subtitle!,
+                        style: Theme.of(context).textTheme.headline3,
+                        textAlign: TextAlign.start,
+                      ),
+                    ],
                   ),
-                  textAlign: TextAlign.start,
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          )
+        : Center(
+            child: Text(
+              this.subtitle!,
+              style: Theme.of(context).textTheme.headline3,
+              textAlign: TextAlign.center,
+            ),
+          );
   }
 }
 
@@ -707,22 +704,15 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
         ),
       );
 
-    return InkWell(
-      onTap: widget.enabled ? showButtonMenu : null,
-      borderRadius: BorderRadius.circular(20.0),
-      child: Container(
-        height: 40.0,
-        width: 40.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: widget.icon ??
-            Icon(
-              Icons.more_vert,
-              size: 20.0,
-              color: Colors.black,
-            ),
-      ),
+    return IconButton(
+      onPressed: widget.enabled ? showButtonMenu : null,
+      icon: widget.icon ??
+          Icon(
+            Icons.more_vert,
+            size: 20.0,
+            color: Colors.black,
+          ),
+      splashRadius: 20.0,
     );
   }
 }
@@ -776,8 +766,8 @@ class DesktopTitleBar extends StatelessWidget {
                         ),
                   CloseWindowButton(
                     onPressed: () {
-                      /// Properly dispose `winrt::Windows::Media::Playback::MediaPlayer` before closing the window to avoid `SIGTERM`.
-                      if (Platform.isWindows) player.dispose();
+                      if (Platform.isWindows || Platform.isLinux)
+                        player.dispose();
                       appWindow.close();
                     },
                     colors: this.windowButtonColors(context),
@@ -826,183 +816,128 @@ class DesktopTitleBar extends StatelessWidget {
       );
 }
 
-class CollectionTrackContextMenu extends StatelessWidget {
-  final Track track;
-  const CollectionTrackContextMenu({
+class MobileBottomNavigationBar extends StatefulWidget {
+  final ValueNotifier<TabRoute> tabControllerNotifier;
+  MobileBottomNavigationBar({
     Key? key,
-    required this.track,
+    required this.tabControllerNotifier,
   }) : super(key: key);
 
   @override
+  State<MobileBottomNavigationBar> createState() =>
+      _MobileBottomNavigationBarState();
+}
+
+class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
+  late int _index;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.tabControllerNotifier.addListener(onChange);
+    this._index = widget.tabControllerNotifier.value.index;
+  }
+
+  void onChange() {
+    if (this._index != widget.tabControllerNotifier.value.index) {
+      this.setState(() {
+        this._index = widget.tabControllerNotifier.value.index;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.tabControllerNotifier.removeListener(onChange);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Consumer<Collection>(
-      builder: (context, collection, _) => ContextMenuButton(
-        elevation: 4.0,
-        onSelected: (index) {
-          switch (index) {
-            case 0:
-              showDialog(
-                context: context,
-                builder: (subContext) => AlertDialog(
-                  backgroundColor:
-                      Theme.of(context).appBarTheme.backgroundColor,
-                  title: Text(
-                    language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_HEADER,
-                    style: Theme.of(subContext).textTheme.headline1,
-                  ),
-                  content: Text(
-                    language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_BODY,
-                    style: Theme.of(subContext).textTheme.headline3,
-                  ),
-                  actions: [
-                    MaterialButton(
-                      textColor: Theme.of(context).primaryColor,
-                      onPressed: () async {
-                        await collection.delete(track);
-                        Navigator.of(subContext).pop();
-                      },
-                      child: Text(language.YES),
-                    ),
-                    MaterialButton(
-                      textColor: Theme.of(context).primaryColor,
-                      onPressed: Navigator.of(subContext).pop,
-                      child: Text(language.NO),
-                    ),
-                  ],
-                ),
-              );
-              break;
-            case 1:
-              Share.shareFiles(
-                [track.filePath!],
-                subject:
-                    '${track.trackName} • ${track.albumName}. Shared using Harmonoid!',
-              );
-              break;
-            case 2:
-              showDialog(
-                context: context,
-                builder: (subContext) => AlertDialog(
-                  backgroundColor:
-                      Theme.of(context).appBarTheme.backgroundColor,
-                  contentPadding: EdgeInsets.zero,
-                  actionsPadding: EdgeInsets.zero,
-                  title: Text(
-                    language.PLAYLIST_ADD_DIALOG_TITLE,
-                    style: Theme.of(subContext).textTheme.headline1,
-                  ),
-                  content: Container(
-                    height: 280,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
-                          child: Text(
-                            language.PLAYLIST_ADD_DIALOG_BODY,
-                            style: Theme.of(subContext).textTheme.headline3,
-                          ),
-                        ),
-                        Container(
-                          height: 236,
-                          width: 280,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: collection.playlists.length,
-                            itemBuilder: (context, playlistIndex) {
-                              return ListTile(
-                                title: Text(
-                                  collection
-                                      .playlists[playlistIndex].playlistName!,
-                                  style: Theme.of(context).textTheme.headline2,
-                                ),
-                                leading: Icon(
-                                  Icons.queue_music,
-                                  size: Theme.of(context).iconTheme.size,
-                                  color: Theme.of(context).iconTheme.color,
-                                ),
-                                onTap: () async {
-                                  await collection.playlistAddTrack(
-                                    collection.playlists[playlistIndex],
-                                    track,
-                                  );
-                                  Navigator.of(subContext).pop();
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  actions: [
-                    MaterialButton(
-                      textColor: Theme.of(context).primaryColor,
-                      onPressed: Navigator.of(subContext).pop,
-                      child: Text(language.CANCEL),
-                    ),
-                  ],
-                ),
-              );
-              break;
-            case 3:
-              Playback.add(
-                [
-                  track,
-                ],
-              );
-              break;
-          }
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(color: Colors.black45, blurRadius: 8.0),
+        ],
+      ),
+      child: BottomNavigationBar(
+        currentIndex: this._index,
+        type: BottomNavigationBarType.shifting,
+        onTap: (index) {
+          this.setState(() {
+            this._index = index;
+            widget.tabControllerNotifier.value =
+                TabRoute(index, TabRouteSender.bottomNavigationBar);
+          });
         },
-        tooltip: language.OPTIONS,
-        itemBuilder: (_) => <PopupMenuEntry>[
-          PopupMenuItem(
-            padding: EdgeInsets.zero,
-            value: 0,
-            child: ListTile(
-              leading: Icon(FluentIcons.delete_16_regular),
-              title: Text(
-                language.DELETE,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.album),
+            label: language.ALBUM,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
-          PopupMenuItem(
-            padding: EdgeInsets.zero,
-            value: 1,
-            child: ListTile(
-              leading: Icon(FluentIcons.share_16_regular),
-              title: Text(
-                language.SHARE,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.music_note),
+            label: language.TRACK,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
-          PopupMenuItem(
-            padding: EdgeInsets.zero,
-            value: 2,
-            child: ListTile(
-              leading: Icon(FluentIcons.list_16_regular),
-              title: Text(
-                language.ADD_TO_PLAYLIST,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: language.ARTIST,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
-          PopupMenuItem(
-            padding: EdgeInsets.zero,
-            value: 3,
-            child: ListTile(
-              leading: Icon(FluentIcons.music_note_2_16_regular),
-              title: Text(
-                language.ADD_TO_NOW_PLAYING,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.queue),
+            label: language.PLAYLIST,
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.play_circle),
+            label: language.YOUTUBE,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ShowAllButton extends StatelessWidget {
+  final void Function()? onPressed;
+  const ShowAllButton({Key? key, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(4.0),
+      child: InkWell(
+        onTap: this.onPressed,
+        borderRadius: BorderRadius.circular(4.0),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 6.0,
+            vertical: 2.0,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.view_list,
+                color: Theme.of(context).primaryColor,
+              ),
+              const SizedBox(
+                width: 4.0,
+              ),
+              Text(
+                language.SEE_ALL,
+                style: Theme.of(context).textTheme.headline3?.copyWith(
+                      color: Theme.of(context).primaryColor,
+                    ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

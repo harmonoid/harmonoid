@@ -14,26 +14,27 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/discordrpc.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:harmonoid/core/discord_rpc.dart';
+import 'package:harmonoid/interface/change_notifiers.dart';
 import 'package:harmonoid/interface/nowplaying.dart';
 import 'package:harmonoid/interface/nowplayingbar.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/core/lyrics.dart';
-import 'package:harmonoid/interface/collection/collectionmusic.dart';
+import 'package:harmonoid/interface/collection/collection.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -41,58 +42,87 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home>
-    with TickerProviderStateMixin, WidgetsBindingObserver {
-  int? index = 0;
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  final ValueNotifier<TabRoute> tabControllerNotifier =
+      ValueNotifier<TabRoute>(TabRoute(0, TabRouteSender.systemNavigation));
+  final List<TabRoute> tabControllerRouteStack = <TabRoute>[
+    TabRoute(0, TabRouteSender.systemNavigation)
+  ];
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
+    this.tabControllerNotifier.addListener(onTabChange);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
+    tabControllerNotifier.removeListener(onTabChange);
     super.dispose();
+  }
+
+  void onTabChange() {
+    print(this.tabControllerNotifier.value.index);
+    if (this.tabControllerNotifier.value.sender !=
+        TabRouteSender.systemNavigation) {
+      this.tabControllerRouteStack.add(this.tabControllerNotifier.value);
+    }
   }
 
   @override
   Future<bool> didPopRoute() async {
-    if (nowPlayingBar.maximized) nowPlayingBar.maximized = false;
     if (this.navigatorKey.currentState!.canPop()) {
+      // Any route was pushed to nested [Navigator].
       this.navigatorKey.currentState!.pop();
-    } else {
-      showDialog(
-        context: context,
-        builder: (subContext) => AlertDialog(
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-          title: Text(
-            language.EXIT_TITLE,
-            style: Theme.of(subContext).textTheme.headline1,
-          ),
-          content: Text(
-            language.EXIT_SUBTITLE,
-            style: Theme.of(subContext).textTheme.headline3,
-          ),
-          actions: [
-            MaterialButton(
-              textColor: Theme.of(context).primaryColor,
-              onPressed: SystemNavigator.pop,
-              child: Text(language.YES),
+    } // No route was left in nested [Navigator]'s stack.
+    else {
+      // Check for previously opened tabs & switch.
+      if (this.tabControllerRouteStack.length > 1) {
+        tabControllerRouteStack.removeLast();
+        this.tabControllerNotifier.value = TabRoute(
+          tabControllerRouteStack.removeLast().index,
+          TabRouteSender.systemNavigation,
+        );
+      } else {
+        // Show exist confirmation dialog.
+        showDialog(
+          context: context,
+          builder: (subContext) => AlertDialog(
+            backgroundColor: Theme.of(context).cardColor,
+            title: Text(
+              language.EXIT_TITLE,
+              style: Theme.of(subContext).textTheme.headline1,
             ),
-            MaterialButton(
-              textColor: Theme.of(context).primaryColor,
-              onPressed: Navigator.of(subContext).pop,
-              child: Text(language.NO),
+            content: Text(
+              language.EXIT_SUBTITLE,
+              style: Theme.of(subContext).textTheme.headline3,
             ),
-          ],
-        ),
-      );
+            actions: [
+              MaterialButton(
+                textColor: Theme.of(context).primaryColor,
+                onPressed: SystemNavigator.pop,
+                child: Text(language.YES),
+              ),
+              MaterialButton(
+                textColor: Theme.of(context).primaryColor,
+                onPressed: Navigator.of(subContext).pop,
+                child: Text(language.NO),
+              ),
+            ],
+          ),
+        );
+      }
     }
+
+    /// Desktop specific.
+    if (nowPlayingBar.maximized) nowPlayingBar.maximized = false;
     return true;
   }
 
+  /// Desktop specific.
   void launch() {
     nowPlayingBar.maximized = true;
     navigatorKey.currentState?.push(
@@ -145,14 +175,48 @@ class HomeState extends State<Home>
             create: (context) => Lyrics.get(),
           ),
         ],
-        builder: (context, _) => Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(
-              padding: EdgeInsets.only(
-                bottom: kDesktopNowPlayingBarHeight,
-              ),
-              child: Consumer<Language>(
+        builder: (context, _) => isDesktop
+            ? Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(
+                      bottom: kDesktopNowPlayingBarHeight,
+                    ),
+                    child: Consumer<Language>(
+                      builder: (context, _, __) => Scaffold(
+                        resizeToAvoidBottomInset: false,
+                        body: HeroControllerScope(
+                          controller:
+                              MaterialApp.createMaterialHeroController(),
+                          child: Navigator(
+                            key: this.navigatorKey,
+                            initialRoute: 'collection',
+                            onGenerateRoute: (RouteSettings routeSettings) {
+                              Route<dynamic>? route;
+                              if (routeSettings.name == 'collection') {
+                                route = MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      CollectionScreen(
+                                    tabControllerNotifier:
+                                        tabControllerNotifier,
+                                  ),
+                                );
+                              }
+                              return route;
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  NowPlayingBar(
+                    launch: this.launch,
+                    exit: this.exit,
+                  ),
+                ],
+              )
+            : Consumer<Language>(
                 builder: (context, _, __) => Scaffold(
                   resizeToAvoidBottomInset: false,
                   body: HeroControllerScope(
@@ -164,8 +228,9 @@ class HomeState extends State<Home>
                         Route<dynamic>? route;
                         if (routeSettings.name == 'collection') {
                           route = MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                const CollectionMusic(),
+                            builder: (BuildContext context) => CollectionScreen(
+                              tabControllerNotifier: tabControllerNotifier,
+                            ),
                           );
                         }
                         return route;
@@ -174,13 +239,6 @@ class HomeState extends State<Home>
                   ),
                 ),
               ),
-            ),
-            NowPlayingBar(
-              launch: this.launch,
-              exit: this.exit,
-            ),
-          ],
-        ),
       ),
     );
   }
