@@ -73,6 +73,7 @@ class Strings {
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
   late String MENU;
+  late String M_TRACKS_AND_N_ALBUMS;
   late String NO;
   late String NOTIFICATION_LYRICS_SUBTITLE;
   late String NOTIFICATION_LYRICS_TITLE;

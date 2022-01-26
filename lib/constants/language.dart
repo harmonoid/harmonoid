@@ -233,6 +233,7 @@ class Language extends Strings with ChangeNotifier {
     this.LYRICS_NOT_FOUND = asset['LYRICS_NOT_FOUND']!;
     this.LYRICS_RETRIEVING = asset['LYRICS_RETRIEVING']!;
     this.MENU = asset['MENU']!;
+    this.M_TRACKS_AND_N_ALBUMS = asset['M_TRACKS_AND_N_ALBUMS']!;
     this.NO = asset['NO']!;
     this.NOTIFICATION_LYRICS_SUBTITLE = asset['NOTIFICATION_LYRICS_SUBTITLE']!;
     this.NOTIFICATION_LYRICS_TITLE = asset['NOTIFICATION_LYRICS_TITLE']!;
