@@ -143,6 +143,7 @@ class Strings {
   late String SETTING_THEME_SUBTITLE;
   late String SETTING_THEME_TITLE;
   late String SHARE;
+  late String SHOW_ALBUM;
   late String SORT_BY;
   late String STARTING_PLAYBACK;
   late String SWITCH_THEME;

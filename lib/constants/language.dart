@@ -303,6 +303,7 @@ class Language extends Strings with ChangeNotifier {
     this.SETTING_THEME_SUBTITLE = asset['SETTING_THEME_SUBTITLE']!;
     this.SETTING_THEME_TITLE = asset['SETTING_THEME_TITLE']!;
     this.SHARE = asset['SHARE']!;
+    this.SHOW_ALBUM = asset['SHOW_ALBUM']!;
     this.SORT_BY = asset['SORT_BY']!;
     this.STARTING_PLAYBACK = asset['STARTING_PLAYBACK']!;
     this.SWITCH_THEME = asset['SWITCH_THEME']!;
