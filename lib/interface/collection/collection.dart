@@ -379,7 +379,7 @@ class CollectionScreenState extends State<CollectionScreen>
                               SizedBox(
                                 width: 24.0,
                               ),
-                              ContextMenuButton<CollectionSort>(
+                              ContextMenuButton<dynamic>(
                                 offset: Offset.fromDirection(pi / 2, 64.0),
                                 icon: Icon(
                                   Icons.sort,
@@ -387,12 +387,21 @@ class CollectionScreenState extends State<CollectionScreen>
                                 ),
                                 elevation: 4.0,
                                 onSelected: (value) async {
-                                  Provider.of<Collection>(context,
-                                          listen: false)
-                                      .sort(type: value);
-                                  await configuration.save(
-                                    collectionSortType: value,
-                                  );
+                                  if (value is CollectionSort) {
+                                    Provider.of<Collection>(context,
+                                            listen: false)
+                                        .sort(type: value);
+                                    await configuration.save(
+                                      collectionSortType: value,
+                                    );
+                                  } else if (value is CollectionOrder) {
+                                    Provider.of<Collection>(context,
+                                            listen: false)
+                                        .order(type: value);
+                                    await configuration.save(
+                                      collectionOrderType: value,
+                                    );
+                                  }
                                 },
                                 itemBuilder: (context) => [
                                   CheckedPopupMenuItem(
@@ -424,6 +433,29 @@ class CollectionScreenState extends State<CollectionScreen>
                                     value: CollectionSort.year,
                                     child: Text(
                                       language.YEAR,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    ),
+                                  ),
+                                  PopupMenuDivider(),
+                                  CheckedPopupMenuItem(
+                                    padding: EdgeInsets.zero,
+                                    checked: collection.collectionOrderType ==
+                                        CollectionOrder.ascending,
+                                    value: CollectionOrder.ascending,
+                                    child: Text(
+                                      language.ASCENDING,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    ),
+                                  ),
+                                  CheckedPopupMenuItem(
+                                    padding: EdgeInsets.zero,
+                                    checked: collection.collectionOrderType ==
+                                        CollectionOrder.descending,
+                                    value: CollectionOrder.descending,
+                                    child: Text(
+                                      language.DESCENDING,
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                     ),
