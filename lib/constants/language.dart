@@ -261,6 +261,7 @@ class Language extends Strings with ChangeNotifier {
     this.PLAY_NOW = asset['PLAY_NOW']!;
     this.RECOMMENDATIONS = asset['RECOMMENDATIONS']!;
     this.REFRESH = asset['REFRESH']!;
+    this.REINDEX = asset['REINDEX']!;
     this.REMOVE = asset['REMOVE']!;
     this.RETRIEVING_INFO = asset['RETRIEVING_INFO']!;
     this.RETRIEVING_LINK = asset['RETRIEVING_LINK']!;

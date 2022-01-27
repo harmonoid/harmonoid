@@ -101,6 +101,7 @@ class Strings {
   late String PLAY_NOW;
   late String RECOMMENDATIONS;
   late String REFRESH;
+  late String REINDEX;
   late String REMOVE;
   late String RETRIEVING_INFO;
   late String RETRIEVING_LINK;
