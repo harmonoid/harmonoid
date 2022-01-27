@@ -392,74 +392,7 @@ class TrackTileState extends State<TrackTile> {
                       ? <Track>[widget.track]
                       : widget.group ?? collection.tracks,
                 ),
-                onLongPress: () async {
-                  var result;
-                  await showModalBottomSheet(
-                    context: context,
-                    builder: (context) => Container(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: trackPopupMenuItems(context)
-                                .map(
-                                  (item) => PopupMenuItem<int>(
-                                    child: item.child,
-                                    onTap: () => result = item.value,
-                                  ),
-                                )
-                                .toList() +
-                            <PopupMenuItem<int>>[
-                              PopupMenuItem(
-                                child: PopupMenuItem<int>(
-                                  onTap: () => result = -1,
-                                  padding: EdgeInsets.zero,
-                                  value: -1,
-                                  child: ListTile(
-                                    leading: Icon(Icons.album),
-                                    title: Text(
-                                      language.SHOW_ALBUM,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                      ),
-                    ),
-                  );
-                  print(result);
-                  if (result == -1) {
-                    late final Album album;
-                    for (final item in collection.albums) {
-                      if (item.albumName == widget.track.albumName &&
-                          item.year == widget.track.year) {
-                        album = item;
-                        break;
-                      }
-                    }
-                    final result = await PaletteGenerator.fromImageProvider(
-                        FileImage(album.albumArt));
-                    final palette = result.colors;
-                    Navigator.of(context).push(
-                      desktop.PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            FadeThroughTransition(
-                          animation: animation,
-                          secondaryAnimation: secondaryAnimation,
-                          child: AlbumScreen(
-                            album: album,
-                            palette: palette,
-                          ),
-                        ),
-                      ),
-                    );
-                    return;
-                  }
-                  await trackPopupMenuHandle(
-                    context,
-                    widget.track,
-                    result,
-                    recursivelyPopNavigatorOnDeleteIf: () => true,
-                  );
-                },
+                onLongPress: this._showBottomSheet,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -517,11 +450,11 @@ class TrackTileState extends State<TrackTile> {
                             width: 64.0,
                             height: 64.0,
                             alignment: Alignment.center,
-                            child: Text(
-                              Duration(
-                                      milliseconds:
-                                          widget.track.trackDuration ?? 0)
-                                  .label,
+                            child: IconButton(
+                              onPressed: this._showBottomSheet,
+                              icon: Icon(Icons.more_vert),
+                              iconSize: 24.0,
+                              splashRadius: 20.0,
                             ),
                           ),
                         ],
@@ -531,6 +464,25 @@ class TrackTileState extends State<TrackTile> {
                 ),
               ),
             ),
+    );
+  }
+
+  void _showBottomSheet() async {
+    var result;
+    await showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: trackPopupMenuItems(context),
+        ),
+      ),
+    );
+    await trackPopupMenuHandle(
+      context,
+      widget.track,
+      result,
+      recursivelyPopNavigatorOnDeleteIf: () => true,
     );
   }
 }
