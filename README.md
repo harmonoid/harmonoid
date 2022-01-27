@@ -7,11 +7,11 @@
 Join our **[Discord server](https://discord.gg/rBFwXNJJ)** till then? Below are the screenshots of the upcoming release.
 
 <br></br>
-![harmonoid_e3iQ26h5h2-trim](https://user-images.githubusercontent.com/28951144/151245863-ab4c7de2-0eaa-4c09-8542-bfb02693828d.png)
-![harmonoid_ccb7CBNmfQ-trim](https://user-images.githubusercontent.com/28951144/151245850-9c660b04-40d4-42dc-8d8b-6d9ef969900d.png)
-![harmonoid_U9Mrt4zC4V-trim](https://user-images.githubusercontent.com/28951144/151245837-1400cb3b-a567-4399-b386-35a60b60b3e1.png)
-![harmonoid_hWqCBmPR5k-trim](https://user-images.githubusercontent.com/28951144/151245876-f7762c7b-045d-4238-96d0-51f76351638b.png)
-![harmonoid_LHwoUTazmO-trim](https://user-images.githubusercontent.com/28951144/151245816-36aa191c-3ca5-4301-bef8-5b5645e41a3f.png)
+![0](https://user-images.githubusercontent.com/28951144/151304862-f4d336c6-4559-477b-b82e-a876f78f5eec.png)
+![1](https://user-images.githubusercontent.com/28951144/151304870-6d1d18db-7120-43bd-87fa-9fa369244bfd.png)
+![2](https://user-images.githubusercontent.com/28951144/151304875-dc120964-3b98-4460-beaf-d28c75b45109.png)
+![3](https://user-images.githubusercontent.com/28951144/151304877-13ff90bb-6123-4c06-940f-9d9de6b13666.png)
+![4](https://user-images.githubusercontent.com/28951144/151304879-cdb10677-30c5-45bb-9e67-f520297280da.png)
 
 
 ## Motion
