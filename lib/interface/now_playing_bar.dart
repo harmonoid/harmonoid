@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:math';
@@ -25,7 +25,7 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:harmonoid/interface/change_notifiers.dart';
 
 class NowPlayingBar extends StatefulWidget {
   final void Function()? launch;
@@ -44,7 +44,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
     super.initState();
     this.playOrPause =
         AnimationController(vsync: this, duration: Duration(milliseconds: 200));
-    var provider = Provider.of<NowPlayingController>(context, listen: false);
+    final provider = Provider.of<NowPlayingController>(context, listen: false);
     provider.addListener(() {
       if (provider.isPlaying)
         this.playOrPause.forward();
@@ -55,7 +55,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
 
   @override
   Widget build(BuildContext context) {
-    if (kDesktopHorizontalBreakPoint >= MediaQuery.of(context).size.width)
+    if (kHorizontalBreakpoint >= MediaQuery.of(context).size.width)
       return Consumer<NowPlayingController>(
         builder: (context, nowPlaying, _) => Consumer<NowPlayingBarController>(
           builder: (context, container, _) => AnimatedContainer(
@@ -230,7 +230,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                 nowPlaying.tracks.length >
                                     (nowPlaying.index ?? double.infinity) &&
                                 0 <= (nowPlaying.index ?? double.infinity) &&
-                                kDesktopHorizontalBreakPoint <
+                                kHorizontalBreakpoint <
                                     MediaQuery.of(context).size.width)
                             ? Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -691,13 +691,15 @@ class NowPlayingBarState extends State<NowPlayingBar>
                       children: [
                         Consumer<NowPlayingBarController>(
                           builder: (context, controller, _) => IconButton(
-                            onPressed: controller.maximized
-                                ? () {
-                                    widget.exit?.call();
-                                  }
-                                : () {
-                                    widget.launch?.call();
-                                  },
+                            onPressed: nowPlaying.tracks.isEmpty
+                                ? null
+                                : controller.maximized
+                                    ? () {
+                                        widget.exit?.call();
+                                      }
+                                    : () {
+                                        widget.launch?.call();
+                                      },
                             iconSize: 24.0,
                             color:
                                 Theme.of(context).brightness == Brightness.dark

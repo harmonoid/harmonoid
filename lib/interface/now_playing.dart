@@ -18,8 +18,10 @@
  */
 
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:provider/provider.dart';
@@ -28,8 +30,8 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
-import 'package:harmonoid/interface/nowplayingbar.dart';
+import 'package:harmonoid/interface/change_notifiers.dart';
+import 'package:harmonoid/interface/now_playing_bar.dart';
 
 class NowPlayingScreen extends StatefulWidget {
   const NowPlayingScreen({Key? key}) : super(key: key);
@@ -42,7 +44,7 @@ class NowPlayingState extends State<NowPlayingScreen>
   Widget build(BuildContext context) {
     return Consumer<NowPlayingController>(
       builder: (context, nowPlaying, _) => MediaQuery.of(context).size.width <
-              kDesktopHorizontalBreakPoint
+              kHorizontalBreakpoint
           ? Scaffold(
               body: Stack(
                 children: [
@@ -505,288 +507,137 @@ class NowPlayingState extends State<NowPlayingScreen>
                   nowPlaying.tracks.length >
                       (nowPlaying.index ?? double.infinity) &&
                   0 <= (nowPlaying.index ?? double.negativeInfinity) &&
-                  kDesktopHorizontalBreakPoint <
-                      MediaQuery.of(context).size.width
+                  kHorizontalBreakpoint < MediaQuery.of(context).size.width
               ? Scaffold(
-                  body: Column(
-                    mainAxisSize: MainAxisSize.max,
+                  body: Stack(
                     children: [
+                      DesktopAppBar(
+                        leading: NavigatorPopButton(
+                          onTap: () {
+                            Provider.of<NowPlayingBarController>(context,
+                                    listen: false)
+                                .maximized = false;
+                          },
+                        ),
+                        title: language.NOW_PLAYING,
+                      ),
                       Container(
-                        height: 56.0,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).appBarTheme.backgroundColor,
-                          border: Border(
-                            bottom: BorderSide(
-                                color: Theme.of(context)
-                                    .dividerColor
-                                    .withOpacity(0.12)),
-                          ),
+                        margin: EdgeInsets.only(
+                          top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            NavigatorPopButton(
-                              onTap: () {
-                                Provider.of<NowPlayingBarController>(context,
-                                        listen: false)
-                                    .maximized = false;
-                              },
-                            ),
-                            SizedBox(
-                              width: 16.0,
-                            ),
-                            Text(
-                              language.NOW_PLAYING,
-                              style: TextStyle(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Color(0xFF242424)
-                              : Color(0xFFFFFFFF),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width / 2,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(48.0),
-                                      child: Container(
-                                        constraints: BoxConstraints(
-                                          maxWidth: 382.0,
-                                          maxHeight: 382.0,
-                                        ),
-                                        child: Stack(
-                                          clipBehavior: Clip.none,
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Positioned.fill(
-                                              bottom: -20.0,
-                                              child: Stack(
-                                                alignment: Alignment.center,
-                                                children: [
-                                                  Stack(
-                                                    alignment: Alignment.center,
-                                                    children: [
-                                                      Padding(
-                                                        padding: EdgeInsets.all(
-                                                            32.0),
-                                                        child: Image(
-                                                          image: (nowPlaying
-                                                                      .index ==
-                                                                  null
-                                                              ? AssetImage(
-                                                                  'assets/images/default_album_art.jpg')
-                                                              : (nowPlaying
-                                                                          .tracks[nowPlaying
-                                                                              .index!]
-                                                                          .networkAlbumArt !=
-                                                                      null
-                                                                  ? NetworkImage(nowPlaying
-                                                                      .tracks[nowPlaying
-                                                                          .index!]
-                                                                      .networkAlbumArt!)
-                                                                  : FileImage(
-                                                                      nowPlaying
-                                                                          .tracks[
-                                                                              nowPlaying.index!]
-                                                                          .albumArt,
-                                                                    ))) as ImageProvider<
-                                                              Object>,
-                                                          fit: BoxFit.contain,
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding: EdgeInsets.all(
-                                                            32.0),
-                                                        child: Container(
-                                                          color: Colors.black.withOpacity(
-                                                              Theme.of(context)
-                                                                          .brightness ==
-                                                                      Brightness
-                                                                          .light
-                                                                  ? 0.1
-                                                                  : 0.4),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  ClipRect(
-                                                    child: BackdropFilter(
-                                                      filter: ImageFilter.blur(
-                                                        sigmaX: 8.0,
-                                                        sigmaY: 8.0,
-                                                      ),
-                                                      child: Container(
-                                                        height: 382.0,
-                                                        width: 382.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.all(34.0),
-                                              child: ClipRRect(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(4.0),
-                                                ),
-                                                child: Image(
-                                                  image: (nowPlaying.index ==
-                                                          null
-                                                      ? AssetImage(
-                                                          'assets/images/default_album_art.jpg')
-                                                      : (nowPlaying
-                                                                  .tracks[
-                                                                      nowPlaying
-                                                                          .index!]
-                                                                  .networkAlbumArt !=
-                                                              null
-                                                          ? NetworkImage(nowPlaying
-                                                              .tracks[nowPlaying
-                                                                  .index!]
-                                                              .networkAlbumArt!)
-                                                          : FileImage(
-                                                              nowPlaying
-                                                                  .tracks[
-                                                                      nowPlaying
-                                                                          .index!]
-                                                                  .albumArt,
-                                                            ))) as ImageProvider<
-                                                      Object>,
-                                                  fit: BoxFit.contain,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                            Expanded(
+                              child: Center(
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                    maxWidth: 640.0,
+                                    maxHeight: 640.0,
+                                  ),
+                                  padding: EdgeInsets.all(32.0),
+                                  child: Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    elevation: 8.0,
+                                    child: LayoutBuilder(
+                                      builder: (context, constraints) => Image(
+                                        image: (nowPlaying.index == null
+                                            ? AssetImage(
+                                                'assets/images/default_album_art.jpg')
+                                            : (nowPlaying
+                                                        .tracks[
+                                                            nowPlaying.index!]
+                                                        .networkAlbumArt !=
+                                                    null
+                                                ? NetworkImage(nowPlaying
+                                                    .tracks[nowPlaying.index!]
+                                                    .networkAlbumArt!)
+                                                : FileImage(
+                                                    nowPlaying
+                                                        .tracks[
+                                                            nowPlaying.index!]
+                                                        .albumArt,
+                                                  ))) as ImageProvider<Object>,
+                                        fit: BoxFit.contain,
+                                        height: min(constraints.maxHeight,
+                                            constraints.maxWidth),
+                                        width: min(constraints.maxHeight,
+                                            constraints.maxWidth),
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                              Container(
-                                width: MediaQuery.of(context).size.width / 2,
-                                color: Theme.of(context).brightness ==
-                                        Brightness.light
-                                    ? Colors.white.withOpacity(0.10)
-                                    : Colors.black.withOpacity(0.10),
-                                child: DefaultTabController(
-                                  length: 2,
-                                  child: Column(
-                                    children: [
-                                      Material(
-                                        color: Colors.transparent,
-                                        child: TabBar(
-                                          unselectedLabelColor:
-                                              Theme.of(context)
-                                                  .textTheme
-                                                  .headline1
-                                                  ?.color,
-                                          indicatorColor:
-                                              Theme.of(context).brightness ==
-                                                      Brightness.light
-                                                  ? Colors.black
-                                                  : Colors.white,
-                                          labelColor:
-                                              Theme.of(context).brightness ==
-                                                      Brightness.light
-                                                  ? Colors.black
-                                                  : Colors.white,
-                                          tabs: [
-                                            Tab(
-                                              text: language.COMING_UP
-                                                  .toUpperCase(),
-                                            ),
-                                            Tab(
-                                              text:
-                                                  language.LYRICS.toUpperCase(),
-                                            ),
-                                          ],
-                                        ),
+                            ),
+                            VerticalDivider(
+                              width: 1.0,
+                              thickness: 1.0,
+                            ),
+                            Expanded(
+                              child: DefaultTabController(
+                                length: 2,
+                                child: Column(
+                                  children: [
+                                    Material(
+                                      color: Colors.transparent,
+                                      child: TabBar(
+                                        unselectedLabelColor: Theme.of(context)
+                                            .textTheme
+                                            .headline1
+                                            ?.color,
+                                        labelStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline4
+                                            ?.copyWith(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                        indicatorColor:
+                                            Theme.of(context).primaryColor,
+                                        labelColor:
+                                            Theme.of(context).primaryColor,
+                                        tabs: [
+                                          Tab(
+                                            text: language.COMING_UP
+                                                .toUpperCase(),
+                                          ),
+                                          Tab(
+                                            text: language.LYRICS.toUpperCase(),
+                                          ),
+                                        ],
                                       ),
-                                      Expanded(
-                                        child: TabBarView(
-                                          children: [
-                                            CustomListView(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 16.0),
-                                              children: segment
-                                                  .map(
-                                                    (track) => Material(
-                                                      color: Colors.transparent,
-                                                      child: ListTile(
-                                                        onTap: () {
-                                                          Playback.jump(
-                                                              nowPlaying.tracks
-                                                                  .indexOf(
-                                                                      track));
-                                                        },
-                                                        dense: false,
-                                                        leading: CircleAvatar(
-                                                          backgroundImage: track
-                                                                      .networkAlbumArt !=
-                                                                  null
-                                                              ? NetworkImage(track
-                                                                  .networkAlbumArt!)
-                                                              : FileImage(track
-                                                                      .albumArt)
-                                                                  as ImageProvider<
-                                                                      Object>?,
-                                                        ),
-                                                        title: Text(
-                                                          track.trackName!,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 1,
-                                                          softWrap: false,
-                                                        ),
-                                                        subtitle: Text(
-                                                          track.albumName! +
-                                                              ' • ' +
-                                                              (track.trackArtistNames!
-                                                                          .length <
-                                                                      2
-                                                                  ? track
-                                                                      .trackArtistNames!
-                                                                      .join(
-                                                                          ', ')
-                                                                  : track
-                                                                      .trackArtistNames!
-                                                                      .sublist(
-                                                                          0, 2)
-                                                                      .join(
-                                                                          ', ')),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 1,
-                                                          softWrap: false,
-                                                        ),
-                                                      ),
+                                    ),
+                                    Divider(
+                                      thickness: 1.0,
+                                      height: 1.0,
+                                    ),
+                                    Expanded(
+                                      child: TabBarView(
+                                        children: [
+                                          CustomListView(
+                                            children: segment
+                                                .map(
+                                                  (track) => Material(
+                                                    color: Colors.transparent,
+                                                    child: TrackTile(
+                                                      track: track,
+                                                      index: 0,
+                                                      onPressed: () {
+                                                        Playback.jump(
+                                                          nowPlaying.tracks
+                                                              .indexOf(track),
+                                                        );
+                                                      },
+                                                      disableContextMenu: true,
                                                     ),
-                                                  )
-                                                  .toList(),
-                                            ),
-                                            CustomListView(
-                                              shrinkWrap: true,
-                                              padding: EdgeInsets.all(16.0),
-                                              children: lyrics
-                                                      .current.isNotEmpty
-                                                  ? lyrics.current
+                                                  ),
+                                                )
+                                                .toList(),
+                                          ),
+                                          lyrics.current.isNotEmpty
+                                              ? CustomListView(
+                                                  shrinkWrap: true,
+                                                  padding: EdgeInsets.all(16.0),
+                                                  children: lyrics.current
                                                       .map(
                                                         (lyric) => Text(
                                                           lyric.words,
@@ -798,38 +649,31 @@ class NowPlayingState extends State<NowPlayingScreen>
                                                               TextAlign.start,
                                                         ),
                                                       )
-                                                      .toList()
-                                                  : [
-                                                      Text(
-                                                        language
-                                                            .LYRICS_NOT_FOUND,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline4,
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                      ),
-                                                    ],
-                                            ),
-                                          ],
-                                        ),
+                                                      .toList(),
+                                                )
+                                              : Center(
+                                                  child: Text(
+                                                    language.LYRICS_NOT_FOUND,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline4,
+                                                    textAlign: TextAlign.start,
+                                                  ),
+                                                ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 )
-              : Center(
-                  child: Text(
-                    language.NOW_PLAYING_NOT_PLAYING_TITLE,
-                  ),
-                )),
+              : Container()),
     );
   }
 
@@ -838,8 +682,8 @@ class NowPlayingState extends State<NowPlayingScreen>
         (nowPlaying.index ?? -1) < 0 ||
         (nowPlaying.index ?? double.infinity) > nowPlaying.tracks.length)
       return [];
-    return nowPlaying.tracks.length - nowPlaying.index! > 10
-        ? nowPlaying.tracks.sublist(nowPlaying.index!, nowPlaying.index! + 10)
+    return nowPlaying.tracks.length - nowPlaying.index! > 20
+        ? nowPlaying.tracks.sublist(nowPlaying.index!, nowPlaying.index! + 20)
         : nowPlaying.tracks.sublist(nowPlaying.index!);
   }
 }

@@ -18,15 +18,18 @@
  */
 
 import 'dart:io';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:animations/animations.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:palette_generator/palette_generator.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:share_plus/share_plus.dart';
 
 final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 final isMobile = Platform.isAndroid || Platform.isIOS;
@@ -244,7 +247,8 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
       padding: EdgeInsets.zero,
       value: 0,
       child: ListTile(
-        leading: Icon(isDesktop ? FluentIcons.delete_16_regular : Icons.delete),
+        leading: Icon(
+            Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete),
         title: Text(
           language.DELETE,
           style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
@@ -255,7 +259,8 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
       padding: EdgeInsets.zero,
       value: 1,
       child: ListTile(
-        leading: Icon(isDesktop ? FluentIcons.share_16_regular : Icons.share),
+        leading: Icon(
+            Platform.isWindows ? FluentIcons.share_16_regular : Icons.share),
         title: Text(
           language.SHARE,
           style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
@@ -266,8 +271,9 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
       padding: EdgeInsets.zero,
       value: 2,
       child: ListTile(
-        leading:
-            Icon(isDesktop ? FluentIcons.list_16_regular : Icons.queue_music),
+        leading: Icon(Platform.isWindows
+            ? FluentIcons.list_16_regular
+            : Icons.queue_music),
         title: Text(
           language.ADD_TO_PLAYLIST,
           style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
@@ -278,10 +284,23 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
       padding: EdgeInsets.zero,
       value: 3,
       child: ListTile(
-        leading: Icon(
-            isDesktop ? FluentIcons.music_note_2_16_regular : Icons.music_note),
+        leading: Icon(Platform.isWindows
+            ? FluentIcons.music_note_2_16_regular
+            : Icons.music_note),
         title: Text(
           language.ADD_TO_NOW_PLAYING,
+          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+        ),
+      ),
+    ),
+    PopupMenuItem<int>(
+      padding: EdgeInsets.zero,
+      value: 4,
+      child: ListTile(
+        leading: Icon(
+            Platform.isWindows ? FluentIcons.album_24_regular : Icons.album),
+        title: Text(
+          language.SHOW_ALBUM,
           style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
         ),
       ),
@@ -414,7 +433,7 @@ Future<void> trackPopupMenuHandle(
                     Expanded(
                       child: Center(
                         child: Text(
-                          'No playlists found.\nCreate some to see them there.',
+                          language.NO_PLAYLISTS_FOUND,
                           style: Theme.of(context).textTheme.headline4,
                           textAlign: TextAlign.center,
                         ),
@@ -443,6 +462,36 @@ Future<void> trackPopupMenuHandle(
           ],
         );
         break;
+      case 4:
+        {
+          Iterable<Color>? palette;
+          late final Album album;
+          for (final item in collection.albums) {
+            if (item.albumName == track.albumName && item.year == track.year) {
+              album = item;
+              break;
+            }
+          }
+          if (isMobile) {
+            final result = await PaletteGenerator.fromImageProvider(
+                FileImage(album.albumArt));
+            palette = result.colors;
+          }
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  FadeThroughTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                child: AlbumScreen(
+                  album: album,
+                  palette: palette,
+                ),
+              ),
+            ),
+          );
+          break;
+        }
     }
   }
 }
