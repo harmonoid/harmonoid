@@ -106,16 +106,30 @@ class CollectionScreenState extends State<CollectionScreen>
                     builder: (context, refresh, __) => Stack(
                       alignment: Alignment.bottomLeft,
                       children: <Widget>[
+                        if (collection.tracks.isNotEmpty)
+                          Positioned.fill(
+                            child: Opacity(
+                              opacity: 0.2,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Image.memory(
+                                  visualAssets.collection,
+                                  height: 512.0,
+                                  width: 512.0,
+                                  filterQuality: FilterQuality.high,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                          ),
                         PageTransitionSwitcher(
                           child: [
                             AlbumTab(),
                             TrackTab(),
                             ArtistTab(),
-                            CollectionPlaylistTab(),
-                            YouTubeMusic(),
-                            CollectionSearch(
-                              query: query,
-                            ),
+                            PlaylistTab(),
+                            YouTubeTab(),
+                            SearchTab(query: query),
                           ][this.index],
                           transitionBuilder:
                               (child, animation, secondaryAnimation) =>
@@ -123,9 +137,8 @@ class CollectionScreenState extends State<CollectionScreen>
                             animation: animation,
                             secondaryAnimation: secondaryAnimation,
                             transitionType: SharedAxisTransitionType.vertical,
-                            fillColor:
-                                Theme.of(context).scaffoldBackgroundColor,
                             child: child,
+                            fillColor: Colors.transparent,
                           ),
                         ),
                         if (refresh.progress != refresh.total)
@@ -707,11 +720,11 @@ class CollectionScreenState extends State<CollectionScreen>
                             }
                           },
                           children: [
-                            CollectionPlaylistTab(),
+                            PlaylistTab(),
                             TrackTab(),
                             AlbumTab(),
                             ArtistTab(),
-                            YouTubeMusic(),
+                            YouTubeTab(),
                           ],
                         ),
                       ),

@@ -30,10 +30,13 @@ import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/interface/collection/playlist.dart';
+import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
 
 final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 final isMobile = Platform.isAndroid || Platform.isIOS;
 final tileMargin = isDesktop ? kDesktopTileMargin : kMobileTileMargin;
+final visualAssets = VisualAssets();
 
 List<Widget> tileGridListWidgets({
   required double tileHeight,
@@ -367,12 +370,7 @@ Future<void> trackPopupMenuHandle(
           builder: (subContext) => AlertDialog(
             contentPadding: EdgeInsets.zero,
             actionsPadding: EdgeInsets.zero,
-            title: Text(
-              language.PLAYLIST_ADD_DIALOG_TITLE,
-              style: Theme.of(subContext).textTheme.headline1?.copyWith(
-                    fontSize: 20.0,
-                  ),
-            ),
+            titlePadding: EdgeInsets.zero,
             content: Container(
               width: MediaQuery.of(context).size.width > kHorizontalBreakpoint
                   ? 512.0
@@ -386,59 +384,46 @@ Future<void> trackPopupMenuHandle(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
+                    padding: EdgeInsets.fromLTRB(28, 20, 0, 0),
+                    child: Text(
+                      language.PLAYLIST_ADD_DIALOG_TITLE,
+                      style: Theme.of(subContext).textTheme.headline1?.copyWith(
+                            fontSize: 20.0,
+                          ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(28, 2, 0, 16),
                     child: Text(
                       language.PLAYLIST_ADD_DIALOG_BODY,
                       style: Theme.of(subContext).textTheme.headline3,
                     ),
                   ),
-                  Divider(
-                    height: 1.0,
+                  Container(
+                    height: (MediaQuery.of(context).size.width >
+                                kHorizontalBreakpoint
+                            ? 512.0
+                            : 280.0) -
+                        118.0,
+                    width: MediaQuery.of(context).size.width >
+                            kHorizontalBreakpoint
+                        ? 512.0
+                        : 280.0,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: collection.playlists.length,
+                      itemBuilder: (context, i) => PlaylistTile(
+                        playlist: collection.playlists[i],
+                        onTap: () async {
+                          await collection.playlistAddTrack(
+                            collection.playlists[i],
+                            track,
+                          );
+                          Navigator.of(subContext).pop();
+                        },
+                      ),
+                    ),
                   ),
-                  if (collection.playlists.isNotEmpty)
-                    Container(
-                      height: (MediaQuery.of(context).size.width >
-                                  kHorizontalBreakpoint
-                              ? 512.0
-                              : 280.0) -
-                          78.0,
-                      width: MediaQuery.of(context).size.width >
-                              kHorizontalBreakpoint
-                          ? 512.0
-                          : 280.0,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: collection.playlists.length,
-                        itemBuilder: (context, index) => ListTile(
-                          title: Text(
-                            collection.playlists[index].playlistName!,
-                            style: Theme.of(context).textTheme.headline4,
-                          ),
-                          leading: Icon(
-                            Icons.queue_music,
-                            size: Theme.of(context).iconTheme.size,
-                            color: Theme.of(context).iconTheme.color,
-                          ),
-                          onTap: () async {
-                            await collection.playlistAddTrack(
-                              collection.playlists[index],
-                              track,
-                            );
-                            Navigator.of(subContext).pop();
-                          },
-                        ),
-                      ),
-                    ),
-                  if (collection.playlists.isEmpty)
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          language.NO_PLAYLISTS_FOUND,
-                          style: Theme.of(context).textTheme.headline4,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
                   Divider(
                     height: 1.0,
                   ),

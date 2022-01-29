@@ -17,338 +17,597 @@
  *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
+import 'dart:io';
 import 'dart:math';
-import 'dart:ui';
 import 'dart:async';
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
-import 'package:animations/animations.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/core/hotkeys.dart';
 
-class AlbumTab extends StatelessWidget {
-  final controller = ScrollController();
-  AlbumTab({
-    Key? key,
-  }) : super(key: key);
+class PlaylistTab extends StatelessWidget {
+  final TextEditingController _controller = new TextEditingController();
 
+  @override
   Widget build(BuildContext context) {
-    final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin) ~/
-        (kAlbumTileWidth + tileMargin);
-    final double width = isMobile
-        ? (MediaQuery.of(context).size.width -
-                (elementsPerRow + 1) * tileMargin) /
-            elementsPerRow
-        : kAlbumTileWidth;
-    final double height = isMobile
-        ? width * kAlbumTileHeight / kAlbumTileWidth
-        : kAlbumTileHeight;
-
-    return Consumer<Collection>(
-      builder: (context, collection, _) {
-        final data = tileGridListWidgetsWithScrollbarSupport(
-          context: context,
-          tileHeight: height,
-          tileWidth: width,
-          elementsPerRow: elementsPerRow,
-          subHeader: null,
-          leadingSubHeader: null,
-          leadingWidget: null,
-          widgetCount: collection.albums.length,
-          builder: (BuildContext context, int index) => AlbumTile(
-            height: height,
-            width: width,
-            album: collection.albums[index],
-            key: ValueKey(collection.albums[index]),
-          ),
-        );
-        return isDesktop
-            ? collection.tracks.isNotEmpty
-                ? CustomListView(
-                    padding: EdgeInsets.only(
-                      top: tileMargin,
+    return Consumer<Collection>(builder: (context, collection, _) {
+      final screen = CustomListView(
+        shrinkWrap: true,
+        padding: EdgeInsets.symmetric(
+          vertical: 20.0,
+        ),
+        children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      language.PLAYLIST,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline1
+                          ?.copyWith(fontSize: 20.0),
+                      textAlign: TextAlign.start,
                     ),
-                    children: data.widgets,
-                  )
-                : Center(
-                    child: ExceptionWidget(
-                      title: language.NO_COLLECTION_TITLE,
-                      subtitle: language.NO_COLLECTION_SUBTITLE,
+                    const SizedBox(height: 2.0),
+                    Text(language.PLAYLISTS_SUBHEADER),
+                    const SizedBox(
+                      height: 18.0,
                     ),
-                  )
-            : Consumer<Collection>(
-                builder: (context, collection, _) => collection
-                        .tracks.isNotEmpty
-                    ? DraggableScrollbar.semicircle(
-                        heightScrollThumb: 56.0,
-                        labelConstraints: BoxConstraints.tightFor(
-                          width: 120.0,
-                          height: 32.0,
-                        ),
-                        labelTextBuilder: (offset) {
-                          final index = (offset -
-                                  (kMobileSearchBarHeight +
-                                      2 * tileMargin +
-                                      MediaQuery.of(context).padding.top)) ~/
-                              (height + tileMargin);
-                          final album = data
-                              .data[index.clamp(
-                            0,
-                            data.data.length - 1,
-                          )]
-                              .first as Album;
-                          switch (collection.collectionSortType) {
-                            case CollectionSort.aToZ:
-                              {
-                                return Text(
-                                  album.albumName![0].toUpperCase(),
-                                  style: Theme.of(context).textTheme.headline1,
-                                );
-                              }
-                            case CollectionSort.dateAdded:
-                              {
-                                return Text(
-                                  '${DateTime.fromMillisecondsSinceEpoch(album.timeAdded).label}',
-                                  style: Theme.of(context).textTheme.headline4,
-                                );
-                              }
-                            case CollectionSort.year:
-                              {
-                                return Text(
-                                  '${album.year ?? 'Unknown Year'}',
-                                  style: Theme.of(context).textTheme.headline4,
-                                );
-                              }
-                            default:
-                              return Text(
-                                '',
-                                style: Theme.of(context).textTheme.headline4,
-                              );
-                          }
-                        },
-                        backgroundColor: Theme.of(context).cardColor,
-                        controller: controller,
-                        child: ListView(
-                          controller: controller,
-                          itemExtent: height + tileMargin,
-                          padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).padding.top +
-                                kMobileSearchBarHeight +
-                                2 * tileMargin,
+                    MaterialButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            contentPadding: const EdgeInsets.fromLTRB(
+                                16.0, 16.0, 16.0, 8.0),
+                            content: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  language.CREATE,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline1
+                                      ?.copyWith(fontSize: 20.0),
+                                  textAlign: TextAlign.start,
+                                ),
+                                Text(
+                                  language.CREATE_PLAYLIST_SUBHEADER,
+                                  style: Theme.of(context).textTheme.headline3,
+                                ),
+                                const SizedBox(
+                                  height: 18.0,
+                                ),
+                                Container(
+                                  height: 42.0,
+                                  width: 280.0,
+                                  alignment: Alignment.center,
+                                  margin:
+                                      EdgeInsets.only(top: 0.0, bottom: 0.0),
+                                  padding: EdgeInsets.only(top: 2.0),
+                                  child: Focus(
+                                    onFocusChange: (hasFocus) {
+                                      if (hasFocus) {
+                                        HotKeys.disableSpaceHotKey();
+                                      } else {
+                                        HotKeys.enableSpaceHotKey();
+                                      }
+                                    },
+                                    child: TextField(
+                                      autofocus: true,
+                                      controller: this._controller,
+                                      cursorWidth: 1.0,
+                                      onSubmitted: (String value) async {
+                                        if (value.isNotEmpty) {
+                                          FocusScope.of(context).unfocus();
+                                          await collection.playlistAdd(
+                                            Playlist(
+                                              playlistName: value,
+                                            ),
+                                          );
+                                          this._controller.clear();
+                                          Navigator.of(context).maybePop();
+                                        }
+                                      },
+                                      cursorColor:
+                                          Theme.of(context).brightness ==
+                                                  Brightness.light
+                                              ? Colors.black
+                                              : Colors.white,
+                                      textAlignVertical:
+                                          TextAlignVertical.bottom,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                      decoration: InputDecoration(
+                                        hintText:
+                                            language.PLAYLISTS_TEXT_FIELD_HINT,
+                                        hintStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline3
+                                            ?.copyWith(
+                                              color: Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.light
+                                                  ? Colors.black
+                                                      .withOpacity(0.6)
+                                                  : Colors.white60,
+                                            ),
+                                        filled: true,
+                                        fillColor:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.light
+                                                ? Colors.white
+                                                : Color(0xFF202020),
+                                        hoverColor:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.light
+                                                ? Colors.white
+                                                : Color(0xFF202020),
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .dividerColor
+                                                .withOpacity(0.32),
+                                            width: 1.0,
+                                          ),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .dividerColor
+                                                .withOpacity(0.32),
+                                            width: 1.0,
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            width: 1.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              MaterialButton(
+                                child: Text(
+                                  language.OK,
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  if (_controller.text.isNotEmpty) {
+                                    FocusScope.of(context).unfocus();
+                                    await collection.playlistAdd(
+                                      Playlist(
+                                        playlistName: _controller.text,
+                                      ),
+                                    );
+                                    this._controller.clear();
+                                    Navigator.of(context).maybePop();
+                                  }
+                                },
+                              ),
+                              MaterialButton(
+                                child: Text(
+                                  language.CANCEL,
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                onPressed: Navigator.of(context).maybePop,
+                              ),
+                            ],
                           ),
-                          children: data.widgets,
-                        ),
-                      )
-                    : Center(
-                        child: ExceptionWidget(
-                          title: language.NO_COLLECTION_TITLE,
-                          subtitle: language.NO_COLLECTION_SUBTITLE,
+                        );
+                      },
+                      padding: EdgeInsets.zero,
+                      child: Text(
+                        language.CREATE_NEW_PLAYLIST,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
-              );
-      },
-    );
+                    ),
+                    const SizedBox(
+                      height: 4.0,
+                    ),
+                    if (collection.playlists.isNotEmpty)
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                  ],
+                ),
+              ),
+            ] +
+            collection.playlists
+                .map((Playlist playlist) => PlaylistTile(playlist: playlist))
+                .toList(),
+      );
+      return Container(
+        alignment: Alignment.topCenter,
+        height: MediaQuery.of(context).size.height -
+            (kDesktopTitleBarHeight + kDesktopAppBarHeight),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            if (collection.playlists.isNotEmpty)
+              Expanded(
+                child: screen,
+              ),
+            if (collection.playlists.isEmpty) screen,
+            if (collection.playlists.isEmpty)
+              Expanded(
+                child: Center(
+                  child: Text(
+                    language.NO_PLAYLISTS_FOUND,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+    });
   }
 }
 
-class AlbumTile extends StatelessWidget {
-  final double height;
+class PlaylistThumbnail extends StatelessWidget {
+  final List<Track> tracks;
   final double width;
-  final Album album;
-
-  const AlbumTile({
+  final bool encircle;
+  final bool mini;
+  const PlaylistThumbnail({
     Key? key,
-    required this.album,
-    required this.height,
+    required this.tracks,
     required this.width,
+    this.encircle = true,
+    this.mini = true,
   }) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
-    Iterable<Color>? palette;
+    if (encircle) {
+      return Card(
+        elevation: 4.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(this.width / 2),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(this.mini ? 4.0 : 8.0),
+          child: ClipOval(
+            child: _child(
+              context,
+              this.width - (this.mini ? 8.0 : 16.0),
+              this.mini,
+            ),
+          ),
+        ),
+      );
+    } else {
+      return _child(
+        context,
+        this.width,
+        this.mini,
+      );
+    }
+  }
 
-    return isDesktop
-        ? Card(
-            clipBehavior: Clip.antiAlias,
-            elevation: 4.0,
-            margin: EdgeInsets.zero,
-            child: InkWell(
-              onTap: () {
+  Widget _child(BuildContext context, double width, bool mini) {
+    if (tracks.length > 2) {
+      return Container(
+        height: width,
+        width: width,
+        child: Row(
+          children: [
+            Image.file(
+              tracks[tracks.length - 1].albumArt,
+              height: width,
+              width: width / 2 - (!mini ? 12.0 : 0.0),
+              fit: BoxFit.cover,
+            ),
+            if (!mini) SizedBox(width: 8.0),
+            Column(
+              children: [
+                Image.file(
+                  tracks[tracks.length - 2].albumArt,
+                  height: width / 2 - (!mini ? 12.0 : 0.0),
+                  width: width / 2 - (!mini ? 4.0 : 0.0),
+                  fit: BoxFit.cover,
+                ),
+                if (!mini) SizedBox(height: 8.0),
+                Image.file(
+                  tracks[tracks.length - 3].albumArt,
+                  height: width / 2 - (!mini ? 4.0 : 0.0),
+                  width: width / 2 - (!mini ? 4.0 : 0.0),
+                  fit: BoxFit.cover,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    } else if (tracks.length == 2) {
+      return Container(
+        height: width,
+        width: width,
+        child: Row(
+          children: [
+            Image.file(
+              tracks[tracks.length - 1].albumArt,
+              height: width,
+              width: width / 2 - (!mini ? 12.0 : 0.0),
+              fit: BoxFit.cover,
+            ),
+            if (!mini) SizedBox(width: 8.0),
+            Image.file(
+              tracks[tracks.length - 2].albumArt,
+              height: width,
+              width: width / 2 - (!mini ? 4.0 : 0.0),
+              fit: BoxFit.cover,
+            ),
+          ],
+        ),
+      );
+    } else if (tracks.length == 1) {
+      return Image.file(
+        tracks[tracks.length - 1].albumArt,
+        height: width,
+        width: width,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Container(
+        height: width,
+        width: width,
+        alignment: Alignment.center,
+        child: Icon(
+          Icons.music_note,
+          color: Theme.of(context).primaryColor,
+          size: width / 2,
+        ),
+      );
+    }
+  }
+}
+
+class PlaylistTile extends StatefulWidget {
+  final Playlist playlist;
+  final void Function()? onTap;
+
+  PlaylistTile({
+    Key? key,
+    required this.playlist,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  PlaylistTileState createState() => PlaylistTileState();
+}
+
+class PlaylistTileState extends State<PlaylistTile> {
+  bool reactToSecondaryPress = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: (e) {
+        reactToSecondaryPress = e.kind == PointerDeviceKind.mouse &&
+            e.buttons == kSecondaryMouseButton;
+      },
+      onPointerUp: (e) async {
+        if (!reactToSecondaryPress) return;
+        if (widget.playlist.playlistId! < 0) return;
+        final result = await showMenu(
+          elevation: 4.0,
+          context: context,
+          position: RelativeRect.fromRect(
+            Offset(e.position.dx, e.position.dy) & Size(164.0, 320.0),
+            Rect.fromLTWH(
+              0,
+              0,
+              MediaQuery.of(context).size.width,
+              MediaQuery.of(context).size.height,
+            ),
+          ),
+          items: [
+            PopupMenuItem<int>(
+              padding: EdgeInsets.zero,
+              value: 0,
+              child: ListTile(
+                leading: Icon(Platform.isWindows
+                    ? FluentIcons.delete_16_regular
+                    : Icons.delete),
+                title: Text(
+                  language.DELETE,
+                  style:
+                      isDesktop ? Theme.of(context).textTheme.headline4 : null,
+                ),
+              ),
+            ),
+          ],
+        );
+        switch (result) {
+          case 0:
+            {
+              showDialog(
+                context: context,
+                builder: (subContext) => AlertDialog(
+                  title: Text(
+                    language.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER,
+                    style: Theme.of(subContext).textTheme.headline1,
+                  ),
+                  content: Text(
+                    language.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY.replaceAll(
+                      'NAME',
+                      '${widget.playlist.playlistName}',
+                    ),
+                    style: Theme.of(subContext).textTheme.headline3,
+                  ),
+                  actions: [
+                    MaterialButton(
+                      textColor: Theme.of(context).primaryColor,
+                      onPressed: () async {
+                        await collection.playlistRemove(widget.playlist);
+                        Navigator.of(subContext).pop();
+                      },
+                      child: Text(language.YES),
+                    ),
+                    MaterialButton(
+                      textColor: Theme.of(context).primaryColor,
+                      onPressed: Navigator.of(subContext).pop,
+                      child: Text(language.NO),
+                    ),
+                  ],
+                ),
+              );
+              break;
+            }
+          default:
+            break;
+        }
+      },
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: widget.onTap ??
+              () async {
+                Iterable<Color>? palette;
+                if (isMobile && widget.playlist.tracks.isNotEmpty) {
+                  final result = await PaletteGenerator.fromImageProvider(
+                      FileImage(widget.playlist.tracks.last.albumArt));
+                  palette = result.colors;
+                }
                 Navigator.of(context).push(
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
                         FadeThroughTransition(
-                      fillColor: Colors.transparent,
                       animation: animation,
                       secondaryAnimation: secondaryAnimation,
-                      child: AlbumScreen(
-                        album: this.album,
+                      child: PlaylistScreen(
+                        playlist: widget.playlist,
+                        palette: palette,
                       ),
                     ),
-                    transitionDuration: Duration(milliseconds: 300),
-                    reverseTransitionDuration: Duration(milliseconds: 300),
                   ),
                 );
               },
-              child: Container(
-                height: this.height,
-                width: this.width,
-                child: Column(
+          onLongPress: () {},
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Divider(
+                height: 1.0,
+                indent: isMobile ? 80.0 : null,
+              ),
+              Container(
+                height: 64.0,
+                alignment: Alignment.center,
+                margin: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ClipRect(
-                      child: ScaleOnHover(
-                        child: Hero(
-                          tag:
-                              'album_art_${this.album.albumName}_${this.album.albumArtistName}',
-                          child: Image.file(
-                            this.album.albumArt,
-                            fit: BoxFit.cover,
-                            height: this.width,
-                            width: this.width,
+                    const SizedBox(width: 12.0),
+                    Container(
+                      height: 56.0,
+                      width: 56.0,
+                      alignment: Alignment.center,
+                      child: Hero(
+                        tag:
+                            'playlist_art_${this.widget.playlist.playlistName}',
+                        child: PlaylistThumbnail(
+                          tracks: widget.playlist.tracks,
+                          width: 48.0,
+                          mini: true,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12.0),
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.playlist.playlistName!,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: Theme.of(context).textTheme.headline2,
                           ),
-                        ),
+                          const SizedBox(
+                            height: 2.0,
+                          ),
+                          Text(
+                            language.N_TRACKS.replaceAll(
+                              'N',
+                              '${widget.playlist.tracks.length}',
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                        ),
-                        width: this.width,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              this.album.albumName!.overflow,
-                              style: Theme.of(context).textTheme.headline2,
-                              textAlign: TextAlign.left,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 2),
-                              child: Text(
-                                '${this.album.albumArtistName} ${this.album.year != null ? ' • ' : ''} ${this.album.year ?? ''}',
-                                style: isDesktop
-                                    ? Theme.of(context)
-                                        .textTheme
-                                        .headline3
-                                        ?.copyWith(
-                                          fontSize: 12.0,
-                                        )
-                                    : Theme.of(context).textTheme.headline3,
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    const SizedBox(width: 12.0),
+                    Container(
+                      width: 64.0,
+                      height: 64.0,
+                      alignment: Alignment.center,
+                      // child: IconButton(
+                      //   onPressed: this._showBottomSheet,
+                      //   icon: Icon(Icons.more_vert),
+                      //   iconSize: 24.0,
+                      //   splashRadius: 20.0,
+                      // ),
                     ),
                   ],
                 ),
               ),
-            ),
-          )
-        : OpenContainer(
-            closedElevation: 4.0,
-            closedColor: Theme.of(context).cardColor,
-            openElevation: 0.0,
-            openColor: Theme.of(context).scaffoldBackgroundColor,
-            closedBuilder: (context, open) => InkWell(
-              onTap: () async {
-                if (palette == null) {
-                  final result = await PaletteGenerator.fromImageProvider(
-                      FileImage(this.album.albumArt));
-                  palette = result.colors;
-                }
-                open();
-              },
-              child: Container(
-                height: this.height,
-                width: this.width,
-                child: Column(
-                  children: [
-                    Ink.image(
-                      image: FileImage(this.album.albumArt),
-                      fit: BoxFit.cover,
-                      height: this.width,
-                      width: this.width,
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                        ),
-                        width: this.width,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              this.album.albumName!.overflow,
-                              style: Theme.of(context).textTheme.headline2,
-                              textAlign: TextAlign.left,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 2),
-                              child: Text(
-                                '${this.album.albumArtistName} ${this.album.year != null ? ' • ' : ''} ${this.album.year ?? ''}',
-                                style: isDesktop
-                                    ? Theme.of(context)
-                                        .textTheme
-                                        .headline3
-                                        ?.copyWith(
-                                          fontSize: 12.0,
-                                        )
-                                    : Theme.of(context).textTheme.headline3,
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            openBuilder: (context, _) => AlbumScreen(
-              album: album,
-              palette: palette,
-            ),
-          );
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
-class AlbumScreen extends StatefulWidget {
-  final Album album;
+class PlaylistScreen extends StatefulWidget {
+  final Playlist playlist;
   final Iterable<Color>? palette;
-  const AlbumScreen({
+
+  const PlaylistScreen({
     Key? key,
-    required this.album,
+    required this.playlist,
     this.palette,
   }) : super(key: key);
-  AlbumScreenState createState() => AlbumScreenState();
+  PlaylistScreenState createState() => PlaylistScreenState();
 }
 
-class AlbumScreenState extends State<AlbumScreen>
+class PlaylistScreenState extends State<PlaylistScreen>
     with SingleTickerProviderStateMixin {
   Color? color;
   Color? secondary;
@@ -356,19 +615,18 @@ class AlbumScreenState extends State<AlbumScreen>
   bool reactToSecondaryPress = false;
   bool detailsVisible = false;
   bool detailsLoaded = false;
-  ScrollController controller = ScrollController(initialScrollOffset: 136.0);
+  ScrollController controller = ScrollController(initialScrollOffset: 96.0);
 
   @override
   void initState() {
     super.initState();
-    widget.album.tracks.sort((first, second) =>
-        (first.trackNumber ?? 0).compareTo(second.trackNumber ?? 0));
-    if (isDesktop) {
+    if (isDesktop && widget.playlist.tracks.isNotEmpty) {
       Timer(
         Duration(milliseconds: 300),
         () {
           if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(FileImage(widget.album.albumArt))
+            PaletteGenerator.fromImageProvider(
+                    FileImage(widget.playlist.tracks.last.albumArt))
                 .then((palette) {
               this.setState(() {
                 this.color = palette.colors.first;
@@ -436,7 +694,7 @@ class AlbumScreenState extends State<AlbumScreen>
                     ),
                     curve: Curves.easeOut,
                     duration: Duration(
-                      milliseconds: 200,
+                      milliseconds: 400,
                     ),
                     builder: (context, color, _) => DesktopAppBar(
                       height: MediaQuery.of(context).size.height / 3,
@@ -450,65 +708,45 @@ class AlbumScreenState extends State<AlbumScreen>
                     width: MediaQuery.of(context).size.width,
                     child: Container(
                       alignment: Alignment.center,
-                      child: Card(
-                        clipBehavior: Clip.antiAlias,
+                      child: Container(
                         margin: EdgeInsets.only(top: 72.0),
-                        elevation: 4.0,
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: 1280.0,
-                            maxHeight: 720.0,
-                          ),
-                          width: MediaQuery.of(context).size.width - 136.0,
-                          height: MediaQuery.of(context).size.height - 192.0,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Expanded(
-                                flex: 6,
-                                child: Hero(
-                                  tag:
-                                      'album_art_${widget.album.albumName}_${widget.album.albumArtistName}',
-                                  child: Stack(
-                                    alignment: Alignment.bottomLeft,
-                                    children: [
-                                      Positioned.fill(
-                                        child: Image.file(
-                                          widget.album.albumArt,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ClipOval(
-                                          child: Container(
-                                            height: 36.0,
-                                            width: 36.0,
-                                            color: Colors.black54,
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  launch(
-                                                      'file:///${widget.album.albumArt.path}');
-                                                },
-                                                icon: Icon(
-                                                  Icons.image,
-                                                  size: 20.0,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                        constraints: BoxConstraints(
+                          maxWidth: 1280.0,
+                          maxHeight: 720.0,
+                        ),
+                        width: MediaQuery.of(context).size.width - 136.0,
+                        height: MediaQuery.of(context).size.height - 192.0,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 6,
+                              child: LayoutBuilder(
+                                  builder: (context, constraints) {
+                                var dimension = min(
+                                  constraints.maxWidth,
+                                  constraints.maxHeight,
+                                );
+                                return SizedBox.square(
+                                  dimension: dimension,
+                                  child: Hero(
+                                    tag:
+                                        'playlist_art_${this.widget.playlist.playlistName}',
+                                    child: PlaylistThumbnail(
+                                      tracks: widget.playlist.tracks,
+                                      width: dimension,
+                                      mini: false,
+                                    ),
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 7,
+                                );
+                              }),
+                            ),
+                            Expanded(
+                              flex: 7,
+                              child: Card(
+                                clipBehavior: Clip.antiAlias,
+                                elevation: 4.0,
                                 child: CustomListView(
                                   children: [
                                     Stack(
@@ -525,7 +763,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                widget.album.albumName!,
+                                                widget.playlist.playlistName!,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline1
@@ -535,7 +773,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                               ),
                                               SizedBox(height: 8.0),
                                               Text(
-                                                '${language.ARTIST}: ${widget.album.albumArtistName}\n${language.YEAR}: ${widget.album.year ?? 'Unknown Year'}\n${language.TRACK}: ${widget.album.tracks.length}',
+                                                '${language.TRACK}: ${widget.playlist.tracks.length}',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline3,
@@ -556,7 +794,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   Playback.play(
                                                     index: 0,
                                                     tracks: widget
-                                                            .album.tracks +
+                                                            .playlist.tracks +
                                                         ([...collection.tracks]
                                                           ..shuffle()),
                                                   );
@@ -574,7 +812,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 heroTag: 'add_to_now_playing',
                                                 onPressed: () {
                                                   Playback.add(
-                                                    widget.album.tracks,
+                                                    widget.playlist.tracks,
                                                   );
                                                 },
                                                 mini: true,
@@ -616,12 +854,13 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: Text(
-                                                        language.TRACK,
+                                                        language.TRACK_SINGLE,
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline2,
                                                       ),
                                                     ),
+                                                    flex: 3,
                                                   ),
                                                   Expanded(
                                                     child: Container(
@@ -631,23 +870,19 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: Text(
-                                                        language.ARTIST,
+                                                        language.ALBUM_SINGLE,
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline2,
                                                       ),
                                                     ),
+                                                    flex: 2,
                                                   ),
                                                 ],
                                               ),
                                               Divider(height: 1.0),
                                             ] +
-                                            (widget.album.tracks
-                                                  ..sort((first, second) =>
-                                                      (first.trackNumber ?? 1)
-                                                          .compareTo((second
-                                                                  .trackNumber ??
-                                                              1))))
+                                            widget.playlist.tracks
                                                 .map(
                                                   (track) => MouseRegion(
                                                     onEnter: (e) {
@@ -672,8 +907,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       onPointerUp: (e) async {
                                                         if (!reactToSecondaryPress)
                                                           return;
-                                                        var result =
-                                                            await showMenu(
+                                                        await showMenu(
                                                           elevation: 4.0,
                                                           context: context,
                                                           position: RelativeRect
@@ -698,20 +932,38 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                   .height,
                                                             ),
                                                           ),
-                                                          items:
-                                                              trackPopupMenuItems(
-                                                            context,
-                                                          ),
-                                                        );
-                                                        await trackPopupMenuHandle(
-                                                          context,
-                                                          track,
-                                                          result,
-                                                          recursivelyPopNavigatorOnDeleteIf:
-                                                              () => widget
-                                                                  .album
-                                                                  .tracks
-                                                                  .isEmpty,
+                                                          items: [
+                                                            PopupMenuItem<int>(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .zero,
+                                                              onTap: () async {
+                                                                collection
+                                                                    .playlistRemoveTrack(
+                                                                        widget
+                                                                            .playlist,
+                                                                        track);
+                                                              },
+                                                              value: 4,
+                                                              child: ListTile(
+                                                                leading: Icon(Platform.isWindows
+                                                                    ? FluentIcons
+                                                                        .delete_20_regular
+                                                                    : Icons
+                                                                        .delete),
+                                                                title: Text(
+                                                                  language
+                                                                      .REMOVE_FROM_PLAYLIST,
+                                                                  style: isDesktop
+                                                                      ? Theme.of(
+                                                                              context)
+                                                                          .textTheme
+                                                                          .headline4
+                                                                      : null,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
                                                         );
                                                       },
                                                       child: Material(
@@ -721,11 +973,12 @@ class AlbumScreenState extends State<AlbumScreen>
                                                           onTap: () {
                                                             Playback.play(
                                                               index: widget
-                                                                  .album.tracks
+                                                                  .playlist
+                                                                  .tracks
                                                                   .indexOf(
                                                                       track),
                                                               tracks: widget
-                                                                      .album
+                                                                      .playlist
                                                                       .tracks +
                                                                   ([
                                                                     ...collection
@@ -753,9 +1006,9 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                           Playback
                                                                               .play(
                                                                             index:
-                                                                                widget.album.tracks.indexOf(track),
+                                                                                widget.playlist.tracks.indexOf(track),
                                                                             tracks:
-                                                                                widget.album.tracks,
+                                                                                widget.playlist.tracks,
                                                                           );
                                                                         },
                                                                         icon: Icon(
@@ -793,6 +1046,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                             .ellipsis,
                                                                   ),
                                                                 ),
+                                                                flex: 3,
                                                               ),
                                                               Expanded(
                                                                 child:
@@ -806,9 +1060,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                       Alignment
                                                                           .centerLeft,
                                                                   child: Text(
-                                                                    track.trackArtistNames
-                                                                            ?.join(', ') ??
-                                                                        'Unknown Artist',
+                                                                    track.albumName ??
+                                                                        'Unknown Album',
                                                                     style: Theme.of(
                                                                             context)
                                                                         .textTheme
@@ -818,6 +1071,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                             .ellipsis,
                                                                   ),
                                                                 ),
+                                                                flex: 2,
                                                               ),
                                                             ],
                                                           ),
@@ -832,8 +1086,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -850,7 +1104,7 @@ class AlbumScreenState extends State<AlbumScreen>
                   slivers: [
                     SliverAppBar(
                       expandedHeight: MediaQuery.of(context).size.width +
-                          136.0 -
+                          96.0 -
                           MediaQuery.of(context).padding.top,
                       pinned: true,
                       leading: IconButton(
@@ -862,60 +1116,16 @@ class AlbumScreenState extends State<AlbumScreen>
                         splashRadius: 20.0,
                       ),
                       forceElevated: true,
-                      actions: [
-                        // IconButton(
-                        //   onPressed: () {},
-                        //   icon: Icon(
-                        //     Icons.favorite,
-                        //   ),
-                        //   iconSize: 24.0,
-                        //   splashRadius: 20.0,
-                        // ),
-                        IconButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (subContext) => AlertDialog(
-                                title: Text(
-                                  language
-                                      .COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-                                  style:
-                                      Theme.of(subContext).textTheme.headline1,
-                                ),
-                                content: Text(
-                                  language.COLLECTION_ALBUM_DELETE_DIALOG_BODY
-                                      .replaceAll(
-                                    'NAME',
-                                    widget.album.albumName!,
-                                  ),
-                                  style:
-                                      Theme.of(subContext).textTheme.headline3,
-                                ),
-                                actions: [
-                                  MaterialButton(
-                                    textColor: Theme.of(context).primaryColor,
-                                    onPressed: () async {
-                                      await collection.delete(widget.album);
-                                      Navigator.of(subContext).pop();
-                                    },
-                                    child: Text(language.YES),
-                                  ),
-                                  MaterialButton(
-                                    textColor: Theme.of(context).primaryColor,
-                                    onPressed: Navigator.of(subContext).pop,
-                                    child: Text(language.NO),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          icon: Icon(
-                            Icons.delete,
-                          ),
-                          iconSize: 24.0,
-                          splashRadius: 20.0,
-                        ),
-                      ],
+                      // actions: [
+                      //  IconButton(
+                      //    onPressed: () {},
+                      //    icon: Icon(
+                      //      Icons.favorite,
+                      //    ),
+                      //     iconSize: 24.0,
+                      //     splashRadius: 20.0,
+                      //   ),
+                      // ],
                       title: TweenAnimationBuilder<double>(
                         tween: Tween<double>(
                           begin: 1.0,
@@ -925,7 +1135,7 @@ class AlbumScreenState extends State<AlbumScreen>
                         builder: (context, value, _) => Opacity(
                           opacity: value,
                           child: Text(
-                            language.ALBUM_SINGLE,
+                            language.ARTIST_SINGLE,
                             style: Theme.of(context)
                                 .textTheme
                                 .headline1
@@ -937,11 +1147,41 @@ class AlbumScreenState extends State<AlbumScreen>
                       flexibleSpace: FlexibleSpaceBar(
                         background: Column(
                           children: [
-                            Image.file(
-                              widget.album.albumArt,
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width,
+                            Container(
                               height: MediaQuery.of(context).size.width,
+                              width: MediaQuery.of(context).size.width,
+                              child: LayoutBuilder(
+                                builder: (context, constraints) => Hero(
+                                  tag:
+                                      'playlist_art_${widget.playlist.playlistName}',
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(min(
+                                              constraints.maxHeight,
+                                              constraints.maxWidth) -
+                                          28.0),
+                                    ),
+                                    elevation: 4.0,
+                                    margin: EdgeInsets.all(
+                                      56.0,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: ClipOval(
+                                        child: Image.file(
+                                          widget.playlist.tracks.last.albumArt,
+                                          height: min(constraints.maxHeight,
+                                                  constraints.maxWidth) -
+                                              64.0,
+                                          width: min(constraints.maxHeight,
+                                                  constraints.maxWidth) -
+                                              64.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                             TweenAnimationBuilder<double>(
                               tween: Tween<double>(
@@ -953,7 +1193,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                 opacity: value,
                                 child: Container(
                                   color: this.color,
-                                  height: 136.0,
+                                  height: 96.0,
                                   width: MediaQuery.of(context).size.width,
                                   padding: EdgeInsets.all(16.0),
                                   child: Column(
@@ -963,7 +1203,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        widget.album.albumName!.overflow,
+                                        widget.playlist.playlistName!.overflow,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline1
@@ -977,46 +1217,6 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   ? 1
                                                   : 0],
                                               fontSize: 24.0,
-                                            ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 4.0),
-                                      Text(
-                                        widget.album.albumArtistName!.overflow,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline1
-                                            ?.copyWith(
-                                              color: [
-                                                Color(0xFFD9D9D9),
-                                                Color(0xFF363636)
-                                              ][(this.color?.computeLuminance() ??
-                                                          0.0) >
-                                                      0.5
-                                                  ? 1
-                                                  : 0],
-                                              fontSize: 16.0,
-                                            ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 2.0),
-                                      Text(
-                                        '${widget.album.year ?? 'Unknown Year'}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline1
-                                            ?.copyWith(
-                                              color: [
-                                                Color(0xFFD9D9D9),
-                                                Color(0xFF363636)
-                                              ][(this.color?.computeLuminance() ??
-                                                          0.0) >
-                                                      0.5
-                                                  ? 1
-                                                  : 0],
-                                              fontSize: 16.0,
                                             ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -1042,7 +1242,7 @@ class AlbumScreenState extends State<AlbumScreen>
                           child: InkWell(
                             onTap: () => Playback.play(
                               index: i,
-                              tracks: widget.album.tracks +
+                              tracks: widget.playlist.tracks +
                                   ([...collection.tracks]..shuffle()),
                             ),
                             onLongPress: () async {
@@ -1065,10 +1265,8 @@ class AlbumScreenState extends State<AlbumScreen>
                               );
                               await trackPopupMenuHandle(
                                 context,
-                                widget.album.tracks[i],
+                                widget.playlist.tracks[i],
                                 result,
-                                recursivelyPopNavigatorOnDeleteIf: () =>
-                                    widget.album.tracks.isEmpty,
                               );
                             },
                             child: Column(
@@ -1089,7 +1287,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                         width: 56.0,
                                         alignment: Alignment.center,
                                         child: Text(
-                                          '${widget.album.tracks[i].trackNumber ?? 1}',
+                                          '${widget.playlist.tracks[i].trackNumber ?? 1}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline3
@@ -1106,8 +1304,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              widget.album.tracks[i].trackName!
-                                                  .overflow,
+                                              widget.playlist.tracks[i]
+                                                  .trackName!.overflow,
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               style: Theme.of(context)
@@ -1120,16 +1318,14 @@ class AlbumScreenState extends State<AlbumScreen>
                                             Text(
                                               Duration(
                                                     milliseconds: widget
-                                                            .album
+                                                            .playlist
                                                             .tracks[i]
                                                             .trackDuration ??
                                                         0,
                                                   ).label +
                                                   ' • ' +
-                                                  widget.album.tracks[i]
-                                                      .trackArtistNames!
-                                                      .take(2)
-                                                      .join(', '),
+                                                  widget.playlist.tracks[i]
+                                                      .albumName!,
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               style: Theme.of(context)
@@ -1168,11 +1364,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                             );
                                             await trackPopupMenuHandle(
                                               context,
-                                              widget.album.tracks[i],
+                                              widget.playlist.tracks[i],
                                               result,
-                                              recursivelyPopNavigatorOnDeleteIf:
-                                                  () => widget
-                                                      .album.tracks.isEmpty,
                                             );
                                           },
                                           icon: Icon(
@@ -1193,7 +1386,7 @@ class AlbumScreenState extends State<AlbumScreen>
                             ),
                           ),
                         ),
-                        childCount: widget.album.tracks.length,
+                        childCount: widget.playlist.tracks.length,
                       ),
                     ),
                     SliverPadding(
@@ -1231,7 +1424,7 @@ class AlbumScreenState extends State<AlbumScreen>
                           onPressed: () {
                             Playback.play(
                               index: 0,
-                              tracks: widget.album.tracks +
+                              tracks: widget.playlist.tracks +
                                   ([...collection.tracks]..shuffle()),
                             );
                           },
@@ -1265,7 +1458,7 @@ class AlbumScreenState extends State<AlbumScreen>
                           onPressed: () {
                             Playback.play(
                               index: 0,
-                              tracks: [...widget.album.tracks]..shuffle(),
+                              tracks: [...widget.playlist.tracks]..shuffle(),
                             );
                           },
                         ),

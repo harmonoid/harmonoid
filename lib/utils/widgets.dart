@@ -20,19 +20,19 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:math' as math;
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/change_notifiers.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
 
 class CustomListView extends StatelessWidget {
   final ScrollController controller = ScrollController();
@@ -411,62 +411,86 @@ class FadeFutureBuilderState extends State<FadeFutureBuilder>
 }
 
 class ExceptionWidget extends StatelessWidget {
-  final EdgeInsets margin;
-  final double? height;
-  final double? width;
-  final Icon? icon;
   final String? title;
   final String? subtitle;
 
   const ExceptionWidget({
     Key? key,
-    this.icon,
-    required this.margin,
-    this.height,
-    this.width,
     required this.title,
     required this.subtitle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MediaQuery.of(context).size.width > kHorizontalBreakpoint
+    return isDesktop
         ? Container(
-            width: this.width,
-            height: this.height,
+            margin: EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 4.0,
+            ),
+            width: 480.0,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 4.0,
-                  ),
-                  width: this.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        this.title!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline1
-                            ?.copyWith(fontSize: 20.0),
-                        textAlign: TextAlign.start,
-                      ),
-                      const SizedBox(
-                        height: 2.0,
-                      ),
-                      Text(
-                        this.subtitle!,
-                        style: Theme.of(context).textTheme.headline3,
-                        textAlign: TextAlign.start,
-                      ),
-                    ],
+                Transform.scale(
+                  scale: 1.4,
+                  child: Image.memory(
+                    {
+                      language.NO_COLLECTION_TITLE: visualAssets.collection,
+                      language.NO_INTERNET_TITLE: visualAssets.collection,
+                      language.COLLECTION_SEARCH_NO_RESULTS_TITLE:
+                          visualAssets.searchPage,
+                    }[this.title]!,
+                    height: 196.0,
+                    width: 196.0,
+                    filterQuality: FilterQuality.high,
+                    fit: BoxFit.contain,
                   ),
                 ),
+                Text(
+                  this.title!,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1
+                      ?.copyWith(fontSize: 20.0),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 2.0,
+                ),
+                Text(
+                  this.subtitle!,
+                  style: Theme.of(context).textTheme.headline3,
+                  textAlign: TextAlign.center,
+                ),
+                if (this.title == language.NO_COLLECTION_TITLE) ...[
+                  const SizedBox(
+                    height: 8.0,
+                  ),
+                  MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  FadeThroughTransition(
+                            fillColor: Colors.transparent,
+                            animation: animation,
+                            secondaryAnimation: secondaryAnimation,
+                            child: Settings(),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      language.GO_TO_SETTINGS,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                ]
               ],
             ),
           )

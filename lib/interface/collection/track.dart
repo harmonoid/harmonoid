@@ -17,21 +17,18 @@
  *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
-import 'package:animations/animations.dart';
 import 'package:desktop/desktop.dart' as desktop;
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/interface/collection/album.dart';
-import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/utils/rendering.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class TrackTab extends StatelessWidget {
   final controller = ScrollController();
@@ -137,16 +134,13 @@ class TrackTab extends StatelessWidget {
                               'Unknown Year',
                         ][property],
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.headline3,
+                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
                 )
               : Center(
                   child: ExceptionWidget(
-                    height: 256.0,
-                    width: 420.0,
-                    margin: EdgeInsets.zero,
                     title: language.NO_COLLECTION_TITLE,
                     subtitle: language.NO_COLLECTION_SUBTITLE,
                   ),
@@ -218,9 +212,6 @@ class TrackTab extends StatelessWidget {
                     )
                   : Center(
                       child: ExceptionWidget(
-                        height: 256.0,
-                        width: 420.0,
-                        margin: EdgeInsets.zero,
                         title: language.NO_COLLECTION_TITLE,
                         subtitle: language.NO_COLLECTION_SUBTITLE,
                       ),
@@ -484,15 +475,5 @@ class TrackTileState extends State<TrackTile> {
       result,
       recursivelyPopNavigatorOnDeleteIf: () => true,
     );
-  }
-}
-
-extension on Duration {
-  String get label {
-    int minutes = inSeconds ~/ 60;
-    String seconds = inSeconds - (minutes * 60) > 9
-        ? '${inSeconds - (minutes * 60)}'
-        : '0${inSeconds - (minutes * 60)}';
-    return '$minutes:$seconds';
   }
 }

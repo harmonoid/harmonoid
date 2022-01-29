@@ -81,9 +81,6 @@ class ArtistTab extends StatelessWidget {
                   )
                 : Center(
                     child: ExceptionWidget(
-                      height: 256.0,
-                      width: 420.0,
-                      margin: EdgeInsets.zero,
                       title: language.NO_COLLECTION_TITLE,
                       subtitle: language.NO_COLLECTION_SUBTITLE,
                     ),
@@ -159,9 +156,6 @@ class ArtistTab extends StatelessWidget {
                       )
                     : Center(
                         child: ExceptionWidget(
-                          height: 256.0,
-                          width: 420.0,
-                          margin: EdgeInsets.zero,
                           title: language.NO_COLLECTION_TITLE,
                           subtitle: language.NO_COLLECTION_SUBTITLE,
                         ),
