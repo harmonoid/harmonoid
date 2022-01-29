@@ -206,7 +206,8 @@ class Language extends Strings with ChangeNotifier {
     this.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY = asset['COLLECTION_PLAYLIST_DELETE_DIALOG_BODY']!;
     this.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER = asset['COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER']!;
     this.COLLECTION_SEARCH_LABEL = asset['COLLECTION_SEARCH_LABEL']!;
-    this.COLLECTION_SEARCH_NO_RESULTS = asset['COLLECTION_SEARCH_NO_RESULTS']!;
+    this.COLLECTION_SEARCH_NO_RESULTS_SUBTITLE = asset['COLLECTION_SEARCH_NO_RESULTS_SUBTITLE']!;
+    this.COLLECTION_SEARCH_NO_RESULTS_TITLE = asset['COLLECTION_SEARCH_NO_RESULTS_TITLE']!;
     this.COLLECTION_SEARCH_WELCOME = asset['COLLECTION_SEARCH_WELCOME']!;
     this.COLLECTION_TOP_BODY_ALBUM_EMPTY = asset['COLLECTION_TOP_BODY_ALBUM_EMPTY']!;
     this.COLLECTION_TOP_SUBHEADER_ALBUM = asset['COLLECTION_TOP_SUBHEADER_ALBUM']!;
@@ -216,6 +217,9 @@ class Language extends Strings with ChangeNotifier {
     this.COLLECTION_TRACK_DELETE_DIALOG_BODY = asset['COLLECTION_TRACK_DELETE_DIALOG_BODY']!;
     this.COLLECTION_TRACK_DELETE_DIALOG_HEADER = asset['COLLECTION_TRACK_DELETE_DIALOG_HEADER']!;
     this.COMING_UP = asset['COMING_UP']!;
+    this.CREATE = asset['CREATE']!;
+    this.CREATE_NEW_PLAYLIST = asset['CREATE_NEW_PLAYLIST']!;
+    this.CREATE_PLAYLIST_SUBHEADER = asset['CREATE_PLAYLIST_SUBHEADER']!;
     this.DATE_ADDED = asset['DATE_ADDED']!;
     this.DELETE = asset['DELETE']!;
     this.DELETE_TRACK = asset['DELETE_TRACK']!;
@@ -226,6 +230,7 @@ class Language extends Strings with ChangeNotifier {
     this.ENABLE_ACRYLIC_BLUR = asset['ENABLE_ACRYLIC_BLUR']!;
     this.EXIT_SUBTITLE = asset['EXIT_SUBTITLE']!;
     this.EXIT_TITLE = asset['EXIT_TITLE']!;
+    this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
     this.INTERNET_ERROR = asset['INTERNET_ERROR']!;
     this.KNOW_MORE = asset['KNOW_MORE']!;
     this.LAST_COLLECTION_DIRECTORY_REMOVED = asset['LAST_COLLECTION_DIRECTORY_REMOVED']!;
@@ -246,6 +251,8 @@ class Language extends Strings with ChangeNotifier {
     this.NO_DOWNLOAD_UPDATE = asset['NO_DOWNLOAD_UPDATE']!;
     this.NO_INTERNET_SUBTITLE = asset['NO_INTERNET_SUBTITLE']!;
     this.NO_INTERNET_TITLE = asset['NO_INTERNET_TITLE']!;
+    this.NO_PLAYLISTS_FOUND = asset['NO_PLAYLISTS_FOUND']!;
+    this.N_TRACKS = asset['N_TRACKS']!;
     this.OK = asset['OK']!;
     this.OPTIONS = asset['OPTIONS']!;
     this.PAUSE = asset['PAUSE']!;
@@ -263,6 +270,7 @@ class Language extends Strings with ChangeNotifier {
     this.REFRESH = asset['REFRESH']!;
     this.REINDEX = asset['REINDEX']!;
     this.REMOVE = asset['REMOVE']!;
+    this.REMOVE_FROM_PLAYLIST = asset['REMOVE_FROM_PLAYLIST']!;
     this.RETRIEVING_INFO = asset['RETRIEVING_INFO']!;
     this.RETRIEVING_LINK = asset['RETRIEVING_LINK']!;
     this.SAVE_TO_DOWNLOADS = asset['SAVE_TO_DOWNLOADS']!;

@@ -46,7 +46,8 @@ class Strings {
   late String COLLECTION_PLAYLIST_DELETE_DIALOG_BODY;
   late String COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER;
   late String COLLECTION_SEARCH_LABEL;
-  late String COLLECTION_SEARCH_NO_RESULTS;
+  late String COLLECTION_SEARCH_NO_RESULTS_SUBTITLE;
+  late String COLLECTION_SEARCH_NO_RESULTS_TITLE;
   late String COLLECTION_SEARCH_WELCOME;
   late String COLLECTION_TOP_BODY_ALBUM_EMPTY;
   late String COLLECTION_TOP_SUBHEADER_ALBUM;
@@ -56,6 +57,9 @@ class Strings {
   late String COLLECTION_TRACK_DELETE_DIALOG_BODY;
   late String COLLECTION_TRACK_DELETE_DIALOG_HEADER;
   late String COMING_UP;
+  late String CREATE;
+  late String CREATE_NEW_PLAYLIST;
+  late String CREATE_PLAYLIST_SUBHEADER;
   late String DATE_ADDED;
   late String DELETE;
   late String DELETE_TRACK;
@@ -66,6 +70,7 @@ class Strings {
   late String ENABLE_ACRYLIC_BLUR;
   late String EXIT_SUBTITLE;
   late String EXIT_TITLE;
+  late String GO_TO_SETTINGS;
   late String INTERNET_ERROR;
   late String KNOW_MORE;
   late String LAST_COLLECTION_DIRECTORY_REMOVED;
@@ -86,6 +91,8 @@ class Strings {
   late String NO_DOWNLOAD_UPDATE;
   late String NO_INTERNET_SUBTITLE;
   late String NO_INTERNET_TITLE;
+  late String NO_PLAYLISTS_FOUND;
+  late String N_TRACKS;
   late String OK;
   late String OPTIONS;
   late String PAUSE;
@@ -103,6 +110,7 @@ class Strings {
   late String REFRESH;
   late String REINDEX;
   late String REMOVE;
+  late String REMOVE_FROM_PLAYLIST;
   late String RETRIEVING_INFO;
   late String RETRIEVING_LINK;
   late String SAVE_TO_DOWNLOADS;
