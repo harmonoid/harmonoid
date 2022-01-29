@@ -1,5 +1,5 @@
 name: harmonoid
-description: Elegant music app to play local music & YouTube music. Distributes music into albums & artists. Has playlists & lyrics.
+description: Elegant music app to play & manage music library.
 publish_to: "none"
 version: 0.1.9+5003
 
@@ -11,7 +11,7 @@ dependencies:
     sdk: flutter
   animations: ^2.0.0
   provider: ^6.0.1
-  libmpv: 
+  libmpv:
     git:
       url: https://github.com/alexmercerind/libmpv.dart.git
       ref: dacfab0f4e527cdcecafdf86f10d511974c980e8
@@ -19,14 +19,18 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/smtc-win32.git
       path: bindings/system_media_transport_controls.dart
+      ref: fc9c86cc1712957f734f03011b0f0b8cd42144a4
   flutter_media_metadata:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
       ref: a072bd97a8b05eb07896138173ab802480896ea6
+  windows_taskbar: ^0.0.1
+  harmonoid_visual_assets:
+    git:
+      url: https://github.com/alexmercerind/harmonoid_visual_assets.git
   assets_audio_player:
     git:
       url: https://github.com/florent37/Flutter-AssetsAudioPlayer.git
-  windows_taskbar: ^0.0.1
   dbus: ^0.6.3
   dart_discord_rpc: ^0.0.2
   fluentui_system_icons: ^1.1.136
@@ -47,7 +51,6 @@ dependencies:
   http: ^0.13.0
   path: ^1.8.0
   url_launcher: ^6.0.3
-  google_fonts: ^2.1.0
   hotkey_manager:
     git:
       url: https://github.com/alexmercerind/hotkey_manager.git

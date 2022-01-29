@@ -315,13 +315,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  google_fonts:
+  harmonoid_visual_assets:
     dependency: "direct main"
     description:
-      name: google_fonts
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
+      path: "."
+      ref: HEAD
+      resolved-ref: ec1ce8dd5c9ea0c9d82409cebe9170d5166b3108
+      url: "https://github.com/alexmercerind/harmonoid_visual_assets.git"
+    source: git
+    version: "1.0.0"
   hotkey_manager:
     dependency: "direct main"
     description:
@@ -694,8 +696,8 @@ packages:
     dependency: "direct main"
     description:
       path: "bindings/system_media_transport_controls.dart"
-      ref: HEAD
-      resolved-ref: dd4a2e113138438db2e10f2f431b626a408d5b7d
+      ref: fc9c86cc1712957f734f03011b0f0b8cd42144a4
+      resolved-ref: fc9c86cc1712957f734f03011b0f0b8cd42144a4
       url: "https://github.com/alexmercerind/smtc-win32.git"
     source: git
     version: "0.0.1"
