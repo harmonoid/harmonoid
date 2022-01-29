@@ -33,7 +33,7 @@ set(FLUTTER_ICU_DATA_FILE "${EPHEMERAL_DIR}/icudtl.dat" PARENT_SCOPE)
 set(PROJECT_BUILD_DIR "${PROJECT_DIR}/build/" PARENT_SCOPE)
 set(AOT_LIBRARY "${PROJECT_DIR}/build/lib/libapp.so" PARENT_SCOPE)
 
-list(APPEND FLUTTER_LIBRARY_HEADERS
+list(APPEND FLUTTER_COLLECTION_HEADERS
   "fl_basic_message_channel.h"
   "fl_binary_codec.h"
   "fl_binary_messenger.h"
@@ -55,7 +55,7 @@ list(APPEND FLUTTER_LIBRARY_HEADERS
   "fl_view.h"
   "flutter_linux.h"
 )
-list_prepend(FLUTTER_LIBRARY_HEADERS "${EPHEMERAL_DIR}/flutter_linux/")
+list_prepend(FLUTTER_COLLECTION_HEADERS "${EPHEMERAL_DIR}/flutter_linux/")
 add_library(flutter INTERFACE)
 target_include_directories(flutter INTERFACE
   "${EPHEMERAL_DIR}"
@@ -73,7 +73,7 @@ add_dependencies(flutter flutter_assemble)
 # since currently there's no way to get a full input/output list from the
 # flutter tool.
 add_custom_command(
-  OUTPUT ${FLUTTER_LIBRARY} ${FLUTTER_LIBRARY_HEADERS}
+  OUTPUT ${FLUTTER_LIBRARY} ${FLUTTER_COLLECTION_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/_phony_
   COMMAND ${CMAKE_COMMAND} -E env
     ${FLUTTER_TOOL_ENVIRONMENT}
@@ -83,5 +83,5 @@ add_custom_command(
 )
 add_custom_target(flutter_assemble DEPENDS
   "${FLUTTER_LIBRARY}"
-  ${FLUTTER_LIBRARY_HEADERS}
+  ${FLUTTER_COLLECTION_HEADERS}
 )

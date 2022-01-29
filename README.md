@@ -1,5 +1,5 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
-<h4 align="center">Elegant music app to play local music & YouTube music.</h4>
+<h4 align="center">Elegant music app to play & manage music library.</h4>
 <br></br>
 
 **Next BIG update is coming soon!**
@@ -26,7 +26,7 @@ _Spoilers for the next release._
 - Cross-platform (currently aiming Windows, Linux & Android).
 - MPV based music playback for strong format support (on Linux & Windows) using `dart:ffi`.
 - Native 1:1 YouTube Music client.
-- Mini-Window mode.
+- Mini-window mode.
 - D-Bus MPRIS controls for Linux.
 - Taskbar & System Media Transport Controls for Windows.
 - Small installer (< 25 MB) & low RAM usage (< 120 MB).
