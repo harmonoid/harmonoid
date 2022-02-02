@@ -53,6 +53,7 @@
   "INTERNET_ERROR": "インターネット接続を確認してください。",
   "KNOW_MORE": "もっと見る",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "コレクションには1つ以上のフォルダを残しておく必要があります。",
+  "LISTENING_TO_MUSIC": "Listening to music 💜",
   "LYRICS": "歌詞",
   "LYRICS_NOT_FOUND": "歌詞が見つかりませんでした。",
   "LYRICS_RETRIEVING": "歌詞を受信中...",
@@ -90,6 +91,7 @@
   "REINDEX": "Reindex",
   "REMOVE": "削除",
   "REMOVE_FROM_PLAYLIST": "Remove from playlist",
+  "RESULTS_FOR_QUERY": "Results for \"QUERY\"",
   "RETRIEVING_INFO": "情報を取得中",
   "RETRIEVING_LINK": "ストリームを取得中",
   "SAVE_TO_DOWNLOADS": "ダウンロードに保存",
@@ -149,5 +151,7 @@
   "YOUTUBE": "YouTube",
   "YOUTUBE_INTERNET_ERROR": "オンラインに復帰するまで端末の音楽を再生しましょう。",
   "YOUTUBE_NO_RESULTS": "見つかりませんでした。",
-  "YOUTUBE_WELCOME": "音楽を検索するかリンクを入力"
+  "YOUTUBE_WELCOME": "音楽を検索するかリンクを入力",
+  "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
+  "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }

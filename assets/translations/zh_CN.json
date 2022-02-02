@@ -53,6 +53,7 @@
   "INTERNET_ERROR": "检查您的网络连接。",
   "KNOW_MORE": "KNOW MORE",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "您的收藏中需要只是包括一个目录。",
+  "LISTENING_TO_MUSIC": "Listening to music 💜",
   "LYRICS": "歌词",
   "LYRICS_NOT_FOUND": "歌词未找到。",
   "LYRICS_RETRIEVING": "获取歌词中...",
@@ -90,6 +91,7 @@
   "REINDEX": "Reindex",
   "REMOVE": "移除",
   "REMOVE_FROM_PLAYLIST": "Remove from playlist",
+  "RESULTS_FOR_QUERY": "Results for \"QUERY\"",
   "RETRIEVING_INFO": "获取详情中",
   "RETRIEVING_LINK": "获取串流中",
   "SAVE_TO_DOWNLOADS": "保存到下载列表",
@@ -149,5 +151,7 @@
   "YOUTUBE": "YouTube",
   "YOUTUBE_INTERNET_ERROR": "当前离线中，播放一些本地音乐吧。",
   "YOUTUBE_NO_RESULTS": "未找到结果。",
-  "YOUTUBE_WELCOME": "搜索音乐或输入链接"
+  "YOUTUBE_WELCOME": "搜索音乐或输入链接",
+  "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
+  "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }

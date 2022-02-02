@@ -53,6 +53,7 @@
   "INTERNET_ERROR": "Controleer uw internet verbinding...",
   "KNOW_MORE": "KNOW MORE",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Er moet ten minste één map in uw collectie blijven.",
+  "LISTENING_TO_MUSIC": "Listening to music 💜",
   "LYRICS": "Songteksten",
   "LYRICS_NOT_FOUND": "Songteksten niet gevonden.",
   "LYRICS_RETRIEVING": "Songteksten ophalen...",
@@ -90,6 +91,7 @@
   "REINDEX": "Reindex",
   "REMOVE": "VERWIJDEREN",
   "REMOVE_FROM_PLAYLIST": "Remove from playlist",
+  "RESULTS_FOR_QUERY": "Results for \"QUERY\"",
   "RETRIEVING_INFO": "Info ophalen",
   "RETRIEVING_LINK": "Stream ophalen",
   "SAVE_TO_DOWNLOADS": "Sla op in downloads",
@@ -149,5 +151,7 @@
   "YOUTUBE": "YouTube",
   "YOUTUBE_INTERNET_ERROR": "We spelen wat lokale muziek af, totdat je terug online bent.",
   "YOUTUBE_NO_RESULTS": "Zoiets was niet te vinden.",
-  "YOUTUBE_WELCOME": "Zoek naar muziek of geef een link"
+  "YOUTUBE_WELCOME": "Zoek naar muziek of geef een link",
+  "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
+  "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }

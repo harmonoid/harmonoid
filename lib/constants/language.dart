@@ -234,6 +234,7 @@ class Language extends Strings with ChangeNotifier {
     this.INTERNET_ERROR = asset['INTERNET_ERROR']!;
     this.KNOW_MORE = asset['KNOW_MORE']!;
     this.LAST_COLLECTION_DIRECTORY_REMOVED = asset['LAST_COLLECTION_DIRECTORY_REMOVED']!;
+    this.LISTENING_TO_MUSIC = asset['LISTENING_TO_MUSIC']!;
     this.LYRICS = asset['LYRICS']!;
     this.LYRICS_NOT_FOUND = asset['LYRICS_NOT_FOUND']!;
     this.LYRICS_RETRIEVING = asset['LYRICS_RETRIEVING']!;
@@ -271,6 +272,7 @@ class Language extends Strings with ChangeNotifier {
     this.REINDEX = asset['REINDEX']!;
     this.REMOVE = asset['REMOVE']!;
     this.REMOVE_FROM_PLAYLIST = asset['REMOVE_FROM_PLAYLIST']!;
+    this.RESULTS_FOR_QUERY = asset['RESULTS_FOR_QUERY']!;
     this.RETRIEVING_INFO = asset['RETRIEVING_INFO']!;
     this.RETRIEVING_LINK = asset['RETRIEVING_LINK']!;
     this.SAVE_TO_DOWNLOADS = asset['SAVE_TO_DOWNLOADS']!;
@@ -331,6 +333,8 @@ class Language extends Strings with ChangeNotifier {
     this.YOUTUBE_INTERNET_ERROR = asset['YOUTUBE_INTERNET_ERROR']!;
     this.YOUTUBE_NO_RESULTS = asset['YOUTUBE_NO_RESULTS']!;
     this.YOUTUBE_WELCOME = asset['YOUTUBE_WELCOME']!;
+    this.YOUTUBE_WELCOME_SUBTITLE = asset['YOUTUBE_WELCOME_SUBTITLE']!;
+    this.YOUTUBE_WELCOME_TITLE = asset['YOUTUBE_WELCOME_TITLE']!;
     configuration.save(languageRegion: languageRegion);
     this.current = languageRegion;
     this.notifyListeners();

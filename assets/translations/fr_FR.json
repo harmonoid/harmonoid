@@ -53,6 +53,7 @@
   "INTERNET_ERROR": "Vérifier votre connexion Internet.",
   "KNOW_MORE": "KNOW MORE",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Au moins un dosser doit rester dans votre collection.",
+  "LISTENING_TO_MUSIC": "Listening to music 💜",
   "LYRICS": "Paroles",
   "LYRICS_NOT_FOUND": "Paroles non trouvées.",
   "LYRICS_RETRIEVING": "Récupération des paroles ...",
@@ -90,6 +91,7 @@
   "REINDEX": "Reindex",
   "REMOVE": "SUPPRIMER",
   "REMOVE_FROM_PLAYLIST": "Remove from playlist",
+  "RESULTS_FOR_QUERY": "Results for \"QUERY\"",
   "RETRIEVING_INFO": "Recuperation d'info",
   "RETRIEVING_LINK": "Recuperation stream",
   "SAVE_TO_DOWNLOADS": "Enregistrer dans les téléchargements",
@@ -149,5 +151,7 @@
   "YOUTUBE": "YouTube",
   "YOUTUBE_INTERNET_ERROR": "Lire votre musique local, en attendant que vous êtes en ligne.",
   "YOUTUBE_NO_RESULTS": "Aucune correspondance trouvée.",
-  "YOUTUBE_WELCOME": "Rechercher une chanson ou son son lien"
+  "YOUTUBE_WELCOME": "Rechercher une chanson ou son son lien",
+  "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
+  "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }

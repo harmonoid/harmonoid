@@ -53,6 +53,7 @@
   "INTERNET_ERROR": "Nincs internetelérés.",
   "KNOW_MORE": "KNOW MORE",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Atleast one folder needs to stay in your collection.",
+  "LISTENING_TO_MUSIC": "Listening to music 💜",
   "LYRICS": "Énekszöveg",
   "LYRICS_NOT_FOUND": "Nem található énekszöveg.",
   "LYRICS_RETRIEVING": "Énekszöveg betöltése...",
@@ -90,6 +91,7 @@
   "REINDEX": "Reindex",
   "REMOVE": "ELTÁVOLÍTÁS",
   "REMOVE_FROM_PLAYLIST": "Remove from playlist",
+  "RESULTS_FOR_QUERY": "Results for \"QUERY\"",
   "RETRIEVING_INFO": "Azonosítás...",
   "RETRIEVING_LINK": "Adatfolyam betöltése...",
   "SAVE_TO_DOWNLOADS": "Mentés a letöltések közé",
@@ -149,5 +151,7 @@
   "YOUTUBE": "YouTube",
   "YOUTUBE_INTERNET_ERROR": "Folytassuk a helyi zenéiddel, amíg vissza nem tér az internet.",
   "YOUTUBE_NO_RESULTS": "Nincs találat a YouTube-on!",
-  "YOUTUBE_WELCOME": "Keresés a YouTube-on (vagy link bemásolása)"
+  "YOUTUBE_WELCOME": "Keresés a YouTube-on (vagy link bemásolása)",
+  "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
+  "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }

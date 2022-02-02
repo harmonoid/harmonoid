@@ -53,6 +53,7 @@
   "INTERNET_ERROR": "Prosimo, preverite vašo internetno povezavo",
   "KNOW_MORE": "KNOW MORE",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Vsaj en direktorij mora ostati v tvoji zbirki.",
+  "LISTENING_TO_MUSIC": "Listening to music 💜",
   "LYRICS": "Besedilo pesmi",
   "LYRICS_NOT_FOUND": "Besedilo pesmi ni bilo najdeno.",
   "LYRICS_RETRIEVING": "Pridobivanje besedila pesmi...",
@@ -90,6 +91,7 @@
   "REINDEX": "Reindex",
   "REMOVE": "ODSTRANI",
   "REMOVE_FROM_PLAYLIST": "Remove from playlist",
+  "RESULTS_FOR_QUERY": "Results for \"QUERY\"",
   "RETRIEVING_INFO": "Pridobivanje informacij o pesmi",
   "RETRIEVING_LINK": "Pridobivanje toka pesmi",
   "SAVE_TO_DOWNLOADS": "Shrani med prenose",
@@ -149,5 +151,7 @@
   "YOUTUBE": "YouTube",
   "YOUTUBE_INTERNET_ERROR": "Predvajajmo lokalno glasbo, medtem ko ni internetne povezave.",
   "YOUTUBE_NO_RESULTS": "Iskali smo širno, a tega nismo mogli najti.",
-  "YOUTUBE_WELCOME": "Išči za glasbo ali pa vpiši povezavo"
+  "YOUTUBE_WELCOME": "Išči za glasbo ali pa vpiši povezavo",
+  "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
+  "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }

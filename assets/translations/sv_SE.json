@@ -53,6 +53,7 @@
   "INTERNET_ERROR": "Granska din internetanslutning.",
   "KNOW_MORE": "KNOW MORE",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Atleast one folder needs to stay in your collection.",
+  "LISTENING_TO_MUSIC": "Listening to music 💜",
   "LYRICS": "Låttexter",
   "LYRICS_NOT_FOUND": "Låttexter inte funna.",
   "LYRICS_RETRIEVING": "Hämtar låttexter...",
@@ -90,6 +91,7 @@
   "REINDEX": "Reindex",
   "REMOVE": "TA BORT",
   "REMOVE_FROM_PLAYLIST": "Remove from playlist",
+  "RESULTS_FOR_QUERY": "Results for \"QUERY\"",
   "RETRIEVING_INFO": "Hämtar info",
   "RETRIEVING_LINK": "Hämtar stream",
   "SAVE_TO_DOWNLOADS": "Spara i nerladdningar",
@@ -149,5 +151,7 @@
   "YOUTUBE": "YouTube",
   "YOUTUBE_INTERNET_ERROR": "Låt oss spela din lokala musik, medan du återgår online.",
   "YOUTUBE_NO_RESULTS": "Inget sådant hittades.",
-  "YOUTUBE_WELCOME": "Sök musik eller ange länk"
+  "YOUTUBE_WELCOME": "Sök musik eller ange länk",
+  "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
+  "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }

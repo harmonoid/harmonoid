@@ -74,6 +74,7 @@ class Strings {
   late String INTERNET_ERROR;
   late String KNOW_MORE;
   late String LAST_COLLECTION_DIRECTORY_REMOVED;
+  late String LISTENING_TO_MUSIC;
   late String LYRICS;
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
@@ -111,6 +112,7 @@ class Strings {
   late String REINDEX;
   late String REMOVE;
   late String REMOVE_FROM_PLAYLIST;
+  late String RESULTS_FOR_QUERY;
   late String RETRIEVING_INFO;
   late String RETRIEVING_LINK;
   late String SAVE_TO_DOWNLOADS;
@@ -171,4 +173,6 @@ class Strings {
   late String YOUTUBE_INTERNET_ERROR;
   late String YOUTUBE_NO_RESULTS;
   late String YOUTUBE_WELCOME;
+  late String YOUTUBE_WELCOME_SUBTITLE;
+  late String YOUTUBE_WELCOME_TITLE;
 }

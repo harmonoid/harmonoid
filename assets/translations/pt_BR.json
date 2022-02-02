@@ -53,6 +53,7 @@
   "INTERNET_ERROR": "Verifique sua conexão com a internet...",
   "KNOW_MORE": "KNOW MORE",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Atleast one folder needs to stay in your collection.",
+  "LISTENING_TO_MUSIC": "Listening to music 💜",
   "LYRICS": "Letras",
   "LYRICS_NOT_FOUND": "Letras não disponíveis.",
   "LYRICS_RETRIEVING": "Baixando letras...",
@@ -90,6 +91,7 @@
   "REINDEX": "Reindex",
   "REMOVE": "REMOVE",
   "REMOVE_FROM_PLAYLIST": "Remove from playlist",
+  "RESULTS_FOR_QUERY": "Results for \"QUERY\"",
   "RETRIEVING_INFO": "Retrieving info",
   "RETRIEVING_LINK": "Retrieving stream",
   "SAVE_TO_DOWNLOADS": "Salvar nos downloads",
@@ -149,5 +151,7 @@
   "YOUTUBE": "YouTube",
   "YOUTUBE_INTERNET_ERROR": "Let's play your local music, while you get back online..",
   "YOUTUBE_NO_RESULTS": "Nothing like that could be found.",
-  "YOUTUBE_WELCOME": "Search for music or give a link"
+  "YOUTUBE_WELCOME": "Search for music or give a link",
+  "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
+  "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }

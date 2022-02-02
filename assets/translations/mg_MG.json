@@ -53,6 +53,7 @@
   "INTERNET_ERROR": "Hamarino ny fifandraisana Internet anao.",
   "KNOW_MORE": "KNOW MORE",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Farafahakeliny rakitra iray tsy maintsy mijanona ao amin'ny fanangonana.",
+  "LISTENING_TO_MUSIC": "Listening to music 💜",
   "LYRICS": "Tonon-kira",
   "LYRICS_NOT_FOUND": "Tsy hita ilay tonon-kira.",
   "LYRICS_RETRIEVING": "Famerenana tonon-kira ...",
@@ -90,6 +91,7 @@
   "REINDEX": "Reindex",
   "REMOVE": "FAFANA",
   "REMOVE_FROM_PLAYLIST": "Remove from playlist",
+  "RESULTS_FOR_QUERY": "Results for \"QUERY\"",
   "RETRIEVING_INFO": "Recuperation d'info",
   "RETRIEVING_LINK": "Recuperation stream",
   "SAVE_TO_DOWNLOADS": "Tehirizo amin'ny fisintomana",
@@ -149,5 +151,7 @@
   "YOUTUBE": "YouTube",
   "YOUTUBE_INTERNET_ERROR": "Mihaino ny mozika eo an-toerana mandritra ny fiandrasana Internet .",
   "YOUTUBE_NO_RESULTS": "Tsy misy fifandraisana hita",
-  "YOUTUBE_WELCOME": "Mikaroha hira na ny rohiny"
+  "YOUTUBE_WELCOME": "Mikaroha hira na ny rohiny",
+  "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
+  "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }
