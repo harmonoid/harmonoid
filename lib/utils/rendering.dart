@@ -24,12 +24,13 @@ import 'package:share_plus/share_plus.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
 
@@ -253,7 +254,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
         leading: Icon(
             Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete),
         title: Text(
-          language.DELETE,
+          Language.instance.DELETE,
           style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
         ),
       ),
@@ -265,7 +266,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
         leading: Icon(
             Platform.isWindows ? FluentIcons.share_16_regular : Icons.share),
         title: Text(
-          language.SHARE,
+          Language.instance.SHARE,
           style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
         ),
       ),
@@ -278,7 +279,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
             ? FluentIcons.list_16_regular
             : Icons.queue_music),
         title: Text(
-          language.ADD_TO_PLAYLIST,
+          Language.instance.ADD_TO_PLAYLIST,
           style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
         ),
       ),
@@ -291,7 +292,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
             ? FluentIcons.music_note_2_16_regular
             : Icons.music_note),
         title: Text(
-          language.ADD_TO_NOW_PLAYING,
+          Language.instance.ADD_TO_NOW_PLAYING,
           style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
         ),
       ),
@@ -303,7 +304,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
         leading: Icon(
             Platform.isWindows ? FluentIcons.album_24_regular : Icons.album),
         title: Text(
-          language.SHOW_ALBUM,
+          Language.instance.SHOW_ALBUM,
           style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
         ),
       ),
@@ -324,13 +325,13 @@ Future<void> trackPopupMenuHandle(
           context: context,
           builder: (subContext) => AlertDialog(
             title: Text(
-              language.COLLECTION_TRACK_DELETE_DIALOG_HEADER,
+              Language.instance.COLLECTION_TRACK_DELETE_DIALOG_HEADER,
               style: Theme.of(subContext).textTheme.headline1,
             ),
             content: Text(
-              language.COLLECTION_TRACK_DELETE_DIALOG_BODY.replaceAll(
+              Language.instance.COLLECTION_TRACK_DELETE_DIALOG_BODY.replaceAll(
                 'NAME',
-                track.trackName!,
+                track.trackName,
               ),
               style: Theme.of(subContext).textTheme.headline3,
             ),
@@ -338,7 +339,7 @@ Future<void> trackPopupMenuHandle(
               MaterialButton(
                 textColor: Theme.of(context).primaryColor,
                 onPressed: () async {
-                  await collection.delete(track);
+                  await Collection.instance.delete(track);
                   Navigator.of(subContext).pop();
                   if (recursivelyPopNavigatorOnDeleteIf != null) {
                     if (recursivelyPopNavigatorOnDeleteIf()) {
@@ -347,12 +348,12 @@ Future<void> trackPopupMenuHandle(
                     }
                   }
                 },
-                child: Text(language.YES),
+                child: Text(Language.instance.YES),
               ),
               MaterialButton(
                 textColor: Theme.of(context).primaryColor,
                 onPressed: Navigator.of(subContext).pop,
-                child: Text(language.NO),
+                child: Text(Language.instance.NO),
               ),
             ],
           ),
@@ -360,7 +361,7 @@ Future<void> trackPopupMenuHandle(
         break;
       case 1:
         Share.shareFiles(
-          [track.filePath!],
+          [track.uri.toString()],
           subject: '${track.trackName} • ${track.albumName}',
         );
         break;
@@ -386,7 +387,7 @@ Future<void> trackPopupMenuHandle(
                   Padding(
                     padding: EdgeInsets.fromLTRB(28, 20, 0, 0),
                     child: Text(
-                      language.PLAYLIST_ADD_DIALOG_TITLE,
+                      Language.instance.PLAYLIST_ADD_DIALOG_TITLE,
                       style: Theme.of(subContext).textTheme.headline1?.copyWith(
                             fontSize: 20.0,
                           ),
@@ -395,7 +396,7 @@ Future<void> trackPopupMenuHandle(
                   Padding(
                     padding: EdgeInsets.fromLTRB(28, 2, 0, 16),
                     child: Text(
-                      language.PLAYLIST_ADD_DIALOG_BODY,
+                      Language.instance.PLAYLIST_ADD_DIALOG_BODY,
                       style: Theme.of(subContext).textTheme.headline3,
                     ),
                   ),
@@ -411,12 +412,12 @@ Future<void> trackPopupMenuHandle(
                         : 280.0,
                     child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: collection.playlists.length,
+                      itemCount: Collection.instance.playlists.length,
                       itemBuilder: (context, i) => PlaylistTile(
-                        playlist: collection.playlists[i],
+                        playlist: Collection.instance.playlists[i],
                         onTap: () async {
-                          await collection.playlistAddTrack(
-                            collection.playlists[i],
+                          await Collection.instance.playlistAddTrack(
+                            Collection.instance.playlists[i],
                             track,
                           );
                           Navigator.of(subContext).pop();
@@ -434,24 +435,20 @@ Future<void> trackPopupMenuHandle(
               MaterialButton(
                 textColor: Theme.of(context).primaryColor,
                 onPressed: Navigator.of(subContext).pop,
-                child: Text(language.CANCEL),
+                child: Text(Language.instance.CANCEL),
               ),
             ],
           ),
         );
         break;
       case 3:
-        Playback.add(
-          [
-            track,
-          ],
-        );
+        Playback.instance.add([track]);
         break;
       case 4:
         {
           Iterable<Color>? palette;
           late final Album album;
-          for (final item in collection.albums) {
+          for (final item in Collection.instance.albums) {
             if (item.albumName == track.albumName && item.year == track.year) {
               album = item;
               break;
@@ -459,7 +456,7 @@ Future<void> trackPopupMenuHandle(
           }
           if (isMobile) {
             final result = await PaletteGenerator.fromImageProvider(
-                FileImage(album.albumArt));
+                Collection.instance.getAlbumArt(album));
             palette = result.colors;
           }
           Navigator.of(context).push(
@@ -481,6 +478,64 @@ Future<void> trackPopupMenuHandle(
   }
 }
 
+InputDecoration desktopInputDecoration(
+  BuildContext context,
+  String hintText, {
+  Widget? trailingIcon,
+  VoidCallback? trailingIconOnPressed,
+}) {
+  return InputDecoration(
+    suffixIcon: Material(
+      color: Colors.transparent,
+      child: trailingIcon == null
+          ? null
+          : IconButton(
+              splashRadius: 14.0,
+              highlightColor: Colors.transparent,
+              onPressed: trailingIconOnPressed,
+              icon: trailingIcon,
+              iconSize: 24.0,
+            ),
+    ),
+    contentPadding:
+        EdgeInsets.only(left: 10.0, bottom: trailingIcon == null ? 18.0 : 14.0),
+    hintText: hintText,
+    hintStyle: Theme.of(context).textTheme.headline3?.copyWith(
+          color: Theme.of(context).brightness == Brightness.light
+              ? Colors.black.withOpacity(0.6)
+              : Colors.white60,
+        ),
+    filled: true,
+    fillColor: Theme.of(context).brightness == Brightness.light
+        ? Colors.white
+        : Color(0xFF202020),
+    hoverColor: Theme.of(context).brightness == Brightness.light
+        ? Colors.white
+        : Color(0xFF202020),
+    border: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Theme.of(context).dividerColor.withOpacity(0.32),
+        width: 0.6,
+      ),
+      borderRadius: BorderRadius.zero,
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Theme.of(context).dividerColor.withOpacity(0.32),
+        width: 0.6,
+      ),
+      borderRadius: BorderRadius.zero,
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Theme.of(context).dividerColor.withOpacity(0.32),
+        width: 0.6,
+      ),
+      borderRadius: BorderRadius.zero,
+    ),
+  );
+}
+
 class TabRoute {
   final int index;
   final TabRouteSender sender;
@@ -500,6 +555,8 @@ extension StringExtension on String {
   get overflow => Characters(this)
       .replaceAll(Characters(''), Characters('\u{200B}'))
       .toString();
+
+  get safePath => replaceAll(RegExp(r'[\\/:*?""<>| ]'), '');
 }
 
 extension DateTimeExtension on DateTime {
