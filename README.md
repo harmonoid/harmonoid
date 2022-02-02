@@ -4,7 +4,7 @@
 
 **Next BIG update is coming soon!**
 
-Join our **[Discord server](https://discord.gg/rBFwXNJJ)** till then? Below are the screenshots of the upcoming release.
+Join our **[Discord server](https://discord.gg/2Rc3edFWd8)** till then? Below are the screenshots of the upcoming release.
 
 <br></br>
 ![0](https://user-images.githubusercontent.com/28951144/151304862-f4d336c6-4559-477b-b82e-a876f78f5eec.png)
