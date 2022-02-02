@@ -20,19 +20,23 @@
 import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
-import 'package:harmonoid/utils/theme.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path;
 
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 /// Configuration
 /// -------------
 ///
-/// App configuration & settings persistence management.
+/// App configuration & settings persistence management for [Harmonoid](https://github.com/harmonoid/harmonoid).
 ///
 class Configuration extends ConfigurationKeys {
+  /// [Configuration] object instance.
+  static late Configuration instance = Configuration();
+
   /// Configuration storage [File] to hold serialized JSON document.
   late File file;
 
@@ -58,24 +62,23 @@ class Configuration extends ConfigurationKeys {
   /// Generates from scratch if no configuration is found.
   ///
   static Future<void> initialize() async {
-    configuration = Configuration();
-    configuration.file = File(
+    instance.file = File(
       path.join(
-        await configuration.configurationDirectory,
+        await instance.configurationDirectory,
         '.Harmonoid',
         'Configuration.json',
       ),
     );
-    if (!await configuration.file.exists()) {
-      await configuration.file.create(recursive: true);
-      await configuration.file.writeAsString(
-        convert.JsonEncoder.withIndent('  ').convert(default_configuration),
+    if (!await instance.file.exists()) {
+      await instance.file.create(recursive: true);
+      await instance.file.writeAsString(
+        convert.JsonEncoder.withIndent('  ').convert(defaultConfiguration),
       );
     }
-    await configuration.read();
-    configuration.cacheDirectory = Directory(
+    await instance.read();
+    instance.cacheDirectory = Directory(
       path.join(
-        await configuration.configurationDirectory,
+        await instance.configurationDirectory,
         '.Harmonoid',
       ),
     );
@@ -88,6 +91,7 @@ class Configuration extends ConfigurationKeys {
     LanguageRegion? languageRegion,
     Accent? accent,
     ThemeMode? themeMode,
+    CollectionOrder? collectionOrderType,
     CollectionSort? collectionSortType,
     bool? automaticAccent,
     bool? notificationLyrics,
@@ -110,6 +114,9 @@ class Configuration extends ConfigurationKeys {
     if (collectionSortType != null) {
       this.collectionSortType = collectionSortType;
     }
+    if (collectionOrderType != null) {
+      this.collectionOrderType = collectionOrderType;
+    }
     if (collectionSearchRecent != null) {
       this.collectionSearchRecent = collectionSearchRecent;
     }
@@ -125,18 +132,19 @@ class Configuration extends ConfigurationKeys {
     if (notificationLyrics != null) {
       this.notificationLyrics = notificationLyrics;
     }
-    await configuration.file.writeAsString(
+    await file.writeAsString(
       convert.JsonEncoder.withIndent('  ').convert(
         {
           'collectionDirectories': this
-              .collectionDirectories!
+              .collectionDirectories
               .map((directory) => directory.path)
               .toList()
               .cast<String>(),
-          'languageRegion': this.languageRegion!.index,
+          'languageRegion': this.languageRegion.index,
           'accent': kAccents.indexOf(this.accent),
-          'themeMode': this.themeMode!.index,
-          'collectionSortType': this.collectionSortType!.index,
+          'themeMode': this.themeMode.index,
+          'collectionSortType': this.collectionSortType.index,
+          'collectionOrderType': this.collectionOrderType.index,
           'automaticAccent': this.automaticAccent,
           'notificationLyrics': this.notificationLyrics,
           'collectionSearchRecent': this.collectionSearchRecent,
@@ -149,52 +157,65 @@ class Configuration extends ConfigurationKeys {
 
   /// Reads various configuration keys & stores in memory.
   ///
-  Future<dynamic> read() async {
-    Map<String, dynamic> current =
-        convert.jsonDecode(await this.file.readAsString());
-    // Emblace default values for the keys that not found. Possibly due to app update.
-    default_configuration.keys.forEach(
-      (String key) {
-        if (!current.containsKey(key)) {
-          current[key] = default_configuration[key];
-        }
-      },
-    );
-    // Check for actual keys from the cache.
-    this.collectionDirectories = current['collectionDirectories']
-        .map((directory) => Directory(directory))
-        .toList()
-        .cast<Directory>();
-    this.languageRegion = LanguageRegion.values[current['languageRegion']];
-    this.accent = kAccents[current['accent']];
-    this.themeMode = ThemeMode.values[current['themeMode']];
-    this.collectionSortType =
-        CollectionSort.values[current['collectionSortType']];
-    this.automaticAccent = current['automaticAccent'];
-    this.notificationLyrics = current['notificationLyrics'];
-    this.collectionSearchRecent =
-        current['collectionSearchRecent'].cast<String>();
-    this.discoverSearchRecent = current['discoverSearchRecent'].cast<String>();
-    this.discoverRecent = current['discoverRecent'].cast<String>();
+  Future<void> read({
+    bool retry = true,
+  }) async {
+    try {
+      Map<String, dynamic> current =
+          convert.jsonDecode(await file.readAsString());
+      // Emblace default values for the keys that not found. Possibly due to app update.
+      defaultConfiguration.keys.forEach(
+        (String key) {
+          if (!current.containsKey(key)) {
+            current[key] = defaultConfiguration[key];
+          }
+        },
+      );
+      // Check for actual keys from the cache.
+      collectionDirectories = current['collectionDirectories']
+          .map((directory) => Directory(directory))
+          .toList()
+          .cast<Directory>();
+      languageRegion = LanguageRegion.values[current['languageRegion']];
+      accent = kAccents[current['accent']];
+      themeMode = ThemeMode.values[current['themeMode']];
+      collectionSortType = CollectionSort.values[current['collectionSortType']];
+      collectionOrderType =
+          CollectionOrder.values[current['collectionOrderType']];
+      automaticAccent = current['automaticAccent'];
+      notificationLyrics = current['notificationLyrics'];
+      collectionSearchRecent = current['collectionSearchRecent'].cast<String>();
+      discoverSearchRecent = current['discoverSearchRecent'].cast<String>();
+      discoverRecent = current['discoverRecent'].cast<String>();
+    } catch (exception) {
+      if (!retry) throw exception;
+      if (!await file.exists()) {
+        await file.create(recursive: true);
+      }
+      await file.writeAsString(
+        convert.JsonEncoder.withIndent('  ').convert(defaultConfiguration),
+      );
+      read(retry: false);
+    }
   }
 }
 
 abstract class ConfigurationKeys {
-  List<Directory>? collectionDirectories;
-  Directory? cacheDirectory;
-  LanguageRegion? languageRegion;
-  Accent? accent;
-  ThemeMode? themeMode;
-  CollectionSort? collectionSortType;
-  bool? automaticAccent;
-  bool? notificationLyrics;
-  List<String>? collectionSearchRecent;
-  List<String>? discoverSearchRecent;
-  List<String>? discoverRecent;
+  late List<Directory> collectionDirectories;
+  late Directory cacheDirectory;
+  late LanguageRegion languageRegion;
+  late Accent accent;
+  late ThemeMode themeMode;
+  late CollectionSort collectionSortType;
+  late CollectionOrder collectionOrderType;
+  late bool automaticAccent;
+  late bool notificationLyrics;
+  late List<String> collectionSearchRecent;
+  late List<String> discoverSearchRecent;
+  late List<String> discoverRecent;
 }
 
-// ignore: non_constant_identifier_names
-final Map<String, dynamic> default_configuration = {
+final Map<String, dynamic> defaultConfiguration = {
   'collectionDirectories': <String>[
     {
       'windows': () => path.join(Platform.environment['USERPROFILE']!, 'Music'),
@@ -205,14 +226,12 @@ final Map<String, dynamic> default_configuration = {
   ],
   'languageRegion': 0,
   'accent': 0,
-  'themeMode': 1,
-  'collectionSortType': 0,
+  'themeMode': isMobile ? 0 : 1,
+  'collectionSortType': 1,
+  'collectionOrderType': 1,
   'automaticAccent': false,
   'notificationLyrics': true,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
-  'discoverRecent': ['XfEMj-z3TtA'],
+  'discoverRecent': [],
 };
-
-/// Late initialized configuration object instance.
-late Configuration configuration;
