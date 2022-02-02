@@ -284,8 +284,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: a072bd97a8b05eb07896138173ab802480896ea6
-      resolved-ref: a072bd97a8b05eb07896138173ab802480896ea6
+      ref: harmonoid
+      resolved-ref: "6984082511b597916e987e0b099c67cd1437ea42"
       url: "https://github.com/alexmercerind/flutter_media_metadata.git"
     source: git
     version: "0.1.2"
@@ -318,11 +318,9 @@ packages:
   harmonoid_visual_assets:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: ec1ce8dd5c9ea0c9d82409cebe9170d5166b3108
-      url: "https://github.com/alexmercerind/harmonoid_visual_assets.git"
-    source: git
+      path: "external/harmonoid_visual_assets"
+      relative: true
+    source: path
     version: "1.0.0"
   hotkey_manager:
     dependency: "direct main"
@@ -385,11 +383,9 @@ packages:
   libmpv:
     dependency: "direct main"
     description:
-      path: "."
-      ref: dacfab0f4e527cdcecafdf86f10d511974c980e8
-      resolved-ref: dacfab0f4e527cdcecafdf86f10d511974c980e8
-      url: "https://github.com/alexmercerind/libmpv.dart.git"
-    source: git
+      path: "external/libmpv.dart"
+      relative: true
+    source: path
     version: "0.0.1"
   logging:
     dependency: transitive
@@ -695,11 +691,9 @@ packages:
   system_media_transport_controls:
     dependency: "direct main"
     description:
-      path: "bindings/system_media_transport_controls.dart"
-      ref: fc9c86cc1712957f734f03011b0f0b8cd42144a4
-      resolved-ref: fc9c86cc1712957f734f03011b0f0b8cd42144a4
-      url: "https://github.com/alexmercerind/smtc-win32.git"
-    source: git
+      path: "external/smtc-win32/bindings/system_media_transport_controls.dart"
+      relative: true
+    source: path
     version: "0.0.1"
   term_glyph:
     dependency: transitive
@@ -791,7 +785,7 @@ packages:
       name: windows_taskbar
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1"
+    version: "1.1.0"
   xdg_directories:
     dependency: transitive
     description:

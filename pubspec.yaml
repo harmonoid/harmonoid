@@ -4,42 +4,44 @@ publish_to: "none"
 version: 0.1.9+5003
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.14.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  animations: ^2.0.0
   provider: ^6.0.1
-  libmpv:
+  animations: ^2.0.0
+  draggable_scrollbar: ^0.1.0
+  material_floating_search_bar: ^0.3.6
+  desktop:
     git:
-      url: https://github.com/alexmercerind/libmpv.dart.git
-      ref: dacfab0f4e527cdcecafdf86f10d511974c980e8
-  system_media_transport_controls:
-    git:
-      url: https://github.com/alexmercerind/smtc-win32.git
-      path: bindings/system_media_transport_controls.dart
-      ref: fc9c86cc1712957f734f03011b0f0b8cd42144a4
+      url: https://github.com/alexmercerind/desktop.git
+      path: desktop
+  implicitly_animated_reorderable_list: ^0.4.0-dev+4
+  fluentui_system_icons: ^1.1.136
+  palette_generator: ^0.3.2
   flutter_media_metadata:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
-      ref: a072bd97a8b05eb07896138173ab802480896ea6
-  windows_taskbar: ^0.0.1
+      ref: harmonoid
+  libmpv:
+    path: external/libmpv.dart
+  system_media_transport_controls:
+    path: external/smtc-win32/bindings/system_media_transport_controls.dart
   harmonoid_visual_assets:
-    git:
-      url: https://github.com/alexmercerind/harmonoid_visual_assets.git
+    path: external/harmonoid_visual_assets
+  windows_taskbar: ^1.1.0
   assets_audio_player:
     git:
       url: https://github.com/florent37/Flutter-AssetsAudioPlayer.git
-  dbus: ^0.6.3
   dart_discord_rpc: ^0.0.2
-  fluentui_system_icons: ^1.1.136
   filepicker_windows: ^2.0.0
   file_selector: ^0.8.2
   file_selector_linux:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/file_selector/file_selector_linux
+  dbus: ^0.6.3
   bitsdojo_window:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
@@ -55,14 +57,6 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/hotkey_manager.git
       ref: main
-  implicitly_animated_reorderable_list: ^0.4.0-dev+4
-  desktop:
-    git:
-      url: https://github.com/alexmercerind/desktop.git
-      path: desktop
-  palette_generator: ^0.3.2
-  draggable_scrollbar: ^0.1.0
-  material_floating_search_bar: ^0.3.6
 
 dependency_overrides:
   bitsdojo_window_windows:
