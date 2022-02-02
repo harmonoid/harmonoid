@@ -20,15 +20,15 @@
 part of 'media.dart';
 
 class Artist extends Media {
-  String artistName;
+  final String artistName;
   final tracks = <Track>[];
   final albums = <Album>[];
 
   @override
   Map<String, dynamic> toJson() => {
-        'artistName': this.artistName,
-        'albums': this.albums.map((album) => album.toJson()).toList(),
-        'tracks': this.tracks.map((track) => track.toJson()).toList(),
+        'artistName': artistName,
+        'albums': albums.map((album) => album.toJson()).toList(),
+        'tracks': tracks.map((track) => track.toJson()).toList(),
       };
 
   factory Artist.fromJson(Map<String, dynamic> json) => Artist(
@@ -52,15 +52,15 @@ class Artist extends Media {
   @override
   bool operator ==(Object media) {
     if (media is Artist) {
-      return media.artistName == this.artistName;
+      return media.artistName == artistName;
     }
     throw FormatException();
   }
 
   @override
-  int get hashCode => this.artistName.hashCode;
+  int get hashCode => artistName.hashCode;
 
-  DateTime get timeAdded => this.tracks.reduce((value, element) {
+  DateTime get timeAdded => tracks.reduce((value, element) {
         if (element.timeAdded.millisecondsSinceEpoch >
             value.timeAdded.millisecondsSinceEpoch) return value;
         return element;

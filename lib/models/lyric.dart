@@ -36,5 +36,3 @@ class Lyric {
         words: map['words'],
       );
 }
-
-typedef Lyrics = List<Lyric>;

@@ -35,16 +35,16 @@ class Track extends Media {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'uri': this.uri.toString(),
-      'trackName': this.trackName,
-      'albumName': this.albumName,
-      'trackNumber': this.trackNumber,
-      'albumArtistName': this.albumArtistName,
-      'trackArtistNames': this.trackArtistNames,
-      'year': this.year,
-      'timeAdded': this.timeAdded.millisecondsSinceEpoch,
-      'duration': this.duration?.inMilliseconds,
-      'bitrate': this.bitrate,
+      'uri': uri.toString(),
+      'trackName': trackName,
+      'albumName': albumName,
+      'trackNumber': trackNumber,
+      'albumArtistName': albumArtistName,
+      'trackArtistNames': trackArtistNames,
+      'year': year,
+      'timeAdded': timeAdded.millisecondsSinceEpoch,
+      'duration': duration?.inMilliseconds,
+      'bitrate': bitrate,
     };
   }
 
@@ -125,12 +125,14 @@ class Track extends Media {
   @override
   bool operator ==(Object media) {
     if (media is Track) {
-      return media.trackName == this.trackName &&
-          media.albumArtistName == this.albumArtistName;
+      return media.trackName == trackName &&
+          media.trackNumber == media.trackNumber &&
+          media.albumArtistName == albumArtistName;
     }
     throw FormatException();
   }
 
   @override
-  int get hashCode => this.trackName.hashCode ^ this.albumArtistName.hashCode;
+  int get hashCode =>
+      trackName.hashCode ^ trackNumber.hashCode ^ albumArtistName.hashCode;
 }

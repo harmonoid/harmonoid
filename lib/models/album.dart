@@ -27,10 +27,10 @@ class Album extends Media {
 
   @override
   Map<String, dynamic> toJson() => {
-        'albumName': this.albumName,
-        'year': this.year,
-        'albumArtistName': this.albumArtistName,
-        'tracks': this.tracks.map((track) => track.toJson()).toList(),
+        'albumName': albumName,
+        'year': year,
+        'albumArtistName': albumArtistName,
+        'tracks': tracks.map((track) => track.toJson()).toList(),
       };
 
   factory Album.fromJson(dynamic json) => Album(
@@ -52,20 +52,18 @@ class Album extends Media {
   @override
   bool operator ==(Object media) {
     if (media is Album) {
-      return media.albumName == this.albumName &&
-          media.albumArtistName == this.albumArtistName &&
-          media.year == this.year;
+      return media.albumName == albumName &&
+          media.albumArtistName == albumArtistName &&
+          media.year == year;
     }
     throw FormatException();
   }
 
   @override
   int get hashCode =>
-      this.albumName.hashCode ^
-      this.albumArtistName.hashCode ^
-      this.year.hashCode;
+      albumName.hashCode ^ albumArtistName.hashCode ^ year.hashCode;
 
-  DateTime get timeAdded => this.tracks.reduce((value, element) {
+  DateTime get timeAdded => tracks.reduce((value, element) {
         if (element.timeAdded.millisecondsSinceEpoch >
             value.timeAdded.millisecondsSinceEpoch) return value;
         return element;
