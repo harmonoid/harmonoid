@@ -59,6 +59,7 @@
   "LYRICS_RETRIEVING": "Énekszöveg betöltése...",
   "MENU": "Menü",
   "M_TRACKS_AND_N_ALBUMS": "M tracks & N albums",
+  "NEXT": "Next",
   "NO": "NEM",
   "NOTIFICATION_LYRICS_SUBTITLE": "Énekszöveg megjelenítése értesítésként.",
   "NOTIFICATION_LYRICS_TITLE": "Énekszöveg értesítésben",
@@ -75,8 +76,8 @@
   "N_TRACKS": "N tracks",
   "OK": "OK",
   "OPTIONS": "Opciók",
-  "PAUSE": "Szünet",
-  "PLAY": "Lejátszás",
+  "PAUSE": "Pause",
+  "PLAY": "Play",
   "PLAYLIST": "Playlists",
   "PLAYLISTS_CREATE": "Lejátszási lista létrehozása",
   "PLAYLISTS_SUBHEADER": "Playlists available on your device",
@@ -86,6 +87,7 @@
   "PLAYLIST_ADD_DIALOG_TITLE": "Hozzáadás lejátszási listához",
   "PLAYLIST_TRACKS_SUBHEADER": "A lejátszási lista számai",
   "PLAY_NOW": "Lejátszás most",
+  "PREVIOUS": "Previous",
   "RECOMMENDATIONS": "Ajánlott",
   "REFRESH": "FRISSÍTÉS",
   "REINDEX": "Reindex",
@@ -155,3 +157,4 @@
   "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
   "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }
+

@@ -82,12 +82,13 @@ class LanguageRegion {
     github: 'https://github.com/alexmercerind',
   );
   static const deDe = LanguageRegion(
-      code: 'de',
-      countryCode: 'DE',
-      name: 'Deutsche',
-      country: 'Deutschland',
-      translator: 'MickLesk',
-      github: 'https://github.com/MickLesk');
+    code: 'de',
+    countryCode: 'DE',
+    name: 'Deutsche',
+    country: 'Deutschland',
+    translator: 'MickLesk',
+    github: 'https://github.com/MickLesk',
+  );
   static const nlNl = LanguageRegion(
     code: 'nl',
     countryCode: 'NL',
@@ -165,14 +166,13 @@ class LanguageRegion {
 }
 
 class Language extends Strings with ChangeNotifier {
-  late LanguageRegion current;
-
-  static Language? get() => language;
+  /// [Language] object instance. Must call [Language.initialize].
+  static late Language instance;
 
   static Future<void> initialize() async {
-    language = Language();
-    await language.set(
-      languageRegion: configuration.languageRegion!,
+    instance = Language();
+    await instance.set(
+      languageRegion: Configuration.instance.languageRegion,
     );
   }
 
@@ -240,6 +240,7 @@ class Language extends Strings with ChangeNotifier {
     this.LYRICS_RETRIEVING = asset['LYRICS_RETRIEVING']!;
     this.MENU = asset['MENU']!;
     this.M_TRACKS_AND_N_ALBUMS = asset['M_TRACKS_AND_N_ALBUMS']!;
+    this.NEXT = asset['NEXT']!;
     this.NO = asset['NO']!;
     this.NOTIFICATION_LYRICS_SUBTITLE = asset['NOTIFICATION_LYRICS_SUBTITLE']!;
     this.NOTIFICATION_LYRICS_TITLE = asset['NOTIFICATION_LYRICS_TITLE']!;
@@ -267,6 +268,7 @@ class Language extends Strings with ChangeNotifier {
     this.PLAYLIST_ADD_DIALOG_TITLE = asset['PLAYLIST_ADD_DIALOG_TITLE']!;
     this.PLAYLIST_TRACKS_SUBHEADER = asset['PLAYLIST_TRACKS_SUBHEADER']!;
     this.PLAY_NOW = asset['PLAY_NOW']!;
+    this.PREVIOUS = asset['PREVIOUS']!;
     this.RECOMMENDATIONS = asset['RECOMMENDATIONS']!;
     this.REFRESH = asset['REFRESH']!;
     this.REINDEX = asset['REINDEX']!;
@@ -335,15 +337,14 @@ class Language extends Strings with ChangeNotifier {
     this.YOUTUBE_WELCOME = asset['YOUTUBE_WELCOME']!;
     this.YOUTUBE_WELCOME_SUBTITLE = asset['YOUTUBE_WELCOME_SUBTITLE']!;
     this.YOUTUBE_WELCOME_TITLE = asset['YOUTUBE_WELCOME_TITLE']!;
-    configuration.save(languageRegion: languageRegion);
+    Configuration.instance.save(languageRegion: languageRegion);
     this.current = languageRegion;
     this.notifyListeners();
   }
+
+  late LanguageRegion current;
 
   @override
   // ignore: must_call_super
   void dispose() {}
 }
-
-/// Late initialized [Language] object instance.
-late Language language;

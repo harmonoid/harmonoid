@@ -59,6 +59,7 @@
   "LYRICS_RETRIEVING": "Famerenana tonon-kira ...",
   "MENU": "Menu",
   "M_TRACKS_AND_N_ALBUMS": "M tracks & N albums",
+  "NEXT": "Next",
   "NO": "TSIA",
   "NOTIFICATION_LYRICS_SUBTITLE": "Asehoy ny tonon-kira amin'ny fampandrenesana.",
   "NOTIFICATION_LYRICS_TITLE": "Fampahafantarana tonon-kira",
@@ -75,8 +76,8 @@
   "N_TRACKS": "N tracks",
   "OK": "OK",
   "OPTIONS": "Safidy",
-  "PAUSE": "miato kely",
-  "PLAY": "Vakio",
+  "PAUSE": "Pause",
+  "PLAY": "Play",
   "PLAYLIST": "Playlists",
   "PLAYLISTS_CREATE": "Mamorona filaharan-kira vaovao",
   "PLAYLISTS_SUBHEADER": "Playlists available on your device",
@@ -86,6 +87,7 @@
   "PLAYLIST_ADD_DIALOG_TITLE": "Ampio amin'ny filaharan-kira",
   "PLAYLIST_TRACKS_SUBHEADER": "Ireto ny hira avy amin'ity filaharan-kira ity",
   "PLAY_NOW": "Vakio izao",
+  "PREVIOUS": "Previous",
   "RECOMMENDATIONS": "Tolo-kevitra",
   "REFRESH": "Havaozina",
   "REINDEX": "Reindex",
@@ -155,3 +157,6 @@
   "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
   "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }
+
+}
+

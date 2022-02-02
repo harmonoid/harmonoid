@@ -59,6 +59,7 @@
   "LYRICS_RETRIEVING": "获取歌词中...",
   "MENU": "菜单",
   "M_TRACKS_AND_N_ALBUMS": "M tracks & N albums",
+  "NEXT": "Next",
   "NO": "否",
   "NOTIFICATION_LYRICS_SUBTITLE": "在通知栏显示歌词。",
   "NOTIFICATION_LYRICS_TITLE": "通知栏歌词",
@@ -75,8 +76,8 @@
   "N_TRACKS": "N tracks",
   "OK": "好的",
   "OPTIONS": "选项",
-  "PAUSE": "暂停",
-  "PLAY": "播放",
+  "PAUSE": "Pause",
+  "PLAY": "Play",
   "PLAYLIST": "Playlists",
   "PLAYLISTS_CREATE": "创建一个新播放列表",
   "PLAYLISTS_SUBHEADER": "Playlists available on your device",
@@ -86,6 +87,7 @@
   "PLAYLIST_ADD_DIALOG_TITLE": "添加到播放列表",
   "PLAYLIST_TRACKS_SUBHEADER": "这里展示的是播放列表中的歌曲",
   "PLAY_NOW": "现在播放",
+  "PREVIOUS": "Previous",
   "RECOMMENDATIONS": "推荐",
   "REFRESH": "刷新",
   "REINDEX": "Reindex",
@@ -155,3 +157,5 @@
   "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
   "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }
+
+

@@ -59,6 +59,7 @@
   "LYRICS_RETRIEVING": "歌詞を受信中...",
   "MENU": "メニュー",
   "M_TRACKS_AND_N_ALBUMS": "M tracks & N albums",
+  "NEXT": "Next",
   "NO": "いいえ",
   "NOTIFICATION_LYRICS_SUBTITLE": "歌詞を通知パネルに表示する",
   "NOTIFICATION_LYRICS_TITLE": "歌詞を通知に表示",
@@ -75,8 +76,8 @@
   "N_TRACKS": "N tracks",
   "OK": "OK",
   "OPTIONS": "オプション",
-  "PAUSE": "一時停止",
-  "PLAY": "再生",
+  "PAUSE": "Pause",
+  "PLAY": "Play",
   "PLAYLIST": "Playlists",
   "PLAYLISTS_CREATE": "新しいプレイリストを作成",
   "PLAYLISTS_SUBHEADER": "Playlists available on your device",
@@ -86,6 +87,7 @@
   "PLAYLIST_ADD_DIALOG_TITLE": "プレイリストに追加",
   "PLAYLIST_TRACKS_SUBHEADER": "このプレイリストには以下のトラックがあります",
   "PLAY_NOW": "今すぐ再生",
+  "PREVIOUS": "Previous",
   "RECOMMENDATIONS": "おすすめ",
   "REFRESH": "リフレッシュ",
   "REINDEX": "Reindex",
@@ -155,3 +157,6 @@
   "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
   "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }
+o"
+}
+

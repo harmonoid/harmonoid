@@ -59,6 +59,7 @@
   "LYRICS_RETRIEVING": "Baixando letras...",
   "MENU": "Menu",
   "M_TRACKS_AND_N_ALBUMS": "M tracks & N albums",
+  "NEXT": "Next",
   "NO": "NÃO",
   "NOTIFICATION_LYRICS_SUBTITLE": "Mostrar letras numa notificação.",
   "NOTIFICATION_LYRICS_TITLE": "Letras nas notificações",
@@ -75,8 +76,8 @@
   "N_TRACKS": "N tracks",
   "OK": "OK",
   "OPTIONS": "Opções",
-  "PAUSE": "Pausar",
-  "PLAY": "Tocar",
+  "PAUSE": "Pause",
+  "PLAY": "Play",
   "PLAYLIST": "Playlists",
   "PLAYLISTS_CREATE": "Criar uma nova playlist",
   "PLAYLISTS_SUBHEADER": "Playlists available on your device",
@@ -86,6 +87,7 @@
   "PLAYLIST_ADD_DIALOG_TITLE": "Adicionar à playlist",
   "PLAYLIST_TRACKS_SUBHEADER": "Aqui estão algumas músicas nessa playlist",
   "PLAY_NOW": "Play now",
+  "PREVIOUS": "Previous",
   "RECOMMENDATIONS": "Recommendations",
   "REFRESH": "ATUALIZAR",
   "REINDEX": "Reindex",
@@ -155,3 +157,5 @@
   "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
   "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }
+
+

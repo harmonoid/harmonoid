@@ -59,6 +59,7 @@
   "LYRICS_RETRIEVING": "Pridobivanje besedila pesmi...",
   "MENU": "Meni",
   "M_TRACKS_AND_N_ALBUMS": "M tracks & N albums",
+  "NEXT": "Next",
   "NO": "NE",
   "NOTIFICATION_LYRICS_SUBTITLE": "Pokaži besedilo pesmi v obvestilih.",
   "NOTIFICATION_LYRICS_TITLE": "Besedilo pesmi v obvestilu",
@@ -75,8 +76,8 @@
   "N_TRACKS": "N tracks",
   "OK": "OK",
   "OPTIONS": "Opcije",
-  "PAUSE": "Ustavi",
-  "PLAY": "Predvajaj",
+  "PAUSE": "Pause",
+  "PLAY": "Play",
   "PLAYLIST": "Playlists",
   "PLAYLISTS_CREATE": "Ustvari seznam predvajanja",
   "PLAYLISTS_SUBHEADER": "Playlists available on your device",
@@ -86,6 +87,7 @@
   "PLAYLIST_ADD_DIALOG_TITLE": "Dodaj na seznam predvajanja",
   "PLAYLIST_TRACKS_SUBHEADER": "Tukaj so pesmi iz seznama predvajanja",
   "PLAY_NOW": "Predvajaj zdaj",
+  "PREVIOUS": "Previous",
   "RECOMMENDATIONS": "Priporočeno",
   "REFRESH": "OSVEŽI",
   "REINDEX": "Reindex",
@@ -155,3 +157,4 @@
   "YOUTUBE_WELCOME_SUBTITLE": "Recommendations will appear here based on what you listen.",
   "YOUTUBE_WELCOME_TITLE": "Let's Go"
 }
+

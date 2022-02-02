@@ -80,6 +80,7 @@ class Strings {
   late String LYRICS_RETRIEVING;
   late String MENU;
   late String M_TRACKS_AND_N_ALBUMS;
+  late String NEXT;
   late String NO;
   late String NOTIFICATION_LYRICS_SUBTITLE;
   late String NOTIFICATION_LYRICS_TITLE;
@@ -107,6 +108,7 @@ class Strings {
   late String PLAYLIST_ADD_DIALOG_TITLE;
   late String PLAYLIST_TRACKS_SUBHEADER;
   late String PLAY_NOW;
+  late String PREVIOUS;
   late String RECOMMENDATIONS;
   late String REFRESH;
   late String REINDEX;
