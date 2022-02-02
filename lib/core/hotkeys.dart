@@ -14,30 +14,32 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:harmonoid/interface/change_notifiers.dart';
 
 /// HotKeys
 /// -------
 ///
-/// Hotkey mappings.
+/// Hotkey & keyboard shortcuts inside [Harmonoid](https://github.com/harmonoid/harmonoid).
 ///
-HotKey spaceHotKey = HotKey(
-  KeyCode.space,
-  scope: HotKeyScope.inapp,
-);
 class HotKeys {
+  /// [HotKeys] object instance. Must call [HotKeys.initialize].
+  static late HotKeys instance = HotKeys();
+
   static Future<void> initialize() async {
     await Future.wait(
       [
         HotKeyManager.instance.register(
-          spaceHotKey,
-          keyDownHandler: (_) => Playback.playOrPause(),
+          HotKey(
+            KeyCode.space,
+            scope: HotKeyScope.inapp,
+          ),
+          keyDownHandler: (_) => Playback.instance.playOrPause(),
         ),
         HotKeyManager.instance.register(
           HotKey(
@@ -45,7 +47,7 @@ class HotKeys {
             modifiers: [KeyModifier.alt],
             scope: HotKeyScope.inapp,
           ),
-          keyDownHandler: (_) => Playback.next(),
+          keyDownHandler: (_) => Playback.instance.next(),
         ),
         HotKeyManager.instance.register(
           HotKey(
@@ -53,7 +55,7 @@ class HotKeys {
             modifiers: [KeyModifier.alt],
             scope: HotKeyScope.inapp,
           ),
-          keyDownHandler: (_) => Playback.back(),
+          keyDownHandler: (_) => Playback.instance.previous(),
         ),
         HotKeyManager.instance.register(
           HotKey(
@@ -61,7 +63,7 @@ class HotKeys {
             modifiers: [KeyModifier.alt],
             scope: HotKeyScope.inapp,
           ),
-          keyDownHandler: (_) => Playback.toggleMute(),
+          keyDownHandler: (_) => Playback.instance.toggleMute(),
         ),
         HotKeyManager.instance.register(
           HotKey(
@@ -72,7 +74,7 @@ class HotKeys {
           keyDownHandler: (_) {
             if (nowPlaying.volume <= 0) return;
             nowPlaying.volume -= 0.02;
-            Playback.setVolume(nowPlaying.volume);
+            Playback.instance.setVolume(nowPlaying.volume);
           },
         ),
         HotKeyManager.instance.register(
@@ -84,7 +86,7 @@ class HotKeys {
           keyDownHandler: (_) {
             if (nowPlaying.volume >= 1.0) return;
             nowPlaying.volume += 0.02;
-            Playback.setVolume(nowPlaying.volume);
+            Playback.instance.setVolume(nowPlaying.volume);
           },
         ),
         HotKeyManager.instance.register(
@@ -96,7 +98,7 @@ class HotKeys {
           keyDownHandler: (_) {
             if (nowPlaying.position >= nowPlaying.duration) return;
             nowPlaying.position -= Duration(seconds: 10);
-            Playback.seek(nowPlaying.position);
+            Playback.instance.seek(nowPlaying.position);
           },
         ),
         HotKeyManager.instance.register(
@@ -108,19 +110,27 @@ class HotKeys {
           keyDownHandler: (_) {
             if (nowPlaying.position <= Duration.zero) return;
             nowPlaying.position += Duration(seconds: 10);
-            Playback.seek(nowPlaying.position);
+            Playback.instance.seek(nowPlaying.position);
           },
         ),
       ],
     );
   }
-  static Future<void> disableSpaceHotKey() async{
-    await HotKeyManager.instance.unregister(spaceHotKey);
+
+  Future<void> disableSpaceHotKey() async {
+    await HotKeyManager.instance.unregister(HotKey(
+      KeyCode.space,
+      scope: HotKeyScope.inapp,
+    ));
   }
-  static Future<void> enableSpaceHotKey() async{
+
+  Future<void> enableSpaceHotKey() async {
     await HotKeyManager.instance.register(
-      spaceHotKey,
-      keyDownHandler: (_) => Playback.playOrPause(),
+      HotKey(
+        KeyCode.space,
+        scope: HotKeyScope.inapp,
+      ),
+      keyDownHandler: (_) => Playback.instance.playOrPause(),
     );
-}
+  }
 }
