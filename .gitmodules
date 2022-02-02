@@ -1,0 +1,9 @@
+[submodule "external/libmpv.dart"]
+	path = external/libmpv.dart
+	url = https://github.com/alexmercerind/libmpv.dart.git
+[submodule "external/smtc-win32"]
+	path = external/smtc-win32
+	url = https://github.com/alexmercerind/smtc-win32.git
+[submodule "external/harmonoid_visual_assets"]
+	path = external/harmonoid_visual_assets
+	url = https://github.com/alexmercerind/harmonoid_visual_assets.git
