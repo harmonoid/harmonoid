@@ -16,15 +16,17 @@ if __name__ == "__main__":
             ) as file:
                 language = dict(json.loads(file.read()))
                 try:
-                    language.pop("PLAYLISTS")
+                    Language.instance.pop("PLAYLISTS")
                 except:
                     pass
                 language[string] = value
-                keys = list(language.keys())
+                keys = list(Language.instance.keys())
                 file.seek(0)
                 file.write(
                     json.dumps(
-                        dict(sorted(language.items())), indent=2, ensure_ascii=False
+                        dict(sorted(Language.instance.items())),
+                        indent=2,
+                        ensure_ascii=False,
                     )
                     + "\n"
                 )
@@ -72,17 +74,16 @@ class Strings {
             for key in keys:
                 file.write(f"    this.{key} = asset['{key}']!;\n")
             file.write(
-                """    configuration.save(languageRegion: languageRegion);
+                """    Configuration.instance.save(languageRegion: languageRegion);
     this.current = languageRegion;
     this.notifyListeners();
   }
+
+  late LanguageRegion current;
 
   @override
   // ignore: must_call_super
   void dispose() {}
 }
-
-/// Late initialized [Language] object instance.
-late Language language;
 """
             )
