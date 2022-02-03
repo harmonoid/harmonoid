@@ -34,10 +34,7 @@ class HotKeys {
     await Future.wait(
       [
         HotKeyManager.instance.register(
-          HotKey(
-            KeyCode.space,
-            scope: HotKeyScope.inapp,
-          ),
+          _spaceHotkey,
           keyDownHandler: (_) => Playback.instance.playOrPause(),
         ),
         HotKeyManager.instance.register(
@@ -122,19 +119,18 @@ class HotKeys {
   }
 
   Future<void> disableSpaceHotKey() async {
-    await HotKeyManager.instance.unregister(HotKey(
-      KeyCode.space,
-      scope: HotKeyScope.inapp,
-    ));
+    await HotKeyManager.instance.unregister(_spaceHotkey);
   }
 
   Future<void> enableSpaceHotKey() async {
     await HotKeyManager.instance.register(
-      HotKey(
-        KeyCode.space,
-        scope: HotKeyScope.inapp,
-      ),
+      _spaceHotkey,
       keyDownHandler: (_) => Playback.instance.playOrPause(),
     );
   }
 }
+
+final _spaceHotkey = HotKey(
+  KeyCode.space,
+  scope: HotKeyScope.inapp,
+);
