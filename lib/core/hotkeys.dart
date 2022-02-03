@@ -20,7 +20,6 @@
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/interface/change_notifiers.dart';
 
 /// HotKeys
 /// -------
@@ -72,9 +71,10 @@ class HotKeys {
             scope: HotKeyScope.inapp,
           ),
           keyDownHandler: (_) {
-            if (nowPlaying.volume <= 0) return;
-            nowPlaying.volume -= 0.02;
-            Playback.instance.setVolume(nowPlaying.volume);
+            if (Playback.instance.volume <= 0) return;
+            Playback.instance.setVolume(
+              Playback.instance.volume - 0.02,
+            );
           },
         ),
         HotKeyManager.instance.register(
@@ -84,9 +84,10 @@ class HotKeys {
             scope: HotKeyScope.inapp,
           ),
           keyDownHandler: (_) {
-            if (nowPlaying.volume >= 1.0) return;
-            nowPlaying.volume += 0.02;
-            Playback.instance.setVolume(nowPlaying.volume);
+            if (Playback.instance.volume >= 100.0) return;
+            Playback.instance.setVolume(
+              Playback.instance.volume + 0.02,
+            );
           },
         ),
         HotKeyManager.instance.register(
@@ -96,9 +97,11 @@ class HotKeys {
             scope: HotKeyScope.inapp,
           ),
           keyDownHandler: (_) {
-            if (nowPlaying.position >= nowPlaying.duration) return;
-            nowPlaying.position -= Duration(seconds: 10);
-            Playback.instance.seek(nowPlaying.position);
+            if (Playback.instance.position >= Playback.instance.duration)
+              return;
+            Playback.instance.seek(
+              Playback.instance.position - Duration(seconds: 10),
+            );
           },
         ),
         HotKeyManager.instance.register(
@@ -108,9 +111,10 @@ class HotKeys {
             scope: HotKeyScope.inapp,
           ),
           keyDownHandler: (_) {
-            if (nowPlaying.position <= Duration.zero) return;
-            nowPlaying.position += Duration(seconds: 10);
-            Playback.instance.seek(nowPlaying.position);
+            if (Playback.instance.position <= Duration.zero) return;
+            Playback.instance.seek(
+              Playback.instance.position + Duration(seconds: 10),
+            );
           },
         ),
       ],

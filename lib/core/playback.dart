@@ -27,8 +27,8 @@ import 'package:system_media_transport_controls/system_media_transport_controls.
 
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/models/media.dart' hide Media;
+import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/constants/language.dart';
 
 /// Playback
