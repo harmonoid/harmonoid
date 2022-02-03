@@ -17,14 +17,17 @@
  *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/state/now_playing_launcher.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
+import 'package:harmonoid/interface/now_playing.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';
 import 'package:harmonoid/interface/collection/collection.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -144,6 +147,16 @@ class HomeState extends State<Home>
           ChangeNotifierProvider(
             create: (context) => Language.instance,
           ),
+          ChangeNotifierProvider(
+            create: (context) => NowPlayingLauncher(
+              launch: () {
+                navigatorKey.currentState?.pushNamed('/now_playing');
+              },
+              exit: () {
+                navigatorKey.currentState?.maybePop();
+              },
+            ),
+          ),
         ],
         builder: (context, _) => isDesktop
             ? Stack(
@@ -161,15 +174,29 @@ class HomeState extends State<Home>
                               MaterialApp.createMaterialHeroController(),
                           child: Navigator(
                             key: this.navigatorKey,
-                            initialRoute: 'collection_screen',
+                            initialRoute: '/collection_screen',
                             onGenerateRoute: (RouteSettings routeSettings) {
                               Route<dynamic>? route;
-                              if (routeSettings.name == 'collection_screen') {
+                              if (routeSettings.name == '/collection_screen') {
                                 route = MaterialPageRoute(
                                   builder: (BuildContext context) =>
                                       CollectionScreen(
                                     tabControllerNotifier:
                                         tabControllerNotifier,
+                                  ),
+                                );
+                              }
+                              if (routeSettings.name == '/now_playing') {
+                                route = PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      SharedAxisTransition(
+                                    transitionType:
+                                        SharedAxisTransitionType.vertical,
+                                    fillColor: Colors.transparent,
+                                    animation: animation,
+                                    secondaryAnimation: secondaryAnimation,
+                                    child: NowPlayingScreen(),
                                   ),
                                 );
                               }
@@ -180,10 +207,7 @@ class HomeState extends State<Home>
                       ),
                     ),
                   ),
-                  NowPlayingBar(
-                    launch: () {},
-                    exit: () {},
-                  ),
+                  const NowPlayingBar(),
                 ],
               )
             : Consumer<Language>(
@@ -193,10 +217,10 @@ class HomeState extends State<Home>
                     controller: MaterialApp.createMaterialHeroController(),
                     child: Navigator(
                       key: this.navigatorKey,
-                      initialRoute: 'collection_screen',
+                      initialRoute: '/collection_screen',
                       onGenerateRoute: (RouteSettings routeSettings) {
                         Route<dynamic>? route;
-                        if (routeSettings.name == 'collection_screen') {
+                        if (routeSettings.name == '/collection_screen') {
                           route = MaterialPageRoute(
                             builder: (BuildContext context) => CollectionScreen(
                               tabControllerNotifier: tabControllerNotifier,

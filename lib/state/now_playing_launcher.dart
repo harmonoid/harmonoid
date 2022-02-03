@@ -16,43 +16,35 @@
  * 
  *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
-import 'dart:convert' as convert;
-import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 
-import 'package:harmonoid/models/lyric.dart';
+class NowPlayingLauncher extends ChangeNotifier {
+  static late NowPlayingLauncher instance;
 
-/// Lyrics
-/// ------
-///
-/// Minimal [ChangeNotifier] to fetch & update the lyrics based on the currently playing track.
-///
-class Lyrics extends ChangeNotifier {
-  /// [Lyrics] object instance.
-  static late Lyrics instance = Lyrics();
+  final VoidCallback launch;
+  final VoidCallback exit;
 
-  List<Lyric> current = <Lyric>[];
-  String query = '';
+  NowPlayingLauncher({
+    required this.launch,
+    required this.exit,
+  }) {
+    NowPlayingLauncher.instance = this;
+  }
 
-  void update(String name) async {
-    if (query == name) return;
-    current.clear();
-    query = name;
-    Uri uri = Uri.https(
-      'harmonoid-lyrics.vercel.app',
-      '/lyrics',
-      {
-        'name': name,
-      },
-    );
-    http.Response response = await http.get(uri);
-    if (response.statusCode == 200) {
-      current = convert
-          .jsonDecode(response.body)
-          .map((lyric) => Lyric.fromJson(lyric))
-          .toList()
-          .cast<Lyric>();
+  void toggle() => maximized = !maximized;
+
+  bool get maximized => _maximized;
+
+  set maximized(bool value) {
+    if (value == _maximized) return;
+    if (value) {
+      launch();
+    } else {
+      exit();
     }
+    _maximized = value;
     notifyListeners();
   }
+
+  bool _maximized = false;
 }

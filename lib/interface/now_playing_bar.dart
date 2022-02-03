@@ -20,6 +20,7 @@
 import 'dart:math';
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/state/now_playing_launcher.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
@@ -28,9 +29,7 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class NowPlayingBar extends StatefulWidget {
-  final void Function()? launch;
-  final void Function()? exit;
-  NowPlayingBar({Key? key, this.launch, this.exit}) : super(key: key);
+  const NowPlayingBar({Key? key}) : super(key: key);
 
   NowPlayingBarState createState() => NowPlayingBarState();
 }
@@ -142,8 +141,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          playback
-                                              .tracks[playback.index].trackName,
+                                          playback.tracks[playback.index]
+                                              .trackName.overflow,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline1,
@@ -154,7 +153,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           playback.tracks[playback.index]
                                               .trackArtistNames
                                               .take(2)
-                                              .join(', '),
+                                              .join(', ')
+                                              .overflow,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline3,
@@ -498,35 +498,32 @@ class NowPlayingBarState extends State<NowPlayingBar>
                           ],
                         ),
                         Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              // IconButton(
-                              //   onPressed: playback.tracks.isEmpty
-                              //       ? null
-                              //       : controller.maximized
-                              //           ? () {
-                              //               widget.exit?.call();
-                              //             }
-                              //           : () {
-                              //               widget.launch?.call();
-                              //             },
-                              //   iconSize: 24.0,
-                              //   color: Theme.of(context).brightness ==
-                              //           Brightness.dark
-                              //       ? Colors.white
-                              //       : Colors.black,
-                              //   splashRadius: 18.0,
-                              //   icon: Icon(
-                              //     controller.maximized
-                              //         ? Icons.expand_more
-                              //         : Icons.expand_less,
-                              //   ),
-                              // ),
-                              SizedBox(
-                                width: 12.0,
-                              ),
-                            ],
+                          child: Consumer<NowPlayingLauncher>(
+                            builder: (context, nowPlayingLauncher, _) => Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  onPressed: playback.tracks.isEmpty
+                                      ? null
+                                      : nowPlayingLauncher.toggle,
+                                  iconSize: 24.0,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
+                                  splashRadius: 18.0,
+                                  icon: Icon(
+                                    nowPlayingLauncher.maximized
+                                        ? Icons.expand_more
+                                        : Icons.expand_less,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 12.0,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],

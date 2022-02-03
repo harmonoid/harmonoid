@@ -20,6 +20,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/state/lyrics.dart';
+import 'package:harmonoid/state/now_playing_launcher.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -47,7 +48,9 @@ class NowPlayingState extends State<NowPlayingScreen>
                 children: [
                   DesktopAppBar(
                     leading: NavigatorPopButton(
-                      onTap: () {},
+                      onTap: () {
+                        NowPlayingLauncher.instance.maximized = false;
+                      },
                     ),
                     title: Language.instance.NOW_PLAYING,
                   ),
