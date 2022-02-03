@@ -14,26 +14,23 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:io';
-import 'dart:async';
 import 'dart:math' as math;
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/constants/language.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/interface/change_notifiers.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/constants/language.dart';
 
 class CustomListView extends StatelessWidget {
   final ScrollController controller = ScrollController();
@@ -52,7 +49,7 @@ class CustomListView extends StatelessWidget {
     if (Platform.isWindows) {
       controller.addListener(
         () {
-          var scrollDirection = controller.position.userScrollDirection;
+          final scrollDirection = controller.position.userScrollDirection;
           if (scrollDirection != ScrollDirection.idle) {
             var scrollEnd = controller.offset +
                 (scrollDirection == ScrollDirection.reverse
@@ -65,27 +62,11 @@ class CustomListView extends StatelessWidget {
         },
       );
     }
-    if (kHorizontalBreakpoint >
-        MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size.width) {
-      controller.addListener(
-        () {
-          var scrollDirection = controller.position.userScrollDirection;
-          if (!nowPlayingBar.maximized) {
-            if (scrollDirection != ScrollDirection.forward) {
-              nowPlayingBar.height = 0.0;
-            }
-            if (scrollDirection != ScrollDirection.reverse) {
-              if (nowPlaying.tracks.isNotEmpty) nowPlayingBar.height = 72.0;
-            }
-          }
-        },
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var listview = ListView(
+    return ListView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       padding: padding ?? EdgeInsets.zero,
       controller: controller,
@@ -93,12 +74,6 @@ class CustomListView extends StatelessWidget {
       shrinkWrap: shrinkWrap ?? false,
       children: children,
     );
-    return Platform.isWindows && scrollDirection == Axis.horizontal
-        ? Scrollbar(
-            controller: controller,
-            child: listview,
-          )
-        : listview;
   }
 }
 
@@ -284,7 +259,7 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CollectionRefreshController>(
+    return Consumer<CollectionRefresh>(
       builder: (context, refresh, _) => refresh.progress == refresh.total
           ? FloatingActionButton(
               elevation: 8.0,
@@ -308,11 +283,9 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
                   lock = true;
                 });
                 tween = Tween<double>(begin: 0, end: turns);
-                Provider.of<Collection>(context, listen: false).refresh(
+                Collection.instance.refresh(
                     onProgress: (progress, total, isCompleted) {
-                  Provider.of<CollectionRefreshController>(context,
-                          listen: false)
-                      .set(progress, total);
+                  CollectionRefresh.instance.set(progress, total);
                   if (isCompleted) {
                     setState(() {
                       lock = false;
@@ -662,14 +635,11 @@ class DesktopTitleBar extends StatelessWidget {
                         ),
                   CloseWindowButton(
                     onPressed: () {
-                      // Wait if [Collection] is being refreshed/indexed.
-                      if (collectionRefresh.progress ==
-                          collectionRefresh.total) {
+                      if (CollectionRefresh.instance.isCompleted) {
                         appWindow.close();
                       } else {
-                        collectionRefresh.addListener(() {
-                          if (collectionRefresh.progress ==
-                              collectionRefresh.total) {
+                        CollectionRefresh.instance.addListener(() {
+                          if (CollectionRefresh.instance.isCompleted) {
                             appWindow.close();
                           }
                         });

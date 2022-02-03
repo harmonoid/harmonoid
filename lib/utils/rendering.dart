@@ -373,12 +373,8 @@ Future<void> trackPopupMenuHandle(
             actionsPadding: EdgeInsets.zero,
             titlePadding: EdgeInsets.zero,
             content: Container(
-              width: MediaQuery.of(context).size.width > kHorizontalBreakpoint
-                  ? 512.0
-                  : 280.0,
-              height: MediaQuery.of(context).size.width > kHorizontalBreakpoint
-                  ? 480.0
-                  : 280.0,
+              width: isDesktop ? 512.0 : 280.0,
+              height: isDesktop ? 480.0 : 280.0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -401,15 +397,8 @@ Future<void> trackPopupMenuHandle(
                     ),
                   ),
                   Container(
-                    height: (MediaQuery.of(context).size.width >
-                                kHorizontalBreakpoint
-                            ? 512.0
-                            : 280.0) -
-                        118.0,
-                    width: MediaQuery.of(context).size.width >
-                            kHorizontalBreakpoint
-                        ? 512.0
-                        : 280.0,
+                    height: (isDesktop ? 512.0 : 280.0) - 118.0,
+                    width: isDesktop ? 512.0 : 280.0,
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: Collection.instance.playlists.length,

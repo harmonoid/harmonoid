@@ -17,7 +17,6 @@
  *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
-const double kHorizontalBreakpoint = 762.0;
 const double kAlbumTileWidth = 156.0;
 const double kAlbumTileHeight = 156.0 + 58.0;
 const double kMobileTileMargin = 8.0;
