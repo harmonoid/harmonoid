@@ -29,6 +29,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -55,7 +56,7 @@ class PlaylistTab extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      language.PLAYLIST,
+                      Language.instance.PLAYLIST,
                       style: Theme.of(context)
                           .textTheme
                           .headline1
@@ -63,7 +64,7 @@ class PlaylistTab extends StatelessWidget {
                       textAlign: TextAlign.start,
                     ),
                     const SizedBox(height: 2.0),
-                    Text(language.PLAYLISTS_SUBHEADER),
+                    Text(Language.instance.PLAYLISTS_SUBHEADER),
                     const SizedBox(
                       height: 18.0,
                     ),
@@ -79,7 +80,7 @@ class PlaylistTab extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  language.CREATE,
+                                  Language.instance.CREATE,
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline1
@@ -87,14 +88,14 @@ class PlaylistTab extends StatelessWidget {
                                   textAlign: TextAlign.start,
                                 ),
                                 Text(
-                                  language.CREATE_PLAYLIST_SUBHEADER,
+                                  Language.instance.CREATE_PLAYLIST_SUBHEADER,
                                   style: Theme.of(context).textTheme.headline3,
                                 ),
                                 const SizedBox(
                                   height: 18.0,
                                 ),
                                 Container(
-                                  height: 42.0,
+                                  height: 40.0,
                                   width: 280.0,
                                   alignment: Alignment.center,
                                   margin:
@@ -103,24 +104,21 @@ class PlaylistTab extends StatelessWidget {
                                   child: Focus(
                                     onFocusChange: (hasFocus) {
                                       if (hasFocus) {
-                                        HotKeys.disableSpaceHotKey();
+                                        HotKeys.instance.disableSpaceHotKey();
                                       } else {
-                                        HotKeys.enableSpaceHotKey();
+                                        HotKeys.instance.enableSpaceHotKey();
                                       }
                                     },
                                     child: TextField(
                                       autofocus: true,
-                                      controller: this._controller,
+                                      controller: _controller,
                                       cursorWidth: 1.0,
                                       onSubmitted: (String value) async {
                                         if (value.isNotEmpty) {
                                           FocusScope.of(context).unfocus();
-                                          await collection.playlistAdd(
-                                            Playlist(
-                                              playlistName: value,
-                                            ),
-                                          );
-                                          this._controller.clear();
+                                          await Collection.instance
+                                              .playlistAdd(value);
+                                          _controller.clear();
                                           Navigator.of(context).maybePop();
                                         }
                                       },
@@ -133,54 +131,10 @@ class PlaylistTab extends StatelessWidget {
                                           TextAlignVertical.bottom,
                                       style:
                                           Theme.of(context).textTheme.headline4,
-                                      decoration: InputDecoration(
-                                        hintText:
-                                            language.PLAYLISTS_TEXT_FIELD_HINT,
-                                        hintStyle: Theme.of(context)
-                                            .textTheme
-                                            .headline3
-                                            ?.copyWith(
-                                              color: Theme.of(context)
-                                                          .brightness ==
-                                                      Brightness.light
-                                                  ? Colors.black
-                                                      .withOpacity(0.6)
-                                                  : Colors.white60,
-                                            ),
-                                        filled: true,
-                                        fillColor:
-                                            Theme.of(context).brightness ==
-                                                    Brightness.light
-                                                ? Colors.white
-                                                : Color(0xFF202020),
-                                        hoverColor:
-                                            Theme.of(context).brightness ==
-                                                    Brightness.light
-                                                ? Colors.white
-                                                : Color(0xFF202020),
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .dividerColor
-                                                .withOpacity(0.32),
-                                            width: 1.0,
-                                          ),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .dividerColor
-                                                .withOpacity(0.32),
-                                            width: 1.0,
-                                          ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            width: 1.0,
-                                          ),
-                                        ),
+                                      decoration: desktopInputDecoration(
+                                        context,
+                                        Language
+                                            .instance.PLAYLISTS_TEXT_FIELD_HINT,
                                       ),
                                     ),
                                   ),
@@ -190,7 +144,7 @@ class PlaylistTab extends StatelessWidget {
                             actions: [
                               MaterialButton(
                                 child: Text(
-                                  language.OK,
+                                  Language.instance.OK,
                                   style: TextStyle(
                                     color: Theme.of(context).primaryColor,
                                   ),
@@ -198,19 +152,16 @@ class PlaylistTab extends StatelessWidget {
                                 onPressed: () async {
                                   if (_controller.text.isNotEmpty) {
                                     FocusScope.of(context).unfocus();
-                                    await collection.playlistAdd(
-                                      Playlist(
-                                        playlistName: _controller.text,
-                                      ),
-                                    );
-                                    this._controller.clear();
+                                    await collection
+                                        .playlistAdd(_controller.text);
+                                    _controller.clear();
                                     Navigator.of(context).maybePop();
                                   }
                                 },
                               ),
                               MaterialButton(
                                 child: Text(
-                                  language.CANCEL,
+                                  Language.instance.CANCEL,
                                   style: TextStyle(
                                     color: Theme.of(context).primaryColor,
                                   ),
@@ -223,7 +174,7 @@ class PlaylistTab extends StatelessWidget {
                       },
                       padding: EdgeInsets.zero,
                       child: Text(
-                        language.CREATE_NEW_PLAYLIST,
+                        Language.instance.CREATE_NEW_PLAYLIST,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                         ),
@@ -232,7 +183,7 @@ class PlaylistTab extends StatelessWidget {
                     const SizedBox(
                       height: 4.0,
                     ),
-                    if (collection.playlists.isNotEmpty)
+                    if (Collection.instance.playlists.isNotEmpty)
                       const SizedBox(
                         height: 16.0,
                       ),
@@ -240,7 +191,7 @@ class PlaylistTab extends StatelessWidget {
                 ),
               ),
             ] +
-            collection.playlists
+            Collection.instance.playlists
                 .map((Playlist playlist) => PlaylistTile(playlist: playlist))
                 .toList(),
       );
@@ -253,16 +204,16 @@ class PlaylistTab extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            if (collection.playlists.isNotEmpty)
+            if (Collection.instance.playlists.isNotEmpty)
               Expanded(
                 child: screen,
               ),
-            if (collection.playlists.isEmpty) screen,
-            if (collection.playlists.isEmpty)
+            if (Collection.instance.playlists.isEmpty) screen,
+            if (Collection.instance.playlists.isEmpty)
               Expanded(
                 child: Center(
                   child: Text(
-                    language.NO_PLAYLISTS_FOUND,
+                    Language.instance.NO_PLAYLISTS_FOUND,
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -293,15 +244,15 @@ class PlaylistThumbnail extends StatelessWidget {
       return Card(
         elevation: 4.0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(this.width / 2),
+          borderRadius: BorderRadius.circular(width / 2),
         ),
         child: Padding(
-          padding: EdgeInsets.all(this.mini ? 4.0 : 8.0),
+          padding: EdgeInsets.all(mini ? 4.0 : 8.0),
           child: ClipOval(
             child: _child(
               context,
-              this.width - (this.mini ? 8.0 : 16.0),
-              this.mini,
+              width - (mini ? 8.0 : 16.0),
+              mini,
             ),
           ),
         ),
@@ -309,8 +260,8 @@ class PlaylistThumbnail extends StatelessWidget {
     } else {
       return _child(
         context,
-        this.width,
-        this.mini,
+        width,
+        mini,
       );
     }
   }
@@ -322,8 +273,8 @@ class PlaylistThumbnail extends StatelessWidget {
         width: width,
         child: Row(
           children: [
-            Image.file(
-              tracks[tracks.length - 1].albumArt,
+            Image(
+              image: Collection.instance.getAlbumArt(tracks[tracks.length - 1]),
               height: width,
               width: width / 2 - (!mini ? 12.0 : 0.0),
               fit: BoxFit.cover,
@@ -331,15 +282,17 @@ class PlaylistThumbnail extends StatelessWidget {
             if (!mini) SizedBox(width: 8.0),
             Column(
               children: [
-                Image.file(
-                  tracks[tracks.length - 2].albumArt,
+                Image(
+                  image: Collection.instance
+                      .getAlbumArt(tracks[tracks.length - 2]),
                   height: width / 2 - (!mini ? 12.0 : 0.0),
                   width: width / 2 - (!mini ? 4.0 : 0.0),
                   fit: BoxFit.cover,
                 ),
                 if (!mini) SizedBox(height: 8.0),
-                Image.file(
-                  tracks[tracks.length - 3].albumArt,
+                Image(
+                  image: Collection.instance
+                      .getAlbumArt(tracks[tracks.length - 3]),
                   height: width / 2 - (!mini ? 4.0 : 0.0),
                   width: width / 2 - (!mini ? 4.0 : 0.0),
                   fit: BoxFit.cover,
@@ -355,15 +308,15 @@ class PlaylistThumbnail extends StatelessWidget {
         width: width,
         child: Row(
           children: [
-            Image.file(
-              tracks[tracks.length - 1].albumArt,
+            Image(
+              image: Collection.instance.getAlbumArt(tracks[tracks.length - 1]),
               height: width,
               width: width / 2 - (!mini ? 12.0 : 0.0),
               fit: BoxFit.cover,
             ),
             if (!mini) SizedBox(width: 8.0),
-            Image.file(
-              tracks[tracks.length - 2].albumArt,
+            Image(
+              image: Collection.instance.getAlbumArt(tracks[tracks.length - 2]),
               height: width,
               width: width / 2 - (!mini ? 4.0 : 0.0),
               fit: BoxFit.cover,
@@ -372,8 +325,8 @@ class PlaylistThumbnail extends StatelessWidget {
         ),
       );
     } else if (tracks.length == 1) {
-      return Image.file(
-        tracks[tracks.length - 1].albumArt,
+      return Image(
+        image: Collection.instance.getAlbumArt(tracks[tracks.length - 1]),
         height: width,
         width: width,
         fit: BoxFit.cover,
@@ -419,7 +372,7 @@ class PlaylistTileState extends State<PlaylistTile> {
       },
       onPointerUp: (e) async {
         if (!reactToSecondaryPress) return;
-        if (widget.playlist.playlistId! < 0) return;
+        if (widget.playlist.id < 0) return;
         final result = await showMenu(
           elevation: 4.0,
           context: context,
@@ -441,7 +394,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                     ? FluentIcons.delete_16_regular
                     : Icons.delete),
                 title: Text(
-                  language.DELETE,
+                  Language.instance.DELETE,
                   style:
                       isDesktop ? Theme.of(context).textTheme.headline4 : null,
                 ),
@@ -456,13 +409,14 @@ class PlaylistTileState extends State<PlaylistTile> {
                 context: context,
                 builder: (subContext) => AlertDialog(
                   title: Text(
-                    language.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER,
+                    Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER,
                     style: Theme.of(subContext).textTheme.headline1,
                   ),
                   content: Text(
-                    language.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY.replaceAll(
+                    Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY
+                        .replaceAll(
                       'NAME',
-                      '${widget.playlist.playlistName}',
+                      '${widget.playlist.name}',
                     ),
                     style: Theme.of(subContext).textTheme.headline3,
                   ),
@@ -470,15 +424,16 @@ class PlaylistTileState extends State<PlaylistTile> {
                     MaterialButton(
                       textColor: Theme.of(context).primaryColor,
                       onPressed: () async {
-                        await collection.playlistRemove(widget.playlist);
+                        await Collection.instance
+                            .playlistRemove(widget.playlist);
                         Navigator.of(subContext).pop();
                       },
-                      child: Text(language.YES),
+                      child: Text(Language.instance.YES),
                     ),
                     MaterialButton(
                       textColor: Theme.of(context).primaryColor,
                       onPressed: Navigator.of(subContext).pop,
-                      child: Text(language.NO),
+                      child: Text(Language.instance.NO),
                     ),
                   ],
                 ),
@@ -497,7 +452,8 @@ class PlaylistTileState extends State<PlaylistTile> {
                 Iterable<Color>? palette;
                 if (isMobile && widget.playlist.tracks.isNotEmpty) {
                   final result = await PaletteGenerator.fromImageProvider(
-                      FileImage(widget.playlist.tracks.last.albumArt));
+                      Collection.instance
+                          .getAlbumArt(widget.playlist.tracks.last));
                   palette = result.colors;
                 }
                 Navigator.of(context).push(
@@ -535,8 +491,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                       width: 56.0,
                       alignment: Alignment.center,
                       child: Hero(
-                        tag:
-                            'playlist_art_${this.widget.playlist.playlistName}',
+                        tag: 'playlist_art_${widget.playlist.name}',
                         child: PlaylistThumbnail(
                           tracks: widget.playlist.tracks,
                           width: 48.0,
@@ -552,7 +507,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.playlist.playlistName!,
+                            widget.playlist.name.overflow,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: Theme.of(context).textTheme.headline2,
@@ -561,7 +516,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                             height: 2.0,
                           ),
                           Text(
-                            language.N_TRACKS.replaceAll(
+                            Language.instance.N_TRACKS.replaceAll(
                               'N',
                               '${widget.playlist.tracks.length}',
                             ),
@@ -578,7 +533,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                       height: 64.0,
                       alignment: Alignment.center,
                       // child: IconButton(
-                      //   onPressed: this._showBottomSheet,
+                      //   onPressed: _showBottomSheet,
                       //   icon: Icon(Icons.more_vert),
                       //   iconSize: 24.0,
                       //   splashRadius: 20.0,
@@ -625,18 +580,18 @@ class PlaylistScreenState extends State<PlaylistScreen>
         Duration(milliseconds: 300),
         () {
           if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(
-                    FileImage(widget.playlist.tracks.last.albumArt))
+            PaletteGenerator.fromImageProvider(Collection.instance
+                    .getAlbumArt(widget.playlist.tracks.last))
                 .then((palette) {
-              this.setState(() {
-                this.color = palette.colors.first;
-                this.secondary = palette.colors.last;
-                this.detailsVisible = true;
+              setState(() {
+                color = palette.colors.first;
+                secondary = palette.colors.last;
+                detailsVisible = true;
               });
             });
           } else {
-            this.setState(() {
-              this.detailsVisible = true;
+            setState(() {
+              detailsVisible = true;
             });
           }
         },
@@ -653,24 +608,24 @@ class PlaylistScreenState extends State<PlaylistScreen>
             )
             .then((_) {
           Timer(Duration(milliseconds: 50), () {
-            this.setState(() {
-              this.detailsLoaded = true;
+            setState(() {
+              detailsLoaded = true;
             });
           });
         });
       });
       if (widget.palette != null) {
-        this.color = widget.palette?.first;
-        this.secondary = widget.palette?.last;
+        color = widget.palette?.first;
+        secondary = widget.palette?.last;
       }
-      this.controller.addListener(() {
-        if (this.controller.offset == 0.0) {
-          this.setState(() {
-            this.detailsVisible = true;
+      controller.addListener(() {
+        if (controller.offset == 0.0) {
+          setState(() {
+            detailsVisible = true;
           });
-        } else if (this.detailsVisible) {
-          this.setState(() {
-            this.detailsVisible = false;
+        } else if (detailsVisible) {
+          setState(() {
+            detailsVisible = false;
           });
         }
       });
@@ -688,9 +643,9 @@ class PlaylistScreenState extends State<PlaylistScreen>
                   TweenAnimationBuilder(
                     tween: ColorTween(
                       begin: Theme.of(context).appBarTheme.backgroundColor,
-                      end: this.color == null
+                      end: color == null
                           ? Theme.of(context).appBarTheme.backgroundColor
-                          : this.color!,
+                          : color!,
                     ),
                     curve: Curves.easeOut,
                     duration: Duration(
@@ -731,8 +686,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                 return SizedBox.square(
                                   dimension: dimension,
                                   child: Hero(
-                                    tag:
-                                        'playlist_art_${this.widget.playlist.playlistName}',
+                                    tag: 'playlist_art_${widget.playlist.name}',
                                     child: PlaylistThumbnail(
                                       tracks: widget.playlist.tracks,
                                       width: dimension,
@@ -763,7 +717,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                widget.playlist.playlistName!,
+                                                widget.playlist.name.overflow,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline1
@@ -773,7 +727,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               ),
                                               SizedBox(height: 8.0),
                                               Text(
-                                                '${language.TRACK}: ${widget.playlist.tracks.length}',
+                                                '${Language.instance.TRACK}: ${widget.playlist.tracks.length}',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline3,
@@ -791,19 +745,20 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               FloatingActionButton(
                                                 heroTag: 'play_now',
                                                 onPressed: () {
-                                                  Playback.play(
-                                                    index: 0,
-                                                    tracks: widget
-                                                            .playlist.tracks +
-                                                        ([...collection.tracks]
-                                                          ..shuffle()),
+                                                  Playback.instance.open(
+                                                    widget.playlist.tracks +
+                                                        ([
+                                                          ...Collection
+                                                              .instance.tracks
+                                                        ]..shuffle()),
                                                   );
                                                 },
                                                 mini: true,
                                                 child: Icon(
                                                   Icons.play_arrow,
                                                 ),
-                                                tooltip: language.PLAY_NOW,
+                                                tooltip:
+                                                    Language.instance.PLAY_NOW,
                                               ),
                                               SizedBox(
                                                 width: 8.0,
@@ -811,7 +766,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               FloatingActionButton(
                                                 heroTag: 'add_to_now_playing',
                                                 onPressed: () {
-                                                  Playback.add(
+                                                  Playback.instance.open(
                                                     widget.playlist.tracks,
                                                   );
                                                 },
@@ -819,8 +774,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                 child: Icon(
                                                   Icons.queue_music,
                                                 ),
-                                                tooltip:
-                                                    language.ADD_TO_NOW_PLAYING,
+                                                tooltip: Language.instance
+                                                    .ADD_TO_NOW_PLAYING,
                                               ),
                                             ],
                                           ),
@@ -854,7 +809,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: Text(
-                                                        language.TRACK_SINGLE,
+                                                        Language.instance
+                                                            .TRACK_SINGLE,
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline2,
@@ -870,7 +826,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: Text(
-                                                        language.ALBUM_SINGLE,
+                                                        Language.instance
+                                                            .ALBUM_SINGLE,
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline2,
@@ -886,12 +843,12 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                 .map(
                                                   (track) => MouseRegion(
                                                     onEnter: (e) {
-                                                      this.setState(() {
+                                                      setState(() {
                                                         hovered = track;
                                                       });
                                                     },
                                                     onExit: (e) {
-                                                      this.setState(() {
+                                                      setState(() {
                                                         hovered = null;
                                                       });
                                                     },
@@ -938,7 +895,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                   EdgeInsets
                                                                       .zero,
                                                               onTap: () async {
-                                                                collection
+                                                                Collection
+                                                                    .instance
                                                                     .playlistRemoveTrack(
                                                                         widget
                                                                             .playlist,
@@ -952,7 +910,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                     : Icons
                                                                         .delete),
                                                                 title: Text(
-                                                                  language
+                                                                  Language
+                                                                      .instance
                                                                       .REMOVE_FROM_PLAYLIST,
                                                                   style: isDesktop
                                                                       ? Theme.of(
@@ -971,19 +930,20 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                             Colors.transparent,
                                                         child: InkWell(
                                                           onTap: () {
-                                                            Playback.play(
+                                                            Playback.instance
+                                                                .open(
+                                                              widget.playlist
+                                                                      .tracks +
+                                                                  ([
+                                                                    ...Collection
+                                                                        .instance
+                                                                        .tracks
+                                                                  ]..shuffle()),
                                                               index: widget
                                                                   .playlist
                                                                   .tracks
                                                                   .indexOf(
                                                                       track),
-                                                              tracks: widget
-                                                                      .playlist
-                                                                      .tracks +
-                                                                  ([
-                                                                    ...collection
-                                                                        .tracks
-                                                                  ]..shuffle()),
                                                             );
                                                           },
                                                           child: Row(
@@ -1004,11 +964,11 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                         onPressed:
                                                                             () {
                                                                           Playback
-                                                                              .play(
+                                                                              .instance
+                                                                              .open(
+                                                                            widget.playlist.tracks,
                                                                             index:
                                                                                 widget.playlist.tracks.indexOf(track),
-                                                                            tracks:
-                                                                                widget.playlist.tracks,
                                                                           );
                                                                         },
                                                                         icon: Icon(
@@ -1017,7 +977,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                             20.0,
                                                                       )
                                                                     : Text(
-                                                                        '${track.trackNumber ?? 1}',
+                                                                        '${track.trackNumber}',
                                                                         style: Theme.of(context)
                                                                             .textTheme
                                                                             .headline4,
@@ -1036,7 +996,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                           .centerLeft,
                                                                   child: Text(
                                                                     track
-                                                                        .trackName!,
+                                                                        .trackName,
                                                                     style: Theme.of(
                                                                             context)
                                                                         .textTheme
@@ -1060,8 +1020,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                       Alignment
                                                                           .centerLeft,
                                                                   child: Text(
-                                                                    track.albumName ??
-                                                                        'Unknown Album',
+                                                                    track
+                                                                        .albumName,
                                                                     style: Theme.of(
                                                                             context)
                                                                         .textTheme
@@ -1100,7 +1060,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
             body: Stack(
               children: [
                 CustomScrollView(
-                  controller: this.controller,
+                  controller: controller,
                   slivers: [
                     SliverAppBar(
                       expandedHeight: MediaQuery.of(context).size.width +
@@ -1135,7 +1095,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                         builder: (context, value, _) => Opacity(
                           opacity: value,
                           child: Text(
-                            language.ARTIST_SINGLE,
+                            Language.instance.ARTIST_SINGLE,
                             style: Theme.of(context)
                                 .textTheme
                                 .headline1
@@ -1143,7 +1103,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                           ),
                         ),
                       ),
-                      backgroundColor: this.color,
+                      backgroundColor: color,
                       flexibleSpace: FlexibleSpaceBar(
                         background: Column(
                           children: [
@@ -1152,8 +1112,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                               width: MediaQuery.of(context).size.width,
                               child: LayoutBuilder(
                                 builder: (context, constraints) => Hero(
-                                  tag:
-                                      'playlist_art_${widget.playlist.playlistName}',
+                                  tag: 'playlist_art_${widget.playlist.name}',
                                   child: Card(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(min(
@@ -1168,8 +1127,10 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                     child: Padding(
                                       padding: EdgeInsets.all(4.0),
                                       child: ClipOval(
-                                        child: Image.file(
-                                          widget.playlist.tracks.last.albumArt,
+                                        child: Image(
+                                          image: Collection.instance
+                                              .getAlbumArt(
+                                                  widget.playlist.tracks.last),
                                           height: min(constraints.maxHeight,
                                                   constraints.maxWidth) -
                                               64.0,
@@ -1192,7 +1153,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                               builder: (context, value, _) => Opacity(
                                 opacity: value,
                                 child: Container(
-                                  color: this.color,
+                                  color: color,
                                   height: 96.0,
                                   width: MediaQuery.of(context).size.width,
                                   padding: EdgeInsets.all(16.0),
@@ -1203,7 +1164,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        widget.playlist.playlistName!.overflow,
+                                        widget.playlist.name.overflow,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline1
@@ -1211,7 +1172,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               color: [
                                                 Colors.white,
                                                 Colors.black
-                                              ][(this.color?.computeLuminance() ??
+                                              ][(color?.computeLuminance() ??
                                                           0.0) >
                                                       0.5
                                                   ? 1
@@ -1240,10 +1201,9 @@ class PlaylistScreenState extends State<PlaylistScreen>
                         (context, i) => Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            onTap: () => Playback.play(
-                              index: i,
-                              tracks: widget.playlist.tracks +
-                                  ([...collection.tracks]..shuffle()),
+                            onTap: () => Playback.instance.open(
+                              widget.playlist.tracks +
+                                  ([...Collection.instance.tracks]..shuffle()),
                             ),
                             onLongPress: () async {
                               var result;
@@ -1287,7 +1247,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                         width: 56.0,
                                         alignment: Alignment.center,
                                         child: Text(
-                                          '${widget.playlist.tracks[i].trackNumber ?? 1}',
+                                          '${widget.playlist.tracks[i].trackNumber}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline3
@@ -1305,7 +1265,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                           children: [
                                             Text(
                                               widget.playlist.tracks[i]
-                                                  .trackName!.overflow,
+                                                  .trackName.overflow,
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               style: Theme.of(context)
@@ -1316,16 +1276,13 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               height: 2.0,
                                             ),
                                             Text(
-                                              Duration(
-                                                    milliseconds: widget
-                                                            .playlist
-                                                            .tracks[i]
-                                                            .trackDuration ??
-                                                        0,
-                                                  ).label +
+                                              (widget.playlist.tracks[i]
+                                                              .duration ??
+                                                          Duration.zero)
+                                                      .label +
                                                   ' • ' +
                                                   widget.playlist.tracks[i]
-                                                      .albumName!,
+                                                      .albumName,
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
                                               style: Theme.of(context)
@@ -1392,7 +1349,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                     SliverPadding(
                       padding: EdgeInsets.only(
                         top: 12.0 +
-                            (this.detailsLoaded
+                            (detailsLoaded
                                 ? 0.0
                                 : MediaQuery.of(context).size.height),
                       ),
@@ -1407,7 +1364,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                   child: TweenAnimationBuilder(
                     curve: Curves.easeOut,
                     tween: Tween<double>(
-                        begin: 0.0, end: this.detailsVisible ? 1.0 : 0.0),
+                        begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
                     duration: Duration(milliseconds: 200),
                     builder: (context, value, _) => Transform.scale(
                       scale: value as double,
@@ -1415,17 +1372,16 @@ class PlaylistScreenState extends State<PlaylistScreen>
                         angle: value * pi + pi,
                         child: FloatingActionButton(
                           heroTag: 'play_now',
-                          backgroundColor: this.secondary,
+                          backgroundColor: secondary,
                           foregroundColor: [Colors.white, Colors.black][
-                              (this.secondary?.computeLuminance() ?? 0.0) > 0.5
+                              (secondary?.computeLuminance() ?? 0.0) > 0.5
                                   ? 1
                                   : 0],
                           child: Icon(Icons.play_arrow),
                           onPressed: () {
-                            Playback.play(
-                              index: 0,
-                              tracks: widget.playlist.tracks +
-                                  ([...collection.tracks]..shuffle()),
+                            Playback.instance.open(
+                              widget.playlist.tracks +
+                                  ([...Collection.instance.tracks]..shuffle()),
                             );
                           },
                         ),
@@ -1441,7 +1397,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                   child: TweenAnimationBuilder(
                     curve: Curves.easeOut,
                     tween: Tween<double>(
-                        begin: 0.0, end: this.detailsVisible ? 1.0 : 0.0),
+                        begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
                     duration: Duration(milliseconds: 200),
                     builder: (context, value, _) => Transform.scale(
                       scale: value as double,
@@ -1449,16 +1405,15 @@ class PlaylistScreenState extends State<PlaylistScreen>
                         angle: value * pi + pi,
                         child: FloatingActionButton(
                           heroTag: 'shuffle',
-                          backgroundColor: this.secondary,
+                          backgroundColor: secondary,
                           foregroundColor: [Colors.white, Colors.black][
-                              (this.secondary?.computeLuminance() ?? 0.0) > 0.5
+                              (secondary?.computeLuminance() ?? 0.0) > 0.5
                                   ? 1
                                   : 0],
                           child: Icon(Icons.shuffle),
                           onPressed: () {
-                            Playback.play(
-                              index: 0,
-                              tracks: [...widget.playlist.tracks]..shuffle(),
+                            Playback.instance.open(
+                              [...widget.playlist.tracks]..shuffle(),
                             );
                           },
                         ),

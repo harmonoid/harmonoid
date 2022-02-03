@@ -14,32 +14,33 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:math';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
-import 'package:harmonoid/utils/rendering.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/intent.dart';
+import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/state/collection_refresh.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
-import 'package:harmonoid/interface/youtube/youtubemusic.dart';
-import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/interface/change_notifiers.dart';
 import 'package:harmonoid/interface/collection/search.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/core/hotkeys.dart';
-import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/constants/language.dart';
+
+import 'package:harmonoid/youtube/youtube.dart';
 
 class CollectionScreen extends StatefulWidget {
   /// Used only on Android.
@@ -73,18 +74,18 @@ class CollectionScreenState extends State<CollectionScreen>
   void initState() {
     super.initState();
     widget.tabControllerNotifier.addListener(() {
-      if (this.index != widget.tabControllerNotifier.value.index) {
-        this.pageController.animateToPage(
-              widget.tabControllerNotifier.value.index,
-              duration: Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-            );
+      if (index != widget.tabControllerNotifier.value.index) {
+        pageController.animateToPage(
+          widget.tabControllerNotifier.value.index,
+          duration: Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+        );
       }
     });
-    this.pageController.addListener(() {
-      this.floatingSearchBarController.show();
+    pageController.addListener(() {
+      floatingSearchBarController.show();
     });
-    intent.play();
+    Intent.instance.play();
   }
 
   @override
@@ -102,11 +103,11 @@ class CollectionScreenState extends State<CollectionScreen>
                   padding: EdgeInsets.only(
                     top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
                   ),
-                  child: Consumer<CollectionRefreshController>(
+                  child: Consumer<CollectionRefresh>(
                     builder: (context, refresh, __) => Stack(
                       alignment: Alignment.bottomLeft,
                       children: <Widget>[
-                        if (collection.tracks.isNotEmpty)
+                        if (Collection.instance.tracks.isNotEmpty)
                           Positioned.fill(
                             child: Opacity(
                               opacity: 0.2,
@@ -128,9 +129,9 @@ class CollectionScreenState extends State<CollectionScreen>
                             TrackTab(),
                             ArtistTab(),
                             PlaylistTab(),
-                            YouTubeTab(),
+                            YoutubeTab(),
                             SearchTab(query: query),
-                          ][this.index],
+                          ][index],
                           transitionBuilder:
                               (child, animation, secondaryAnimation) =>
                                   SharedAxisTransition(
@@ -188,7 +189,8 @@ class CollectionScreenState extends State<CollectionScreen>
                                         ),
                                         Expanded(
                                           child: Text(
-                                            language.COLLECTION_INDEXING_LABEL,
+                                            Language.instance
+                                                .COLLECTION_INDEXING_LABEL,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
@@ -227,25 +229,25 @@ class CollectionScreenState extends State<CollectionScreen>
                                     scrollDirection: Axis.horizontal,
                                     shrinkWrap: true,
                                     children: [
-                                      language.ALBUM,
-                                      language.TRACK,
-                                      language.ARTIST,
-                                      language.PLAYLIST,
-                                      language.YOUTUBE,
+                                      Language.instance.ALBUM,
+                                      Language.instance.TRACK,
+                                      Language.instance.ARTIST,
+                                      Language.instance.PLAYLIST,
+                                      Language.instance.YOUTUBE,
                                     ].map(
                                       (tab) {
                                         final _index = [
-                                          language.ALBUM,
-                                          language.TRACK,
-                                          language.ARTIST,
-                                          language.PLAYLIST,
-                                          language.YOUTUBE,
+                                          Language.instance.ALBUM,
+                                          Language.instance.TRACK,
+                                          Language.instance.ARTIST,
+                                          Language.instance.PLAYLIST,
+                                          Language.instance.YOUTUBE,
                                         ].indexOf(tab);
                                         return InkWell(
                                           borderRadius:
                                               BorderRadius.circular(8.0),
-                                          onTap: () => this.setState(
-                                              () => this.index = _index),
+                                          onTap: () =>
+                                              setState(() => index = _index),
                                           child: Container(
                                             height: 40.0,
                                             padding: EdgeInsets.symmetric(
@@ -257,7 +259,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                               tab.toUpperCase(),
                                               style: TextStyle(
                                                 fontSize: 20.0,
-                                                fontWeight: this.index == _index
+                                                fontWeight: index == _index
                                                     ? FontWeight.w600
                                                     : FontWeight.w300,
                                                 color: (Theme.of(context)
@@ -265,10 +267,9 @@ class CollectionScreenState extends State<CollectionScreen>
                                                             Brightness.dark
                                                         ? Colors.white
                                                         : Colors.black)
-                                                    .withOpacity(
-                                                        this.index == _index
-                                                            ? 1.0
-                                                            : 0.67),
+                                                    .withOpacity(index == _index
+                                                        ? 1.0
+                                                        : 0.67),
                                               ),
                                             ),
                                           ),
@@ -279,7 +280,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                 ),
                               ),
                               Container(
-                                height: 42.0,
+                                height: 40.0,
                                 width: 280.0,
                                 alignment: Alignment.center,
                                 margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
@@ -287,13 +288,13 @@ class CollectionScreenState extends State<CollectionScreen>
                                 child: Focus(
                                   onFocusChange: (hasFocus) {
                                     if (hasFocus) {
-                                      HotKeys.disableSpaceHotKey();
+                                      HotKeys.instance.disableSpaceHotKey();
                                     } else {
-                                      HotKeys.enableSpaceHotKey();
+                                      HotKeys.instance.enableSpaceHotKey();
                                     }
                                   },
                                   child: TextField(
-                                    focusNode: this.node,
+                                    focusNode: node,
                                     cursorWidth: 1.0,
                                     onChanged: (value) {
                                       string = value;
@@ -301,10 +302,10 @@ class CollectionScreenState extends State<CollectionScreen>
                                     onSubmitted: (value) {
                                       query.value = value;
                                       if (string.isNotEmpty)
-                                        this.setState(() {
-                                          this.index = 5;
+                                        setState(() {
+                                          index = 5;
                                         });
-                                      this.node.requestFocus();
+                                      node.requestFocus();
                                     },
                                     cursorColor: Theme.of(context).brightness ==
                                             Brightness.light
@@ -313,78 +314,27 @@ class CollectionScreenState extends State<CollectionScreen>
                                     textAlignVertical: TextAlignVertical.bottom,
                                     style:
                                         Theme.of(context).textTheme.headline4,
-                                    decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                        splashColor: Colors.transparent,
-                                        highlightColor: Colors.transparent,
-                                        hoverColor: Colors.transparent,
-                                        onPressed: () {
-                                          query.value = string;
-                                          if (string.isNotEmpty)
-                                            this.setState(() {
-                                              this.index = 5;
-                                            });
-                                          this.node.requestFocus();
-                                        },
-                                        icon: Transform.rotate(
-                                          angle: pi / 2,
-                                          child: Icon(
-                                            Icons.search,
-                                            size: 20.0,
-                                            color: Theme.of(context)
-                                                .iconTheme
-                                                .color,
-                                          ),
+                                    decoration: desktopInputDecoration(
+                                      context,
+                                      Language
+                                          .instance.COLLECTION_SEARCH_WELCOME,
+                                      trailingIcon: Transform.rotate(
+                                        angle: pi / 2,
+                                        child: Icon(
+                                          Icons.search,
+                                          size: 20.0,
+                                          color:
+                                              Theme.of(context).iconTheme.color,
                                         ),
                                       ),
-                                      contentPadding: EdgeInsets.only(
-                                          left: 10.0, bottom: 14.0),
-                                      hintText:
-                                          language.COLLECTION_SEARCH_WELCOME,
-                                      hintStyle: Theme.of(context)
-                                          .textTheme
-                                          .headline3
-                                          ?.copyWith(
-                                            color: Theme.of(context)
-                                                        .brightness ==
-                                                    Brightness.light
-                                                ? Colors.black.withOpacity(0.6)
-                                                : Colors.white60,
-                                          ),
-                                      filled: true,
-                                      fillColor: Theme.of(context).brightness ==
-                                              Brightness.light
-                                          ? Colors.white
-                                          : Color(0xFF202020),
-                                      hoverColor:
-                                          Theme.of(context).brightness ==
-                                                  Brightness.light
-                                              ? Colors.white
-                                              : Color(0xFF202020),
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .dividerColor
-                                              .withOpacity(0.32),
-                                          width: 0.6,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .dividerColor
-                                              .withOpacity(0.32),
-                                          width: 0.6,
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Theme.of(context)
-                                              .dividerColor
-                                              .withOpacity(0.32),
-                                          width: 0.6,
-                                        ),
-                                      ),
+                                      trailingIconOnPressed: () {
+                                        query.value = string;
+                                        if (string.isNotEmpty)
+                                          setState(() {
+                                            index = 5;
+                                          });
+                                        node.requestFocus();
+                                      },
                                     ),
                                   ),
                                 ),
@@ -404,14 +354,14 @@ class CollectionScreenState extends State<CollectionScreen>
                                     Provider.of<Collection>(context,
                                             listen: false)
                                         .sort(type: value);
-                                    await configuration.save(
+                                    await Configuration.instance.save(
                                       collectionSortType: value,
                                     );
                                   } else if (value is CollectionOrder) {
                                     Provider.of<Collection>(context,
                                             listen: false)
                                         .order(type: value);
-                                    await configuration.save(
+                                    await Configuration.instance.save(
                                       collectionOrderType: value,
                                     );
                                   }
@@ -419,33 +369,36 @@ class CollectionScreenState extends State<CollectionScreen>
                                 itemBuilder: (context) => [
                                   CheckedPopupMenuItem(
                                     padding: EdgeInsets.zero,
-                                    checked: collection.collectionSortType ==
+                                    checked: Collection
+                                            .instance.collectionSortType ==
                                         CollectionSort.aToZ,
                                     value: CollectionSort.aToZ,
                                     child: Text(
-                                      language.A_TO_Z,
+                                      Language.instance.A_TO_Z,
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                     ),
                                   ),
                                   CheckedPopupMenuItem(
                                     padding: EdgeInsets.zero,
-                                    checked: collection.collectionSortType ==
+                                    checked: Collection
+                                            .instance.collectionSortType ==
                                         CollectionSort.dateAdded,
                                     value: CollectionSort.dateAdded,
                                     child: Text(
-                                      language.DATE_ADDED,
+                                      Language.instance.DATE_ADDED,
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                     ),
                                   ),
                                   CheckedPopupMenuItem(
                                     padding: EdgeInsets.zero,
-                                    checked: collection.collectionSortType ==
+                                    checked: Collection
+                                            .instance.collectionSortType ==
                                         CollectionSort.year,
                                     value: CollectionSort.year,
                                     child: Text(
-                                      language.YEAR,
+                                      Language.instance.YEAR,
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                     ),
@@ -453,22 +406,24 @@ class CollectionScreenState extends State<CollectionScreen>
                                   PopupMenuDivider(),
                                   CheckedPopupMenuItem(
                                     padding: EdgeInsets.zero,
-                                    checked: collection.collectionOrderType ==
+                                    checked: Collection
+                                            .instance.collectionOrderType ==
                                         CollectionOrder.ascending,
                                     value: CollectionOrder.ascending,
                                     child: Text(
-                                      language.ASCENDING,
+                                      Language.instance.ASCENDING,
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                     ),
                                   ),
                                   CheckedPopupMenuItem(
                                     padding: EdgeInsets.zero,
-                                    checked: collection.collectionOrderType ==
+                                    checked: Collection
+                                            .instance.collectionOrderType ==
                                         CollectionOrder.descending,
                                     value: CollectionOrder.descending,
                                     child: Text(
-                                      language.DESCENDING,
+                                      Language.instance.DESCENDING,
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                     ),
@@ -522,20 +477,19 @@ class CollectionScreenState extends State<CollectionScreen>
               SystemUiOverlayStyle.light,
               SystemUiOverlayStyle.dark,
             ][Theme.of(context).brightness.index],
-            child: Consumer<CollectionRefreshController>(
+            child: Consumer<CollectionRefresh>(
               builder: (context, refresh, _) => Scaffold(
                 resizeToAvoidBottomInset: false,
                 body: Stack(
                   fit: StackFit.expand,
                   children: [
                     FloatingSearchBar(
-                      controller: this.floatingSearchBarController,
-                      hint: refresh.progress == refresh.total
-                          ? language.SEARCH_WELCOME
-                          : language.COLLECTION_INDEXING_HINT,
-                      progress: refresh.progress == refresh.total
-                          ? null
-                          : refresh.progress / refresh.total,
+                      controller: floatingSearchBarController,
+                      hint: refresh.isCompleted
+                          ? Language.instance.SEARCH_WELCOME
+                          : Language.instance.COLLECTION_INDEXING_HINT,
+                      progress:
+                          refresh.isCompleted ? null : refresh.relativeProgress,
                       transitionCurve: Curves.easeInOut,
                       width: MediaQuery.of(context).size.width - 2 * tileMargin,
                       height: kMobileSearchBarHeight,
@@ -586,21 +540,22 @@ class CollectionScreenState extends State<CollectionScreen>
                                     value: 0,
                                     child: ListTile(
                                       leading: Icon(Icons.sort),
-                                      title: Text(language.SORT_BY),
+                                      title: Text(Language.instance.SORT_BY),
                                     ),
                                   ),
                                   PopupMenuItem(
                                     value: 1,
                                     child: ListTile(
                                       leading: Icon(Icons.settings),
-                                      title: Text(language.SETTING),
+                                      title: Text(Language.instance.SETTING),
                                     ),
                                   ),
                                   PopupMenuItem(
                                     value: 2,
                                     child: ListTile(
                                       leading: Icon(Icons.info),
-                                      title: Text(language.ABOUT_TITLE),
+                                      title:
+                                          Text(Language.instance.ABOUT_TITLE),
                                     ),
                                   ),
                                 ],
@@ -615,53 +570,53 @@ class CollectionScreenState extends State<CollectionScreen>
                                           items: [
                                             CheckedPopupMenuItem(
                                               padding: EdgeInsets.zero,
-                                              checked: collection
+                                              checked: Collection.instance
                                                       .collectionSortType ==
                                                   CollectionSort.aToZ,
                                               value: CollectionSort.aToZ,
                                               child: Text(
-                                                language.A_TO_Z,
+                                                Language.instance.A_TO_Z,
                                               ),
                                             ),
                                             CheckedPopupMenuItem(
                                               padding: EdgeInsets.zero,
-                                              checked: collection
+                                              checked: Collection.instance
                                                       .collectionSortType ==
                                                   CollectionSort.dateAdded,
                                               value: CollectionSort.dateAdded,
                                               child: Text(
-                                                language.DATE_ADDED,
+                                                Language.instance.DATE_ADDED,
                                               ),
                                             ),
                                             CheckedPopupMenuItem(
                                               padding: EdgeInsets.zero,
-                                              checked: collection
+                                              checked: Collection.instance
                                                       .collectionSortType ==
                                                   CollectionSort.year,
                                               value: CollectionSort.year,
                                               child: Text(
-                                                language.YEAR,
+                                                Language.instance.YEAR,
                                               ),
                                             ),
                                             PopupMenuDivider(),
                                             CheckedPopupMenuItem(
                                               padding: EdgeInsets.zero,
-                                              checked: collection
+                                              checked: Collection.instance
                                                       .collectionOrderType ==
                                                   CollectionOrder.ascending,
                                               value: CollectionOrder.ascending,
                                               child: Text(
-                                                language.ASCENDING,
+                                                Language.instance.ASCENDING,
                                               ),
                                             ),
                                             CheckedPopupMenuItem(
                                               padding: EdgeInsets.zero,
-                                              checked: collection
+                                              checked: Collection.instance
                                                       .collectionOrderType ==
                                                   CollectionOrder.descending,
                                               value: CollectionOrder.descending,
                                               child: Text(
-                                                language.DESCENDING,
+                                                Language.instance.DESCENDING,
                                               ),
                                             ),
                                           ],
@@ -670,7 +625,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                           Provider.of<Collection>(context,
                                                   listen: false)
                                               .sort(type: value);
-                                          await configuration.save(
+                                          await Configuration.instance.save(
                                             collectionSortType: value,
                                           );
                                           break;
@@ -678,7 +633,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                           Provider.of<Collection>(context,
                                                   listen: false)
                                               .order(type: value);
-                                          await configuration.save(
+                                          await Configuration.instance.save(
                                             collectionOrderType: value,
                                           );
                                           break;
@@ -711,10 +666,10 @@ class CollectionScreenState extends State<CollectionScreen>
                       },
                       body: FloatingSearchBarScrollNotifier(
                         child: PageView(
-                          controller: this.pageController,
+                          controller: pageController,
                           onPageChanged: (page) {
-                            if (this.index != page) {
-                              this.index = page;
+                            if (index != page) {
+                              index = page;
                               widget.tabControllerNotifier.value =
                                   TabRoute(page, TabRouteSender.pageView);
                             }
@@ -724,7 +679,7 @@ class CollectionScreenState extends State<CollectionScreen>
                             TrackTab(),
                             AlbumTab(),
                             ArtistTab(),
-                            YouTubeTab(),
+                            YoutubeTab(),
                           ],
                         ),
                       ),

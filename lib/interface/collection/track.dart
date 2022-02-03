@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'package:desktop/desktop.dart' as desktop;
@@ -25,6 +25,7 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -52,9 +53,9 @@ class TrackTab extends StatelessWidget {
                   ),
                   child: desktop.ListTable(
                     onPressed: (index, _) {
-                      Playback.play(
+                      Playback.instance.open(
+                        collection.tracks,
                         index: index,
-                        tracks: collection.tracks,
                       );
                     },
                     onSecondaryPress: (index, position) async {
@@ -105,10 +106,10 @@ class TrackTab extends StatelessWidget {
                       child: Text(
                         [
                           '#',
-                          language.TRACK_SINGLE,
-                          language.ARTIST,
-                          language.ALBUM_SINGLE,
-                          language.YEAR
+                          Language.instance.TRACK_SINGLE,
+                          Language.instance.ARTIST,
+                          Language.instance.ALBUM_SINGLE,
+                          Language.instance.YEAR
                         ][index],
                         style: Theme.of(context).textTheme.headline2,
                       ),
@@ -124,14 +125,11 @@ class TrackTab extends StatelessWidget {
                           : Alignment.centerLeft,
                       child: Text(
                         [
-                          '${collection.tracks[index].trackNumber ?? 1}',
-                          collection.tracks[index].trackName ?? 'Unknown Track',
-                          collection.tracks[index].trackArtistNames
-                                  ?.join(', ') ??
-                              'Unknown Artist',
-                          collection.tracks[index].albumName ?? 'Unknown Album',
-                          collection.tracks[index].year?.toString() ??
-                              'Unknown Year',
+                          '${collection.tracks[index].trackNumber}',
+                          collection.tracks[index].trackName,
+                          collection.tracks[index].trackArtistNames.join(', '),
+                          collection.tracks[index].albumName,
+                          collection.tracks[index].year.toString(),
                         ][property],
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.headline4,
@@ -141,8 +139,8 @@ class TrackTab extends StatelessWidget {
                 )
               : Center(
                   child: ExceptionWidget(
-                    title: language.NO_COLLECTION_TITLE,
-                    subtitle: language.NO_COLLECTION_SUBTITLE,
+                    title: Language.instance.NO_COLLECTION_TITLE,
+                    subtitle: Language.instance.NO_COLLECTION_SUBTITLE,
                   ),
                 )
           : Consumer<Collection>(
@@ -167,21 +165,21 @@ class TrackTab extends StatelessWidget {
                           case CollectionSort.aToZ:
                             {
                               return Text(
-                                track.trackName![0].toUpperCase(),
+                                track.trackName[0].toUpperCase(),
                                 style: Theme.of(context).textTheme.headline1,
                               );
                             }
                           case CollectionSort.dateAdded:
                             {
                               return Text(
-                                '${DateTime.fromMillisecondsSinceEpoch(track.timeAdded!).label}',
+                                '${track.timeAdded.label}',
                                 style: Theme.of(context).textTheme.headline4,
                               );
                             }
                           case CollectionSort.year:
                             {
                               return Text(
-                                '${track.year ?? 'Unknown Year'}',
+                                '${track.year}',
                                 style: Theme.of(context).textTheme.headline4,
                               );
                             }
@@ -212,8 +210,8 @@ class TrackTab extends StatelessWidget {
                     )
                   : Center(
                       child: ExceptionWidget(
-                        title: language.NO_COLLECTION_TITLE,
-                        subtitle: language.NO_COLLECTION_SUBTITLE,
+                        title: Language.instance.NO_COLLECTION_TITLE,
+                        subtitle: Language.instance.NO_COLLECTION_SUBTITLE,
                       ),
                     ),
             ),
@@ -251,12 +249,12 @@ class TrackTileState extends State<TrackTile> {
       builder: (context, collection, _) => isDesktop
           ? MouseRegion(
               onEnter: (e) {
-                this.setState(() {
+                setState(() {
                   hovered = true;
                 });
               },
               onExit: (e) {
-                this.setState(() {
+                setState(() {
                   hovered = false;
                 });
               },
@@ -299,9 +297,9 @@ class TrackTileState extends State<TrackTile> {
                         widget.onPressed?.call();
                         return;
                       }
-                      Playback.play(
+                      Playback.instance.open(
+                        collection.tracks,
                         index: collection.tracks.indexOf(widget.track),
-                        tracks: collection.tracks,
                       );
                     },
                     child: Row(
@@ -318,19 +316,21 @@ class TrackTileState extends State<TrackTile> {
                                       widget.onPressed?.call();
                                       return;
                                     }
-                                    Playback.play(
+                                    Playback.instance.open(
+                                      collection.tracks,
                                       index: collection.tracks
                                           .indexOf(widget.track),
-                                      tracks: collection.tracks,
                                     );
                                   },
                                   icon: Icon(Icons.play_arrow),
                                   splashRadius: 20.0,
                                 )
-                              : Text(
-                                  '${widget.track.trackNumber ?? 1}',
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
+                              : widget.leading ??
+                                  Text(
+                                    '${widget.track.trackNumber}',
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                  ),
                         ),
                         Expanded(
                           child: Container(
@@ -338,7 +338,7 @@ class TrackTileState extends State<TrackTile> {
                             padding: EdgeInsets.only(right: 16.0),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              widget.track.trackName!,
+                              widget.track.trackName,
                               style: Theme.of(context).textTheme.headline4,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -350,8 +350,7 @@ class TrackTileState extends State<TrackTile> {
                             padding: EdgeInsets.only(right: 16.0),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              widget.track.trackArtistNames?.join(', ') ??
-                                  'Unknown Artist',
+                              widget.track.trackArtistNames.take(2).join(', '),
                               style: Theme.of(context).textTheme.headline4,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -363,7 +362,7 @@ class TrackTileState extends State<TrackTile> {
                           padding: EdgeInsets.only(right: 32.0),
                           alignment: Alignment.centerRight,
                           child: Text(
-                            widget.track.year?.toString() ?? 'Unknown Year',
+                            widget.track.year.toString(),
                             style: Theme.of(context).textTheme.headline4,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -377,13 +376,13 @@ class TrackTileState extends State<TrackTile> {
           : Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () => Playback.play(
-                  index: widget.index ?? 0,
-                  tracks: widget.index == null
+                onTap: () => Playback.instance.open(
+                  widget.index == null
                       ? <Track>[widget.track]
                       : widget.group ?? collection.tracks,
+                  index: widget.index ?? 0,
                 ),
-                onLongPress: this._showBottomSheet,
+                onLongPress: _showBottomSheet,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -400,12 +399,10 @@ class TrackTileState extends State<TrackTile> {
                         children: [
                           const SizedBox(width: 12.0),
                           widget.leading ??
-                              Image.file(
-                                widget.track.albumArt,
+                              Image(
+                                image: collection.getAlbumArt(widget.track),
                                 height: 56.0,
                                 width: 56.0,
-                                cacheHeight: 180,
-                                cacheWidth: 180,
                               ),
                           const SizedBox(width: 12.0),
                           Expanded(
@@ -415,7 +412,7 @@ class TrackTileState extends State<TrackTile> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.track.trackName!.overflow,
+                                  widget.track.trackName.overflow,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: Theme.of(context).textTheme.headline2,
@@ -424,9 +421,9 @@ class TrackTileState extends State<TrackTile> {
                                   height: 2.0,
                                 ),
                                 Text(
-                                  widget.track.albumName!.overflow +
+                                  widget.track.albumName.overflow +
                                       ' • ' +
-                                      widget.track.trackArtistNames!
+                                      widget.track.trackArtistNames
                                           .take(2)
                                           .join(', '),
                                   overflow: TextOverflow.ellipsis,
@@ -442,7 +439,7 @@ class TrackTileState extends State<TrackTile> {
                             height: 64.0,
                             alignment: Alignment.center,
                             child: IconButton(
-                              onPressed: this._showBottomSheet,
+                              onPressed: _showBottomSheet,
                               icon: Icon(Icons.more_vert),
                               iconSize: 24.0,
                               splashRadius: 20.0,

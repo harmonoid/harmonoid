@@ -20,15 +20,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:animations/animations.dart';
-import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/discord_rpc.dart';
-import 'package:harmonoid/interface/change_notifiers.dart';
-import 'package:harmonoid/interface/now_playing.dart';
+import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/state/lyrics.dart';
+import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';
-import 'package:harmonoid/core/lyrics.dart';
 import 'package:harmonoid/interface/collection/collection.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -100,54 +97,30 @@ class HomeState extends State<Home>
           builder: (subContext) => AlertDialog(
             backgroundColor: Theme.of(context).cardColor,
             title: Text(
-              language.EXIT_TITLE,
+              Language.instance.EXIT_TITLE,
               style: Theme.of(subContext).textTheme.headline1,
             ),
             content: Text(
-              language.EXIT_SUBTITLE,
+              Language.instance.EXIT_SUBTITLE,
               style: Theme.of(subContext).textTheme.headline3,
             ),
             actions: [
               MaterialButton(
                 textColor: Theme.of(context).primaryColor,
                 onPressed: SystemNavigator.pop,
-                child: Text(language.YES),
+                child: Text(Language.instance.YES),
               ),
               MaterialButton(
                 textColor: Theme.of(context).primaryColor,
                 onPressed: Navigator.of(subContext).pop,
-                child: Text(language.NO),
+                child: Text(Language.instance.NO),
               ),
             ],
           ),
         );
       }
     }
-    // Desktop specific.
-    if (nowPlayingBar.maximized) nowPlayingBar.maximized = false;
     return true;
-  }
-
-  // Desktop specific.
-  void launch() {
-    nowPlayingBar.maximized = true;
-    navigatorKey.currentState?.push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            SharedAxisTransition(
-          transitionType: SharedAxisTransitionType.vertical,
-          fillColor: Colors.transparent,
-          animation: animation,
-          secondaryAnimation: secondaryAnimation,
-          child: NowPlayingScreen(),
-        ),
-      ),
-    );
-  }
-
-  void exit() {
-    nowPlayingBar.maximized = false;
-    navigatorKey.currentState?.maybePop();
   }
 
   @override
@@ -156,29 +129,20 @@ class HomeState extends State<Home>
       resizeToAvoidBottomInset: false,
       body: MultiProvider(
         providers: [
-          ChangeNotifierProvider<Collection>(
-            create: (context) => collection,
+          ChangeNotifierProvider(
+            create: (context) => Collection.instance,
           ),
           ChangeNotifierProvider(
-            create: (context) => collectionRefresh,
+            create: (context) => CollectionRefresh.instance,
           ),
-          ChangeNotifierProvider<NowPlayingController>(
-            create: (context) => nowPlaying,
+          ChangeNotifierProvider(
+            create: (context) => Playback.instance,
           ),
-          ChangeNotifierProvider<NowPlayingBarController>(
-            create: (context) => nowPlayingBar,
+          ChangeNotifierProvider(
+            create: (context) => Lyrics.instance,
           ),
-          Provider<DiscordRPC>(
-            create: (context) => discordRPC,
-          ),
-          ChangeNotifierProvider<YouTubeStateController>(
-            create: (context) => YouTubeStateController(),
-          ),
-          ChangeNotifierProvider<Language>(
-            create: (context) => Language.get()!,
-          ),
-          ChangeNotifierProvider<Lyrics>(
-            create: (context) => Lyrics.get(),
+          ChangeNotifierProvider(
+            create: (context) => Language.instance,
           ),
         ],
         builder: (context, _) => isDesktop
@@ -217,8 +181,8 @@ class HomeState extends State<Home>
                     ),
                   ),
                   NowPlayingBar(
-                    launch: this.launch,
-                    exit: this.exit,
+                    launch: () {},
+                    exit: () {},
                   ),
                 ],
               )

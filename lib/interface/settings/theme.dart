@@ -14,23 +14,23 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class ThemeSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
-        title: language.SETTING_THEME_TITLE,
-        subtitle: language.SETTING_THEME_SUBTITLE,
+        title: Language.instance.SETTING_THEME_TITLE,
+        subtitle: Language.instance.SETTING_THEME_SUBTITLE,
         child: Consumer<Visuals>(
           builder: (context, visuals, _) => Column(
             children: [
@@ -38,7 +38,7 @@ class ThemeSetting extends StatelessWidget {
                 RadioListTile(
                   value: ThemeMode.system,
                   title: Text(
-                    language.THEME_MODE_SYSTEM,
+                    Language.instance.THEME_MODE_SYSTEM,
                     style: Theme.of(context).textTheme.headline4,
                   ),
                   groupValue: visuals.themeMode,
@@ -50,7 +50,7 @@ class ThemeSetting extends StatelessWidget {
               RadioListTile(
                 value: ThemeMode.light,
                 title: Text(
-                  language.THEME_MODE_LIGHT,
+                  Language.instance.THEME_MODE_LIGHT,
                   style: Theme.of(context).textTheme.headline4,
                 ),
                 groupValue: visuals.themeMode,
@@ -62,7 +62,7 @@ class ThemeSetting extends StatelessWidget {
               RadioListTile(
                 value: ThemeMode.dark,
                 title: Text(
-                  language.THEME_MODE_DARK,
+                  Language.instance.THEME_MODE_DARK,
                   style: Theme.of(context).textTheme.headline4,
                 ),
                 groupValue: visuals.themeMode,

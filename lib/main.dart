@@ -29,21 +29,21 @@ import 'package:system_media_transport_controls/system_media_transport_controls.
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/core/hotkeys.dart';
-import 'package:harmonoid/interface/change_notifiers.dart';
 
-const String TITLE = 'Harmonoid';
-const String VERSION = '0.1.9';
-const String AUTHOR = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
-const String LICENSE = 'GPL-3.0';
+const String kTitle = 'Harmonoid';
+const String kVersion = '0.1.9';
+const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
+const String kLicense = 'GPL-3.0';
 
 Future<void> main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
   try {
     if (Platform.isWindows) {
-      WidgetsFlutterBinding.ensureInitialized();
       await Configuration.initialize();
       await MPV.initialize();
       await SMTC.initialize();
@@ -58,7 +58,6 @@ Future<void> main(List<String> args) async {
       });
     }
     if (Platform.isLinux) {
-      WidgetsFlutterBinding.ensureInitialized();
       await Configuration.initialize();
       await MPV.initialize();
       await Intent.initialize(args: args);
@@ -66,7 +65,6 @@ Future<void> main(List<String> args) async {
       DiscordRPC.initialize();
     }
     if (Platform.isAndroid) {
-      WidgetsFlutterBinding.ensureInitialized();
       if (await Permission.storage.isDenied) {
         PermissionStatus storagePermissionState =
             await Permission.storage.request();
@@ -80,13 +78,13 @@ Future<void> main(List<String> args) async {
       await Intent.initialize();
     }
     await Collection.initialize(
-      collectionDirectories: configuration.collectionDirectories!,
-      cacheDirectory: configuration.cacheDirectory!,
-      collectionSortType: configuration.collectionSortType!,
-      collectionOrderType: configuration.collectionOrderType!,
+      collectionDirectories: Configuration.instance.collectionDirectories,
+      cacheDirectory: Configuration.instance.cacheDirectory,
+      collectionSortType: Configuration.instance.collectionSortType,
+      collectionOrderType: Configuration.instance.collectionOrderType,
     );
-    await collection.refresh(onProgress: (progress, total, _) {
-      collectionRefresh.set(progress, total);
+    await Collection.instance.refresh(onProgress: (progress, total, _) {
+      CollectionRefresh.instance.set(progress, total);
     });
     await Language.initialize();
     runApp(

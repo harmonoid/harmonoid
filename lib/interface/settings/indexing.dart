@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:io';
@@ -28,7 +28,7 @@ import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
+import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -40,10 +40,10 @@ class IndexingSetting extends StatefulWidget {
 class IndexingState extends State<IndexingSetting> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<CollectionRefreshController>(
+    return Consumer<CollectionRefresh>(
       builder: (context, controller, _) => SettingsTile(
-        title: language.SETTING_INDEXING_TITLE,
-        subtitle: language.SETTING_INDEXING_SUBTITLE,
+        title: Language.instance.SETTING_INDEXING_TITLE,
+        subtitle: Language.instance.SETTING_INDEXING_SUBTITLE,
         child: Container(
           margin: EdgeInsets.only(left: 8, right: 16),
           child: Column(
@@ -57,7 +57,7 @@ class IndexingState extends State<IndexingSetting> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   MaterialButton(
-                    onPressed: controller.progress != controller.total
+                    onPressed: controller.isOngoing
                         ? () {}
                         : () async {
                             Directory? directory;
@@ -81,22 +81,24 @@ class IndexingState extends State<IndexingSetting> {
                               }
                             }
                             if (directory != null) {
-                              await configuration.save(
-                                collectionDirectories:
-                                    configuration.collectionDirectories! +
-                                        [directory],
+                              await Configuration.instance.save(
+                                collectionDirectories: Configuration
+                                        .instance.collectionDirectories +
+                                    [directory],
                               );
-                              collection.setDirectories(
-                                  collectionDirectories:
-                                      configuration.collectionDirectories,
-                                  cacheDirectory: configuration.cacheDirectory,
+                              Collection.instance.setDirectories(
+                                  collectionDirectories: Configuration
+                                      .instance.collectionDirectories,
+                                  cacheDirectory:
+                                      Configuration.instance.cacheDirectory,
                                   onProgress: (progress, total, isCompleted) {
-                                    collectionRefresh.set(progress, total);
+                                    CollectionRefresh.instance
+                                        .set(progress, total);
                                   });
                             }
                           },
                     child: Text(
-                      language.ADD_NEW_FOLDER,
+                      Language.instance.ADD_NEW_FOLDER,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -111,14 +113,14 @@ class IndexingState extends State<IndexingSetting> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                         Text(
-                          language.SELECTED_DIRECTORIES,
+                          Language.instance.SELECTED_DIRECTORIES,
                           style: Theme.of(context).textTheme.headline3,
                         ),
                         SizedBox(
                           height: 4.0,
                         ),
                       ] +
-                      configuration.collectionDirectories!
+                      Configuration.instance.collectionDirectories
                           .map(
                             (directory) => Container(
                               width: 320.0,
@@ -142,20 +144,20 @@ class IndexingState extends State<IndexingSetting> {
                                   ),
                                   MaterialButton(
                                     onPressed: () async {
-                                      if (configuration
-                                              .collectionDirectories!.length ==
+                                      if (Configuration.instance
+                                              .collectionDirectories.length ==
                                           1) {
                                         showDialog(
                                           context: context,
                                           builder: (subContext) => AlertDialog(
                                             title: Text(
-                                              language.WARNING,
+                                              Language.instance.WARNING,
                                               style: Theme.of(subContext)
                                                   .textTheme
                                                   .headline1,
                                             ),
                                             content: Text(
-                                              language
+                                              Language.instance
                                                   .LAST_COLLECTION_DIRECTORY_REMOVED,
                                               style: Theme.of(subContext)
                                                   .textTheme
@@ -169,29 +171,31 @@ class IndexingState extends State<IndexingSetting> {
                                                   Navigator.of(subContext)
                                                       .pop();
                                                 },
-                                                child: Text(language.OK),
+                                                child:
+                                                    Text(Language.instance.OK),
                                               ),
                                             ],
                                           ),
                                         );
                                         return;
                                       }
-                                      configuration.collectionDirectories!
+                                      Configuration
+                                          .instance.collectionDirectories
                                           .remove(directory);
-                                      await configuration.save(
-                                        collectionDirectories:
-                                            configuration.collectionDirectories,
+                                      await Configuration.instance.save(
+                                        collectionDirectories: Configuration
+                                            .instance.collectionDirectories,
                                       );
-                                      collection.refresh(
+                                      Collection.instance.refresh(
                                         onProgress:
                                             (progress, total, isCompleted) {
-                                          collectionRefresh.set(
-                                              progress, total);
+                                          CollectionRefresh.instance
+                                              .set(progress, total);
                                         },
                                       );
                                     },
                                     child: Text(
-                                      language.REMOVE,
+                                      Language.instance.REMOVE,
                                       style: TextStyle(
                                         color: Theme.of(context).primaryColor,
                                       ),
@@ -220,7 +224,7 @@ class IndexingState extends State<IndexingSetting> {
                                       ),
                                       duration: Duration(milliseconds: 400),
                                       child: Text(
-                                        (language
+                                        (Language.instance
                                             .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
                                             .replaceAll(
                                           'NUMBER_STRING',
@@ -273,7 +277,7 @@ class IndexingState extends State<IndexingSetting> {
                                     color: Colors.white,
                                   ),
                                   label: Text(
-                                    language.SETTING_INDEXING_DONE,
+                                    Language.instance.SETTING_INDEXING_DONE,
                                     style: TextStyle(
                                       color: Colors.white,
                                     ),
@@ -283,17 +287,12 @@ class IndexingState extends State<IndexingSetting> {
                         SizedBox(
                           height: 4.0,
                         ),
-                        // No longer necessary.
-                        // Text(
-                        //   language.SETTING_INDEXING_WARNING,
-                        //   style: Theme.of(context).textTheme.headline4,
-                        // ),
                         SizedBox(
                           height: 2.0,
                         ),
                         if (controller.progress != controller.total)
                           Text(
-                            language.COLLECTION_INDEXING_LABEL,
+                            Language.instance.COLLECTION_INDEXING_LABEL,
                             overflow: TextOverflow.ellipsis,
                           ),
                       ],
@@ -307,14 +306,14 @@ class IndexingState extends State<IndexingSetting> {
             onPressed: controller.progress != controller.total
                 ? () {}
                 : () async {
-                    collection.index(
+                    Collection.instance.index(
                       onProgress: (progress, total, isCompleted) {
-                        collectionRefresh.set(progress, total);
+                        CollectionRefresh.instance.set(progress, total);
                       },
                     );
                   },
             child: Text(
-              language.REFRESH,
+              Language.instance.REINDEX.toUpperCase(),
               style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
               ),

@@ -23,10 +23,11 @@ import 'package:provider/provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
@@ -49,14 +50,14 @@ class SearchTabState extends State<SearchTab> {
   void initState() {
     super.initState();
     if (widget.query != null) {
-      this.listener = () async {
-        this.albums = <Widget>[];
-        this.tracks = <Widget>[];
-        this.artists = <Widget>[];
-        var result = collection.search(widget.query!.value);
+      listener = () async {
+        albums = <Widget>[];
+        tracks = <Widget>[];
+        artists = <Widget>[];
+        var result = Collection.instance.search(widget.query!.value);
         for (var media in result) {
           if (media is Album) {
-            this.albums.addAll(
+            albums.addAll(
               [
                 AlbumTile(
                   height: kAlbumTileHeight,
@@ -70,7 +71,7 @@ class SearchTabState extends State<SearchTab> {
             );
           }
           if (media is Artist) {
-            this.artists.addAll(
+            artists.addAll(
               [
                 ArtistTile(
                   height: kDesktopArtistTileHeight,
@@ -83,23 +84,23 @@ class SearchTabState extends State<SearchTab> {
               ],
             );
           } else if (media is Track) {
-            this.tracks.add(
-                  TrackTile(
-                    track: media,
-                    index: collection.tracks.indexOf(media),
-                  ),
-                );
+            tracks.add(
+              TrackTile(
+                track: media,
+                index: Collection.instance.tracks.indexOf(media),
+              ),
+            );
           }
         }
       };
-      widget.query!.addListener(this.listener);
+      widget.query!.addListener(listener);
       listener();
     }
   }
 
   @override
   void dispose() {
-    widget.query!.removeListener(this.listener);
+    widget.query!.removeListener(listener);
     super.dispose();
   }
 
@@ -133,9 +134,9 @@ class SearchTabState extends State<SearchTab> {
                         child: Focus(
                           onFocusChange: (hasFocus) {
                             if (hasFocus) {
-                              HotKeys.disableSpaceHotKey();
+                              HotKeys.instance.disableSpaceHotKey();
                             } else {
-                              HotKeys.enableSpaceHotKey();
+                              HotKeys.instance.enableSpaceHotKey();
                             }
                           },
                           child: TextField(
@@ -144,12 +145,12 @@ class SearchTabState extends State<SearchTab> {
                               int _index = index;
                               index++;
                               List<dynamic> result = collection.search(query);
-                              List<Widget> albums = <Widget>[];
-                              List<Widget> tracks = <Widget>[];
-                              List<Widget> artists = <Widget>[];
-                              for (dynamic media in result) {
+                              List<Widget> _albums = <Widget>[];
+                              List<Widget> _tracks = <Widget>[];
+                              List<Widget> _artists = <Widget>[];
+                              for (final media in result) {
                                 if (media is Album) {
-                                  albums.addAll(
+                                  _albums.addAll(
                                     [
                                       AlbumTile(
                                         height: kAlbumTileHeight,
@@ -163,7 +164,7 @@ class SearchTabState extends State<SearchTab> {
                                   );
                                 }
                                 if (media is Artist) {
-                                  artists.addAll(
+                                  _artists.addAll(
                                     [
                                       ArtistTile(
                                         height: kDesktopArtistTileHeight,
@@ -176,7 +177,7 @@ class SearchTabState extends State<SearchTab> {
                                     ],
                                   );
                                 } else if (media is Track) {
-                                  tracks.add(
+                                  _tracks.add(
                                     TrackTile(
                                       track: media,
                                       index: collection.tracks.indexOf(media),
@@ -185,16 +186,17 @@ class SearchTabState extends State<SearchTab> {
                                 }
                               }
                               if (_index == index - 1) {
-                                this.albums = albums;
-                                this.artists = artists;
-                                this.tracks = tracks;
+                                albums = _albums;
+                                artists = _artists;
+                                tracks = _tracks;
                                 setState(() {});
                               }
                             },
                             style: Theme.of(context).textTheme.headline4,
                             cursorWidth: 1.0,
                             decoration: InputDecoration(
-                              hintText: language.COLLECTION_SEARCH_LABEL,
+                              hintText:
+                                  Language.instance.COLLECTION_SEARCH_LABEL,
                               hintStyle: Theme.of(context).textTheme.headline3,
                               border: UnderlineInputBorder(
                                 borderSide: BorderSide(
@@ -227,15 +229,15 @@ class SearchTabState extends State<SearchTab> {
                   ),
                 ),
               Expanded(
-                child: this.albums.isNotEmpty ||
-                        this.artists.isNotEmpty ||
-                        this.tracks.isNotEmpty
+                child: albums.isNotEmpty ||
+                        artists.isNotEmpty ||
+                        tracks.isNotEmpty
                     ? CustomListView(
                         children: <Widget>[
-                              if (this.albums.isNotEmpty)
+                              if (albums.isNotEmpty)
                                 Row(
                                   children: [
-                                    SubHeader(language.ALBUM),
+                                    SubHeader(Language.instance.ALBUM),
                                     const Spacer(),
                                     ShowAllButton(
                                       onPressed: () {
@@ -283,13 +285,13 @@ class SearchTabState extends State<SearchTab> {
                                                           builder: (BuildContext
                                                                       context,
                                                                   int index) =>
-                                                              this.albums[
-                                                                  2 * index],
+                                                              albums[2 * index],
                                                         ),
                                                       ),
                                                     ),
                                                     DesktopAppBar(
-                                                      title: language.ALBUM,
+                                                      title: Language
+                                                          .instance.ALBUM,
                                                       elevation: 4.0,
                                                     ),
                                                   ],
@@ -305,7 +307,7 @@ class SearchTabState extends State<SearchTab> {
                                     ),
                                   ],
                                 ),
-                              if (this.albums.isNotEmpty)
+                              if (albums.isNotEmpty)
                                 Container(
                                   height: kAlbumTileHeight + 10.0,
                                   width: MediaQuery.of(context).size.width,
@@ -317,13 +319,13 @@ class SearchTabState extends State<SearchTab> {
                                     ),
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
-                                    children: this.albums,
+                                    children: albums,
                                   ),
                                 ),
-                              if (this.artists.isNotEmpty)
+                              if (artists.isNotEmpty)
                                 Row(
                                   children: [
-                                    SubHeader(language.ARTIST),
+                                    SubHeader(Language.instance.ARTIST),
                                     const Spacer(),
                                     ShowAllButton(
                                       onPressed: () {
@@ -371,13 +373,14 @@ class SearchTabState extends State<SearchTab> {
                                                           builder: (BuildContext
                                                                       context,
                                                                   int index) =>
-                                                              this.artists[
+                                                              artists[
                                                                   2 * index],
                                                         ),
                                                       ),
                                                     ),
                                                     DesktopAppBar(
-                                                      title: language.ARTIST,
+                                                      title: Language
+                                                          .instance.ARTIST,
                                                       elevation: 4.0,
                                                     ),
                                                   ],
@@ -393,7 +396,7 @@ class SearchTabState extends State<SearchTab> {
                                     ),
                                   ],
                                 ),
-                              if (this.artists.isNotEmpty)
+                              if (artists.isNotEmpty)
                                 Container(
                                   height: kDesktopArtistTileHeight + 10.0,
                                   width: MediaQuery.of(context).size.width,
@@ -405,13 +408,13 @@ class SearchTabState extends State<SearchTab> {
                                     ),
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
-                                    children: this.artists,
+                                    children: artists,
                                   ),
                                 ),
-                              if (this.tracks.isNotEmpty)
+                              if (tracks.isNotEmpty)
                                 Row(
                                   children: [
-                                    SubHeader(language.TRACK),
+                                    SubHeader(Language.instance.TRACK),
                                     const Spacer(),
                                     const SizedBox(
                                       width: 20.0,
@@ -419,15 +422,15 @@ class SearchTabState extends State<SearchTab> {
                                   ],
                                 ),
                             ] +
-                            this.tracks,
+                            tracks,
                       )
                     : (controller.text.isNotEmpty ||
                             (widget.query?.value.isNotEmpty ?? false)
                         ? Center(
                             child: ExceptionWidget(
-                              title:
-                                  language.COLLECTION_SEARCH_NO_RESULTS_TITLE,
-                              subtitle: language
+                              title: Language
+                                  .instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                              subtitle: Language.instance
                                   .COLLECTION_SEARCH_NO_RESULTS_SUBTITLE,
                             ),
                           )

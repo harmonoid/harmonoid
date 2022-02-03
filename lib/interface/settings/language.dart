@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'package:flutter/material.dart' hide ExpansionTile;
@@ -63,7 +63,7 @@ class LanguageSetting extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          language.SETTING_LANGUAGE_TITLE,
+                          Language.instance.SETTING_LANGUAGE_TITLE,
                           style:
                               Theme.of(context).textTheme.headline1?.copyWith(
                                     fontSize: 20.0,
@@ -73,7 +73,7 @@ class LanguageSetting extends StatelessWidget {
                           height: 2.0,
                         ),
                         Text(
-                          language.SETTING_LANGUAGE_SUBTITLE,
+                          Language.instance.SETTING_LANGUAGE_SUBTITLE,
                           style: Theme.of(context).textTheme.headline3,
                         ),
                       ],
@@ -94,7 +94,7 @@ class LanguageSetting extends StatelessWidget {
             ),
             fixedChild: AnimatedSwitcher(
               duration: Duration(milliseconds: 300),
-              child: _buildLanguageRegionTile(language.current),
+              child: _buildLanguageRegionTile(Language.instance.current),
             ),
             children: [
               ImplicitlyAnimatedList<LanguageRegion?>(
@@ -142,10 +142,10 @@ class LanguageSetting extends StatelessWidget {
             fontSize: 14.0,
           ),
         ),
-        groupValue: configuration.languageRegion,
+        groupValue: Configuration.instance.languageRegion,
         onChanged: (languageRegion) async {
           if (languageRegion != null) {
-            await language.set(languageRegion: languageRegion);
+            await Language.instance.set(languageRegion: languageRegion);
           }
         },
       ),

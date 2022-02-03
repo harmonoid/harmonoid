@@ -29,8 +29,9 @@ import 'package:animations/animations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/models/media.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -63,16 +64,16 @@ class AlbumTab extends StatelessWidget {
           subHeader: null,
           leadingSubHeader: null,
           leadingWidget: null,
-          widgetCount: collection.albums.length,
+          widgetCount: Collection.instance.albums.length,
           builder: (BuildContext context, int index) => AlbumTile(
             height: height,
             width: width,
-            album: collection.albums[index],
-            key: ValueKey(collection.albums[index]),
+            album: Collection.instance.albums[index],
+            key: ValueKey(Collection.instance.albums[index]),
           ),
         );
         return isDesktop
-            ? collection.tracks.isNotEmpty
+            ? Collection.instance.tracks.isNotEmpty
                 ? CustomListView(
                     padding: EdgeInsets.only(
                       top: tileMargin,
@@ -81,8 +82,8 @@ class AlbumTab extends StatelessWidget {
                   )
                 : Center(
                     child: ExceptionWidget(
-                      title: language.NO_COLLECTION_TITLE,
-                      subtitle: language.NO_COLLECTION_SUBTITLE,
+                      title: Language.instance.NO_COLLECTION_TITLE,
+                      subtitle: Language.instance.NO_COLLECTION_SUBTITLE,
                     ),
                   )
             : Consumer<Collection>(
@@ -106,25 +107,25 @@ class AlbumTab extends StatelessWidget {
                             data.data.length - 1,
                           )]
                               .first as Album;
-                          switch (collection.collectionSortType) {
+                          switch (Collection.instance.collectionSortType) {
                             case CollectionSort.aToZ:
                               {
                                 return Text(
-                                  album.albumName![0].toUpperCase(),
+                                  album.albumName[0].toUpperCase(),
                                   style: Theme.of(context).textTheme.headline1,
                                 );
                               }
                             case CollectionSort.dateAdded:
                               {
                                 return Text(
-                                  '${DateTime.fromMillisecondsSinceEpoch(album.timeAdded).label}',
+                                  '${album.timeAdded.label}',
                                   style: Theme.of(context).textTheme.headline4,
                                 );
                               }
                             case CollectionSort.year:
                               {
                                 return Text(
-                                  '${album.year ?? 'Unknown Year'}',
+                                  album.year,
                                   style: Theme.of(context).textTheme.headline4,
                                 );
                               }
@@ -150,8 +151,8 @@ class AlbumTab extends StatelessWidget {
                       )
                     : Center(
                         child: ExceptionWidget(
-                          title: language.NO_COLLECTION_TITLE,
-                          subtitle: language.NO_COLLECTION_SUBTITLE,
+                          title: Language.instance.NO_COLLECTION_TITLE,
+                          subtitle: Language.instance.NO_COLLECTION_SUBTITLE,
                         ),
                       ),
               );
@@ -190,7 +191,7 @@ class AlbumTile extends StatelessWidget {
                       animation: animation,
                       secondaryAnimation: secondaryAnimation,
                       child: AlbumScreen(
-                        album: this.album,
+                        album: album,
                       ),
                     ),
                     transitionDuration: Duration(milliseconds: 300),
@@ -199,20 +200,20 @@ class AlbumTile extends StatelessWidget {
                 );
               },
               child: Container(
-                height: this.height,
-                width: this.width,
+                height: height,
+                width: width,
                 child: Column(
                   children: [
                     ClipRect(
                       child: ScaleOnHover(
                         child: Hero(
                           tag:
-                              'album_art_${this.album.albumName}_${this.album.albumArtistName}',
-                          child: Image.file(
-                            this.album.albumArt,
+                              'album_art_${album.albumName}_${album.albumArtistName}',
+                          child: Image(
+                            image: Collection.instance.getAlbumArt(album),
                             fit: BoxFit.cover,
-                            height: this.width,
-                            width: this.width,
+                            height: width,
+                            width: width,
                           ),
                         ),
                       ),
@@ -222,14 +223,14 @@ class AlbumTile extends StatelessWidget {
                         padding: EdgeInsets.symmetric(
                           horizontal: 8.0,
                         ),
-                        width: this.width,
+                        width: width,
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              this.album.albumName!.overflow,
+                              album.albumName.overflow,
                               style: Theme.of(context).textTheme.headline2,
                               textAlign: TextAlign.left,
                               maxLines: 1,
@@ -238,7 +239,7 @@ class AlbumTile extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(top: 2),
                               child: Text(
-                                '${this.album.albumArtistName} ${this.album.year != null ? ' • ' : ''} ${this.album.year ?? ''}',
+                                '${album.albumArtistName} • ${album.year}',
                                 style: isDesktop
                                     ? Theme.of(context)
                                         .textTheme
@@ -270,35 +271,35 @@ class AlbumTile extends StatelessWidget {
               onTap: () async {
                 if (palette == null) {
                   final result = await PaletteGenerator.fromImageProvider(
-                      FileImage(this.album.albumArt));
+                      Collection.instance.getAlbumArt(album));
                   palette = result.colors;
                 }
                 open();
               },
               child: Container(
-                height: this.height,
-                width: this.width,
+                height: height,
+                width: width,
                 child: Column(
                   children: [
                     Ink.image(
-                      image: FileImage(this.album.albumArt),
+                      image: Collection.instance.getAlbumArt(album),
                       fit: BoxFit.cover,
-                      height: this.width,
-                      width: this.width,
+                      height: width,
+                      width: width,
                     ),
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 8.0,
                         ),
-                        width: this.width,
+                        width: width,
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              this.album.albumName!.overflow,
+                              album.albumName.overflow,
                               style: Theme.of(context).textTheme.headline2,
                               textAlign: TextAlign.left,
                               maxLines: 1,
@@ -307,7 +308,7 @@ class AlbumTile extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(top: 2),
                               child: Text(
-                                '${this.album.albumArtistName} ${this.album.year != null ? ' • ' : ''} ${this.album.year ?? ''}',
+                                '${album.albumArtistName} • ${album.year}',
                                 style: isDesktop
                                     ? Theme.of(context)
                                         .textTheme
@@ -361,24 +362,25 @@ class AlbumScreenState extends State<AlbumScreen>
   @override
   void initState() {
     super.initState();
-    widget.album.tracks.sort((first, second) =>
-        (first.trackNumber ?? 0).compareTo(second.trackNumber ?? 0));
+    widget.album.tracks.sort(
+        (first, second) => first.trackNumber.compareTo(second.trackNumber));
     if (isDesktop) {
       Timer(
         Duration(milliseconds: 300),
         () {
           if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(FileImage(widget.album.albumArt))
+            PaletteGenerator.fromImageProvider(
+                    Collection.instance.getAlbumArt(widget.album))
                 .then((palette) {
-              this.setState(() {
-                this.color = palette.colors.first;
-                this.secondary = palette.colors.last;
-                this.detailsVisible = true;
+              setState(() {
+                color = palette.colors.first;
+                secondary = palette.colors.last;
+                detailsVisible = true;
               });
             });
           } else {
-            this.setState(() {
-              this.detailsVisible = true;
+            setState(() {
+              detailsVisible = true;
             });
           }
         },
@@ -395,24 +397,24 @@ class AlbumScreenState extends State<AlbumScreen>
             )
             .then((_) {
           Timer(Duration(milliseconds: 50), () {
-            this.setState(() {
-              this.detailsLoaded = true;
+            setState(() {
+              detailsLoaded = true;
             });
           });
         });
       });
       if (widget.palette != null) {
-        this.color = widget.palette?.first;
-        this.secondary = widget.palette?.last;
+        color = widget.palette?.first;
+        secondary = widget.palette?.last;
       }
-      this.controller.addListener(() {
-        if (this.controller.offset == 0.0) {
-          this.setState(() {
-            this.detailsVisible = true;
+      controller.addListener(() {
+        if (controller.offset == 0.0) {
+          setState(() {
+            detailsVisible = true;
           });
-        } else if (this.detailsVisible) {
-          this.setState(() {
-            this.detailsVisible = false;
+        } else if (detailsVisible) {
+          setState(() {
+            detailsVisible = false;
           });
         }
       });
@@ -430,9 +432,9 @@ class AlbumScreenState extends State<AlbumScreen>
                   TweenAnimationBuilder(
                     tween: ColorTween(
                       begin: Theme.of(context).appBarTheme.backgroundColor,
-                      end: this.color == null
+                      end: color == null
                           ? Theme.of(context).appBarTheme.backgroundColor
-                          : this.color!,
+                          : color!,
                     ),
                     curve: Curves.easeOut,
                     duration: Duration(
@@ -474,8 +476,9 @@ class AlbumScreenState extends State<AlbumScreen>
                                     alignment: Alignment.bottomLeft,
                                     children: [
                                       Positioned.fill(
-                                        child: Image.file(
-                                          widget.album.albumArt,
+                                        child: Image(
+                                          image: Collection.instance
+                                              .getAlbumArt(widget.album),
                                           fit: BoxFit.cover,
                                         ),
                                       ),
@@ -491,7 +494,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                               child: IconButton(
                                                 onPressed: () {
                                                   launch(
-                                                      'file:///${widget.album.albumArt.path}');
+                                                      'file:///${(Collection.instance.getAlbumArt(widget.album) as FileImage).file.path}');
                                                 },
                                                 icon: Icon(
                                                   Icons.image,
@@ -525,7 +528,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                widget.album.albumName!,
+                                                widget.album.albumName,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline1
@@ -535,7 +538,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                               ),
                                               SizedBox(height: 8.0),
                                               Text(
-                                                '${language.ARTIST}: ${widget.album.albumArtistName}\n${language.YEAR}: ${widget.album.year ?? 'Unknown Year'}\n${language.TRACK}: ${widget.album.tracks.length}',
+                                                '${Language.instance.ARTIST}: ${widget.album.albumArtistName}\n${Language.instance.YEAR}: ${widget.album.year}\n${Language.instance.TRACK}: ${widget.album.tracks.length}',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline3,
@@ -553,19 +556,20 @@ class AlbumScreenState extends State<AlbumScreen>
                                               FloatingActionButton(
                                                 heroTag: 'play_now',
                                                 onPressed: () {
-                                                  Playback.play(
-                                                    index: 0,
-                                                    tracks: widget
-                                                            .album.tracks +
-                                                        ([...collection.tracks]
-                                                          ..shuffle()),
+                                                  Playback.instance.open(
+                                                    widget.album.tracks +
+                                                        ([
+                                                          ...Collection
+                                                              .instance.tracks
+                                                        ]..shuffle()),
                                                   );
                                                 },
                                                 mini: true,
                                                 child: Icon(
                                                   Icons.play_arrow,
                                                 ),
-                                                tooltip: language.PLAY_NOW,
+                                                tooltip:
+                                                    Language.instance.PLAY_NOW,
                                               ),
                                               SizedBox(
                                                 width: 8.0,
@@ -573,7 +577,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                               FloatingActionButton(
                                                 heroTag: 'add_to_now_playing',
                                                 onPressed: () {
-                                                  Playback.add(
+                                                  Playback.instance.add(
                                                     widget.album.tracks,
                                                   );
                                                 },
@@ -581,8 +585,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 child: Icon(
                                                   Icons.queue_music,
                                                 ),
-                                                tooltip:
-                                                    language.ADD_TO_NOW_PLAYING,
+                                                tooltip: Language.instance
+                                                    .ADD_TO_NOW_PLAYING,
                                               ),
                                             ],
                                           ),
@@ -616,7 +620,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: Text(
-                                                        language.TRACK,
+                                                        Language.instance.TRACK,
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline2,
@@ -631,7 +635,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: Text(
-                                                        language.ARTIST,
+                                                        Language
+                                                            .instance.ARTIST,
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline2,
@@ -644,19 +649,18 @@ class AlbumScreenState extends State<AlbumScreen>
                                             ] +
                                             (widget.album.tracks
                                                   ..sort((first, second) =>
-                                                      (first.trackNumber ?? 1)
-                                                          .compareTo((second
-                                                                  .trackNumber ??
-                                                              1))))
+                                                      first.trackNumber
+                                                          .compareTo(second
+                                                              .trackNumber)))
                                                 .map(
                                                   (track) => MouseRegion(
                                                     onEnter: (e) {
-                                                      this.setState(() {
+                                                      setState(() {
                                                         hovered = track;
                                                       });
                                                     },
                                                     onExit: (e) {
-                                                      this.setState(() {
+                                                      setState(() {
                                                         hovered = null;
                                                       });
                                                     },
@@ -719,16 +723,13 @@ class AlbumScreenState extends State<AlbumScreen>
                                                             Colors.transparent,
                                                         child: InkWell(
                                                           onTap: () {
-                                                            Playback.play(
-                                                              index: widget
-                                                                  .album.tracks
-                                                                  .indexOf(
-                                                                      track),
-                                                              tracks: widget
-                                                                      .album
+                                                            Playback.instance
+                                                                .open(
+                                                              widget.album
                                                                       .tracks +
                                                                   ([
-                                                                    ...collection
+                                                                    ...Collection
+                                                                        .instance
                                                                         .tracks
                                                                   ]..shuffle()),
                                                             );
@@ -751,11 +752,11 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                         onPressed:
                                                                             () {
                                                                           Playback
-                                                                              .play(
+                                                                              .instance
+                                                                              .open(
+                                                                            widget.album.tracks,
                                                                             index:
                                                                                 widget.album.tracks.indexOf(track),
-                                                                            tracks:
-                                                                                widget.album.tracks,
                                                                           );
                                                                         },
                                                                         icon: Icon(
@@ -764,7 +765,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                             20.0,
                                                                       )
                                                                     : Text(
-                                                                        '${track.trackNumber ?? 1}',
+                                                                        '${track.trackNumber}',
                                                                         style: Theme.of(context)
                                                                             .textTheme
                                                                             .headline4,
@@ -783,7 +784,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                           .centerLeft,
                                                                   child: Text(
                                                                     track
-                                                                        .trackName!,
+                                                                        .trackName,
                                                                     style: Theme.of(
                                                                             context)
                                                                         .textTheme
@@ -806,9 +807,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                       Alignment
                                                                           .centerLeft,
                                                                   child: Text(
-                                                                    track.trackArtistNames
-                                                                            ?.join(', ') ??
-                                                                        'Unknown Artist',
+                                                                    track
+                                                                        .trackArtistNames
+                                                                        .join(
+                                                                            ', '),
                                                                     style: Theme.of(
                                                                             context)
                                                                         .textTheme
@@ -846,7 +848,7 @@ class AlbumScreenState extends State<AlbumScreen>
             body: Stack(
               children: [
                 CustomScrollView(
-                  controller: this.controller,
+                  controller: controller,
                   slivers: [
                     SliverAppBar(
                       expandedHeight: MediaQuery.of(context).size.width +
@@ -877,16 +879,17 @@ class AlbumScreenState extends State<AlbumScreen>
                               context: context,
                               builder: (subContext) => AlertDialog(
                                 title: Text(
-                                  language
+                                  Language.instance
                                       .COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
                                   style:
                                       Theme.of(subContext).textTheme.headline1,
                                 ),
                                 content: Text(
-                                  language.COLLECTION_ALBUM_DELETE_DIALOG_BODY
+                                  Language.instance
+                                      .COLLECTION_ALBUM_DELETE_DIALOG_BODY
                                       .replaceAll(
                                     'NAME',
-                                    widget.album.albumName!,
+                                    widget.album.albumName,
                                   ),
                                   style:
                                       Theme.of(subContext).textTheme.headline3,
@@ -895,15 +898,16 @@ class AlbumScreenState extends State<AlbumScreen>
                                   MaterialButton(
                                     textColor: Theme.of(context).primaryColor,
                                     onPressed: () async {
-                                      await collection.delete(widget.album);
+                                      await Collection.instance
+                                          .delete(widget.album);
                                       Navigator.of(subContext).pop();
                                     },
-                                    child: Text(language.YES),
+                                    child: Text(Language.instance.YES),
                                   ),
                                   MaterialButton(
                                     textColor: Theme.of(context).primaryColor,
                                     onPressed: Navigator.of(subContext).pop,
-                                    child: Text(language.NO),
+                                    child: Text(Language.instance.NO),
                                   ),
                                 ],
                               ),
@@ -925,7 +929,7 @@ class AlbumScreenState extends State<AlbumScreen>
                         builder: (context, value, _) => Opacity(
                           opacity: value,
                           child: Text(
-                            language.ALBUM_SINGLE,
+                            Language.instance.ALBUM_SINGLE,
                             style: Theme.of(context)
                                 .textTheme
                                 .headline1
@@ -933,12 +937,13 @@ class AlbumScreenState extends State<AlbumScreen>
                           ),
                         ),
                       ),
-                      backgroundColor: this.color,
+                      backgroundColor: color,
                       flexibleSpace: FlexibleSpaceBar(
                         background: Column(
                           children: [
-                            Image.file(
-                              widget.album.albumArt,
+                            Image(
+                              image:
+                                  Collection.instance.getAlbumArt(widget.album),
                               fit: BoxFit.cover,
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.width,
@@ -952,7 +957,7 @@ class AlbumScreenState extends State<AlbumScreen>
                               builder: (context, value, _) => Opacity(
                                 opacity: value,
                                 child: Container(
-                                  color: this.color,
+                                  color: color,
                                   height: 136.0,
                                   width: MediaQuery.of(context).size.width,
                                   padding: EdgeInsets.all(16.0),
@@ -963,7 +968,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        widget.album.albumName!.overflow,
+                                        widget.album.albumName.overflow,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline1
@@ -971,7 +976,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                               color: [
                                                 Colors.white,
                                                 Colors.black
-                                              ][(this.color?.computeLuminance() ??
+                                              ][(color?.computeLuminance() ??
                                                           0.0) >
                                                       0.5
                                                   ? 1
@@ -983,7 +988,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       ),
                                       const SizedBox(height: 4.0),
                                       Text(
-                                        widget.album.albumArtistName!.overflow,
+                                        widget.album.albumArtistName.overflow,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline1
@@ -991,7 +996,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                               color: [
                                                 Color(0xFFD9D9D9),
                                                 Color(0xFF363636)
-                                              ][(this.color?.computeLuminance() ??
+                                              ][(color?.computeLuminance() ??
                                                           0.0) >
                                                       0.5
                                                   ? 1
@@ -1003,7 +1008,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       ),
                                       const SizedBox(height: 2.0),
                                       Text(
-                                        '${widget.album.year ?? 'Unknown Year'}',
+                                        '${widget.album.year}',
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline1
@@ -1011,7 +1016,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                               color: [
                                                 Color(0xFFD9D9D9),
                                                 Color(0xFF363636)
-                                              ][(this.color?.computeLuminance() ??
+                                              ][(color?.computeLuminance() ??
                                                           0.0) >
                                                       0.5
                                                   ? 1
@@ -1040,10 +1045,10 @@ class AlbumScreenState extends State<AlbumScreen>
                         (context, i) => Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            onTap: () => Playback.play(
+                            onTap: () => Playback.instance.open(
+                              widget.album.tracks +
+                                  ([...Collection.instance.tracks]..shuffle()),
                               index: i,
-                              tracks: widget.album.tracks +
-                                  ([...collection.tracks]..shuffle()),
                             ),
                             onLongPress: () async {
                               var result;
@@ -1089,7 +1094,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                         width: 56.0,
                                         alignment: Alignment.center,
                                         child: Text(
-                                          '${widget.album.tracks[i].trackNumber ?? 1}',
+                                          '${widget.album.tracks[i].trackNumber}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline3
@@ -1106,7 +1111,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              widget.album.tracks[i].trackName!
+                                              widget.album.tracks[i].trackName
                                                   .overflow,
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
@@ -1118,16 +1123,13 @@ class AlbumScreenState extends State<AlbumScreen>
                                               height: 2.0,
                                             ),
                                             Text(
-                                              Duration(
-                                                    milliseconds: widget
-                                                            .album
-                                                            .tracks[i]
-                                                            .trackDuration ??
-                                                        0,
-                                                  ).label +
+                                              (widget.album.tracks[i]
+                                                              .duration ??
+                                                          Duration.zero)
+                                                      .label +
                                                   ' • ' +
                                                   widget.album.tracks[i]
-                                                      .trackArtistNames!
+                                                      .trackArtistNames
                                                       .take(2)
                                                       .join(', '),
                                               overflow: TextOverflow.ellipsis,
@@ -1199,7 +1201,7 @@ class AlbumScreenState extends State<AlbumScreen>
                     SliverPadding(
                       padding: EdgeInsets.only(
                         top: 12.0 +
-                            (this.detailsLoaded
+                            (detailsLoaded
                                 ? 0.0
                                 : MediaQuery.of(context).size.height),
                       ),
@@ -1214,7 +1216,7 @@ class AlbumScreenState extends State<AlbumScreen>
                   child: TweenAnimationBuilder(
                     curve: Curves.easeOut,
                     tween: Tween<double>(
-                        begin: 0.0, end: this.detailsVisible ? 1.0 : 0.0),
+                        begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
                     duration: Duration(milliseconds: 200),
                     builder: (context, value, _) => Transform.scale(
                       scale: value as double,
@@ -1222,17 +1224,16 @@ class AlbumScreenState extends State<AlbumScreen>
                         angle: value * pi + pi,
                         child: FloatingActionButton(
                           heroTag: 'play_now',
-                          backgroundColor: this.secondary,
+                          backgroundColor: secondary,
                           foregroundColor: [Colors.white, Colors.black][
-                              (this.secondary?.computeLuminance() ?? 0.0) > 0.5
+                              (secondary?.computeLuminance() ?? 0.0) > 0.5
                                   ? 1
                                   : 0],
                           child: Icon(Icons.play_arrow),
                           onPressed: () {
-                            Playback.play(
-                              index: 0,
-                              tracks: widget.album.tracks +
-                                  ([...collection.tracks]..shuffle()),
+                            Playback.instance.open(
+                              widget.album.tracks +
+                                  ([...Collection.instance.tracks]..shuffle()),
                             );
                           },
                         ),
@@ -1248,7 +1249,7 @@ class AlbumScreenState extends State<AlbumScreen>
                   child: TweenAnimationBuilder(
                     curve: Curves.easeOut,
                     tween: Tween<double>(
-                        begin: 0.0, end: this.detailsVisible ? 1.0 : 0.0),
+                        begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
                     duration: Duration(milliseconds: 200),
                     builder: (context, value, _) => Transform.scale(
                       scale: value as double,
@@ -1256,16 +1257,15 @@ class AlbumScreenState extends State<AlbumScreen>
                         angle: value * pi + pi,
                         child: FloatingActionButton(
                           heroTag: 'shuffle',
-                          backgroundColor: this.secondary,
+                          backgroundColor: secondary,
                           foregroundColor: [Colors.white, Colors.black][
-                              (this.secondary?.computeLuminance() ?? 0.0) > 0.5
+                              (secondary?.computeLuminance() ?? 0.0) > 0.5
                                   ? 1
                                   : 0],
                           child: Icon(Icons.shuffle),
                           onPressed: () {
-                            Playback.play(
-                              index: 0,
-                              tracks: [...widget.album.tracks]..shuffle(),
+                            Playback.instance.open(
+                              [...widget.album.tracks]..shuffle(),
                             );
                           },
                         ),
