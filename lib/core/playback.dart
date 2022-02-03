@@ -147,8 +147,9 @@ class Playback extends ChangeNotifier {
 
   void toggleMute() {
     if (isMuted) {
-      setVolume(volume);
+      setVolume(_volume);
     } else {
+      _volume = volume;
       setVolume(0.0);
     }
     isMuted = !isMuted;
@@ -188,6 +189,7 @@ class Playback extends ChangeNotifier {
             .toList(),
       );
       player.jump(index);
+      player.play();
     }
     if (Platform.isAndroid || Platform.isIOS) {}
   }
@@ -209,12 +211,12 @@ class Playback extends ChangeNotifier {
   Playback() {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       player.streams.index.listen((event) {
-        index = event;
+        index = event.clamp(0, tracks.length);
         notifyListeners();
         update();
       });
-      player.streams.playlist.listen((medias) {
-        tracks = medias.map((media) => Track.fromJson(media.extras)).toList();
+      player.streams.playlist.listen((event) {
+        tracks = event.map((media) => Track.fromJson(media.extras)).toList();
         notifyListeners();
         update();
       });
@@ -230,111 +232,117 @@ class Playback extends ChangeNotifier {
       });
       player.streams.isCompleted.listen((event) async {
         isCompleted = event;
+        if (index == tracks.length - 1) {
+          pause();
+        }
         notifyListeners();
-        update();
       });
       player.streams.position.listen((event) {
-        position = position;
+        position = event;
         notifyListeners();
-        update();
+        if (Platform.isWindows) {
+          WindowsTaskbar.setProgress(
+            position.inMilliseconds,
+            duration.inMilliseconds,
+          );
+        }
       });
       player.streams.duration.listen((event) {
         duration = event;
         notifyListeners();
-        update();
       });
       player.volume = volume;
-      if (Platform.isWindows) {
-        smtc.create();
-        smtc.events.listen((value) {
-          switch (value) {
-            case SMTCEvent.play:
-              play();
-              break;
-            case SMTCEvent.pause:
-              pause();
-              break;
-            case SMTCEvent.next:
-              next();
-              break;
-            case SMTCEvent.previous:
-              previous();
-              break;
-            default:
-              break;
-          }
-        });
-      }
+      try {
+        if (Platform.isWindows) {
+          smtc.create();
+          smtc.events.listen((value) {
+            switch (value) {
+              case SMTCEvent.play:
+                play();
+                break;
+              case SMTCEvent.pause:
+                pause();
+                break;
+              case SMTCEvent.next:
+                next();
+                break;
+              case SMTCEvent.previous:
+                previous();
+                break;
+              default:
+                break;
+            }
+          });
+        }
+      } catch (_) {}
     }
   }
 
   void update() {
     try {
       final track = tracks[index];
-      if (Platform.isWindows) {
-        smtc.set_status(isPlaying ? SMTCStatus.playing : SMTCStatus.paused);
-        smtc.set_music_data(
-          album_title: track.albumName,
-          album_artist: track.albumArtistName,
-          artist: track.trackArtistNames.take(2).join(', '),
-          title: track.trackName,
-          track_number: track.trackNumber,
-        );
-        final artwork = Collection.instance.getAlbumArt(track);
-        if (artwork is FileImage) {
-          smtc.set_artwork(artwork.file);
-        } else if (artwork is NetworkImage) {
-          smtc.set_artwork(artwork.url);
-        }
-        WindowsTaskbar.setProgress(
-          position.inMilliseconds,
-          duration.inMilliseconds,
-        );
-        WindowsTaskbar.setProgressMode(isBuffering
-            ? TaskbarProgressMode.indeterminate
-            : TaskbarProgressMode.normal);
-        WindowsTaskbar.setThumbnailToolbar([
-          ThumbnailToolbarButton(
-            ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
-            Language.instance.PREVIOUS,
-            previous,
-            mode: index == 0 ? ThumbnailToolbarButtonMode.disabled : 0,
-          ),
-          ThumbnailToolbarButton(
-            ThumbnailToolbarAssetIcon(
-                isPlaying ? 'assets/icons/pause.ico' : 'assets/icons/play.ico'),
-            isPlaying ? Language.instance.PAUSE : Language.instance.PLAY,
-            isPlaying ? pause : play,
-          ),
-          ThumbnailToolbarButton(
-            ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
-            Language.instance.NEXT,
-            next,
-            mode: index == tracks.length - 1
-                ? ThumbnailToolbarButtonMode.disabled
-                : 0,
-          ),
-        ]);
-      }
-      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-        if (!isCompleted) {
-          discord.start(autoRegister: true);
-          discord.updatePresence(
-            DiscordPresence(
-              state: '${track.albumName}',
-              details: '${track.trackName} • ${track.albumArtistName}',
-              startTimeStamp: DateTime.now().millisecondsSinceEpoch,
-              largeImageKey: 'icon',
-              largeImageText: Language.instance.LISTENING_TO_MUSIC,
-              smallImageKey: 'icon',
-              smallImageText: kTitle,
-            ),
+      try {
+        if (Platform.isWindows) {
+          smtc.set_status(isPlaying ? SMTCStatus.playing : SMTCStatus.paused);
+          smtc.set_music_data(
+            album_title: track.albumName,
+            album_artist: track.albumArtistName,
+            artist: track.trackArtistNames.take(2).join(', '),
+            title: track.trackName,
+            track_number: track.trackNumber,
           );
+          final artwork = Collection.instance.getAlbumArt(track);
+          if (artwork is FileImage) {
+            smtc.set_artwork(artwork.file);
+          } else if (artwork is NetworkImage) {
+            smtc.set_artwork(artwork.url);
+          }
+          WindowsTaskbar.setProgressMode(isBuffering
+              ? TaskbarProgressMode.indeterminate
+              : TaskbarProgressMode.normal);
+          WindowsTaskbar.setThumbnailToolbar([
+            ThumbnailToolbarButton(
+              ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
+              Language.instance.PREVIOUS,
+              previous,
+              mode: index == 0 ? ThumbnailToolbarButtonMode.disabled : 0,
+            ),
+            ThumbnailToolbarButton(
+              ThumbnailToolbarAssetIcon(isPlaying
+                  ? 'assets/icons/pause.ico'
+                  : 'assets/icons/play.ico'),
+              isPlaying ? Language.instance.PAUSE : Language.instance.PLAY,
+              isPlaying ? pause : play,
+            ),
+            ThumbnailToolbarButton(
+              ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
+              Language.instance.NEXT,
+              next,
+              mode: index == tracks.length - 1
+                  ? ThumbnailToolbarButtonMode.disabled
+                  : 0,
+            ),
+          ]);
         }
-        if (isCompleted) {
-          discord.clearPresence();
+        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+          if (!isCompleted) {
+            discord.start(autoRegister: true);
+            discord.updatePresence(
+              DiscordPresence(
+                state: '${track.albumName}',
+                details: '${track.trackName} • ${track.albumArtistName}',
+                startTimeStamp: DateTime.now().millisecondsSinceEpoch,
+                largeImageKey: 'icon',
+                largeImageText: Language.instance.LISTENING_TO_MUSIC,
+                smallImageText: kTitle,
+              ),
+            );
+          }
+          if (isCompleted) {
+            discord.clearPresence();
+          }
         }
-      }
+      } catch (_) {}
       Lyrics.instance.update(
           track.trackName + ' ' + track.trackArtistNames.take(2).join(', '));
     } catch (_) {}
@@ -345,6 +353,8 @@ class Playback extends ChangeNotifier {
   final discord = DiscordRPC(
     applicationId: '881480706545573918',
   );
+
+  double _volume = 50.0;
 }
 
 enum PlaylistMode {
