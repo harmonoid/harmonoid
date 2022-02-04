@@ -21,6 +21,7 @@ jobs:
           channel: "stable"
 
       - run: flutter config --enable-windows-desktop
+      - run: flutter pub upgrade
       - run: flutter pub get
       - run: flutter build windows
 
@@ -70,6 +71,7 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev libwebkit2gtk-4.0-dev libmediainfo-dev dpkg-dev alien
       - run: flutter config --enable-linux-desktop
+      - run: flutter pub upgrade
       - run: flutter pub get
       - run: flutter build linux --verbose
 
@@ -143,6 +145,7 @@ jobs:
       - run: cp "${{ steps.create_key_store.outputs.filePath }}" android/app/keystore.jks
       - run: cp "${{ steps.create_key_properties.outputs.filePath }}" android/key.properties
 
+      - run: flutter pub upgrade
       - run: flutter pub get
       - run: flutter build apk --verbose
       - run: cp build/app/outputs/flutter-apk/app-release.apk harmonoid-android.apk
