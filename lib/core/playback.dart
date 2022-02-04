@@ -67,8 +67,6 @@ class Playback extends ChangeNotifier {
     if (Platform.isAndroid || Platform.isIOS) {
       assetsAudioPlayer.play();
     }
-    isPlaying = true;
-    notifyListeners();
   }
 
   void pause() {
@@ -78,8 +76,6 @@ class Playback extends ChangeNotifier {
     if (Platform.isAndroid || Platform.isIOS) {
       assetsAudioPlayer.pause();
     }
-    isPlaying = false;
-    notifyListeners();
   }
 
   void playOrPause() {
@@ -88,8 +84,6 @@ class Playback extends ChangeNotifier {
     } else {
       play();
     }
-    isPlaying = !isPlaying;
-    notifyListeners();
   }
 
   void next() {
@@ -259,6 +253,12 @@ class Playback extends ChangeNotifier {
         notifyListeners();
       });
       player.volume = volume;
+      // A bug that results in [isPlaying] becoming `true` after attempting to change the volume.
+      // Calling [pause] after a delay to ensure that play button isn't in incorrect state at the
+      // startup of the application.
+      Future.delayed(const Duration(seconds: 1), () {
+        pause();
+      });
       try {
         if (Platform.isWindows) {
           smtc.create();
