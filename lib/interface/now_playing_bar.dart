@@ -396,8 +396,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(20.0),
-                                          border: playback.playlistMode !=
-                                                  PlaylistMode.none
+                                          border: playback.playlistLoopMode !=
+                                                  PlaylistLoopMode.none
                                               ? Border.all(
                                                   color: Theme.of(context)
                                                               .brightness ==
@@ -411,17 +411,17 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                       ),
                                       IconButton(
                                         onPressed: () {
-                                          if (playback.playlistMode ==
-                                              PlaylistMode.loop) {
-                                            playback.setPlaylistMode(
-                                              PlaylistMode.none,
+                                          if (playback.playlistLoopMode ==
+                                              PlaylistLoopMode.loop) {
+                                            playback.setPlaylistLoopMode(
+                                              PlaylistLoopMode.none,
                                             );
                                             return;
                                           }
-                                          playback.setPlaylistMode(
-                                            PlaylistMode.values[
-                                                playback.playlistMode.index +
-                                                    1],
+                                          playback.setPlaylistLoopMode(
+                                            PlaylistLoopMode.values[playback
+                                                    .playlistLoopMode.index +
+                                                1],
                                           );
                                         },
                                         iconSize: 20.0,
@@ -431,8 +431,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             : Colors.black87,
                                         splashRadius: 18.0,
                                         icon: Icon(
-                                          playback.playlistMode ==
-                                                  PlaylistMode.single
+                                          playback.playlistLoopMode ==
+                                                  PlaylistLoopMode.single
                                               ? Icons.repeat_one
                                               : Icons.repeat,
                                         ),

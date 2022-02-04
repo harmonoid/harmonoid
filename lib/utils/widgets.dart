@@ -140,10 +140,7 @@ class NavigatorPopButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
-            Navigator.of(context).pop();
-            onTap?.call();
-          },
+          onTap: onTap != null ? onTap : Navigator.of(context).pop,
           borderRadius: BorderRadius.circular(20.0),
           child: Container(
             height: 40.0,

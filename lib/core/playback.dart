@@ -51,7 +51,7 @@ class Playback extends ChangeNotifier {
   List<Track> tracks = [];
   double volume = 50.0;
   double rate = 1.0;
-  PlaylistMode playlistMode = PlaylistMode.none;
+  PlaylistLoopMode playlistLoopMode = PlaylistLoopMode.none;
   Duration position = Duration.zero;
   Duration duration = Duration.zero;
   bool isMuted = false;
@@ -141,8 +141,12 @@ class Playback extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setPlaylistMode(PlaylistMode value) {
-    playlistMode = value;
+  void setPlaylistLoopMode(PlaylistLoopMode value) {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      player.setPlaylistMode(PlaylistMode.values[value.index]);
+    }
+    if (Platform.isAndroid || Platform.isIOS) {}
+    playlistLoopMode = value;
     notifyListeners();
   }
 
@@ -191,7 +195,11 @@ class Playback extends ChangeNotifier {
       );
       player.jump(index);
       player.play();
-      NowPlayingLauncher.instance.maximized = true;
+      isShuffling = false;
+      notifyListeners();
+      Future.delayed(const Duration(milliseconds: 200), () {
+        NowPlayingLauncher.instance.maximized = true;
+      });
     }
     if (Platform.isAndroid || Platform.isIOS) {}
   }
@@ -356,7 +364,7 @@ class Playback extends ChangeNotifier {
   double _volume = 50.0;
 }
 
-enum PlaylistMode {
+enum PlaylistLoopMode {
   none,
   single,
   loop,
