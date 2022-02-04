@@ -21,7 +21,6 @@ jobs:
           channel: "stable"
 
       - run: flutter config --enable-windows-desktop
-      - run: flutter pub upgrade
       - run: flutter pub get
       - run: flutter build windows
 

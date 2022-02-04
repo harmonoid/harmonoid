@@ -63,6 +63,7 @@ dependency_overrides:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_windows
+  platform: ^3.1.0
 
 dev_dependencies:
   msix:
