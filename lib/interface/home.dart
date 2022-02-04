@@ -188,6 +188,10 @@ class HomeState extends State<Home>
                               }
                               if (routeSettings.name == '/now_playing') {
                                 route = PageRouteBuilder(
+                                  transitionDuration:
+                                      Duration(milliseconds: 600),
+                                  reverseTransitionDuration:
+                                      Duration(milliseconds: 300),
                                   pageBuilder: (context, animation,
                                           secondaryAnimation) =>
                                       SharedAxisTransition(
