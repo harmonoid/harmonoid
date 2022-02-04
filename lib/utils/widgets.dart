@@ -779,6 +779,28 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
   }
 }
 
+class DoNotGCCleanThisWidgetFromMemory extends StatefulWidget {
+  final Widget child;
+  DoNotGCCleanThisWidgetFromMemory(this.child, {Key? key}) : super(key: key);
+
+  @override
+  State<DoNotGCCleanThisWidgetFromMemory> createState() =>
+      _DoNotGCCleanThisWidgetFromMemoryState();
+}
+
+class _DoNotGCCleanThisWidgetFromMemoryState
+    extends State<DoNotGCCleanThisWidgetFromMemory>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
+  }
+
+  @override
+  bool wantKeepAlive = true;
+}
+
 class ShowAllButton extends StatelessWidget {
   final void Function()? onPressed;
   const ShowAllButton({Key? key, this.onPressed}) : super(key: key);

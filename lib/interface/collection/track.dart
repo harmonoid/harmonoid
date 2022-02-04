@@ -356,17 +356,18 @@ class TrackTileState extends State<TrackTile> {
                             ),
                           ),
                         ),
-                        Container(
-                          height: 48.0,
-                          width: 120.0,
-                          padding: EdgeInsets.only(right: 32.0),
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            widget.track.year.toString(),
-                            style: Theme.of(context).textTheme.headline4,
-                            overflow: TextOverflow.ellipsis,
+                        if (!widget.disableContextMenu)
+                          Container(
+                            height: 48.0,
+                            width: 120.0,
+                            padding: EdgeInsets.only(right: 32.0),
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              widget.track.year.toString(),
+                              style: Theme.of(context).textTheme.headline4,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
