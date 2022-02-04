@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
@@ -88,7 +87,6 @@ abstract class YoutubeApi {
         'videoId': videoId,
       },
     );
-    File('response.json').writeAsString(response.body);
     final body = convert.jsonDecode(response.body)['contents']
                         ['singleColumnMusicWatchNextResultsRenderer']
                     ['tabbedRenderer']
