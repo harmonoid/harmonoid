@@ -1,13 +1,16 @@
+import 'dart:io';
 import 'dart:ui';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/constants/language.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/widgets.dart';
 
-class YoutubeTile extends StatelessWidget {
+import 'package:harmonoid/youtube/state/youtube.dart';
+
+class YoutubeTile extends StatefulWidget {
   final double height;
   final double width;
   final Track track;
@@ -19,46 +22,125 @@ class YoutubeTile extends StatelessWidget {
     required this.width,
   }) : super(key: key);
 
+  @override
+  YoutubeTileState createState() => YoutubeTileState();
+}
+
+class YoutubeTileState extends State<YoutubeTile> {
+  double scale = 0.0;
+
   Widget build(BuildContext context) {
     return Card(
       clipBehavior: Clip.antiAlias,
       elevation: 4.0,
       margin: EdgeInsets.zero,
-      child: InkWell(
-        onTap: () {
-          Playback.instance.open([track]);
-        },
+      child: MouseRegion(
+        onEnter: (e) => setState(() {
+          scale = 1.0;
+        }),
+        onExit: (e) => setState(() {
+          scale = 0.0;
+        }),
         child: Container(
-          height: height,
-          width: width,
+          height: widget.height,
+          width: widget.width,
           child: Column(
             children: [
-              ClipRect(
-                child: ScaleOnHover(
-                  child: Hero(
-                    tag: 'track_art_${track.trackName}',
-                    child: Image(
-                      image: Collection.instance.getAlbumArt(track),
-                      fit: BoxFit.cover,
-                      height: width,
-                      width: width,
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  ClipRect(
+                    child: Hero(
+                      tag: 'track_art_${widget.track.trackName}',
+                      child: Image(
+                        image: Collection.instance.getAlbumArt(widget.track),
+                        fit: BoxFit.cover,
+                        height: widget.width,
+                        width: widget.width,
+                      ),
                     ),
                   ),
-                ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AnimatedScale(
+                        scale: scale,
+                        duration: Duration(milliseconds: 100),
+                        curve: Curves.easeInOut,
+                        child: Material(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(20.0),
+                          elevation: 4.0,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20.0),
+                            onTap: () {
+                              YouTube.instance.open(widget.track);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: Colors.black54,
+                              ),
+                              height: 40.0,
+                              width: 40.0,
+                              child: Icon(
+                                Icons.play_arrow,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 4.0),
+                      AnimatedScale(
+                        scale: scale,
+                        duration: Duration(milliseconds: 100),
+                        curve: Curves.easeInOut,
+                        child: Material(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(20.0),
+                          elevation: 4.0,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20.0),
+                            onTap: () {
+                              trackPopupMenuHandle(
+                                context,
+                                widget.track,
+                                2,
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                                color: Colors.black54,
+                              ),
+                              height: 40.0,
+                              width: 40.0,
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               Expanded(
                 child: Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: 8.0,
                   ),
-                  width: width,
+                  width: widget.width,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        track.trackName.overflow,
+                        widget.track.trackName.overflow,
                         style: Theme.of(context).textTheme.headline2,
                         textAlign: TextAlign.left,
                         maxLines: 1,
@@ -67,7 +149,7 @@ class YoutubeTile extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(top: 2),
                         child: Text(
-                          '${track.trackArtistNames.take(2).join(', ')}',
+                          '${widget.track.trackArtistNames.take(2).join(', ')}',
                           style:
                               Theme.of(context).textTheme.headline3?.copyWith(
                                     fontSize: 12.0,
