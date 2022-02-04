@@ -29,6 +29,7 @@ import 'package:harmonoid/main.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/models/media.dart' hide Media;
 import 'package:harmonoid/state/lyrics.dart';
+import 'package:harmonoid/state/now_playing_launcher.dart';
 import 'package:harmonoid/constants/language.dart';
 
 /// Playback
@@ -190,6 +191,7 @@ class Playback extends ChangeNotifier {
       );
       player.jump(index);
       player.play();
+      NowPlayingLauncher.instance.maximized = true;
     }
     if (Platform.isAndroid || Platform.isIOS) {}
   }
@@ -232,9 +234,6 @@ class Playback extends ChangeNotifier {
       });
       player.streams.isCompleted.listen((event) async {
         isCompleted = event;
-        if (index == tracks.length - 1) {
-          pause();
-        }
         notifyListeners();
       });
       player.streams.position.listen((event) {
