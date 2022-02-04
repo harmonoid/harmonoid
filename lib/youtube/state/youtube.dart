@@ -24,6 +24,9 @@ class YouTube extends ChangeNotifier {
         recommendations = await YoutubeApi.getRecommendations(
           Configuration.instance.discoverRecent.first,
         );
+        if (recommendations!.length == 1) {
+          await fetchRecommendations();
+        }
         current = Configuration.instance.discoverRecent.first;
         notifyListeners();
       } catch (_) {
