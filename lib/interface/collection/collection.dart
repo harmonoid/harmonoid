@@ -270,7 +270,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                               child: Text(
                                                 tab.toUpperCase(),
                                                 style: TextStyle(
-                                                  fontSize: 18.0,
+                                                  fontSize: 20.0,
                                                   fontWeight: index == _index
                                                       ? FontWeight.w600
                                                       : FontWeight.w300,

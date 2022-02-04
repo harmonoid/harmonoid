@@ -97,7 +97,7 @@ class LanguageSetting extends StatelessWidget {
               child: _buildLanguageRegionTile(Language.instance.current),
             ),
             children: [
-              ImplicitlyAnimatedList<LanguageRegion?>(
+              ImplicitlyAnimatedList<LanguageRegion>(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 areItemsTheSame: (a, b) => a == b,
