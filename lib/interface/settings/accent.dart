@@ -1,10 +1,29 @@
+/* 
+ *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
+ *  
+ *  Harmonoid is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Harmonoid is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ */
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:provider/provider.dart';
 
-import 'package:harmonoid/interface/changenotifiers.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class AccentSetting extends StatefulWidget {
@@ -18,24 +37,11 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
-      title: language.SETTING_ACCENT_COLOR_TITLE,
-      subtitle: language.SETTING_ACCENT_COLOR_SUBTITLE,
+      title: Language.instance.SETTING_ACCENT_COLOR_TITLE,
+      subtitle: Language.instance.SETTING_ACCENT_COLOR_SUBTITLE,
       child: Consumer<Visuals>(
         builder: (context, visuals, _) => Column(
           children: [
-            /*
-            // TODO: Re-implement automatic accent colors using Provider.
-             SwitchListTile(
-               value: configuration.automaticAccent!,
-               onChanged: (bool isChecked) async {
-                 await configuration.save(
-                   automaticAccent: isChecked,
-                 );
-                 this.setState(() {});
-               },
-               title: Text(language.SETTING_ACCENT_COLOR_AUTOMATIC),
-             ),
-             */
             Padding(
               padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
               child: GridView.extent(
@@ -44,17 +50,17 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                 shrinkWrap: true,
                 childAspectRatio: 1.0,
                 children: kAccents.map((accent) {
-                  this.animationControllers.add(
-                        AnimationController(
-                          vsync: this,
-                          duration: Duration(milliseconds: 200),
-                          reverseDuration: Duration(milliseconds: 200),
-                          lowerBound: 0.0,
-                          upperBound: 1.0,
-                        ),
-                      );
+                  animationControllers.add(
+                    AnimationController(
+                      vsync: this,
+                      duration: Duration(milliseconds: 200),
+                      reverseDuration: Duration(milliseconds: 200),
+                      lowerBound: 0.0,
+                      upperBound: 1.0,
+                    ),
+                  );
                   if (accent == visuals.accent)
-                    this.animationControllers.last.forward();
+                    animationControllers.last.forward();
                   return Container(
                     height: 56.0,
                     width: 56.0,
@@ -68,7 +74,7 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                accent!.light,
+                                accent.light,
                                 accent.dark,
                               ],
                               stops: [
@@ -85,25 +91,23 @@ class AccentState extends State<AccentSetting> with TickerProviderStateMixin {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () async {
-                                this.animationControllers.asMap().forEach(
+                                animationControllers.asMap().forEach(
                                     (int controllerIndex,
                                         AnimationController controller) {
                                   if (kAccents.indexOf(accent) ==
                                       controllerIndex) {
-                                    this
-                                        .animationControllers[controllerIndex]
+                                    animationControllers[controllerIndex]
                                         .forward();
                                     visuals.update(
                                       accent: accent,
                                     );
                                   } else
-                                    this
-                                        .animationControllers[controllerIndex]
+                                    animationControllers[controllerIndex]
                                         .reverse();
                                 });
                               },
                               child: ScaleTransition(
-                                scale: this.animationControllers.last,
+                                scale: animationControllers.last,
                                 alignment: Alignment.center,
                                 child: Container(
                                   child: Icon(

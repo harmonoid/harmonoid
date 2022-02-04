@@ -20,11 +20,9 @@
 import 'package:flutter/material.dart';
 import 'package:harmonoid/constants/language.dart';
 
-import 'package:harmonoid/interface/settings/accent.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
 import 'package:harmonoid/interface/settings/language.dart';
-import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -37,7 +35,7 @@ class Settings extends StatelessWidget {
       body: Stack(
         children: [
           DesktopAppBar(
-            title: language.SETTING,
+            title: Language.instance.SETTING,
           ),
           Container(
             margin: EdgeInsets.only(
@@ -51,9 +49,9 @@ class Settings extends StatelessWidget {
                 ),
                 IndexingSetting(),
                 ThemeSetting(),
-                AccentSetting(),
+                // TODO: Removed accents after including new iconography.
+                // AccentSetting(),
                 LanguageSetting(),
-                MiscellaneousSetting(),
                 AboutSetting(),
                 VersionSetting(),
                 SizedBox(
@@ -128,13 +126,6 @@ class SettingsTile extends StatelessWidget {
             child: this.child,
           ),
           if (this.actions != null) ...[
-            // Divider(
-            //   color: Theme.of(context).dividerColor,
-            //   thickness: 1.0,
-            //   indent: 16.0,
-            //   endIndent: 16.0,
-            //   height: 1.0,
-            // ),
             Padding(
               padding: EdgeInsets.only(left: 8.0),
               child: ButtonBar(

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:io';
@@ -23,78 +23,109 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-ThemeData createTheme({required Color accentColor, ThemeMode? themeMode}) {
+ThemeData createTheme({required Color color, ThemeMode? themeMode}) {
   bool isLight = themeMode == ThemeMode.light;
-  TextTheme textTheme = TextTheme(
-    /// Leading tile widgets text theme.
-    headline1: TextStyle(
-      color: isLight ? Colors.black : Colors.white,
-      fontSize: 16.0,
-      fontWeight: FontWeight.w600,
-    ),
+  late TextTheme textTheme;
+  if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    textTheme = TextTheme(
+      /// Leading tile widgets text theme.
+      headline1: TextStyle(
+        color: isLight ? Colors.black : Colors.white,
+        fontSize: 16.0,
+        fontWeight: FontWeight.w600,
+      ),
 
-    /// [CollectionAlbumTile] text theme.
-    headline2: TextStyle(
-      color: isLight ? Colors.black : Colors.white,
-      fontSize: 14.0,
-      fontWeight: FontWeight.w600,
-    ),
-    headline3: TextStyle(
-      color: isLight
-          ? Colors.black.withOpacity(0.8)
-          : Colors.white.withOpacity(0.8),
-      fontSize: 14.0,
-      fontWeight: FontWeight.normal,
-    ),
-    headline4: TextStyle(
-      color: isLight ? Colors.black : Colors.white,
-      fontSize: 14.0,
-      fontWeight: FontWeight.normal,
-    ),
-    headline5: TextStyle(
-      color: isLight
-          ? Colors.black.withOpacity(0.8)
-          : Colors.white.withOpacity(0.8),
-      fontSize: 12.0,
-      fontWeight: FontWeight.normal,
-    ),
+      /// [AlbumTile] text theme.
+      headline2: TextStyle(
+        color: isLight ? Colors.black : Colors.white,
+        fontSize: 14.0,
+        fontWeight: FontWeight.w600,
+      ),
+      headline3: TextStyle(
+        color: isLight
+            ? Colors.black.withOpacity(0.67)
+            : Colors.white.withOpacity(0.67),
+        fontSize: 14.0,
+        fontWeight: FontWeight.normal,
+      ),
+      headline4: TextStyle(
+        color: isLight ? Colors.black : Colors.white,
+        fontSize: 14.0,
+        fontWeight: FontWeight.normal,
+      ),
+      headline5: TextStyle(
+        color: isLight
+            ? Colors.black.withOpacity(0.67)
+            : Colors.white.withOpacity(0.67),
+        fontSize: 12.0,
+        fontWeight: FontWeight.normal,
+      ),
 
-    /// [ListTile] text theme.
-    /// [ListTile.title]'s text theme must be overrided to headline4, if it does not contain subtitle.
-    subtitle1: TextStyle(
-      color: isLight ? Colors.black : Colors.white,
-      fontSize: 14.0,
-      fontWeight: FontWeight.w600,
-    ),
-    bodyText2: TextStyle(
-      color: isLight
-          ? Colors.black.withOpacity(0.8)
-          : Colors.white.withOpacity(0.8),
-      fontSize: 14.0,
-      fontWeight: FontWeight.normal,
-    ),
-    caption: TextStyle(
-      color: isLight
-          ? Colors.black.withOpacity(0.8)
-          : Colors.white.withOpacity(0.8),
-      fontSize: 14.0,
-      fontWeight: FontWeight.normal,
-    ),
-    button: Platform.isLinux
-        ? TextStyle(
-            color: accentColor,
-            fontSize: 14.0,
-            fontWeight: FontWeight.w600,
-          )
-        : null,
-  );
+      /// [ListTile] text theme.
+      /// [ListTile.title]'s text theme must be overrided to headline4, if it does not contain subtitle.
+      subtitle1: TextStyle(
+        color: isLight ? Colors.black : Colors.white,
+        fontSize: 14.0,
+        fontWeight: FontWeight.w600,
+      ),
+      bodyText2: TextStyle(
+        color: isLight
+            ? Colors.black.withOpacity(0.67)
+            : Colors.white.withOpacity(0.67),
+        fontSize: 14.0,
+        fontWeight: FontWeight.normal,
+      ),
+      caption: TextStyle(
+        color: isLight
+            ? Colors.black.withOpacity(0.67)
+            : Colors.white.withOpacity(0.67),
+        fontSize: 14.0,
+        fontWeight: FontWeight.normal,
+      ),
+      button: Platform.isLinux
+          ? TextStyle(
+              color: color,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
+            )
+          : null,
+    );
+  } else {
+    textTheme = TextTheme(
+      headline1: TextStyle(
+        fontWeight: FontWeight.normal,
+        color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
+        fontSize: 18.0,
+      ),
+      headline2: TextStyle(
+        fontWeight: FontWeight.normal,
+        color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
+        fontSize: 16.0,
+      ),
+      headline3: TextStyle(
+        fontWeight: FontWeight.normal,
+        color: isLight ? Colors.black54 : Colors.white.withOpacity(0.54),
+        fontSize: 14.0,
+      ),
+      headline4: TextStyle(
+        fontWeight: FontWeight.normal,
+        color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
+        fontSize: 14.0,
+      ),
+      headline5: TextStyle(
+        fontWeight: FontWeight.normal,
+        color: isLight ? Colors.black54 : Colors.white.withOpacity(0.54),
+        fontSize: 14.0,
+      ),
+    );
+  }
   return ThemeData(
     chipTheme: Platform.isLinux
         ? ChipThemeData(
-            backgroundColor: accentColor,
-            disabledColor: accentColor.withOpacity(0.2),
-            selectedColor: accentColor,
-            secondarySelectedColor: accentColor,
+            backgroundColor: color,
+            disabledColor: color.withOpacity(0.2),
+            selectedColor: color,
+            secondarySelectedColor: color,
             padding: EdgeInsets.zero,
             labelStyle: TextStyle(
               color: Colors.white,
@@ -110,8 +141,8 @@ ThemeData createTheme({required Color accentColor, ThemeMode? themeMode}) {
           )
         : null,
     textSelectionTheme: TextSelectionThemeData(
-      cursorColor: accentColor,
-      selectionColor: accentColor.withOpacity(0.2),
+      cursorColor: color,
+      selectionColor: color.withOpacity(0.2),
     ),
     scrollbarTheme: ScrollbarThemeData(
       isAlwaysShown: true,
@@ -139,17 +170,17 @@ ThemeData createTheme({required Color accentColor, ThemeMode? themeMode}) {
       ),
     ),
     splashFactory: InkRipple.splashFactory,
-    primaryColorLight: accentColor,
-    primaryColor: accentColor,
-    primaryColorDark: accentColor,
+    primaryColorLight: color,
+    primaryColor: color,
+    primaryColorDark: color,
     scaffoldBackgroundColor: isLight ? Colors.grey.shade100 : Color(0xFF121212),
-    toggleableActiveColor: accentColor,
+    toggleableActiveColor: color,
     cardColor: isLight ? Colors.white : Color(0xFF202020),
-    backgroundColor: accentColor.withOpacity(0.24),
+    backgroundColor: color.withOpacity(0.24),
     dividerColor: isLight ? Colors.black12 : Colors.white24,
     disabledColor: isLight ? Colors.black38 : Colors.white38,
     tabBarTheme: TabBarTheme(
-      labelColor: accentColor,
+      labelColor: color,
       unselectedLabelColor:
           isLight ? Colors.black54 : Colors.white.withOpacity(0.67),
     ),
@@ -157,34 +188,49 @@ ThemeData createTheme({required Color accentColor, ThemeMode? themeMode}) {
       elevation: 2.0,
       color: isLight ? Colors.white : Color(0xFF242424),
     ),
-    appBarTheme: AppBarTheme(
-      backgroundColor: isLight ? Colors.white : Color(0xFF272727),
-      systemOverlayStyle:
-          isLight ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
-      elevation: 4.0,
-      iconTheme: IconThemeData(
-        color: isLight ? Colors.black54 : Colors.white54,
-        size: 24.0,
-      ),
-      actionsIconTheme: IconThemeData(
-        color: isLight ? Colors.black54 : Colors.white54,
-        size: 24.0,
-      ),
-    ),
+    appBarTheme: Platform.isAndroid || Platform.isIOS
+        ? AppBarTheme(
+            backgroundColor: color,
+            systemOverlayStyle: SystemUiOverlayStyle.light,
+            elevation: 4.0,
+            iconTheme: IconThemeData(
+              color: Colors.white,
+              size: 24.0,
+            ),
+            actionsIconTheme: IconThemeData(
+              color: Colors.white,
+              size: 24.0,
+            ),
+          )
+        : AppBarTheme(
+            backgroundColor: isLight ? Colors.white : Color(0xFF272727),
+            systemOverlayStyle: isLight
+                ? SystemUiOverlayStyle.light
+                : SystemUiOverlayStyle.dark,
+            elevation: 4.0,
+            iconTheme: IconThemeData(
+              color: isLight ? Colors.black54 : Colors.white54,
+              size: 24.0,
+            ),
+            actionsIconTheme: IconThemeData(
+              color: isLight ? Colors.black54 : Colors.white54,
+              size: 24.0,
+            ),
+          ),
     iconTheme: IconThemeData(
       color: isLight ? Colors.black54 : Colors.white54,
       size: 24,
     ),
     dialogBackgroundColor: isLight ? Colors.white : Color(0xFF202020),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: isLight ? accentColor : Color(0xFF272727),
+      backgroundColor: isLight ? color : Color(0xFF272727),
       selectedItemColor: Colors.white.withOpacity(0.87),
       unselectedItemColor: Colors.white54,
     ),
     textTheme: textTheme,
     primaryTextTheme: textTheme,
     colorScheme: ColorScheme.fromSwatch().copyWith(
-      secondary: accentColor,
+      secondary: color,
       brightness: isLight ? Brightness.light : Brightness.dark,
     ),
     tooltipTheme: TooltipThemeData(
@@ -203,52 +249,22 @@ ThemeData createTheme({required Color accentColor, ThemeMode? themeMode}) {
   );
 }
 
-const List<Accent?> kAccents = [
-  Accent(
-    light: Color(0xFF651FFF),
-    dark: Color(0xFF7C4DFF),
-  ),
-  Accent(
-    light: Color(0xFFF55A34),
-    dark: Color(0xFFF55A34),
-  ),
-  Accent(
-    light: Color(0xFFE53935),
-    dark: Color(0xFFE53935),
-  ),
-  Accent(
-    light: Color(0xFF4285F4),
-    dark: Color(0xFF82B1FF),
-  ),
-  Accent(
-    light: Color(0xFFF4B400),
-    dark: Color(0xFFFFE57F),
-  ),
-  Accent(
-    light: Color(0xFF0F9D58),
-    dark: Color(0xFF0F9D58),
-  ),
-  Accent(
-    light: Color(0xFF89CDD0),
-    dark: Color(0xFF89CDD0),
-  ),
-  Accent(
-    light: Color(0xFF5B51D8),
-    dark: Color(0xFFD1C4E9),
-  ),
-  Accent(
-    light: Color(0xFFF50057),
-    dark: Color(0xFFFF80AB),
-  ),
-  Accent(
-    light: Color(0xFF424242),
-    dark: Color(0xFF757575),
-  ),
+const kAccents = [
+  Accent(Color(0xFF651FFF), Color(0xFF7C4DFF)),
+  Accent(Color(0xFFF55A34), Color(0xFFF55A34)),
+  Accent(Color(0xFFE53935), Color(0xFFE53935)),
+  Accent(Color(0xFF4285F4), Color(0xFF82B1FF)),
+  Accent(Color(0xFFF4B400), Color(0xFFFFE57F)),
+  Accent(Color(0xFF0F9D58), Color(0xFF0F9D58)),
+  Accent(Color(0xFF89CDD0), Color(0xFF89CDD0)),
+  Accent(Color(0xFF5B51D8), Color(0xFFD1C4E9)),
+  Accent(Color(0xFFF50057), Color(0xFFFF80AB)),
+  Accent(Color(0xFF424242), Color(0xFF757575)),
 ];
 
 class Accent {
   final Color light;
   final Color dark;
 
-  const Accent({required this.light, required this.dark});
+  const Accent(this.light, this.dark);
 }

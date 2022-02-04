@@ -13,7 +13,7 @@ class VersionSetting extends StatefulWidget {
 }
 
 class VersionState extends State<VersionSetting> {
-  String? version = 'v' + VERSION;
+  String? version = 'v' + kVersion;
 
   @override
   void initState() {
@@ -22,9 +22,9 @@ class VersionState extends State<VersionSetting> {
         .get(Uri.parse(
             'https://api.github.com/repos/harmonoid/harmonoid/releases'))
         .then((http.Response response) {
-      this.setState(() {
+      setState(() {
         List<dynamic> json = convert.jsonDecode(response.body);
-        this.version = json.first['tag_name'];
+        version = json.first['tag_name'];
       });
     }).catchError((exception) {});
   }
@@ -32,35 +32,35 @@ class VersionState extends State<VersionSetting> {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(
-      title: language.SETTING_APP_VERSION_TITLE,
-      subtitle: language.SETTING_APP_VERSION_SUBTITLE,
+      title: Language.instance.SETTING_APP_VERSION_TITLE,
+      subtitle: Language.instance.SETTING_APP_VERSION_SUBTITLE,
       child: Column(
         children: [
           Table(
             children: [
               TableRow(
                 children: [
-                  Text(language.SETTING_APP_VERSION_INSTALLED),
-                  Text('v' + VERSION),
+                  Text(Language.instance.SETTING_APP_VERSION_INSTALLED),
+                  Text('v' + kVersion),
                 ],
               ),
               TableRow(children: [
-                Text(language.SETTING_APP_VERSION_LATEST),
-                Text(this.version ?? language.NO_INTERNET_TITLE),
+                Text(Language.instance.SETTING_APP_VERSION_LATEST),
+                Text(version ?? Language.instance.NO_INTERNET_TITLE),
               ]),
             ],
           ),
         ],
       ),
       margin: EdgeInsets.all(16.0),
-      actions: this.version == 'v' + VERSION
+      actions: version == 'v' + kVersion
           ? null
           : [
               MaterialButton(
                 onPressed: () =>
                     launch('https://github.com/harmonoid/harmonoid/releases'),
                 child: Text(
-                  language.DOWNLOAD_UPDATE,
+                  Language.instance.DOWNLOAD_UPDATE,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                   ),

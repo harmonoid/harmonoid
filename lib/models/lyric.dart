@@ -14,15 +14,25 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
-import 'package:dart_discord_rpc/dart_discord_rpc.dart';
+class Lyric {
+  final int time;
+  final String words;
 
-/// Discord application ID.
-const String discord_app_id = '881480706545573918';
+  Lyric({
+    required this.time,
+    required this.words,
+  });
 
-/// Discord RPC object to send presence updates.
-final discordRPC = DiscordRPC(
-  applicationId: discord_app_id,
-);
+  Map<String, dynamic> toJson(dynamic map) => {
+        'time': this.time,
+        'words': this.words,
+      };
+
+  static Lyric fromJson(dynamic map) => Lyric(
+        time: map['time'],
+        words: map['words'],
+      );
+}
