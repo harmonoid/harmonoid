@@ -84,8 +84,8 @@ class Collection extends ChangeNotifier {
     required Directory? cacheDirectory,
     void Function(int, int, bool)? onProgress,
   }) async {
-    collectionDirectories = collectionDirectories!;
-    cacheDirectory = cacheDirectory!;
+    this.collectionDirectories = collectionDirectories!;
+    this.cacheDirectory = cacheDirectory!;
     for (Directory directory in collectionDirectories) {
       if (!await directory.exists()) await directory.create(recursive: true);
     }
@@ -836,7 +836,7 @@ const String kUnknownAlbumArtFileName = 'UnknownAlbum.png';
 /// Returns extension of a particular file system entity like [File] or [Directory].
 ///
 extension CollectionFileSystemEntityExtension on FileSystemEntity {
-  String get extension => path.split('.').last.toUpperCase();
+  String get extension => this.path.split('.').last.toUpperCase();
 }
 
 extension CollectionTrackExtension on Track {
