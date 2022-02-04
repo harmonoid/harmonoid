@@ -61,6 +61,12 @@ const kContributors = [
     'AppImage & Flatpak installers. Bug reports. Hindi translation.',
   ],
   [
+    'https://www.instagram.com/shinybluebelll',
+    'https://drive.google.com/uc?export=view&id=1eI-dHiALVQM123_HnQIcYe9HtbX0uS_W',
+    'Bluebell',
+    'Artwork & iconography.'
+  ],
+  [
     'https://github.com/gaetan1903',
     'https://avatars.githubusercontent.com/u/43904633?s=80&v=4',
     'Gaetan Jonathan BAKARY',
