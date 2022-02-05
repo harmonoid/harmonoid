@@ -26,7 +26,7 @@ add_custom_command(
 set(LIBMPV_URL "https://udomain.dl.sourceforge.net/project/mpv-player-windows/libmpv/mpv-dev-x86_64-20220116-git-1ba0547.7z")
 set(LIBMPV_ARCHIVE "${CMAKE_BINARY_DIR}/mpv-dev-x86_64-20220116-git-1ba0547.7z")
 if (NOT EXISTS "${LIBMPV_ARCHIVE}")
-  file(DOWNLOAD "${LIBMPV_URL} ${LIBMPV_ARCHIVE}")
+  file(DOWNLOAD "${LIBMPV_URL}" "${LIBMPV_ARCHIVE}")
 endif()
 
 add_custom_command(
