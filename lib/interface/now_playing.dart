@@ -21,6 +21,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/now_playing_launcher.dart';
+import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -31,6 +32,7 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NowPlayingScreen extends StatefulWidget {
   const NowPlayingScreen({Key? key}) : super(key: key);
@@ -40,6 +42,8 @@ class NowPlayingScreen extends StatefulWidget {
 
 class NowPlayingState extends State<NowPlayingScreen>
     with TickerProviderStateMixin {
+  double scale = 0.0;
+
   Widget build(BuildContext context) {
     return Consumer<Playback>(
       builder: (context, playback, _) => isDesktop
@@ -69,18 +73,120 @@ class NowPlayingState extends State<NowPlayingScreen>
                                 maxHeight: 640.0,
                               ),
                               padding: EdgeInsets.all(32.0),
-                              child: Card(
-                                clipBehavior: Clip.antiAlias,
-                                elevation: 8.0,
-                                child: LayoutBuilder(
-                                  builder: (context, constraints) => Image(
-                                    image: Collection.instance.getAlbumArt(
-                                        playback.tracks[playback.index]),
-                                    fit: BoxFit.cover,
-                                    height: min(constraints.maxHeight,
-                                        constraints.maxWidth),
-                                    width: min(constraints.maxHeight,
-                                        constraints.maxWidth),
+                              child: MouseRegion(
+                                onEnter: (e) => setState(() {
+                                  scale = 1.0;
+                                }),
+                                onExit: (e) => setState(() {
+                                  scale = 0.0;
+                                }),
+                                child: Card(
+                                  clipBehavior: Clip.antiAlias,
+                                  elevation: 8.0,
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) => Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Image(
+                                          image: Collection.instance
+                                              .getAlbumArt(playback
+                                                  .tracks[playback.index]),
+                                          fit: BoxFit.cover,
+                                          height: min(constraints.maxHeight,
+                                              constraints.maxWidth),
+                                          width: min(constraints.maxHeight,
+                                              constraints.maxWidth),
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            AnimatedScale(
+                                              scale: scale,
+                                              duration:
+                                                  Duration(milliseconds: 100),
+                                              curve: Curves.easeInOut,
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                borderRadius:
+                                                    BorderRadius.circular(28.0),
+                                                elevation: 4.0,
+                                                child: InkWell(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          28.0),
+                                                  onTap: () {
+                                                    trackPopupMenuHandle(
+                                                      context,
+                                                      playback.tracks[
+                                                          playback.index],
+                                                      2,
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              28.0),
+                                                      color: Colors.black54,
+                                                    ),
+                                                    height: 56.0,
+                                                    width: 56.0,
+                                                    child: Icon(
+                                                      Icons.add,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 12.0),
+                                            if (Plugins.isExternalMedia(playback
+                                                .tracks[playback.index].uri))
+                                              AnimatedScale(
+                                                scale: scale,
+                                                duration:
+                                                    Duration(milliseconds: 100),
+                                                curve: Curves.easeInOut,
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          28.0),
+                                                  elevation: 4.0,
+                                                  child: InkWell(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            28.0),
+                                                    onTap: () {
+                                                      launch(playback
+                                                          .tracks[
+                                                              playback.index]
+                                                          .uri
+                                                          .toString());
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(28.0),
+                                                        color: Colors.black54,
+                                                      ),
+                                                      height: 56.0,
+                                                      width: 56.0,
+                                                      child: Icon(
+                                                        Icons.launch,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
