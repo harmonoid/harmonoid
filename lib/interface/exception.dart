@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:io';
@@ -180,97 +180,95 @@ class ExceptionApp extends StatelessWidget {
         statusBarIconBrightness: Brightness.light,
       ),
     );
-    return FractionallyScaledWidget(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        darkTheme: getTheme(
-          accentColor: Colors.deepPurpleAccent.shade200,
-          themeMode: ThemeMode.dark,
-        ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      darkTheme: getTheme(
+        accentColor: Colors.deepPurpleAccent.shade200,
         themeMode: ThemeMode.dark,
-        home: Scaffold(
-          body: Column(
-            children: [
-              DesktopTitleBar(),
-              Container(
-                height: 56.0,
-                color: Colors.white.withOpacity(0.10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 24.0,
-                    ),
-                    Text(
-                      'Exception',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.symmetric(vertical: 4.0),
-                  children: [
-                    SettingsTile(
-                      title: 'Exception occured',
-                      subtitle: 'Something wrong has happened.',
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            exception.toString(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14.0,
-                              fontWeight: FontWeights.thin(false),
-                            ),
-                          ),
-                          Text(
-                            stacktrace.toString(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14.0,
-                              fontWeight: FontWeights.thin(false),
-                            ),
-                          ),
-                        ],
-                      ),
-                      margin: EdgeInsets.symmetric(horizontal: 16.0),
-                    ),
-                  ],
-                ),
-              ),
-              ButtonBar(
+      ),
+      themeMode: ThemeMode.dark,
+      home: Scaffold(
+        body: Column(
+          children: [
+            DesktopTitleBar(),
+            Container(
+              height: 56.0,
+              color: Colors.white.withOpacity(0.10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  MaterialButton(
-                    onPressed: () => UrlLauncher.launch(
-                        'https://github.com/alexmercerind/harmonoid/issues'),
-                    child: Text(
-                      'REPORT',
-                      style: TextStyle(
-                        color: Colors.deepPurpleAccent.shade200,
-                      ),
-                    ),
+                  SizedBox(
+                    width: 24.0,
                   ),
-                  MaterialButton(
-                    onPressed: SystemNavigator.pop,
-                    child: Text(
-                      'EXIT',
-                      style: TextStyle(
-                        color: Colors.deepPurpleAccent.shade200,
-                      ),
+                  Text(
+                    'Exception',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16.0,
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.symmetric(vertical: 4.0),
+                children: [
+                  SettingsTile(
+                    title: 'Exception occured',
+                    subtitle: 'Something wrong has happened.',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          exception.toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                            fontWeight: FontWeights.thin(false),
+                          ),
+                        ),
+                        Text(
+                          stacktrace.toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                            fontWeight: FontWeights.thin(false),
+                          ),
+                        ),
+                      ],
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 16.0),
+                  ),
+                ],
+              ),
+            ),
+            ButtonBar(
+              children: [
+                MaterialButton(
+                  onPressed: () => UrlLauncher.launch(
+                      'https://github.com/alexmercerind/harmonoid/issues'),
+                  child: Text(
+                    'REPORT',
+                    style: TextStyle(
+                      color: Colors.deepPurpleAccent.shade200,
+                    ),
+                  ),
+                ),
+                MaterialButton(
+                  onPressed: SystemNavigator.pop,
+                  child: Text(
+                    'EXIT',
+                    style: TextStyle(
+                      color: Colors.deepPurpleAccent.shade200,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

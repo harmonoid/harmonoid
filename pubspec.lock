@@ -98,6 +98,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  cli_util:
+    dependency: transitive
+    description:
+      name: cli_util
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.5"
   clock:
     dependency: transitive
     description:
@@ -170,6 +177,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0-alpha.15"
+  draggable_scrollbar:
+    dependency: "direct main"
+    description:
+      name: draggable_scrollbar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   ffi:
     dependency: transitive
     description:
@@ -177,6 +191,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.2"
+  ffigen:
+    dependency: transitive
+    description:
+      name: ffigen
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.2"
   file:
     dependency: transitive
     description:
@@ -240,13 +261,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_acrylic:
-    dependency: "direct main"
-    description:
-      name: flutter_acrylic
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.2"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -270,11 +284,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "1d1deae09d6ee622d118013b28f3d6bfbabb6b9c"
-      resolved-ref: "1d1deae09d6ee622d118013b28f3d6bfbabb6b9c"
+      ref: harmonoid
+      resolved-ref: "6984082511b597916e987e0b099c67cd1437ea42"
       url: "https://github.com/alexmercerind/flutter_media_metadata.git"
     source: git
-    version: "0.1.1"
+    version: "0.1.2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -294,13 +308,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.15.0"
-  google_fonts:
-    dependency: "direct main"
+  glob:
+    dependency: transitive
     description:
-      name: google_fonts
+      name: glob
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.0.2"
+  harmonoid_visual_assets:
+    dependency: "direct main"
+    description:
+      path: "external/harmonoid_visual_assets"
+      relative: true
+    source: path
+    version: "1.0.0"
   hotkey_manager:
     dependency: "direct main"
     description:
@@ -316,7 +337,7 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.3"
+    version: "0.13.4"
   http_parser:
     dependency: transitive
     description:
@@ -359,13 +380,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.3.0"
-  libwinmedia:
+  libmpv:
     dependency: "direct main"
     description:
-      name: libwinmedia
+      path: "external/libmpv.dart"
+      relative: true
+    source: path
+    version: "0.0.1"
+  logging:
+    dependency: transitive
+    description:
+      name: logging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.7"
+    version: "1.0.2"
+  matcher:
+    dependency: transitive
+    description:
+      name: matcher
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.12.11"
+  material_floating_search_bar:
+    dependency: "direct main"
+    description:
+      name: material_floating_search_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.6"
   meta:
     dependency: transitive
     description:
@@ -508,6 +550,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.1"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1+1"
   rxdart:
     dependency: transitive
     description:
@@ -625,6 +674,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.1"
+  stack_trace:
+    dependency: transitive
+    description:
+      name: stack_trace
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.10.0"
   string_scanner:
     dependency: transitive
     description:
@@ -632,6 +688,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  system_media_transport_controls:
+    dependency: "direct main"
+    description:
+      path: "external/smtc-win32/bindings/system_media_transport_controls.dart"
+      relative: true
+    source: path
+    version: "0.0.1"
   term_glyph:
     dependency: transitive
     description:
@@ -716,6 +779,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.8"
+  windows_taskbar:
+    dependency: "direct main"
+    description:
+      name: windows_taskbar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   xdg_directories:
     dependency: transitive
     description:
@@ -738,5 +808,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.14.0 <3.0.0"
+  dart: ">=2.14.4 <3.0.0"
   flutter: ">=2.5.0"

@@ -14,25 +14,30 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:io';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/core/configuration.dart';
-import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:path/path.dart' as path;
+import 'package:libmpv/libmpv.dart';
+import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
-import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/models/media.dart' hide Media;
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/collection.dart';
 
 /// Intent
 /// ------
 ///
-/// Handles the opened audio file from file explorer.
+/// Handles the opened audio file from file explorer in [Harmonoid](https://github.com/harmonoid/harmonoid).
 /// Primary purpose being to retrieve the path, saving metadata & playback of the possibly opened file.
 ///
 class Intent {
+  /// [Intent] object instance. Must call [Intent.initialize].
+  static late Intent instance = Intent();
+
   /// The opened audio file from file explorer.
   /// `null` if no file was opened.
   File? file;
@@ -45,20 +50,20 @@ class Intent {
     if (Platform.isAndroid) {
       try {
         File file = await Intent.openFile;
-        intent = Intent(
+        instance = Intent(
           file: file,
         );
       } catch (exception) {
-        intent = Intent();
+        instance = Intent();
       }
     }
-    if (Platform.isWindows || Platform.isLinux) {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       if (args.isNotEmpty)
-        intent = Intent(
+        instance = Intent(
           file: File(args.first),
         );
       else
-        intent = Intent();
+        instance = Intent();
     }
   }
 
@@ -68,36 +73,46 @@ class Intent {
     String? response =
         await MethodChannel('com.alexmercerind.harmonoid/openFile')
             .invokeMethod('getOpenFile', {});
-    String filePath = response!;
-    File file = File(filePath);
+    String uri = response!;
+    File file = File(uri);
     if (await file.exists())
       return file;
     else
       throw Exception();
   }
 
-  /// Starts playing the possibly opened file & saves its metdaata.
+  /// Starts playing the possibly opened file & saves its metadata before doing it.
   ///
   Future<void> play() async {
     if (file != null) {
-      var metadata = await MetadataRetriever.fromFile(this.file!);
-      var track = Track.fromMap(
-          metadata.toMap()..putIfAbsent('filePath', () => this.file!.path));
-      track.filePath = this.file!.path;
-      if (metadata.albumArt != null) {
-        await File(path.join(
-          configuration.cacheDirectory!.path,
-          'AlbumArts',
-          track.albumArtBasename,
-        )).writeAsBytes(metadata.albumArt!);
+      var metadata = <String, String>{
+        'uri': file!.uri.toString(),
+      };
+      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        try {
+          metadata.addAll(await tagger.parse(
+            Media(file!.uri.toString()),
+            coverDirectory: Collection.instance.albumArtDirectory,
+          ));
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
+        final track = Track.fromTagger(metadata);
+        Playback.instance.open([track]);
+      } else {
+        final _metadata = await MetadataRetriever.fromFile(file!);
+        metadata.addAll(_metadata.toJson().cast());
+        final track = Track.fromTagger(metadata);
+        if (_metadata.albumArt != null) {
+          await File(path.join(
+            Collection.instance.cacheDirectory.path,
+            kAlbumArtsDirectoryName,
+            track.albumArtFileName,
+          )).writeAsBytes(_metadata.albumArt!);
+        }
+        Playback.instance.open([track]);
       }
-      Playback.play(
-        tracks: <Track>[track],
-        index: 0,
-      );
     }
   }
 }
-
-/// Late initialized intent object instance.
-late Intent intent;

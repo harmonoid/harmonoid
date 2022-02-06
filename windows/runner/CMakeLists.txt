@@ -22,3 +22,20 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/../bin/vcruntime140.dll" "$<TARGET_FILE_DIR:${BINARY_NAME}>/vcruntime140.dll"
   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/../bin/vcruntime140_1.dll" "$<TARGET_FILE_DIR:${BINARY_NAME}>/vcruntime140_1.dll"
 )
+
+# TODO: Host archive & compile libmpv privately.
+
+set(LIBMPV_URL "https://github.com/myfreeer/mpv-build-lite/releases/download/0.32.0-624-gbb231889fd/mpv-dev.7z")
+set(LIBMPV_ARCHIVE "${CMAKE_BINARY_DIR}/mpv-dev.7z")
+if (NOT EXISTS "${LIBMPV_ARCHIVE}")
+  file(DOWNLOAD "${LIBMPV_URL}" "${LIBMPV_ARCHIVE}")
+endif()
+
+add_custom_command(
+  TARGET ${BINARY_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E tar xzf \"${LIBMPV_ARCHIVE}\"
+  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/mpv-1.dll" "$<TARGET_FILE_DIR:${BINARY_NAME}>/mpv-1.dll"
+  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/../bin/smtc-win32.dll" "$<TARGET_FILE_DIR:${BINARY_NAME}>/smtc-win32.dll"
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+  DEPENDS "${LIBMPV_ARCHIVE}"
+)

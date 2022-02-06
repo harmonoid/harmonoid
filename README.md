@@ -1,62 +1,48 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
-<h4 align="center">Elegant music app to play local music & YouTube music.</h4>
+<h4 align="center">Elegant music app to play & manage music library.</h4>
+<h4 align="center"><a href="https://github.com/harmonoid/harmonoid/releases/tag/v0.1.9">Download</a></h4>
 
-<h4 align="center"><a href='#download'>Download Now</a></h4>
+Join our **[Discord server](https://discord.gg/2Rc3edFWd8)**?
 
-🏁 Windows, Linux & Android. Feel free to report bugs & issues.
-<br></br>
+We are still working (refactoring) our Linux & Android versions. New Windows version is [live](https://github.com/harmonoid/harmonoid/releases/tag/v0.1.9) 🎉.
 
-![](https://github.com/harmonoid/harmonoid/blob/assets/Harmonoid-Snapshots/0.jpg?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/Harmonoid-Snapshots/1.jpg?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/Harmonoid-Snapshots/2.jpg?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/Android.jpg?raw=true)
+![0](https://user-images.githubusercontent.com/28951144/151304862-f4d336c6-4559-477b-b82e-a876f78f5eec.png)
+![1](https://user-images.githubusercontent.com/28951144/151304870-6d1d18db-7120-43bd-87fa-9fa369244bfd.png)
+![2](https://user-images.githubusercontent.com/28951144/151304875-dc120964-3b98-4460-beaf-d28c75b45109.png)
+![3](https://user-images.githubusercontent.com/28951144/151304877-13ff90bb-6123-4c06-940f-9d9de6b13666.png)
+![4](https://user-images.githubusercontent.com/28951144/151304879-cdb10677-30c5-45bb-9e67-f520297280da.png)
 
-<br></br>
 
-<h4  align="center">Loving the project? Share with your friends 💜 & star the repository ⭐.</h4>
+## Motion
 
-## Download
-
-#### **Windows**
-
-- [Setup Installer](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-windows-setup.exe) (11.9 MB) _Recommended. Automatically links with various file extensions_
-- [Portable EXE](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-windows-exe.zip) (14.5 MB) _For sandboxed running. Does not bind with file extensions._
-
-#### **Android**
-
-- [APK](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-android.apk) (22.9 MB)
-
-#### **Linux**
-
-- [DEB Package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.deb) (8.49 MB) _e.g. Ubuntu, Debian, elementaryOS, KDE Neon etc._
-- [AppImage](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.AppImage) (11.4 MB)
-- [Raw Executable](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.tar.gz) (11.2 MB)
-- [RPM Package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.rpm) (11.2 MB) _e.g. RedHat, Fedora etc._
+![](https://user-images.githubusercontent.com/28951144/151239401-be199319-0a22-4139-8bef-fe1edac2d576.gif)
 
 ## Features
 
-- **Powerful metadata engine**
-  - Indexes all your music into albums & artists based on embedded tags.
-- **Discord integration**
-  - Show your friends what you listen.
-- **Play local music**
-  - Local music playback. Strong format support.
-- **Play YouTube music**
-  - Play YouTube music directly with a link or search for it. YouTube music must be available in your country.
-- **Small size**
-  - < 15 MB standalone installer.
-- **Lyrics retriever**
-  - Gets lyrics for all your music.
-- **Beautiful user interface**
-  - Eye catching user experience, interface & animations.
-- **Ads free forever**
-  - No advertisements.
-- **Playlists**
-  - Create ever-staying playlists for your music.
-- **Freedom**
-  - Open source.
-- **Personalization**
-  - Set your favorite colors & themes.
+- Powerful music library management based on metadata tags. Indexes music into group of albums & artists.
+- Cross-platform (currently aiming Windows, Linux & Android).
+- MPV based music playback for strong format support (on Linux & Windows) using `dart:ffi`.
+- Taskbar & System Media Transport Controls for Windows.
+- Small installer (< 25 MB) & low RAM usage (< 120 MB).
+- Lyrics for all your music.
+- Very strictly follows [Material](https://material.io/) design guidelines for UI & animations.
+- Ability to create playlists for both your local & YouTube music to play on the go.
+- Discord RPC integration.
+
+Upcoming features
+- Mini-window mode.
+- Minimization to system tray.
+- D-Bus MPRIS controls for Linux.
+- Importing playlists from YouTube & Spotify using Web API.
+- Music visualizations.
+
+Few features are still a work in progress & planned for the next stable releases.
+
+## License
+
+GNU General Public License v3
+
+Contributions welcomed. Let's make it better.
 
 ## Contributors
 
@@ -73,7 +59,6 @@ for contributor in contributors:
     html = template.format(
         contributor[1], contributor[0], contributor[2], contributor[3])
     result += html
-
 print(
     f'''<ul>{result}
 </ul>'''
@@ -84,7 +69,7 @@ print(
   <li>
     <img src='https://avatars.githubusercontent.com/u/28951144?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/alexmercerind'>Hitesh Kumar Saini</a></strong>
     <ul>
-      <li>Lead developer. Deals with playback & indexing. UI & state management. Core C++ plugins.</li>
+      <li>Lead developer. Deals with playback & parsing of music. Writes UI, state management & lifecycle code. Maintains core C++ plugins.</li>
     </ul>
   </li>
   <li>
@@ -102,13 +87,19 @@ print(
   <li>
     <img src='https://avatars.githubusercontent.com/u/52399966?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/mytja'>mytja</a></strong>
     <ul>
-      <li>WinGet package. Bug reports. Slovenian translation.</li>
+      <li>WinGet package. Bug reports. CI. Slovenian translation.</li>
     </ul>
   </li>
   <li>
     <img src='https://avatars.githubusercontent.com/u/41370460?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/prateekmedia'>Prateek SU</a></strong>
     <ul>
-      <li>AppImage, RPM & Flatpak installers. Linux distribution. Bug reports. Hindi translation.</li>
+      <li>AppImage & Flatpak installers. Bug reports. Hindi translation.</li>
+    </ul>
+  </li>
+  <li>
+    <img src='https://drive.google.com/uc?export=view&id=1eI-dHiALVQM123_HnQIcYe9HtbX0uS_W' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://www.instagram.com/shinybluebelll'>Bluebell</a></strong>
+    <ul>
+      <li>Artwork & iconography.</li>
     </ul>
   </li>
   <li>
@@ -118,7 +109,7 @@ print(
     </ul>
   </li>
   <li>
-    <img src='https://avatars.githubusercontent.com/u/12989935?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/RedyAu'>RedyAu</a></strong>
+    <img src='https://avatars.githubusercontent.com/u/12989935?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/RedyAu'>Fodor Benedek</a></strong>
     <ul>
       <li>Hungarian translation.</li>
     </ul>
@@ -166,19 +157,15 @@ print(
     </ul>
   </li>
   <li>
+    <img src='https://avatars.githubusercontent.com/u/2262007?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/stonega'>stonegate</a></strong>
+    <ul>
+      <li>Mandarin translation & bug reports.</li>
+    </ul>
+  </li>
+  <li>
     <img src='https://avatars.githubusercontent.com/u/66313777?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/HiSubway'>さぶうぇい</a></strong>
     <ul>
       <li>Japanese translation.</li>
     </ul>
   </li>
 </ul>
-
-
-## License
-
-Copyright © 2020 - 2022, [Hitesh Kumar Saini](https://github.com/alexmercerind) <[saini123hitesh@gmail.com](mailto:saini123hitesh@gmail.com)>
-
-GNU General Public License v3
-
-Contributions welcomed. Let's make it better.
-Checkout [contribution guidelines](https://github.com/harmonoid/harmonoid/blob/master/CONTRIBUTING.md) to learn in detail.

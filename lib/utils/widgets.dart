@@ -14,45 +14,23 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:io';
-import 'dart:async';
 import 'dart:math' as math;
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/utils/dimensions.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/state/collection_refresh.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:harmonoid/core/configuration.dart';
-
-class FractionallyScaledWidget extends StatelessWidget {
-  final Widget child;
-  const FractionallyScaledWidget({Key? key, required this.child})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (configuration.enable125Scaling!)
-      return FractionallySizedBox(
-        heightFactor: 0.8,
-        widthFactor: 0.8,
-        child: Transform.scale(
-          scale: 1 / 0.8,
-          child: this.child,
-        ),
-      );
-    return this.child;
-  }
-}
 
 class CustomListView extends StatelessWidget {
   final ScrollController controller = ScrollController();
@@ -62,15 +40,16 @@ class CustomListView extends StatelessWidget {
   final bool? shrinkWrap;
   final EdgeInsets? padding;
 
-  CustomListView(
-      {required this.children,
-      this.scrollDirection,
-      this.shrinkWrap,
-      this.padding}) {
+  CustomListView({
+    required this.children,
+    this.scrollDirection,
+    this.shrinkWrap,
+    this.padding,
+  }) {
     if (Platform.isWindows) {
       controller.addListener(
         () {
-          var scrollDirection = controller.position.userScrollDirection;
+          final scrollDirection = controller.position.userScrollDirection;
           if (scrollDirection != ScrollDirection.idle) {
             var scrollEnd = controller.offset +
                 (scrollDirection == ScrollDirection.reverse
@@ -83,43 +62,18 @@ class CustomListView extends StatelessWidget {
         },
       );
     }
-    if (kDesktopHorizontalBreakPoint >
-        MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
-            .size
-            .width
-            .normalized) {
-      controller.addListener(
-        () {
-          var scrollDirection = controller.position.userScrollDirection;
-          if (!nowPlayingBar.maximized) {
-            if (scrollDirection != ScrollDirection.forward) {
-              nowPlayingBar.height = 0.0;
-            }
-            if (scrollDirection != ScrollDirection.reverse) {
-              if (nowPlaying.tracks.isNotEmpty) nowPlayingBar.height = 72.0;
-            }
-          }
-        },
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var listview = ListView(
+    return ListView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      padding: this.padding ?? EdgeInsets.zero,
-      controller: this.controller,
-      scrollDirection: this.scrollDirection ?? Axis.vertical,
-      shrinkWrap: this.shrinkWrap ?? false,
-      children: this.children,
+      padding: padding ?? EdgeInsets.zero,
+      controller: controller,
+      scrollDirection: scrollDirection ?? Axis.vertical,
+      shrinkWrap: shrinkWrap ?? false,
+      children: children,
     );
-    return Platform.isWindows && this.scrollDirection == Axis.horizontal
-        ? Scrollbar(
-            controller: this.controller,
-            child: listview,
-          )
-        : listview;
   }
 }
 
@@ -137,10 +91,10 @@ class _ScaleOnHoverState extends State<ScaleOnHover> {
   Widget build(BuildContext context) {
     return MouseRegion(
       onEnter: (e) => setState(() {
-        this.scale = 1.05;
+        scale = 1.05;
       }),
       onExit: (e) => setState(() {
-        this.scale = 1.00;
+        scale = 1.00;
       }),
       child: TweenAnimationBuilder(
         duration: const Duration(milliseconds: 100),
@@ -163,14 +117,11 @@ class SubHeader extends StatelessWidget {
     return text != null
         ? Container(
             alignment: Alignment.centerLeft,
-            height: 48,
-            padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
+            height: 56.0,
+            padding: EdgeInsets.fromLTRB(24.0, 0, 0, 0),
             child: Text(
               text!,
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  ?.copyWith(fontSize: 16.0),
+              style: Theme.of(context).textTheme.headline1,
             ),
           )
         : Container();
@@ -189,10 +140,7 @@ class NavigatorPopButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
-            Navigator.of(context).pop();
-            onTap?.call();
-          },
+          onTap: onTap != null ? onTap : Navigator.of(context).pop,
           borderRadius: BorderRadius.circular(20.0),
           child: Container(
             height: 40.0,
@@ -200,7 +148,7 @@ class NavigatorPopButton extends StatelessWidget {
             child: Icon(
               Icons.arrow_back,
               size: 20.0,
-              color: this.color,
+              color: color,
             ),
           ),
         ),
@@ -231,19 +179,18 @@ class DesktopAppBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         DesktopTitleBar(
-          color: this.color,
+          color: color,
         ),
         ClipRect(
           child: ClipRect(
             clipBehavior: Clip.antiAlias,
             child: Container(
-              height: (this.height ?? kDesktopAppBarHeight) + 8.0,
+              height: (height ?? kDesktopAppBarHeight) + 8.0,
               alignment: Alignment.topLeft,
               padding: EdgeInsets.only(bottom: 8.0),
               child: Material(
-                elevation: this.elevation ?? 4.0,
-                color:
-                    this.color ?? Theme.of(context).appBarTheme.backgroundColor,
+                elevation: elevation ?? 4.0,
+                color: color ?? Theme.of(context).appBarTheme.backgroundColor,
                 child: Container(
                   height: double.infinity,
                   alignment: Alignment.topLeft,
@@ -253,10 +200,10 @@ class DesktopAppBar extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        this.leading ??
+                        leading ??
                             NavigatorPopButton(
-                              color: this.color != null
-                                  ? this.isDark
+                              color: color != null
+                                  ? isDark
                                       ? Colors.white
                                       : Colors.black
                                   : null,
@@ -264,9 +211,9 @@ class DesktopAppBar extends StatelessWidget {
                         SizedBox(
                           width: 16.0,
                         ),
-                        if (this.title != null)
+                        if (title != null)
                           Text(
-                            this.title!,
+                            title!,
                             style: Theme.of(context).textTheme.headline1,
                           ),
                       ],
@@ -282,9 +229,9 @@ class DesktopAppBar extends StatelessWidget {
   }
 
   bool get isDark =>
-      (0.299 * (this.color?.red ?? 256.0)) +
-          (0.587 * (this.color?.green ?? 256.0)) +
-          (0.114 * (this.color?.blue ?? 256.0)) <
+      (0.299 * (color?.red ?? 256.0)) +
+          (0.587 * (color?.green ?? 256.0)) +
+          (0.114 * (color?.blue ?? 256.0)) <
       128.0;
 }
 
@@ -309,7 +256,7 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CollectionRefreshController>(
+    return Consumer<CollectionRefresh>(
       builder: (context, refresh, _) => refresh.progress == refresh.total
           ? FloatingActionButton(
               elevation: 8.0,
@@ -319,7 +266,7 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
                   Icons.refresh,
                   color: Colors.white,
                 ),
-                tween: this.tween,
+                tween: tween,
                 duration: Duration(milliseconds: 800),
                 builder: (_, dynamic value, child) => Transform.rotate(
                   alignment: Alignment.center,
@@ -328,19 +275,17 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
                 ),
               ),
               onPressed: () {
-                if (this.lock) return;
-                this.setState(() {
-                  this.lock = true;
+                if (lock) return;
+                setState(() {
+                  lock = true;
                 });
-                this.tween = Tween<double>(begin: 0, end: this.turns);
-                Provider.of<Collection>(context, listen: false).refresh(
+                tween = Tween<double>(begin: 0, end: turns);
+                Collection.instance.refresh(
                     onProgress: (progress, total, isCompleted) {
-                  Provider.of<CollectionRefreshController>(context,
-                          listen: false)
-                      .set(progress, total);
+                  CollectionRefresh.instance.set(progress, total);
                   if (isCompleted) {
-                    this.setState(() {
-                      this.lock = false;
+                    setState(() {
+                      lock = false;
                     });
                   }
                 });
@@ -351,219 +296,113 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
   }
 }
 
-class FadeFutureBuilder extends StatefulWidget {
-  final Future<Object> Function() future;
-  final Widget Function(BuildContext context) initialWidgetBuilder;
-  final Widget Function(BuildContext context, Object? object)
-      finalWidgetBuilder;
-  final Widget Function(BuildContext context, Object object) errorWidgetBuilder;
-  final Duration transitionDuration;
-
-  const FadeFutureBuilder({
-    Key? key,
-    required this.future,
-    required this.initialWidgetBuilder,
-    required this.finalWidgetBuilder,
-    required this.errorWidgetBuilder,
-    required this.transitionDuration,
-  }) : super(key: key);
-  FadeFutureBuilderState createState() => FadeFutureBuilderState();
-}
-
-class FadeFutureBuilderState extends State<FadeFutureBuilder>
-    with SingleTickerProviderStateMixin {
-  bool _init = true;
-  Widget _currentWidget = Container();
-  late AnimationController _widgetOpacityController;
-  late Animation<double> _widgetOpacity;
-  Object? _futureResolve;
-
-  @override
-  void initState() {
-    super.initState();
-    this._currentWidget = widget.initialWidgetBuilder(context);
-  }
-
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    if (this._init) {
-      this._currentWidget = widget.initialWidgetBuilder(context);
-      this._widgetOpacityController = new AnimationController(
-        vsync: this,
-        duration: widget.transitionDuration,
-        reverseDuration: widget.transitionDuration,
-      );
-      this._widgetOpacity = new Tween<double>(
-        begin: 1.0,
-        end: 0.0,
-      ).animate(new CurvedAnimation(
-        parent: this._widgetOpacityController,
-        curve: Curves.easeInOutCubic,
-        reverseCurve: Curves.easeInOutCubic,
-      ));
-      try {
-        this._futureResolve = await widget.future();
-        this._widgetOpacityController.forward();
-        Future.delayed(widget.transitionDuration, () {
-          this.setState(() {
-            this._currentWidget =
-                widget.finalWidgetBuilder(context, this._futureResolve);
-          });
-          this._widgetOpacityController.reverse();
-        });
-      } catch (exception) {
-        this._widgetOpacityController.forward();
-        Future.delayed(widget.transitionDuration, () {
-          this.setState(() {
-            this._currentWidget = widget.errorWidgetBuilder(context, exception);
-          });
-          this._widgetOpacityController.reverse();
-        });
-      }
-      this._init = false;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: FadeTransition(
-        opacity: this._widgetOpacity,
-        child: this._currentWidget,
-      ),
-    );
-  }
-}
-
 class ExceptionWidget extends StatelessWidget {
-  final EdgeInsets margin;
-  final double? height;
-  final double? width;
-  final Icon? icon;
   final String? title;
   final String? subtitle;
 
   const ExceptionWidget({
     Key? key,
-    this.icon,
-    required this.margin,
-    this.height,
-    this.width,
     required this.title,
     required this.subtitle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: this.width,
-      height: this.height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
+    return isDesktop
+        ? Container(
             margin: EdgeInsets.symmetric(
               horizontal: 16.0,
               vertical: 4.0,
             ),
-            width: this.width,
+            width: 480.0,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  this.title!,
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.0,
+                Transform.scale(
+                  scale: 1.4,
+                  child: Image.memory(
+                    {
+                      Language.instance.NO_COLLECTION_TITLE:
+                          visualAssets.collection,
+                      Language.instance.NO_INTERNET_TITLE:
+                          visualAssets.collection,
+                      Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE:
+                          visualAssets.searchPage,
+                      Language.instance.YOUTUBE_WELCOME_TITLE:
+                          visualAssets.searchNotes,
+                    }[title]!,
+                    height: 196.0,
+                    width: 196.0,
+                    filterQuality: FilterQuality.high,
+                    fit: BoxFit.contain,
                   ),
-                  textAlign: TextAlign.start,
-                ),
-                Divider(
-                  color: Colors.transparent,
-                  height: 4.0,
                 ),
                 Text(
-                  this.subtitle!,
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white.withOpacity(0.8)
-                        : Colors.black.withOpacity(0.8),
-                    fontSize: 14.0,
-                  ),
-                  textAlign: TextAlign.start,
+                  title!,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1
+                      ?.copyWith(fontSize: 20.0),
+                  textAlign: TextAlign.center,
                 ),
+                const SizedBox(
+                  height: 2.0,
+                ),
+                Text(
+                  subtitle!,
+                  style: Theme.of(context).textTheme.headline3,
+                  textAlign: TextAlign.center,
+                ),
+                if (title == Language.instance.NO_COLLECTION_TITLE) ...[
+                  const SizedBox(
+                    height: 8.0,
+                  ),
+                  MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  FadeThroughTransition(
+                            fillColor: Colors.transparent,
+                            animation: animation,
+                            secondaryAnimation: secondaryAnimation,
+                            child: Settings(),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      Language.instance.GO_TO_SETTINGS,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                ]
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class FakeLinearProgressIndicator extends StatelessWidget {
-  final String label;
-  final Duration duration;
-  final double? width;
-  final EdgeInsets? margin;
-
-  FakeLinearProgressIndicator({
-    Key? key,
-    required this.label,
-    required this.duration,
-    this.width,
-    this.margin,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder(
-      tween: Tween<double>(begin: 0.0, end: 1.0),
-      duration: this.duration,
-      child: Text(this.label),
-      curve: Curves.linear,
-      builder: (BuildContext context, double value, Widget? child) => Center(
-        child: Container(
-          margin: this.margin ?? EdgeInsets.zero,
-          alignment: Alignment.center,
-          width: this.width ?? 148.0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                this.label,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              Divider(
-                height: 12.0,
-                color: Colors.transparent,
-              ),
-              LinearProgressIndicator(value: value),
-            ],
-          ),
-        ),
-      ),
-    );
+          )
+        : Center(
+            child: Text(
+              this.subtitle!,
+              style: Theme.of(context).textTheme.headline3,
+              textAlign: TextAlign.center,
+            ),
+          );
   }
 }
 
 class ClosedTile extends StatelessWidget {
   final String? title;
   final String? subtitle;
-  const ClosedTile(
-      {Key? key,
-      required this.open,
-      required this.title,
-      required this.subtitle})
-      : super(key: key);
+  const ClosedTile({
+    Key? key,
+    required this.open,
+    required this.title,
+    required this.subtitle,
+  }) : super(key: key);
 
   final Function open;
 
@@ -577,7 +416,7 @@ class ClosedTile extends StatelessWidget {
       ),
       child: ListTile(
         title: Text(
-          this.title!,
+          title!,
           style: TextStyle(
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.white
@@ -587,7 +426,7 @@ class ClosedTile extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          this.subtitle!,
+          subtitle!,
           style: TextStyle(
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.white.withOpacity(0.8)
@@ -731,22 +570,15 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
         ),
       );
 
-    return InkWell(
-      onTap: widget.enabled ? showButtonMenu : null,
-      borderRadius: BorderRadius.circular(20.0),
-      child: Container(
-        height: 40.0,
-        width: 40.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: widget.icon ??
-            Icon(
-              Icons.more_vert,
-              size: 20.0,
-              color: Colors.black,
-            ),
-      ),
+    return IconButton(
+      onPressed: widget.enabled ? showButtonMenu : null,
+      icon: widget.icon ??
+          Icon(
+            Icons.more_vert,
+            size: 20.0,
+            color: Colors.black,
+          ),
+      splashRadius: 20.0,
     );
   }
 }
@@ -760,13 +592,13 @@ class DesktopTitleBar extends StatelessWidget {
     if (Platform.isAndroid || Platform.isIOS)
       return Container(
         height: MediaQuery.of(context).padding.top,
-        color: this.color ?? Theme.of(context).appBarTheme.backgroundColor,
+        color: color ?? Theme.of(context).appBarTheme.backgroundColor,
       );
     return Platform.isWindows
         ? Container(
-            width: MediaQuery.of(context).size.width.normalized,
+            width: MediaQuery.of(context).size.width,
             height: kDesktopTitleBarHeight,
-            color: this.color ?? Theme.of(context).appBarTheme.backgroundColor,
+            color: color ?? Theme.of(context).appBarTheme.backgroundColor,
             child: MoveWindow(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -777,7 +609,7 @@ class DesktopTitleBar extends StatelessWidget {
                   Text(
                     'Harmonoid Music',
                     style: TextStyle(
-                      color: (this.color == null
+                      color: (color == null
                               ? Theme.of(context).brightness == Brightness.dark
                               : isDark)
                           ? Colors.white
@@ -789,22 +621,28 @@ class DesktopTitleBar extends StatelessWidget {
                     child: Container(),
                   ),
                   MinimizeWindowButton(
-                    colors: this.windowButtonColors(context),
+                    colors: windowButtonColors(context),
                   ),
                   appWindow.isMaximized
                       ? RestoreWindowButton(
-                          colors: this.windowButtonColors(context),
+                          colors: windowButtonColors(context),
                         )
                       : MaximizeWindowButton(
-                          colors: this.windowButtonColors(context),
+                          colors: windowButtonColors(context),
                         ),
                   CloseWindowButton(
                     onPressed: () {
-                      /// Properly dispose `winrt::Windows::Media::Playback::MediaPlayer` before closing the window to avoid `SIGTERM`.
-                      if (Platform.isWindows) player.dispose();
-                      appWindow.close();
+                      if (CollectionRefresh.instance.isCompleted) {
+                        appWindow.close();
+                      } else {
+                        CollectionRefresh.instance.addListener(() {
+                          if (CollectionRefresh.instance.isCompleted) {
+                            appWindow.close();
+                          }
+                        });
+                      }
                     },
-                    colors: this.windowButtonColors(context),
+                    colors: windowButtonColors(context),
                   ),
                 ],
               ),
@@ -814,35 +652,35 @@ class DesktopTitleBar extends StatelessWidget {
   }
 
   bool get isDark =>
-      (0.299 * (this.color?.red ?? 256.0)) +
-          (0.587 * (this.color?.green ?? 256.0)) +
-          (0.114 * (this.color?.blue ?? 256.0)) <
+      (0.299 * (color?.red ?? 256.0)) +
+          (0.587 * (color?.green ?? 256.0)) +
+          (0.114 * (color?.blue ?? 256.0)) <
       128.0;
 
   WindowButtonColors windowButtonColors(BuildContext context) =>
       WindowButtonColors(
-        iconNormal: (this.color == null
+        iconNormal: (color == null
                 ? Theme.of(context).brightness == Brightness.dark
                 : isDark)
             ? Colors.white
             : Colors.black,
-        iconMouseDown: (this.color == null
+        iconMouseDown: (color == null
                 ? Theme.of(context).brightness == Brightness.dark
                 : isDark)
             ? Colors.white
             : Colors.black,
-        iconMouseOver: (this.color == null
+        iconMouseOver: (color == null
                 ? Theme.of(context).brightness == Brightness.dark
                 : isDark)
             ? Colors.white
             : Colors.black,
         normal: Colors.transparent,
-        mouseOver: (this.color == null
+        mouseOver: (color == null
                 ? Theme.of(context).brightness == Brightness.dark
                 : isDark)
             ? Colors.white.withOpacity(0.04)
             : Colors.black.withOpacity(0.04),
-        mouseDown: (this.color == null
+        mouseDown: (color == null
                 ? Theme.of(context).brightness == Brightness.dark
                 : isDark)
             ? Colors.white.withOpacity(0.04)
@@ -850,186 +688,87 @@ class DesktopTitleBar extends StatelessWidget {
       );
 }
 
-class CollectionTrackContextMenu extends StatelessWidget {
-  final Track track;
-  const CollectionTrackContextMenu({
+class MobileBottomNavigationBar extends StatefulWidget {
+  final ValueNotifier<TabRoute> tabControllerNotifier;
+  MobileBottomNavigationBar({
     Key? key,
-    required this.track,
+    required this.tabControllerNotifier,
   }) : super(key: key);
 
   @override
+  State<MobileBottomNavigationBar> createState() =>
+      _MobileBottomNavigationBarState();
+}
+
+class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
+  late int _index;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.tabControllerNotifier.addListener(onChange);
+    _index = widget.tabControllerNotifier.value.index;
+  }
+
+  void onChange() {
+    if (_index != widget.tabControllerNotifier.value.index) {
+      setState(() {
+        _index = widget.tabControllerNotifier.value.index;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.tabControllerNotifier.removeListener(onChange);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Consumer<Collection>(
-      builder: (context, collection, _) => ContextMenuButton(
-        elevation: 4.0,
-        onSelected: (index) {
-          switch (index) {
-            case 0:
-              showDialog(
-                context: context,
-                builder: (subContext) => FractionallyScaledWidget(
-                  child: AlertDialog(
-                    backgroundColor:
-                        Theme.of(context).appBarTheme.backgroundColor,
-                    title: Text(
-                      language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_HEADER,
-                      style: Theme.of(subContext).textTheme.headline1,
-                    ),
-                    content: Text(
-                      language.COLLECTION_ALBUM_TRACK_DELETE_DIALOG_BODY,
-                      style: Theme.of(subContext).textTheme.headline3,
-                    ),
-                    actions: [
-                      MaterialButton(
-                        textColor: Theme.of(context).primaryColor,
-                        onPressed: () async {
-                          await collection.delete(track);
-                          Navigator.of(subContext).pop();
-                        },
-                        child: Text(language.YES),
-                      ),
-                      MaterialButton(
-                        textColor: Theme.of(context).primaryColor,
-                        onPressed: Navigator.of(subContext).pop,
-                        child: Text(language.NO),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-              break;
-            case 1:
-              Share.shareFiles(
-                [track.filePath!],
-                subject:
-                    '${track.trackName} • ${track.albumName}. Shared using Harmonoid!',
-              );
-              break;
-            case 2:
-              showDialog(
-                context: context,
-                builder: (subContext) => FractionallyScaledWidget(
-                  child: AlertDialog(
-                    backgroundColor:
-                        Theme.of(context).appBarTheme.backgroundColor,
-                    contentPadding: EdgeInsets.zero,
-                    actionsPadding: EdgeInsets.zero,
-                    title: Text(
-                      language.PLAYLIST_ADD_DIALOG_TITLE,
-                      style: Theme.of(subContext).textTheme.headline1,
-                    ),
-                    content: Container(
-                      height: 280,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(24, 8, 0, 16),
-                            child: Text(
-                              language.PLAYLIST_ADD_DIALOG_BODY,
-                              style: Theme.of(subContext).textTheme.headline3,
-                            ),
-                          ),
-                          Container(
-                            height: 236,
-                            width: 280,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: collection.playlists.length,
-                              itemBuilder: (context, playlistIndex) {
-                                return ListTile(
-                                  title: Text(
-                                    collection
-                                        .playlists[playlistIndex].playlistName!,
-                                    style:
-                                        Theme.of(context).textTheme.headline2,
-                                  ),
-                                  leading: Icon(
-                                    Icons.queue_music,
-                                    size: Theme.of(context).iconTheme.size,
-                                    color: Theme.of(context).iconTheme.color,
-                                  ),
-                                  onTap: () async {
-                                    await collection.playlistAddTrack(
-                                      collection.playlists[playlistIndex],
-                                      track,
-                                    );
-                                    Navigator.of(subContext).pop();
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: [
-                      MaterialButton(
-                        textColor: Theme.of(context).primaryColor,
-                        onPressed: Navigator.of(subContext).pop,
-                        child: Text(language.CANCEL),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-              break;
-            case 3:
-              Playback.add(
-                [
-                  track,
-                ],
-              );
-              break;
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(color: Colors.black45, blurRadius: 8.0),
+        ],
+      ),
+      child: BottomNavigationBar(
+        currentIndex: _index,
+        type: BottomNavigationBarType.shifting,
+        onTap: (index) {
+          if (index != _index) {
+            widget.tabControllerNotifier.value =
+                TabRoute(index, TabRouteSender.bottomNavigationBar);
           }
+          setState(() {
+            _index = index;
+          });
         },
-        tooltip: language.OPTIONS,
-        itemBuilder: (_) => <PopupMenuEntry>[
-          PopupMenuItem(
-            padding: EdgeInsets.zero,
-            value: 0,
-            child: ListTile(
-              leading: Icon(FluentIcons.delete_16_regular),
-              title: Text(
-                language.DELETE,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.queue),
+            label: Language.instance.PLAYLIST,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
-          PopupMenuItem(
-            padding: EdgeInsets.zero,
-            value: 1,
-            child: ListTile(
-              leading: Icon(FluentIcons.share_16_regular),
-              title: Text(
-                language.SHARE,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.music_note),
+            label: Language.instance.TRACK,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
-          PopupMenuItem(
-            padding: EdgeInsets.zero,
-            value: 2,
-            child: ListTile(
-              leading: Icon(FluentIcons.list_16_regular),
-              title: Text(
-                language.ADD_TO_PLAYLIST,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.album),
+            label: Language.instance.ALBUM,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
-          PopupMenuItem(
-            padding: EdgeInsets.zero,
-            value: 3,
-            child: ListTile(
-              leading: Icon(FluentIcons.music_note_2_16_regular),
-              title: Text(
-                language.ADD_TO_NOW_PLAYING,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: Language.instance.ARTIST,
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.play_circle),
+            label: Language.instance.YOUTUBE,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
         ],
       ),
@@ -1037,8 +776,65 @@ class CollectionTrackContextMenu extends StatelessWidget {
   }
 }
 
-extension ScalingExtension on double {
-  double get normalized {
-    return this * (configuration.enable125Scaling! ? 0.8 : 1.0);
+class DoNotGCCleanThisWidgetFromMemory extends StatefulWidget {
+  final Widget child;
+  DoNotGCCleanThisWidgetFromMemory(this.child, {Key? key}) : super(key: key);
+
+  @override
+  State<DoNotGCCleanThisWidgetFromMemory> createState() =>
+      _DoNotGCCleanThisWidgetFromMemoryState();
+}
+
+class _DoNotGCCleanThisWidgetFromMemoryState
+    extends State<DoNotGCCleanThisWidgetFromMemory>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
+  }
+
+  @override
+  bool wantKeepAlive = true;
+}
+
+class ShowAllButton extends StatelessWidget {
+  final void Function()? onPressed;
+  const ShowAllButton({Key? key, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(4.0),
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(4.0),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 6.0,
+            vertical: 2.0,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.view_list,
+                color: Theme.of(context).primaryColor,
+              ),
+              const SizedBox(
+                width: 4.0,
+              ),
+              Text(
+                Language.instance.SEE_ALL,
+                style: Theme.of(context).textTheme.headline3?.copyWith(
+                      color: Theme.of(context).primaryColor,
+                    ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

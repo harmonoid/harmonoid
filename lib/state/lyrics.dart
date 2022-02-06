@@ -14,25 +14,30 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
-
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
 
+import 'package:harmonoid/models/lyric.dart';
+
 /// Lyrics
 /// ------
 ///
+/// Minimal [ChangeNotifier] to fetch & update the lyrics based on the currently playing track.
+///
 class Lyrics extends ChangeNotifier {
-  static Lyrics get() => lyrics;
+  /// [Lyrics] object instance.
+  static late Lyrics instance = Lyrics();
 
   List<Lyric> current = <Lyric>[];
   String query = '';
 
-  Future<void> fromName(String name) async {
-    this.current.clear();
-    this.query = name;
+  void update(String name) async {
+    if (query == name) return;
+    current.clear();
+    query = name;
     Uri uri = Uri.https(
       'harmonoid-lyrics.vercel.app',
       '/lyrics',
@@ -42,41 +47,12 @@ class Lyrics extends ChangeNotifier {
     );
     http.Response response = await http.get(uri);
     if (response.statusCode == 200) {
-      (convert.jsonDecode(response.body) as List).forEach(
-        (map) {
-          this.current.add(
-                Lyric.fromMap(map),
-              );
-        },
-      );
+      current = convert
+          .jsonDecode(response.body)
+          .map((lyric) => Lyric.fromJson(lyric))
+          .toList()
+          .cast<Lyric>();
     }
-    this.notifyListeners();
+    notifyListeners();
   }
 }
-
-/// Lyric
-/// -----
-///
-/// A model class to keep lyrics & equivalent time stamps.
-///
-class Lyric {
-  final int time;
-  final String words;
-
-  Lyric({
-    required this.time,
-    required this.words,
-  });
-
-  Map<String, dynamic> toMap(dynamic map) => {
-        'time': this.time,
-        'words': this.words,
-      };
-
-  static Lyric fromMap(dynamic map) => Lyric(
-        time: map['time'],
-        words: map['words'],
-      );
-}
-
-var lyrics = Lyrics();

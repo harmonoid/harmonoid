@@ -14,50 +14,42 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
  * 
- *  Copyright 2020-2021, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+ *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
 import 'dart:io';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
-import 'package:libwinmedia/libwinmedia.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:libmpv/libmpv.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/core/hotkeys.dart';
-import 'package:harmonoid/interface/changenotifiers.dart';
 
-const String TITLE = 'Harmonoid';
-const String VERSION = '0.1.9';
-const String AUTHOR = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
-const String LICENSE = 'GPL-3.0';
+const String kTitle = 'Harmonoid';
+const String kVersion = '0.1.9';
+const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
+const String kLicense = 'GPL-3.0';
 
 Future<void> main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
   try {
     if (Platform.isWindows) {
-      WidgetsFlutterBinding.ensureInitialized();
       await Configuration.initialize();
-      await Acrylic.initialize();
-      await Acrylic.setEffect(
-        effect: configuration.acrylicEnabled!
-            ? AcrylicEffect.acrylic
-            : AcrylicEffect.solid,
-        gradientColor: configuration.themeMode! == ThemeMode.light
-            ? Color(0x22DDDDDD)
-            : Color(0xCC222222),
-      );
-      LWM.initialize();
-      DiscordRPC.initialize();
+      await MPV.initialize();
+      await SMTC.initialize();
       await Intent.initialize(args: args);
       await HotKeys.initialize();
+      DiscordRPC.initialize();
       doWhenWindowReady(() {
         appWindow.minSize = Size(960, 640);
         appWindow.size = Size(1024, 640);
@@ -66,16 +58,14 @@ Future<void> main(List<String> args) async {
       });
     }
     if (Platform.isLinux) {
-      WidgetsFlutterBinding.ensureInitialized();
       await Configuration.initialize();
-      LWM.initialize();
-      DiscordRPC.initialize();
+      await MPV.initialize();
       await Intent.initialize(args: args);
       await HotKeys.initialize();
+      DiscordRPC.initialize();
     }
     if (Platform.isAndroid) {
-      WidgetsFlutterBinding.ensureInitialized();
-      if (Platform.isAndroid) if (await Permission.storage.isDenied) {
+      if (await Permission.storage.isDenied) {
         PermissionStatus storagePermissionState =
             await Permission.storage.request();
         if (!storagePermissionState.isGranted) {
@@ -88,12 +78,13 @@ Future<void> main(List<String> args) async {
       await Intent.initialize();
     }
     await Collection.initialize(
-      collectionDirectories: configuration.collectionDirectories!,
-      cacheDirectory: configuration.cacheDirectory!,
-      collectionSortType: configuration.collectionSortType!,
+      collectionDirectories: Configuration.instance.collectionDirectories,
+      cacheDirectory: Configuration.instance.cacheDirectory,
+      collectionSortType: Configuration.instance.collectionSortType,
+      collectionOrderType: Configuration.instance.collectionOrderType,
     );
-    await collection.refresh(onProgress: (progress, total, _) {
-      collectionRefresh.set(progress, total);
+    await Collection.instance.refresh(onProgress: (progress, total, _) {
+      CollectionRefresh.instance.set(progress, total);
     });
     await Language.initialize();
     runApp(
