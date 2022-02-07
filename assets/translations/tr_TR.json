@@ -100,7 +100,7 @@
   "SEARCH": "Ara",
   "SEARCH_COLLECTION": "Koleksiyon ara",
   "SEARCH_HISTORY_SUBHEADER": "Son aramaların",
-  "SEARCH_NO_RECENT_SEARCHES": "Son aramalrın burada gözükür.",
+  "SEARCH_NO_RECENT_SEARCHES": "Son aramaların burada gözükür.",
   "SEARCH_RESULT_LOADER_LABEL": "Müziğin getiriliyor...",
   "SEARCH_WELCOME": "Harmonoid'de ara...",
   "SEE_ALL": "Tümünü gör",
@@ -137,7 +137,7 @@
   "SETTING_THEME_TITLE": "Tema",
   "SHARE": "Paylaş",
   "SHOW_ALBUM": "Albümü görüntüle",
-  "SHOW_NOW_PLAYING_AFTER_PLAYING": "Automatically jump to \"Now playing\" screen after playing a track",
+  "SHOW_NOW_PLAYING_AFTER_PLAYING": "Bir parça oynattıktan sonra \"Now playing\" ekranına geç",
   "SORT_BY": "Sırala",
   "STARTING_PLAYBACK": "Oynatmaya başlanıyor...",
   "SWITCH_THEME": "Temayı değiştir",
@@ -156,10 +156,9 @@
   "YOUTUBE_NO_RESULTS": "Aramanla eşleşen bir sonuç bulunamadı.",
   "YOUTUBE_WELCOME": "Bir müzik ara veya bağlantı yapıştır...",
   "YOUTUBE_WELCOME_SUBTITLE": "Önerilenler dinlediklerinize göre görüntülenir.",
+  "YOUTUBE_WELCOME_TITLE": "Hadi başlayalım...",
+  "YOUTUBE_WELCOME": "Bir müzik ara veya bağlantı yapıştır...",
+  "YOUTUBE_WELCOME_SUBTITLE": "Önerilenler dinlediklerinize göre görüntülenir.",
   "YOUTUBE_WELCOME_TITLE": "Hadi başlayalım..."
-}
-BE_WELCOME": "Bir müzik ara veya bağlantı yapıştır...",
-    "YOUTUBE_WELCOME_SUBTITLE": "Önerilenler dinlediklerinize göre görüntülenir.",
-    "YOUTUBE_WELCOME_TITLE": "Hadi başlayalım..."
   }
   
