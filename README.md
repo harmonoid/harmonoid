@@ -1,6 +1,6 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
 <h4 align="center">Elegant music app to play & manage music library.</h4>
-<h4 align="center"><a href="https://github.com/harmonoid/harmonoid/releases/tag/v0.1.9">Download</a></h4>
+<h4 align="center"><a href="https://github.com/harmonoid/harmonoid/releases/download/v0.1.9/harmonoid-windows-setup.exe">Download [Setup]</a> | <a href="https://github.com/harmonoid/harmonoid/releases/download/v0.1.9/harmonoid-windows-exe.zip">Download [Portable]</a></h4>
 
 Join our **[Discord server](https://discord.gg/2Rc3edFWd8)**?
 
