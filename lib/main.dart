@@ -18,6 +18,7 @@
  */
 
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:libmpv/libmpv.dart';
@@ -45,8 +46,10 @@ Future<void> main(List<String> args) async {
   try {
     if (Platform.isWindows) {
       await Configuration.initialize();
-      await MPV.initialize();
-      await SMTC.initialize();
+      if (kReleaseMode) {
+        await MPV.initialize();
+        await SMTC.initialize();
+      }
       await Intent.initialize(args: args);
       await HotKeys.initialize();
       DiscordRPC.initialize();
@@ -59,7 +62,9 @@ Future<void> main(List<String> args) async {
     }
     if (Platform.isLinux) {
       await Configuration.initialize();
-      await MPV.initialize();
+      if (kReleaseMode) {
+        await MPV.initialize();
+      }
       await Intent.initialize(args: args);
       await HotKeys.initialize();
       DiscordRPC.initialize();
