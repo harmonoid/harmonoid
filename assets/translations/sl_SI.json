@@ -10,6 +10,7 @@
   "ARTIST": "Skladatelji",
   "ARTIST_SINGLE": "Ustvarjalec",
   "ASCENDING": "Po abecedi naprej",
+  "AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING": "Automatically add other songs from collection to now playing after album completion",
   "A_TO_Z": "Od A do Z",
   "BUFFERING": "Bufferanje...",
   "CANCEL": "PREKLIČI",
@@ -137,6 +138,7 @@
   "SETTING_THEME_TITLE": "Način",
   "SHARE": "Deli",
   "SHOW_ALBUM": "Pokaži album",
+  "SHOW_TRACK_PROGRESS_ON_TASKBAR": "Show track progress on taskbar",
   "SORT_BY": "Filter",
   "STARTING_PLAYBACK": "Začenjam predvajanje",
   "SWITCH_THEME": "Zamenjaj temo",
@@ -157,4 +159,3 @@
   "YOUTUBE_WELCOME_SUBTITLE": "Priporočila se bodo pojavljala tukaj, glede na to, kaj boste iskali.",
   "YOUTUBE_WELCOME_TITLE": "Pa pojdimo"
 }
-

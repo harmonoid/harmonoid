@@ -16,9 +16,7 @@
  * 
  *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
-
 // ignore_for_file: non_constant_identifier_names
-
 class Strings {
   late String ABOUT_SUBTITLE;
   late String ABOUT_TITLE;
@@ -31,6 +29,7 @@ class Strings {
   late String ARTIST;
   late String ARTIST_SINGLE;
   late String ASCENDING;
+  late String AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING;
   late String A_TO_Z;
   late String BUFFERING;
   late String CANCEL;
@@ -158,6 +157,7 @@ class Strings {
   late String SETTING_THEME_TITLE;
   late String SHARE;
   late String SHOW_ALBUM;
+  late String SHOW_TRACK_PROGRESS_ON_TASKBAR;
   late String SORT_BY;
   late String STARTING_PLAYBACK;
   late String SWITCH_THEME;

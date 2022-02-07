@@ -191,6 +191,7 @@ class Language extends Strings with ChangeNotifier {
     this.ARTIST = asset['ARTIST']!;
     this.ARTIST_SINGLE = asset['ARTIST_SINGLE']!;
     this.ASCENDING = asset['ASCENDING']!;
+    this.AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING = asset['AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING']!;
     this.A_TO_Z = asset['A_TO_Z']!;
     this.BUFFERING = asset['BUFFERING']!;
     this.CANCEL = asset['CANCEL']!;
@@ -318,6 +319,7 @@ class Language extends Strings with ChangeNotifier {
     this.SETTING_THEME_TITLE = asset['SETTING_THEME_TITLE']!;
     this.SHARE = asset['SHARE']!;
     this.SHOW_ALBUM = asset['SHOW_ALBUM']!;
+    this.SHOW_TRACK_PROGRESS_ON_TASKBAR = asset['SHOW_TRACK_PROGRESS_ON_TASKBAR']!;
     this.SORT_BY = asset['SORT_BY']!;
     this.STARTING_PLAYBACK = asset['STARTING_PLAYBACK']!;
     this.SWITCH_THEME = asset['SWITCH_THEME']!;
@@ -341,9 +343,7 @@ class Language extends Strings with ChangeNotifier {
     this.current = languageRegion;
     this.notifyListeners();
   }
-
   late LanguageRegion current;
-
   @override
   // ignore: must_call_super
   void dispose() {}
