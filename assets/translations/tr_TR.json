@@ -10,6 +10,7 @@
   "ARTIST": "Sanatçılar",
   "ARTIST_SINGLE": "Sanatçı",
   "ASCENDING": "Artan",
+  "AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING": "Automatically add other songs from collection to now playing after album completion",
   "A_TO_Z": "A'dan Z'ye",
   "BUFFERING": "Yükleniyor",
   "CANCEL": "İPTAL",
@@ -138,6 +139,7 @@
   "SHARE": "Paylaş",
   "SHOW_ALBUM": "Albümü görüntüle",
   "SHOW_NOW_PLAYING_AFTER_PLAYING": "Automatically jump to \"Now playing\" screen after playing a track",
+  "SHOW_TRACK_PROGRESS_ON_TASKBAR": "Show track progress on taskbar",
   "SORT_BY": "Sırala",
   "STARTING_PLAYBACK": "Oynatmaya başlanıyor...",
   "SWITCH_THEME": "Temayı değiştir",
@@ -158,8 +160,3 @@
   "YOUTUBE_WELCOME_SUBTITLE": "Önerilenler dinlediklerinize göre görüntülenir.",
   "YOUTUBE_WELCOME_TITLE": "Hadi başlayalım..."
 }
-BE_WELCOME": "Bir müzik ara veya bağlantı yapıştır...",
-    "YOUTUBE_WELCOME_SUBTITLE": "Önerilenler dinlediklerinize göre görüntülenir.",
-    "YOUTUBE_WELCOME_TITLE": "Hadi başlayalım..."
-  }
-  

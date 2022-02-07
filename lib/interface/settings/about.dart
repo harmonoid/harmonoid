@@ -131,6 +131,12 @@ const kContributors = [
     'https://avatars.githubusercontent.com/u/66313777?s=80&v=4',
     'さぶうぇい',
     'Japanese translation.'
+  ],
+  [
+    'https://github.com/TuranBerlin',
+    'https://avatars.githubusercontent.com/u/66092540?s=80&v=4',
+    'Yusuf Kamil Turan',
+    'Turkish translation.'
   ]
 ];
 
