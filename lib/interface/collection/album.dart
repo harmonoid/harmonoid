@@ -249,6 +249,10 @@ class DesktopAlbumArtistTab extends StatelessWidget {
                     children: Collection.instance.albumArtists.keys
                         .map((e) => InkWell(
                               onTap: () {
+                                // Resizing the window/viewport breaks the scroll offset. Thus,
+                                // jumping back to initial offset & then animating to the required destination.
+                                // TODO: Seek for a better approach or report bug at flutter/flutter.
+                                scrollController.jumpTo(0.0);
                                 scrollController.animateTo(
                                   offsets[e]!,
                                   duration: Duration(milliseconds: 200),
