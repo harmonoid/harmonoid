@@ -80,19 +80,7 @@ flutter:
     - assets/icons/play.ico
     - assets/icons/previous.ico
     - assets/images/default_album_art.jpg
-    - assets/translations/de_DE.json
-    - assets/translations/en_US.json
-    - assets/translations/fr_FR.json
-    - assets/translations/hi_IN.json
-    - assets/translations/hu_HU.json
-    - assets/translations/mg_MG.json
-    - assets/translations/nl_NL.json
-    - assets/translations/pt_BR.json
-    - assets/translations/ru_RU.json
-    - assets/translations/sl_SI.json
-    - assets/translations/sv_SE.json
-    - assets/translations/zh_CN.json
-    - assets/translations/ja_JP.json
+    - assets/translations/
 
 msix_config:
   msix_version: 0.1.9.0
