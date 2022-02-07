@@ -454,11 +454,11 @@ class AlbumScreenState extends State<AlbumScreen>
                       alignment: Alignment.center,
                       child: Card(
                         clipBehavior: Clip.antiAlias,
-                        margin: EdgeInsets.only(top: 72.0),
+                        margin: EdgeInsets.only(top: 96.0, bottom: 4.0),
                         elevation: 4.0,
                         child: Container(
                           constraints: BoxConstraints(
-                            maxWidth: 1280.0,
+                            maxWidth: 12 / 6 * 720.0,
                             maxHeight: 720.0,
                           ),
                           width: MediaQuery.of(context).size.width - 136.0,
@@ -468,40 +468,72 @@ class AlbumScreenState extends State<AlbumScreen>
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Expanded(
-                                flex: 6,
-                                child: Hero(
-                                  tag:
-                                      'album_art_${widget.album.albumName}_${widget.album.albumArtistName}',
+                                flex: 5,
+                                child: ClipRect(
                                   child: Stack(
-                                    alignment: Alignment.bottomLeft,
+                                    alignment: Alignment.center,
                                     children: [
                                       Positioned.fill(
-                                        child: Image(
-                                          image: Collection.instance
-                                              .getAlbumArt(widget.album),
-                                          fit: BoxFit.cover,
+                                        child: ImageFiltered(
+                                          imageFilter: ImageFilter.blur(
+                                              sigmaX: 20, sigmaY: 20),
+                                          child: Image(
+                                            image: Collection.instance
+                                                .getAlbumArt(widget.album),
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ClipOval(
-                                          child: Container(
-                                            height: 36.0,
-                                            width: 36.0,
-                                            color: Colors.black54,
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  launch(
-                                                      'file:///${(Collection.instance.getAlbumArt(widget.album) as FileImage).file.path}');
-                                                },
-                                                icon: Icon(
-                                                  Icons.image,
-                                                  size: 20.0,
-                                                  color: Colors.white,
+                                        padding: EdgeInsets.all(20.0),
+                                        child: Hero(
+                                          tag:
+                                              'album_art_${widget.album.albumName}_${widget.album.albumArtistName}',
+                                          child: Card(
+                                            elevation: 4.0,
+                                            child: Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Image(
+                                                    image: Collection.instance
+                                                        .getAlbumArt(
+                                                            widget.album),
+                                                  ),
                                                 ),
-                                              ),
+                                                Positioned(
+                                                  bottom: 0.0,
+                                                  left: 0.0,
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.all(16.0),
+                                                    child: ClipOval(
+                                                      child: Container(
+                                                        height: 36.0,
+                                                        width: 36.0,
+                                                        color: Colors.black54,
+                                                        child: Material(
+                                                          color: Colors
+                                                              .transparent,
+                                                          child: IconButton(
+                                                            onPressed: () {
+                                                              launch(
+                                                                  'file:///${(Collection.instance.getAlbumArt(widget.album) as FileImage).file.path}');
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.image,
+                                                              size: 20.0,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),

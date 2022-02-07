@@ -459,70 +459,77 @@ class ArtistScreenState extends State<ArtistScreen>
                       width: MediaQuery.of(context).size.width,
                       child: Container(
                         alignment: Alignment.center,
-                        child: Container(
-                          margin: EdgeInsets.only(top: 72.0),
-                          constraints: BoxConstraints(
-                            maxWidth: 1280.0,
-                            maxHeight: 720.0,
-                          ),
-                          width: MediaQuery.of(context).size.width - 136.0,
-                          height: MediaQuery.of(context).size.height - 192.0,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 6,
-                                child: LayoutBuilder(
-                                    builder: (context, constraints) {
-                                  var dimension = min(
-                                    constraints.maxWidth,
-                                    constraints.maxHeight,
-                                  );
-                                  return SizedBox.square(
-                                    dimension: dimension,
-                                    child: Container(
-                                      height: dimension,
-                                      width: dimension,
-                                      margin: EdgeInsets.all(24.0),
-                                      alignment: Alignment.center,
-                                      child: Hero(
-                                        tag:
-                                            'artist_art_${widget.artist.artistName}',
-                                        child: Card(
-                                          clipBehavior: Clip.antiAlias,
-                                          margin: EdgeInsets.zero,
-                                          elevation: 4.0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              (dimension - 48.0) / 2.0,
-                                            ),
-                                          ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(4.0),
-                                            width: dimension - 48.0,
-                                            height: dimension - 48.0,
-                                            child: ClipOval(
+                        child: Card(
+                          clipBehavior: Clip.antiAlias,
+                          margin: EdgeInsets.only(top: 96.0, bottom: 4.0),
+                          elevation: 4.0,
+                          child: Container(
+                            constraints: BoxConstraints(
+                              maxWidth: 12 / 6 * 720.0,
+                              maxHeight: 720.0,
+                            ),
+                            width: MediaQuery.of(context).size.width - 136.0,
+                            height: MediaQuery.of(context).size.height - 192.0,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                  flex: 6,
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) => ClipRect(
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Positioned.fill(
+                                            child: ImageFiltered(
+                                              imageFilter: ImageFilter.blur(
+                                                  sigmaX: 20, sigmaY: 20),
                                               child: Image(
-                                                image: collection
+                                                image: Collection.instance
                                                     .getAlbumArt(widget.artist),
                                                 fit: BoxFit.cover,
-                                                height: dimension - 56.0,
-                                                width: dimension - 56.0,
                                               ),
                                             ),
                                           ),
-                                        ),
+                                          Padding(
+                                            padding: EdgeInsets.all(20.0),
+                                            child: Hero(
+                                              tag:
+                                                  'artist_art_${widget.artist.artistName}',
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      blurRadius: 8.0,
+                                                      color: Colors.black26,
+                                                      spreadRadius: 6.0,
+                                                      offset: Offset(0, 6.0),
+                                                    )
+                                                  ],
+                                                ),
+                                                padding: EdgeInsets.all(8.0),
+                                                child: CircleAvatar(
+                                                  radius: 240.0,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  backgroundImage: Collection
+                                                      .instance
+                                                      .getAlbumArt(
+                                                          widget.artist),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  );
-                                }),
-                              ),
-                              Expanded(
-                                flex: 7,
-                                child: Card(
-                                  clipBehavior: Clip.antiAlias,
-                                  elevation: 4.0,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 7,
                                   child: CustomListView(
                                     children: [
                                       Stack(
@@ -854,8 +861,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                     ],
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
