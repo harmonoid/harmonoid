@@ -138,6 +138,7 @@
   "SETTING_THEME_TITLE": "主题",
   "SHARE": "分享",
   "SHOW_ALBUM": "Show album",
+  "SHOW_NOW_PLAYING_AFTER_PLAYING": "Automatically jump to \"Now playing\" screen after playing a track",
   "SHOW_TRACK_PROGRESS_ON_TASKBAR": "Show track progress on taskbar",
   "SORT_BY": "Sort By",
   "STARTING_PLAYBACK": "开启播放中",
