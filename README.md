@@ -6,12 +6,13 @@ Join our **[Discord server](https://discord.gg/2Rc3edFWd8)**?
 
 We are still working (refactoring) our Linux & Android versions. New Windows version is [live](https://github.com/harmonoid/harmonoid/releases/tag/v0.1.9) 🎉.
 
-![0](https://user-images.githubusercontent.com/28951144/151304862-f4d336c6-4559-477b-b82e-a876f78f5eec.png)
-![1](https://user-images.githubusercontent.com/28951144/151304870-6d1d18db-7120-43bd-87fa-9fa369244bfd.png)
-![2](https://user-images.githubusercontent.com/28951144/151304875-dc120964-3b98-4460-beaf-d28c75b45109.png)
-![3](https://user-images.githubusercontent.com/28951144/151304877-13ff90bb-6123-4c06-940f-9d9de6b13666.png)
-![4](https://user-images.githubusercontent.com/28951144/151304879-cdb10677-30c5-45bb-9e67-f520297280da.png)
-
+![](https://github.com/harmonoid/harmonoid/blob/assets/151304862-f4d336c6-4559-477b-b82e-a876f78f5eec.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/151304870-6d1d18db-7120-43bd-87fa-9fa369244bfd.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/151304875-dc120964-3b98-4460-beaf-d28c75b45109.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/151304877-13ff90bb-6123-4c06-940f-9d9de6b13666.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/151304879-cdb10677-30c5-45bb-9e67-f520297280da.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/151304879-cdb10677-30c5-45bb-9e67-f520297280dp.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_IG9AUuWpVR.png?raw=true)
 
 ## Motion
 
@@ -28,8 +29,11 @@ We are still working (refactoring) our Linux & Android versions. New Windows ver
 - Very strictly follows [Material](https://material.io/) design guidelines for UI & animations.
 - Ability to create playlists for both your local & YouTube music to play on the go.
 - Discord RPC integration.
+- Portable (if you wish).
+- Does not use [electron.js](https://www.electronjs.org/).
 
 Upcoming features
+
 - Mini-window mode.
 - Minimization to system tray.
 - D-Bus MPRIS controls for Linux.
@@ -166,6 +170,12 @@ print(
     <img src='https://avatars.githubusercontent.com/u/66313777?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/HiSubway'>さぶうぇい</a></strong>
     <ul>
       <li>Japanese translation.</li>
+    </ul>
+  </li>
+  <li>
+    <img src='https://avatars.githubusercontent.com/u/66092540?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/TuranBerlin'>Yusuf Kamil Turan</a></strong>
+    <ul>
+      <li>Turkish translation.</li>
     </ul>
   </li>
 </ul>
