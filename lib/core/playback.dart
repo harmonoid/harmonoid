@@ -27,6 +27,7 @@ import 'package:system_media_transport_controls/system_media_transport_controls.
 
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart' hide Media;
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/now_playing_launcher.dart';
@@ -191,9 +192,12 @@ class Playback extends ChangeNotifier {
       player.play();
       isShuffling = false;
       notifyListeners();
-      Future.delayed(const Duration(milliseconds: 200), () {
-        NowPlayingLauncher.instance.maximized = true;
-      });
+      if (Configuration
+          .instance.automaticallyShowNowPlayingScreenAfterPlaying) {
+        Future.delayed(const Duration(milliseconds: 200), () {
+          NowPlayingLauncher.instance.maximized = true;
+        });
+      }
     }
     if (Platform.isAndroid || Platform.isIOS) {}
   }
@@ -241,7 +245,8 @@ class Playback extends ChangeNotifier {
       player.streams.position.listen((event) {
         position = event;
         notifyListeners();
-        if (Platform.isWindows) {
+        if (Platform.isWindows &&
+            Configuration.instance.showTrackProgressOnTaskbar) {
           WindowsTaskbar.setProgress(
             position.inMilliseconds,
             duration.inMilliseconds,

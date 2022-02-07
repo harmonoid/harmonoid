@@ -17,6 +17,7 @@
  *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
+import 'dart:collection';
 import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
@@ -76,6 +77,8 @@ class Collection extends ChangeNotifier {
   List<Album> albums = <Album>[];
   List<Track> tracks = <Track>[];
   List<Artist> artists = <Artist>[];
+  SplayTreeMap<String, List<Album>> albumArtists =
+      SplayTreeMap<String, List<Album>>();
 
   /// Updates (or sets) the directories that are used for indexing of the music.
   ///
@@ -247,6 +250,15 @@ class Collection extends ChangeNotifier {
           }
         }
       }
+      for (int i = 0; i < albumArtists[object.albumArtistName]!.length; i++) {
+        if (albumArtists[object.albumArtistName]![i].tracks.isEmpty) {
+          albumArtists[object.albumArtistName]!.removeAt(i);
+          break;
+        }
+      }
+      if (albumArtists[object.albumArtistName]!.isEmpty) {
+        albumArtists.remove(object.albumArtistName);
+      }
       if (await File(object.uri.toFilePath()).exists()) {
         await File(object.uri.toFilePath()).delete();
       }
@@ -285,6 +297,10 @@ class Collection extends ChangeNotifier {
             break;
           }
         }
+      }
+      albumArtists[object.albumArtistName]!.remove(object);
+      if (albumArtists[object.albumArtistName]!.isEmpty) {
+        albumArtists.remove(object.albumArtistName);
       }
       for (Track track in object.tracks) {
         if (await File(track.uri.toFilePath()).exists()) {
@@ -417,7 +433,8 @@ class Collection extends ChangeNotifier {
 
     artists
         .sort((first, second) => first.timeAdded.compareTo(second.timeAdded));
-    if (type == CollectionSort.aToZ) {
+    if (type == CollectionSort.aToZ ||
+        type == CollectionSort.artist /* Handled externally */) {
       tracks.sort((first, second) => first.trackName
           .toLowerCase()
           .compareTo(second.trackName.toLowerCase()));
@@ -732,6 +749,11 @@ class Collection extends ChangeNotifier {
           .tracks
           .add(track);
     }
+    // A new album artist gets discovered.
+    if (!albumArtists.containsKey(track.albumArtistName)) {
+      // Create new [List] and append the new [Album] to its name.
+      albumArtists[track.albumArtistName] = [];
+    }
     for (String artistName in track.trackArtistNames) {
       if (!artists.contains(Artist(artistName: artistName))) {
         artists.add(
@@ -750,7 +772,7 @@ class Collection extends ChangeNotifier {
     tracks.add(track);
   }
 
-  /// Populates all the discovered artists' albums after running the [_arrange] loop.
+  /// Populates all the [albumArtists] & discovered artists' albums after running the [_arrange] loop.
   ///
   Future<void> _arrangeArtists() async {
     for (Album album in albums) {
@@ -769,6 +791,7 @@ class Collection extends ChangeNotifier {
               .albums
               .add(album);
       }
+      albumArtists[album.albumArtistName]!.add(album);
     }
     notifyListeners();
   }
@@ -787,7 +810,15 @@ class Collection extends ChangeNotifier {
 
 /// Types of sorts available.
 ///
-enum CollectionSort { aToZ, dateAdded, year }
+enum CollectionSort {
+  aToZ,
+  dateAdded,
+  year,
+
+  /// A new sort which arranges the [AlbumScreen] & [ArtistScreen] with a sidebar that allows to view [Artist]s [Track]s from a specified artist.
+  /// Currently exclusive to desktop.
+  artist,
+}
 
 /// Types of orders available.
 ///
