@@ -28,6 +28,7 @@ import 'package:provider/provider.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -578,10 +579,16 @@ class ArtistScreenState extends State<ArtistScreen>
                                                   heroTag: 'play_now',
                                                   onPressed: () {
                                                     Playback.instance.open(
-                                                      widget.artist.tracks +
-                                                          ([
-                                                            ...collection.tracks
-                                                          ]..shuffle()),
+                                                      [
+                                                        ...widget.artist.tracks,
+                                                        if (Configuration
+                                                            .instance
+                                                            .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                          ...[
+                                                            ...Collection
+                                                                .instance.tracks
+                                                          ]..shuffle(),
+                                                      ],
                                                     );
                                                   },
                                                   mini: true,
@@ -782,7 +789,13 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                           onPressed:
                                                                               () {
                                                                             Playback.instance.open(
-                                                                              widget.artist.tracks,
+                                                                              [
+                                                                                ...widget.artist.tracks,
+                                                                                if (Configuration.instance.automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                                                  ...[
+                                                                                    ...Collection.instance.tracks
+                                                                                  ]..shuffle(),
+                                                                              ],
                                                                               index: widget.artist.tracks.indexOf(track),
                                                                             );
                                                                           },
@@ -1018,8 +1031,13 @@ class ArtistScreenState extends State<ArtistScreen>
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () => Playback.instance.open(
-                                widget.artist.tracks +
-                                    ([...collection.tracks]..shuffle()),
+                                [
+                                  ...widget.artist.tracks,
+                                  if (Configuration.instance
+                                      .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                    ...[...Collection.instance.tracks]
+                                      ..shuffle(),
+                                ],
                                 index: i,
                               ),
                               onLongPress: () async {
@@ -1205,11 +1223,12 @@ class ArtistScreenState extends State<ArtistScreen>
                                     : 0],
                             child: Icon(Icons.play_arrow),
                             onPressed: () {
-                              Playback.instance.open(
-                                widget.artist.tracks +
-                                    ([...collection.tracks]..shuffle()),
-                                index: 0,
-                              );
+                              Playback.instance.open([
+                                ...widget.artist.tracks,
+                                if (Configuration.instance
+                                    .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                  ...[...Collection.instance.tracks]..shuffle(),
+                              ]);
                             },
                           ),
                         ),

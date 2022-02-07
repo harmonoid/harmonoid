@@ -454,6 +454,19 @@ class CollectionScreenState extends State<CollectionScreen>
                                                   .headline4,
                                             ),
                                           ),
+                                          CheckedPopupMenuItem(
+                                            padding: EdgeInsets.zero,
+                                            checked: Collection.instance
+                                                    .collectionSortType ==
+                                                CollectionSort.artist,
+                                            value: CollectionSort.artist,
+                                            child: Text(
+                                              Language.instance.ARTIST_SINGLE,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4,
+                                            ),
+                                          ),
                                           PopupMenuDivider(),
                                           CheckedPopupMenuItem(
                                             padding: EdgeInsets.zero,

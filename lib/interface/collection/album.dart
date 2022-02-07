@@ -30,6 +30,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -56,6 +57,8 @@ class AlbumTab extends StatelessWidget {
 
     return Consumer<Collection>(
       builder: (context, collection, _) {
+        if (collection.collectionSortType == CollectionSort.artist && isDesktop)
+          return DesktopAlbumArtistTab();
         final data = tileGridListWidgetsWithScrollbarSupport(
           context: context,
           tileHeight: height,
@@ -158,6 +161,139 @@ class AlbumTab extends StatelessWidget {
               );
       },
     );
+  }
+}
+
+class DesktopAlbumArtistTab extends StatelessWidget {
+  DesktopAlbumArtistTab({Key? key}) : super(key: key);
+
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<Collection>(builder: (context, collection, _) {
+      final elementsPerRow =
+          ((MediaQuery.of(context).size.width - 177.0) - tileMargin) ~/
+              (kAlbumTileWidth + tileMargin);
+      final double width = isMobile
+          ? ((MediaQuery.of(context).size.width - 177.0) -
+                  (elementsPerRow + 1) * tileMargin) /
+              elementsPerRow
+          : kAlbumTileWidth;
+      final double height = isMobile
+          ? width * kAlbumTileHeight / kAlbumTileWidth
+          : kAlbumTileHeight;
+      List<Widget> children = [];
+      Map<String, double> offsets = {};
+      double last = -1 * (tileMargin + 12.0);
+      List<Widget> widgets = [];
+      Collection.instance.albumArtists.forEach((key, value) {
+        offsets[key] =
+            36.0 + (kAlbumTileHeight + tileMargin) * widgets.length + last;
+        last = offsets[key]!;
+        children.addAll(widgets);
+        children.add(Container(
+          margin: EdgeInsets.only(left: tileMargin),
+          alignment: Alignment.topLeft,
+          height: 36.0,
+          child: Text(
+            key,
+            style: Theme.of(context).textTheme.headline1,
+          ),
+        ));
+        widgets = tileGridListWidgets(
+          context: context,
+          tileHeight: height,
+          tileWidth: width,
+          elementsPerRow: elementsPerRow,
+          subHeader: null,
+          leadingSubHeader: null,
+          leadingWidget: null,
+          widgetCount: value.length,
+          builder: (BuildContext context, int index) => AlbumTile(
+            height: height,
+            width: width,
+            album: value[index],
+            key: ValueKey(value[index]),
+          ),
+          mainAxisAlignment: MainAxisAlignment.start,
+        );
+      });
+      children.addAll(tileGridListWidgets(
+        context: context,
+        tileHeight: height,
+        tileWidth: width,
+        elementsPerRow: elementsPerRow,
+        subHeader: null,
+        leadingSubHeader: null,
+        leadingWidget: null,
+        widgetCount: Collection.instance.albumArtists.values.last.length,
+        builder: (BuildContext context, int index) => AlbumTile(
+          height: height,
+          width: width,
+          album: Collection.instance.albumArtists.values.last[index],
+          key: ValueKey(Collection.instance.albumArtists.values.last[index]),
+        ),
+        mainAxisAlignment: MainAxisAlignment.start,
+      ));
+      return Collection.instance.tracks.isNotEmpty
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  width: 176.0,
+                  child: CustomListView(
+                    padding: EdgeInsets.only(
+                      top: 4.0,
+                    ),
+                    children: Collection.instance.albumArtists.keys
+                        .map((e) => InkWell(
+                              onTap: () {
+                                scrollController.animateTo(
+                                  offsets[e]!,
+                                  duration: Duration(milliseconds: 200),
+                                  curve: Curves.easeInOut,
+                                );
+                              },
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                width: 156.0,
+                                height: 28.0,
+                                padding: EdgeInsets.only(
+                                  left: 8.0,
+                                  right: 8.0,
+                                ),
+                                child: Text(
+                                  e.overflow,
+                                  style: Theme.of(context).textTheme.headline4,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ))
+                        .toList(),
+                  ),
+                ),
+                VerticalDivider(
+                  width: 1.0,
+                ),
+                Expanded(
+                  child: CustomListView(
+                    controller: scrollController,
+                    padding: EdgeInsets.only(
+                      top: tileMargin,
+                    ),
+                    children: children,
+                  ),
+                ),
+              ],
+            )
+          : Center(
+              child: ExceptionWidget(
+                title: Language.instance.NO_COLLECTION_TITLE,
+                subtitle: Language.instance.NO_COLLECTION_SUBTITLE,
+              ),
+            );
+    });
   }
 }
 
@@ -490,6 +626,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                           tag:
                                               'album_art_${widget.album.albumName}_${widget.album.albumArtistName}',
                                           child: Card(
+                                            color: Colors.white,
                                             elevation: 4.0,
                                             child: Stack(
                                               alignment: Alignment.center,
@@ -588,13 +725,15 @@ class AlbumScreenState extends State<AlbumScreen>
                                               FloatingActionButton(
                                                 heroTag: 'play_now',
                                                 onPressed: () {
-                                                  Playback.instance.open(
-                                                    widget.album.tracks +
-                                                        ([
-                                                          ...Collection
-                                                              .instance.tracks
-                                                        ]..shuffle()),
-                                                  );
+                                                  Playback.instance.open([
+                                                    ...widget.album.tracks,
+                                                    if (Configuration.instance
+                                                        .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                      ...[
+                                                        ...Collection
+                                                            .instance.tracks
+                                                      ]..shuffle(),
+                                                  ]);
                                                 },
                                                 mini: true,
                                                 child: Icon(
@@ -757,13 +896,22 @@ class AlbumScreenState extends State<AlbumScreen>
                                                           onTap: () {
                                                             Playback.instance
                                                                 .open(
-                                                              widget.album
-                                                                      .tracks +
-                                                                  ([
+                                                              [
+                                                                ...widget.album
+                                                                    .tracks,
+                                                                if (Configuration
+                                                                    .instance
+                                                                    .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                                  ...[
                                                                     ...Collection
                                                                         .instance
                                                                         .tracks
-                                                                  ]..shuffle()),
+                                                                  ]..shuffle(),
+                                                              ],
+                                                              index: widget
+                                                                  .album.tracks
+                                                                  .indexOf(
+                                                                      track),
                                                             );
                                                           },
                                                           child: Row(
@@ -1078,8 +1226,12 @@ class AlbumScreenState extends State<AlbumScreen>
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () => Playback.instance.open(
-                              widget.album.tracks +
-                                  ([...Collection.instance.tracks]..shuffle()),
+                              [
+                                ...widget.album.tracks,
+                                if (Configuration.instance
+                                    .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                  ...[...Collection.instance.tracks]..shuffle(),
+                              ],
                               index: i,
                             ),
                             onLongPress: () async {
@@ -1263,10 +1415,12 @@ class AlbumScreenState extends State<AlbumScreen>
                                   : 0],
                           child: Icon(Icons.play_arrow),
                           onPressed: () {
-                            Playback.instance.open(
-                              widget.album.tracks +
-                                  ([...Collection.instance.tracks]..shuffle()),
-                            );
+                            Playback.instance.open([
+                              ...widget.album.tracks,
+                              if (Configuration.instance
+                                  .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                ...[...Collection.instance.tracks]..shuffle(),
+                            ]);
                           },
                         ),
                       ),
