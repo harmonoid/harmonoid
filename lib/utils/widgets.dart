@@ -33,7 +33,7 @@ import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class CustomListView extends StatelessWidget {
-  final ScrollController controller = ScrollController();
+  late final ScrollController controller;
   final int velocity = 40;
   final List<Widget> children;
   final Axis? scrollDirection;
@@ -41,23 +41,29 @@ class CustomListView extends StatelessWidget {
   final EdgeInsets? padding;
 
   CustomListView({
+    ScrollController? controller,
     required this.children,
     this.scrollDirection,
     this.shrinkWrap,
     this.padding,
   }) {
+    if (controller != null) {
+      this.controller = controller;
+    } else {
+      this.controller = ScrollController();
+    }
     if (Platform.isWindows) {
-      controller.addListener(
+      this.controller.addListener(
         () {
-          final scrollDirection = controller.position.userScrollDirection;
+          final scrollDirection = this.controller.position.userScrollDirection;
           if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = controller.offset +
+            var scrollEnd = this.controller.offset +
                 (scrollDirection == ScrollDirection.reverse
                     ? velocity
                     : -velocity);
-            scrollEnd = math.min(controller.position.maxScrollExtent,
-                math.max(controller.position.minScrollExtent, scrollEnd));
-            controller.jumpTo(scrollEnd);
+            scrollEnd = math.min(this.controller.position.maxScrollExtent,
+                math.max(this.controller.position.minScrollExtent, scrollEnd));
+            this.controller.jumpTo(scrollEnd);
           }
         },
       );
