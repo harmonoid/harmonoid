@@ -23,6 +23,7 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
 import 'package:harmonoid/interface/settings/language.dart';
+import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -49,8 +50,7 @@ class Settings extends StatelessWidget {
                 ),
                 IndexingSetting(),
                 ThemeSetting(),
-                // TODO: Removed accents after including new iconography.
-                // AccentSetting(),
+                MiscellaneousSetting(),
                 LanguageSetting(),
                 AboutSetting(),
                 VersionSetting(),
