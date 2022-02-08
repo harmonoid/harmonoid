@@ -733,53 +733,57 @@ class DesktopTitleBar extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: kDesktopTitleBarHeight,
             color: color ?? Theme.of(context).appBarTheme.backgroundColor,
-            child: MoveWindow(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 14.0,
-                  ),
-                  Text(
-                    'Harmonoid Music',
-                    style: TextStyle(
-                      color: (color == null
-                              ? Theme.of(context).brightness == Brightness.dark
-                              : isDark)
-                          ? Colors.white
-                          : Colors.black,
-                      fontSize: 12.0,
+            child: Row(
+              children: [
+                Expanded(
+                  child: MoveWindow(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 14.0,
+                        ),
+                        Text(
+                          'Harmonoid Music',
+                          style: TextStyle(
+                            color: (color == null
+                                    ? Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    : isDark)
+                                ? Colors.white
+                                : Colors.black,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Expanded(
-                    child: Container(),
-                  ),
-                  MinimizeWindowButton(
-                    colors: windowButtonColors(context),
-                  ),
-                  appWindow.isMaximized
-                      ? RestoreWindowButton(
-                          colors: windowButtonColors(context),
-                        )
-                      : MaximizeWindowButton(
-                          colors: windowButtonColors(context),
-                        ),
-                  CloseWindowButton(
-                    onPressed: () {
-                      if (CollectionRefresh.instance.isCompleted) {
-                        appWindow.close();
-                      } else {
-                        CollectionRefresh.instance.addListener(() {
-                          if (CollectionRefresh.instance.isCompleted) {
-                            appWindow.close();
-                          }
-                        });
-                      }
-                    },
-                    colors: windowButtonColors(context),
-                  ),
-                ],
-              ),
+                ),
+                MinimizeWindowButton(
+                  colors: windowButtonColors(context),
+                ),
+                appWindow.isMaximized
+                    ? RestoreWindowButton(
+                        colors: windowButtonColors(context),
+                      )
+                    : MaximizeWindowButton(
+                        colors: windowButtonColors(context),
+                      ),
+                CloseWindowButton(
+                  onPressed: () {
+                    if (CollectionRefresh.instance.isCompleted) {
+                      appWindow.close();
+                    } else {
+                      CollectionRefresh.instance.addListener(() {
+                        if (CollectionRefresh.instance.isCompleted) {
+                          appWindow.close();
+                        }
+                      });
+                    }
+                  },
+                  colors: windowButtonColors(context),
+                ),
+              ],
             ),
           )
         : Container();
