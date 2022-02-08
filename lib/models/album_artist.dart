@@ -17,27 +17,30 @@
  *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
-import 'dart:io';
-import 'package:path/path.dart' as path;
+part of 'media.dart';
 
-part 'album_artist.dart';
-part 'album.dart';
-part 'artist.dart';
-part 'playlist.dart';
-part 'track.dart';
+/// Used for ordering album artists correctly in [SplayTreeMap].
+/// Wraps [String] such that uppercase & lowercase album artist
+/// name strings are sorted regardless of their case.
+class AlbumArtist extends Comparable<AlbumArtist> {
+  final String name;
 
-const String kUnknownYear = 'Unknown Year';
-const String kUnknownAlbum = 'Unknown Album';
-const String kUnknownArtist = 'Unknown Artist';
-
-abstract class Media {
-  Map<String, dynamic> toJson();
+  AlbumArtist(this.name);
 
   @override
-  bool operator ==(Object media) {
-    throw UnimplementedError();
+  operator ==(Object other) {
+    if (other is AlbumArtist) {
+      return name.toLowerCase() == other.name.toLowerCase();
+    }
+    // Why would one ever...
+    return false;
   }
 
   @override
-  int get hashCode => throw UnimplementedError();
+  int get hashCode => name.hashCode;
+
+  @override
+  int compareTo(AlbumArtist other) {
+    return name.toLowerCase().compareTo(other.name.toLowerCase());
+  }
 }

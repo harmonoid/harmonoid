@@ -77,8 +77,8 @@ class Collection extends ChangeNotifier {
   List<Album> albums = <Album>[];
   List<Track> tracks = <Track>[];
   List<Artist> artists = <Artist>[];
-  SplayTreeMap<String, List<Album>> albumArtists =
-      SplayTreeMap<String, List<Album>>();
+  SplayTreeMap<AlbumArtist, List<Album>> albumArtists =
+      SplayTreeMap<AlbumArtist, List<Album>>();
 
   /// Updates (or sets) the directories that are used for indexing of the music.
   ///
@@ -250,14 +250,18 @@ class Collection extends ChangeNotifier {
           }
         }
       }
-      for (int i = 0; i < albumArtists[object.albumArtistName]!.length; i++) {
-        if (albumArtists[object.albumArtistName]![i].tracks.isEmpty) {
-          albumArtists[object.albumArtistName]!.removeAt(i);
+      for (int i = 0;
+          i < albumArtists[AlbumArtist(object.albumArtistName)]!.length;
+          i++) {
+        if (albumArtists[AlbumArtist(object.albumArtistName)]![i]
+            .tracks
+            .isEmpty) {
+          albumArtists[AlbumArtist(object.albumArtistName)]!.removeAt(i);
           break;
         }
       }
-      if (albumArtists[object.albumArtistName]!.isEmpty) {
-        albumArtists.remove(object.albumArtistName);
+      if (albumArtists[AlbumArtist(object.albumArtistName)]!.isEmpty) {
+        albumArtists.remove(AlbumArtist(object.albumArtistName));
       }
       if (await File(object.uri.toFilePath()).exists()) {
         await File(object.uri.toFilePath()).delete();
@@ -298,9 +302,9 @@ class Collection extends ChangeNotifier {
           }
         }
       }
-      albumArtists[object.albumArtistName]!.remove(object);
-      if (albumArtists[object.albumArtistName]!.isEmpty) {
-        albumArtists.remove(object.albumArtistName);
+      albumArtists[AlbumArtist(object.albumArtistName)]!.remove(object);
+      if (albumArtists[AlbumArtist(object.albumArtistName)]!.isEmpty) {
+        albumArtists.remove(AlbumArtist(object.albumArtistName));
       }
       for (Track track in object.tracks) {
         if (await File(track.uri.toFilePath()).exists()) {
@@ -430,30 +434,27 @@ class Collection extends ChangeNotifier {
     tracks.sort((first, second) => (first.timeAdded.millisecondsSinceEpoch)
         .compareTo(second.timeAdded.millisecondsSinceEpoch));
     albums.sort((first, second) => first.timeAdded.compareTo(second.timeAdded));
-
-    artists
-        .sort((first, second) => first.timeAdded.compareTo(second.timeAdded));
     if (type == CollectionSort.aToZ ||
-        type == CollectionSort.artist /* Handled externally */) {
+        type ==
+            CollectionSort
+                .artist /* Handled externally & applicable only for albums & other tabs fallback to `CollectionSort.aToZ */) {
       tracks.sort((first, second) => first.trackName
           .toLowerCase()
           .compareTo(second.trackName.toLowerCase()));
       albums.sort((first, second) => first.albumName
           .toLowerCase()
           .compareTo(second.albumName.toLowerCase()));
-      artists.sort((first, second) => first.artistName
-          .toLowerCase()
-          .compareTo(second.artistName.toLowerCase()));
     }
     if (type == CollectionSort.year) {
       tracks.sort((first, second) => (int.tryParse(first.year) ?? -1)
           .compareTo(int.tryParse(second.year) ?? -1));
       albums.sort((first, second) => (int.tryParse(first.year) ?? -1)
           .compareTo(int.tryParse(second.year) ?? -1));
-      artists.sort((first, second) =>
-          (int.tryParse(first.tracks.last.year) ?? -1)
-              .compareTo(int.tryParse(second.tracks.last.year) ?? -1));
     }
+    // Only `CollectionSort.aToZ` is available for [artists].
+    artists.sort((first, second) => first.artistName
+        .toLowerCase()
+        .compareTo(second.artistName.toLowerCase()));
     if (collectionOrderType == CollectionOrder.descending) {
       tracks = tracks.reversed.toList();
       albums = albums.reversed.toList();
@@ -750,9 +751,9 @@ class Collection extends ChangeNotifier {
           .add(track);
     }
     // A new album artist gets discovered.
-    if (!albumArtists.containsKey(track.albumArtistName)) {
+    if (!albumArtists.containsKey(AlbumArtist(track.albumArtistName))) {
       // Create new [List] and append the new [Album] to its name.
-      albumArtists[track.albumArtistName] = [];
+      albumArtists[AlbumArtist(track.albumArtistName)] = [];
     }
     for (String artistName in track.trackArtistNames) {
       if (!artists.contains(Artist(artistName: artistName))) {
@@ -791,7 +792,9 @@ class Collection extends ChangeNotifier {
               .albums
               .add(album);
       }
-      albumArtists[album.albumArtistName]!.add(album);
+      if (!albumArtists[AlbumArtist(album.albumArtistName)]!.contains(album)) {
+        albumArtists[AlbumArtist(album.albumArtistName)]!.add(album);
+      }
     }
     notifyListeners();
   }
