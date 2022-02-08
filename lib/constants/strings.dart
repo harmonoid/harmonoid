@@ -96,6 +96,7 @@ class Strings {
   late String N_TRACKS;
   late String OK;
   late String OPTIONS;
+  late String ORDER;
   late String PAUSE;
   late String PLAY;
   late String PLAYLIST;
@@ -159,6 +160,7 @@ class Strings {
   late String SHOW_ALBUM;
   late String SHOW_NOW_PLAYING_AFTER_PLAYING;
   late String SHOW_TRACK_PROGRESS_ON_TASKBAR;
+  late String SORT;
   late String SORT_BY;
   late String STARTING_PLAYBACK;
   late String SWITCH_THEME;
