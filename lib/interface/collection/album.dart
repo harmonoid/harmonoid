@@ -77,11 +77,14 @@ class AlbumTab extends StatelessWidget {
         );
         return isDesktop
             ? Collection.instance.tracks.isNotEmpty
-                ? CustomListView(
+                ? CustomListViewBuilder(
                     padding: EdgeInsets.only(
                       top: tileMargin,
                     ),
-                    children: data.widgets,
+                    itemCount: data.widgets.length,
+                    itemExtents: List.generate(
+                        data.widgets.length, (index) => height + tileMargin),
+                    itemBuilder: (context, i) => data.widgets[i],
                   )
                 : Center(
                     child: ExceptionWidget(
@@ -172,36 +175,64 @@ class DesktopAlbumArtistTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<Collection>(builder: (context, collection, _) {
+      if (collection.tracks.isEmpty)
+        return Center(
+          child: ExceptionWidget(
+            title: Language.instance.NO_COLLECTION_TITLE,
+            subtitle: Language.instance.NO_COLLECTION_SUBTITLE,
+          ),
+        );
       final elementsPerRow =
           ((MediaQuery.of(context).size.width - 177.0) - tileMargin) ~/
               (kAlbumTileWidth + tileMargin);
-      final double width = isMobile
-          ? ((MediaQuery.of(context).size.width - 177.0) -
-                  (elementsPerRow + 1) * tileMargin) /
-              elementsPerRow
-          : kAlbumTileWidth;
-      final double height = isMobile
-          ? width * kAlbumTileHeight / kAlbumTileWidth
-          : kAlbumTileHeight;
+      final double width = kAlbumTileWidth;
+      final double height = kAlbumTileHeight;
+      // Children of the right pane.
       List<Widget> children = [];
-      Map<String, double> offsets = {};
+      List<double> itemExtents = [];
+      Map<AlbumArtist, double> offsets = {};
       double last = -1 * (tileMargin + 12.0);
+      // Grid generated for each iteration of album artist.
       List<Widget> widgets = [];
-      Collection.instance.albumArtists.forEach((key, value) {
-        offsets[key] =
-            36.0 + (kAlbumTileHeight + tileMargin) * widgets.length + last;
-        last = offsets[key]!;
-        children.addAll(widgets);
-        children.add(Container(
-          margin: EdgeInsets.only(left: tileMargin),
-          alignment: Alignment.topLeft,
-          height: 36.0,
-          child: Text(
-            key,
-            style: Theme.of(context).textTheme.headline1,
-          ),
-        ));
-        widgets = tileGridListWidgets(
+      if (collection.collectionOrderType == CollectionOrder.ascending) {
+        for (final key in collection.albumArtists.keys) {
+          offsets[key] =
+              36.0 + (kAlbumTileHeight + tileMargin) * widgets.length + last;
+          last = offsets[key]!;
+          children.addAll(widgets);
+          children.add(Container(
+            margin: EdgeInsets.only(left: tileMargin),
+            alignment: Alignment.topLeft,
+            height: 36.0,
+            child: Text(
+              key.name,
+              style: Theme.of(context).textTheme.headline1,
+            ),
+          ));
+          itemExtents.addAll(List.generate(
+            widgets.length,
+            (_) => (kAlbumTileHeight + tileMargin),
+          ));
+          itemExtents.add(36.0);
+          widgets = tileGridListWidgets(
+            context: context,
+            tileHeight: height,
+            tileWidth: width,
+            elementsPerRow: elementsPerRow,
+            subHeader: null,
+            leadingSubHeader: null,
+            leadingWidget: null,
+            widgetCount: collection.albumArtists[key]!.length,
+            builder: (BuildContext context, int index) => AlbumTile(
+              height: height,
+              width: width,
+              album: collection.albumArtists[key]![index],
+              key: ValueKey(collection.albumArtists[key]![index]),
+            ),
+            mainAxisAlignment: MainAxisAlignment.start,
+          );
+        }
+        children.addAll(tileGridListWidgets(
           context: context,
           tileHeight: height,
           tileWidth: width,
@@ -209,94 +240,142 @@ class DesktopAlbumArtistTab extends StatelessWidget {
           subHeader: null,
           leadingSubHeader: null,
           leadingWidget: null,
-          widgetCount: value.length,
+          widgetCount: collection.albumArtists.values.last.length,
           builder: (BuildContext context, int index) => AlbumTile(
             height: height,
             width: width,
-            album: value[index],
-            key: ValueKey(value[index]),
+            album: collection.albumArtists.values.last[index],
+            key: ValueKey(collection.albumArtists.values.last[index]),
           ),
           mainAxisAlignment: MainAxisAlignment.start,
-        );
-      });
-      children.addAll(tileGridListWidgets(
-        context: context,
-        tileHeight: height,
-        tileWidth: width,
-        elementsPerRow: elementsPerRow,
-        subHeader: null,
-        leadingSubHeader: null,
-        leadingWidget: null,
-        widgetCount: Collection.instance.albumArtists.values.last.length,
-        builder: (BuildContext context, int index) => AlbumTile(
-          height: height,
-          width: width,
-          album: Collection.instance.albumArtists.values.last[index],
-          key: ValueKey(Collection.instance.albumArtists.values.last[index]),
-        ),
-        mainAxisAlignment: MainAxisAlignment.start,
-      ));
-      return Collection.instance.tracks.isNotEmpty
-          ? Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  width: 176.0,
-                  child: CustomListView(
+        ));
+        itemExtents.addAll(List.generate(
+            widgets.length, (_) => (kAlbumTileHeight + tileMargin)));
+      }
+      if (collection.collectionOrderType == CollectionOrder.descending) {
+        for (final key in collection.albumArtists.keys.toList().reversed) {
+          offsets[key] =
+              36.0 + (kAlbumTileHeight + tileMargin) * widgets.length + last;
+          last = offsets[key]!;
+          children.addAll(widgets);
+          children.add(Container(
+            margin: EdgeInsets.only(left: tileMargin),
+            alignment: Alignment.topLeft,
+            height: 36.0,
+            child: Text(
+              key.name,
+              style: Theme.of(context).textTheme.headline1,
+            ),
+          ));
+          itemExtents.addAll(List.generate(
+              widgets.length, (_) => (kAlbumTileHeight + tileMargin)));
+          itemExtents.add(36.0);
+          widgets = tileGridListWidgets(
+            context: context,
+            tileHeight: height,
+            tileWidth: width,
+            elementsPerRow: elementsPerRow,
+            subHeader: null,
+            leadingSubHeader: null,
+            leadingWidget: null,
+            widgetCount: collection.albumArtists[key]!.length,
+            builder: (BuildContext context, int index) => AlbumTile(
+              height: height,
+              width: width,
+              album: collection.albumArtists[key]![index],
+              key: ValueKey(collection.albumArtists[key]![index]),
+            ),
+            mainAxisAlignment: MainAxisAlignment.start,
+          );
+        }
+        children.addAll(tileGridListWidgets(
+          context: context,
+          tileHeight: height,
+          tileWidth: width,
+          elementsPerRow: elementsPerRow,
+          subHeader: null,
+          leadingSubHeader: null,
+          leadingWidget: null,
+          widgetCount: collection.albumArtists.values.first.length,
+          builder: (BuildContext context, int index) => AlbumTile(
+            height: height,
+            width: width,
+            album: collection.albumArtists.values.first[index],
+            key: ValueKey(collection.albumArtists.values.first[index]),
+          ),
+          mainAxisAlignment: MainAxisAlignment.start,
+        ));
+        itemExtents.addAll(List.generate(
+            widgets.length, (_) => (kAlbumTileHeight + tileMargin)));
+      }
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            width: 176.0,
+            child: CustomListViewBuilder(
+              itemCount: collection.albumArtists.keys.length,
+              itemExtents: List.generate(
+                  collection.albumArtists.keys.length, (_) => 28.0),
+              itemBuilder: (context, i) => Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    scrollController.animateTo(
+                      offsets[collection.collectionOrderType ==
+                              CollectionOrder.ascending
+                          ? collection.albumArtists.keys.elementAt(i)
+                          : collection.albumArtists.keys.toList().elementAt(
+                              collection.albumArtists.keys.length - i - 1)]!,
+                      duration: Duration(milliseconds: 100),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    width: 156.0,
+                    height: 28.0,
                     padding: EdgeInsets.only(
-                      top: 4.0,
+                      left: 12.0,
+                      right: 8.0,
                     ),
-                    children: Collection.instance.albumArtists.keys
-                        .map((e) => InkWell(
-                              onTap: () {
-                                // Resizing the window/viewport breaks the scroll offset. Thus,
-                                // jumping back to initial offset & then animating to the required destination.
-                                // TODO: Seek for a better approach or report bug at flutter/flutter.
-                                scrollController.jumpTo(0.0);
-                                scrollController.animateTo(
-                                  offsets[e]!,
-                                  duration: Duration(milliseconds: 200),
-                                  curve: Curves.easeInOut,
-                                );
-                              },
-                              child: Container(
-                                alignment: Alignment.centerLeft,
-                                width: 156.0,
-                                height: 28.0,
-                                padding: EdgeInsets.only(
-                                  left: 8.0,
-                                  right: 8.0,
-                                ),
-                                child: Text(
-                                  e.overflow,
-                                  style: Theme.of(context).textTheme.headline4,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ))
-                        .toList(),
+                    child: Text(
+                      collection.collectionOrderType ==
+                              CollectionOrder.ascending
+                          ? collection.albumArtists.keys
+                              .elementAt(i)
+                              .name
+                              .overflow
+                          : collection.albumArtists.keys
+                              .toList()
+                              .elementAt(
+                                  collection.albumArtists.keys.length - i - 1)
+                              .name
+                              .overflow,
+                      style: Theme.of(context).textTheme.headline4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
-                VerticalDivider(
-                  width: 1.0,
-                ),
-                Expanded(
-                  child: CustomListView(
-                    controller: scrollController,
-                    padding: EdgeInsets.only(
-                      top: tileMargin,
-                    ),
-                    children: children,
-                  ),
-                ),
-              ],
-            )
-          : Center(
-              child: ExceptionWidget(
-                title: Language.instance.NO_COLLECTION_TITLE,
-                subtitle: Language.instance.NO_COLLECTION_SUBTITLE,
               ),
-            );
+            ),
+          ),
+          VerticalDivider(
+            width: 1.0,
+          ),
+          Expanded(
+            child: CustomListViewBuilder(
+              padding: EdgeInsets.only(
+                top: tileMargin,
+              ),
+              controller: scrollController,
+              itemCount: children.length,
+              itemExtents: itemExtents,
+              itemBuilder: (context, i) => children[i],
+            ),
+          ),
+        ],
+      );
     });
   }
 }
@@ -578,7 +657,7 @@ class AlbumScreenState extends State<AlbumScreen>
                     ),
                     curve: Curves.easeOut,
                     duration: Duration(
-                      milliseconds: 200,
+                      milliseconds: 300,
                     ),
                     builder: (context, color, _) => DesktopAppBar(
                       height: MediaQuery.of(context).size.height / 3,
@@ -613,14 +692,23 @@ class AlbumScreenState extends State<AlbumScreen>
                                   child: Stack(
                                     alignment: Alignment.center,
                                     children: [
-                                      Positioned.fill(
-                                        child: ImageFiltered(
-                                          imageFilter: ImageFilter.blur(
-                                              sigmaX: 20, sigmaY: 20),
-                                          child: Image(
-                                            image: Collection.instance
-                                                .getAlbumArt(widget.album),
-                                            fit: BoxFit.cover,
+                                      TweenAnimationBuilder(
+                                        tween: ColorTween(
+                                          begin: Theme.of(context)
+                                              .appBarTheme
+                                              .backgroundColor,
+                                          end: color == null
+                                              ? Theme.of(context).dividerColor
+                                              : secondary!,
+                                        ),
+                                        curve: Curves.easeOut,
+                                        duration: Duration(
+                                          milliseconds: 300,
+                                        ),
+                                        builder: (context, color, _) =>
+                                            Positioned.fill(
+                                          child: Container(
+                                            color: color as Color?,
                                           ),
                                         ),
                                       ),

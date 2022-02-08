@@ -254,7 +254,7 @@ final Map<String, dynamic> defaultConfiguration = {
   'languageRegion': 0,
   'accent': 0,
   'themeMode': isMobile ? 0 : 1,
-  'collectionSortType': isMobile ? 1 : 3,
+  'collectionSortType': isMobile ? 1 : 4,
   'collectionOrderType': 1,
   'automaticAccent': false,
   'notificationLyrics': true,

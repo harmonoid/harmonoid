@@ -47,9 +47,8 @@ class ArtistTab extends StatelessWidget {
       builder: (context, collection, _) {
         return isDesktop
             ? collection.tracks.isNotEmpty
-                ? CustomListView(
-                    padding: EdgeInsets.only(top: tileMargin),
-                    children: tileGridListWidgets(
+                ? () {
+                    final data = tileGridListWidgets(
                       context: context,
                       tileHeight: kDesktopArtistTileHeight,
                       tileWidth: kDesktopArtistTileWidth,
@@ -57,14 +56,21 @@ class ArtistTab extends StatelessWidget {
                       subHeader: null,
                       leadingSubHeader: null,
                       widgetCount: collection.artists.length,
-                      leadingWidget: Container(),
+                      leadingWidget: null,
                       builder: (BuildContext context, int index) => ArtistTile(
                         height: kDesktopArtistTileHeight,
                         width: kDesktopArtistTileWidth,
                         artist: collection.artists[index],
                       ),
-                    ),
-                  )
+                    );
+                    return CustomListViewBuilder(
+                      padding: EdgeInsets.only(top: tileMargin),
+                      itemCount: data.length,
+                      itemExtents: List.generate(data.length,
+                          (_) => kDesktopArtistTileHeight + tileMargin),
+                      itemBuilder: (_, i) => data[i],
+                    );
+                  }()
                 : Center(
                     child: ExceptionWidget(
                       title: Language.instance.NO_COLLECTION_TITLE,
@@ -446,7 +452,7 @@ class ArtistScreenState extends State<ArtistScreen>
                       ),
                       curve: Curves.easeOut,
                       duration: Duration(
-                        milliseconds: 400,
+                        milliseconds: 300,
                       ),
                       builder: (context, color, _) => DesktopAppBar(
                         height: MediaQuery.of(context).size.height / 3,
@@ -482,14 +488,24 @@ class ArtistScreenState extends State<ArtistScreen>
                                       child: Stack(
                                         alignment: Alignment.center,
                                         children: [
-                                          Positioned.fill(
-                                            child: ImageFiltered(
-                                              imageFilter: ImageFilter.blur(
-                                                  sigmaX: 20, sigmaY: 20),
-                                              child: Image(
-                                                image: Collection.instance
-                                                    .getAlbumArt(widget.artist),
-                                                fit: BoxFit.cover,
+                                          TweenAnimationBuilder(
+                                            tween: ColorTween(
+                                              begin: Theme.of(context)
+                                                  .appBarTheme
+                                                  .backgroundColor,
+                                              end: color == null
+                                                  ? Theme.of(context)
+                                                      .dividerColor
+                                                  : secondary!,
+                                            ),
+                                            curve: Curves.easeOut,
+                                            duration: Duration(
+                                              milliseconds: 300,
+                                            ),
+                                            builder: (context, color, _) =>
+                                                Positioned.fill(
+                                              child: Container(
+                                                color: color as Color?,
                                               ),
                                             ),
                                           ),
@@ -904,16 +920,6 @@ class ArtistScreenState extends State<ArtistScreen>
                           splashRadius: 20.0,
                         ),
                         forceElevated: true,
-                        // actions: [
-                        //  IconButton(
-                        //    onPressed: () {},
-                        //    icon: Icon(
-                        //      Icons.favorite,
-                        //    ),
-                        //     iconSize: 24.0,
-                        //     splashRadius: 20.0,
-                        //   ),
-                        // ],
                         title: TweenAnimationBuilder<double>(
                           tween: Tween<double>(
                             begin: 1.0,

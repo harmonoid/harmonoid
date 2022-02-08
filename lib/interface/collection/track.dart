@@ -83,7 +83,7 @@ class TrackTab extends StatelessWidget {
                     colCount: 5,
                     headerColumnBorder: BorderSide(
                       color: Theme.of(context).dividerColor,
-                      width: 1.0,
+                      width: 0.0,
                     ),
                     tableBorder: desktop.TableBorder(
                       verticalInside: BorderSide(
