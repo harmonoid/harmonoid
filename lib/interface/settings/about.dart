@@ -137,6 +137,18 @@ const kContributors = [
     'https://avatars.githubusercontent.com/u/66092540?s=80&v=4',
     'Yusuf Kamil Turan',
     'Turkish translation.'
+  ],
+  [
+    'https://github.com/yulog',
+    'https://avatars.githubusercontent.com/u/29723448?s=80&v=4',
+    'yulog',
+    'Update Japanese translation.'
+  ],
+  [
+    'https://github.com/ejacquemoud',
+    'https://avatars.githubusercontent.com/u/25613162?s=80&v=4',
+    'ejacquemoud',
+    'Update French translation.'
   ]
 ];
 

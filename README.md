@@ -178,4 +178,16 @@ print(
       <li>Turkish translation.</li>
     </ul>
   </li>
+  <li>
+    <img src='https://avatars.githubusercontent.com/u/29723448?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/yulog'>yulog</a></strong>
+    <ul>
+      <li>Update Japanese translation.</li>
+    </ul>
+  </li>
+  <li>
+    <img src='https://avatars.githubusercontent.com/u/25613162?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/ejacquemoud'>ejacquemoud</a></strong>
+    <ul>
+      <li>Update French translation.</li>
+    </ul>
+  </li>
 </ul>
