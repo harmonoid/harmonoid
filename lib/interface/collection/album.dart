@@ -911,10 +911,6 @@ class AlbumScreenState extends State<AlbumScreen>
                                               Divider(height: 1.0),
                                             ] +
                                             (widget.album.tracks
-                                                  ..sort((first, second) =>
-                                                      first.trackNumber
-                                                          .compareTo(second
-                                                              .trackNumber)))
                                                 .map(
                                                   (track) => MouseRegion(
                                                     onEnter: (e) {
@@ -1100,7 +1096,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     ),
                                                   ),
                                                 )
-                                                .toList(),
+                                                .toList()),
                                       ),
                                     ),
                                   ],
