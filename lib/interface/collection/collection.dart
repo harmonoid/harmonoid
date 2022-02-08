@@ -104,106 +104,276 @@ class CollectionScreenState extends State<CollectionScreen>
                   padding: EdgeInsets.only(
                     top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
                   ),
-                  child: Consumer<CollectionRefresh>(
-                    builder: (context, refresh, __) => Stack(
-                      alignment: Alignment.bottomLeft,
-                      children: <Widget>[
-                        if (Collection.instance.tracks.isNotEmpty)
-                          Positioned.fill(
-                            child: Opacity(
-                              opacity: 0.2,
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Image.memory(
-                                  visualAssets.collection,
-                                  height: 512.0,
-                                  width: 512.0,
-                                  filterQuality: FilterQuality.high,
-                                  fit: BoxFit.contain,
+                  child: Column(
+                    children: [
+                      TweenAnimationBuilder(
+                        tween: Tween<double>(
+                          begin: 38.0,
+                          end: index != 3 && index != 4 ? 38.0 : 0.0,
+                        ),
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                        child: ListView(
+                          physics: NeverScrollableScrollPhysics(),
+                          children: [
+                            Consumer<Collection>(
+                              builder: (context, collection, __) => Container(
+                                height: 37.0,
+                                child: Row(
+                                  children: [
+                                    SizedBox(width: 8.0),
+                                    PickerButton(
+                                      onSelected: (value) async {
+                                        collection.sort(type: value);
+                                        await Configuration.instance.save(
+                                          collectionSortType: value,
+                                        );
+                                      },
+                                      label: Language.instance.SORT_BY,
+                                      selected:
+                                          // Falls back to `CollectionSort.aToZ` in other tabs.
+                                          (index != 0 &&
+                                                      collection
+                                                              .collectionSortType ==
+                                                          CollectionSort
+                                                              .artist ||
+                                                  index ==
+                                                      2 /* Only `CollectionSort.aToZ` is available in Artists tab. */)
+                                              ? 0
+                                              : collection
+                                                  .collectionSortType.index,
+                                      items: [
+                                        CheckedPopupMenuItem(
+                                          padding: EdgeInsets.zero,
+                                          // Falls back to `CollectionSort.aToZ` in other tabs.
+                                          checked: (Collection.instance
+                                                      .collectionSortType ==
+                                                  CollectionSort.aToZ) ||
+                                              (index != 0 &&
+                                                      collection
+                                                              .collectionSortType ==
+                                                          CollectionSort
+                                                              .artist ||
+                                                  index ==
+                                                      2 /* Only `CollectionSort.aToZ` is available in Artists tab. */),
+                                          value: CollectionSort.aToZ,
+                                          child: Text(
+                                            Language.instance.A_TO_Z,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                          ),
+                                        ),
+                                        if (index != 2)
+                                          CheckedPopupMenuItem(
+                                            padding: EdgeInsets.zero,
+                                            checked: Collection.instance
+                                                    .collectionSortType ==
+                                                CollectionSort.dateAdded,
+                                            value: CollectionSort.dateAdded,
+                                            child: Text(
+                                              Language.instance.DATE_ADDED,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4,
+                                            ),
+                                          ),
+                                        if (index != 2)
+                                          CheckedPopupMenuItem(
+                                            padding: EdgeInsets.zero,
+                                            checked: Collection.instance
+                                                    .collectionSortType ==
+                                                CollectionSort.year,
+                                            value: CollectionSort.year,
+                                            child: Text(
+                                              Language.instance.YEAR,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4,
+                                            ),
+                                          ),
+                                        // `CollectionSort.artist` only [Artist] tab.
+                                        if (index == 0)
+                                          CheckedPopupMenuItem(
+                                            padding: EdgeInsets.zero,
+                                            checked: Collection.instance
+                                                    .collectionSortType ==
+                                                CollectionSort.artist,
+                                            value: CollectionSort.artist,
+                                            child: Text(
+                                              Language.instance.ARTIST_SINGLE,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                    SizedBox(width: 8.0),
+                                    PickerButton(
+                                      onSelected: (value) async {
+                                        collection.order(type: value);
+                                        await Configuration.instance.save(
+                                          collectionOrderType: value,
+                                        );
+                                      },
+                                      label: Language.instance.ORDER,
+                                      selected:
+                                          collection.collectionOrderType.index,
+                                      items: [
+                                        CheckedPopupMenuItem(
+                                          padding: EdgeInsets.zero,
+                                          checked: Collection.instance
+                                                  .collectionOrderType ==
+                                              CollectionOrder.ascending,
+                                          value: CollectionOrder.ascending,
+                                          child: Text(
+                                            Language.instance.ASCENDING,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                          ),
+                                        ),
+                                        CheckedPopupMenuItem(
+                                          padding: EdgeInsets.zero,
+                                          checked: Collection.instance
+                                                  .collectionOrderType ==
+                                              CollectionOrder.descending,
+                                          value: CollectionOrder.descending,
+                                          child: Text(
+                                            Language.instance.DESCENDING,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                          ),
-                        PageTransitionSwitcher(
-                          child: [
-                            AlbumTab(),
-                            TrackTab(),
-                            ArtistTab(),
-                            PlaylistTab(),
-                            YoutubeTab(),
-                            SearchTab(query: query),
-                          ][index],
-                          transitionBuilder:
-                              (child, animation, secondaryAnimation) =>
-                                  SharedAxisTransition(
-                            animation: animation,
-                            secondaryAnimation: secondaryAnimation,
-                            transitionType: SharedAxisTransitionType.vertical,
-                            child: child,
-                            fillColor: Colors.transparent,
-                          ),
+                            if (index != 1 ||
+                                Collection.instance.tracks.isEmpty)
+                              Divider(
+                                height: 1.0,
+                                thickness: 1.0,
+                              ),
+                          ],
                         ),
-                        if (refresh.progress != refresh.total)
-                          Card(
-                            clipBehavior: Clip.antiAlias,
-                            margin: EdgeInsets.only(
-                              top: 16.0,
-                              bottom: 16.0,
-                              left: 16.0,
-                              right: 16.0,
-                            ),
-                            elevation: 4.0,
-                            child: Container(
-                              color: Theme.of(context).cardColor,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  LinearProgressIndicator(
-                                    value: refresh.progress / refresh.total,
-                                    valueColor: AlwaysStoppedAnimation(
-                                      Theme.of(context).primaryColor,
+                        builder: (context, value, child) => Container(
+                          height: value as double?,
+                          child: child,
+                        ),
+                      ),
+                      Expanded(
+                        child: Consumer<CollectionRefresh>(
+                          builder: (context, refresh, __) => Stack(
+                            alignment: Alignment.bottomLeft,
+                            children: <Widget>[
+                              if (Collection.instance.tracks.isNotEmpty)
+                                Positioned.fill(
+                                  child: Opacity(
+                                    opacity: 0.2,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: Image.memory(
+                                        visualAssets.collection,
+                                        height: 512.0,
+                                        width: 512.0,
+                                        filterQuality: FilterQuality.high,
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
-                                    backgroundColor: Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.4),
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.all(12.0),
-                                    child: Row(
+                                ),
+                              PageTransitionSwitcher(
+                                child: [
+                                  AlbumTab(),
+                                  TrackTab(),
+                                  ArtistTab(),
+                                  PlaylistTab(),
+                                  YoutubeTab(),
+                                  SearchTab(query: query),
+                                ][index],
+                                transitionBuilder:
+                                    (child, animation, secondaryAnimation) =>
+                                        SharedAxisTransition(
+                                  animation: animation,
+                                  secondaryAnimation: secondaryAnimation,
+                                  transitionType:
+                                      SharedAxisTransitionType.vertical,
+                                  child: child,
+                                  fillColor: Colors.transparent,
+                                ),
+                              ),
+                              if (refresh.progress != refresh.total)
+                                Card(
+                                  clipBehavior: Clip.antiAlias,
+                                  margin: EdgeInsets.only(
+                                    top: 16.0,
+                                    bottom: 16.0,
+                                    left: 16.0,
+                                    right: 16.0,
+                                  ),
+                                  elevation: 4.0,
+                                  child: Container(
+                                    color: Theme.of(context).cardColor,
+                                    child: Column(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        SizedBox(
-                                          width: 16.0,
+                                        LinearProgressIndicator(
+                                          value:
+                                              refresh.progress / refresh.total,
+                                          valueColor: AlwaysStoppedAnimation(
+                                            Theme.of(context).primaryColor,
+                                          ),
+                                          backgroundColor: Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.4),
                                         ),
-                                        Text(
-                                          '${refresh.progress}/${refresh.total}',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline2,
-                                        ),
-                                        SizedBox(
-                                          width: 16.0,
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            Language.instance
-                                                .COLLECTION_INDEXING_LABEL,
-                                            overflow: TextOverflow.ellipsis,
+                                        Container(
+                                          padding: EdgeInsets.all(12.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                width: 16.0,
+                                              ),
+                                              Text(
+                                                '${refresh.progress}/${refresh.total}',
+                                                overflow: TextOverflow.ellipsis,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline2,
+                                              ),
+                                              SizedBox(
+                                                width: 16.0,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  Language.instance
+                                                      .COLLECTION_INDEXING_LABEL,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
+                            ],
                           ),
-                      ],
-                    ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Column(
@@ -381,127 +551,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 24.0,
-                                    ),
-                                    TweenAnimationBuilder<double>(
-                                      tween: Tween<double>(
-                                        begin: 0.0,
-                                        end: (index == 4) ? 0.0 : 1.0,
-                                      ),
-                                      duration: Duration(milliseconds: 200),
-                                      child: ContextMenuButton<dynamic>(
-                                        offset:
-                                            Offset.fromDirection(pi / 2, 64.0),
-                                        icon: Icon(
-                                          Icons.sort,
-                                          size: 20.0,
-                                        ),
-                                        elevation: 4.0,
-                                        onSelected: (value) async {
-                                          if (value is CollectionSort) {
-                                            Provider.of<Collection>(context,
-                                                    listen: false)
-                                                .sort(type: value);
-                                            await Configuration.instance.save(
-                                              collectionSortType: value,
-                                            );
-                                          } else if (value is CollectionOrder) {
-                                            Provider.of<Collection>(context,
-                                                    listen: false)
-                                                .order(type: value);
-                                            await Configuration.instance.save(
-                                              collectionOrderType: value,
-                                            );
-                                          }
-                                        },
-                                        itemBuilder: (context) => [
-                                          CheckedPopupMenuItem(
-                                            padding: EdgeInsets.zero,
-                                            checked: Collection.instance
-                                                    .collectionSortType ==
-                                                CollectionSort.aToZ,
-                                            value: CollectionSort.aToZ,
-                                            child: Text(
-                                              Language.instance.A_TO_Z,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ),
-                                          CheckedPopupMenuItem(
-                                            padding: EdgeInsets.zero,
-                                            checked: Collection.instance
-                                                    .collectionSortType ==
-                                                CollectionSort.dateAdded,
-                                            value: CollectionSort.dateAdded,
-                                            child: Text(
-                                              Language.instance.DATE_ADDED,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ),
-                                          CheckedPopupMenuItem(
-                                            padding: EdgeInsets.zero,
-                                            checked: Collection.instance
-                                                    .collectionSortType ==
-                                                CollectionSort.year,
-                                            value: CollectionSort.year,
-                                            child: Text(
-                                              Language.instance.YEAR,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ),
-                                          CheckedPopupMenuItem(
-                                            padding: EdgeInsets.zero,
-                                            checked: Collection.instance
-                                                    .collectionSortType ==
-                                                CollectionSort.artist,
-                                            value: CollectionSort.artist,
-                                            child: Text(
-                                              Language.instance.ARTIST_SINGLE,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ),
-                                          PopupMenuDivider(),
-                                          CheckedPopupMenuItem(
-                                            padding: EdgeInsets.zero,
-                                            checked: Collection.instance
-                                                    .collectionOrderType ==
-                                                CollectionOrder.ascending,
-                                            value: CollectionOrder.ascending,
-                                            child: Text(
-                                              Language.instance.ASCENDING,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ),
-                                          CheckedPopupMenuItem(
-                                            padding: EdgeInsets.zero,
-                                            checked: Collection.instance
-                                                    .collectionOrderType ==
-                                                CollectionOrder.descending,
-                                            value: CollectionOrder.descending,
-                                            child: Text(
-                                              Language.instance.DESCENDING,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      builder: (context, value, child) =>
-                                          Opacity(
-                                        opacity: value,
-                                        child:
-                                            value == 0.0 ? Container() : child,
-                                      ),
+                                      width: 12.0,
                                     ),
                                     Padding(
                                       padding: EdgeInsets.all(8.0),
