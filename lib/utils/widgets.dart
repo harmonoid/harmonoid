@@ -20,10 +20,11 @@
 import 'dart:io';
 import 'dart:math' as math;
 import 'package:animations/animations.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ReorderableDragStartListener;
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -79,6 +80,131 @@ class CustomListView extends StatelessWidget {
       scrollDirection: scrollDirection ?? Axis.vertical,
       shrinkWrap: shrinkWrap ?? false,
       children: children,
+    );
+  }
+}
+
+class CustomListViewBuilder extends StatelessWidget {
+  late final ScrollController controller;
+  final int velocity = 40;
+  final int itemCount;
+  final List<double> itemExtents;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final Axis? scrollDirection;
+  final bool? shrinkWrap;
+  final EdgeInsets? padding;
+
+  CustomListViewBuilder({
+    ScrollController? controller,
+    required this.itemCount,
+    required this.itemExtents,
+    required this.itemBuilder,
+    this.scrollDirection,
+    this.shrinkWrap,
+    this.padding,
+  }) {
+    if (controller != null) {
+      this.controller = controller;
+    } else {
+      this.controller = ScrollController();
+    }
+    if (Platform.isWindows) {
+      this.controller.addListener(
+        () {
+          final scrollDirection = this.controller.position.userScrollDirection;
+          if (scrollDirection != ScrollDirection.idle) {
+            var scrollEnd = this.controller.offset +
+                (scrollDirection == ScrollDirection.reverse
+                    ? velocity
+                    : -velocity);
+            scrollEnd = math.min(this.controller.position.maxScrollExtent,
+                math.max(this.controller.position.minScrollExtent, scrollEnd));
+            this.controller.jumpTo(scrollEnd);
+          }
+        },
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KnownExtentsListView.builder(
+      controller: controller,
+      itemExtents: itemExtents,
+      itemCount: itemCount,
+      itemBuilder: itemBuilder,
+      padding: padding,
+    );
+  }
+}
+
+class PickerButton extends StatefulWidget {
+  final String label;
+  final int selected;
+  final void Function(dynamic) onSelected;
+  final List<PopupMenuItem> items;
+  PickerButton({
+    Key? key,
+    required this.label,
+    required this.selected,
+    required this.onSelected,
+    required this.items,
+  }) : super(key: key);
+
+  @override
+  State<PickerButton> createState() => _PickerButtonState();
+}
+
+class _PickerButtonState extends State<PickerButton> {
+  final key = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        final position = RelativeRect.fromRect(
+          Offset(
+                key.globalPaintBounds!.left,
+                key.globalPaintBounds!.top + 40.0,
+              ) &
+              Size(228.0, 320.0),
+          Rect.fromLTWH(
+            0,
+            0,
+            MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height,
+          ),
+        );
+        showMenu(
+          context: context,
+          position: position,
+          items: widget.items,
+        ).then((value) {
+          widget.onSelected(value);
+        });
+      },
+      child: Container(
+        key: key,
+        height: 36.0,
+        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+        alignment: Alignment.centerLeft,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              widget.label + ':',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            const SizedBox(width: 4.0),
+            Text(
+              (widget.items[widget.selected].child as Text).data!,
+              style: Theme.of(context).textTheme.headline4?.copyWith(
+                    color: Theme.of(context).primaryColor,
+                  ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -265,12 +391,14 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
     return Consumer<CollectionRefresh>(
       builder: (context, refresh, _) => refresh.progress == refresh.total
           ? FloatingActionButton(
+              mini: true,
               elevation: 8.0,
               backgroundColor: Theme.of(context).colorScheme.secondary,
               child: TweenAnimationBuilder(
                 child: Icon(
                   Icons.refresh,
                   color: Colors.white,
+                  size: 20.0,
                 ),
                 tween: tween,
                 duration: Duration(milliseconds: 800),
@@ -842,5 +970,18 @@ class ShowAllButton extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension GlobalKeyExtension on GlobalKey {
+  Rect? get globalPaintBounds {
+    final renderObject = currentContext?.findRenderObject();
+    final translation = renderObject?.getTransformTo(null).getTranslation();
+    if (translation != null && renderObject?.paintBounds != null) {
+      final offset = Offset(translation.x, translation.y);
+      return renderObject!.paintBounds.shift(offset);
+    } else {
+      return null;
+    }
   }
 }

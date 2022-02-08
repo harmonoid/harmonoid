@@ -17,8 +17,8 @@
  *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
  */
 
-const double kAlbumTileWidth = 156.0;
-const double kAlbumTileHeight = 156.0 + 58.0;
+const double kAlbumTileWidth = 148.0;
+const double kAlbumTileHeight = 148.0 + 56.0;
 const double kMobileTileMargin = 8.0;
 const double kMobileSearchBarHeight = 56.0;
 const double kMobileTrackTileHeight = 64.0 + 8.0 + 1.0;
