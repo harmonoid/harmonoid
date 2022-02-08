@@ -406,6 +406,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.4.0"
+  known_extents_list_view_builder:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "078c6411768e1567c547abf3330d0857489a8792"
+      url: "https://github.com/alexmercerind/known_extents_list_view_builder.git"
+    source: git
+    version: "1.1.0"
   libmpv:
     dependency: "direct main"
     description:

@@ -11,6 +11,9 @@ dependencies:
     sdk: flutter
   provider: ^6.0.1
   animations: ^2.0.0
+  known_extents_list_view_builder:
+    git:
+      url: https://github.com/alexmercerind/known_extents_list_view_builder.git
   draggable_scrollbar: ^0.1.0
   material_floating_search_bar: ^0.3.6
   desktop:
