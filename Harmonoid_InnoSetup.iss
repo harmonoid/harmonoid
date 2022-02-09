@@ -138,6 +138,17 @@ Root: HKA; Subkey: "Software\Classes\HarmonoidTrack.opus\DefaultIcon"; ValueType
 Root: HKA; Subkey: "Software\Classes\HarmonoidTrack.opus\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".opus"; ValueData: ""
 
+; .aiff
+Root: HKA; Subkey: "Software\Classes\.opus\OpenWithProgids"; ValueType: string; ValueName: "HarmonoidTrack.aiff"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\HarmonoidTrack.opus"; ValueType: string; ValueName: ""; ValueData: "{#MyAppAssocName}"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\HarmonoidTrack.opus\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\HarmonoidTrack.opus\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".aiff"; ValueData: ""
+
+Root: "HKCR"; Subkey: "Directory\shell\HarmonoidAddToPlaylist"; ValueType: string; ValueName: ""; ValueData: "Add to Harmonoid's Playlist"; Flags: uninsdeletekey
+Root: "HKCR"; Subkey: "Directory\shell\HarmonoidAddToPlaylist"; ValueType: string; ValueName: "Icon"; ValueData: """{app}\{#MyAppExeName}"",0"; Flags: uninsdeletekey
+Root: "HKCR"; Subkey: "Directory\shell\HarmonoidAddToPlaylist\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}""  ""%1"""; Flags: uninsdeletekey
+
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
