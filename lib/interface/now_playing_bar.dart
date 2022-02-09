@@ -293,13 +293,13 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         onScrolledUp: () {
                                           playback.setRate(
                                             (playback.rate + 0.05)
-                                                .clamp(0.0, 1.0),
+                                                .clamp(0.0, 2.0),
                                           );
                                         },
                                         onScrolledDown: () {
                                           playback.setRate(
                                             (playback.rate - 0.05)
-                                                .clamp(0.0, 1.0),
+                                                .clamp(0.0, 2.0),
                                           );
                                         },
                                         onChanged: (value) {
