@@ -803,6 +803,12 @@ class Collection extends ChangeNotifier {
   ///
   Future<void> redraw() async {
     await sort();
+    // Explicitly populate so that [Artist] sort in [Album] tab doesn't present empty screen at the time of indexing.
+    for (Album album in albums) {
+      if (!albumArtists[AlbumArtist(album.albumArtistName)]!.contains(album)) {
+        albumArtists[AlbumArtist(album.albumArtistName)]!.add(album);
+      }
+    }
     notifyListeners();
   }
 
@@ -859,13 +865,13 @@ const String kUnknownAlbumArtRootBundle = 'assets/images/default_album_art.jpg';
 const String kAlbumArtsDirectoryName = 'AlbumArts';
 
 /// Cache file to store collection.
-const String kCollectionCacheFileName = 'Collection.json';
+const String kCollectionCacheFileName = 'Collection.JSON';
 
 /// Cache file to store playlists.
-const String kPlaylistsCacheFileName = 'Playlists.json';
+const String kPlaylistsCacheFileName = 'Playlists.JSON';
 
 /// Name of the file to use as fallback when no album art is discovered.
-const String kUnknownAlbumArtFileName = 'UnknownAlbum.png';
+const String kUnknownAlbumArtFileName = 'UnknownAlbum.PNG';
 
 /// Returns extension of a particular file system entity like [File] or [Directory].
 ///
@@ -876,7 +882,7 @@ extension CollectionFileSystemEntityExtension on FileSystemEntity {
 extension CollectionTrackExtension on Track {
   String get albumArtFileName =>
       '$albumName$albumArtistName'.replaceAll(RegExp(r'[\\/:*?""<>| ]'), '') +
-      '.png';
+      '.PNG';
 }
 
 /// `libmpv.dart` [mpv.Tagger] instance.
