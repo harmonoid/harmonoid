@@ -24,6 +24,8 @@ jobs:
       - run: flutter pub get
       - run: flutter build windows
 
+      - run: rmdir /s /q build\\windows\\runner\\Release\\data\\flutter_assets\\packages\\desktop
+
       - name: Create PFX
         id: create_pfx
         uses: timheuer/base64-to-file@v1
