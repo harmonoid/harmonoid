@@ -20,13 +20,14 @@
 import 'dart:math';
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/state/now_playing_launcher.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/state/now_playing_launcher.dart';
 
 class NowPlayingBar extends StatefulWidget {
   const NowPlayingBar({Key? key}) : super(key: key);
@@ -221,7 +222,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             playback.duration.inMilliseconds
                                         ? Container(
                                             width: 480.0,
-                                            child: Slider(
+                                            child: ScrollableSlider(
+                                              min: 0.0,
+                                              max: playback
+                                                  .duration.inMilliseconds
+                                                  .toDouble(),
                                               value: playback
                                                   .position.inMilliseconds
                                                   .toDouble(),
@@ -232,10 +237,25 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                   ),
                                                 );
                                               },
-                                              min: 0.0,
-                                              max: playback
-                                                  .duration.inMilliseconds
-                                                  .toDouble(),
+                                              onScrolledUp: () {
+                                                if (Playback
+                                                        .instance.position >=
+                                                    Playback.instance.duration)
+                                                  return;
+                                                playback.seek(
+                                                  playback.position +
+                                                      Duration(seconds: 10),
+                                                );
+                                              },
+                                              onScrolledDown: () {
+                                                if (Playback
+                                                        .instance.position <=
+                                                    Duration.zero) return;
+                                                playback.seek(
+                                                  playback.position -
+                                                      Duration(seconds: 10),
+                                                );
+                                              },
                                             ))
                                         : Container(),
                                     SizedBox(
@@ -264,40 +284,27 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                 children: [
                                   Transform.rotate(
                                     angle: pi,
-                                    child: SliderTheme(
-                                      data: SliderThemeData(
-                                        trackHeight: 2.0,
-                                        trackShape: CustomTrackShape(),
-                                        thumbShape: RoundSliderThumbShape(
-                                          enabledThumbRadius: 6.0,
-                                          pressedElevation: 4.0,
-                                          elevation: 2.0,
-                                        ),
-                                        overlayShape: RoundSliderOverlayShape(
-                                            overlayRadius: 12.0),
-                                        overlayColor: Theme.of(context)
-                                            .primaryColor
-                                            .withOpacity(0.4),
-                                        thumbColor:
-                                            Theme.of(context).primaryColor,
-                                        activeTrackColor:
-                                            Theme.of(context).primaryColor,
-                                        inactiveTrackColor:
-                                            Theme.of(context).brightness ==
-                                                    Brightness.dark
-                                                ? Colors.white.withOpacity(0.4)
-                                                : Colors.black.withOpacity(0.2),
-                                      ),
-                                      child: Container(
-                                        width: 84.0,
-                                        child: Slider(
-                                          value: playback.rate,
-                                          onChanged: (value) {
-                                            playback.setRate(value);
-                                          },
-                                          max: 2.0,
-                                          min: 0.0,
-                                        ),
+                                    child: Container(
+                                      width: 84.0,
+                                      child: ScrollableSlider(
+                                        min: 0.0,
+                                        max: 2.0,
+                                        value: playback.rate,
+                                        onScrolledUp: () {
+                                          playback.setRate(
+                                            (playback.rate + 0.05)
+                                                .clamp(0.0, 1.0),
+                                          );
+                                        },
+                                        onScrolledDown: () {
+                                          playback.setRate(
+                                            (playback.rate - 0.05)
+                                                .clamp(0.0, 1.0),
+                                          );
+                                        },
+                                        onChanged: (value) {
+                                          playback.setRate(value);
+                                        },
                                       ),
                                     ),
                                   ),
@@ -456,40 +463,27 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                   SizedBox(
                                     width: 12.0,
                                   ),
-                                  SliderTheme(
-                                    data: SliderThemeData(
-                                      trackHeight: 2.0,
-                                      trackShape: CustomTrackShape(),
-                                      thumbShape: RoundSliderThumbShape(
-                                        enabledThumbRadius: 6.0,
-                                        pressedElevation: 4.0,
-                                        elevation: 2.0,
-                                      ),
-                                      overlayShape: RoundSliderOverlayShape(
-                                          overlayRadius: 12.0),
-                                      overlayColor: Theme.of(context)
-                                          .primaryColor
-                                          .withOpacity(0.4),
-                                      thumbColor:
-                                          Theme.of(context).primaryColor,
-                                      activeTrackColor:
-                                          Theme.of(context).primaryColor,
-                                      inactiveTrackColor:
-                                          Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white.withOpacity(0.4)
-                                              : Colors.black.withOpacity(0.2),
-                                    ),
-                                    child: Container(
-                                      width: 84.0,
-                                      child: Slider(
-                                        value: playback.volume,
-                                        onChanged: (value) {
-                                          playback.setVolume(value);
-                                        },
-                                        max: 100.0,
-                                        min: 0.0,
-                                      ),
+                                  Container(
+                                    width: 84.0,
+                                    child: ScrollableSlider(
+                                      min: 0,
+                                      max: 100.0,
+                                      value: playback.volume,
+                                      onScrolledUp: () {
+                                        playback.setVolume(
+                                          (playback.volume + 5.0)
+                                              .clamp(0.0, 100.0),
+                                        );
+                                      },
+                                      onScrolledDown: () {
+                                        playback.setVolume(
+                                          (playback.volume - 5.0)
+                                              .clamp(0.0, 100.0),
+                                        );
+                                      },
+                                      onChanged: (value) {
+                                        playback.setVolume(value);
+                                      },
                                     ),
                                   ),
                                 ],
@@ -544,22 +538,5 @@ extension on Duration {
         ? '${inSeconds - (minutes * 60)}'
         : '0${inSeconds - (minutes * 60)}';
     return '$minutes:$seconds';
-  }
-}
-
-class CustomTrackShape extends RoundedRectSliderTrackShape {
-  Rect getPreferredRect({
-    required RenderBox parentBox,
-    Offset offset = Offset.zero,
-    required SliderThemeData sliderTheme,
-    bool isEnabled = false,
-    bool isDiscrete = false,
-  }) {
-    final double trackHeight = sliderTheme.trackHeight!;
-    final double trackLeft = offset.dx;
-    final double trackTop =
-        offset.dy + (parentBox.size.height - trackHeight) / 2;
-    final double trackWidth = parentBox.size.width;
-    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }

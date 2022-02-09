@@ -68,9 +68,8 @@ class HotKeys {
             scope: HotKeyScope.inapp,
           ),
           keyDownHandler: (_) {
-            if (Playback.instance.volume <= 0) return;
             Playback.instance.setVolume(
-              Playback.instance.volume - 0.02,
+              (Playback.instance.volume - 5.0).clamp(0.0, 100.0),
             );
           },
         ),
@@ -81,9 +80,8 @@ class HotKeys {
             scope: HotKeyScope.inapp,
           ),
           keyDownHandler: (_) {
-            if (Playback.instance.volume >= 100.0) return;
             Playback.instance.setVolume(
-              Playback.instance.volume + 0.02,
+              (Playback.instance.volume + 5.0).clamp(0.0, 100.0),
             );
           },
         ),
@@ -97,7 +95,7 @@ class HotKeys {
             if (Playback.instance.position >= Playback.instance.duration)
               return;
             Playback.instance.seek(
-              Playback.instance.position - Duration(seconds: 10),
+              Playback.instance.position + Duration(seconds: 10),
             );
           },
         ),
@@ -110,7 +108,7 @@ class HotKeys {
           keyDownHandler: (_) {
             if (Playback.instance.position <= Duration.zero) return;
             Playback.instance.seek(
-              Playback.instance.position + Duration(seconds: 10),
+              Playback.instance.position - Duration(seconds: 10),
             );
           },
         ),
