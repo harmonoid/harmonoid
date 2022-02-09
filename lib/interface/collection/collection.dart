@@ -86,7 +86,9 @@ class CollectionScreenState extends State<CollectionScreen>
     pageController.addListener(() {
       floatingSearchBarController.show();
     });
-    Intent.instance.play();
+    Future.delayed(const Duration(seconds: 1), () {
+      Intent.instance.play();
+    });
   }
 
   @override

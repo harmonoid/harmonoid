@@ -261,7 +261,7 @@ class Playback extends ChangeNotifier {
       // A bug that results in [isPlaying] becoming `true` after attempting to change the volume.
       // Calling [pause] after a delay to ensure that play button isn't in incorrect state at the
       // startup of the application.
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         pause();
       });
       try {

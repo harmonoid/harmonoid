@@ -66,7 +66,7 @@ class Configuration extends ConfigurationKeys {
       path.join(
         await instance.configurationDirectory,
         '.Harmonoid',
-        'Configuration.json',
+        'Configuration.JSON',
       ),
     );
     if (!await instance.file.exists()) {
@@ -254,8 +254,8 @@ final Map<String, dynamic> defaultConfiguration = {
   'languageRegion': 0,
   'accent': 0,
   'themeMode': isMobile ? 0 : 1,
-  'collectionSortType': isMobile ? 1 : 4,
-  'collectionOrderType': 1,
+  'collectionSortType': isMobile ? 1 : 3,
+  'collectionOrderType': isMobile ? 1 : 0,
   'automaticAccent': false,
   'notificationLyrics': true,
   'collectionSearchRecent': [],

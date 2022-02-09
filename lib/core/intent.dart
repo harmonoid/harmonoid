@@ -27,6 +27,7 @@ import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:harmonoid/models/media.dart' hide Media;
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/state/now_playing_launcher.dart';
 
 /// Intent
 /// ------
@@ -40,9 +41,12 @@ class Intent {
 
   /// The opened audio file from file explorer.
   /// `null` if no file was opened.
-  File? file;
+  final File? file;
 
-  Intent({this.file});
+  /// `Add to Harmonoid's Playlist` on Windows.
+  final Directory? directory;
+
+  Intent({this.file, this.directory});
 
   /// Initializes the intent & checks for possibly opened file.
   ///
@@ -58,12 +62,20 @@ class Intent {
       }
     }
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      if (args.isNotEmpty)
-        instance = Intent(
-          file: File(args.first),
-        );
-      else
+      if (args.isNotEmpty) {
+        if (FileSystemEntity.typeSync(args.first) ==
+            FileSystemEntityType.file) {
+          instance = Intent(
+            file: File(args.first),
+          );
+        } else {
+          instance = Intent(
+            directory: Directory(args.first),
+          );
+        }
+      } else {
         instance = Intent();
+      }
     }
   }
 
@@ -85,7 +97,7 @@ class Intent {
   ///
   Future<void> play() async {
     if (file != null) {
-      var metadata = <String, String>{
+      final metadata = <String, String>{
         'uri': file!.uri.toString(),
       };
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -100,10 +112,11 @@ class Intent {
         }
         final track = Track.fromTagger(metadata);
         Playback.instance.open([track]);
+        NowPlayingLauncher.instance.maximized = true;
       } else {
         final _metadata = await MetadataRetriever.fromFile(file!);
         metadata.addAll(_metadata.toJson().cast());
-        final track = Track.fromTagger(metadata);
+        final track = Track.fromJson(metadata);
         if (_metadata.albumArt != null) {
           await File(path.join(
             Collection.instance.cacheDirectory.path,
@@ -112,6 +125,59 @@ class Intent {
           )).writeAsBytes(_metadata.albumArt!);
         }
         Playback.instance.open([track]);
+        NowPlayingLauncher.instance.maximized = true;
+      }
+    }
+    if (directory != null) {
+      bool playing = false;
+      for (final file in directory!.listSync(recursive: true)) {
+        if (file is File && kSupportedFileTypes.contains(file.extension)) {
+          final metadata = <String, String>{
+            'uri': file.uri.toString(),
+          };
+          if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+            try {
+              metadata.addAll(await tagger.parse(
+                Media(file.uri.toString()),
+                coverDirectory: Collection.instance.albumArtDirectory,
+              ));
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
+            final track = Track.fromTagger(metadata);
+            if (!playing) {
+              Playback.instance.open([track]);
+              NowPlayingLauncher.instance.maximized = true;
+              playing = true;
+            } else {
+              Playback.instance.add([track]);
+            }
+          } else {
+            try {
+              final _metadata = await MetadataRetriever.fromFile(file);
+              metadata.addAll(_metadata.toJson().cast());
+              final track = Track.fromJson(metadata);
+              if (_metadata.albumArt != null) {
+                await File(path.join(
+                  Collection.instance.cacheDirectory.path,
+                  kAlbumArtsDirectoryName,
+                  track.albumArtFileName,
+                )).writeAsBytes(_metadata.albumArt!);
+              }
+              if (!playing) {
+                Playback.instance.open([track]);
+                NowPlayingLauncher.instance.maximized = true;
+                playing = true;
+              } else {
+                Playback.instance.add([track]);
+              }
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
+          }
+        }
       }
     }
   }
