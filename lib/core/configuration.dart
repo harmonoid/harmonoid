@@ -263,5 +263,5 @@ final Map<String, dynamic> defaultConfiguration = {
   'discoverRecent': [],
   'showTrackProgressOnTaskbar': false,
   'automaticallyAddOtherSongsFromCollectionToNowPlaying': false,
-  'automaticallyShowNowPlayingScreenAfterPlaying': false,
+  'automaticallyShowNowPlayingScreenAfterPlaying': true,
 };
