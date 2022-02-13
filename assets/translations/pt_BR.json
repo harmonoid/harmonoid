@@ -28,7 +28,7 @@
   "COLLECTION_SEARCH_LABEL": "Pesquisa em sua coleção",
   "COLLECTION_SEARCH_NO_RESULTS_SUBTITLE": "Nada parecido pôde ser encontrado em sua coleção",
   "COLLECTION_SEARCH_NO_RESULTS_TITLE": "Sem Resultados",
-  "COLLECTION_SEARCH_WELCOME": "Adicione algo para pesquisar na sua coleção",
+  "COLLECTION_SEARCH_WELCOME": "Pesquisar álbuns, faixas ou artistas..",
   "COLLECTION_TOP_BODY_ALBUM_EMPTY": "Procure & salve algumas músicas para vê-las aqui.\nGire para atualizar e ver as novidades.",
   "COLLECTION_TOP_SUBHEADER_ALBUM": "Aqui está o último álbum que você salvou",
   "COLLECTION_TOP_SUBHEADER_ARTIST": "Aqui está o último artista que você salvou",
@@ -79,7 +79,7 @@
   "OPTIONS": "Opções",
   "ORDER": "Pedido",
   "PAUSE": "Pausar",
-  "PLAY": "Reproduzir
+  "PLAY": "Reproduzir",
   "PLAYLIST": "Listas de reprodução",
   "PLAYLISTS_CREATE": "Criar uma nova lista de reprodução",
   "PLAYLISTS_SUBHEADER": "Listas de reprodução disponíveis no seu dispositivo",
