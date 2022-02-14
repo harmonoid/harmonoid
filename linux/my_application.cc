@@ -48,8 +48,15 @@ static void my_application_activate(GApplication* application) {
     gtk_window_set_title(window, "Harmonoid");
   }
   gtk_window_set_default_size(window, 1280, 720);
+  GdkGeometry geometry;
+  geometry.min_width = 1024;
+  geometry.min_height = 640;
+  geometry.base_width = 1280;
+  geometry.base_height = 720;
+  gtk_window_set_geometry_hints(
+      window, GTK_WIDGET(window), &geometry,
+      static_cast<GdkWindowHints>(GDK_HINT_MIN_SIZE | GDK_HINT_BASE_SIZE));
   gtk_widget_show(GTK_WIDGET(window));
-
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(
       project, self->dart_entrypoint_arguments);
