@@ -452,7 +452,7 @@ class ArtistScreenState extends State<ArtistScreen>
                       ),
                       curve: Curves.easeOut,
                       duration: Duration(
-                        milliseconds: 300,
+                        milliseconds: 400,
                       ),
                       builder: (context, color, _) => DesktopAppBar(
                         height: MediaQuery.of(context).size.height / 3,
@@ -500,7 +500,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                             ),
                                             curve: Curves.easeOut,
                                             duration: Duration(
-                                              milliseconds: 300,
+                                              milliseconds: 400,
                                             ),
                                             builder: (context, color, _) =>
                                                 Positioned.fill(

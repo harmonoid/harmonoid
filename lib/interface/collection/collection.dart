@@ -104,7 +104,7 @@ class CollectionScreenState extends State<CollectionScreen>
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.only(
-                    top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
+                    top: desktopTitleBarHeight + kDesktopAppBarHeight,
                   ),
                   child: Consumer<CollectionRefresh>(
                     builder: (context, refresh, __) => Stack(
@@ -388,7 +388,9 @@ class CollectionScreenState extends State<CollectionScreen>
                                     TweenAnimationBuilder<double>(
                                       tween: Tween<double>(
                                         begin: 0.0,
-                                        end: ([3, 4].contains(index)) ? 0.0 : 1.0,
+                                        end: ([3, 4].contains(index))
+                                            ? 0.0
+                                            : 1.0,
                                       ),
                                       duration: Duration(milliseconds: 200),
                                       child: CollectionSortButton(

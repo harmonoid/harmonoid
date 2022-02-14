@@ -314,6 +314,7 @@ class DesktopAlbumArtistTab extends StatelessWidget {
           Container(
             width: 176.0,
             child: CustomListViewBuilder(
+              padding: EdgeInsets.only(top: tileMargin / 2.0),
               itemCount: collection.albumArtists.keys.length,
               itemExtents: List.generate(
                   collection.albumArtists.keys.length, (_) => 28.0),
@@ -657,7 +658,7 @@ class AlbumScreenState extends State<AlbumScreen>
                     ),
                     curve: Curves.easeOut,
                     duration: Duration(
-                      milliseconds: 300,
+                      milliseconds: 400,
                     ),
                     builder: (context, color, _) => DesktopAppBar(
                       height: MediaQuery.of(context).size.height / 3,
@@ -703,7 +704,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                         ),
                                         curve: Curves.easeOut,
                                         duration: Duration(
-                                          milliseconds: 300,
+                                          milliseconds: 400,
                                         ),
                                         builder: (context, color, _) =>
                                             Positioned.fill(
