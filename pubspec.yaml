@@ -49,6 +49,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window
+      ref: 32be8356b6add213166d26f1fa55500d0af0816a
   flutter_local_notifications: ^5.0.0
   file_picker: ^3.0.0
   permission_handler: ^6.1.1

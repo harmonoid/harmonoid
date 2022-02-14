@@ -49,8 +49,8 @@ packages:
     dependency: "direct main"
     description:
       path: bitsdojo_window
-      ref: HEAD
-      resolved-ref: bcec2329d611481e3b717e03cec86d2bc3801b7d
+      ref: "32be8356b6add213166d26f1fa55500d0af0816a"
+      resolved-ref: "32be8356b6add213166d26f1fa55500d0af0816a"
       url: "https://github.com/alexmercerind/bitsdojo_window.git"
     source: git
     version: "0.1.1+1"
