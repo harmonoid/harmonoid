@@ -1,6 +1,8 @@
 #include "my_application.h"
 
 #include <flutter_linux/flutter_linux.h>
+
+#include <locale>
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
 #endif
@@ -59,6 +61,8 @@ static void my_application_activate(GApplication* application) {
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
 
   gtk_widget_grab_focus(GTK_WIDGET(view));
+  // Required by one of Harmonoid's dependencies invoked through |dart:ffi|.
+  std::setlocale(LC_NUMERIC, "C");
 }
 
 // Implements GApplication::local_command_line.
