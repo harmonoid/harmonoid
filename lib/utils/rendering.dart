@@ -36,6 +36,7 @@ import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
 
 final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 final isMobile = Platform.isAndroid || Platform.isIOS;
+final desktopTitleBarHeight = Platform.isWindows ? 32.0 : 0.0;
 final tileMargin = isDesktop ? kDesktopTileMargin : kMobileTileMargin;
 final visualAssets = VisualAssets();
 

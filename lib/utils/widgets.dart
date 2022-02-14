@@ -734,7 +734,7 @@ class DesktopTitleBar extends StatelessWidget {
     return Platform.isWindows
         ? Container(
             width: MediaQuery.of(context).size.width,
-            height: kDesktopTitleBarHeight,
+            height: desktopTitleBarHeight,
             color: color ?? Theme.of(context).appBarTheme.backgroundColor,
             child: Row(
               children: [
