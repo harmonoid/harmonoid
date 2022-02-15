@@ -9,10 +9,7 @@ We are still working (refactoring) our Linux & Android versions. New Windows ver
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304862-f4d336c6-4559-477b-b82e-a876f78f5eec.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304870-6d1d18db-7120-43bd-87fa-9fa369244bfd.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304875-dc120964-3b98-4460-beaf-d28c75b45109.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/151304877-13ff90bb-6123-4c06-940f-9d9de6b13666.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304879-cdb10677-30c5-45bb-9e67-f520297280da.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/151304879-cdb10677-30c5-45bb-9e67-f520297280dp.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_IG9AUuWpVR.png?raw=true)
 
 ## Motion
 
@@ -26,8 +23,9 @@ We are still working (refactoring) our Linux & Android versions. New Windows ver
 - Taskbar & System Media Transport Controls for Windows.
 - Small installer (< 25 MB) & low RAM usage (< 120 MB).
 - Lyrics for all your music.
-- Very strictly follows [Material](https://material.io/) design guidelines for UI & animations.
-- Ability to create playlists for both your local & YouTube music to play on the go.
+- Very strictly follows [Material Design](https://material.io/) guidelines for UI & animations.
+- Ability to create persistent or "Now playing" playlists.
+- Context menu integrations & file associations (exclusive to setup version).
 - Discord RPC integration.
 - Portable (if you wish).
 - Does not use [electron.js](https://www.electronjs.org/).
@@ -39,47 +37,33 @@ Upcoming features
 - D-Bus MPRIS controls for Linux.
 - Importing playlists from YouTube & Spotify using Web API.
 - Music visualizations.
+- Improvising YouTube support.
+- Last.fm scrobbling.
+- Time-sync lyrics.
+- Plugin API.
+- Windows 11 `IExplorerCommand` integration.
 
-Few features are still a work in progress & planned for the next stable releases.
+We are working hard to bring this new update to all platforms soon.
+
+Few features are still a work in progress, planned for the next stable releases or can be part of a separate "PRO" variant of the application.
 
 ## License
 
-GNU General Public License v3
-
-Contributions welcomed. Let's make it better.
+Source code and official releases/binaries are distributed under our [End-User License Agreement for Harmonoid (EULA)](./EULA.txt). Please check that there are modules/libraries in the source code that are proprietary to Harmonoid & present in the [external](./external) directory (at the time of commiting this file).
 
 ## Contributors
-
-<!--
-template = '''
-  <li>
-    <img src='{}' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='{}'>{}</a></strong>
-    <ul>
-      <li>{}</li>
-    </ul>
-  </li>'''
-result = ''
-for contributor in contributors:
-    html = template.format(
-        contributor[1], contributor[0], contributor[2], contributor[3])
-    result += html
-print(
-    f'''<ul>{result}
-</ul>'''
-)
--->
 
 <ul>
   <li>
     <img src='https://avatars.githubusercontent.com/u/28951144?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/alexmercerind'>Hitesh Kumar Saini</a></strong>
     <ul>
-      <li>Lead developer. Deals with playback & parsing of music. Writes UI, state management & lifecycle code. Maintains core C++ plugins.</li>
+      <li>Lead developer. Deals with playback & indexing of music. Writes UI, state management & lifecycle code. Maintains native C++ plugins.</li>
     </ul>
   </li>
   <li>
     <img src='https://avatars.githubusercontent.com/u/64320078?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/raitonoberu'>Denis</a></strong>
     <ul>
-      <li>Windows installer & bug fixes. Russian translation.</li>
+      <li>Windows installer & major bug fixes. Russian translation.</li>
     </ul>
   </li>
   <li>
@@ -91,7 +75,7 @@ print(
   <li>
     <img src='https://avatars.githubusercontent.com/u/52399966?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/mytja'>mytja</a></strong>
     <ul>
-      <li>WinGet package. Bug reports. CI. Slovenian translation.</li>
+      <li>WinGet package. Backward compatiblity checks. Bug reports. CI. Slovenian translation.</li>
     </ul>
   </li>
   <li>
@@ -101,9 +85,9 @@ print(
     </ul>
   </li>
   <li>
-    <img src='https://drive.google.com/uc?export=view&id=1eI-dHiALVQM123_HnQIcYe9HtbX0uS_W' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://www.instagram.com/shinybluebelll'>Bluebell</a></strong>
+    <img src='https://drive.google.com/uc?id=1eI-dHiALVQM123_HnQIcYe9HtbX0uS_W' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://www.instagram.com/shinybluebelll'>Bluebell</a></strong>
     <ul>
-      <li>Artwork & iconography.</li>
+      <li>Artwork & iconography used in the application.</li>
     </ul>
   </li>
   <li>
@@ -191,3 +175,11 @@ print(
     </ul>
   </li>
 </ul>
+
+## Acknowlegements
+
+- Harmonoid is (for the most part) written in Dart programming language using [Flutter SDK](https://github.com/flutter/flutter). Refrences to all the other external "plugins" & "packages" used at the time of building application can be found [here](./pubspec.yaml).
+
+- Harmonoid uses a modified version of [libmpv](https://github.com/mpv-player/mpv/tree/master/libmpv) for media playback capabilities on desktop. The compilation setup & other information can be found [here](https://github.com/alexmercerind/harmonoid-custom-codec). The application bundles a minimal & LGPL compilant version of [mpv](https://github.com/mpv-player/mpv) shared library (`mpv-2.dll`). Users are free to update/change to their own preferred libmpv by replacing the `mpv-2.dll` file present in Harmonoid's application directory.
+
+- [End-User License Agreement for Harmonoid (EULA)](./EULA.txt) is greatly inspired by [End-User License Agreement for Aseprite (EULA)](https://github.com/aseprite/aseprite/blob/main/EULA.txt).
