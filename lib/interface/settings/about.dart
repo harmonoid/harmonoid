@@ -26,6 +26,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -212,7 +213,7 @@ class AboutPageState extends State<AboutPage> {
           ),
           Container(
             margin: EdgeInsets.only(
-              top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
+              top: desktopTitleBarHeight + kDesktopAppBarHeight,
             ),
             child: Container(
               child: CustomListView(

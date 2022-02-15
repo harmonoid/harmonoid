@@ -27,6 +27,7 @@ import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 class Settings extends StatelessWidget {
@@ -40,7 +41,7 @@ class Settings extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.only(
-              top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
+              top: desktopTitleBarHeight + kDesktopAppBarHeight,
             ),
             child: CustomListView(
               shrinkWrap: true,

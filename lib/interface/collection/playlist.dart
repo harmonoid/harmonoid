@@ -198,7 +198,7 @@ class PlaylistTab extends StatelessWidget {
       return Container(
         alignment: Alignment.topCenter,
         height: MediaQuery.of(context).size.height -
-            (kDesktopTitleBarHeight + kDesktopAppBarHeight),
+            (desktopTitleBarHeight + kDesktopAppBarHeight),
         width: MediaQuery.of(context).size.width,
         child: Column(
           mainAxisSize: MainAxisSize.min,

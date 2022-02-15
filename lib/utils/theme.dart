@@ -22,7 +22,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-ThemeData createTheme({required Color color, ThemeMode? themeMode}) {
+ThemeData createTheme({
+  required Color color,
+  required ThemeMode themeMode,
+}) {
   bool isLight = themeMode == ThemeMode.light;
   late TextTheme textTheme;
   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
@@ -81,13 +84,6 @@ ThemeData createTheme({required Color color, ThemeMode? themeMode}) {
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
       ),
-      button: Platform.isLinux
-          ? TextStyle(
-              color: color,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w600,
-            )
-          : null,
     );
   } else {
     textTheme = TextTheme(
@@ -119,6 +115,7 @@ ThemeData createTheme({required Color color, ThemeMode? themeMode}) {
     );
   }
   return ThemeData(
+    /// Explicitly using [ChipThemeData] on Linux since it seems to be falling back to Ubuntu's font family.
     chipTheme: Platform.isLinux
         ? ChipThemeData(
             backgroundColor: color,
@@ -130,11 +127,13 @@ ThemeData createTheme({required Color color, ThemeMode? themeMode}) {
               color: Colors.white,
               fontSize: 14.0,
               fontWeight: FontWeight.normal,
+              fontFamily: 'Inter',
             ),
             secondaryLabelStyle: TextStyle(
               color: Colors.white,
               fontSize: 14.0,
               fontWeight: FontWeight.normal,
+              fontFamily: 'Inter',
             ),
             brightness: Brightness.dark,
           )
@@ -245,6 +244,7 @@ ThemeData createTheme({required Color color, ThemeMode? themeMode}) {
           : null,
       waitDuration: Duration(seconds: 1),
     ),
+    fontFamily: Platform.isLinux ? 'Inter' : null,
   );
 }
 

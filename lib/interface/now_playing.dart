@@ -60,7 +60,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                      top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
+                      top: desktopTitleBarHeight + kDesktopAppBarHeight,
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,

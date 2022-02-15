@@ -49,6 +49,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window
+      ref: 32be8356b6add213166d26f1fa55500d0af0816a
   flutter_local_notifications: ^5.0.0
   file_picker: ^3.0.0
   permission_handler: ^6.1.1
@@ -78,12 +79,31 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/icons/next.ico
-    - assets/icons/pause.ico
-    - assets/icons/play.ico
-    - assets/icons/previous.ico
-    - assets/images/default_album_art.jpg
+    - assets/fonts/
+    - assets/icons/
+    - assets/images/
     - assets/translations/
+  fonts:
+    - family: 'Inter'
+      fonts:
+        - asset: assets/fonts/Inter-Thin.otf
+          weight: 100
+        - asset: assets/fonts/Inter-ExtraLight.otf
+          weight: 200
+        - asset: assets/fonts/Inter-Light.otf
+          weight: 300
+        - asset: assets/fonts/Inter-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Inter-ExtraBold.otf 
+          weight: 800
+        - asset: assets/fonts/Inter-Black.otf 
+          weight: 900
 
 msix_config:
   msix_version: 0.1.9.0

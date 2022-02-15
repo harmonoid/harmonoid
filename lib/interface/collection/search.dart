@@ -252,7 +252,7 @@ class SearchTabState extends State<SearchTab> {
                                                   children: [
                                                     Padding(
                                                       padding: EdgeInsets.only(
-                                                          top: kDesktopTitleBarHeight +
+                                                          top: desktopTitleBarHeight +
                                                               kDesktopAppBarHeight),
                                                       child: CustomListView(
                                                         padding:
@@ -340,7 +340,7 @@ class SearchTabState extends State<SearchTab> {
                                                   children: [
                                                     Padding(
                                                       padding: EdgeInsets.only(
-                                                          top: kDesktopTitleBarHeight +
+                                                          top: desktopTitleBarHeight +
                                                               kDesktopAppBarHeight),
                                                       child: CustomListView(
                                                         padding:
