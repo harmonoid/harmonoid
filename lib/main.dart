@@ -26,7 +26,7 @@ import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/constants/language.dart';
 
 const String kTitle = 'Harmonoid';
-const String kVersion = '0.1.9';
+const String kVersion = '0.2.0';
 const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 

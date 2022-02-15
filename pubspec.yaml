@@ -1,7 +1,7 @@
 name: harmonoid
 description: Elegant music app to play & manage music library.
 publish_to: "none"
-version: 0.1.9+5003
+version: 0.2.0+5003
 
 environment:
   sdk: ">=2.14.0 <3.0.0"
@@ -9,24 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.0.1
-  animations: ^2.0.0
-  known_extents_list_view_builder:
-    git:
-      url: https://github.com/alexmercerind/known_extents_list_view_builder.git
-  draggable_scrollbar: ^0.1.0
-  material_floating_search_bar: ^0.3.6
-  desktop:
-    git:
-      url: https://github.com/alexmercerind/desktop.git
-      path: desktop
-  implicitly_animated_reorderable_list: ^0.4.0-dev+4
-  fluentui_system_icons: ^1.1.136
-  palette_generator: ^0.3.2
-  flutter_media_metadata:
-    git:
-      url: https://github.com/alexmercerind/flutter_media_metadata.git
-      ref: harmonoid
+  
+  # Plugins maintained by github.com/alexmercerind or proprietary to the Harmonoid.
+  
   libmpv:
     path: external/libmpv.dart
   system_media_transport_controls:
@@ -34,33 +19,62 @@ dependencies:
   harmonoid_visual_assets:
     path: external/harmonoid_visual_assets
   windows_taskbar: ^1.1.0
+  dart_discord_rpc: ^0.0.2
+  flutter_media_metadata:
+    git:
+      url: https://github.com/alexmercerind/flutter_media_metadata.git
+      ref: harmonoid
+  
+  # Third-party plugins.
+
+  dbus: ^0.6.3
+  share_plus: ^2.1.4
+  url_launcher: ^6.0.3
+  permission_handler: ^6.1.1
+  filepicker_windows: ^2.0.0
+  flutter_local_notifications: ^5.0.0
   assets_audio_player:
     git:
       url: https://github.com/florent37/Flutter-AssetsAudioPlayer.git
-  dart_discord_rpc: ^0.0.2
-  filepicker_windows: ^2.0.0
+  file_picker: ^3.0.0
   file_selector: ^0.8.2
   file_selector_linux:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
-      path: plugins/file_selector/file_selector_linux
-  dbus: ^0.6.3
+      path: plugins/file_selector/file_selector_linux 
+
+  # Third-party UI widgets or "pure-dart" packages.
+
+  http: ^0.13.0
+  path: ^1.8.0
+  provider: ^6.0.1
+  animations: ^2.0.0
+  palette_generator: ^0.3.2
+  draggable_scrollbar: ^0.1.0
+  fluentui_system_icons: ^1.1.136
+  material_floating_search_bar: ^0.3.6
+  implicitly_animated_reorderable_list: ^0.4.0-dev+4 
+
+  # Forked plugins & packages to meet requirements.
+
+  desktop:
+    git:
+      url: https://github.com/alexmercerind/desktop.git
+      path: desktop
   bitsdojo_window:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window
       ref: 32be8356b6add213166d26f1fa55500d0af0816a
-  flutter_local_notifications: ^5.0.0
-  file_picker: ^3.0.0
-  permission_handler: ^6.1.1
-  share_plus: ^2.1.4
-  http: ^0.13.0
-  path: ^1.8.0
-  url_launcher: ^6.0.3
   hotkey_manager:
     git:
       url: https://github.com/alexmercerind/hotkey_manager.git
       ref: main
+  known_extents_list_view_builder:
+    git:
+      url: https://github.com/alexmercerind/known_extents_list_view_builder.git
+  
+  
 
 dependency_overrides:
   bitsdojo_window_windows:
@@ -74,7 +88,6 @@ dev_dependencies:
     git:
       url: git://github.com/alexmercerind/msix.git
       ref: a2c15a8662dd346b2738ea89538179f532d4f437
-  device_preview: ^1.0.0-alpha.15
 
 flutter:
   uses-material-design: true
@@ -106,7 +119,7 @@ flutter:
           weight: 900
 
 msix_config:
-  msix_version: 0.1.9.0
+  msix_version: 0.2.0.0
   display_name: Harmonoid
   identity_name: com.alexmercerind.harmonoid
   file_extension: ogg, ogx, aac, m4a, mp3, wma, wav, aiff, flac, opus
