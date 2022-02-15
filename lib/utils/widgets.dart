@@ -23,13 +23,13 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide ReorderableDragStartListener;
-import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
