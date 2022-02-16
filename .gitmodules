@@ -7,3 +7,6 @@
 [submodule "external/harmonoid_visual_assets"]
 	path = external/harmonoid_visual_assets
 	url = https://github.com/alexmercerind/harmonoid_visual_assets.git
+[submodule "external/mpris_service.dart"]
+	path = external/mpris_service.dart
+	url = https://github.com/alexmercerind/mpris_service.dart
