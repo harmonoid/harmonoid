@@ -16,6 +16,8 @@ dependencies:
     path: external/libmpv.dart
   system_media_transport_controls:
     path: external/smtc-win32/bindings/system_media_transport_controls.dart
+  mpris_service:
+    path: external/mpris_service.dart
   harmonoid_visual_assets:
     path: external/harmonoid_visual_assets
   windows_taskbar: ^1.1.0
@@ -27,7 +29,6 @@ dependencies:
   
   # Third-party plugins.
 
-  dbus: ^0.6.3
   share_plus: ^2.1.4
   url_launcher: ^6.0.3
   permission_handler: ^6.1.1

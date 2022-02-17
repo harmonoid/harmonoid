@@ -155,12 +155,12 @@ packages:
     source: hosted
     version: "0.0.2"
   dbus:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: dbus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.8"
+    version: "0.7.1"
   desktop:
     dependency: "direct main"
     description:
@@ -424,6 +424,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  mpris_service:
+    dependency: "direct main"
+    description:
+      path: "external/mpris_service.dart"
+      relative: true
+    source: path
+    version: "0.0.1"
   msix:
     dependency: "direct dev"
     description:
@@ -789,5 +796,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.15.0 <3.0.0"
+  dart: ">=2.16.1 <3.0.0"
   flutter: ">=2.10.0"
