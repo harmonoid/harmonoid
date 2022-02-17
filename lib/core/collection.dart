@@ -1,22 +1,12 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 
+import 'dart:collection';
 import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
@@ -76,6 +66,8 @@ class Collection extends ChangeNotifier {
   List<Album> albums = <Album>[];
   List<Track> tracks = <Track>[];
   List<Artist> artists = <Artist>[];
+  SplayTreeMap<AlbumArtist, List<Album>> albumArtists =
+      SplayTreeMap<AlbumArtist, List<Album>>();
 
   /// Updates (or sets) the directories that are used for indexing of the music.
   ///
@@ -247,6 +239,19 @@ class Collection extends ChangeNotifier {
           }
         }
       }
+      for (int i = 0;
+          i < albumArtists[AlbumArtist(object.albumArtistName)]!.length;
+          i++) {
+        if (albumArtists[AlbumArtist(object.albumArtistName)]![i]
+            .tracks
+            .isEmpty) {
+          albumArtists[AlbumArtist(object.albumArtistName)]!.removeAt(i);
+          break;
+        }
+      }
+      if (albumArtists[AlbumArtist(object.albumArtistName)]!.isEmpty) {
+        albumArtists.remove(AlbumArtist(object.albumArtistName));
+      }
       if (await File(object.uri.toFilePath()).exists()) {
         await File(object.uri.toFilePath()).delete();
       }
@@ -285,6 +290,10 @@ class Collection extends ChangeNotifier {
             break;
           }
         }
+      }
+      albumArtists[AlbumArtist(object.albumArtistName)]!.remove(object);
+      if (albumArtists[AlbumArtist(object.albumArtistName)]!.isEmpty) {
+        albumArtists.remove(AlbumArtist(object.albumArtistName));
       }
       for (Track track in object.tracks) {
         if (await File(track.uri.toFilePath()).exists()) {
@@ -414,29 +423,27 @@ class Collection extends ChangeNotifier {
     tracks.sort((first, second) => (first.timeAdded.millisecondsSinceEpoch)
         .compareTo(second.timeAdded.millisecondsSinceEpoch));
     albums.sort((first, second) => first.timeAdded.compareTo(second.timeAdded));
-
-    artists
-        .sort((first, second) => first.timeAdded.compareTo(second.timeAdded));
-    if (type == CollectionSort.aToZ) {
+    if (type == CollectionSort.aToZ ||
+        type ==
+            CollectionSort
+                .artist /* Handled externally & applicable only for albums & other tabs fallback to `CollectionSort.aToZ */) {
       tracks.sort((first, second) => first.trackName
           .toLowerCase()
           .compareTo(second.trackName.toLowerCase()));
       albums.sort((first, second) => first.albumName
           .toLowerCase()
           .compareTo(second.albumName.toLowerCase()));
-      artists.sort((first, second) => first.artistName
-          .toLowerCase()
-          .compareTo(second.artistName.toLowerCase()));
     }
     if (type == CollectionSort.year) {
       tracks.sort((first, second) => (int.tryParse(first.year) ?? -1)
           .compareTo(int.tryParse(second.year) ?? -1));
       albums.sort((first, second) => (int.tryParse(first.year) ?? -1)
           .compareTo(int.tryParse(second.year) ?? -1));
-      artists.sort((first, second) =>
-          (int.tryParse(first.tracks.last.year) ?? -1)
-              .compareTo(int.tryParse(second.tracks.last.year) ?? -1));
     }
+    // Only `CollectionSort.aToZ` is available for [artists].
+    artists.sort((first, second) => first.artistName
+        .toLowerCase()
+        .compareTo(second.artistName.toLowerCase()));
     if (collectionOrderType == CollectionOrder.descending) {
       tracks = tracks.reversed.toList();
       albums = albums.reversed.toList();
@@ -732,6 +739,11 @@ class Collection extends ChangeNotifier {
           .tracks
           .add(track);
     }
+    // A new album artist gets discovered.
+    if (!albumArtists.containsKey(AlbumArtist(track.albumArtistName))) {
+      // Create new [List] and append the new [Album] to its name.
+      albumArtists[AlbumArtist(track.albumArtistName)] = [];
+    }
     for (String artistName in track.trackArtistNames) {
       if (!artists.contains(Artist(artistName: artistName))) {
         artists.add(
@@ -750,7 +762,7 @@ class Collection extends ChangeNotifier {
     tracks.add(track);
   }
 
-  /// Populates all the discovered artists' albums after running the [_arrange] loop.
+  /// Populates all the [albumArtists] & discovered artists' albums after running the [_arrange] loop.
   ///
   Future<void> _arrangeArtists() async {
     for (Album album in albums) {
@@ -769,6 +781,9 @@ class Collection extends ChangeNotifier {
               .albums
               .add(album);
       }
+      if (!albumArtists[AlbumArtist(album.albumArtistName)]!.contains(album)) {
+        albumArtists[AlbumArtist(album.albumArtistName)]!.add(album);
+      }
     }
     notifyListeners();
   }
@@ -777,6 +792,12 @@ class Collection extends ChangeNotifier {
   ///
   Future<void> redraw() async {
     await sort();
+    // Explicitly populate so that [Artist] sort in [Album] tab doesn't present empty screen at the time of indexing.
+    for (Album album in albums) {
+      if (!albumArtists[AlbumArtist(album.albumArtistName)]!.contains(album)) {
+        albumArtists[AlbumArtist(album.albumArtistName)]!.add(album);
+      }
+    }
     notifyListeners();
   }
 
@@ -787,7 +808,15 @@ class Collection extends ChangeNotifier {
 
 /// Types of sorts available.
 ///
-enum CollectionSort { aToZ, dateAdded, year }
+enum CollectionSort {
+  aToZ,
+  dateAdded,
+  year,
+
+  /// A new sort which arranges the [AlbumScreen] & [ArtistScreen] with a sidebar that allows to view [Artist]s [Track]s from a specified artist.
+  /// Currently exclusive to desktop.
+  artist,
+}
 
 /// Types of orders available.
 ///
@@ -825,13 +854,13 @@ const String kUnknownAlbumArtRootBundle = 'assets/images/default_album_art.jpg';
 const String kAlbumArtsDirectoryName = 'AlbumArts';
 
 /// Cache file to store collection.
-const String kCollectionCacheFileName = 'Collection.json';
+const String kCollectionCacheFileName = 'Collection.JSON';
 
 /// Cache file to store playlists.
-const String kPlaylistsCacheFileName = 'Playlists.json';
+const String kPlaylistsCacheFileName = 'Playlists.JSON';
 
 /// Name of the file to use as fallback when no album art is discovered.
-const String kUnknownAlbumArtFileName = 'UnknownAlbum.png';
+const String kUnknownAlbumArtFileName = 'UnknownAlbum.PNG';
 
 /// Returns extension of a particular file system entity like [File] or [Directory].
 ///
@@ -842,7 +871,7 @@ extension CollectionFileSystemEntityExtension on FileSystemEntity {
 extension CollectionTrackExtension on Track {
   String get albumArtFileName =>
       '$albumName$albumArtistName'.replaceAll(RegExp(r'[\\/:*?""<>| ]'), '') +
-      '.png';
+      '.PNG';
 }
 
 /// `libmpv.dart` [mpv.Tagger] instance.

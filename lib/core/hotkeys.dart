@@ -1,21 +1,10 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 
 import 'package:hotkey_manager/hotkey_manager.dart';
 
@@ -68,9 +57,8 @@ class HotKeys {
             scope: HotKeyScope.inapp,
           ),
           keyDownHandler: (_) {
-            if (Playback.instance.volume <= 0) return;
             Playback.instance.setVolume(
-              Playback.instance.volume - 0.02,
+              (Playback.instance.volume - 5.0).clamp(0.0, 100.0),
             );
           },
         ),
@@ -81,9 +69,8 @@ class HotKeys {
             scope: HotKeyScope.inapp,
           ),
           keyDownHandler: (_) {
-            if (Playback.instance.volume >= 100.0) return;
             Playback.instance.setVolume(
-              Playback.instance.volume + 0.02,
+              (Playback.instance.volume + 5.0).clamp(0.0, 100.0),
             );
           },
         ),
@@ -97,7 +84,7 @@ class HotKeys {
             if (Playback.instance.position >= Playback.instance.duration)
               return;
             Playback.instance.seek(
-              Playback.instance.position - Duration(seconds: 10),
+              Playback.instance.position + Duration(seconds: 10),
             );
           },
         ),
@@ -110,7 +97,7 @@ class HotKeys {
           keyDownHandler: (_) {
             if (Playback.instance.position <= Duration.zero) return;
             Playback.instance.seek(
-              Playback.instance.position + Duration(seconds: 10),
+              Playback.instance.position - Duration(seconds: 10),
             );
           },
         ),

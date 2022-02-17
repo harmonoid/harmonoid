@@ -1,21 +1,10 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 
 import 'package:flutter/material.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -23,9 +12,11 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
 import 'package:harmonoid/interface/settings/language.dart';
+import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 class Settings extends StatelessWidget {
@@ -39,7 +30,7 @@ class Settings extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.only(
-              top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
+              top: desktopTitleBarHeight + kDesktopAppBarHeight,
             ),
             child: CustomListView(
               shrinkWrap: true,
@@ -49,8 +40,7 @@ class Settings extends StatelessWidget {
                 ),
                 IndexingSetting(),
                 ThemeSetting(),
-                // TODO: Removed accents after including new iconography.
-                // AccentSetting(),
+                MiscellaneousSetting(),
                 LanguageSetting(),
                 AboutSetting(),
                 VersionSetting(),

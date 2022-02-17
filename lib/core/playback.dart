@@ -1,25 +1,16 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 
 import 'dart:io';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Intent;
+import 'package:harmonoid/core/intent.dart';
 import 'package:libmpv/libmpv.dart';
+import 'package:mpris_service/mpris_service.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
@@ -27,6 +18,7 @@ import 'package:system_media_transport_controls/system_media_transport_controls.
 
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart' hide Media;
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/now_playing_launcher.dart';
@@ -121,6 +113,9 @@ class Playback extends ChangeNotifier {
       assetsAudioPlayer.setPlaySpeed(value);
     }
     rate = value;
+    if (Platform.isLinux) {
+      mpris?.rate = value;
+    }
     notifyListeners();
   }
 
@@ -132,6 +127,9 @@ class Playback extends ChangeNotifier {
       assetsAudioPlayer.setVolume(value);
     }
     volume = value;
+    if (Platform.isLinux) {
+      mpris?.volume = value;
+    }
     notifyListeners();
   }
 
@@ -191,9 +189,12 @@ class Playback extends ChangeNotifier {
       player.play();
       isShuffling = false;
       notifyListeners();
-      Future.delayed(const Duration(milliseconds: 200), () {
-        NowPlayingLauncher.instance.maximized = true;
-      });
+      if (Configuration
+          .instance.automaticallyShowNowPlayingScreenAfterPlaying) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          NowPlayingLauncher.instance.maximized = true;
+        });
+      }
     }
     if (Platform.isAndroid || Platform.isIOS) {}
   }
@@ -241,11 +242,15 @@ class Playback extends ChangeNotifier {
       player.streams.position.listen((event) {
         position = event;
         notifyListeners();
-        if (Platform.isWindows) {
+        if (Platform.isWindows &&
+            Configuration.instance.showTrackProgressOnTaskbar) {
           WindowsTaskbar.setProgress(
             position.inMilliseconds,
             duration.inMilliseconds,
           );
+        }
+        if (Platform.isLinux) {
+          mpris?.position = event;
         }
       });
       player.streams.duration.listen((event) {
@@ -256,7 +261,7 @@ class Playback extends ChangeNotifier {
       // A bug that results in [isPlaying] becoming `true` after attempting to change the volume.
       // Calling [pause] after a delay to ensure that play button isn't in incorrect state at the
       // startup of the application.
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         pause();
       });
       try {
@@ -280,6 +285,67 @@ class Playback extends ChangeNotifier {
                 break;
             }
           });
+        }
+        if (Platform.isLinux) {
+          mpris = MPRISService(
+            'harmonoid',
+            identity: 'Harmonoid',
+            desktopEntry: '/usr/share/applications/harmonoid.desktop',
+            setLoopStatus: (value) {
+              switch (value) {
+                case 'None':
+                  {
+                    setPlaylistLoopMode(PlaylistLoopMode.none);
+                    break;
+                  }
+                case 'Track':
+                  {
+                    setPlaylistLoopMode(PlaylistLoopMode.single);
+                    break;
+                  }
+                case 'Playlist':
+                  {
+                    setPlaylistLoopMode(PlaylistLoopMode.loop);
+                    break;
+                  }
+              }
+            },
+            setRate: (value) {
+              setRate(value);
+            },
+            setShuffle: (value) {
+              if (this.isShuffling != value) {
+                toggleShuffle();
+              }
+            },
+            setVolume: (value) {
+              setVolume(value);
+            },
+            doNext: next,
+            doPrevious: previous,
+            doPause: pause,
+            doPlayPause: playOrPause,
+            doPlay: play,
+            doSeek: (value) {
+              seek(Duration(microseconds: value));
+            },
+            doSetPosition: (objectPath, timeMicroseconds) {
+              final index = mpris?.playlist
+                      .map(
+                        (e) => '/' + e.uri.toString().hashCode.toString(),
+                      )
+                      .toList()
+                      .indexOf(objectPath) ??
+                  -1;
+              if (index >= 0 && index != this.index) {
+                jump(index);
+              }
+              seek(Duration(microseconds: timeMicroseconds));
+            },
+            doOpenUri: (uri) {
+              Intent.instance.playUri(uri);
+            },
+          );
         }
       } catch (_) {}
     }
@@ -331,6 +397,23 @@ class Playback extends ChangeNotifier {
             ),
           ]);
         }
+        if (Platform.isLinux) {
+          Uri? artworkUri;
+          final artwork = Collection.instance.getAlbumArt(track);
+          if (artwork is FileImage) {
+            artworkUri = artwork.file.uri;
+          } else if (artwork is NetworkImage) {
+            artworkUri = Uri.parse(artwork.url);
+          }
+          mpris?.isPlaying = isPlaying;
+          mpris?.isCompleted = isCompleted;
+          mpris?.index = index;
+          mpris?.playlist = tracks.map((e) {
+            final json = e.toJson();
+            json['artworkUri'] = artworkUri.toString();
+            return MPRISMedia.fromJson(json);
+          }).toList();
+        }
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           if (!isCompleted) {
             discord.start(autoRegister: true);
@@ -349,7 +432,10 @@ class Playback extends ChangeNotifier {
             discord.clearPresence();
           }
         }
-      } catch (_) {}
+      } catch (_, __) {
+        print(_);
+        print(__);
+      }
       Lyrics.instance.update(
           track.trackName + ' ' + track.trackArtistNames.take(2).join(', '));
     } catch (_) {}
@@ -357,9 +443,8 @@ class Playback extends ChangeNotifier {
 
   final Player player = Player(video: false, osc: false, title: kTitle);
   final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
-  final discord = DiscordRPC(
-    applicationId: '881480706545573918',
-  );
+  MPRISService? mpris;
+  final discord = DiscordRPC(applicationId: '881480706545573918');
 
   double _volume = 50.0;
 }

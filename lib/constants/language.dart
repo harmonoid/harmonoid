@@ -1,21 +1,10 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
@@ -145,6 +134,14 @@ class LanguageRegion {
     translator: 'さぶうぇい',
     github: 'https://github.com/HiSubway',
   );
+  static const trTR = LanguageRegion(
+    code: 'tr',
+    countryCode: 'TR',
+    name: 'Türkçe',
+    country: 'Türkiye',
+    translator: 'Yusuf Kamil Turan',
+    github: 'https://github.com/TuranBerlin',
+  );
 
   static const values = <LanguageRegion>[
     enUs,
@@ -159,7 +156,8 @@ class LanguageRegion {
     huHu,
     mgMG,
     zhCN,
-    jaJP
+    jaJP,
+    trTR
   ];
 
   int get index => values.indexOf(this);
@@ -191,31 +189,48 @@ class Language extends Strings with ChangeNotifier {
     this.ARTIST = asset['ARTIST']!;
     this.ARTIST_SINGLE = asset['ARTIST_SINGLE']!;
     this.ASCENDING = asset['ASCENDING']!;
+    this.AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING =
+        asset['AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING']!;
     this.A_TO_Z = asset['A_TO_Z']!;
     this.BUFFERING = asset['BUFFERING']!;
     this.CANCEL = asset['CANCEL']!;
     this.COLLECTION = asset['COLLECTION']!;
-    this.COLLECTION_ALBUM_DELETE_DIALOG_BODY = asset['COLLECTION_ALBUM_DELETE_DIALOG_BODY']!;
-    this.COLLECTION_ALBUM_DELETE_DIALOG_HEADER = asset['COLLECTION_ALBUM_DELETE_DIALOG_HEADER']!;
+    this.COLLECTION_ALBUM_DELETE_DIALOG_BODY =
+        asset['COLLECTION_ALBUM_DELETE_DIALOG_BODY']!;
+    this.COLLECTION_ALBUM_DELETE_DIALOG_HEADER =
+        asset['COLLECTION_ALBUM_DELETE_DIALOG_HEADER']!;
     this.COLLECTION_INDEXING_HINT = asset['COLLECTION_INDEXING_HINT']!;
     this.COLLECTION_INDEXING_LABEL = asset['COLLECTION_INDEXING_LABEL']!;
     this.COLLECTION_INFO_SUBHEADER = asset['COLLECTION_INFO_SUBHEADER']!;
-    this.COLLECTION_OTHER_SUBHEADER_ALBUM = asset['COLLECTION_OTHER_SUBHEADER_ALBUM']!;
-    this.COLLECTION_OTHER_SUBHEADER_ARTIST = asset['COLLECTION_OTHER_SUBHEADER_ARTIST']!;
-    this.COLLECTION_OTHER_SUBHEADER_TRACK = asset['COLLECTION_OTHER_SUBHEADER_TRACK']!;
-    this.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY = asset['COLLECTION_PLAYLIST_DELETE_DIALOG_BODY']!;
-    this.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER = asset['COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER']!;
+    this.COLLECTION_OTHER_SUBHEADER_ALBUM =
+        asset['COLLECTION_OTHER_SUBHEADER_ALBUM']!;
+    this.COLLECTION_OTHER_SUBHEADER_ARTIST =
+        asset['COLLECTION_OTHER_SUBHEADER_ARTIST']!;
+    this.COLLECTION_OTHER_SUBHEADER_TRACK =
+        asset['COLLECTION_OTHER_SUBHEADER_TRACK']!;
+    this.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY =
+        asset['COLLECTION_PLAYLIST_DELETE_DIALOG_BODY']!;
+    this.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER =
+        asset['COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER']!;
     this.COLLECTION_SEARCH_LABEL = asset['COLLECTION_SEARCH_LABEL']!;
-    this.COLLECTION_SEARCH_NO_RESULTS_SUBTITLE = asset['COLLECTION_SEARCH_NO_RESULTS_SUBTITLE']!;
-    this.COLLECTION_SEARCH_NO_RESULTS_TITLE = asset['COLLECTION_SEARCH_NO_RESULTS_TITLE']!;
+    this.COLLECTION_SEARCH_NO_RESULTS_SUBTITLE =
+        asset['COLLECTION_SEARCH_NO_RESULTS_SUBTITLE']!;
+    this.COLLECTION_SEARCH_NO_RESULTS_TITLE =
+        asset['COLLECTION_SEARCH_NO_RESULTS_TITLE']!;
     this.COLLECTION_SEARCH_WELCOME = asset['COLLECTION_SEARCH_WELCOME']!;
-    this.COLLECTION_TOP_BODY_ALBUM_EMPTY = asset['COLLECTION_TOP_BODY_ALBUM_EMPTY']!;
-    this.COLLECTION_TOP_SUBHEADER_ALBUM = asset['COLLECTION_TOP_SUBHEADER_ALBUM']!;
-    this.COLLECTION_TOP_SUBHEADER_ARTIST = asset['COLLECTION_TOP_SUBHEADER_ARTIST']!;
-    this.COLLECTION_TOP_SUBHEADER_TRACK = asset['COLLECTION_TOP_SUBHEADER_TRACK']!;
+    this.COLLECTION_TOP_BODY_ALBUM_EMPTY =
+        asset['COLLECTION_TOP_BODY_ALBUM_EMPTY']!;
+    this.COLLECTION_TOP_SUBHEADER_ALBUM =
+        asset['COLLECTION_TOP_SUBHEADER_ALBUM']!;
+    this.COLLECTION_TOP_SUBHEADER_ARTIST =
+        asset['COLLECTION_TOP_SUBHEADER_ARTIST']!;
+    this.COLLECTION_TOP_SUBHEADER_TRACK =
+        asset['COLLECTION_TOP_SUBHEADER_TRACK']!;
     this.COLLECTION_TRACKS_SUBHEADER = asset['COLLECTION_TRACKS_SUBHEADER']!;
-    this.COLLECTION_TRACK_DELETE_DIALOG_BODY = asset['COLLECTION_TRACK_DELETE_DIALOG_BODY']!;
-    this.COLLECTION_TRACK_DELETE_DIALOG_HEADER = asset['COLLECTION_TRACK_DELETE_DIALOG_HEADER']!;
+    this.COLLECTION_TRACK_DELETE_DIALOG_BODY =
+        asset['COLLECTION_TRACK_DELETE_DIALOG_BODY']!;
+    this.COLLECTION_TRACK_DELETE_DIALOG_HEADER =
+        asset['COLLECTION_TRACK_DELETE_DIALOG_HEADER']!;
     this.COMING_UP = asset['COMING_UP']!;
     this.CREATE = asset['CREATE']!;
     this.CREATE_NEW_PLAYLIST = asset['CREATE_NEW_PLAYLIST']!;
@@ -233,7 +248,8 @@ class Language extends Strings with ChangeNotifier {
     this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
     this.INTERNET_ERROR = asset['INTERNET_ERROR']!;
     this.KNOW_MORE = asset['KNOW_MORE']!;
-    this.LAST_COLLECTION_DIRECTORY_REMOVED = asset['LAST_COLLECTION_DIRECTORY_REMOVED']!;
+    this.LAST_COLLECTION_DIRECTORY_REMOVED =
+        asset['LAST_COLLECTION_DIRECTORY_REMOVED']!;
     this.LISTENING_TO_MUSIC = asset['LISTENING_TO_MUSIC']!;
     this.LYRICS = asset['LYRICS']!;
     this.LYRICS_NOT_FOUND = asset['LYRICS_NOT_FOUND']!;
@@ -246,7 +262,8 @@ class Language extends Strings with ChangeNotifier {
     this.NOTIFICATION_LYRICS_TITLE = asset['NOTIFICATION_LYRICS_TITLE']!;
     this.NOW_PLAYING = asset['NOW_PLAYING']!;
     this.NOW_PLAYING_NEXT_TRACK = asset['NOW_PLAYING_NEXT_TRACK']!;
-    this.NOW_PLAYING_NOT_PLAYING_TITLE = asset['NOW_PLAYING_NOT_PLAYING_TITLE']!;
+    this.NOW_PLAYING_NOT_PLAYING_TITLE =
+        asset['NOW_PLAYING_NOT_PLAYING_TITLE']!;
     this.NOW_PLAYING_PREVIOUS_TRACK = asset['NOW_PLAYING_PREVIOUS_TRACK']!;
     this.NO_COLLECTION_SUBTITLE = asset['NO_COLLECTION_SUBTITLE']!;
     this.NO_COLLECTION_TITLE = asset['NO_COLLECTION_TITLE']!;
@@ -257,6 +274,7 @@ class Language extends Strings with ChangeNotifier {
     this.N_TRACKS = asset['N_TRACKS']!;
     this.OK = asset['OK']!;
     this.OPTIONS = asset['OPTIONS']!;
+    this.ORDER = asset['ORDER']!;
     this.PAUSE = asset['PAUSE']!;
     this.PLAY = asset['PLAY']!;
     this.PLAYLIST = asset['PLAYLIST']!;
@@ -288,28 +306,39 @@ class Language extends Strings with ChangeNotifier {
     this.SELECTED_DIRECTORIES = asset['SELECTED_DIRECTORIES']!;
     this.SELECTED_DIRECTORY = asset['SELECTED_DIRECTORY']!;
     this.SETTING = asset['SETTING']!;
-    this.SETTING_ACCENT_COLOR_AUTOMATIC = asset['SETTING_ACCENT_COLOR_AUTOMATIC']!;
-    this.SETTING_ACCENT_COLOR_SUBTITLE = asset['SETTING_ACCENT_COLOR_SUBTITLE']!;
+    this.SETTING_ACCENT_COLOR_AUTOMATIC =
+        asset['SETTING_ACCENT_COLOR_AUTOMATIC']!;
+    this.SETTING_ACCENT_COLOR_SUBTITLE =
+        asset['SETTING_ACCENT_COLOR_SUBTITLE']!;
     this.SETTING_ACCENT_COLOR_TITLE = asset['SETTING_ACCENT_COLOR_TITLE']!;
-    this.SETTING_APP_VERSION_INSTALLED = asset['SETTING_APP_VERSION_INSTALLED']!;
+    this.SETTING_APP_VERSION_INSTALLED =
+        asset['SETTING_APP_VERSION_INSTALLED']!;
     this.SETTING_APP_VERSION_LATEST = asset['SETTING_APP_VERSION_LATEST']!;
     this.SETTING_APP_VERSION_SUBTITLE = asset['SETTING_APP_VERSION_SUBTITLE']!;
     this.SETTING_APP_VERSION_TITLE = asset['SETTING_APP_VERSION_TITLE']!;
     this.SETTING_GITHUB = asset['SETTING_GITHUB']!;
     this.SETTING_INDEXING_DONE = asset['SETTING_INDEXING_DONE']!;
-    this.SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR = asset['SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR']!;
+    this.SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR =
+        asset['SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR']!;
     this.SETTING_INDEXING_SUBTITLE = asset['SETTING_INDEXING_SUBTITLE']!;
     this.SETTING_INDEXING_TITLE = asset['SETTING_INDEXING_TITLE']!;
     this.SETTING_INDEXING_WARNING = asset['SETTING_INDEXING_WARNING']!;
-    this.SETTING_LANGUAGE_PROVIDERS_SUBTITLE = asset['SETTING_LANGUAGE_PROVIDERS_SUBTITLE']!;
-    this.SETTING_LANGUAGE_PROVIDERS_TITLE = asset['SETTING_LANGUAGE_PROVIDERS_TITLE']!;
-    this.SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE = asset['SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE']!;
-    this.SETTING_LANGUAGE_RESTART_DIALOG_TITLE = asset['SETTING_LANGUAGE_RESTART_DIALOG_TITLE']!;
+    this.SETTING_LANGUAGE_PROVIDERS_SUBTITLE =
+        asset['SETTING_LANGUAGE_PROVIDERS_SUBTITLE']!;
+    this.SETTING_LANGUAGE_PROVIDERS_TITLE =
+        asset['SETTING_LANGUAGE_PROVIDERS_TITLE']!;
+    this.SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE =
+        asset['SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE']!;
+    this.SETTING_LANGUAGE_RESTART_DIALOG_TITLE =
+        asset['SETTING_LANGUAGE_RESTART_DIALOG_TITLE']!;
     this.SETTING_LANGUAGE_SUBTITLE = asset['SETTING_LANGUAGE_SUBTITLE']!;
     this.SETTING_LANGUAGE_TITLE = asset['SETTING_LANGUAGE_TITLE']!;
-    this.SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE = asset['SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE']!;
-    this.SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE = asset['SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE']!;
-    this.SETTING_MISCELLANEOUS_SUBTITLE = asset['SETTING_MISCELLANEOUS_SUBTITLE']!;
+    this.SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE =
+        asset['SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE']!;
+    this.SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE =
+        asset['SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE']!;
+    this.SETTING_MISCELLANEOUS_SUBTITLE =
+        asset['SETTING_MISCELLANEOUS_SUBTITLE']!;
     this.SETTING_MISCELLANEOUS_TITLE = asset['SETTING_MISCELLANEOUS_TITLE']!;
     this.SETTING_STARGAZERS_SUBTITLE = asset['SETTING_STARGAZERS_SUBTITLE']!;
     this.SETTING_STARGAZERS_TITLE = asset['SETTING_STARGAZERS_TITLE']!;
@@ -318,6 +347,11 @@ class Language extends Strings with ChangeNotifier {
     this.SETTING_THEME_TITLE = asset['SETTING_THEME_TITLE']!;
     this.SHARE = asset['SHARE']!;
     this.SHOW_ALBUM = asset['SHOW_ALBUM']!;
+    this.SHOW_NOW_PLAYING_AFTER_PLAYING =
+        asset['SHOW_NOW_PLAYING_AFTER_PLAYING']!;
+    this.SHOW_TRACK_PROGRESS_ON_TASKBAR =
+        asset['SHOW_TRACK_PROGRESS_ON_TASKBAR']!;
+    this.SORT = asset['SORT']!;
     this.SORT_BY = asset['SORT_BY']!;
     this.STARTING_PLAYBACK = asset['STARTING_PLAYBACK']!;
     this.SWITCH_THEME = asset['SWITCH_THEME']!;
@@ -343,7 +377,6 @@ class Language extends Strings with ChangeNotifier {
   }
 
   late LanguageRegion current;
-
   @override
   // ignore: must_call_super
   void dispose() {}

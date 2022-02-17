@@ -1,21 +1,10 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 
 import 'dart:math';
 import 'dart:ui';
@@ -30,6 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -56,6 +46,8 @@ class AlbumTab extends StatelessWidget {
 
     return Consumer<Collection>(
       builder: (context, collection, _) {
+        if (collection.collectionSortType == CollectionSort.artist && isDesktop)
+          return DesktopAlbumArtistTab();
         final data = tileGridListWidgetsWithScrollbarSupport(
           context: context,
           tileHeight: height,
@@ -74,11 +66,14 @@ class AlbumTab extends StatelessWidget {
         );
         return isDesktop
             ? Collection.instance.tracks.isNotEmpty
-                ? CustomListView(
+                ? CustomListViewBuilder(
                     padding: EdgeInsets.only(
                       top: tileMargin,
                     ),
-                    children: data.widgets,
+                    itemCount: data.widgets.length,
+                    itemExtents: List.generate(
+                        data.widgets.length, (index) => height + tileMargin),
+                    itemBuilder: (context, i) => data.widgets[i],
                   )
                 : Center(
                     child: ExceptionWidget(
@@ -158,6 +153,220 @@ class AlbumTab extends StatelessWidget {
               );
       },
     );
+  }
+}
+
+class DesktopAlbumArtistTab extends StatelessWidget {
+  DesktopAlbumArtistTab({Key? key}) : super(key: key);
+
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<Collection>(builder: (context, collection, _) {
+      if (collection.tracks.isEmpty)
+        return Center(
+          child: ExceptionWidget(
+            title: Language.instance.NO_COLLECTION_TITLE,
+            subtitle: Language.instance.NO_COLLECTION_SUBTITLE,
+          ),
+        );
+      final elementsPerRow =
+          ((MediaQuery.of(context).size.width - 177.0) - tileMargin) ~/
+              (kAlbumTileWidth + tileMargin);
+      final double width = kAlbumTileWidth;
+      final double height = kAlbumTileHeight;
+      // Children of the right pane.
+      List<Widget> children = [];
+      List<double> itemExtents = [];
+      Map<AlbumArtist, double> offsets = {};
+      double last = -1 * (tileMargin + 12.0);
+      // Grid generated for each iteration of album artist.
+      List<Widget> widgets = [];
+      if (collection.collectionOrderType == CollectionOrder.ascending) {
+        for (final key in collection.albumArtists.keys) {
+          offsets[key] =
+              36.0 + (kAlbumTileHeight + tileMargin) * widgets.length + last;
+          last = offsets[key]!;
+          children.addAll(widgets);
+          children.add(Container(
+            margin: EdgeInsets.only(left: tileMargin),
+            alignment: Alignment.topLeft,
+            height: 36.0,
+            child: Text(
+              key.name,
+              style: Theme.of(context).textTheme.headline1,
+            ),
+          ));
+          itemExtents.addAll(List.generate(
+            widgets.length,
+            (_) => (kAlbumTileHeight + tileMargin),
+          ));
+          itemExtents.add(36.0);
+          widgets = tileGridListWidgets(
+            context: context,
+            tileHeight: height,
+            tileWidth: width,
+            elementsPerRow: elementsPerRow,
+            subHeader: null,
+            leadingSubHeader: null,
+            leadingWidget: null,
+            widgetCount: collection.albumArtists[key]!.length,
+            builder: (BuildContext context, int index) => AlbumTile(
+              height: height,
+              width: width,
+              album: collection.albumArtists[key]![index],
+              key: ValueKey(collection.albumArtists[key]![index]),
+            ),
+            mainAxisAlignment: MainAxisAlignment.start,
+          );
+        }
+        children.addAll(tileGridListWidgets(
+          context: context,
+          tileHeight: height,
+          tileWidth: width,
+          elementsPerRow: elementsPerRow,
+          subHeader: null,
+          leadingSubHeader: null,
+          leadingWidget: null,
+          widgetCount: collection.albumArtists.values.last.length,
+          builder: (BuildContext context, int index) => AlbumTile(
+            height: height,
+            width: width,
+            album: collection.albumArtists.values.last[index],
+            key: ValueKey(collection.albumArtists.values.last[index]),
+          ),
+          mainAxisAlignment: MainAxisAlignment.start,
+        ));
+        itemExtents.addAll(List.generate(
+            widgets.length, (_) => (kAlbumTileHeight + tileMargin)));
+      }
+      if (collection.collectionOrderType == CollectionOrder.descending) {
+        for (final key in collection.albumArtists.keys.toList().reversed) {
+          offsets[key] =
+              36.0 + (kAlbumTileHeight + tileMargin) * widgets.length + last;
+          last = offsets[key]!;
+          children.addAll(widgets);
+          children.add(Container(
+            margin: EdgeInsets.only(left: tileMargin),
+            alignment: Alignment.topLeft,
+            height: 36.0,
+            child: Text(
+              key.name,
+              style: Theme.of(context).textTheme.headline1,
+            ),
+          ));
+          itemExtents.addAll(List.generate(
+              widgets.length, (_) => (kAlbumTileHeight + tileMargin)));
+          itemExtents.add(36.0);
+          widgets = tileGridListWidgets(
+            context: context,
+            tileHeight: height,
+            tileWidth: width,
+            elementsPerRow: elementsPerRow,
+            subHeader: null,
+            leadingSubHeader: null,
+            leadingWidget: null,
+            widgetCount: collection.albumArtists[key]!.length,
+            builder: (BuildContext context, int index) => AlbumTile(
+              height: height,
+              width: width,
+              album: collection.albumArtists[key]![index],
+              key: ValueKey(collection.albumArtists[key]![index]),
+            ),
+            mainAxisAlignment: MainAxisAlignment.start,
+          );
+        }
+        children.addAll(tileGridListWidgets(
+          context: context,
+          tileHeight: height,
+          tileWidth: width,
+          elementsPerRow: elementsPerRow,
+          subHeader: null,
+          leadingSubHeader: null,
+          leadingWidget: null,
+          widgetCount: collection.albumArtists.values.first.length,
+          builder: (BuildContext context, int index) => AlbumTile(
+            height: height,
+            width: width,
+            album: collection.albumArtists.values.first[index],
+            key: ValueKey(collection.albumArtists.values.first[index]),
+          ),
+          mainAxisAlignment: MainAxisAlignment.start,
+        ));
+        itemExtents.addAll(List.generate(
+            widgets.length, (_) => (kAlbumTileHeight + tileMargin)));
+      }
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            width: 176.0,
+            child: CustomListViewBuilder(
+              padding: EdgeInsets.only(top: tileMargin / 2.0),
+              itemCount: collection.albumArtists.keys.length,
+              itemExtents: List.generate(
+                  collection.albumArtists.keys.length, (_) => 28.0),
+              itemBuilder: (context, i) => Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    scrollController.animateTo(
+                      offsets[collection.collectionOrderType ==
+                              CollectionOrder.ascending
+                          ? collection.albumArtists.keys.elementAt(i)
+                          : collection.albumArtists.keys.toList().elementAt(
+                              collection.albumArtists.keys.length - i - 1)]!,
+                      duration: Duration(milliseconds: 100),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    width: 156.0,
+                    height: 28.0,
+                    padding: EdgeInsets.only(
+                      left: 12.0,
+                      right: 8.0,
+                    ),
+                    child: Text(
+                      collection.collectionOrderType ==
+                              CollectionOrder.ascending
+                          ? collection.albumArtists.keys
+                              .elementAt(i)
+                              .name
+                              .overflow
+                          : collection.albumArtists.keys
+                              .toList()
+                              .elementAt(
+                                  collection.albumArtists.keys.length - i - 1)
+                              .name
+                              .overflow,
+                      style: Theme.of(context).textTheme.headline4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          VerticalDivider(
+            width: 1.0,
+          ),
+          Expanded(
+            child: CustomListViewBuilder(
+              padding: EdgeInsets.only(
+                top: tileMargin,
+              ),
+              controller: scrollController,
+              itemCount: children.length,
+              itemExtents: itemExtents,
+              itemBuilder: (context, i) => children[i],
+            ),
+          ),
+        ],
+      );
+    });
   }
 }
 
@@ -438,7 +647,7 @@ class AlbumScreenState extends State<AlbumScreen>
                     ),
                     curve: Curves.easeOut,
                     duration: Duration(
-                      milliseconds: 200,
+                      milliseconds: 400,
                     ),
                     builder: (context, color, _) => DesktopAppBar(
                       height: MediaQuery.of(context).size.height / 3,
@@ -454,11 +663,11 @@ class AlbumScreenState extends State<AlbumScreen>
                       alignment: Alignment.center,
                       child: Card(
                         clipBehavior: Clip.antiAlias,
-                        margin: EdgeInsets.only(top: 72.0),
+                        margin: EdgeInsets.only(top: 96.0, bottom: 4.0),
                         elevation: 4.0,
                         child: Container(
                           constraints: BoxConstraints(
-                            maxWidth: 1280.0,
+                            maxWidth: 12 / 6 * 720.0,
                             maxHeight: 720.0,
                           ),
                           width: MediaQuery.of(context).size.width - 136.0,
@@ -468,40 +677,82 @@ class AlbumScreenState extends State<AlbumScreen>
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Expanded(
-                                flex: 6,
-                                child: Hero(
-                                  tag:
-                                      'album_art_${widget.album.albumName}_${widget.album.albumArtistName}',
+                                flex: 5,
+                                child: ClipRect(
                                   child: Stack(
-                                    alignment: Alignment.bottomLeft,
+                                    alignment: Alignment.center,
                                     children: [
-                                      Positioned.fill(
-                                        child: Image(
-                                          image: Collection.instance
-                                              .getAlbumArt(widget.album),
-                                          fit: BoxFit.cover,
+                                      TweenAnimationBuilder(
+                                        tween: ColorTween(
+                                          begin: Theme.of(context)
+                                              .appBarTheme
+                                              .backgroundColor,
+                                          end: color == null
+                                              ? Theme.of(context).dividerColor
+                                              : secondary!,
+                                        ),
+                                        curve: Curves.easeOut,
+                                        duration: Duration(
+                                          milliseconds: 400,
+                                        ),
+                                        builder: (context, color, _) =>
+                                            Positioned.fill(
+                                          child: Container(
+                                            color: color as Color?,
+                                          ),
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ClipOval(
-                                          child: Container(
-                                            height: 36.0,
-                                            width: 36.0,
-                                            color: Colors.black54,
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  launch(
-                                                      'file:///${(Collection.instance.getAlbumArt(widget.album) as FileImage).file.path}');
-                                                },
-                                                icon: Icon(
-                                                  Icons.image,
-                                                  size: 20.0,
-                                                  color: Colors.white,
+                                        padding: EdgeInsets.all(20.0),
+                                        child: Hero(
+                                          tag:
+                                              'album_art_${widget.album.albumName}_${widget.album.albumArtistName}',
+                                          child: Card(
+                                            color: Colors.white,
+                                            elevation: 4.0,
+                                            child: Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Image(
+                                                    image: Collection.instance
+                                                        .getAlbumArt(
+                                                            widget.album),
+                                                  ),
                                                 ),
-                                              ),
+                                                Positioned(
+                                                  bottom: 0.0,
+                                                  left: 0.0,
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.all(16.0),
+                                                    child: ClipOval(
+                                                      child: Container(
+                                                        height: 36.0,
+                                                        width: 36.0,
+                                                        color: Colors.black54,
+                                                        child: Material(
+                                                          color: Colors
+                                                              .transparent,
+                                                          child: IconButton(
+                                                            onPressed: () {
+                                                              launch(
+                                                                  'file:///${(Collection.instance.getAlbumArt(widget.album) as FileImage).file.path}');
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.image,
+                                                              size: 20.0,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
@@ -556,13 +807,15 @@ class AlbumScreenState extends State<AlbumScreen>
                                               FloatingActionButton(
                                                 heroTag: 'play_now',
                                                 onPressed: () {
-                                                  Playback.instance.open(
-                                                    widget.album.tracks +
-                                                        ([
-                                                          ...Collection
-                                                              .instance.tracks
-                                                        ]..shuffle()),
-                                                  );
+                                                  Playback.instance.open([
+                                                    ...widget.album.tracks,
+                                                    if (Configuration.instance
+                                                        .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                      ...[
+                                                        ...Collection
+                                                            .instance.tracks
+                                                      ]..shuffle(),
+                                                  ]);
                                                 },
                                                 mini: true,
                                                 child: Icon(
@@ -648,10 +901,6 @@ class AlbumScreenState extends State<AlbumScreen>
                                               Divider(height: 1.0),
                                             ] +
                                             (widget.album.tracks
-                                                  ..sort((first, second) =>
-                                                      first.trackNumber
-                                                          .compareTo(second
-                                                              .trackNumber)))
                                                 .map(
                                                   (track) => MouseRegion(
                                                     onEnter: (e) {
@@ -725,13 +974,22 @@ class AlbumScreenState extends State<AlbumScreen>
                                                           onTap: () {
                                                             Playback.instance
                                                                 .open(
-                                                              widget.album
-                                                                      .tracks +
-                                                                  ([
+                                                              [
+                                                                ...widget.album
+                                                                    .tracks,
+                                                                if (Configuration
+                                                                    .instance
+                                                                    .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                                  ...[
                                                                     ...Collection
                                                                         .instance
                                                                         .tracks
-                                                                  ]..shuffle()),
+                                                                  ]..shuffle(),
+                                                              ],
+                                                              index: widget
+                                                                  .album.tracks
+                                                                  .indexOf(
+                                                                      track),
                                                             );
                                                           },
                                                           child: Row(
@@ -828,7 +1086,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                     ),
                                                   ),
                                                 )
-                                                .toList(),
+                                                .toList()),
                                       ),
                                     ),
                                   ],
@@ -1046,8 +1304,12 @@ class AlbumScreenState extends State<AlbumScreen>
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () => Playback.instance.open(
-                              widget.album.tracks +
-                                  ([...Collection.instance.tracks]..shuffle()),
+                              [
+                                ...widget.album.tracks,
+                                if (Configuration.instance
+                                    .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                  ...[...Collection.instance.tracks]..shuffle(),
+                              ],
                               index: i,
                             ),
                             onLongPress: () async {
@@ -1231,10 +1493,12 @@ class AlbumScreenState extends State<AlbumScreen>
                                   : 0],
                           child: Icon(Icons.play_arrow),
                           onPressed: () {
-                            Playback.instance.open(
-                              widget.album.tracks +
-                                  ([...Collection.instance.tracks]..shuffle()),
-                            );
+                            Playback.instance.open([
+                              ...widget.album.tracks,
+                              if (Configuration.instance
+                                  .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                ...[...Collection.instance.tracks]..shuffle(),
+                            ]);
                           },
                         ),
                       ),

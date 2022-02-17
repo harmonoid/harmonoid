@@ -328,7 +328,7 @@ class YouTubeSearch extends StatelessWidget {
                 ),
                 Container(
                     margin: EdgeInsets.only(
-                      top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
+                      top: desktopTitleBarHeight + kDesktopAppBarHeight,
                     ),
                     child: FutureBuilder<List<Track>>(
                       future: future,

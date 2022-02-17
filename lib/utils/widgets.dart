@@ -1,31 +1,24 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 
 import 'dart:io';
 import 'dart:math' as math;
+import 'dart:math';
 import 'package:animations/animations.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart' hide ReorderableDragStartListener;
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
@@ -33,7 +26,7 @@ import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class CustomListView extends StatelessWidget {
-  final ScrollController controller = ScrollController();
+  late final ScrollController controller;
   final int velocity = 40;
   final List<Widget> children;
   final Axis? scrollDirection;
@@ -41,23 +34,29 @@ class CustomListView extends StatelessWidget {
   final EdgeInsets? padding;
 
   CustomListView({
+    ScrollController? controller,
     required this.children,
     this.scrollDirection,
     this.shrinkWrap,
     this.padding,
   }) {
+    if (controller != null) {
+      this.controller = controller;
+    } else {
+      this.controller = ScrollController();
+    }
     if (Platform.isWindows) {
-      controller.addListener(
+      this.controller.addListener(
         () {
-          final scrollDirection = controller.position.userScrollDirection;
+          final scrollDirection = this.controller.position.userScrollDirection;
           if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = controller.offset +
+            var scrollEnd = this.controller.offset +
                 (scrollDirection == ScrollDirection.reverse
                     ? velocity
                     : -velocity);
-            scrollEnd = math.min(controller.position.maxScrollExtent,
-                math.max(controller.position.minScrollExtent, scrollEnd));
-            controller.jumpTo(scrollEnd);
+            scrollEnd = math.min(this.controller.position.maxScrollExtent,
+                math.max(this.controller.position.minScrollExtent, scrollEnd));
+            this.controller.jumpTo(scrollEnd);
           }
         },
       );
@@ -73,6 +72,131 @@ class CustomListView extends StatelessWidget {
       scrollDirection: scrollDirection ?? Axis.vertical,
       shrinkWrap: shrinkWrap ?? false,
       children: children,
+    );
+  }
+}
+
+class CustomListViewBuilder extends StatelessWidget {
+  late final ScrollController controller;
+  final int velocity = 40;
+  final int itemCount;
+  final List<double> itemExtents;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final Axis? scrollDirection;
+  final bool? shrinkWrap;
+  final EdgeInsets? padding;
+
+  CustomListViewBuilder({
+    ScrollController? controller,
+    required this.itemCount,
+    required this.itemExtents,
+    required this.itemBuilder,
+    this.scrollDirection,
+    this.shrinkWrap,
+    this.padding,
+  }) {
+    if (controller != null) {
+      this.controller = controller;
+    } else {
+      this.controller = ScrollController();
+    }
+    if (Platform.isWindows) {
+      this.controller.addListener(
+        () {
+          final scrollDirection = this.controller.position.userScrollDirection;
+          if (scrollDirection != ScrollDirection.idle) {
+            var scrollEnd = this.controller.offset +
+                (scrollDirection == ScrollDirection.reverse
+                    ? velocity
+                    : -velocity);
+            scrollEnd = math.min(this.controller.position.maxScrollExtent,
+                math.max(this.controller.position.minScrollExtent, scrollEnd));
+            this.controller.jumpTo(scrollEnd);
+          }
+        },
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KnownExtentsListView.builder(
+      controller: controller,
+      itemExtents: itemExtents,
+      itemCount: itemCount,
+      itemBuilder: itemBuilder,
+      padding: padding,
+    );
+  }
+}
+
+class PickerButton extends StatefulWidget {
+  final String label;
+  final int selected;
+  final void Function(dynamic) onSelected;
+  final List<PopupMenuItem> items;
+  PickerButton({
+    Key? key,
+    required this.label,
+    required this.selected,
+    required this.onSelected,
+    required this.items,
+  }) : super(key: key);
+
+  @override
+  State<PickerButton> createState() => _PickerButtonState();
+}
+
+class _PickerButtonState extends State<PickerButton> {
+  final key = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        final position = RelativeRect.fromRect(
+          Offset(
+                key.globalPaintBounds!.left,
+                key.globalPaintBounds!.top + 40.0,
+              ) &
+              Size(228.0, 320.0),
+          Rect.fromLTWH(
+            0,
+            0,
+            MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height,
+          ),
+        );
+        showMenu(
+          context: context,
+          position: position,
+          items: widget.items,
+        ).then((value) {
+          widget.onSelected(value);
+        });
+      },
+      child: Container(
+        key: key,
+        height: 36.0,
+        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+        alignment: Alignment.centerLeft,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              widget.label + ':',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            const SizedBox(width: 4.0),
+            Text(
+              (widget.items[widget.selected].child as Text).data!,
+              style: Theme.of(context).textTheme.headline4?.copyWith(
+                    color: Theme.of(context).primaryColor,
+                  ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -259,12 +383,14 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
     return Consumer<CollectionRefresh>(
       builder: (context, refresh, _) => refresh.progress == refresh.total
           ? FloatingActionButton(
+              mini: true,
               elevation: 8.0,
               backgroundColor: Theme.of(context).colorScheme.secondary,
               child: TweenAnimationBuilder(
                 child: Icon(
                   Icons.refresh,
                   color: Colors.white,
+                  size: 20.0,
                 ),
                 tween: tween,
                 duration: Duration(milliseconds: 800),
@@ -597,55 +723,59 @@ class DesktopTitleBar extends StatelessWidget {
     return Platform.isWindows
         ? Container(
             width: MediaQuery.of(context).size.width,
-            height: kDesktopTitleBarHeight,
+            height: desktopTitleBarHeight,
             color: color ?? Theme.of(context).appBarTheme.backgroundColor,
-            child: MoveWindow(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 14.0,
-                  ),
-                  Text(
-                    'Harmonoid Music',
-                    style: TextStyle(
-                      color: (color == null
-                              ? Theme.of(context).brightness == Brightness.dark
-                              : isDark)
-                          ? Colors.white
-                          : Colors.black,
-                      fontSize: 12.0,
+            child: Row(
+              children: [
+                Expanded(
+                  child: MoveWindow(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 14.0,
+                        ),
+                        Text(
+                          'Harmonoid Music',
+                          style: TextStyle(
+                            color: (color == null
+                                    ? Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    : isDark)
+                                ? Colors.white
+                                : Colors.black,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Expanded(
-                    child: Container(),
-                  ),
-                  MinimizeWindowButton(
-                    colors: windowButtonColors(context),
-                  ),
-                  appWindow.isMaximized
-                      ? RestoreWindowButton(
-                          colors: windowButtonColors(context),
-                        )
-                      : MaximizeWindowButton(
-                          colors: windowButtonColors(context),
-                        ),
-                  CloseWindowButton(
-                    onPressed: () {
-                      if (CollectionRefresh.instance.isCompleted) {
-                        appWindow.close();
-                      } else {
-                        CollectionRefresh.instance.addListener(() {
-                          if (CollectionRefresh.instance.isCompleted) {
-                            appWindow.close();
-                          }
-                        });
-                      }
-                    },
-                    colors: windowButtonColors(context),
-                  ),
-                ],
-              ),
+                ),
+                MinimizeWindowButton(
+                  colors: windowButtonColors(context),
+                ),
+                appWindow.isMaximized
+                    ? RestoreWindowButton(
+                        colors: windowButtonColors(context),
+                      )
+                    : MaximizeWindowButton(
+                        colors: windowButtonColors(context),
+                      ),
+                CloseWindowButton(
+                  onPressed: () {
+                    if (CollectionRefresh.instance.isCompleted) {
+                      appWindow.close();
+                    } else {
+                      CollectionRefresh.instance.addListener(() {
+                        if (CollectionRefresh.instance.isCompleted) {
+                          appWindow.close();
+                        }
+                      });
+                    }
+                  },
+                  colors: windowButtonColors(context),
+                ),
+              ],
             ),
           )
         : Container();
@@ -835,6 +965,197 @@ class ShowAllButton extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+extension GlobalKeyExtension on GlobalKey {
+  Rect? get globalPaintBounds {
+    final renderObject = currentContext?.findRenderObject();
+    final translation = renderObject?.getTransformTo(null).getTranslation();
+    if (translation != null && renderObject?.paintBounds != null) {
+      final offset = Offset(translation.x, translation.y);
+      return renderObject!.paintBounds.shift(offset);
+    } else {
+      return null;
+    }
+  }
+}
+
+class ScrollableSlider extends StatelessWidget {
+  final double min;
+  final double max;
+  final double value;
+  final VoidCallback onScrolledUp;
+  final VoidCallback onScrolledDown;
+  final void Function(double) onChanged;
+
+  const ScrollableSlider({
+    Key? key,
+    required this.min,
+    required this.max,
+    required this.value,
+    required this.onScrolledUp,
+    required this.onScrolledDown,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerSignal: (event) {
+        if (event is PointerScrollEvent) {
+          if (event.scrollDelta.dy < 0) {
+            onScrolledUp();
+          }
+          if (event.scrollDelta.dy > 0) {
+            onScrolledDown();
+          }
+        }
+      },
+      child: SliderTheme(
+        data: SliderThemeData(
+          trackHeight: 2.0,
+          trackShape: CustomTrackShape(),
+          thumbShape: RoundSliderThumbShape(
+            enabledThumbRadius: 6.0,
+            pressedElevation: 4.0,
+            elevation: 2.0,
+          ),
+          overlayShape: RoundSliderOverlayShape(overlayRadius: 12.0),
+          overlayColor: Theme.of(context).primaryColor.withOpacity(0.4),
+          thumbColor: Theme.of(context).primaryColor,
+          activeTrackColor: Theme.of(context).primaryColor,
+          inactiveTrackColor: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white.withOpacity(0.4)
+              : Colors.black.withOpacity(0.2),
+        ),
+        child: Slider(
+          value: value,
+          onChanged: onChanged,
+          min: min,
+          max: max,
+        ),
+      ),
+    );
+  }
+}
+
+class CustomTrackShape extends RoundedRectSliderTrackShape {
+  Rect getPreferredRect({
+    required RenderBox parentBox,
+    Offset offset = Offset.zero,
+    required SliderThemeData sliderTheme,
+    bool isEnabled = false,
+    bool isDiscrete = false,
+  }) {
+    final double trackHeight = sliderTheme.trackHeight!;
+    final double trackLeft = offset.dx;
+    final double trackTop =
+        offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final double trackWidth = parentBox.size.width;
+    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
+  }
+}
+
+class CollectionSortButton extends StatelessWidget {
+  final int tab;
+  const CollectionSortButton({
+    Key? key,
+    required this.tab,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ContextMenuButton<dynamic>(
+      offset: Offset.fromDirection(pi / 2, 64.0),
+      icon: Icon(
+        Icons.sort,
+        size: 20.0,
+      ),
+      elevation: 4.0,
+      onSelected: (value) async {
+        if (value is CollectionSort) {
+          Provider.of<Collection>(context, listen: false).sort(type: value);
+          await Configuration.instance.save(
+            collectionSortType: value,
+          );
+        } else if (value is CollectionOrder) {
+          Provider.of<Collection>(context, listen: false).order(type: value);
+          await Configuration.instance.save(
+            collectionOrderType: value,
+          );
+        }
+      },
+      itemBuilder: (context) => [
+        CheckedPopupMenuItem(
+          padding: EdgeInsets.zero,
+          checked:
+              Collection.instance.collectionSortType == CollectionSort.aToZ ||
+                  (tab != 0 &&
+                      Collection.instance.collectionSortType ==
+                          CollectionSort.artist),
+          value: CollectionSort.aToZ,
+          child: Text(
+            Language.instance.A_TO_Z,
+            style: Theme.of(context).textTheme.headline4,
+          ),
+        ),
+        if (tab == 0 || tab == 1)
+          CheckedPopupMenuItem(
+            padding: EdgeInsets.zero,
+            checked: Collection.instance.collectionSortType ==
+                CollectionSort.dateAdded,
+            value: CollectionSort.dateAdded,
+            child: Text(
+              Language.instance.DATE_ADDED,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+        if (tab == 0 || tab == 1)
+          CheckedPopupMenuItem(
+            padding: EdgeInsets.zero,
+            checked:
+                Collection.instance.collectionSortType == CollectionSort.year,
+            value: CollectionSort.year,
+            child: Text(
+              Language.instance.YEAR,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+        if (tab == 0)
+          CheckedPopupMenuItem(
+            padding: EdgeInsets.zero,
+            checked:
+                Collection.instance.collectionSortType == CollectionSort.artist,
+            value: CollectionSort.artist,
+            child: Text(
+              Language.instance.ARTIST_SINGLE,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+        PopupMenuDivider(),
+        CheckedPopupMenuItem(
+          padding: EdgeInsets.zero,
+          checked: Collection.instance.collectionOrderType ==
+              CollectionOrder.ascending,
+          value: CollectionOrder.ascending,
+          child: Text(
+            Language.instance.ASCENDING,
+            style: Theme.of(context).textTheme.headline4,
+          ),
+        ),
+        CheckedPopupMenuItem(
+          padding: EdgeInsets.zero,
+          checked: Collection.instance.collectionOrderType ==
+              CollectionOrder.descending,
+          value: CollectionOrder.descending,
+          child: Text(
+            Language.instance.DESCENDING,
+            style: Theme.of(context).textTheme.headline4,
+          ),
+        ),
+      ],
     );
   }
 }

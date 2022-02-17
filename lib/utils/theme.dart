@@ -1,28 +1,20 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-ThemeData createTheme({required Color color, ThemeMode? themeMode}) {
+ThemeData createTheme({
+  required Color color,
+  required ThemeMode themeMode,
+}) {
   bool isLight = themeMode == ThemeMode.light;
   late TextTheme textTheme;
   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
@@ -81,13 +73,6 @@ ThemeData createTheme({required Color color, ThemeMode? themeMode}) {
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
       ),
-      button: Platform.isLinux
-          ? TextStyle(
-              color: color,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w600,
-            )
-          : null,
     );
   } else {
     textTheme = TextTheme(
@@ -119,6 +104,7 @@ ThemeData createTheme({required Color color, ThemeMode? themeMode}) {
     );
   }
   return ThemeData(
+    /// Explicitly using [ChipThemeData] on Linux since it seems to be falling back to Ubuntu's font family.
     chipTheme: Platform.isLinux
         ? ChipThemeData(
             backgroundColor: color,
@@ -130,11 +116,13 @@ ThemeData createTheme({required Color color, ThemeMode? themeMode}) {
               color: Colors.white,
               fontSize: 14.0,
               fontWeight: FontWeight.normal,
+              fontFamily: 'Inter',
             ),
             secondaryLabelStyle: TextStyle(
               color: Colors.white,
               fontSize: 14.0,
               fontWeight: FontWeight.normal,
+              fontFamily: 'Inter',
             ),
             brightness: Brightness.dark,
           )
@@ -245,6 +233,7 @@ ThemeData createTheme({required Color color, ThemeMode? themeMode}) {
           : null,
       waitDuration: Duration(seconds: 1),
     ),
+    fontFamily: Platform.isLinux ? 'Inter' : null,
   );
 }
 

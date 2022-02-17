@@ -1,23 +1,13 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:libmpv/libmpv.dart';
@@ -34,19 +24,22 @@ import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/override_window_destroy.dart';
 
 const String kTitle = 'Harmonoid';
-const String kVersion = '0.1.9';
+const String kVersion = '0.2.0';
 const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
-const String kLicense = 'GPL-3.0';
+const String kLicense = 'End-User License Agreement for Harmonoid';
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     if (Platform.isWindows) {
       await Configuration.initialize();
-      await MPV.initialize();
-      await SMTC.initialize();
+      if (kReleaseMode) {
+        await MPV.initialize();
+        await SMTC.initialize();
+      }
       await Intent.initialize(args: args);
       await HotKeys.initialize();
       DiscordRPC.initialize();
@@ -59,9 +52,12 @@ Future<void> main(List<String> args) async {
     }
     if (Platform.isLinux) {
       await Configuration.initialize();
-      await MPV.initialize();
+      if (kReleaseMode) {
+        await MPV.initialize();
+      }
       await Intent.initialize(args: args);
       await HotKeys.initialize();
+      OverrideWindowDestroy.initialize();
       DiscordRPC.initialize();
     }
     if (Platform.isAndroid) {

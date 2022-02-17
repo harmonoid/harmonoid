@@ -1,24 +1,11 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
-
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 // ignore_for_file: non_constant_identifier_names
-
 class Strings {
   late String ABOUT_SUBTITLE;
   late String ABOUT_TITLE;
@@ -31,6 +18,7 @@ class Strings {
   late String ARTIST;
   late String ARTIST_SINGLE;
   late String ASCENDING;
+  late String AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING;
   late String A_TO_Z;
   late String BUFFERING;
   late String CANCEL;
@@ -97,6 +85,7 @@ class Strings {
   late String N_TRACKS;
   late String OK;
   late String OPTIONS;
+  late String ORDER;
   late String PAUSE;
   late String PLAY;
   late String PLAYLIST;
@@ -158,6 +147,9 @@ class Strings {
   late String SETTING_THEME_TITLE;
   late String SHARE;
   late String SHOW_ALBUM;
+  late String SHOW_NOW_PLAYING_AFTER_PLAYING;
+  late String SHOW_TRACK_PROGRESS_ON_TASKBAR;
+  late String SORT;
   late String SORT_BY;
   late String STARTING_PLAYBACK;
   late String SWITCH_THEME;

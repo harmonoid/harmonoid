@@ -27,6 +27,12 @@ class YouTube extends ChangeNotifier {
         if (recommendations!.length == 1) {
           await fetchRecommendations();
         }
+        recommendations!.addAll(
+          (await YoutubeApi.getRecommendations(
+                  Plugins.redirect(recommendations!.last.uri)
+                      .queryParameters['id']!))
+              .skip(1),
+        );
         current = Configuration.instance.discoverRecent.first;
         notifyListeners();
       } catch (_) {

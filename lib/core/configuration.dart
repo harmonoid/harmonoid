@@ -1,21 +1,10 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 
 import 'dart:io';
 import 'dart:convert' as convert;
@@ -66,7 +55,7 @@ class Configuration extends ConfigurationKeys {
       path.join(
         await instance.configurationDirectory,
         '.Harmonoid',
-        'Configuration.json',
+        'Configuration.JSON',
       ),
     );
     if (!await instance.file.exists()) {
@@ -98,6 +87,9 @@ class Configuration extends ConfigurationKeys {
     List<String>? collectionSearchRecent,
     List<String>? discoverSearchRecent,
     List<String>? discoverRecent,
+    bool? showTrackProgressOnTaskbar,
+    bool? automaticallyAddOtherSongsFromCollectionToNowPlaying,
+    bool? automaticallyShowNowPlayingScreenAfterPlaying,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -132,6 +124,17 @@ class Configuration extends ConfigurationKeys {
     if (notificationLyrics != null) {
       this.notificationLyrics = notificationLyrics;
     }
+    if (showTrackProgressOnTaskbar != null) {
+      this.showTrackProgressOnTaskbar = showTrackProgressOnTaskbar;
+    }
+    if (automaticallyAddOtherSongsFromCollectionToNowPlaying != null) {
+      this.automaticallyAddOtherSongsFromCollectionToNowPlaying =
+          automaticallyAddOtherSongsFromCollectionToNowPlaying;
+    }
+    if (automaticallyShowNowPlayingScreenAfterPlaying != null) {
+      this.automaticallyShowNowPlayingScreenAfterPlaying =
+          automaticallyShowNowPlayingScreenAfterPlaying;
+    }
     await file.writeAsString(
       convert.JsonEncoder.withIndent('  ').convert(
         {
@@ -150,6 +153,11 @@ class Configuration extends ConfigurationKeys {
           'collectionSearchRecent': this.collectionSearchRecent,
           'discoverSearchRecent': this.discoverSearchRecent,
           'discoverRecent': this.discoverRecent,
+          'showTrackProgressOnTaskbar': this.showTrackProgressOnTaskbar,
+          'automaticallyAddOtherSongsFromCollectionToNowPlaying':
+              this.automaticallyAddOtherSongsFromCollectionToNowPlaying,
+          'automaticallyShowNowPlayingScreenAfterPlaying':
+              this.automaticallyShowNowPlayingScreenAfterPlaying,
         },
       ),
     );
@@ -187,6 +195,11 @@ class Configuration extends ConfigurationKeys {
       collectionSearchRecent = current['collectionSearchRecent'].cast<String>();
       discoverSearchRecent = current['discoverSearchRecent'].cast<String>();
       discoverRecent = current['discoverRecent'].cast<String>();
+      showTrackProgressOnTaskbar = current['showTrackProgressOnTaskbar'];
+      automaticallyAddOtherSongsFromCollectionToNowPlaying =
+          current['automaticallyAddOtherSongsFromCollectionToNowPlaying'];
+      automaticallyShowNowPlayingScreenAfterPlaying =
+          current['automaticallyShowNowPlayingScreenAfterPlaying'];
     } catch (exception) {
       if (!retry) throw exception;
       if (!await file.exists()) {
@@ -213,6 +226,9 @@ abstract class ConfigurationKeys {
   late List<String> collectionSearchRecent;
   late List<String> discoverSearchRecent;
   late List<String> discoverRecent;
+  late bool showTrackProgressOnTaskbar;
+  late bool automaticallyAddOtherSongsFromCollectionToNowPlaying;
+  late bool automaticallyShowNowPlayingScreenAfterPlaying;
 }
 
 final Map<String, dynamic> defaultConfiguration = {
@@ -227,11 +243,14 @@ final Map<String, dynamic> defaultConfiguration = {
   'languageRegion': 0,
   'accent': 0,
   'themeMode': isMobile ? 0 : 1,
-  'collectionSortType': 1,
-  'collectionOrderType': 1,
+  'collectionSortType': isMobile ? 1 : 3,
+  'collectionOrderType': isMobile ? 1 : 0,
   'automaticAccent': false,
   'notificationLyrics': true,
   'collectionSearchRecent': [],
   'discoverSearchRecent': [],
   'discoverRecent': [],
+  'showTrackProgressOnTaskbar': false,
+  'automaticallyAddOtherSongsFromCollectionToNowPlaying': false,
+  'automaticallyShowNowPlayingScreenAfterPlaying': true,
 };

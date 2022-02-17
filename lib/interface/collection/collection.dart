@@ -1,21 +1,10 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 
 import 'dart:math';
 import 'package:flutter/material.dart' hide Intent;
@@ -86,7 +75,9 @@ class CollectionScreenState extends State<CollectionScreen>
     pageController.addListener(() {
       floatingSearchBarController.show();
     });
-    Intent.instance.play();
+    Future.delayed(const Duration(seconds: 1), () {
+      Intent.instance.play();
+    });
   }
 
   @override
@@ -102,7 +93,7 @@ class CollectionScreenState extends State<CollectionScreen>
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.only(
-                    top: kDesktopTitleBarHeight + kDesktopAppBarHeight,
+                    top: desktopTitleBarHeight + kDesktopAppBarHeight,
                   ),
                   child: Consumer<CollectionRefresh>(
                     builder: (context, refresh, __) => Stack(
@@ -381,107 +372,18 @@ class CollectionScreenState extends State<CollectionScreen>
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 24.0,
+                                      width: 12.0,
                                     ),
                                     TweenAnimationBuilder<double>(
                                       tween: Tween<double>(
                                         begin: 0.0,
-                                        end: (index == 4) ? 0.0 : 1.0,
+                                        end: ([3, 4].contains(index))
+                                            ? 0.0
+                                            : 1.0,
                                       ),
                                       duration: Duration(milliseconds: 200),
-                                      child: ContextMenuButton<dynamic>(
-                                        offset:
-                                            Offset.fromDirection(pi / 2, 64.0),
-                                        icon: Icon(
-                                          Icons.sort,
-                                          size: 20.0,
-                                        ),
-                                        elevation: 4.0,
-                                        onSelected: (value) async {
-                                          if (value is CollectionSort) {
-                                            Provider.of<Collection>(context,
-                                                    listen: false)
-                                                .sort(type: value);
-                                            await Configuration.instance.save(
-                                              collectionSortType: value,
-                                            );
-                                          } else if (value is CollectionOrder) {
-                                            Provider.of<Collection>(context,
-                                                    listen: false)
-                                                .order(type: value);
-                                            await Configuration.instance.save(
-                                              collectionOrderType: value,
-                                            );
-                                          }
-                                        },
-                                        itemBuilder: (context) => [
-                                          CheckedPopupMenuItem(
-                                            padding: EdgeInsets.zero,
-                                            checked: Collection.instance
-                                                    .collectionSortType ==
-                                                CollectionSort.aToZ,
-                                            value: CollectionSort.aToZ,
-                                            child: Text(
-                                              Language.instance.A_TO_Z,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ),
-                                          CheckedPopupMenuItem(
-                                            padding: EdgeInsets.zero,
-                                            checked: Collection.instance
-                                                    .collectionSortType ==
-                                                CollectionSort.dateAdded,
-                                            value: CollectionSort.dateAdded,
-                                            child: Text(
-                                              Language.instance.DATE_ADDED,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ),
-                                          CheckedPopupMenuItem(
-                                            padding: EdgeInsets.zero,
-                                            checked: Collection.instance
-                                                    .collectionSortType ==
-                                                CollectionSort.year,
-                                            value: CollectionSort.year,
-                                            child: Text(
-                                              Language.instance.YEAR,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ),
-                                          PopupMenuDivider(),
-                                          CheckedPopupMenuItem(
-                                            padding: EdgeInsets.zero,
-                                            checked: Collection.instance
-                                                    .collectionOrderType ==
-                                                CollectionOrder.ascending,
-                                            value: CollectionOrder.ascending,
-                                            child: Text(
-                                              Language.instance.ASCENDING,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ),
-                                          CheckedPopupMenuItem(
-                                            padding: EdgeInsets.zero,
-                                            checked: Collection.instance
-                                                    .collectionOrderType ==
-                                                CollectionOrder.descending,
-                                            value: CollectionOrder.descending,
-                                            child: Text(
-                                              Language.instance.DESCENDING,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ),
-                                        ],
+                                      child: CollectionSortButton(
+                                        tab: index,
                                       ),
                                       builder: (context, value, child) =>
                                           Opacity(

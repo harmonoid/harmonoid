@@ -1,21 +1,10 @@
-/* 
- *  This file is part of Harmonoid (https://github.com/harmonoid/harmonoid).
- *  
- *  Harmonoid is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  Harmonoid is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with Harmonoid. If not, see <https://www.gnu.org/licenses/>.
- * 
- *  Copyright 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
- */
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 
 import 'dart:ui';
 import 'dart:async';
@@ -28,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -46,9 +36,8 @@ class ArtistTab extends StatelessWidget {
       builder: (context, collection, _) {
         return isDesktop
             ? collection.tracks.isNotEmpty
-                ? CustomListView(
-                    padding: EdgeInsets.only(top: tileMargin),
-                    children: tileGridListWidgets(
+                ? () {
+                    final data = tileGridListWidgets(
                       context: context,
                       tileHeight: kDesktopArtistTileHeight,
                       tileWidth: kDesktopArtistTileWidth,
@@ -56,14 +45,21 @@ class ArtistTab extends StatelessWidget {
                       subHeader: null,
                       leadingSubHeader: null,
                       widgetCount: collection.artists.length,
-                      leadingWidget: Container(),
+                      leadingWidget: null,
                       builder: (BuildContext context, int index) => ArtistTile(
                         height: kDesktopArtistTileHeight,
                         width: kDesktopArtistTileWidth,
                         artist: collection.artists[index],
                       ),
-                    ),
-                  )
+                    );
+                    return CustomListViewBuilder(
+                      padding: EdgeInsets.only(top: tileMargin),
+                      itemCount: data.length,
+                      itemExtents: List.generate(data.length,
+                          (_) => kDesktopArtistTileHeight + tileMargin),
+                      itemBuilder: (_, i) => data[i],
+                    );
+                  }()
                 : Center(
                     child: ExceptionWidget(
                       title: Language.instance.NO_COLLECTION_TITLE,
@@ -459,70 +455,87 @@ class ArtistScreenState extends State<ArtistScreen>
                       width: MediaQuery.of(context).size.width,
                       child: Container(
                         alignment: Alignment.center,
-                        child: Container(
-                          margin: EdgeInsets.only(top: 72.0),
-                          constraints: BoxConstraints(
-                            maxWidth: 1280.0,
-                            maxHeight: 720.0,
-                          ),
-                          width: MediaQuery.of(context).size.width - 136.0,
-                          height: MediaQuery.of(context).size.height - 192.0,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 6,
-                                child: LayoutBuilder(
-                                    builder: (context, constraints) {
-                                  var dimension = min(
-                                    constraints.maxWidth,
-                                    constraints.maxHeight,
-                                  );
-                                  return SizedBox.square(
-                                    dimension: dimension,
-                                    child: Container(
-                                      height: dimension,
-                                      width: dimension,
-                                      margin: EdgeInsets.all(24.0),
-                                      alignment: Alignment.center,
-                                      child: Hero(
-                                        tag:
-                                            'artist_art_${widget.artist.artistName}',
-                                        child: Card(
-                                          clipBehavior: Clip.antiAlias,
-                                          margin: EdgeInsets.zero,
-                                          elevation: 4.0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              (dimension - 48.0) / 2.0,
+                        child: Card(
+                          clipBehavior: Clip.antiAlias,
+                          margin: EdgeInsets.only(top: 96.0, bottom: 4.0),
+                          elevation: 4.0,
+                          child: Container(
+                            constraints: BoxConstraints(
+                              maxWidth: 12 / 6 * 720.0,
+                              maxHeight: 720.0,
+                            ),
+                            width: MediaQuery.of(context).size.width - 136.0,
+                            height: MediaQuery.of(context).size.height - 192.0,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                  flex: 6,
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) => ClipRect(
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          TweenAnimationBuilder(
+                                            tween: ColorTween(
+                                              begin: Theme.of(context)
+                                                  .appBarTheme
+                                                  .backgroundColor,
+                                              end: color == null
+                                                  ? Theme.of(context)
+                                                      .dividerColor
+                                                  : secondary!,
                                             ),
-                                          ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(4.0),
-                                            width: dimension - 48.0,
-                                            height: dimension - 48.0,
-                                            child: ClipOval(
-                                              child: Image(
-                                                image: collection
-                                                    .getAlbumArt(widget.artist),
-                                                fit: BoxFit.cover,
-                                                height: dimension - 56.0,
-                                                width: dimension - 56.0,
+                                            curve: Curves.easeOut,
+                                            duration: Duration(
+                                              milliseconds: 400,
+                                            ),
+                                            builder: (context, color, _) =>
+                                                Positioned.fill(
+                                              child: Container(
+                                                color: color as Color?,
                                               ),
                                             ),
                                           ),
-                                        ),
+                                          Padding(
+                                            padding: EdgeInsets.all(20.0),
+                                            child: Hero(
+                                              tag:
+                                                  'artist_art_${widget.artist.artistName}',
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      blurRadius: 8.0,
+                                                      color: Colors.black26,
+                                                      spreadRadius: 6.0,
+                                                      offset: Offset(0, 6.0),
+                                                    )
+                                                  ],
+                                                ),
+                                                padding: EdgeInsets.all(8.0),
+                                                child: CircleAvatar(
+                                                  radius: 240.0,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  backgroundImage: Collection
+                                                      .instance
+                                                      .getAlbumArt(
+                                                          widget.artist),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  );
-                                }),
-                              ),
-                              Expanded(
-                                flex: 7,
-                                child: Card(
-                                  clipBehavior: Clip.antiAlias,
-                                  elevation: 4.0,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 7,
                                   child: CustomListView(
                                     children: [
                                       Stack(
@@ -571,10 +584,16 @@ class ArtistScreenState extends State<ArtistScreen>
                                                   heroTag: 'play_now',
                                                   onPressed: () {
                                                     Playback.instance.open(
-                                                      widget.artist.tracks +
-                                                          ([
-                                                            ...collection.tracks
-                                                          ]..shuffle()),
+                                                      [
+                                                        ...widget.artist.tracks,
+                                                        if (Configuration
+                                                            .instance
+                                                            .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                          ...[
+                                                            ...Collection
+                                                                .instance.tracks
+                                                          ]..shuffle(),
+                                                      ],
                                                     );
                                                   },
                                                   mini: true,
@@ -775,7 +794,13 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                           onPressed:
                                                                               () {
                                                                             Playback.instance.open(
-                                                                              widget.artist.tracks,
+                                                                              [
+                                                                                ...widget.artist.tracks,
+                                                                                if (Configuration.instance.automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                                                  ...[
+                                                                                    ...Collection.instance.tracks
+                                                                                  ]..shuffle(),
+                                                                              ],
                                                                               index: widget.artist.tracks.indexOf(track),
                                                                             );
                                                                           },
@@ -854,8 +879,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                     ],
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -884,16 +909,6 @@ class ArtistScreenState extends State<ArtistScreen>
                           splashRadius: 20.0,
                         ),
                         forceElevated: true,
-                        // actions: [
-                        //  IconButton(
-                        //    onPressed: () {},
-                        //    icon: Icon(
-                        //      Icons.favorite,
-                        //    ),
-                        //     iconSize: 24.0,
-                        //     splashRadius: 20.0,
-                        //   ),
-                        // ],
                         title: TweenAnimationBuilder<double>(
                           tween: Tween<double>(
                             begin: 1.0,
@@ -1011,8 +1026,13 @@ class ArtistScreenState extends State<ArtistScreen>
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () => Playback.instance.open(
-                                widget.artist.tracks +
-                                    ([...collection.tracks]..shuffle()),
+                                [
+                                  ...widget.artist.tracks,
+                                  if (Configuration.instance
+                                      .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                    ...[...Collection.instance.tracks]
+                                      ..shuffle(),
+                                ],
                                 index: i,
                               ),
                               onLongPress: () async {
@@ -1198,11 +1218,12 @@ class ArtistScreenState extends State<ArtistScreen>
                                     : 0],
                             child: Icon(Icons.play_arrow),
                             onPressed: () {
-                              Playback.instance.open(
-                                widget.artist.tracks +
-                                    ([...collection.tracks]..shuffle()),
-                                index: 0,
-                              );
+                              Playback.instance.open([
+                                ...widget.artist.tracks,
+                                if (Configuration.instance
+                                    .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                  ...[...Collection.instance.tracks]..shuffle(),
+                              ]);
                             },
                           ),
                         ),
