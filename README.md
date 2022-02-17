@@ -174,6 +174,12 @@ Source code and official releases/binaries are distributed under our [End-User L
       <li>Update French translation.</li>
     </ul>
   </li>
+  <li>
+    <img src='https://avatars.githubusercontent.com/u/11423362?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/maisondasilva'>Maison</a></strong>
+    <ul>
+      <li>Update Portuguese translation.</li>
+    </ul>
+  </li>
 </ul>
 
 ## Acknowlegements
@@ -182,4 +188,4 @@ Source code and official releases/binaries are distributed under our [End-User L
 
 - Harmonoid uses a modified version of [libmpv](https://github.com/mpv-player/mpv/tree/master/libmpv) for media playback capabilities on desktop. The compilation setup & other information can be found [here](https://github.com/alexmercerind/harmonoid-custom-codec). The application bundles a minimal & LGPL compilant version of [mpv](https://github.com/mpv-player/mpv) shared library (`mpv-2.dll`). Users are free to update/change to their own preferred libmpv by replacing the `mpv-2.dll` file present in Harmonoid's application directory.
 
-- [End-User License Agreement for Harmonoid (EULA)](./EULA.txt) is greatly inspired by [End-User License Agreement for Aseprite (EULA)](https://github.com/aseprite/aseprite/blob/main/EULA.txt).
+- [End-User License Agreement for Harmonoid (EULA)](./EULA.txt) is a slightly modified version of [End-User License Agreement for Aseprite (EULA)](https://github.com/aseprite/aseprite/blob/main/EULA.txt).
