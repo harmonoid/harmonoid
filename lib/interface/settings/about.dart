@@ -139,6 +139,12 @@ const kContributors = [
     'https://avatars.githubusercontent.com/u/25613162?s=80&v=4',
     'ejacquemoud',
     'Update French translation.'
+  ],
+  [
+    'https://github.com/maisondasilva',
+    'https://avatars.githubusercontent.com/u/11423362?s=80&v=4',
+    'Maison',
+    'Update Portuguese translation.'
   ]
 ];
 
@@ -261,10 +267,7 @@ class AboutPageState extends State<AboutPage> {
                         Padding(
                           padding: EdgeInsets.only(left: 16.0, right: 16.0),
                           child: Text(
-                            (repository == null ||
-                                    repository!.containsKey('message'))
-                                ? 'GNU General Public License v3.0'
-                                : repository!['license']['name'],
+                            'End-User License Agreement for Harmonoid',
                             style: TextStyle(
                               color: Theme.of(context).brightness ==
                                       Brightness.dark
