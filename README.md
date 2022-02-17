@@ -80,7 +80,7 @@ Please note that these are download links for the free version of the app. You m
      <td>Integrate D-Bus MPRIS controls in your Dart/Flutter app.</td>
    </tr>
   <tr>
-     <td><a href='https://github.com/alexmercerind/libmpv.dart'>libmpv.dart</a></td>
+     <td><a href='https://github.com/alexmercerind/smtc-win32/tree/master/bindings/system_media_transport_controls.dart'>system_media_transport_controls.dart</a></td>
      <td>Modern UWP System Media Transport Controls for Dart/Flutter.</td>
    </tr>
   <tr>
@@ -108,6 +108,7 @@ Well you've scrolled this down... How about seeing more stuff.
 <img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/3.png'></img>
 <img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/4.png'></img>
 <img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/5.png'></img>
+
 ## Contributors
 
 <ul>
