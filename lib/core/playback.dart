@@ -7,8 +7,10 @@
 ///
 
 import 'dart:io';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Intent;
+import 'package:harmonoid/core/intent.dart';
 import 'package:libmpv/libmpv.dart';
+import 'package:mpris_service/mpris_service.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
@@ -111,6 +113,9 @@ class Playback extends ChangeNotifier {
       assetsAudioPlayer.setPlaySpeed(value);
     }
     rate = value;
+    if (Platform.isLinux) {
+      mpris?.rate = value;
+    }
     notifyListeners();
   }
 
@@ -122,6 +127,9 @@ class Playback extends ChangeNotifier {
       assetsAudioPlayer.setVolume(value);
     }
     volume = value;
+    if (Platform.isLinux) {
+      mpris?.volume = value;
+    }
     notifyListeners();
   }
 
@@ -183,7 +191,7 @@ class Playback extends ChangeNotifier {
       notifyListeners();
       if (Configuration
           .instance.automaticallyShowNowPlayingScreenAfterPlaying) {
-        Future.delayed(const Duration(milliseconds: 200), () {
+        Future.delayed(const Duration(milliseconds: 500), () {
           NowPlayingLauncher.instance.maximized = true;
         });
       }
@@ -241,6 +249,9 @@ class Playback extends ChangeNotifier {
             duration.inMilliseconds,
           );
         }
+        if (Platform.isLinux) {
+          mpris?.position = event;
+        }
       });
       player.streams.duration.listen((event) {
         duration = event;
@@ -274,6 +285,67 @@ class Playback extends ChangeNotifier {
                 break;
             }
           });
+        }
+        if (Platform.isLinux) {
+          mpris = MPRISService(
+            'harmonoid',
+            identity: 'Harmonoid',
+            desktopEntry: '/usr/share/applications/harmonoid.desktop',
+            setLoopStatus: (value) {
+              switch (value) {
+                case 'None':
+                  {
+                    setPlaylistLoopMode(PlaylistLoopMode.none);
+                    break;
+                  }
+                case 'Track':
+                  {
+                    setPlaylistLoopMode(PlaylistLoopMode.single);
+                    break;
+                  }
+                case 'Playlist':
+                  {
+                    setPlaylistLoopMode(PlaylistLoopMode.loop);
+                    break;
+                  }
+              }
+            },
+            setRate: (value) {
+              setRate(value);
+            },
+            setShuffle: (value) {
+              if (this.isShuffling != value) {
+                toggleShuffle();
+              }
+            },
+            setVolume: (value) {
+              setVolume(value);
+            },
+            doNext: next,
+            doPrevious: previous,
+            doPause: pause,
+            doPlayPause: playOrPause,
+            doPlay: play,
+            doSeek: (value) {
+              seek(Duration(microseconds: value));
+            },
+            doSetPosition: (objectPath, timeMicroseconds) {
+              final index = mpris?.playlist
+                      .map(
+                        (e) => '/' + e.uri.toString().hashCode.toString(),
+                      )
+                      .toList()
+                      .indexOf(objectPath) ??
+                  -1;
+              if (index >= 0 && index != this.index) {
+                jump(index);
+              }
+              seek(Duration(microseconds: timeMicroseconds));
+            },
+            doOpenUri: (uri) {
+              Intent.instance.playUri(uri);
+            },
+          );
         }
       } catch (_) {}
     }
@@ -325,6 +397,23 @@ class Playback extends ChangeNotifier {
             ),
           ]);
         }
+        if (Platform.isLinux) {
+          Uri? artworkUri;
+          final artwork = Collection.instance.getAlbumArt(track);
+          if (artwork is FileImage) {
+            artworkUri = artwork.file.uri;
+          } else if (artwork is NetworkImage) {
+            artworkUri = Uri.parse(artwork.url);
+          }
+          mpris?.isPlaying = isPlaying;
+          mpris?.isCompleted = isCompleted;
+          mpris?.index = index;
+          mpris?.playlist = tracks.map((e) {
+            final json = e.toJson();
+            json['artworkUri'] = artworkUri.toString();
+            return MPRISMedia.fromJson(json);
+          }).toList();
+        }
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           if (!isCompleted) {
             discord.start(autoRegister: true);
@@ -343,7 +432,10 @@ class Playback extends ChangeNotifier {
             discord.clearPresence();
           }
         }
-      } catch (_) {}
+      } catch (_, __) {
+        print(_);
+        print(__);
+      }
       Lyrics.instance.update(
           track.trackName + ' ' + track.trackArtistNames.take(2).join(', '));
     } catch (_) {}
@@ -351,9 +443,8 @@ class Playback extends ChangeNotifier {
 
   final Player player = Player(video: false, osc: false, title: kTitle);
   final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
-  final discord = DiscordRPC(
-    applicationId: '881480706545573918',
-  );
+  MPRISService? mpris;
+  final discord = DiscordRPC(applicationId: '881480706545573918');
 
   double _volume = 50.0;
 }
