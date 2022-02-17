@@ -70,22 +70,26 @@ jobs:
         with:
           channel: "stable"
       - run: sudo apt-get update
-      - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev mpv libmpv-dev dpkg-dev alien
+      - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev mpv libmpv-dev dpkg-dev rpm
       - run: flutter config --enable-linux-desktop
       - run: flutter pub upgrade
       - run: flutter pub get
       - run: flutter build linux --verbose
 
-      - name: Build .deb executable
+      - name: Build RPM Package
         run: |
           cp -fr build/linux/x64/release/bundle linux/debian/usr/bin
+          sed -i "s:cp -rf :cp -rf $(pwd)/:" linux/rpm/harmonoid.spec
+          cd linux/debian
+          sed -i "s:FILES_HERE:$(find usr -type f -follow -print | awk '{printf "/%s\\n", $0}'):" ../rpm/harmonoid.spec
+          cd ../../
+          rpmbuild -bb linux/rpm/harmonoid.spec -D "_topdir $(pwd)/rpmbuild"
+          cp rpmbuild/RPMS/x86_64/*.rpm harmonoid-linux-x86_64.rpm
+
+      - name: Build DEB Package
+        run: |
           dpkg-deb --build --root-owner-group linux/debian
           cp linux/*.deb harmonoid-linux-x86_64.deb
-
-      - name: Build .rpm executable
-        run: |
-          alien -r harmonoid-linux-x86_64.deb
-          mv harmonoid*.rpm harmonoid-linux-x86_64.rpm
 
       - name: Build Tarball
         run: |
