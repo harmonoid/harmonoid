@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_linux
   dart_discord_rpc
   file_selector_linux
+  override_window_destroy
   url_launcher_linux
 )
 

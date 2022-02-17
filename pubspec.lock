@@ -430,7 +430,7 @@ packages:
       path: "external/mpris_service.dart"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   msix:
     dependency: "direct dev"
     description:
@@ -447,6 +447,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  override_window_destroy:
+    dependency: "direct main"
+    description:
+      path: "external/override_window_destroy"
+      relative: true
+    source: path
+    version: "0.0.1"
   package_config:
     dependency: transitive
     description:

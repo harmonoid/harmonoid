@@ -20,6 +20,8 @@ dependencies:
     path: external/mpris_service.dart
   harmonoid_visual_assets:
     path: external/harmonoid_visual_assets
+  override_window_destroy:
+    path: external/override_window_destroy
   windows_taskbar: ^1.1.0
   dart_discord_rpc: ^0.0.2
   flutter_media_metadata:
