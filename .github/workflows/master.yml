@@ -76,18 +76,20 @@ jobs:
       - run: flutter pub get
       - run: flutter build linux --verbose
 
-      - name: Build .deb executable
+      - name: Build RPM Package
         run: |
           cp -fr build/linux/x64/release/bundle linux/debian/usr/bin
+          sed -i "s:cp -rf :cp -rf $(pwd)/:" linux/rpm/harmonoid.spec
+          cd linux/debian
+          sed -i "s:FILES_HERE:$(find usr -type f -follow -print | awk '{printf "/%s\\n", $0}'):" ../rpm/harmonoid.spec
+          cd ../../
+          rpmbuild -bb linux/packaging/rpm/harmonoid.spec -D "_topdir $(pwd)/rpmbuild"
+          cp rpmbuild/RPMS/x86_64/*.rpm harmonoid-linux-x86_64.rpm
+
+      - name: Build DEB Package
+        run: |
           dpkg-deb --build --root-owner-group linux/debian
           cp linux/*.deb harmonoid-linux-x86_64.deb
-
-      - name: Build .rpm executable
-
-        run: |
-          sed -i "s:cp -rf :cp -rf $(pwd)/:" linux/rpm/harmonoid.spec
-          rpmbuild -bb linux/rpm/harmonoid.spec -D "_topdir $(pwd)/rpmbuild"
-          mv rpmbuild/RPMS/x86_64/*.rpm harmonoid-linux-x86_64.rpm
 
       - name: Build Tarball
         run: |
