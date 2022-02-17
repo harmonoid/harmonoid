@@ -83,7 +83,7 @@ jobs:
           cd linux/debian
           sed -i "s:FILES_HERE:$(find usr -type f -follow -print | awk '{printf "/%s\\n", $0}'):" ../rpm/harmonoid.spec
           cd ../../
-          rpmbuild -bb linux/packaging/rpm/harmonoid.spec -D "_topdir $(pwd)/rpmbuild"
+          rpmbuild -bb linux/rpm/harmonoid.spec -D "_topdir $(pwd)/rpmbuild"
           cp rpmbuild/RPMS/x86_64/*.rpm harmonoid-linux-x86_64.rpm
 
       - name: Build DEB Package
