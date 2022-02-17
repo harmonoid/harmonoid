@@ -1,8 +1,9 @@
 Name:       harmonoid
-Version:    0.1.9-1 
+Version:    0.2.0-1
 Release:    1
 Summary:    Elegant music app to play local music & YouTube music.
-License:    GPL-3.0
+License:    EULA
+Requires:   mpv, mpv-libs-devel
 
 %description
 Elegant music app to play local music & YouTube music.
