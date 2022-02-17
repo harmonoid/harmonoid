@@ -24,6 +24,7 @@ import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/override_window_destroy.dart';
 
 const String kTitle = 'Harmonoid';
 const String kVersion = '0.2.0';
@@ -56,6 +57,7 @@ Future<void> main(List<String> args) async {
       }
       await Intent.initialize(args: args);
       await HotKeys.initialize();
+      OverrideWindowDestroy.initialize();
       DiscordRPC.initialize();
     }
     if (Platform.isAndroid) {
