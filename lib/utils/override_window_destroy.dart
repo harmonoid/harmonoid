@@ -9,6 +9,7 @@
 import 'package:flutter/services.dart';
 
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/collection.dart';
 
 /// OverrideWindowDestroy
 /// ---------------------
@@ -24,6 +25,7 @@ abstract class OverrideWindowDestroy {
     const channel = const MethodChannel('override_window_destroy');
     channel.setMethodCallHandler((call) async {
       await Playback.instance.player.dispose();
+      await tagger.dispose();
       channel.invokeMethod('destroy_window');
     });
   }
