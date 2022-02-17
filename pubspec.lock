@@ -55,11 +55,13 @@ packages:
     source: git
     version: "0.1.1+1"
   bitsdojo_window_linux:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: bitsdojo_window_linux
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: bitsdojo_window_linux
+      ref: HEAD
+      resolved-ref: "32be8356b6add213166d26f1fa55500d0af0816a"
+      url: "https://github.com/alexmercerind/bitsdojo_window.git"
+    source: git
     version: "0.1.1"
   bitsdojo_window_macos:
     dependency: transitive
