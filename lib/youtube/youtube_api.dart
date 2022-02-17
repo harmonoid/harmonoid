@@ -193,13 +193,13 @@ abstract class YoutubeApi {
           trackArtistNames.isNotEmpty ? trackArtistNames : [kUnknownArtist],
       albumArtistName:
           trackArtistNames.isNotEmpty ? trackArtistNames.first : kUnknownArtist,
-      albumName: albumName,
+      albumName: albumName ?? kUnknownAlbum,
       trackNumber: 1,
       year: hasMicroformat && microformat["publishDate"] != null
           ? microformat["publishDate"].toString().split("-")[0]
           : kUnknownYear,
       duration: Duration(seconds: int.parse(details["lengthSeconds"])),
-      bitrate: bitrate != null ? bitrate : null,
+      bitrate: bitrate,
       timeAdded: hasMicroformat
           ? DateTime.parse(microformat["publishDate"])
           : DateTime.now(),
@@ -262,17 +262,33 @@ const Map<String, String> _kRequestHeaders = {
   'sec-fetch-site': 'same-origin',
   'x-origin': 'https://music.youtube.com',
   'x-youtube-client-name': '67',
-  'x-youtube-client-version': '1.20210823.00.00',
+  'x-youtube-client-version': '1.20220209.00.00',
+  'x-forwarded-for': '6.0.0.0/8',
+  'user-agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36 Edg/97.0.1072.69,gzip(gfe)',
 };
 const Map<String, dynamic> _kRequestPayload = {
   'context': {
     'client': {
+      'hl': 'en',
+      'gl': 'US',
+      'remoteHost': '6.0.0.0/8',
+      'osName': 'Windows',
+      'platform': 'DESKTOP',
+      'userAgent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36 Edg/97.0.1072.69,gzip(gfe)',
       'clientName': 'WEB_REMIX',
-      'clientVersion': '0.1',
-      'newVisitorCookie': true,
+      'clientVersion': '1.20220209.00.00',
+      'timeZone': 'America/Phoenix',
+      'visitorData': 'Cgtua1JLWXRtU0s0YyiFy6WQBg%3D%3D',
     },
     'user': {
       'lockedSafetyMode': false,
-    }
+    },
+    'request': {
+      'useSsl': true,
+      'internalExperimentFlags': [],
+      'consistencyTokenJars': []
+    },
   }
 };
