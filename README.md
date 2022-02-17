@@ -1,8 +1,10 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
 <h4 align="center">Elegant music app to play & manage music library.</h4>
-<h4 align="center"><a href="https://github.com/harmonoid/harmonoid/releases/download/v0.1.9/harmonoid-windows-setup.exe">Download [Setup]</a> | <a href="https://github.com/harmonoid/harmonoid/releases/download/v0.1.9/harmonoid-windows-exe.zip">Download [Portable]</a></h4>
+<h4 align="center"><a href="https://github.com/harmonoid/harmonoid#download-1">Download</a></h4>
 
 Join our **[Discord server](https://discord.gg/2Rc3edFWd8)**?
+
+Support us on **[Patreon](https://github.com/harmonoid/harmonoid/edit/master/README.md#patreon)**?
 
 We are still working (refactoring) our Linux & Android versions. New Windows version is [live](https://github.com/harmonoid/harmonoid/releases/tag/v0.1.9) 🎉.
 
@@ -18,6 +20,7 @@ We are still working (refactoring) our Linux & Android versions. New Windows ver
 ## Features
 
 - Powerful music library management based on metadata tags. Indexes music into group of albums & artists.
+- Capable of indexing 20 files/second (on Windows) & saves cache for future app start-ups.
 - Cross-platform (currently aiming Windows, Linux & Android).
 - MPV based music playback for strong format support (on Linux & Windows) using `dart:ffi`.
 - Taskbar & System Media Transport Controls for Windows.
@@ -29,28 +32,82 @@ We are still working (refactoring) our Linux & Android versions. New Windows ver
 - Discord RPC integration.
 - Portable (if you wish).
 - Does not use [electron.js](https://www.electronjs.org/).
+- D-Bus MPRIS controls for Linux.
 
 Upcoming features
 
-- Mini-window mode.
-- Minimization to system tray.
-- D-Bus MPRIS controls for Linux.
+- Mini-window mode [exclusive to [Patreon](https://www.patreon.com/harmonoid) supporters].
+- Minimization to system tray [exclusive to [Patreon](https://www.patreon.com/harmonoid) supporters].
 - Importing playlists from YouTube & Spotify using Web API.
-- Music visualizations.
-- Improvising YouTube support.
+- Music visualizations [exclusive to [Patreon](https://www.patreon.com/harmonoid) supporters].
+- Tag editor [exclusive to [Patreon](https://www.patreon.com/harmonoid) supporters].
+- Improvising YouTube support to be close to official web-client.
 - Last.fm scrobbling.
-- Time-sync lyrics.
+- Time-synced lyrics [exclusive to [Patreon](https://www.patreon.com/harmonoid) supporters].
 - Plugin API.
 - Windows 11 `IExplorerCommand` integration.
+- Publishing to Microsoft Store & other places.
+- Support for remaining macOS & iOS platforms.
+- YOU Tell 😄
 
 We are working hard to bring this new update to all platforms soon.
 
-Few features are still a work in progress, planned for the next stable releases or can be part of a separate "PRO" variant of the application.
+## Download
+  
+#### Windows
+- <a href="https://github.com/harmonoid/harmonoid/releases/download/v0.1.9/harmonoid-windows-setup.exe">Setup</a>
+- <a href="https://github.com/harmonoid/harmonoid/releases/download/v0.1.9/harmonoid-windows-exe.zip">Portable</a>
 
+#### Linux
+- Coming Tomorrow 👀.
+  
+#### Android
+- Coming Soon 😣.
+
+## [Patreon](https://www.patreon.com/harmonoid)
+
+Please note that these are download links for the free version of the app. You may become a [Patreon](https://www.patreon.com/harmonoid) to:
+- [5$] Get lifetime access to more awesome exclusive features like visuals, tag-editor & time-synced lyrics etc. (once available, but you can definitely speed us up!)
+- [25$] Get lifetime license to [private](https://github.com/harmonoid/harmonoid/tree/master/external) Harmonoid plugin/libraries & use them in any commercial project for media playback, MPRIS integration, media parsing or whatever you find useful. 100% of Harmonoid's source code. Currently these plugins include:
+
+<table>
+   <tr>
+     <td><a href='https://github.com/alexmercerind/libmpv.dart'>libmpv.dart</a></td>
+     <td>Dart bindings to MPV media player's C API.</td>
+   </tr>
+  <tr>
+     <td><a href='https://github.com/alexmercerind/mpris_service.dart'>mpris_service.dart</a></td>
+     <td>Integrate D-Bus MPRIS controls in your Dart/Flutter app.</td>
+   </tr>
+  <tr>
+     <td><a href='https://github.com/alexmercerind/libmpv.dart'>libmpv.dart</a></td>
+     <td>Modern UWP System Media Transport Controls for Dart/Flutter.</td>
+   </tr>
+  <tr>
+     <td>More to come.</td>
+   </tr>
+</table>
+  
 ## License
 
 Source code and official releases/binaries are distributed under our [End-User License Agreement for Harmonoid (EULA)](./EULA.txt). Please check that there are modules/libraries in the source code that are proprietary to Harmonoid & present in the [external](./external) directory (at the time of commiting this file).
 
+## Acknowlegements
+
+- Harmonoid is (for the most part) written in Dart programming language using [Flutter SDK](https://github.com/flutter/flutter). Refrences to all the other external "plugins" & "packages" used at the time of building application can be found [here](./pubspec.yaml).
+
+- Harmonoid uses a modified version of [libmpv](https://github.com/mpv-player/mpv/tree/master/libmpv) for media playback capabilities on desktop. The compilation setup & other information can be found [here](https://github.com/alexmercerind/harmonoid-custom-codec). The application bundles a minimal & LGPL compilant version of [mpv](https://github.com/mpv-player/mpv) shared library (`mpv-2.dll`). Users are free to update/change to their own preferred libmpv by replacing the `mpv-2.dll` file present in Harmonoid's application directory.
+
+- [End-User License Agreement for Harmonoid (EULA)](./EULA.txt) is a slightly modified version of [End-User License Agreement for Aseprite (EULA)](https://github.com/aseprite/aseprite/blob/main/EULA.txt).
+
+## Bonus
+
+Well you've scrolled this down... How about seeing more stuff.
+
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/2.png'></img>
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/3.png'></img>
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/4.png'></img>
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/5.png'></img>
 ## Contributors
 
 <ul>
@@ -64,12 +121,6 @@ Source code and official releases/binaries are distributed under our [End-User L
     <img src='https://avatars.githubusercontent.com/u/64320078?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/raitonoberu'>Denis</a></strong>
     <ul>
       <li>Windows installer & major bug fixes. Russian translation.</li>
-    </ul>
-  </li>
-  <li>
-    <img src='https://avatars.githubusercontent.com/u/45696119?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/bdlukaa'>Bruno D'Luka</a></strong>
-    <ul>
-      <li>User interface & design. Portuguese translation.</li>
     </ul>
   </li>
   <li>
@@ -88,6 +139,12 @@ Source code and official releases/binaries are distributed under our [End-User L
     <img src='https://drive.google.com/uc?id=1eI-dHiALVQM123_HnQIcYe9HtbX0uS_W' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://www.instagram.com/shinybluebelll'>Bluebell</a></strong>
     <ul>
       <li>Artwork & iconography used in the application.</li>
+    </ul>
+  </li>
+  <li>
+    <img src='https://avatars.githubusercontent.com/u/45696119?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/bdlukaa'>Bruno D'Luka</a></strong>
+    <ul>
+      <li>User interface & design. Portuguese translation.</li>
     </ul>
   </li>
   <li>
@@ -181,11 +238,3 @@ Source code and official releases/binaries are distributed under our [End-User L
     </ul>
   </li>
 </ul>
-
-## Acknowlegements
-
-- Harmonoid is (for the most part) written in Dart programming language using [Flutter SDK](https://github.com/flutter/flutter). Refrences to all the other external "plugins" & "packages" used at the time of building application can be found [here](./pubspec.yaml).
-
-- Harmonoid uses a modified version of [libmpv](https://github.com/mpv-player/mpv/tree/master/libmpv) for media playback capabilities on desktop. The compilation setup & other information can be found [here](https://github.com/alexmercerind/harmonoid-custom-codec). The application bundles a minimal & LGPL compilant version of [mpv](https://github.com/mpv-player/mpv) shared library (`mpv-2.dll`). Users are free to update/change to their own preferred libmpv by replacing the `mpv-2.dll` file present in Harmonoid's application directory.
-
-- [End-User License Agreement for Harmonoid (EULA)](./EULA.txt) is a slightly modified version of [End-User License Agreement for Aseprite (EULA)](https://github.com/aseprite/aseprite/blob/main/EULA.txt).
