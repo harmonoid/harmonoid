@@ -4,7 +4,7 @@ Section: base
 Priority: optional
 Homepage: https://github.com/harmonoid/harmonoid
 Architecture: amd64
-Depends: mediainfo, gstreamer1.0-libav, libwebkit2gtk-4.0-dev
+Depends: mpv, libmpv-dev
 Maintainer: Hitesh Kumar Saini <saini123hitesh@gmail.com>
 Description: Harmonoid
  Elegant music app to play & manage music library.

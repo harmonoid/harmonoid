@@ -70,7 +70,7 @@ jobs:
         with:
           channel: "stable"
       - run: sudo apt-get update
-      - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev libwebkit2gtk-4.0-dev libmediainfo-dev dpkg-dev alien
+      - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev mpv libmpv-dev dpkg-dev alien
       - run: flutter config --enable-linux-desktop
       - run: flutter pub upgrade
       - run: flutter pub get
