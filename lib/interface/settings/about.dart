@@ -170,6 +170,18 @@ class AboutSetting extends StatelessWidget {
               color: Theme.of(context).colorScheme.secondary,
             ),
           ),
+        ),
+        SizedBox(width: 16.0),
+        MaterialButton(
+          onPressed: () {
+            launch('https://github.com/harmonoid/harmonoid#support');
+          },
+          child: Text(
+            'BECOME SUPPORTER',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
         )
       ],
     );

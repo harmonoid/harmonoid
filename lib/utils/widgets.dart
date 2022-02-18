@@ -32,6 +32,7 @@ class CustomListView extends StatelessWidget {
   final Axis? scrollDirection;
   final bool? shrinkWrap;
   final EdgeInsets? padding;
+  final double? itemExtent;
 
   CustomListView({
     ScrollController? controller,
@@ -39,6 +40,7 @@ class CustomListView extends StatelessWidget {
     this.scrollDirection,
     this.shrinkWrap,
     this.padding,
+    this.itemExtent,
   }) {
     if (controller != null) {
       this.controller = controller;
@@ -72,6 +74,7 @@ class CustomListView extends StatelessWidget {
       scrollDirection: scrollDirection ?? Axis.vertical,
       shrinkWrap: shrinkWrap ?? false,
       children: children,
+      itemExtent: itemExtent,
     );
   }
 }
