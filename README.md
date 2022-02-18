@@ -1,12 +1,12 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
 <h4 align="center">Elegant music app to play & manage music library (+ YouTube Music support)</h4>
-<h3 align="center"><a href="https://github.com/harmonoid/harmonoid#download-1">Download [Windows & Linux]</a></h3>
+<h4 align="center"><a href="https://github.com/harmonoid/harmonoid#download-1">Download [Windows & Linux]</a></h4>
 
 Become a [supporter](#support) or [donate](#support)?
 
 Join our [Discord server](https://discord.gg/2Rc3edFWd8)?
 
-New Windows & Linux version is [live](https://github.com/harmonoid/harmonoid/releases/latest) 🎉. We are still working on Android refactor...
+New Windows & Linux version is [live](https://github.com/harmonoid/harmonoid/releases/latest) 🎉. We are still working on **Android** refactor...
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304862-f4d336c6-4559-477b-b82e-a876f78f5eec.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304870-6d1d18db-7120-43bd-87fa-9fa369244bfd.webp?raw=true)
