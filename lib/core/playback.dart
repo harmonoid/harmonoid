@@ -32,6 +32,7 @@ import 'package:harmonoid/constants/language.dart';
 ///
 /// Automatically handles:
 /// * `ITaskbarList3` & `SystemMediaTransportControls` controls on Windows.
+/// * D-Bus MPRIS controls on Linux.
 /// * Discord RPC.
 /// * Lyrics.
 ///
