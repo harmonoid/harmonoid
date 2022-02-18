@@ -24,7 +24,7 @@
 			<li>Cross-platform (currently aiming Windows, Linux &amp; Android).</li>
 			<li>MPV based music playback for strong format support (on Linux &amp; Windows) using dart:ffi.</li>
 			<li>Taskbar &amp; System Media Transport Controls for Windows.</li>
-			<li>Small installer (< 25 MB) &amp; low RAM usage (< 120 MB).</li>
+			<li>Small installer (&lt; 25 MB) &amp; low RAM usage (&lt; 120 MB).</li>
 			<li>Very strictly follows Material Design guidelines for UI &amp; animations.</li>
 			<li>Ability to create persistent or "Now playing" playlists.</li>
 			<li>Context menu integrations &amp; file associations (exclusive to setup version).</li>
