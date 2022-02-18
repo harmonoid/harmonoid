@@ -1,12 +1,12 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
 <h4 align="center">Elegant music app to play & manage music library (+ YouTube Music support)</h4>
-<h4 align="center"><a href="https://github.com/harmonoid/harmonoid#download-1">Download</a></h4>
+<h3 align="center"><a href="https://github.com/harmonoid/harmonoid#download-1">Download [Windows & Linux]</a></h3>
 
-Join our **[Discord server](https://discord.gg/2Rc3edFWd8)**?
+Become a [supporter](#support) or [donate](#support)?
 
-Support us on **[Patreon](https://github.com/harmonoid/harmonoid#patreon)**?
+Join our [Discord server](https://discord.gg/2Rc3edFWd8)?
 
-We are still working (refactoring) our Linux & Android versions. New Windows version is [live](https://github.com/harmonoid/harmonoid/releases/tag/v0.1.9) 🎉.
+New Windows & Linux version is [live](https://github.com/harmonoid/harmonoid/releases/latest) 🎉. We are still working on Android refactor...
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304862-f4d336c6-4559-477b-b82e-a876f78f5eec.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304870-6d1d18db-7120-43bd-87fa-9fa369244bfd.webp?raw=true)
@@ -16,6 +16,39 @@ We are still working (refactoring) our Linux & Android versions. New Windows ver
 ## Motion
 
 ![](https://user-images.githubusercontent.com/28951144/151239401-be199319-0a22-4139-8bef-fe1edac2d576.gif)
+
+## Download
+
+### Windows
+
+- <a href="https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-windows-setup.exe">Setup</a>
+- <a href="https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-windows-exe.zip">Portable</a>
+- winget install harmonoid
+
+On Windows, [setup](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-windows-setup.exe) is recommended as it automatically links with files & file explorer context menus.
+
+### Linux
+
+- [.deb package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.deb)
+- [.rpm package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.rpm)
+- [AppImage](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.AppImage)
+- [Raw Executable](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.tar.gz)
+- flatpak install flathub io.github.harmonoid.harmonoid
+
+On Debian or Ubuntu based distros, you need to install `mpv` & `libmpv-dev` to be able to install & run the app.
+
+```bash
+sudo apt install mpv libmpv-dev
+sudo dpkg -i harmonoid-linux-x86_64.deb
+```
+
+Similar instructions can be followed on your favorite distro.
+
+Big thanks to [@prateekmedia](https://github.com/prateekmedia) for setting up Linux packages & stuff.
+
+### Android
+
+- Coming Soon 😣.
 
 ## Features
 
@@ -36,14 +69,15 @@ We are still working (refactoring) our Linux & Android versions. New Windows ver
 
 Upcoming features
 
-- Mini-window mode [exclusive to [Patreon](https://www.patreon.com/harmonoid) supporters].
-- Minimization to system tray [exclusive to [Patreon](https://www.patreon.com/harmonoid) supporters].
+- Mini-window mode [exclusive to [supporters](#support)].
+- Minimization to system tray [exclusive to [supporters](#support)].
+- Music visualizations [exclusive to [supporters](#support)].
+- Tag editor [exclusive to [supporters](#support)].
+- Time-synced lyrics [exclusive to [supporters](#support)].
 - Importing playlists from YouTube & Spotify using Web API.
-- Music visualizations [exclusive to [Patreon](https://www.patreon.com/harmonoid) supporters].
-- Tag editor [exclusive to [Patreon](https://www.patreon.com/harmonoid) supporters].
+- Equalizer.
 - Improvising YouTube support to be close to official web-client.
 - Last.fm scrobbling.
-- Time-synced lyrics [exclusive to [Patreon](https://www.patreon.com/harmonoid) supporters].
 - Plugin API.
 - Windows 11 `IExplorerCommand` integration.
 - Publishing to Microsoft Store & other places.
@@ -52,42 +86,37 @@ Upcoming features
 
 We are working hard to bring this new update to all platforms soon.
 
-## Download
-  
-#### Windows
-- <a href="https://github.com/harmonoid/harmonoid/releases/download/v0.1.9/harmonoid-windows-setup.exe">Setup</a>
-- <a href="https://github.com/harmonoid/harmonoid/releases/download/v0.1.9/harmonoid-windows-exe.zip">Portable</a>
+**NOTE:** Project is NEVER going to offer feature for downloading music from YouTube.
 
-#### Linux
-- Coming Tomorrow 👀.
-  
-#### Android
-- Coming Soon 😣.
+## Support
 
-## [Patreon](https://www.patreon.com/harmonoid)
+[PayPal](https://paypal.me/alexmercerind) • Please mention your email in the notes, so that you can get updates & stuff mailed!
 
-Please note that these are download links for the free version of the app. You may become a [Patreon](https://www.patreon.com/harmonoid) to:
+Please note that above are the download links for free version of the app. You may donate/buy at [PayPal](https://paypal.me/alexmercerind) to:
+
 - [5$] Get lifetime access to more awesome exclusive features like visuals, tag-editor & time-synced lyrics etc. (once available, but you can definitely speed us up!)
-- [25$] Get lifetime license to [private](https://github.com/harmonoid/harmonoid/tree/master/external) Harmonoid plugin/libraries & use them in any commercial project for media playback, MPRIS integration, media parsing or whatever you find useful. 100% of Harmonoid's source code. Currently these plugins include:
+- [25$] Get lifetime license to [private](https://github.com/harmonoid/harmonoid/tree/master/external) Harmonoid plugin/libraries & use them in any commercial project for media playback, MPRIS integration, media parsing or whatever you find useful. 100% of Harmonoid's source code. Learn more [here](https://github.com/harmonoid/harmonoid-API-samples). Currently these plugins include:
 
 <table>
    <tr>
      <td><a href='https://github.com/alexmercerind/libmpv.dart'>libmpv.dart</a></td>
      <td>Dart bindings to MPV media player's C API.</td>
+     <td><a href='https://github.com/harmonoid/Harmonoid-API-Samples/tree/master/libmpv.dart'>API Examples</a></td>
    </tr>
   <tr>
      <td><a href='https://github.com/alexmercerind/mpris_service.dart'>mpris_service.dart</a></td>
      <td>Integrate D-Bus MPRIS controls in your Dart/Flutter app.</td>
+     <td><a href='https://github.com/harmonoid/Harmonoid-API-Samples/tree/master/mpris_service.dart'>API Examples</a></td>
    </tr>
   <tr>
-     <td><a href='https://github.com/alexmercerind/smtc-win32/tree/master/bindings/system_media_transport_controls.dart'>system_media_transport_controls.dart</a></td>
+     <td><a href='https://github.com/alexmercerind/smtc-win32/tree/master/bindings/system_media_transport_controls.dart'>smtc.dart</a></td>
      <td>Modern UWP System Media Transport Controls for Dart/Flutter.</td>
-   </tr>
-  <tr>
-     <td>More to come.</td>
+     <td><a href='https://github.com/harmonoid/Harmonoid-API-Samples/tree/master/system_media_transport_controls.dart'>API Examples</a></td>
    </tr>
 </table>
-  
+
+Appreciate your love & support for the project if you consider buying/donating.
+
 ## License
 
 Source code and official releases/binaries are distributed under our [End-User License Agreement for Harmonoid (EULA)](./EULA.txt). Please check that there are modules/libraries in the source code that are proprietary to Harmonoid & present in the [external](./external) directory (at the time of commiting this file).
@@ -104,10 +133,13 @@ Source code and official releases/binaries are distributed under our [End-User L
 
 Well you've scrolled this down... How about seeing more stuff.
 
-<img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/2.png'></img>
-<img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/3.png'></img>
-<img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/4.png'></img>
-<img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/5.png'></img>
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/linux_full/4.jpeg?raw=true'></img>
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/2.png?raw=true'></img>
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/3.png?raw=true'></img>
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/4.png?raw=true'></img>
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/5.png?raw=true'></img>
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/linux_full/0.jpeg?raw=true'></img>
+<img src='https://github.com/harmonoid/harmonoid/blob/assets/linux_full/1.jpeg?raw=true'></img>
 
 ## Contributors
 
