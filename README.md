@@ -163,9 +163,9 @@ Well you've scrolled this down... How about seeing more stuff.
     </ul>
   </li>
   <li>
-    <img src='https://avatars.githubusercontent.com/u/41370460?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/prateekmedia'>Prateek SU</a></strong>
+    <img src='https://avatars.githubusercontent.com/u/41370460?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/prateekmedia'>Prateek Sunal</a></strong>
     <ul>
-      <li>AppImage & Flatpak installers. Bug reports. Hindi translation.</li>
+      <li>AppImage, RPM & Flatpak installers. Bug reports. Hindi translation.</li>
     </ul>
   </li>
   <li>
