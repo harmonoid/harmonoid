@@ -51,12 +51,13 @@ dependencies:
   http: ^0.13.0
   path: ^1.8.0
   provider: ^6.0.1
-  animations: ^2.0.0
+  animations: ^2.0.0  
   palette_generator: ^0.3.2
   draggable_scrollbar: ^0.1.0
   fluentui_system_icons: ^1.1.136
   material_floating_search_bar: ^0.3.6
   implicitly_animated_reorderable_list: ^0.4.0-dev+4 
+  collection: any
 
   # Forked plugins & packages to meet requirements.
 
