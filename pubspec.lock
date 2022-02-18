@@ -49,8 +49,8 @@ packages:
     dependency: "direct main"
     description:
       path: bitsdojo_window
-      ref: "32be8356b6add213166d26f1fa55500d0af0816a"
-      resolved-ref: "32be8356b6add213166d26f1fa55500d0af0816a"
+      ref: "5e6ddd4b58bb357b23541181b4188ce5892ba7a3"
+      resolved-ref: "5e6ddd4b58bb357b23541181b4188ce5892ba7a3"
       url: "https://github.com/alexmercerind/bitsdojo_window.git"
     source: git
     version: "0.1.1+1"
@@ -805,5 +805,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.16.1 <3.0.0"
+  dart: ">=2.16.0 <3.0.0"
   flutter: ">=2.10.0"
