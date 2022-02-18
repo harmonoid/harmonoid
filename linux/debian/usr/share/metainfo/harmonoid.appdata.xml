@@ -2,9 +2,9 @@
 <component type="desktop-application">
 	<id>harmonoid</id>
 	<name>Harmonoid</name>
-	<summary>Elegant music app to play &amp; manage music library.</summary>
+	<summary>Elegant music app to play &amp;amp; manage music library (+ YouTube Music support).</summary>
 	<metadata_license>CC0-1.0</metadata_license>
-	<project_license>End-User License Agreement for Harmonoid</project_license>
+	<project_license>EULA</project_license>
 	<recommends>
 		<control>pointing</control>
 		<control>keyboard</control>
@@ -12,8 +12,54 @@
 	</recommends>
 	<developer_name>Hitesh Kumar Saini</developer_name>
 	<url type="homepage">https://github.com/harmonoid/harmonoid</url>
+	<url type="donate">https://github.com/harmonoid/harmonoid#support</url>
+	<url type="discord">https://discord.gg/2Rc3edFWd8</url>
+	<description>
+		<p>Elegant music app to play &amp;amp; manage music library (+ YouTube Music support).</p>
+		<p></p>
+		<p>Features</p>
+		<ul>
+			<li>Powerful music library management based on metadata tags. Indexes music into group of albums &amp; artists.</li>
+			<li>Capable of indexing 20 files/second (on Windows) &amp; saves cache for future app start-ups.</li>
+			<li>Cross-platform (currently aiming Windows, Linux &amp; Android).</li>
+			<li>MPV based music playback for strong format support (on Linux &amp; Windows) using dart:ffi.</li>
+			<li>Taskbar &amp; System Media Transport Controls for Windows.</li>
+			<li>Small installer (< 25 MB) &amp; low RAM usage (< 120 MB).</li>
+			<li>Very strictly follows Material Design guidelines for UI &amp; animations.</li>
+			<li>Ability to create persistent or "Now playing" playlists.</li>
+			<li>Context menu integrations &amp; file associations (exclusive to setup version).</li>
+			<li>Discord RPC integration.</li>
+			<li>D-Bus MPRIS controls for Linux.</li>
+		</ul>
+		<p></p>
+		<p>Upcoming Features</p>
+		<ul>
+			<li>Mini-window mode [exclusive to supporters].</li>
+			<li>Minimization to system tray [exclusive to supporters].</li>
+			<li>Music visualizations [exclusive to supporters].</li>
+			<li>Tag editor [exclusive to supporters].</li>
+			<li>Time-synced lyrics [exclusive to supporters].</li>
+			<li>Importing playlists from YouTube &amp; Spotify using Web API.</li>
+			<li>Equalizer.</li>
+			<li>Improvising YouTube support to be close to official web-client.</li>
+			<li>Last.fm scrobbling.</li>
+			<li>Plugin API.</li>
+			<li>Support for remaining macOS &amp; iOS platforms.</li>
+			<li>YOU tell [exclusive to supporters].</li>
+		</ul>
+	</description>
+	<screenshots>
+		<screenshot>
+			<image type="source">https://github.com/harmonoid/harmonoid/blob/assets/linux_full/0.jpeg?raw=true</image>
+			<image type="source">https://github.com/harmonoid/harmonoid/blob/assets/linux_full/2.jpeg?raw=true</image>
+			<image type="source">https://github.com/harmonoid/harmonoid/blob/assets/linux_full/1.jpeg?raw=true</image>
+			<image type="source">https://github.com/harmonoid/harmonoid/blob/assets/linux_full/3.jpeg?raw=true</image>
+			<image type="source">https://github.com/harmonoid/harmonoid/blob/assets/linux_full/5.jpg?raw=true</image>
+		</screenshot>
+	</screenshots>
 	<launchable type="desktop-id">harmonoid.desktop</launchable>
 	<releases>
+		<release version="0.2.0" date="2022-02-18"/>
 		<release version="0.1.7" date="2021-09-22"/>
 		<release version="0.1.6" date="2021-09-21"/>
 		<release version="0.1.5" date="2021-09-17"/>
