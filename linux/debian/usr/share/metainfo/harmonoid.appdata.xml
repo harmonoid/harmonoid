@@ -4,7 +4,7 @@
 	<name>Harmonoid</name>
 	<summary>Elegant music app to play &amp; manage music library. Lyrics &amp; playlists. YouTube support.</summary>
 	<metadata_license>CC0-1.0</metadata_license>
-	<project_license>EULA</project_license>
+	<project_license>LicenseRef-proprietary=https://github.com/harmonoid/harmonoid/blob/master/EULA.txt</project_license>
 	<recommends>
 		<control>pointing</control>
 		<control>keyboard</control>
