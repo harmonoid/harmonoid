@@ -1,6 +1,6 @@
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
-<h4 align="center">Elegant music app to play & manage music library (+ YouTube Music support)</h4>
-<h4 align="center"><a href="https://github.com/harmonoid/harmonoid#download">Download [Windows & Linux]</a></h4>
+<h4 align="center">Elegant music app to play & manage music library</h4>
+<h4 align="center"><a href="#download-1">Download</a></h4>
 
 Become a [supporter](#support) or [donate](#support)?
 

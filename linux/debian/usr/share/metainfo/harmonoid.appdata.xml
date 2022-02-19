@@ -2,7 +2,7 @@
 <component type="desktop-application">
 	<id>harmonoid</id>
 	<name>Harmonoid</name>
-	<summary>Elegant music app to play &amp;amp; manage music library (+ YouTube Music support).</summary>
+	<summary>Elegant music app to play &amp; manage music library. Lyrics &amp; playlists. YouTube support.</summary>
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>EULA</project_license>
 	<recommends>
@@ -15,7 +15,7 @@
 	<url type="donate">https://github.com/harmonoid/harmonoid#support</url>
 	<url type="discord">https://discord.gg/2Rc3edFWd8</url>
 	<description>
-		<p>Elegant music app to play &amp;amp; manage music library (+ YouTube Music support).</p>
+		<p>Elegant music app to play &amp; manage music library. Lyrics &amp; playlists. YouTube support.</p>
 		<p></p>
 		<p>Features</p>
 		<ul>
