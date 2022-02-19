@@ -33,7 +33,7 @@ On Windows, [setup](https://github.com/harmonoid/harmonoid/releases/latest/downl
 - [.rpm package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.rpm)
 - [AppImage](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.AppImage)
 - [Raw Executable](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.tar.gz)
-- flatpak install flathub io.github.harmonoid.harmonoid
+- ~~flatpak install flathub io.github.harmonoid.harmonoid~~ Do NOT install. Yet to be updated. 
 
 On Debian or Ubuntu based distros, you need to install `mpv` & `libmpv-dev` to be able to install & run the app.
 
