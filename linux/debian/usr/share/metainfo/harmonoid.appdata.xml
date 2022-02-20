@@ -2,9 +2,9 @@
 <component type="desktop-application">
 	<id>harmonoid</id>
 	<name>Harmonoid</name>
-	<summary>Elegant music app to play &amp;amp; manage music library (+ YouTube Music support).</summary>
+	<summary>Elegant music app to play &amp; manage music library. Lyrics &amp; playlists. YouTube support.</summary>
 	<metadata_license>CC0-1.0</metadata_license>
-	<project_license>EULA</project_license>
+	<project_license>LicenseRef-proprietary=https://github.com/harmonoid/harmonoid/blob/master/EULA.txt</project_license>
 	<recommends>
 		<control>pointing</control>
 		<control>keyboard</control>
@@ -12,10 +12,10 @@
 	</recommends>
 	<developer_name>Hitesh Kumar Saini</developer_name>
 	<url type="homepage">https://github.com/harmonoid/harmonoid</url>
-	<url type="donate">https://github.com/harmonoid/harmonoid#support</url>
-	<url type="discord">https://discord.gg/2Rc3edFWd8</url>
+	<url type="donation">https://github.com/harmonoid/harmonoid#support</url>
+	<url type="contact">https://discord.gg/2Rc3edFWd8</url>
 	<description>
-		<p>Elegant music app to play &amp;amp; manage music library (+ YouTube Music support).</p>
+		<p>Elegant music app to play &amp; manage music library. Lyrics &amp; playlists. YouTube support.</p>
 		<p></p>
 		<p>Features</p>
 		<ul>
@@ -24,7 +24,7 @@
 			<li>Cross-platform (currently aiming Windows, Linux &amp; Android).</li>
 			<li>MPV based music playback for strong format support (on Linux &amp; Windows) using dart:ffi.</li>
 			<li>Taskbar &amp; System Media Transport Controls for Windows.</li>
-			<li>Small installer (< 25 MB) &amp; low RAM usage (< 120 MB).</li>
+			<li>Small installer (&lt; 25 MB) &amp; low RAM usage (&lt; 120 MB).</li>
 			<li>Very strictly follows Material Design guidelines for UI &amp; animations.</li>
 			<li>Ability to create persistent or "Now playing" playlists.</li>
 			<li>Context menu integrations &amp; file associations (exclusive to setup version).</li>

@@ -9,9 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
+
   # Plugins maintained by github.com/alexmercerind or proprietary to the Harmonoid.
-  
+
   libmpv:
     path: external/libmpv.dart
   system_media_transport_controls:
@@ -28,7 +28,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
       ref: harmonoid
-  
+
   # Third-party plugins.
 
   share_plus: ^2.1.4
@@ -44,19 +44,19 @@ dependencies:
   file_selector_linux:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
-      path: plugins/file_selector/file_selector_linux 
+      path: plugins/file_selector/file_selector_linux
 
   # Third-party UI widgets or "pure-dart" packages.
 
   http: ^0.13.0
   path: ^1.8.0
   provider: ^6.0.1
-  animations: ^2.0.0  
+  animations: ^2.0.0
   palette_generator: ^0.3.2
   draggable_scrollbar: ^0.1.0
   fluentui_system_icons: ^1.1.136
   material_floating_search_bar: ^0.3.6
-  implicitly_animated_reorderable_list: ^0.4.0-dev+4 
+  implicitly_animated_reorderable_list: ^0.4.0-dev+4
   collection: any
 
   # Forked plugins & packages to meet requirements.
@@ -69,7 +69,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window
-      ref: 32be8356b6add213166d26f1fa55500d0af0816a
+      ref: 5e6ddd4b58bb357b23541181b4188ce5892ba7a3
   hotkey_manager:
     git:
       url: https://github.com/alexmercerind/hotkey_manager.git
@@ -77,18 +77,18 @@ dependencies:
   known_extents_list_view_builder:
     git:
       url: https://github.com/alexmercerind/known_extents_list_view_builder.git
-  
-  
 
 dependency_overrides:
   bitsdojo_window_windows:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_windows
+      ref: 5e6ddd4b58bb357b23541181b4188ce5892ba7a3
   bitsdojo_window_linux:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_linux
+      ref: 5e6ddd4b58bb357b23541181b4188ce5892ba7a3
   platform: ^3.1.0
 
 dev_dependencies:
@@ -105,7 +105,7 @@ flutter:
     - assets/images/
     - assets/translations/
   fonts:
-    - family: 'Inter'
+    - family: "Inter"
       fonts:
         - asset: assets/fonts/Inter-Thin.otf
           weight: 100
@@ -121,9 +121,9 @@ flutter:
           weight: 600
         - asset: assets/fonts/Inter-Bold.otf
           weight: 700
-        - asset: assets/fonts/Inter-ExtraBold.otf 
+        - asset: assets/fonts/Inter-ExtraBold.otf
           weight: 800
-        - asset: assets/fonts/Inter-Black.otf 
+        - asset: assets/fonts/Inter-Black.otf
           weight: 900
 
 msix_config:
