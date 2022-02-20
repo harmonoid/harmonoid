@@ -27,11 +27,19 @@ On Windows, [setup](https://github.com/harmonoid/harmonoid/releases/latest/downl
 
 ### Linux
 
-- [.deb package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.deb)
-- [.rpm package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.rpm)
-- [AppImage](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.AppImage)
-- [Raw Executable](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.tar.gz)
-- ~~flatpak install flathub io.github.harmonoid.harmonoid~~ Do NOT install. Yet to be updated. 
+**NOTE:** Flutter seems to be causing MEMORY LEAKS on Linux.
+
+It causes memory to steadily increase & at a really fast pace when indexing the music.
+
+https://github.com/flutter/flutter/issues/73402
+
+I will have a detailed look once I return after my exams.
+
+- ~~[.deb package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.deb)~~
+- ~~[.rpm package](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.rpm)~~
+- ~~[AppImage](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.AppImage)~~
+- ~~[Raw Executable](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.tar.gz)~~
+- ~~flatpak install flathub io.github.harmonoid.harmonoid Do NOT install. Yet to be updated.~~
 
 On Debian or Ubuntu based distros, you need to install `mpv` & `libmpv-dev` to be able to install & run the app.
 
