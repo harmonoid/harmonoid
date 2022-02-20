@@ -477,11 +477,9 @@ class Collection extends ChangeNotifier {
     playlists = <Playlist>[];
     final directory = <File>[];
     for (final collectionDirectory in collectionDirectories)
-      directory.addAll((collectionDirectory.listSync()
+      directory.addAll((collectionDirectory.listSync(recursive: true)
             ..removeWhere((element) => !(element is File)))
           .cast());
-    directory.sort((first, second) =>
-        second.lastModifiedSync().compareTo(first.lastModifiedSync()));
     for (int index = 0; index < directory.length; index++) {
       final object = directory[index];
       if (kSupportedFileTypes.contains(object.extension)) {
