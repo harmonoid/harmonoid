@@ -1,3 +1,4 @@
+<div><p align="center"><img src="https://raw.githubusercontent.com/maisondasilva/harmonoid/master/harmonoid.ico" width="75" height="75" /></p></div>
 <h1 align="center"><a href="https://github.com/alexmercerind/harmonoid">Harmonoid</a></h1>
 <h4 align="center">Elegant music app to play & manage music library</h4>
 <h4 align="center"><a href="#download-1">Download</a></h4>
