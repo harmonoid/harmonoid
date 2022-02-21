@@ -23,7 +23,7 @@ class ThemeSetting extends StatelessWidget {
         child: Consumer<Visuals>(
           builder: (context, visuals, _) => Column(
             children: [
-              if (Platform.isAndroid || Platform.isIOS)
+              if (Platform.isAndroid || Platform.isIOS || Platform.isWindows)
                 RadioListTile(
                   value: ThemeMode.system,
                   title: Text(
