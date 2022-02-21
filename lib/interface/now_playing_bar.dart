@@ -310,6 +310,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         ? Colors.white.withOpacity(0.87)
                                         : Colors.black87,
                                     splashRadius: 18.0,
+                                    tooltip: Language.instance.SPEED,
                                     icon: Icon(
                                       Icons.speed,
                                     ),
@@ -343,6 +344,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             ? Colors.white.withOpacity(0.87)
                                             : Colors.black87,
                                         splashRadius: 18.0,
+                                        tooltip: Language.instance.SHUFFLE,
                                         icon: Icon(
                                           Icons.shuffle,
                                         ),
@@ -357,6 +359,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         ? Colors.white.withOpacity(0.87)
                                         : Colors.black87,
                                     splashRadius: 18.0,
+                                    tooltip: Language.instance.PREVIOUS,
                                     icon: Icon(
                                       Icons.skip_previous,
                                     ),
@@ -364,6 +367,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                   FloatingActionButton(
                                     onPressed: playback.playOrPause,
                                     elevation: 2.0,
+                                    tooltip: playback.isPlaying
+                                        ? Language.instance.PAUSE
+                                        : Language.instance.PLAY,
                                     child: AnimatedIcon(
                                       icon: AnimatedIcons.play_pause,
                                       color: Colors.white,
@@ -379,6 +385,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         ? Colors.white.withOpacity(0.87)
                                         : Colors.black87,
                                     splashRadius: 18.0,
+                                    tooltip: Language.instance.NEXT,
                                     icon: Icon(
                                       Icons.skip_next,
                                     ),
@@ -420,6 +427,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 1],
                                           );
                                         },
+                                        tooltip: Language.instance.REPEAT,
                                         iconSize: 20.0,
                                         color: Theme.of(context).brightness ==
                                                 Brightness.dark
@@ -443,6 +451,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         ? Colors.white.withOpacity(0.87)
                                         : Colors.black87,
                                     splashRadius: 18.0,
+                                    tooltip: playback.isMuted
+                                        ? Language.instance.UNMUTE
+                                        : Language.instance.MUTE,
                                     icon: Icon(
                                       playback.volume == 0.0
                                           ? Icons.volume_off
@@ -496,6 +507,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                       ? Colors.white
                                       : Colors.black,
                                   splashRadius: 18.0,
+                                  tooltip: playback.tracks.isEmpty
+                                      ? ''
+                                      : nowPlayingLauncher.maximized
+                                          ? Language.instance.EXIT_NOW_PLAYING
+                                          : Language.instance.NOW_PLAYING,
                                   icon: Icon(
                                     nowPlayingLauncher.maximized
                                         ? Icons.expand_more

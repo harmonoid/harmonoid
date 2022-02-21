@@ -1070,95 +1070,98 @@ class CollectionSortButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ContextMenuButton<dynamic>(
-      offset: Offset.fromDirection(pi / 2, 64.0),
-      icon: Icon(
-        Icons.sort,
-        size: 20.0,
+    return Tooltip(
+      message: Language.instance.SORT,
+      child: ContextMenuButton<dynamic>(
+        offset: Offset.fromDirection(pi / 2, 64.0),
+        icon: Icon(
+          Icons.sort,
+          size: 20.0,
+        ),
+        elevation: 4.0,
+        onSelected: (value) async {
+          if (value is CollectionSort) {
+            Provider.of<Collection>(context, listen: false).sort(type: value);
+            await Configuration.instance.save(
+              collectionSortType: value,
+            );
+          } else if (value is CollectionOrder) {
+            Provider.of<Collection>(context, listen: false).order(type: value);
+            await Configuration.instance.save(
+              collectionOrderType: value,
+            );
+          }
+        },
+        itemBuilder: (context) => [
+          CheckedPopupMenuItem(
+            padding: EdgeInsets.zero,
+            checked:
+                Collection.instance.collectionSortType == CollectionSort.aToZ ||
+                    (tab != 0 &&
+                        Collection.instance.collectionSortType ==
+                            CollectionSort.artist),
+            value: CollectionSort.aToZ,
+            child: Text(
+              Language.instance.A_TO_Z,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+          if (tab == 0 || tab == 1)
+            CheckedPopupMenuItem(
+              padding: EdgeInsets.zero,
+              checked: Collection.instance.collectionSortType ==
+                  CollectionSort.dateAdded,
+              value: CollectionSort.dateAdded,
+              child: Text(
+                Language.instance.DATE_ADDED,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ),
+          if (tab == 0 || tab == 1)
+            CheckedPopupMenuItem(
+              padding: EdgeInsets.zero,
+              checked:
+                  Collection.instance.collectionSortType == CollectionSort.year,
+              value: CollectionSort.year,
+              child: Text(
+                Language.instance.YEAR,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ),
+          if (tab == 0)
+            CheckedPopupMenuItem(
+              padding: EdgeInsets.zero,
+              checked: Collection.instance.collectionSortType ==
+                  CollectionSort.artist,
+              value: CollectionSort.artist,
+              child: Text(
+                Language.instance.ARTIST_SINGLE,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ),
+          PopupMenuDivider(),
+          CheckedPopupMenuItem(
+            padding: EdgeInsets.zero,
+            checked: Collection.instance.collectionOrderType ==
+                CollectionOrder.ascending,
+            value: CollectionOrder.ascending,
+            child: Text(
+              Language.instance.ASCENDING,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+          CheckedPopupMenuItem(
+            padding: EdgeInsets.zero,
+            checked: Collection.instance.collectionOrderType ==
+                CollectionOrder.descending,
+            value: CollectionOrder.descending,
+            child: Text(
+              Language.instance.DESCENDING,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+        ],
       ),
-      elevation: 4.0,
-      onSelected: (value) async {
-        if (value is CollectionSort) {
-          Provider.of<Collection>(context, listen: false).sort(type: value);
-          await Configuration.instance.save(
-            collectionSortType: value,
-          );
-        } else if (value is CollectionOrder) {
-          Provider.of<Collection>(context, listen: false).order(type: value);
-          await Configuration.instance.save(
-            collectionOrderType: value,
-          );
-        }
-      },
-      itemBuilder: (context) => [
-        CheckedPopupMenuItem(
-          padding: EdgeInsets.zero,
-          checked:
-              Collection.instance.collectionSortType == CollectionSort.aToZ ||
-                  (tab != 0 &&
-                      Collection.instance.collectionSortType ==
-                          CollectionSort.artist),
-          value: CollectionSort.aToZ,
-          child: Text(
-            Language.instance.A_TO_Z,
-            style: Theme.of(context).textTheme.headline4,
-          ),
-        ),
-        if (tab == 0 || tab == 1)
-          CheckedPopupMenuItem(
-            padding: EdgeInsets.zero,
-            checked: Collection.instance.collectionSortType ==
-                CollectionSort.dateAdded,
-            value: CollectionSort.dateAdded,
-            child: Text(
-              Language.instance.DATE_ADDED,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ),
-        if (tab == 0 || tab == 1)
-          CheckedPopupMenuItem(
-            padding: EdgeInsets.zero,
-            checked:
-                Collection.instance.collectionSortType == CollectionSort.year,
-            value: CollectionSort.year,
-            child: Text(
-              Language.instance.YEAR,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ),
-        if (tab == 0)
-          CheckedPopupMenuItem(
-            padding: EdgeInsets.zero,
-            checked:
-                Collection.instance.collectionSortType == CollectionSort.artist,
-            value: CollectionSort.artist,
-            child: Text(
-              Language.instance.ARTIST_SINGLE,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ),
-        PopupMenuDivider(),
-        CheckedPopupMenuItem(
-          padding: EdgeInsets.zero,
-          checked: Collection.instance.collectionOrderType ==
-              CollectionOrder.ascending,
-          value: CollectionOrder.ascending,
-          child: Text(
-            Language.instance.ASCENDING,
-            style: Theme.of(context).textTheme.headline4,
-          ),
-        ),
-        CheckedPopupMenuItem(
-          padding: EdgeInsets.zero,
-          checked: Collection.instance.collectionOrderType ==
-              CollectionOrder.descending,
-          value: CollectionOrder.descending,
-          child: Text(
-            Language.instance.DESCENDING,
-            style: Theme.of(context).textTheme.headline4,
-          ),
-        ),
-      ],
     );
   }
 }

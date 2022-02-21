@@ -243,6 +243,7 @@ class Language extends Strings with ChangeNotifier {
     this.DOWNLOAD_UPDATE = asset['DOWNLOAD_UPDATE']!;
     this.ENABLE_125_SCALING = asset['ENABLE_125_SCALING']!;
     this.ENABLE_ACRYLIC_BLUR = asset['ENABLE_ACRYLIC_BLUR']!;
+    this.EXIT_NOW_PLAYING = asset['EXIT_NOW_PLAYING']!;
     this.EXIT_SUBTITLE = asset['EXIT_SUBTITLE']!;
     this.EXIT_TITLE = asset['EXIT_TITLE']!;
     this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
@@ -255,6 +256,7 @@ class Language extends Strings with ChangeNotifier {
     this.LYRICS_NOT_FOUND = asset['LYRICS_NOT_FOUND']!;
     this.LYRICS_RETRIEVING = asset['LYRICS_RETRIEVING']!;
     this.MENU = asset['MENU']!;
+    this.MUTE = asset['MUTE']!;
     this.M_TRACKS_AND_N_ALBUMS = asset['M_TRACKS_AND_N_ALBUMS']!;
     this.NEXT = asset['NEXT']!;
     this.NO = asset['NO']!;
@@ -292,6 +294,7 @@ class Language extends Strings with ChangeNotifier {
     this.REINDEX = asset['REINDEX']!;
     this.REMOVE = asset['REMOVE']!;
     this.REMOVE_FROM_PLAYLIST = asset['REMOVE_FROM_PLAYLIST']!;
+    this.REPEAT = asset['REPEAT']!;
     this.RESULTS_FOR_QUERY = asset['RESULTS_FOR_QUERY']!;
     this.RETRIEVING_INFO = asset['RETRIEVING_INFO']!;
     this.RETRIEVING_LINK = asset['RETRIEVING_LINK']!;
@@ -351,8 +354,10 @@ class Language extends Strings with ChangeNotifier {
         asset['SHOW_NOW_PLAYING_AFTER_PLAYING']!;
     this.SHOW_TRACK_PROGRESS_ON_TASKBAR =
         asset['SHOW_TRACK_PROGRESS_ON_TASKBAR']!;
+    this.SHUFFLE = asset['SHUFFLE']!;
     this.SORT = asset['SORT']!;
     this.SORT_BY = asset['SORT_BY']!;
+    this.SPEED = asset['SPEED']!;
     this.STARTING_PLAYBACK = asset['STARTING_PLAYBACK']!;
     this.SWITCH_THEME = asset['SWITCH_THEME']!;
     this.THEME_MODE_DARK = asset['THEME_MODE_DARK']!;
@@ -362,6 +367,7 @@ class Language extends Strings with ChangeNotifier {
     this.TRACKS_FROM_ARTIST = asset['TRACKS_FROM_ARTIST']!;
     this.TRACK_SINGLE = asset['TRACK_SINGLE']!;
     this.TRANSFERS = asset['TRANSFERS']!;
+    this.UNMUTE = asset['UNMUTE']!;
     this.WARNING = asset['WARNING']!;
     this.YEAR = asset['YEAR']!;
     this.YES = asset['YES']!;
