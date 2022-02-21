@@ -56,6 +56,7 @@ class Strings {
   late String DOWNLOAD_UPDATE;
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;
+  late String EXIT_NOW_PLAYING;
   late String EXIT_SUBTITLE;
   late String EXIT_TITLE;
   late String GO_TO_SETTINGS;
@@ -67,6 +68,7 @@ class Strings {
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
   late String MENU;
+  late String MUTE;
   late String M_TRACKS_AND_N_ALBUMS;
   late String NEXT;
   late String NO;
@@ -103,6 +105,7 @@ class Strings {
   late String REINDEX;
   late String REMOVE;
   late String REMOVE_FROM_PLAYLIST;
+  late String REPEAT;
   late String RESULTS_FOR_QUERY;
   late String RETRIEVING_INFO;
   late String RETRIEVING_LINK;
@@ -149,8 +152,10 @@ class Strings {
   late String SHOW_ALBUM;
   late String SHOW_NOW_PLAYING_AFTER_PLAYING;
   late String SHOW_TRACK_PROGRESS_ON_TASKBAR;
+  late String SHUFFLE;
   late String SORT;
   late String SORT_BY;
+  late String SPEED;
   late String STARTING_PLAYBACK;
   late String SWITCH_THEME;
   late String THEME_MODE_DARK;
@@ -160,6 +165,7 @@ class Strings {
   late String TRACKS_FROM_ARTIST;
   late String TRACK_SINGLE;
   late String TRANSFERS;
+  late String UNMUTE;
   late String WARNING;
   late String YEAR;
   late String YES;

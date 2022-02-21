@@ -344,12 +344,16 @@ class CollectionScreenState extends State<CollectionScreen>
                                                   .COLLECTION_SEARCH_WELCOME,
                                               trailingIcon: Transform.rotate(
                                                 angle: pi / 2,
-                                                child: Icon(
-                                                  Icons.search,
-                                                  size: 20.0,
-                                                  color: Theme.of(context)
-                                                      .iconTheme
-                                                      .color,
+                                                child: Tooltip(
+                                                  message:
+                                                      Language.instance.SEARCH,
+                                                  child: Icon(
+                                                    Icons.search,
+                                                    size: 20.0,
+                                                    color: Theme.of(context)
+                                                        .iconTheme
+                                                        .color,
+                                                  ),
                                                 ),
                                               ),
                                               trailingIconOnPressed: () {
@@ -394,30 +398,34 @@ class CollectionScreenState extends State<CollectionScreen>
                                     ),
                                     Padding(
                                       padding: EdgeInsets.all(8.0),
-                                      child: InkWell(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                            PageRouteBuilder(
-                                              pageBuilder: (context, animation,
-                                                      secondaryAnimation) =>
-                                                  FadeThroughTransition(
-                                                fillColor: Colors.transparent,
-                                                animation: animation,
-                                                secondaryAnimation:
-                                                    secondaryAnimation,
-                                                child: Settings(),
+                                      child: Tooltip(
+                                        message: Language.instance.SETTING,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              PageRouteBuilder(
+                                                pageBuilder: (context,
+                                                        animation,
+                                                        secondaryAnimation) =>
+                                                    FadeThroughTransition(
+                                                  fillColor: Colors.transparent,
+                                                  animation: animation,
+                                                  secondaryAnimation:
+                                                      secondaryAnimation,
+                                                  child: Settings(),
+                                                ),
                                               ),
+                                            );
+                                          },
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                          child: Container(
+                                            height: 40.0,
+                                            width: 40.0,
+                                            child: Icon(
+                                              Icons.settings,
+                                              size: 20.0,
                                             ),
-                                          );
-                                        },
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        child: Container(
-                                          height: 40.0,
-                                          width: 40.0,
-                                          child: Icon(
-                                            Icons.settings,
-                                            size: 20.0,
                                           ),
                                         ),
                                       ),

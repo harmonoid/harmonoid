@@ -108,7 +108,7 @@ class YoutubeTabState extends State<YoutubeTab> {
                   child: MaterialButton(
                     onPressed: youtube.fetchRecommendations,
                     child: Text(
-                      Language.instance.REFRESH,
+                      Language.instance.REFRESH.toUpperCase(),
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                       ),
@@ -282,10 +282,13 @@ class YoutubeTabState extends State<YoutubeTab> {
                     Language.instance.SEARCH,
                     trailingIcon: Transform.rotate(
                       angle: pi / 2,
-                      child: Icon(
-                        Icons.search,
-                        size: 20.0,
-                        color: Theme.of(context).iconTheme.color,
+                      child: Tooltip(
+                        message: Language.instance.SEARCH,
+                        child: Icon(
+                          Icons.search,
+                          size: 20.0,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
                       ),
                     ),
                     trailingIconOnPressed: () {
