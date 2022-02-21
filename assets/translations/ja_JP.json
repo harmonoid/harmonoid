@@ -10,7 +10,7 @@
   "ARTIST": "アーティスト",
   "ARTIST_SINGLE": "アーティスト",
   "ASCENDING": "昇順",
-  "AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING": "Automatically add other songs from collection to now playing after album completion",
+  "AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING": "アルバムの完了後、コレクションから他の曲を自動的に再生中に追加する",
   "A_TO_Z": "A から Z",
   "BUFFERING": "バッファしています...",
   "CANCEL": "キャンセル",
@@ -160,5 +160,5 @@
   "YOUTUBE_NO_RESULTS": "見つかりませんでした。",
   "YOUTUBE_WELCOME": "音楽を検索するかリンクを入力",
   "YOUTUBE_WELCOME_SUBTITLE": "あなたが聞いた音楽を基におすすめがここに表示されます",
-  "YOUTUBE_WELCOME_TITLE": "Let's Go"
+  "YOUTUBE_WELCOME_TITLE": "さあ、行こう"
 }
