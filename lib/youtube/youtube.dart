@@ -15,6 +15,7 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/youtube/youtube_api.dart';
 import 'package:harmonoid/youtube/youtube_tile.dart';
 import 'package:harmonoid/youtube/state/youtube.dart';
+import 'package:substring_highlight/substring_highlight.dart';
 
 class YoutubeTab extends StatefulWidget {
   const YoutubeTab({Key? key}) : super(key: key);
@@ -25,6 +26,7 @@ class YoutubeTabState extends State<YoutubeTab> {
   String _query = '';
   List<String> _suggestions = <String>[];
   int _highlightedSuggestionIndex = -1;
+  TextEditingController _searchBarController = TextEditingController();
 
   @override
   void initState() {
@@ -243,9 +245,18 @@ class YoutubeTabState extends State<YoutubeTab> {
                               height: 32.0,
                               alignment: Alignment.centerLeft,
                               padding: EdgeInsets.only(left: 10.0),
-                              child: Text(
-                                option,
-                                style: Theme.of(context).textTheme.headline3,
+                              child: SubstringHighlight(
+                                text: option,
+                                term: _searchBarController.text,
+                                textStyle:
+                                    Theme.of(context).textTheme.headline3!,
+                                textStyleHighlight: TextStyle(
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                           );
@@ -257,85 +268,89 @@ class YoutubeTabState extends State<YoutubeTab> {
               ),
             ),
           ),
-          fieldViewBuilder: (context, controller, node, callback) => Focus(
-            onFocusChange: (hasFocus) {
-              if (!hasFocus) {
-                HotKeys.instance.enableSpaceHotKey();
-              }
-            },
-            onKey: (node, event) {
-              var isArrowDownPressed =
-                  event.isKeyPressed(LogicalKeyboardKey.arrowDown);
-
-              if (isArrowDownPressed ||
-                  event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
-                _updateHighlightSuggestionIndex(isArrowDownPressed
-                    ? _highlightedSuggestionIndex + 1
-                    : _highlightedSuggestionIndex - 1);
-                _updateSearchFieldWithHighlightSuggestion(controller);
-              }
-
-              return KeyEventResult.ignored;
-            },
-            child: Focus(
+          fieldViewBuilder: (context, controller, node, callback) {
+            this._searchBarController = controller;
+            return Focus(
               onFocusChange: (hasFocus) {
-                if (hasFocus) {
-                  HotKeys.instance.disableSpaceHotKey();
-                } else {
+                if (!hasFocus) {
                   HotKeys.instance.enableSpaceHotKey();
                 }
               },
-              child: Container(
-                height: 40.0,
-                width: 480.0,
-                child: TextField(
-                  autofocus: isDesktop,
-                  cursorWidth: 1.0,
-                  focusNode: node,
-                  controller: controller,
-                  onChanged: (value) async {
-                    setState(() {
-                      _highlightedSuggestionIndex = -1;
-                    });
-                    _query = value;
-                    if (value.isEmpty) {
-                      _suggestions = [];
+              onKey: (node, event) {
+                var isArrowDownPressed =
+                    event.isKeyPressed(LogicalKeyboardKey.arrowDown);
+
+                if (isArrowDownPressed ||
+                    event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+                  _updateHighlightSuggestionIndex(isArrowDownPressed
+                      ? _highlightedSuggestionIndex + 1
+                      : _highlightedSuggestionIndex - 1);
+                  _updateSearchFieldWithHighlightSuggestion(controller);
+                }
+
+                return KeyEventResult.ignored;
+              },
+              child: Focus(
+                onFocusChange: (hasFocus) {
+                  if (hasFocus) {
+                    HotKeys.instance.disableSpaceHotKey();
+                  } else {
+                    HotKeys.instance.enableSpaceHotKey();
+                  }
+                },
+                child: Container(
+                  height: 40.0,
+                  width: 480.0,
+                  child: TextField(
+                    autofocus: isDesktop,
+                    cursorWidth: 1.0,
+                    focusNode: node,
+                    controller: controller,
+                    onChanged: (value) async {
+                      setState(() {
+                        _highlightedSuggestionIndex = -1;
+                      });
+                      _query = value;
+                      if (value.isEmpty) {
+                        _suggestions = [];
+                        setState(() {});
+                      } else {
+                        _suggestions = await YoutubeApi.getSuggestions(value);
+                      }
                       setState(() {});
-                    } else {
-                      _suggestions = await YoutubeApi.getSuggestions(value);
-                    }
-                    setState(() {});
-                  },
-                  onSubmitted: (value) {
-                    searchOrPlay(value);
-                  },
-                  cursorColor: Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white,
-                  textAlignVertical: TextAlignVertical.bottom,
-                  style: Theme.of(context).textTheme.headline4,
-                  decoration: desktopInputDecoration(
-                    context,
-                    Language.instance.SEARCH,
-                    trailingIcon: Transform.rotate(
-                      angle: pi / 2,
-                      child: Tooltip(
-                        message: Language.instance.SEARCH,
-                        child: Icon(
-                          Icons.search,
-                          size: 20.0,
-                          color: Theme.of(context).iconTheme.color,
+                    },
+                    onSubmitted: (value) {
+                      searchOrPlay(value);
+                    },
+                    cursorColor:
+                        Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white,
+                    textAlignVertical: TextAlignVertical.bottom,
+                    style: Theme.of(context).textTheme.headline4,
+                    decoration: desktopInputDecoration(
+                      context,
+                      Language.instance.SEARCH,
+                      trailingIcon: Transform.rotate(
+                        angle: pi / 2,
+                        child: Tooltip(
+                          message: Language.instance.SEARCH,
+                          child: Icon(
+                            Icons.search,
+                            size: 20.0,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
                         ),
                       ),
+                      trailingIconOnPressed: () {
+                        searchOrPlay(_query);
+                      },
                     ),
-                    trailingIconOnPressed: () {
-                      searchOrPlay(_query);
-                    },
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       );
 
