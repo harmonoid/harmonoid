@@ -58,6 +58,7 @@ dependencies:
   material_floating_search_bar: ^0.3.6
   implicitly_animated_reorderable_list: ^0.4.0-dev+4
   collection: any
+  substring_highlight: ^1.0.33
 
   # Forked plugins & packages to meet requirements.
 
