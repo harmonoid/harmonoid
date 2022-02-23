@@ -98,18 +98,6 @@ jobs:
           ln -sr AppDir/usr/bin/harmonoid AppDir/harmonoid
           tar czf harmonoid-linux-x86_64.tar.gz -C AppDir/ .
 
-      - name: Build AppImage
-        run: |
-          echo '#!/bin/sh
-          cd "$(dirname "$0")"
-          exec ./harmonoid' > AppDir/AppRun
-          chmod +x AppDir/AppRun
-          ln -sr AppDir/usr/share/icons/hicolor/256x256/apps/harmonoid.png AppDir/harmonoid.png
-          cp AppDir/usr/share/applications/harmonoid.desktop AppDir/harmonoid.desktop
-          curl -L https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -o appimagetool-x86_64.AppImage
-          chmod +x appimagetool-x86_64.AppImage
-          ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir/ harmonoid-linux-x86_64.AppImage
-
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
