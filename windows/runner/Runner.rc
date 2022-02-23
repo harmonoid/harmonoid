@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "Hitesh Kumar Saini <saini123hitesh@gmail.com>" "\0"
+            VALUE "CompanyName", "Harmonoid Project Authors" "\0"
             VALUE "FileDescription", "Harmonoid" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "Harmonoid" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2021 Hitesh Kumar Saini <saini123hitesh@gmail.com>. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2021 Harmonoid Project Authors. All rights reserved." "\0"
             VALUE "OriginalFilename", "harmonoid.exe" "\0"
             VALUE "ProductName", "Harmonoid" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

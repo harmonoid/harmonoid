@@ -3,7 +3,7 @@
 
 #define MyAppName "Harmonoid"
 #define MyAppVersion "0.2.1.0"
-#define MyAppPublisher "Hitesh Kumar Saini"
+#define MyAppPublisher "The Harmonoid Authors"
 #define MyAppURL "https://github.com/harmonoid/harmonoid"
 #define MyAppExeName "harmonoid.exe"
 

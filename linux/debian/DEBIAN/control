@@ -5,6 +5,6 @@ Priority: optional
 Homepage: https://github.com/harmonoid/harmonoid
 Architecture: amd64
 Depends: mpv, libmpv-dev
-Maintainer: Hitesh Kumar Saini <saini123hitesh@gmail.com>
+Maintainer: Harmonoid Project Authors
 Description: Harmonoid
  Elegant music app to play & manage music library.
