@@ -236,7 +236,7 @@ final Map<String, dynamic> defaultConfiguration = {
     {
       'windows': () => path.join(Platform.environment['USERPROFILE']!, 'Music'),
       'linux': () =>
-          Process.runSync('xdg-user-dir', ['MUSIC']).stdout.toString(),
+          Process.runSync('xdg-user-dir', ['MUSIC']).stdout.toString().trim(),
       'android': () => '/storage/emulated/0/Music',
     }[Platform.operatingSystem]!(),
   ],
