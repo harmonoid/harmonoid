@@ -8,7 +8,6 @@
 
 import 'dart:io';
 import 'package:flutter/widgets.dart' hide Intent;
-import 'package:harmonoid/core/intent.dart';
 import 'package:libmpv/libmpv.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
@@ -17,6 +16,7 @@ import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
 import 'package:harmonoid/main.dart';
+import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart' hide Media;
@@ -222,6 +222,7 @@ class Playback extends ChangeNotifier {
         update();
       });
       player.streams.playlist.listen((event) {
+        tracks.clear();
         tracks = event.map((media) => Track.fromJson(media.extras)).toList();
         notifyListeners();
         update();
@@ -442,10 +443,14 @@ class Playback extends ChangeNotifier {
     } catch (_) {}
   }
 
-  final Player player = Player(video: false, osc: false, title: kTitle);
-  final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
-  MPRISService? mpris;
-  final discord = DiscordRPC(applicationId: '881480706545573918');
+  static final Player player = Player(video: false, osc: false, title: kTitle);
+  static final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
+  static MPRISService? mpris;
+  static final discord = DiscordRPC(applicationId: '881480706545573918');
+
+  @override
+  // ignore: must_call_super
+  void dispose() {}
 
   double _volume = 50.0;
 }

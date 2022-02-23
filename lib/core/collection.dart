@@ -11,8 +11,8 @@ import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:libmpv/libmpv.dart' hide Playlist, Media;
 import 'package:path/path.dart' as path;
-import 'package:libmpv/libmpv.dart' as mpv;
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
 import 'package:harmonoid/models/media.dart';
@@ -142,7 +142,7 @@ class Collection extends ChangeNotifier {
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           try {
             metadata.addAll(await tagger.parse(
-              mpv.Media(file.uri.toString()),
+              file.uri.toString(),
               coverDirectory: albumArtDirectory,
             ));
           } catch (exception, stacktrace) {
@@ -490,7 +490,7 @@ class Collection extends ChangeNotifier {
           if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
             try {
               metadata.addAll(await tagger.parse(
-                mpv.Media(object.uri.toString()),
+                object.uri.toString(),
                 coverDirectory: albumArtDirectory,
               ));
             } catch (exception, stacktrace) {
@@ -539,8 +539,8 @@ class Collection extends ChangeNotifier {
 
   ImageProvider getAlbumArt(Media media) {
     if (media is Track) {
-      if (mpv.Plugins.isExternalMedia(media.uri)) {
-        return NetworkImage(mpv.Plugins.artwork(media.uri));
+      if (Plugins.isExternalMedia(media.uri)) {
+        return NetworkImage(Plugins.artwork(media.uri));
       }
       final file = File(path.join(
         albumArtDirectory.path,
@@ -558,8 +558,8 @@ class Collection extends ChangeNotifier {
         }
       }
     } else if (media is Album) {
-      if (mpv.Plugins.isExternalMedia(media.tracks.first.uri)) {
-        return NetworkImage(mpv.Plugins.artwork(media.tracks.first.uri));
+      if (Plugins.isExternalMedia(media.tracks.first.uri)) {
+        return NetworkImage(Plugins.artwork(media.tracks.first.uri));
       }
       final file = File(path.join(
         albumArtDirectory.path,
@@ -577,8 +577,8 @@ class Collection extends ChangeNotifier {
         }
       }
     } else if (media is Artist) {
-      if (mpv.Plugins.isExternalMedia(media.tracks.first.uri)) {
-        return NetworkImage(mpv.Plugins.artwork(media.tracks.first.uri));
+      if (Plugins.isExternalMedia(media.tracks.first.uri)) {
+        return NetworkImage(Plugins.artwork(media.tracks.first.uri));
       }
       final file = File(path.join(
         albumArtDirectory.path,
@@ -872,8 +872,8 @@ extension CollectionTrackExtension on Track {
       '.PNG';
 }
 
-/// `libmpv.dart` [mpv.Tagger] instance.
-final mpv.Tagger tagger = mpv.Tagger();
+/// `libdart` [Tagger] instance.
+final Tagger tagger = Tagger();
 
 /// Prettified JSON serialization.
 const encoder = convert.JsonEncoder.withIndent('  ');

@@ -27,7 +27,7 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/override_window_destroy.dart';
 
 const String kTitle = 'Harmonoid';
-const String kVersion = '0.2.0';
+const String kVersion = '0.2.1';
 const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 
@@ -36,7 +36,7 @@ Future<void> main(List<String> args) async {
   try {
     if (Platform.isWindows) {
       await Configuration.initialize();
-      if (kReleaseMode) {
+      if (kReleaseMode || kProfileMode) {
         await MPV.initialize();
         await SMTC.initialize();
       }
@@ -52,7 +52,7 @@ Future<void> main(List<String> args) async {
     }
     if (Platform.isLinux) {
       await Configuration.initialize();
-      if (kReleaseMode) {
+      if (kReleaseMode || kProfileMode) {
         await MPV.initialize();
       }
       await Intent.initialize(args: args);
