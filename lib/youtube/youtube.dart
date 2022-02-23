@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
@@ -23,6 +24,7 @@ class YoutubeTab extends StatefulWidget {
 class YoutubeTabState extends State<YoutubeTab> {
   String _query = '';
   List<String> _suggestions = <String>[];
+  int _highlightedSuggestionIndex = -1;
 
   @override
   void initState() {
@@ -57,6 +59,21 @@ class YoutubeTabState extends State<YoutubeTab> {
         ),
       ),
     );
+  }
+
+  void _updateHighlightSuggestionIndex(int newIndex) {
+    if (newIndex < -1) newIndex++;
+    setState(() {
+      _highlightedSuggestionIndex =
+          _suggestions.isEmpty ? -1 : newIndex % _suggestions.length;
+    });
+  }
+
+  void _updateSearchFieldWithHighlightSuggestion(
+      TextEditingController controller) {
+    controller.text = _suggestions.elementAt(_highlightedSuggestionIndex);
+    controller.selection =
+        TextSelection.collapsed(offset: controller.text.length);
   }
 
   Widget builder(BuildContext context, YouTube youtube) {
@@ -220,6 +237,9 @@ class YoutubeTabState extends State<YoutubeTab> {
                               searchOrPlay(option);
                             },
                             child: Container(
+                              color: _highlightedSuggestionIndex == index
+                                  ? Theme.of(context).focusColor
+                                  : null,
                               height: 32.0,
                               alignment: Alignment.centerLeft,
                               padding: EdgeInsets.only(left: 10.0),
@@ -243,6 +263,20 @@ class YoutubeTabState extends State<YoutubeTab> {
                 HotKeys.instance.enableSpaceHotKey();
               }
             },
+            onKey: (node, event) {
+              var isArrowDownPressed =
+                  event.isKeyPressed(LogicalKeyboardKey.arrowDown);
+
+              if (isArrowDownPressed ||
+                  event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+                _updateHighlightSuggestionIndex(isArrowDownPressed
+                    ? _highlightedSuggestionIndex + 1
+                    : _highlightedSuggestionIndex - 1);
+                _updateSearchFieldWithHighlightSuggestion(controller);
+              }
+
+              return KeyEventResult.ignored;
+            },
             child: Focus(
               onFocusChange: (hasFocus) {
                 if (hasFocus) {
@@ -260,6 +294,9 @@ class YoutubeTabState extends State<YoutubeTab> {
                   focusNode: node,
                   controller: controller,
                   onChanged: (value) async {
+                    setState(() {
+                      _highlightedSuggestionIndex = -1;
+                    });
                     _query = value;
                     if (value.isEmpty) {
                       _suggestions = [];
