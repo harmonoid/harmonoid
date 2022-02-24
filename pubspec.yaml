@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Plugins maintained by github.com/alexmercerind or proprietary to the Harmonoid.
+  # Plugins maintained by github.com/alexmercerind or private to the Harmonoid.
 
   libmpv:
     path: external/libmpv.dart
