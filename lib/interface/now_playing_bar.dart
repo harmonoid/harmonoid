@@ -52,6 +52,17 @@ class NowPlayingBarState extends State<NowPlayingBar>
     super.dispose();
   }
 
+  double getPlaybackDuration(Playback playback) =>
+      playback.duration.inMilliseconds.toDouble();
+
+  double getPlaybackPosition(Playback playback) {
+    var duration = getPlaybackDuration(playback);
+    var position = playback.position.inMilliseconds.toDouble();
+    if (position > duration) return duration;
+    if (duration < 0 || position < 0) return 0;
+    return position;
+  }
+
   @override
   Widget build(BuildContext context) {
     return isDesktop
@@ -207,18 +218,16 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     SizedBox(
                                       width: 12.0,
                                     ),
-                                    playback.position.inMilliseconds <=
-                                            playback.duration.inMilliseconds
+                                    getPlaybackPosition(playback) <=
+                                            getPlaybackDuration(playback)
                                         ? Container(
                                             width: 480.0,
                                             child: ScrollableSlider(
                                               min: 0.0,
-                                              max: playback
-                                                  .duration.inMilliseconds
-                                                  .toDouble(),
-                                              value: playback
-                                                  .position.inMilliseconds
-                                                  .toDouble(),
+                                              max:
+                                                  getPlaybackDuration(playback),
+                                              value:
+                                                  getPlaybackPosition(playback),
                                               onChanged: (value) {
                                                 playback.seek(
                                                   Duration(
