@@ -2,7 +2,7 @@
 
 **🎵 Elegant music app to play & manage music library. Lyrics & playlists. YouTube support.**
 
-_Still a work-in-progress. Currently only Windows & Linux is available._
+_Still a work-in-progress (Windows & Linux is available)._
 
 - [Download](#download)
 - [Discord](https://discord.gg/2Rc3edFWd8)
@@ -134,11 +134,11 @@ To show your local music inside Harmonoid, you can go to the settings & click "A
 
 Your music will be categorized into albums, artists etc. & you'll be able to freely browse music album-wise or artist-wise etc. while being able to sort it alphabetically or year-wise etc.
 
+As of now, you can still browse/play your music while it is being indexed.
+
 Next time when you start the app, your music collection will be retrieved from the cache.
 
-To remove a folder from your music collection, just click on "REMOVE" next to the folder you might wanna remove.
-
-As of now, you can still browse/play your music while it is being indexed.
+To remove a folder from your music collection, just click on "REMOVE" next to the folder you might wanna remove in the settings page.
 
 ### 3. Managing playback queue
 
@@ -157,6 +157,7 @@ You can add both local music & music from YouTube Music to these playlists.
 Currently, YouTube Music support is very basic but it works _well_ in terms of performance & timing. Right now, you can:
 
 - Play.
+- Play from URL.
 - Search.
 - Get recommendations.
 - Get suggestions.
@@ -168,18 +169,22 @@ We intend to improve in future & you can contribute to this. Downloading is neve
 
 If you're playing a song from YouTube Music & want to hear it on website instead, you can simply go to the "Now Playing Screen" by an arrow in the bottom-right corner of the application. Hovering over the album art, you'll see an icon hinting to open the song in your web-browser. Click on it & you're on YouTube Music website.
 
-### 7. Playing from file explorer
+### 7. Playing a YouTube URL
+
+Just enter the YouTube or YouTube Music URL in the search field & hit enter. It'll start playing immediately.
+
+### 8. Playing from file explorer
 
 You can play music directly from file explorer if you installed Harmonoid using the setup installer or from Microsoft Store.
 
 You can also right click a folder to "Add to Harmonoid's Playlist".
 
-### 8. Troubleshoot
+### 9. Troubleshoot
 
 If you encounter some problem like you're unable to start the app or see an error screen, you can try to delete the `.Harmonoid` folder in your home directory.
 WARNING: This will also delete your music indexing cache & playlists. Best decision can be to report us at our Discord.
 
-### 9. Hacking
+### 10. Hacking
 
 If you wish to really configure properties of the app which are not available in the UI yet, you may edit the `.JSON` files in `~/.Harmonoid` directory.
 
@@ -193,7 +198,7 @@ An incomplete list of people who are working (or worked) on the project in past:
   <li>
     <img src='https://avatars.githubusercontent.com/u/28951144?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/alexmercerind'>Hitesh Kumar Saini</a></strong>
     <ul>
-      <li>Deals with playback & indexing of files. Writes UI, state management & lifecycle code.</li>
+      <li>Lead Developer. Deals with playback & indexing of files. Writes UI, state management & lifecycle code. Manages native plugins.</li>
     </ul>
   </li>
   <li>
@@ -211,7 +216,7 @@ An incomplete list of people who are working (or worked) on the project in past:
   <li>
     <img src='https://avatars.githubusercontent.com/u/41370460?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/prateekmedia'>Prateek Sunal</a></strong>
     <ul>
-      <li>RPM & installer. Bug reports. Hindi translation.</li>
+      <li>RPM package. Bug reports. Hindi translation.</li>
     </ul>
   </li>
   <li>
@@ -397,7 +402,7 @@ As of now, if you wish to gain access to all the private packages used in [Harmo
 4. After a long run of maintaining open-source packages at [my GitHub profile](https://github.com/alexmercerind), things haven't been very rewarding to say the least. Simply, I no longer want to set my code free in this project.
 5. I don't want people to re-distribute (or even sell) my work without my permission on their websites or distribute from their privately owned servers.
 6. I don't feel safe putting my work publicly anymore.
-7. Users still can compile their own [open version](#compiling-with-private-packages) of the app (if they don't wish to acquire the private packages).
+7. Users still can compile their own [open version](#compiling-without-private-packages) of the app (if they don't wish to acquire the private packages).
 8. I like to get paid for my work & software-development is not _cheap_ either in terms of time spent or resources used.
 9. The new version of the app is complete rewrite & it no longer is the _old app_.
 10. With no doubt, there are better open-source alternatives present right now. But, we've just started & see [limitations](#limitations) for more details.
