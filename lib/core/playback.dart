@@ -289,65 +289,7 @@ class Playback extends ChangeNotifier {
           });
         }
         if (Platform.isLinux) {
-          mpris = MPRISService(
-            'harmonoid',
-            identity: 'Harmonoid',
-            desktopEntry: '/usr/share/applications/harmonoid.desktop',
-            setLoopStatus: (value) {
-              switch (value) {
-                case 'None':
-                  {
-                    setPlaylistLoopMode(PlaylistLoopMode.none);
-                    break;
-                  }
-                case 'Track':
-                  {
-                    setPlaylistLoopMode(PlaylistLoopMode.single);
-                    break;
-                  }
-                case 'Playlist':
-                  {
-                    setPlaylistLoopMode(PlaylistLoopMode.loop);
-                    break;
-                  }
-              }
-            },
-            setRate: (value) {
-              setRate(value);
-            },
-            setShuffle: (value) {
-              if (this.isShuffling != value) {
-                toggleShuffle();
-              }
-            },
-            setVolume: (value) {
-              setVolume(value);
-            },
-            doNext: next,
-            doPrevious: previous,
-            doPause: pause,
-            doPlayPause: playOrPause,
-            doPlay: play,
-            doSeek: (value) {
-              seek(Duration(microseconds: value));
-            },
-            doSetPosition: (objectPath, timeMicroseconds) {
-              final index = mpris?.playlist
-                      .map(
-                        (e) => '/' + e.uri.toString().hashCode.toString(),
-                      )
-                      .toList()
-                      .indexOf(objectPath) ??
-                  -1;
-              if (index >= 0 && index != this.index) {
-                jump(index);
-              }
-              seek(Duration(microseconds: timeMicroseconds));
-            },
-            doOpenUri: (uri) {
-              Intent.instance.playUri(uri);
-            },
-          );
+          _Harmonoid();
         }
       } catch (_) {}
     }
@@ -459,4 +401,91 @@ enum PlaylistLoopMode {
   none,
   single,
   loop,
+}
+
+/// Implements `org.mpris.MediaPlayer2` & `org.mpris.MediaPlayer2.Player`.
+class _Harmonoid extends MPRISService {
+  _Harmonoid()
+      : super(
+          'harmonoid',
+          identity: 'Harmonoid',
+          desktopEntry: '/usr/share/applications/harmonoid.desktop',
+        );
+
+  @override
+  void setLoopStatus(value) {
+    switch (value) {
+      case 'None':
+        {
+          Playback.instance.setPlaylistLoopMode(PlaylistLoopMode.none);
+          break;
+        }
+      case 'Track':
+        {
+          Playback.instance.setPlaylistLoopMode(PlaylistLoopMode.single);
+          break;
+        }
+      case 'Playlist':
+        {
+          Playback.instance.setPlaylistLoopMode(PlaylistLoopMode.loop);
+          break;
+        }
+    }
+  }
+
+  @override
+  void setRate(value) {
+    Playback.instance.setRate(value);
+  }
+
+  @override
+  void setShuffle(value) {
+    if (Playback.instance.isShuffling != value) {
+      Playback.instance.toggleShuffle();
+    }
+  }
+
+  @override
+  void doNext() {
+    Playback.instance.next();
+  }
+
+  @override
+  void doPrevious() {
+    Playback.instance.previous();
+  }
+
+  @override
+  void doPause() {
+    Playback.instance.pause();
+  }
+
+  @override
+  void doPlay() {
+    Playback.instance.play();
+  }
+
+  @override
+  void doSeek(value) {
+    Playback.instance.seek(Duration(microseconds: value));
+  }
+
+  @override
+  void doSetPosition(objectPath, timeMicroseconds) {
+    final index = playlist
+        .map(
+          (e) => '/' + e.uri.toString().hashCode.toString(),
+        )
+        .toList()
+        .indexOf(objectPath);
+    if (index >= 0 && index != this.index) {
+      Playback.instance.jump(index);
+    }
+    Playback.instance.seek(Duration(microseconds: timeMicroseconds));
+  }
+
+  @override
+  void doOpenUri(uri) {
+    Intent.instance.playUri(uri);
+  }
 }
