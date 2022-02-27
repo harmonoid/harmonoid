@@ -12,9 +12,9 @@ import 'package:harmonoid/models/media.dart';
 import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:collection/collection.dart';
 
-import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/now_playing_launcher.dart';
@@ -106,9 +106,8 @@ class NowPlayingState extends State<NowPlayingScreen>
                                   builder: (context, constraints) => Stack(
                                     alignment: Alignment.center,
                                     children: [
-                                      Image(
-                                        image: Collection.instance
-                                            .getAlbumArt(tracks[index]),
+                                      ExtendedImage(
+                                        image: getAlbumArt(tracks[index]),
                                         fit: BoxFit.cover,
                                         height: min(constraints.maxHeight,
                                             constraints.maxWidth),

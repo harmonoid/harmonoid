@@ -8,11 +8,11 @@
 
 import 'dart:math';
 import 'dart:core';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -112,8 +112,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(0.0),
-                                    child: Image(
-                                      image: Collection.instance.getAlbumArt(
+                                    child: ExtendedImage(
+                                      image: getAlbumArt(
                                           playback.tracks[playback.index]),
                                       height: 84.0,
                                       width: 84.0,

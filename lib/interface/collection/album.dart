@@ -10,6 +10,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'dart:async';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -391,7 +392,8 @@ class AlbumTile extends StatelessWidget {
             elevation: 4.0,
             margin: EdgeInsets.zero,
             child: InkWell(
-              onTap: () {
+              onTap: () async {
+                await precacheImage(getAlbumArt(album), context);
                 Navigator.of(context).push(
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
@@ -418,8 +420,8 @@ class AlbumTile extends StatelessWidget {
                         child: Hero(
                           tag:
                               'album_art_${album.albumName}_${album.albumArtistName}',
-                          child: Image(
-                            image: Collection.instance.getAlbumArt(album),
+                          child: ExtendedImage(
+                            image: getAlbumArt(album, small: true),
                             fit: BoxFit.cover,
                             height: width,
                             width: width,
@@ -480,9 +482,10 @@ class AlbumTile extends StatelessWidget {
               onTap: () async {
                 if (palette == null) {
                   final result = await PaletteGenerator.fromImageProvider(
-                      Collection.instance.getAlbumArt(album));
+                      getAlbumArt(album));
                   palette = result.colors;
                 }
+                await precacheImage(getAlbumArt(album), context);
                 open();
               },
               child: Container(
@@ -491,7 +494,7 @@ class AlbumTile extends StatelessWidget {
                 child: Column(
                   children: [
                     Ink.image(
-                      image: Collection.instance.getAlbumArt(album),
+                      image: getAlbumArt(album),
                       fit: BoxFit.cover,
                       height: width,
                       width: width,
@@ -578,8 +581,7 @@ class AlbumScreenState extends State<AlbumScreen>
         Duration(milliseconds: 300),
         () {
           if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(
-                    Collection.instance.getAlbumArt(widget.album))
+            PaletteGenerator.fromImageProvider(getAlbumArt(widget.album))
                 .then((palette) {
               setState(() {
                 color = palette.colors.first;
@@ -715,10 +717,9 @@ class AlbumScreenState extends State<AlbumScreen>
                                               children: [
                                                 Padding(
                                                   padding: EdgeInsets.all(8.0),
-                                                  child: Image(
-                                                    image: Collection.instance
-                                                        .getAlbumArt(
-                                                            widget.album),
+                                                  child: ExtendedImage(
+                                                    image: getAlbumArt(
+                                                        widget.album),
                                                   ),
                                                 ),
                                                 Positioned(
@@ -738,7 +739,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                           child: IconButton(
                                                             onPressed: () {
                                                               launch(
-                                                                  'file:///${(Collection.instance.getAlbumArt(widget.album) as FileImage).file.path}');
+                                                                  'file:///${(getAlbumArt(widget.album) as FileImage).file.path}');
                                                             },
                                                             icon: Icon(
                                                               Icons.image,
@@ -1199,9 +1200,8 @@ class AlbumScreenState extends State<AlbumScreen>
                       flexibleSpace: FlexibleSpaceBar(
                         background: Column(
                           children: [
-                            Image(
-                              image:
-                                  Collection.instance.getAlbumArt(widget.album),
+                            ExtendedImage(
+                              image: getAlbumArt(widget.album),
                               fit: BoxFit.cover,
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.width,

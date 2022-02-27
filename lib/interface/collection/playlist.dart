@@ -10,6 +10,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:async';
 import 'package:animations/animations.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -262,8 +263,8 @@ class PlaylistThumbnail extends StatelessWidget {
         width: width,
         child: Row(
           children: [
-            Image(
-              image: Collection.instance.getAlbumArt(tracks[tracks.length - 1]),
+            ExtendedImage(
+              image: getAlbumArt(tracks[tracks.length - 1], small: true),
               height: width,
               width: width / 2 - (!mini ? 12.0 : 0.0),
               fit: BoxFit.cover,
@@ -271,17 +272,15 @@ class PlaylistThumbnail extends StatelessWidget {
             if (!mini) SizedBox(width: 8.0),
             Column(
               children: [
-                Image(
-                  image: Collection.instance
-                      .getAlbumArt(tracks[tracks.length - 2]),
+                ExtendedImage(
+                  image: getAlbumArt(tracks[tracks.length - 2], small: true),
                   height: width / 2 - (!mini ? 12.0 : 0.0),
                   width: width / 2 - (!mini ? 4.0 : 0.0),
                   fit: BoxFit.cover,
                 ),
                 if (!mini) SizedBox(height: 8.0),
-                Image(
-                  image: Collection.instance
-                      .getAlbumArt(tracks[tracks.length - 3]),
+                ExtendedImage(
+                  image: getAlbumArt(tracks[tracks.length - 3], small: true),
                   height: width / 2 - (!mini ? 4.0 : 0.0),
                   width: width / 2 - (!mini ? 4.0 : 0.0),
                   fit: BoxFit.cover,
@@ -297,15 +296,15 @@ class PlaylistThumbnail extends StatelessWidget {
         width: width,
         child: Row(
           children: [
-            Image(
-              image: Collection.instance.getAlbumArt(tracks[tracks.length - 1]),
+            ExtendedImage(
+              image: getAlbumArt(tracks[tracks.length - 1], small: true),
               height: width,
               width: width / 2 - (!mini ? 12.0 : 0.0),
               fit: BoxFit.cover,
             ),
             if (!mini) SizedBox(width: 8.0),
-            Image(
-              image: Collection.instance.getAlbumArt(tracks[tracks.length - 2]),
+            ExtendedImage(
+              image: getAlbumArt(tracks[tracks.length - 2], small: true),
               height: width,
               width: width / 2 - (!mini ? 4.0 : 0.0),
               fit: BoxFit.cover,
@@ -314,8 +313,8 @@ class PlaylistThumbnail extends StatelessWidget {
         ),
       );
     } else if (tracks.length == 1) {
-      return Image(
-        image: Collection.instance.getAlbumArt(tracks[tracks.length - 1]),
+      return ExtendedImage(
+        image: getAlbumArt(tracks[tracks.length - 1], small: true),
         height: width,
         width: width,
         fit: BoxFit.cover,
@@ -441,8 +440,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                 Iterable<Color>? palette;
                 if (isMobile && widget.playlist.tracks.isNotEmpty) {
                   final result = await PaletteGenerator.fromImageProvider(
-                      Collection.instance
-                          .getAlbumArt(widget.playlist.tracks.last));
+                      getAlbumArt(widget.playlist.tracks.last));
                   palette = result.colors;
                 }
                 Navigator.of(context).push(
@@ -569,8 +567,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
         Duration(milliseconds: 300),
         () {
           if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(Collection.instance
-                    .getAlbumArt(widget.playlist.tracks.last))
+            PaletteGenerator.fromImageProvider(
+                    getAlbumArt(widget.playlist.tracks.last))
                 .then((palette) {
               setState(() {
                 color = palette.colors.first;
@@ -1116,10 +1114,10 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                     child: Padding(
                                       padding: EdgeInsets.all(4.0),
                                       child: ClipOval(
-                                        child: Image(
-                                          image: Collection.instance
-                                              .getAlbumArt(
-                                                  widget.playlist.tracks.last),
+                                        child: ExtendedImage(
+                                          image: getAlbumArt(
+                                              widget.playlist.tracks.last,
+                                              small: true),
                                           height: min(constraints.maxHeight,
                                                   constraints.maxWidth) -
                                               64.0,

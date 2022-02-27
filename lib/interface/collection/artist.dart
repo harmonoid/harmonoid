@@ -11,6 +11,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
@@ -186,8 +187,8 @@ class ArtistTile extends StatelessWidget {
                         alignment: Alignment.center,
                         children: [
                           ClipOval(
-                            child: Image(
-                              image: collection.getAlbumArt(artist),
+                            child: ExtendedImage(
+                              image: getAlbumArt(artist, small: true),
                               height: width - 8.0,
                               width: width - 8.0,
                             ),
@@ -200,7 +201,9 @@ class ArtistTile extends StatelessWidget {
                             ),
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: () {
+                              onTap: () async {
+                                await precacheImage(
+                                    getAlbumArt(artist), context);
                                 Navigator.of(context).push(
                                   PageRouteBuilder(
                                     pageBuilder: (context, animation,
@@ -247,9 +250,10 @@ class ArtistTile extends StatelessWidget {
                 onTap: () async {
                   if (palette == null) {
                     final result = await PaletteGenerator.fromImageProvider(
-                        collection.getAlbumArt(artist));
+                        getAlbumArt(artist));
                     palette = result.colors;
                   }
+                  await precacheImage(getAlbumArt(artist), context);
                   Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
@@ -292,8 +296,8 @@ class ArtistTile extends StatelessWidget {
                               child: Padding(
                                 padding: EdgeInsets.all(2.0),
                                 child: ClipOval(
-                                  child: Image(
-                                    image: collection.getAlbumArt(artist),
+                                  child: ExtendedImage(
+                                    image: getAlbumArt(artist),
                                     height: 48.0,
                                     width: 48.0,
                                   ),
@@ -372,8 +376,7 @@ class ArtistScreenState extends State<ArtistScreen>
         Duration(milliseconds: 300),
         () {
           if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(
-                    Collection.instance.getAlbumArt(widget.artist))
+            PaletteGenerator.fromImageProvider(getAlbumArt(widget.artist))
                 .then((palette) {
               setState(() {
                 color = palette.colors.first;
@@ -521,10 +524,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                                   radius: 240.0,
                                                   backgroundColor:
                                                       Colors.transparent,
-                                                  backgroundImage: Collection
-                                                      .instance
-                                                      .getAlbumArt(
-                                                          widget.artist),
+                                                  backgroundImage: getAlbumArt(
+                                                      widget.artist),
                                                 ),
                                               ),
                                             ),
@@ -951,9 +952,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                       child: Padding(
                                         padding: EdgeInsets.all(4.0),
                                         child: ClipOval(
-                                          child: Image(
-                                            image: collection
-                                                .getAlbumArt(widget.artist),
+                                          child: ExtendedImage(
+                                            image: getAlbumArt(widget.artist),
                                             height: min(constraints.maxHeight,
                                                     constraints.maxWidth) -
                                                 64.0,

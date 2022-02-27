@@ -1,6 +1,6 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
-import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
@@ -48,8 +48,8 @@ class YoutubeTileState extends State<YoutubeTile> {
                   ClipRect(
                     child: Hero(
                       tag: 'track_art_${widget.track.trackName}',
-                      child: Image(
-                        image: Collection.instance.getAlbumArt(widget.track),
+                      child: ExtendedImage(
+                        image: getAlbumArt(widget.track, small: true),
                         fit: BoxFit.cover,
                         height: widget.width,
                         width: widget.width,

@@ -8,6 +8,7 @@
 
 import 'package:desktop/desktop.dart' as desktop;
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -389,8 +390,8 @@ class TrackTileState extends State<TrackTile> {
                         children: [
                           const SizedBox(width: 12.0),
                           widget.leading ??
-                              Image(
-                                image: collection.getAlbumArt(widget.track),
+                              ExtendedImage(
+                                image: getAlbumArt(widget.track, small: true),
                                 height: 56.0,
                                 width: 56.0,
                               ),
