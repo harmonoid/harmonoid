@@ -17,9 +17,9 @@ import 'package:system_media_transport_controls/system_media_transport_controls.
 
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart' hide Media;
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/now_playing_launcher.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -308,7 +308,7 @@ class Playback extends ChangeNotifier {
             title: track.trackName,
             track_number: track.trackNumber,
           );
-          final artwork = Collection.instance.getAlbumArt(track);
+          final artwork = getAlbumArt(track);
           if (artwork is FileImage) {
             smtc.set_artwork(artwork.file);
           } else if (artwork is NetworkImage) {
@@ -343,7 +343,7 @@ class Playback extends ChangeNotifier {
         }
         if (Platform.isLinux) {
           Uri? artworkUri;
-          final artwork = Collection.instance.getAlbumArt(track);
+          final artwork = getAlbumArt(track);
           if (artwork is FileImage) {
             artworkUri = artwork.file.uri;
           } else if (artwork is NetworkImage) {

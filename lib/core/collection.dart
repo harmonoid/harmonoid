@@ -537,68 +537,6 @@ class Collection extends ChangeNotifier {
     notifyListeners();
   }
 
-  ImageProvider getAlbumArt(Media media) {
-    if (media is Track) {
-      if (Plugins.isExternalMedia(media.uri)) {
-        return NetworkImage(Plugins.artwork(media.uri));
-      }
-      final file = File(path.join(
-        albumArtDirectory.path,
-        media.albumArtFileName,
-      ));
-      if (file.existsSync()) {
-        return FileImage(file);
-      } else {
-        for (final name in kAlbumArtFileNames) {
-          final file =
-              File(path.join(path.basename(media.uri.toFilePath()), name));
-          if (file.existsSync()) {
-            return FileImage(file);
-          }
-        }
-      }
-    } else if (media is Album) {
-      if (Plugins.isExternalMedia(media.tracks.first.uri)) {
-        return NetworkImage(Plugins.artwork(media.tracks.first.uri));
-      }
-      final file = File(path.join(
-        albumArtDirectory.path,
-        media.tracks.first.albumArtFileName,
-      ));
-      if (file.existsSync()) {
-        return FileImage(file);
-      } else {
-        for (final name in kAlbumArtFileNames) {
-          final file = File(path.join(
-              path.basename(media.tracks.first.uri.toFilePath()), name));
-          if (file.existsSync()) {
-            return FileImage(file);
-          }
-        }
-      }
-    } else if (media is Artist) {
-      if (Plugins.isExternalMedia(media.tracks.first.uri)) {
-        return NetworkImage(Plugins.artwork(media.tracks.first.uri));
-      }
-      final file = File(path.join(
-        albumArtDirectory.path,
-        media.tracks.first.albumArtFileName,
-      ));
-      if (file.existsSync()) {
-        return FileImage(file);
-      } else {
-        for (final name in kAlbumArtFileNames) {
-          final file = File(path.join(
-              path.basename(media.tracks.first.uri.toFilePath()), name));
-          if (file.existsSync()) {
-            return FileImage(file);
-          }
-        }
-      }
-    }
-    return FileImage(unknownAlbumArt);
-  }
-
   /// Creates a new playlist in the collection.
   ///
   Future<void> playlistAdd(String playlist) async {

@@ -8,8 +8,11 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
 import 'package:animations/animations.dart';
+import 'package:libmpv/libmpv.dart' hide Media;
 import 'package:share_plus/share_plus.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
@@ -435,8 +438,8 @@ Future<void> trackPopupMenuHandle(
             }
           }
           if (isMobile) {
-            final result = await PaletteGenerator.fromImageProvider(
-                Collection.instance.getAlbumArt(album));
+            final result =
+                await PaletteGenerator.fromImageProvider(getAlbumArt(album));
             palette = result.colors;
           }
           Navigator.of(context).push(
@@ -542,4 +545,89 @@ extension StringExtension on String {
 extension DateTimeExtension on DateTime {
   get label =>
       '${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-$year';
+}
+
+ImageProvider getAlbumArt(Media media, {bool small: false}) {
+  final result = () {
+    if (media is Track) {
+      if (Plugins.isExternalMedia(media.uri)) {
+        return ExtendedNetworkImageProvider(
+          Plugins.artwork(media.uri, small: small),
+          cache: true,
+        );
+      }
+      final file = File(path.join(
+        Collection.instance.albumArtDirectory.path,
+        media.albumArtFileName,
+      ));
+      if (file.existsSync()) {
+        return ExtendedFileImageProvider(file);
+      } else {
+        for (final name in kAlbumArtFileNames) {
+          final file =
+              File(path.join(path.basename(media.uri.toFilePath()), name));
+          if (file.existsSync()) {
+            return ExtendedFileImageProvider(file);
+          }
+        }
+      }
+    } else if (media is Album) {
+      if (Plugins.isExternalMedia(media.tracks.first.uri)) {
+        return ExtendedNetworkImageProvider(
+          Plugins.artwork(
+            media.tracks.first.uri,
+            small: small,
+          ),
+          cache: true,
+        );
+      }
+      final file = File(path.join(
+        Collection.instance.albumArtDirectory.path,
+        media.tracks.first.albumArtFileName,
+      ));
+      if (file.existsSync()) {
+        return ExtendedFileImageProvider(file);
+      } else {
+        for (final name in kAlbumArtFileNames) {
+          final file = File(path.join(
+              path.basename(media.tracks.first.uri.toFilePath()), name));
+          if (file.existsSync()) {
+            return ExtendedFileImageProvider(file);
+          }
+        }
+      }
+    } else if (media is Artist) {
+      if (Plugins.isExternalMedia(media.tracks.first.uri)) {
+        return ExtendedNetworkImageProvider(
+          Plugins.artwork(
+            media.tracks.first.uri,
+            small: small,
+          ),
+          cache: true,
+        );
+      }
+      final file = File(path.join(
+        Collection.instance.albumArtDirectory.path,
+        media.tracks.first.albumArtFileName,
+      ));
+      if (file.existsSync()) {
+        return ExtendedFileImageProvider(file);
+      } else {
+        for (final name in kAlbumArtFileNames) {
+          final file = File(path.join(
+              path.basename(media.tracks.first.uri.toFilePath()), name));
+          if (file.existsSync()) {
+            return ExtendedFileImageProvider(file);
+          }
+        }
+      }
+    }
+    return ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
+  }() as ImageProvider;
+  if (small && result is ExtendedNetworkImageProvider) {
+    return result;
+  } else if (small) {
+    return ResizeImage.resizeIfNeeded(200, 200, result);
+  }
+  return result;
 }
