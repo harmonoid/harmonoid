@@ -1,6 +1,6 @@
 # [Harmonoid](https://github.com/harmonoid/harmonoid)
 
-**🎵 Elegant music app to play & manage music library. Lyrics & playlists. YouTube support.**
+**🎵 Elegant music app to play & manage music library. Lyrics & playlists. YouTube Music support.**
 
 _Still a work-in-progress (Windows & Linux is available)._
 
@@ -67,7 +67,7 @@ Similar instructions can be followed on your favorite distro.
 - Cross-platform (currently aiming Windows, Linux & Android).
 - mpv based music playback for strong format support (on Linux & Windows) using `dart:ffi`.
 - Taskbar & System Media Transport Controls for Windows.
-- Small installer (< 25 MB) & ~~low RAM usage (< 120 MB)~~ (see [limitations](#limitations)).
+- Small installer (< 25 MB) & low RAM usage (< 120 MB) (tested on Windows, still see [limitations](#limitations)).
 - Lyrics for all your music.
 - Very strictly follows [Material Design](https://material.io/) guidelines for UI & animations.
 - Ability to create persistent or "Now playing" playlists.
@@ -173,7 +173,7 @@ If you're playing a song from YouTube Music & want to hear it on website instead
 
 Just enter the YouTube or YouTube Music URL in the search field & hit enter. It'll start playing immediately.
 
-### 8. Playing from file explorer
+### 8. Playing from File Explorer
 
 You can play music directly from file explorer if you installed Harmonoid using the setup installer or from Microsoft Store.
 
@@ -210,7 +210,7 @@ An incomplete list of people who are working (or worked) on the project in past:
   <li>
     <img src='https://avatars.githubusercontent.com/u/52399966?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/mytja'>Mitja Ševerkar</a></strong>
     <ul>
-      <li>WinGet package. Backward Windows compatiblity checks. Improvements to YouTube support. Bug reports. CI. Slovenian translation.</li>
+      <li>WinGet package. Backward Windows compatiblity checks. Improvements to YouTube Music support. Bug reports. CI. Slovenian translation.</li>
     </ul>
   </li>
   <li>
