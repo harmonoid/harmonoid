@@ -102,6 +102,14 @@ class LanguageRegion {
     translator: 'Gaetan Jonathan',
     github: 'https://github.com/gaetan1903',
   );
+  static const faIR = LanguageRegion(
+    code: 'fa',
+    countryCode: 'IR',
+    name: 'فارسی',
+    country: 'ایران',
+    translator: '0xj0hn',
+    github: 'https://github.com/0xj0hn',
+  );
   static const huHu = LanguageRegion(
     code: 'hu',
     countryCode: 'HU',
@@ -153,6 +161,7 @@ class LanguageRegion {
     nlNl,
     svSe,
     frFr,
+    faIR,
     huHu,
     mgMG,
     zhCN,
