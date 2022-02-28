@@ -1,11 +1,3 @@
-/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
-///
-/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-///
-/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
-///
-// ignore_for_file: non_constant_identifier_names
 class Strings {
   late String ABOUT_SUBTITLE;
   late String ABOUT_TITLE;
@@ -53,6 +45,7 @@ class Strings {
   late String DELETE_TRACK;
   late String DESCENDING;
   late String DISCORD;
+  late String DISCOVERING_FILES;
   late String DOWNLOAD_UPDATE;
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;

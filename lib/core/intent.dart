@@ -17,6 +17,7 @@ import 'package:harmonoid/models/media.dart' hide Media;
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/state/now_playing_launcher.dart';
+import 'package:harmonoid/utils/file_system.dart';
 
 import 'package:harmonoid/youtube/youtube_api.dart';
 
@@ -78,7 +79,7 @@ class Intent {
             .invokeMethod('getOpenFile', {});
     String uri = response!;
     File file = File(uri);
-    if (await file.exists())
+    if (await file.exists_())
       return file;
     else
       throw Exception();
@@ -121,8 +122,8 @@ class Intent {
     }
     if (directory != null) {
       bool playing = false;
-      for (final file in directory!.listSync(recursive: true)) {
-        if (file is File && kSupportedFileTypes.contains(file.extension)) {
+      for (final file in await directory!.list_()) {
+        if (kSupportedFileTypes.contains(file.extension)) {
           final metadata = <String, String>{
             'uri': file.uri.toString(),
           };
@@ -176,7 +177,7 @@ class Intent {
   /// Starts playing the possibly opened file & saves its metadata before doing it.
   ///
   Future<void> playUri(Uri uri) async {
-    if (uri.isScheme('FILE') || await File(uri.toString()).exists()) {
+    if (uri.isScheme('FILE') || await File(uri.toString()).exists_()) {
       final metadata = <String, String>{
         'uri': uri.toString(),
       };

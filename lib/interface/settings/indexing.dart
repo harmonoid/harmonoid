@@ -205,56 +205,97 @@ class IndexingState extends State<IndexingSetting> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    TweenAnimationBuilder(
-                                      tween: Tween<double>(
-                                        begin: 0,
-                                        end: controller.progress /
-                                            controller.total,
-                                      ),
-                                      duration: Duration(milliseconds: 400),
-                                      child: Text(
-                                        (Language.instance
-                                            .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
-                                            .replaceAll(
-                                          'NUMBER_STRING',
-                                          controller.progress.toString(),
-                                        )).replaceAll(
-                                          'TOTAL_STRING',
-                                          controller.total.toString(),
-                                        ),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline4,
-                                      ),
-                                      builder: (_, dynamic value, child) =>
-                                          Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          child!,
-                                          Container(
-                                            margin: EdgeInsets.only(top: 6.0),
-                                            height: 4.0,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width -
-                                                32.0,
-                                            child: LinearProgressIndicator(
-                                              value: value,
-                                              backgroundColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary
-                                                  .withOpacity(0.2),
-                                              valueColor:
-                                                  AlwaysStoppedAnimation(
+                                    controller.progress == null
+                                        ? Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                Language
+                                                    .instance.DISCOVERING_FILES,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline4,
+                                              ),
+                                              Container(
+                                                margin:
+                                                    EdgeInsets.only(top: 6.0),
+                                                height: 4.0,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    32.0,
+                                                child: LinearProgressIndicator(
+                                                  value: null,
+                                                  backgroundColor:
                                                       Theme.of(context)
                                                           .colorScheme
-                                                          .secondary),
+                                                          .secondary
+                                                          .withOpacity(0.2),
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation(
+                                                          Theme.of(context)
+                                                              .colorScheme
+                                                              .secondary),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : TweenAnimationBuilder(
+                                            tween: Tween<double>(
+                                              begin: 0,
+                                              end: (controller.progress ?? 0) /
+                                                  controller.total,
+                                            ),
+                                            duration:
+                                                Duration(milliseconds: 400),
+                                            child: Text(
+                                              (Language.instance
+                                                  .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
+                                                  .replaceAll(
+                                                'NUMBER_STRING',
+                                                controller.progress.toString(),
+                                              )).replaceAll(
+                                                'TOTAL_STRING',
+                                                controller.total.toString(),
+                                              ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4,
+                                            ),
+                                            builder:
+                                                (_, dynamic value, child) =>
+                                                    Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                child!,
+                                                Container(
+                                                  margin:
+                                                      EdgeInsets.only(top: 6.0),
+                                                  height: 4.0,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      32.0,
+                                                  child:
+                                                      LinearProgressIndicator(
+                                                    value: value,
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .colorScheme
+                                                            .secondary
+                                                            .withOpacity(0.2),
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation(
+                                                            Theme.of(context)
+                                                                .colorScheme
+                                                                .secondary),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
                                   ],
                                 )
                               : Container(

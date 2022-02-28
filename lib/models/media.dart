@@ -9,6 +9,8 @@
 import 'dart:io';
 import 'package:path/path.dart' as path;
 
+import 'package:harmonoid/utils/file_system.dart';
+
 part 'album_artist.dart';
 part 'album.dart';
 part 'artist.dart';

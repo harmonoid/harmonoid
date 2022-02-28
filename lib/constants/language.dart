@@ -249,6 +249,7 @@ class Language extends Strings with ChangeNotifier {
     this.DELETE_TRACK = asset['DELETE_TRACK']!;
     this.DESCENDING = asset['DESCENDING']!;
     this.DISCORD = asset['DISCORD']!;
+    this.DISCOVERING_FILES = asset['DISCOVERING_FILES']!;
     this.DOWNLOAD_UPDATE = asset['DOWNLOAD_UPDATE']!;
     this.ENABLE_125_SCALING = asset['ENABLE_125_SCALING']!;
     this.ENABLE_ACRYLIC_BLUR = asset['ENABLE_ACRYLIC_BLUR']!;

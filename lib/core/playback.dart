@@ -365,7 +365,6 @@ class Playback extends ChangeNotifier {
               DiscordPresence(
                 state: '${track.albumName}',
                 details: '${track.trackName} • ${track.albumArtistName}',
-                startTimeStamp: DateTime.now().millisecondsSinceEpoch,
                 largeImageKey: 'icon',
                 largeImageText: Language.instance.LISTENING_TO_MUSIC,
                 smallImageText: kTitle,

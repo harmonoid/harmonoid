@@ -13,9 +13,10 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path;
 
 import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/file_system.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/utils/rendering.dart';
 
 /// Configuration
 /// -------------
@@ -58,7 +59,7 @@ class Configuration extends ConfigurationKeys {
         'Configuration.JSON',
       ),
     );
-    if (!await instance.file.exists()) {
+    if (!await instance.file.exists_()) {
       await instance.file.create(recursive: true);
       await instance.file.writeAsString(
         convert.JsonEncoder.withIndent('  ').convert(defaultConfiguration),
@@ -202,7 +203,7 @@ class Configuration extends ConfigurationKeys {
           current['automaticallyShowNowPlayingScreenAfterPlaying'];
     } catch (exception) {
       if (!retry) throw exception;
-      if (!await file.exists()) {
+      if (!await file.exists_()) {
         await file.create(recursive: true);
       }
       await file.writeAsString(
