@@ -20,6 +20,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/core/app_state.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
@@ -42,6 +43,7 @@ Future<void> main(List<String> args) async {
       }
       await Intent.initialize(args: args);
       await HotKeys.initialize();
+      await AppState.initialize();
       DiscordRPC.initialize();
       doWhenWindowReady(() {
         appWindow.minSize = Size(960, 640);
