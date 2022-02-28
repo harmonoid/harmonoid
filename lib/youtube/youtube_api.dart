@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+import 'dart:ffi';
 import 'package:http/http.dart' as http;
 
 import 'package:harmonoid/models/media.dart';
@@ -206,24 +207,48 @@ abstract class YoutubeApi {
     );
   }
 
+  /// Contains cached suggestions for the given query.
+  static var cacheSuggestions = Map<String, String>();
+
   static Future<List<String>> getSuggestions(String query) async {
-    final response = await Client.request(
-      'music/get_search_suggestions',
-      {
-        'input': query,
-      },
-    );
-    final body = convert.jsonDecode(response.body)['contents'][0]
-        ['searchSuggestionsSectionRenderer']['contents'];
+    late String body;
     final result = <String>[];
-    for (var object in body) {
-      if (object.containsKey('searchSuggestionRenderer')) {
-        result.add(object['searchSuggestionRenderer']['suggestion']['runs']
-            .map((text) => text['text'])
-            .toList()
-            .join(''));
+
+    /// If cached, return cached suggestions.
+    /// else make a request to the API.
+    if (cacheSuggestions.containsKey(query)) {
+      body = cacheSuggestions[query]!;
+    } else {
+      final response = await Client.request(
+        'music/get_search_suggestions',
+        {
+          'input': query,
+        },
+      );
+      body = response.body;
+    }
+
+    if (body.isNotEmpty) {
+      cacheSuggestions[query] = body;
+      final bodyDecoded = convert.jsonDecode(body);
+      if (bodyDecoded['contents'] is List) {
+        final contents = bodyDecoded['contents'][0]
+            ['searchSuggestionsSectionRenderer']['contents'];
+
+        if (contents is List) {
+          for (var object in contents) {
+            if (object.containsKey('searchSuggestionRenderer')) {
+              result.add(object['searchSuggestionRenderer']['suggestion']
+                      ['runs']
+                  .map((text) => text['text'])
+                  .toList()
+                  .join(''));
+            }
+          }
+        }
       }
     }
+
     return result;
   }
 }
