@@ -308,6 +308,8 @@ class YoutubeTabState extends State<YoutubeTab> {
                     focusNode: node,
                     controller: controller,
                     onChanged: (value) async {
+                      value = value.trim();
+
                       setState(() {
                         _highlightedSuggestionIndex = -1;
                         _query = value;
