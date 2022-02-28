@@ -47,7 +47,7 @@ class YoutubeTileState extends State<YoutubeTile> {
                 children: [
                   ClipRect(
                     child: Hero(
-                      tag: 'track_art_${widget.track.trackName}',
+                      tag: widget.track.hashCode,
                       child: ExtendedImage(
                         image: getAlbumArt(widget.track, small: true),
                         fit: BoxFit.cover,

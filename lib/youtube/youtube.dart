@@ -17,6 +17,8 @@ import 'package:harmonoid/youtube/youtube_tile.dart';
 import 'package:harmonoid/youtube/state/youtube.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
+import '../utils/extensions.dart';
+
 class YoutubeTab extends StatefulWidget {
   const YoutubeTab({Key? key}) : super(key: key);
   YoutubeTabState createState() => YoutubeTabState();
@@ -392,36 +394,40 @@ class YouTubeSearch extends StatelessWidget {
                             (MediaQuery.of(context).size.width - tileMargin) ~/
                                 (kAlbumTileWidth + tileMargin);
                         if (asyncSnapshot.hasData) {
-                          return asyncSnapshot.data!.isNotEmpty
-                              ? CustomListView(
-                                  padding: EdgeInsets.only(
-                                    top: tileMargin,
-                                  ),
-                                  shrinkWrap: true,
-                                  children: tileGridListWidgets(
-                                    tileHeight: kAlbumTileHeight,
-                                    tileWidth: kAlbumTileWidth,
-                                    subHeader: null,
-                                    leadingSubHeader: null,
-                                    leadingWidget: null,
-                                    context: context,
-                                    widgetCount: asyncSnapshot.data!.length,
-                                    builder: (context, i) => YoutubeTile(
-                                      track: asyncSnapshot.data![i],
-                                      height: kAlbumTileHeight,
-                                      width: kAlbumTileWidth,
-                                    ),
-                                    elementsPerRow: elementsPerRow,
-                                  ),
-                                )
-                              : Center(
-                                  child: ExceptionWidget(
-                                    title: Language.instance
-                                        .COLLECTION_SEARCH_NO_RESULTS_TITLE,
-                                    subtitle:
-                                        Language.instance.YOUTUBE_NO_RESULTS,
-                                  ),
-                                );
+                          if (asyncSnapshot.data!.isNotEmpty) {
+                            var distinctTracks =
+                                asyncSnapshot.data!.distinct().toList();
+
+                            return CustomListView(
+                              padding: EdgeInsets.only(
+                                top: tileMargin,
+                              ),
+                              shrinkWrap: true,
+                              children: tileGridListWidgets(
+                                tileHeight: kAlbumTileHeight,
+                                tileWidth: kAlbumTileWidth,
+                                subHeader: null,
+                                leadingSubHeader: null,
+                                leadingWidget: null,
+                                context: context,
+                                widgetCount: distinctTracks.length,
+                                builder: (context, i) => YoutubeTile(
+                                  track: distinctTracks[i],
+                                  height: kAlbumTileHeight,
+                                  width: kAlbumTileWidth,
+                                ),
+                                elementsPerRow: elementsPerRow,
+                              ),
+                            );
+                          } else {
+                            return Center(
+                              child: ExceptionWidget(
+                                title: Language.instance
+                                    .COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                                subtitle: Language.instance.YOUTUBE_NO_RESULTS,
+                              ),
+                            );
+                          }
                         } else {
                           return Center(
                             child: CircularProgressIndicator(
