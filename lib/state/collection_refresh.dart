@@ -28,14 +28,18 @@ class CollectionRefresh extends ChangeNotifier {
   /// [CollectionRefresh] object instance.
   static late CollectionRefresh instance = CollectionRefresh();
 
-  int progress = 0;
+  int? progress;
   int total = 1;
 
-  double get relativeProgress => progress / total;
+  double? get relativeProgress {
+    if (progress == null) return null;
+    return progress! / total;
+  }
+
   bool get isOngoing => progress != total;
   bool get isCompleted => progress == total;
 
-  void set(int progress, int total) {
+  void set(int? progress, int total) {
     this.progress = progress;
     this.total = total;
     if (this._timer == null) {
@@ -65,4 +69,4 @@ class CollectionRefresh extends ChangeNotifier {
 }
 
 /// Amount of time after which [Collection] should be redrawn if it is being indexed or refreshed.
-const kCollectionRedrawRefractoryPeriod = Duration(seconds: 1);
+const kCollectionRedrawRefractoryPeriod = Duration(seconds: 2);

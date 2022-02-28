@@ -150,15 +150,26 @@ class CollectionScreenState extends State<CollectionScreen>
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  LinearProgressIndicator(
-                                    value: refresh.progress / refresh.total,
-                                    valueColor: AlwaysStoppedAnimation(
-                                      Theme.of(context).primaryColor,
-                                    ),
-                                    backgroundColor: Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.4),
-                                  ),
+                                  refresh.progress == null
+                                      ? LinearProgressIndicator(
+                                          value: null,
+                                          valueColor: AlwaysStoppedAnimation(
+                                            Theme.of(context).primaryColor,
+                                          ),
+                                          backgroundColor: Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.4),
+                                        )
+                                      : LinearProgressIndicator(
+                                          value: (refresh.progress ?? 0) /
+                                              refresh.total,
+                                          valueColor: AlwaysStoppedAnimation(
+                                            Theme.of(context).primaryColor,
+                                          ),
+                                          backgroundColor: Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.4),
+                                        ),
                                   Container(
                                     padding: EdgeInsets.all(12.0),
                                     child: Row(
@@ -170,7 +181,10 @@ class CollectionScreenState extends State<CollectionScreen>
                                           width: 16.0,
                                         ),
                                         Text(
-                                          '${refresh.progress}/${refresh.total}',
+                                          refresh.progress == null
+                                              ? Language
+                                                  .instance.DISCOVERING_FILES
+                                              : '${refresh.progress}/${refresh.total}',
                                           overflow: TextOverflow.ellipsis,
                                           style: Theme.of(context)
                                               .textTheme

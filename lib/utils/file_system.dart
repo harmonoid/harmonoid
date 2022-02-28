@@ -8,6 +8,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:harmonoid/core/collection.dart';
 
 extension DirectoryExtension on Directory {
   /// Recursively lists all the present [File]s inside the [Directory].
@@ -28,7 +29,8 @@ extension DirectoryExtension on Directory {
     )
         .listen(
       (event) {
-        if (event is File) {
+        // Explicitly restricting to [kSupportedFileTypes] for avoiding long iterations in later operations.
+        if (event is File && kSupportedFileTypes.contains(event.extension)) {
           files.add(File(event.path.substring(4)));
         }
       },

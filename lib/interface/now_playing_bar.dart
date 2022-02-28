@@ -125,7 +125,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     borderRadius: BorderRadius.circular(0.0),
                                     child: ExtendedImage(
                                       image: getAlbumArt(
-                                          playback.tracks[playback.index]),
+                                        playback.tracks[playback.index],
+                                        small: true,
+                                      ),
                                       height: 84.0,
                                       width: 84.0,
                                       fit: BoxFit.cover,

@@ -36,7 +36,7 @@ Future<void> main(List<String> args) async {
   try {
     if (Platform.isWindows) {
       await Configuration.initialize();
-      /* Now hot-reload works in libmpv.dart. Thanks to https://github.com/YehudaKremer. */
+      // Now hot-reload works in libmpv.dart. Thanks to https://github.com/YehudaKremer.
       await MPV.initialize();
       if (kReleaseMode || kProfileMode) {
         await SMTC.initialize();

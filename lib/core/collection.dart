@@ -75,7 +75,7 @@ class Collection extends ChangeNotifier {
   Future<void> setDirectories({
     required List<Directory>? collectionDirectories,
     required Directory? cacheDirectory,
-    void Function(int, int, bool)? onProgress,
+    void Function(int?, int, bool)? onProgress,
   }) async {
     this.collectionDirectories = collectionDirectories!;
     this.cacheDirectory = cacheDirectory!;
@@ -127,7 +127,10 @@ class Collection extends ChangeNotifier {
   ///
   /// Normally used when refreshing the music collection. Internally called by [refresh].
   ///
-  Future<void> add({required File file}) async {
+  Future<void> add({
+    required File file,
+    bool notifyListeners: true,
+  }) async {
     bool isAlreadyPresent = false;
     for (final track in tracks) {
       if (track.uri.toFilePath() == file.uri.toFilePath()) {
@@ -180,7 +183,9 @@ class Collection extends ChangeNotifier {
     }
     await saveToCache();
     sort();
-    notifyListeners();
+    if (notifyListeners) {
+      this.notifyListeners();
+    }
   }
 
   /// Removes a [Media] i.e. [Album], [Track] or [Artist] from the music collection.
@@ -332,7 +337,7 @@ class Collection extends ChangeNotifier {
   /// Non-blocking in nature. Sends progress updates to the optional callback parameter [onProgress].
   ///
   Future<void> refresh({
-    void Function(int completed, int total, bool isCompleted)? onProgress,
+    void Function(int? completed, int total, bool isCompleted)? onProgress,
   }) async {
     // For safety.
     if (!await cacheDirectory.exists_())
@@ -391,7 +396,10 @@ class Collection extends ChangeNotifier {
               }
             }
             if (!isTrackAdded) {
-              await add(file: file);
+              await add(
+                file: file,
+                notifyListeners: false,
+              );
             }
             try {
               onProgress?.call(index + 1, directory.length, false);
@@ -470,13 +478,14 @@ class Collection extends ChangeNotifier {
   /// Deletes the cache file before proceeding.
   ///
   Future<void> index(
-      {void Function(int completed, int total, bool isCompleted)?
+      {void Function(int? completed, int total, bool isCompleted)?
           onProgress}) async {
     albums = <Album>[];
     tracks = <Track>[];
     artists = <Artist>[];
     playlists = <Playlist>[];
     final directory = <File>[];
+    onProgress?.call(null, directory.length, true);
     for (final collectionDirectory in collectionDirectories)
       directory.addAll(await (collectionDirectory.list_()));
     for (int index = 0; index < directory.length; index++) {
