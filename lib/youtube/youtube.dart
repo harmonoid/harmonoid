@@ -200,8 +200,7 @@ class YoutubeTabState extends State<YoutubeTab> {
         child: Autocomplete<String>(
           optionsBuilder: (textEditingValue) =>
               textEditingValue.text.isEmpty ? [] : _suggestions,
-          optionsViewBuilder: (context, callback, Iterable<String> values) =>
-              Container(
+          optionsViewBuilder: (context, callback, _) => Container(
             margin: EdgeInsets.zero,
             width: MediaQuery.of(context).size.width,
             child: Align(
@@ -232,9 +231,9 @@ class YoutubeTabState extends State<YoutubeTab> {
                         keyboardDismissBehavior:
                             ScrollViewKeyboardDismissBehavior.onDrag,
                         padding: EdgeInsets.zero,
-                        itemCount: values.length,
+                        itemCount: _suggestions.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final String option = values.elementAt(index);
+                          final String option = _suggestions.elementAt(index);
                           return InkWell(
                             onTap: () {
                               callback(option);
@@ -311,14 +310,13 @@ class YoutubeTabState extends State<YoutubeTab> {
                     onChanged: (value) async {
                       setState(() {
                         _highlightedSuggestionIndex = -1;
+                        _query = value;
                       });
-                      _query = value;
-                      if (value.isEmpty) {
-                        _suggestions = [];
-                        setState(() {});
-                      } else {
-                        _suggestions = await YoutubeApi.getSuggestions(value);
-                      }
+
+                      _suggestions = value.isEmpty
+                          ? []
+                          : await YoutubeApi.getSuggestions(value);
+
                       setState(() {});
                     },
                     onSubmitted: (value) {
