@@ -16,6 +16,7 @@ import 'package:path/path.dart' as path;
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
 import 'package:harmonoid/models/media.dart';
+import 'package:harmonoid/utils/file_system.dart';
 
 /// Collection
 /// ----------
@@ -45,9 +46,9 @@ class Collection extends ChangeNotifier {
     instance.unknownAlbumArt = File(path.join(cacheDirectory.path,
         kAlbumArtsDirectoryName, kUnknownAlbumArtFileName));
     for (Directory directory in collectionDirectories) {
-      if (!await directory.exists()) await directory.create(recursive: true);
+      if (!await directory.exists_()) await directory.create(recursive: true);
     }
-    if (!await instance.unknownAlbumArt.exists()) {
+    if (!await instance.unknownAlbumArt.exists_()) {
       await instance.unknownAlbumArt.create(recursive: true);
       await instance.unknownAlbumArt.writeAsBytes(
           (await rootBundle.load(kUnknownAlbumArtRootBundle))
@@ -79,9 +80,9 @@ class Collection extends ChangeNotifier {
     this.collectionDirectories = collectionDirectories!;
     this.cacheDirectory = cacheDirectory!;
     for (Directory directory in collectionDirectories) {
-      if (!await directory.exists()) await directory.create(recursive: true);
+      if (!await directory.exists_()) await directory.create(recursive: true);
     }
-    if (!await unknownAlbumArt.exists()) {
+    if (!await unknownAlbumArt.exists_()) {
       await unknownAlbumArt.create(recursive: true);
       await unknownAlbumArt.writeAsBytes(
           (await rootBundle.load(kUnknownAlbumArtRootBundle))
@@ -144,6 +145,7 @@ class Collection extends ChangeNotifier {
             metadata.addAll(await tagger.parse(
               file.uri.toString(),
               coverDirectory: albumArtDirectory,
+              timeout: Duration(seconds: 2),
             ));
           } catch (exception, stacktrace) {
             debugPrint(exception.toString());
@@ -252,8 +254,8 @@ class Collection extends ChangeNotifier {
       if (albumArtists[AlbumArtist(object.albumArtistName)]!.isEmpty) {
         albumArtists.remove(AlbumArtist(object.albumArtistName));
       }
-      if (await File(object.uri.toFilePath()).exists()) {
-        await File(object.uri.toFilePath()).delete();
+      if (await File(object.uri.toFilePath()).exists_()) {
+        await File(object.uri.toFilePath()).delete_();
       }
     } else if (object is Album) {
       for (int index = 0; index < albums.length; index++) {
@@ -296,8 +298,8 @@ class Collection extends ChangeNotifier {
         albumArtists.remove(AlbumArtist(object.albumArtistName));
       }
       for (Track track in object.tracks) {
-        if (await File(track.uri.toFilePath()).exists()) {
-          await File(track.uri.toFilePath()).delete();
+        if (await File(track.uri.toFilePath()).exists_()) {
+          await File(track.uri.toFilePath()).delete_();
         }
       }
     }
@@ -333,10 +335,10 @@ class Collection extends ChangeNotifier {
     void Function(int completed, int total, bool isCompleted)? onProgress,
   }) async {
     // For safety.
-    if (!await cacheDirectory.exists())
+    if (!await cacheDirectory.exists_())
       await cacheDirectory.create(recursive: true);
     for (Directory directory in collectionDirectories) {
-      if (!await directory.exists()) await directory.create(recursive: true);
+      if (!await directory.exists_()) await directory.create(recursive: true);
     }
     // Clear existing indexed music.
     albums = <Album>[];
@@ -344,7 +346,7 @@ class Collection extends ChangeNotifier {
     artists = <Artist>[];
     // Indexing from scratch if no cache exists.
     if (!await File(path.join(cacheDirectory.path, kCollectionCacheFileName))
-        .exists()) {
+        .exists_()) {
       index(onProgress: onProgress);
     }
     // Just check for newly added or deleted tracks if cache exists.
@@ -365,13 +367,12 @@ class Collection extends ChangeNotifier {
           // Remove deleted tracks.
           final buffer = [...tracks];
           for (final track in buffer) {
-            if (!await File(track.uri.toFilePath()).exists()) delete(track);
+            if (!await File(track.uri.toFilePath()).exists_()) delete(track);
           }
           // Add newly added tracks.
           List<File> directory = <File>[];
           for (Directory collectionDirectory in collectionDirectories) {
-            for (FileSystemEntity object
-                in collectionDirectory.listSync(recursive: true)) {
+            for (FileSystemEntity object in await collectionDirectory.list_()) {
               if (object is File &&
                   kSupportedFileTypes.contains(object.extension)) {
                 directory.add(object);
@@ -477,9 +478,7 @@ class Collection extends ChangeNotifier {
     playlists = <Playlist>[];
     final directory = <File>[];
     for (final collectionDirectory in collectionDirectories)
-      directory.addAll((collectionDirectory.listSync(recursive: true)
-            ..removeWhere((element) => !(element is File)))
-          .cast());
+      directory.addAll(await (collectionDirectory.list_()));
     for (int index = 0; index < directory.length; index++) {
       final object = directory[index];
       if (kSupportedFileTypes.contains(object.extension)) {
@@ -492,6 +491,7 @@ class Collection extends ChangeNotifier {
               metadata.addAll(await tagger.parse(
                 object.uri.toString(),
                 coverDirectory: albumArtDirectory,
+                timeout: Duration(seconds: 2),
               ));
             } catch (exception, stacktrace) {
               debugPrint(exception.toString());
@@ -626,7 +626,7 @@ class Collection extends ChangeNotifier {
     File playlistFile =
         File(path.join(cacheDirectory.path, kPlaylistsCacheFileName));
     // Keep playlist named "Liked Songs" persistently.
-    if (!await playlistFile.exists()) {
+    if (!await playlistFile.exists_()) {
       playlists = [
         Playlist(
           id: -1,

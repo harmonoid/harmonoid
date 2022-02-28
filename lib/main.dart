@@ -36,8 +36,9 @@ Future<void> main(List<String> args) async {
   try {
     if (Platform.isWindows) {
       await Configuration.initialize();
+      /* Now hot-reload works in libmpv.dart. Thanks to https://github.com/YehudaKremer. */
+      await MPV.initialize();
       if (kReleaseMode || kProfileMode) {
-        await MPV.initialize();
         await SMTC.initialize();
       }
       await Intent.initialize(args: args);
@@ -52,9 +53,7 @@ Future<void> main(List<String> args) async {
     }
     if (Platform.isLinux) {
       await Configuration.initialize();
-      if (kReleaseMode || kProfileMode) {
-        await MPV.initialize();
-      }
+      await MPV.initialize();
       await Intent.initialize(args: args);
       await HotKeys.initialize();
       OverrideWindowDestroy.initialize();

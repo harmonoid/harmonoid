@@ -22,6 +22,7 @@ import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
@@ -560,13 +561,13 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
         Collection.instance.albumArtDirectory.path,
         media.albumArtFileName,
       ));
-      if (file.existsSync()) {
+      if (file.existsSync_()) {
         return ExtendedFileImageProvider(file);
       } else {
         for (final name in kAlbumArtFileNames) {
           final file =
               File(path.join(path.basename(media.uri.toFilePath()), name));
-          if (file.existsSync()) {
+          if (file.existsSync_()) {
             return ExtendedFileImageProvider(file);
           }
         }
@@ -585,13 +586,13 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
         Collection.instance.albumArtDirectory.path,
         media.tracks.first.albumArtFileName,
       ));
-      if (file.existsSync()) {
+      if (file.existsSync_()) {
         return ExtendedFileImageProvider(file);
       } else {
         for (final name in kAlbumArtFileNames) {
           final file = File(path.join(
               path.basename(media.tracks.first.uri.toFilePath()), name));
-          if (file.existsSync()) {
+          if (file.existsSync_()) {
             return ExtendedFileImageProvider(file);
           }
         }
@@ -610,13 +611,13 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
         Collection.instance.albumArtDirectory.path,
         media.tracks.first.albumArtFileName,
       ));
-      if (file.existsSync()) {
+      if (file.existsSync_()) {
         return ExtendedFileImageProvider(file);
       } else {
         for (final name in kAlbumArtFileNames) {
           final file = File(path.join(
               path.basename(media.tracks.first.uri.toFilePath()), name));
-          if (file.existsSync()) {
+          if (file.existsSync_()) {
             return ExtendedFileImageProvider(file);
           }
         }

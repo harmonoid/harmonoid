@@ -58,7 +58,7 @@ class Track extends Media {
           if (uri.isScheme('HTTP') || uri.isScheme('HTTPS')) {
             return DateTime.now();
           }
-          if (File(uri.toFilePath()).existsSync()) {
+          if (File(uri.toFilePath()).existsSync_()) {
             return File(uri.toFilePath()).lastModifiedSync();
           }
           return DateTime.now();
@@ -88,7 +88,7 @@ class Track extends Media {
           if (uri.isScheme('HTTP') || uri.isScheme('HTTPS')) {
             return DateTime.now();
           }
-          if (File(uri.toFilePath()).existsSync()) {
+          if (File(uri.toFilePath()).existsSync_()) {
             return File(uri.toFilePath()).lastModifiedSync();
           }
           return DateTime.now();
