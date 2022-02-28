@@ -1,170 +1,175 @@
 {
-    "ABOUT_SUBTITLE": "اطلاعاتی درمورد این برنامه و برنامه‌نویسان آن",
-    "ABOUT_TITLE": "درباره",
-    "ADD_NEW_FOLDER": "اضافه کردن پوشه جدید",
-    "ADD_TO_NOW_PLAYING": "اضافه کردن به پخش حال",
-    "ADD_TO_PLAYLIST": "اضافه کردن به لیست پخش",
-    "ALBUM": "آلبوم‌ها",
-    "ALBUMS_FROM_ARTIST": "آلبوم‌ها",
-    "ALBUM_SINGLE": "آلبوم‌ها",
-    "ARTIST": "هنرمندان",
-    "ARTIST_SINGLE": "هنرمند",
-    "ASCENDING": "صعودی",
-    "AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING": "اضافه کردن بقیهٔ آهنگ‌ها از مجموعه به پخش وقتی آلبوم کامل شد",
-    "A_TO_Z": "A تا Z",
-    "BUFFERING": "بافرینگ...",
-    "CANCEL": "لغو",
-    "COLLECTION": "مجموعه",
-    "COLLECTION_ALBUM_DELETE_DIALOG_BODY": "آیا می‌خواهید آلبوم \"NAME\" را حذف کنید؟",
-    "COLLECTION_ALBUM_DELETE_DIALOG_HEADER": "حذف",
-    "COLLECTION_INDEXING_HINT": "اضافه کردن موزیک ...",
-    "COLLECTION_INDEXING_LABEL": "موسیقی‌های دستگاه شما در حال همگام‌سازی است.\nایدهٔ جالبی نیست که برنامه را ببندید.",
-    "COLLECTION_INFO_SUBHEADER": "برخی بینش‌های آلبوم",
-    "COLLECTION_OTHER_SUBHEADER_ALBUM": "آلبوم‌های بیشتر",
-    "COLLECTION_OTHER_SUBHEADER_ARTIST": "هنرمندان بیشتر",
-    "COLLECTION_OTHER_SUBHEADER_TRACK": "موسیقی‌های بیشتر",
-    "COLLECTION_PLAYLIST_DELETE_DIALOG_BODY": "پاک کردن لیست پخش \"NAME\"؟",
-    "COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER": "حذف",
-    "COLLECTION_SEARCH_LABEL": "نگاهی در مجموعه شما",
-    "COLLECTION_SEARCH_NO_RESULTS_SUBTITLE": "چیزی مثل آن در مجموعه یافت نشد.",
-    "COLLECTION_SEARCH_NO_RESULTS_TITLE": "پاسخی یافت نشد.",
-    "COLLECTION_SEARCH_WELCOME": "جستجوی آلبوم‌ها، موسیقی‌ها یا هنرمندان...",
-    "COLLECTION_TOP_BODY_ALBUM_EMPTY": "جست‌جو و ذخیره کردن موسیقی برای دیدن آن در این محل\nصفحه را به پایین بکشید تا بروزرسانی شود.",
-    "COLLECTION_TOP_SUBHEADER_ALBUM": "آخرین آلبوم",
-    "COLLECTION_TOP_SUBHEADER_ARTIST": "آخرین هنرمند",
-    "COLLECTION_TOP_SUBHEADER_TRACK": "آخرین آهنگ",
-    "COLLECTION_TRACKS_SUBHEADER": "آهنگ",
-    "COLLECTION_TRACK_DELETE_DIALOG_BODY": "حذف آهنگ \"NAME\"؟",
-    "COLLECTION_TRACK_DELETE_DIALOG_HEADER": "حذف کردن",
-    "COMING_UP": "بالا آمدن",
-    "CREATE": "ساخت",
-    "CREATE_NEW_PLAYLIST": "ساختن لیست پخش جدید",
-    "CREATE_PLAYLIST_SUBHEADER": "ساخت لیست پخش جدید برای اضافه شدن موزیک‌های شما",
-    "DATE_ADDED": "تاریخ اضافه شد.",
-    "DELETE": "حذف",
-    "DELETE_TRACK": "حذف موسیقی",
-    "DESCENDING": "نزولی",
-    "DISCORD": "سرور دیسکورد",
-    "DOWNLOAD_UPDATE": "دانلود آخرین بروزرسانی",
-    "ENABLE_125_SCALING": "فعال کردن مقیاس 125 درصدی",
-    "ENABLE_ACRYLIC_BLUR": "فعال کردن بلور ویندوز",
-    "EXIT_NOW_PLAYING": "خروج از پخش آهنگ",
-    "EXIT_SUBTITLE": "آیا میخواهید از هارمونوید خارج شوید؟",
-    "EXIT_TITLE": "خارج شدن",
-    "GO_TO_SETTINGS": "رفتن به تنظیمات",
-    "INTERNET_ERROR": "وضعیت اتصال خود را بررسی کنید.",
-    "KNOW_MORE": "بیشتر بدانید...",
-    "LAST_COLLECTION_DIRECTORY_REMOVED": "حداقل یک پوشه باید در کالکشن شما باشد.",
-    "LISTENING_TO_MUSIC": "گوش دادن به موزیک💜",
-    "LYRICS": "تکست‌ها",
-    "LYRICS_NOT_FOUND": "تکست آهنگ پیدا نشد.",
-    "LYRICS_RETRIEVING": "گرفتن تکست‌ها...",
-    "MENU": "منو",
-    "MUTE": "بی‌صدا",
-    "M_TRACKS_AND_N_ALBUMS": "M آهنگ و N آلبوم",
-    "NEXT": "بعدی",
-    "NO": "خیر",
-    "NOTIFICATION_LYRICS_SUBTITLE": "تکست را در اعلان نمایش بده...",
-    "NOTIFICATION_LYRICS_TITLE": "تکست در اعلان",
-    "NOW_PLAYING": "در حال پخش",
-    "NOW_PLAYING_NEXT_TRACK": "بعدی",
-    "NOW_PLAYING_NOT_PLAYING_TITLE": "هنوز چیزی اجرا نشده.",
-    "NOW_PLAYING_PREVIOUS_TRACK": "قبلی",
-    "NO_COLLECTION_SUBTITLE": "موزیکی یافت نشد.\nدر تنظیمات میتوانید مکان گشتن موزیک را تغییر دهید.",
-    "NO_COLLECTION_TITLE": "کالکشن خالی",
-    "NO_DOWNLOAD_UPDATE": "شما از آخرین نسخه برنامه استفاده می‌کنید.",
-    "NO_INTERNET_SUBTITLE": "وضعیت اتصال خود را بررسی کنید.",
-    "NO_INTERNET_TITLE": "به اینترنت وصل نمی‌باشید.",
-    "NO_PLAYLISTS_FOUND": "لیست پخشی پیدا نشد.\nلیست پخش بسازید تا آن‌ها را ببینید.",
-    "N_TRACKS": "N موسیقی",
-    "OK": "اوکی",
-    "OPTIONS": "گزینه‌ها",
-    "ORDER": "ترتیب",
-    "PAUSE": "توقف",
-    "PLAY": "شروع",
-    "PLAYLIST": "لیست‌های پخش",
-    "PLAYLISTS_CREATE": "ساخت لیست پخش جدید",
-    "PLAYLISTS_SUBHEADER": "لیست‌های پخش موجود در دستگاه شما.",
-    "PLAYLISTS_TEXT_FIELD_HINT": "نامی را برای لیست‌ پخش وارد کنید...",
-    "PLAYLISTS_TEXT_FIELD_LABEL": "نام لیست پخش",
-    "PLAYLIST_ADD_DIALOG_BODY": "لیست پخشی را انتخاب کنید تا موزیک شما در آن اضافه شود",
-    "PLAYLIST_ADD_DIALOG_TITLE": "اضافه کردن به لیست پخش",
-    "PLAYLIST_TRACKS_SUBHEADER": "اینجا موسیقی‌های لیست پخش را مشاهده می‌کنید.",
-    "PLAY_NOW": "شروع",
-    "PREVIOUS": "قبلی",
-    "RECOMMENDATIONS": "پیشنهادات",
-    "REFRESH": "بروزرسانی",
-    "REINDEX": "بروزرسانی",
-    "REMOVE": "حذف",
-    "REMOVE_FROM_PLAYLIST": "حذف از لیست پخش",
-    "REPEAT": "تکرار",
-    "RESULTS_FOR_QUERY": "نتیجه‌های \"QUERY\"",
-    "RETRIEVING_INFO": "در حال گرفتن اطلاعات",
-    "RETRIEVING_LINK": "در حال گرفتن جریان",
-    "SAVE_TO_DOWNLOADS": "ذخیره در دانلود‌ها",
-    "SEARCH": "جستجو",
-    "SEARCH_COLLECTION": "جستجو در مجموعه",
-    "SEARCH_HISTORY_SUBHEADER": "جستجوهای اخیر",
-    "SEARCH_NO_RECENT_SEARCHES": "جستجوهای اخیر شما اینجا نمایش داده می‌شود",
-    "SEARCH_RESULT_LOADER_LABEL": "گرفتن موزیک شما...",
-    "SEARCH_WELCOME": "جستجو در هارمونوید",
-    "SEE_ALL": "دیدن همه",
-    "SELECTED_DIRECTORIES": "فهرستی از آنچه تا کنون پیدا کرده‌ایم...",
-    "SELECTED_DIRECTORY": "مسیر انتخاب شده: ",
-    "SETTING": "تنظیمات",
-    "SETTING_ACCENT_COLOR_AUTOMATIC": "رنگ اصلی اوتوماتیک",
-    "SETTING_ACCENT_COLOR_SUBTITLE": "عوض کردن رنگ اصلی برنامه",
-    "SETTING_ACCENT_COLOR_TITLE": "رنگ اصلی",
-    "SETTING_APP_VERSION_INSTALLED": "نسخه نصب شده",
-    "SETTING_APP_VERSION_LATEST": "آخرین نسخه",
-    "SETTING_APP_VERSION_SUBTITLE": "اطلاعاتی درمورد نسخه برنامه",
-    "SETTING_APP_VERSION_TITLE": "نسخه",
-    "SETTING_GITHUB": "گیت‌هاب",
-    "SETTING_INDEXING_DONE": "ایندکس شده",
-    "SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR": "NUMBER_STRING از TOTAL_STRING موسیقی ایندکس شد.",
-    "SETTING_INDEXING_SUBTITLE": "پوشه‌های بیشتری را در مجموعه خود اضافه کنید.",
-    "SETTING_INDEXING_TITLE": "مجموعه",
-    "SETTING_INDEXING_WARNING": "پروسه را قطع نکنید.",
-    "SETTING_LANGUAGE_PROVIDERS_SUBTITLE": "تشکر بسیار بابت ساپورت کردن از اپلیکیشن",
-    "SETTING_LANGUAGE_PROVIDERS_TITLE": "فراهم کننده‌های ترجمه",
-    "SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE": "آیا می‌خواهید برنامه را مجدد بارگذاری کنید؟",
-    "SETTING_LANGUAGE_RESTART_DIALOG_TITLE": "نیازمند به بارگذاری مجدد برنامه",
-    "SETTING_LANGUAGE_SUBTITLE": "عوض کردن زبان برنامه",
-    "SETTING_LANGUAGE_TITLE": "زبان",
-    "SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE": "ست کردن سیستم‌عامل به TargetPlatform.IOS",
-    "SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE": "Enable iOS mechanics",
-    "SETTING_MISCELLANEOUS_SUBTITLE": "Other settings in the app",
-    "SETTING_MISCELLANEOUS_TITLE": "Miscellaneous",
-    "SETTING_STARGAZERS_SUBTITLE": "بسیار ممنون برای ساپورت شما",
-    "SETTING_STARGAZERS_TITLE": "Project Stargazers",
-    "SETTING_STAR_GITHUB": "به پروژه ستاره دهید.",
-    "SETTING_THEME_SUBTITLE": "عوض کردن تم به تیره و یا روشن",
-    "SETTING_THEME_TITLE": "تم",
-    "SHARE": "اشتراک گذاری",
-    "SHOW_ALBUM": "دیدن آلبوم",
-    "SHOW_NOW_PLAYING_AFTER_PLAYING": "پریدن به صفحه \"Now playing\" بعد از پخش موسیقی",
-    "SHOW_TRACK_PROGRESS_ON_TASKBAR": "دیدن وضعیت موسیقی در تسک‌بار",
-    "SHUFFLE": "تصادفی",
-    "SORT": "ترتیب",
-    "SORT_BY": "ترتیب بر اساس",
-    "SPEED": "سرعت",
-    "STARTING_PLAYBACK": "شروع پخش",
-    "SWITCH_THEME": "عوض کردن تم",
-    "THEME_MODE_DARK": "تیره",
-    "THEME_MODE_LIGHT": "روشن",
-    "THEME_MODE_SYSTEM": "بر اساس دستگاه",
-    "TRACK": "موسیقی‌",
-    "TRACKS_FROM_ARTIST": "موسیقی‌ها",
-    "TRACK_SINGLE": "موسیقی",
-    "TRANSFERS": "انتقالات",
-    "UNMUTE": "با صدا",
-    "WARNING": "هشدار",
-    "YEAR": "سال",
-    "YES": "بله",
-    "YOUTUBE": "یوتیوب",
-    "YOUTUBE_INTERNET_ERROR": "موزیک‌های خودتان را تا وقتی آنلاین شدید، پخش کنید.",
-    "YOUTUBE_NO_RESULTS": "چیزی مثل عبارت شما پیدا نشد.",
-    "YOUTUBE_WELCOME": "لینک خود و یا اسم آهنگ را جستجو کنید.",
+  "ABOUT_SUBTITLE": "اطلاعاتی درمورد این برنامه و برنامه‌نویسان آن",
+  "ABOUT_TITLE": "درباره",
+  "ADD_NEW_FOLDER": "اضافه کردن پوشه جدید",
+  "ADD_TO_NOW_PLAYING": "اضافه کردن به پخش حال",
+  "ADD_TO_PLAYLIST": "اضافه کردن به لیست پخش",
+  "ALBUM": "آلبوم‌ها",
+  "ALBUMS_FROM_ARTIST": "آلبوم‌ها",
+  "ALBUM_SINGLE": "آلبوم‌ها",
+  "ARTIST": "هنرمندان",
+  "ARTIST_SINGLE": "هنرمند",
+  "ASCENDING": "صعودی",
+  "AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING": "اضافه کردن بقیهٔ آهنگ‌ها از مجموعه به پخش وقتی آلبوم کامل شد",
+  "A_TO_Z": "A تا Z",
+  "BUFFERING": "بافرینگ...",
+  "CANCEL": "لغو",
+  "COLLECTION": "مجموعه",
+  "COLLECTION_ALBUM_DELETE_DIALOG_BODY": "آیا می‌خواهید آلبوم \"NAME\" را حذف کنید؟",
+  "COLLECTION_ALBUM_DELETE_DIALOG_HEADER": "حذف",
+  "COLLECTION_INDEXING_HINT": "اضافه کردن موزیک ...",
+  "COLLECTION_INDEXING_LABEL": "موسیقی‌های دستگاه شما در حال همگام‌سازی است.\nایدهٔ جالبی نیست که برنامه را ببندید.",
+  "COLLECTION_INFO_SUBHEADER": "برخی بینش‌های آلبوم",
+  "COLLECTION_OTHER_SUBHEADER_ALBUM": "آلبوم‌های بیشتر",
+  "COLLECTION_OTHER_SUBHEADER_ARTIST": "هنرمندان بیشتر",
+  "COLLECTION_OTHER_SUBHEADER_TRACK": "موسیقی‌های بیشتر",
+  "COLLECTION_PLAYLIST_DELETE_DIALOG_BODY": "پاک کردن لیست پخش \"NAME\"؟",
+  "COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER": "حذف",
+  "COLLECTION_SEARCH_LABEL": "نگاهی در مجموعه شما",
+  "COLLECTION_SEARCH_NO_RESULTS_SUBTITLE": "چیزی مثل آن در مجموعه یافت نشد.",
+  "COLLECTION_SEARCH_NO_RESULTS_TITLE": "پاسخی یافت نشد.",
+  "COLLECTION_SEARCH_WELCOME": "جستجوی آلبوم‌ها، موسیقی‌ها یا هنرمندان...",
+  "COLLECTION_TOP_BODY_ALBUM_EMPTY": "جست‌جو و ذخیره کردن موسیقی برای دیدن آن در این محل\nصفحه را به پایین بکشید تا بروزرسانی شود.",
+  "COLLECTION_TOP_SUBHEADER_ALBUM": "آخرین آلبوم",
+  "COLLECTION_TOP_SUBHEADER_ARTIST": "آخرین هنرمند",
+  "COLLECTION_TOP_SUBHEADER_TRACK": "آخرین آهنگ",
+  "COLLECTION_TRACKS_SUBHEADER": "آهنگ",
+  "COLLECTION_TRACK_DELETE_DIALOG_BODY": "حذف آهنگ \"NAME\"؟",
+  "COLLECTION_TRACK_DELETE_DIALOG_HEADER": "حذف کردن",
+  "COMING_UP": "بالا آمدن",
+  "CREATE": "ساخت",
+  "CREATE_NEW_PLAYLIST": "ساختن لیست پخش جدید",
+  "CREATE_PLAYLIST_SUBHEADER": "ساخت لیست پخش جدید برای اضافه شدن موزیک‌های شما",
+  "DATE_ADDED": "تاریخ اضافه شد.",
+  "DELETE": "حذف",
+  "DELETE_TRACK": "حذف موسیقی",
+  "DESCENDING": "نزولی",
+  "DISCORD": "سرور دیسکورد",
+  "DISCOVERING_FILES": "Discovering files...",
+  "DOWNLOAD_UPDATE": "دانلود آخرین بروزرسانی",
+  "ENABLE_125_SCALING": "فعال کردن مقیاس 125 درصدی",
+  "ENABLE_ACRYLIC_BLUR": "فعال کردن بلور ویندوز",
+  "EXIT_NOW_PLAYING": "خروج از پخش آهنگ",
+  "EXIT_SUBTITLE": "آیا میخواهید از هارمونوید خارج شوید؟",
+  "EXIT_TITLE": "خارج شدن",
+  "GO_TO_SETTINGS": "رفتن به تنظیمات",
+  "INTERNET_ERROR": "وضعیت اتصال خود را بررسی کنید.",
+  "KNOW_MORE": "بیشتر بدانید...",
+  "LAST_COLLECTION_DIRECTORY_REMOVED": "حداقل یک پوشه باید در کالکشن شما باشد.",
+  "LISTENING_TO_MUSIC": "گوش دادن به موزیک💜",
+  "LYRICS": "تکست‌ها",
+  "LYRICS_NOT_FOUND": "تکست آهنگ پیدا نشد.",
+  "LYRICS_RETRIEVING": "گرفتن تکست‌ها...",
+  "MENU": "منو",
+  "MUTE": "بی‌صدا",
+  "M_TRACKS_AND_N_ALBUMS": "M آهنگ و N آلبوم",
+  "NEXT": "بعدی",
+  "NO": "خیر",
+  "NOTIFICATION_LYRICS_SUBTITLE": "تکست را در اعلان نمایش بده...",
+  "NOTIFICATION_LYRICS_TITLE": "تکست در اعلان",
+  "NOW_PLAYING": "در حال پخش",
+  "NOW_PLAYING_NEXT_TRACK": "بعدی",
+  "NOW_PLAYING_NOT_PLAYING_TITLE": "هنوز چیزی اجرا نشده.",
+  "NOW_PLAYING_PREVIOUS_TRACK": "قبلی",
+  "NO_COLLECTION_SUBTITLE": "موزیکی یافت نشد.\nدر تنظیمات میتوانید مکان گشتن موزیک را تغییر دهید.",
+  "NO_COLLECTION_TITLE": "کالکشن خالی",
+  "NO_DOWNLOAD_UPDATE": "شما از آخرین نسخه برنامه استفاده می‌کنید.",
+  "NO_INTERNET_SUBTITLE": "وضعیت اتصال خود را بررسی کنید.",
+  "NO_INTERNET_TITLE": "به اینترنت وصل نمی‌باشید.",
+  "NO_PLAYLISTS_FOUND": "لیست پخشی پیدا نشد.\nلیست پخش بسازید تا آن‌ها را ببینید.",
+  "N_TRACKS": "N موسیقی",
+  "OK": "اوکی",
+  "OPTIONS": "گزینه‌ها",
+  "ORDER": "ترتیب",
+  "PAUSE": "توقف",
+  "PLAY": "شروع",
+  "PLAYLIST": "لیست‌های پخش",
+  "PLAYLISTS_CREATE": "ساخت لیست پخش جدید",
+  "PLAYLISTS_SUBHEADER": "لیست‌های پخش موجود در دستگاه شما.",
+  "PLAYLISTS_TEXT_FIELD_HINT": "نامی را برای لیست‌ پخش وارد کنید...",
+  "PLAYLISTS_TEXT_FIELD_LABEL": "نام لیست پخش",
+  "PLAYLIST_ADD_DIALOG_BODY": "لیست پخشی را انتخاب کنید تا موزیک شما در آن اضافه شود",
+  "PLAYLIST_ADD_DIALOG_TITLE": "اضافه کردن به لیست پخش",
+  "PLAYLIST_TRACKS_SUBHEADER": "اینجا موسیقی‌های لیست پخش را مشاهده می‌کنید.",
+  "PLAY_NOW": "شروع",
+  "PREVIOUS": "قبلی",
+  "RECOMMENDATIONS": "پیشنهادات",
+  "REFRESH": "بروزرسانی",
+  "REINDEX": "بروزرسانی",
+  "REMOVE": "حذف",
+  "REMOVE_FROM_PLAYLIST": "حذف از لیست پخش",
+  "REPEAT": "تکرار",
+  "RESULTS_FOR_QUERY": "نتیجه‌های \"QUERY\"",
+  "RETRIEVING_INFO": "در حال گرفتن اطلاعات",
+  "RETRIEVING_LINK": "در حال گرفتن جریان",
+  "SAVE_TO_DOWNLOADS": "ذخیره در دانلود‌ها",
+  "SEARCH": "جستجو",
+  "SEARCH_COLLECTION": "جستجو در مجموعه",
+  "SEARCH_HISTORY_SUBHEADER": "جستجوهای اخیر",
+  "SEARCH_NO_RECENT_SEARCHES": "جستجوهای اخیر شما اینجا نمایش داده می‌شود",
+  "SEARCH_RESULT_LOADER_LABEL": "گرفتن موزیک شما...",
+  "SEARCH_WELCOME": "جستجو در هارمونوید",
+  "SEE_ALL": "دیدن همه",
+  "SELECTED_DIRECTORIES": "فهرستی از آنچه تا کنون پیدا کرده‌ایم...",
+  "SELECTED_DIRECTORY": "مسیر انتخاب شده: ",
+  "SETTING": "تنظیمات",
+  "SETTING_ACCENT_COLOR_AUTOMATIC": "رنگ اصلی اوتوماتیک",
+  "SETTING_ACCENT_COLOR_SUBTITLE": "عوض کردن رنگ اصلی برنامه",
+  "SETTING_ACCENT_COLOR_TITLE": "رنگ اصلی",
+  "SETTING_APP_VERSION_INSTALLED": "نسخه نصب شده",
+  "SETTING_APP_VERSION_LATEST": "آخرین نسخه",
+  "SETTING_APP_VERSION_SUBTITLE": "اطلاعاتی درمورد نسخه برنامه",
+  "SETTING_APP_VERSION_TITLE": "نسخه",
+  "SETTING_GITHUB": "گیت‌هاب",
+  "SETTING_INDEXING_DONE": "ایندکس شده",
+  "SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR": "NUMBER_STRING از TOTAL_STRING موسیقی ایندکس شد.",
+  "SETTING_INDEXING_SUBTITLE": "پوشه‌های بیشتری را در مجموعه خود اضافه کنید.",
+  "SETTING_INDEXING_TITLE": "مجموعه",
+  "SETTING_INDEXING_WARNING": "پروسه را قطع نکنید.",
+  "SETTING_LANGUAGE_PROVIDERS_SUBTITLE": "تشکر بسیار بابت ساپورت کردن از اپلیکیشن",
+  "SETTING_LANGUAGE_PROVIDERS_TITLE": "فراهم کننده‌های ترجمه",
+  "SETTING_LANGUAGE_RESTART_DIALOG_SUBTITLE": "آیا می‌خواهید برنامه را مجدد بارگذاری کنید؟",
+  "SETTING_LANGUAGE_RESTART_DIALOG_TITLE": "نیازمند به بارگذاری مجدد برنامه",
+  "SETTING_LANGUAGE_SUBTITLE": "عوض کردن زبان برنامه",
+  "SETTING_LANGUAGE_TITLE": "زبان",
+  "SETTING_MISCELLANEOUS_ENABLE_IOS_SUBTITLE": "ست کردن سیستم‌عامل به TargetPlatform.IOS",
+  "SETTING_MISCELLANEOUS_ENABLE_IOS_TITLE": "Enable iOS mechanics",
+  "SETTING_MISCELLANEOUS_SUBTITLE": "Other settings in the app",
+  "SETTING_MISCELLANEOUS_TITLE": "Miscellaneous",
+  "SETTING_STARGAZERS_SUBTITLE": "بسیار ممنون برای ساپورت شما",
+  "SETTING_STARGAZERS_TITLE": "Project Stargazers",
+  "SETTING_STAR_GITHUB": "به پروژه ستاره دهید.",
+  "SETTING_THEME_SUBTITLE": "عوض کردن تم به تیره و یا روشن",
+  "SETTING_THEME_TITLE": "تم",
+  "SHARE": "اشتراک گذاری",
+  "SHOW_ALBUM": "دیدن آلبوم",
+  "SHOW_NOW_PLAYING_AFTER_PLAYING": "پریدن به صفحه \"Now playing\" بعد از پخش موسیقی",
+  "SHOW_TRACK_PROGRESS_ON_TASKBAR": "دیدن وضعیت موسیقی در تسک‌بار",
+  "SHUFFLE": "تصادفی",
+  "SORT": "ترتیب",
+  "SORT_BY": "ترتیب بر اساس",
+  "SPEED": "سرعت",
+  "STARTING_PLAYBACK": "شروع پخش",
+  "SWITCH_THEME": "عوض کردن تم",
+  "THEME_MODE_DARK": "تیره",
+  "THEME_MODE_LIGHT": "روشن",
+  "THEME_MODE_SYSTEM": "بر اساس دستگاه",
+  "TRACK": "موسیقی‌",
+  "TRACKS_FROM_ARTIST": "موسیقی‌ها",
+  "TRACK_SINGLE": "موسیقی",
+  "TRANSFERS": "انتقالات",
+  "UNMUTE": "با صدا",
+  "WARNING": "هشدار",
+  "YEAR": "سال",
+  "YES": "بله",
+  "YOUTUBE": "یوتیوب",
+  "YOUTUBE_INTERNET_ERROR": "موزیک‌های خودتان را تا وقتی آنلاین شدید، پخش کنید.",
+  "YOUTUBE_NO_RESULTS": "چیزی مثل عبارت شما پیدا نشد.",
+  "YOUTUBE_WELCOME": "لینک خود و یا اسم آهنگ را جستجو کنید.",
+  "YOUTUBE_WELCOME_SUBTITLE": "پیشنهادات در این محل بر اساس موسیقی‌های گوش داده شده، به نمایش در می‌آید.",
+  "YOUTUBE_WELCOME_TITLE": "شروع کنید."
+}
+ک خود و یا اسم آهنگ را جستجو کنید.",
     "YOUTUBE_WELCOME_SUBTITLE": "پیشنهادات در این محل بر اساس موسیقی‌های گوش داده شده، به نمایش در می‌آید.",
     "YOUTUBE_WELCOME_TITLE": "شروع کنید."
   }
