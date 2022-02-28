@@ -28,6 +28,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
     with TickerProviderStateMixin {
   late AnimationController playOrPause;
   late VoidCallback listener;
+  bool showAlbumArtButton = false;
 
   @override
   void initState() {
@@ -121,16 +122,65 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(0.0),
-                                    child: ExtendedImage(
-                                      image: getAlbumArt(
-                                        playback.tracks[playback.index],
-                                        small: true,
-                                      ),
-                                      height: 84.0,
-                                      width: 84.0,
-                                      fit: BoxFit.cover,
+                                  MouseRegion(
+                                    onEnter: (e) {
+                                      setState(() {
+                                        showAlbumArtButton = true;
+                                      });
+                                    },
+                                    onExit: (e) {
+                                      setState(() {
+                                        showAlbumArtButton = false;
+                                      });
+                                    },
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(0.0),
+                                          child: ExtendedImage(
+                                            image: getAlbumArt(
+                                              playback.tracks[playback.index],
+                                              small: true,
+                                            ),
+                                            height: 84.0,
+                                            width: 84.0,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        TweenAnimationBuilder(
+                                          tween: Tween<double>(
+                                            begin: 0.0,
+                                            end: showAlbumArtButton ? 1.0 : 0.0,
+                                          ),
+                                          duration: Duration(milliseconds: 100),
+                                          curve: Curves.easeInOut,
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              onTap: () {
+                                                NowPlayingLauncher
+                                                    .instance.maximized = true;
+                                              },
+                                              child: Container(
+                                                color: Colors.black38,
+                                                height: 84.0,
+                                                width: 84.0,
+                                                child: Icon(
+                                                  Icons.image,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          builder: (context, value, child) =>
+                                              Opacity(
+                                            opacity: value as double,
+                                            child: child,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   SizedBox(
