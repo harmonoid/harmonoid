@@ -18,6 +18,7 @@ import 'package:system_media_transport_controls/system_media_transport_controls.
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/core/app_state.dart';
 import 'package:harmonoid/models/media.dart' hide Media;
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/lyrics.dart';
@@ -40,18 +41,18 @@ class Playback extends ChangeNotifier {
   /// Late initialized [Lyrics] object instance.
   static late Playback instance = Playback();
 
-  int index = 0;
-  List<Track> tracks = [];
-  double volume = 50.0;
-  double rate = 1.0;
-  PlaylistLoopMode playlistLoopMode = PlaylistLoopMode.none;
+  int index = DefaultPlaybackValues.index;
+  List<Track> tracks = DefaultPlaybackValues.tracks;
+  double volume = DefaultPlaybackValues.volume;
+  double rate = DefaultPlaybackValues.rate;
+  PlaylistLoopMode playlistLoopMode = DefaultPlaybackValues.playlistLoopMode;
   Duration position = Duration.zero;
   Duration duration = Duration.zero;
   bool isMuted = false;
   bool isPlaying = false;
   bool isBuffering = false;
   bool isCompleted = false;
-  bool isShuffling = false;
+  bool isShuffling = DefaultPlaybackValues.isShuffling;
 
   void play() {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
@@ -117,6 +118,7 @@ class Playback extends ChangeNotifier {
     if (Platform.isLinux) {
       mpris?.rate = value;
     }
+    saveAppState();
     notifyListeners();
   }
 
@@ -131,6 +133,7 @@ class Playback extends ChangeNotifier {
     if (Platform.isLinux) {
       mpris?.volume = value;
     }
+    saveAppState();
     notifyListeners();
   }
 
@@ -140,6 +143,7 @@ class Playback extends ChangeNotifier {
     }
     if (Platform.isAndroid || Platform.isIOS) {}
     playlistLoopMode = value;
+    saveAppState();
     notifyListeners();
   }
 
@@ -162,6 +166,7 @@ class Playback extends ChangeNotifier {
       assetsAudioPlayer.toggleShuffle();
     }
     isShuffling = !isShuffling;
+    saveAppState();
     notifyListeners();
   }
 
@@ -174,18 +179,17 @@ class Playback extends ChangeNotifier {
     }
   }
 
+  /// Convert [Track] list to [Media] list.
+  List<Media> _tracksToMediaList(List<Track> tracks) => tracks
+      .map((e) => Media(
+            Plugins.redirect(e.uri).toString(),
+            extras: e.toJson(),
+          ))
+      .toList();
+
   void open(List<Track> tracks, {int index = 0}) {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      player.open(
-        tracks
-            .map(
-              (e) => Media(
-                Plugins.redirect(e.uri).toString(),
-                extras: e.toJson(),
-              ),
-            )
-            .toList(),
-      );
+      player.open(_tracksToMediaList(tracks));
       player.jump(index);
       player.play();
       isShuffling = false;
@@ -214,16 +218,37 @@ class Playback extends ChangeNotifier {
     if (Platform.isAndroid || Platform.isIOS) {}
   }
 
+  /// Load the last played playback state.
+  void loadAppState() {
+    final state = AppState.instance;
+    tracks = state.playlist;
+    index = state.playlistIndex;
+    rate = state.rate;
+    isShuffling = state.shuffle;
+    playlistLoopMode = state.playlistLoopMode;
+    volume = state.volume;
+    player.open(_tracksToMediaList(tracks), play: false);
+    player.jump(index);
+  }
+
+  /// Save the current playback state.
+  void saveAppState() => AppState.instance
+      .save(tracks, index, rate, isShuffling, playlistLoopMode, volume);
+
   Playback() {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      loadAppState();
+
       player.streams.index.listen((event) {
         index = event.clamp(0, tracks.length);
+        saveAppState();
         notifyListeners();
         update();
       });
       player.streams.playlist.listen((event) {
         tracks.clear();
         tracks = event.map((media) => Track.fromJson(media.extras)).toList();
+        saveAppState();
         notifyListeners();
         update();
       });
@@ -400,6 +425,16 @@ enum PlaylistLoopMode {
   none,
   single,
   loop,
+}
+
+/// Default Playback class values.
+class DefaultPlaybackValues {
+  static int index = 0;
+  static List<Track> tracks = [];
+  static double volume = 50.0;
+  static double rate = 1.0;
+  static PlaylistLoopMode playlistLoopMode = PlaylistLoopMode.none;
+  static bool isShuffling = false;
 }
 
 /// Implements `org.mpris.MediaPlayer2` & `org.mpris.MediaPlayer2.Player`.
