@@ -371,25 +371,20 @@ class ArtistScreenState extends State<ArtistScreen>
   void initState() {
     super.initState();
     if (isDesktop) {
-      Timer(
-        Duration(milliseconds: 300),
-        () {
-          if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(getAlbumArt(widget.artist))
-                .then((palette) {
-              setState(() {
-                color = palette.colors.first;
-                secondary = palette.colors.last;
-                detailsVisible = true;
-              });
-            });
-          } else {
-            setState(() {
-              detailsVisible = true;
-            });
-          }
-        },
-      );
+      if (widget.palette == null) {
+        PaletteGenerator.fromImageProvider(getAlbumArt(widget.artist))
+            .then((palette) {
+          setState(() {
+            color = palette.colors.first;
+            secondary = palette.colors.last;
+            detailsVisible = true;
+          });
+        });
+      } else {
+        setState(() {
+          detailsVisible = true;
+        });
+      }
     }
     if (isMobile) {
       Timer(Duration(milliseconds: 100), () {
@@ -491,7 +486,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                             ),
                                             curve: Curves.easeOut,
                                             duration: Duration(
-                                              milliseconds: 400,
+                                              milliseconds: 600,
                                             ),
                                             builder: (context, color, _) =>
                                                 Positioned.fill(

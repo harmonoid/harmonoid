@@ -563,26 +563,21 @@ class PlaylistScreenState extends State<PlaylistScreen>
   void initState() {
     super.initState();
     if (isDesktop && widget.playlist.tracks.isNotEmpty) {
-      Timer(
-        Duration(milliseconds: 300),
-        () {
-          if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(
-                    getAlbumArt(widget.playlist.tracks.last))
-                .then((palette) {
-              setState(() {
-                color = palette.colors.first;
-                secondary = palette.colors.last;
-                detailsVisible = true;
-              });
-            });
-          } else {
-            setState(() {
-              detailsVisible = true;
-            });
-          }
-        },
-      );
+      if (widget.palette == null) {
+        PaletteGenerator.fromImageProvider(
+                getAlbumArt(widget.playlist.tracks.last))
+            .then((palette) {
+          setState(() {
+            color = palette.colors.first;
+            secondary = palette.colors.last;
+            detailsVisible = true;
+          });
+        });
+      } else {
+        setState(() {
+          detailsVisible = true;
+        });
+      }
     }
     if (isMobile) {
       Timer(Duration(milliseconds: 100), () {
@@ -622,33 +617,35 @@ class PlaylistScreenState extends State<PlaylistScreen>
   @override
   Widget build(BuildContext context) {
     return isDesktop
-        ? Scaffold(
-            body: Container(
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
-                children: [
-                  TweenAnimationBuilder(
-                    tween: ColorTween(
-                      begin: Theme.of(context).appBarTheme.backgroundColor,
-                      end: color == null
-                          ? Theme.of(context).appBarTheme.backgroundColor
-                          : color!,
+        ? TweenAnimationBuilder(
+            tween: ColorTween(
+              begin: Theme.of(context).appBarTheme.backgroundColor,
+              end: color == null
+                  ? Theme.of(context).appBarTheme.backgroundColor
+                  : color!,
+            ),
+            curve: Curves.easeOut,
+            duration: Duration(milliseconds: 400),
+            builder: (context, color, _) => Scaffold(
+              backgroundColor: color as Color? ?? Colors.transparent,
+              body: Container(
+                height: MediaQuery.of(context).size.height,
+                child: Stack(
+                  children: [
+                    Container(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      margin: const EdgeInsets.only(
+                          top: kDesktopNowPlayingBarHeight),
+                      height: MediaQuery.of(context).size.height -
+                          kDesktopNowPlayingBarHeight,
+                      width: MediaQuery.of(context).size.width,
                     ),
-                    curve: Curves.easeOut,
-                    duration: Duration(
-                      milliseconds: 400,
-                    ),
-                    builder: (context, color, _) => DesktopAppBar(
+                    DesktopAppBar(
                       height: MediaQuery.of(context).size.height / 3,
                       elevation: 4.0,
                       color: color as Color? ?? Colors.transparent,
                     ),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height -
-                        kDesktopNowPlayingBarHeight,
-                    width: MediaQuery.of(context).size.width,
-                    child: Container(
+                    Container(
                       alignment: Alignment.center,
                       child: Container(
                         margin: EdgeInsets.only(top: 72.0),
@@ -1038,8 +1035,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           )
