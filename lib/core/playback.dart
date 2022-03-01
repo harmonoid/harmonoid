@@ -427,6 +427,9 @@ class Playback extends ChangeNotifier {
   void dispose() {}
 
   double _volume = 50.0;
+
+  get isFirstTrack => index == 0;
+  get isLastTrack => index == tracks.length - 1;
 }
 
 enum PlaylistLoopMode {
