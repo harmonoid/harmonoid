@@ -80,35 +80,54 @@ class Playback extends ChangeNotifier {
     }
   }
 
+  /// Plays cross-fade effect between the current track and the next track.
+  Future<void> playCrossFadeEffect({effectRate = 1}) async {
+    var originalVolume = volume;
+
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      while (player.state.volume - effectRate > 0) {
+        player.volume = player.state.volume - effectRate;
+        await Future.delayed(Duration(milliseconds: 1));
+      }
+      player.volume = originalVolume;
+    }
+  }
+
   void next() {
     player.play().then((value) {
-      if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-        player.next();
-      }
-      if (Platform.isAndroid || Platform.isIOS) {
-        assetsAudioPlayer.next();
-      }
+      playCrossFadeEffect().then((_) {
+        if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+          player.next();
+        }
+        if (Platform.isAndroid || Platform.isIOS) {
+          assetsAudioPlayer.next();
+        }
+      });
     });
   }
 
   void previous() {
     player.play().then((value) {
-      if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-        player.back();
-      }
-      if (Platform.isAndroid || Platform.isIOS) {
-        assetsAudioPlayer.previous();
-      }
+      playCrossFadeEffect().then((_) {
+        if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+          player.back();
+        }
+        if (Platform.isAndroid || Platform.isIOS) {
+          assetsAudioPlayer.previous();
+        }
+      });
     });
   }
 
   void jump(int value) {
-    if (Platform.isWindows || Platform.isLinux) {
-      player.jump(value);
-    }
-    if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
-      assetsAudioPlayer.playlistPlayAtIndex(value);
-    }
+    playCrossFadeEffect(effectRate: 3).then((_) {
+      if (Platform.isWindows || Platform.isLinux) {
+        player.jump(value);
+      }
+      if (Platform.isAndroid || Platform.isMacOS || Platform.isIOS) {
+        assetsAudioPlayer.playlistPlayAtIndex(value);
+      }
+    });
   }
 
   void setRate(double value) {
