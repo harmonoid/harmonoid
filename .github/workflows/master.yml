@@ -73,7 +73,7 @@ jobs:
           files: |
             Output/harmonoid-windows-setup.exe
             harmonoid-windows-exe.zip
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
 
   build_linux:
     name: Harmonoid Linux
@@ -140,7 +140,7 @@ jobs:
           body: ${{ github.sha }}
           tag_name: ${{ steps.vars.outputs.sha_short }}
           files: harmonoid-linux-*
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
 
   build_android:
     name: Harmonoid Android
