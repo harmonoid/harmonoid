@@ -65,6 +65,7 @@ jobs:
         env:
           GITHUB_REPOSITORY: harmonoid/harmonoid-nightly
         with:
+          repository: harmonoid/harmonoid-nightly
           draft: false
           prerelease: true
           body: ${{ github.sha }}
@@ -133,6 +134,7 @@ jobs:
         env:
           GITHUB_REPOSITORY: harmonoid/harmonoid-nightly
         with:
+          repository: harmonoid/harmonoid-nightly
           draft: false
           prerelease: true
           body: ${{ github.sha }}
