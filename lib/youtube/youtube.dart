@@ -17,6 +17,8 @@ import 'package:harmonoid/youtube/youtube_tile.dart';
 import 'package:harmonoid/youtube/state/youtube.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
+import '../utils/extensions.dart';
+
 class YoutubeTab extends StatefulWidget {
   const YoutubeTab({Key? key}) : super(key: key);
   YoutubeTabState createState() => YoutubeTabState();
@@ -198,8 +200,7 @@ class YoutubeTabState extends State<YoutubeTab> {
         child: Autocomplete<String>(
           optionsBuilder: (textEditingValue) =>
               textEditingValue.text.isEmpty ? [] : _suggestions,
-          optionsViewBuilder: (context, callback, Iterable<String> values) =>
-              Container(
+          optionsViewBuilder: (context, callback, _) => Container(
             margin: EdgeInsets.zero,
             width: MediaQuery.of(context).size.width,
             child: Align(
@@ -230,9 +231,9 @@ class YoutubeTabState extends State<YoutubeTab> {
                         keyboardDismissBehavior:
                             ScrollViewKeyboardDismissBehavior.onDrag,
                         padding: EdgeInsets.zero,
-                        itemCount: values.length,
+                        itemCount: _suggestions.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final String option = values.elementAt(index);
+                          final String option = _suggestions.elementAt(index);
                           return InkWell(
                             onTap: () {
                               callback(option);
@@ -307,16 +308,17 @@ class YoutubeTabState extends State<YoutubeTab> {
                     focusNode: node,
                     controller: controller,
                     onChanged: (value) async {
+                      value = value.trim();
+
                       setState(() {
                         _highlightedSuggestionIndex = -1;
+                        _query = value;
                       });
-                      _query = value;
-                      if (value.isEmpty) {
-                        _suggestions = [];
-                        setState(() {});
-                      } else {
-                        _suggestions = await YoutubeApi.getSuggestions(value);
-                      }
+
+                      _suggestions = value.isEmpty
+                          ? []
+                          : await YoutubeApi.getSuggestions(value);
+
                       setState(() {});
                     },
                     onSubmitted: (value) {
@@ -392,36 +394,40 @@ class YouTubeSearch extends StatelessWidget {
                             (MediaQuery.of(context).size.width - tileMargin) ~/
                                 (kAlbumTileWidth + tileMargin);
                         if (asyncSnapshot.hasData) {
-                          return asyncSnapshot.data!.isNotEmpty
-                              ? CustomListView(
-                                  padding: EdgeInsets.only(
-                                    top: tileMargin,
-                                  ),
-                                  shrinkWrap: true,
-                                  children: tileGridListWidgets(
-                                    tileHeight: kAlbumTileHeight,
-                                    tileWidth: kAlbumTileWidth,
-                                    subHeader: null,
-                                    leadingSubHeader: null,
-                                    leadingWidget: null,
-                                    context: context,
-                                    widgetCount: asyncSnapshot.data!.length,
-                                    builder: (context, i) => YoutubeTile(
-                                      track: asyncSnapshot.data![i],
-                                      height: kAlbumTileHeight,
-                                      width: kAlbumTileWidth,
-                                    ),
-                                    elementsPerRow: elementsPerRow,
-                                  ),
-                                )
-                              : Center(
-                                  child: ExceptionWidget(
-                                    title: Language.instance
-                                        .COLLECTION_SEARCH_NO_RESULTS_TITLE,
-                                    subtitle:
-                                        Language.instance.YOUTUBE_NO_RESULTS,
-                                  ),
-                                );
+                          if (asyncSnapshot.data!.isNotEmpty) {
+                            var distinctTracks =
+                                asyncSnapshot.data!.distinct().toList();
+
+                            return CustomListView(
+                              padding: EdgeInsets.only(
+                                top: tileMargin,
+                              ),
+                              shrinkWrap: true,
+                              children: tileGridListWidgets(
+                                tileHeight: kAlbumTileHeight,
+                                tileWidth: kAlbumTileWidth,
+                                subHeader: null,
+                                leadingSubHeader: null,
+                                leadingWidget: null,
+                                context: context,
+                                widgetCount: distinctTracks.length,
+                                builder: (context, i) => YoutubeTile(
+                                  track: distinctTracks[i],
+                                  height: kAlbumTileHeight,
+                                  width: kAlbumTileWidth,
+                                ),
+                                elementsPerRow: elementsPerRow,
+                              ),
+                            );
+                          } else {
+                            return Center(
+                              child: ExceptionWidget(
+                                title: Language.instance
+                                    .COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                                subtitle: Language.instance.YOUTUBE_NO_RESULTS,
+                              ),
+                            );
+                          }
                         } else {
                           return Center(
                             child: CircularProgressIndicator(
