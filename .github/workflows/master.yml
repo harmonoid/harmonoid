@@ -13,6 +13,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Set Git Commit Hash
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Check Git Commit Hash
+        run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
@@ -64,7 +69,7 @@ jobs:
           draft: false
           prerelease: true
           body: ${{ github.sha }}
-          tag_name: ${{ github.sha }}
+          tag_name: ${{ steps.vars.outputs.sha_short }}
           files: |
             Output/harmonoid-windows-setup.exe
             harmonoid-windows-exe.zip
@@ -128,7 +133,7 @@ jobs:
           draft: false
           prerelease: true
           body: ${{ github.sha }}
-          tag_name: ${{ github.sha }}
+          tag_name: ${{ steps.vars.outputs.sha_short }}
           files: harmonoid-linux-*
           token: ${{ secrets.GITHUB_TOKEN }}
 
