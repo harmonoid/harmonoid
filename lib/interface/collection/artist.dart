@@ -172,65 +172,64 @@ class ArtistTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Hero(
-                    tag: 'artist_art_${artist.artistName}',
-                    child: Card(
-                      clipBehavior: Clip.antiAlias,
-                      margin: EdgeInsets.zero,
-                      elevation: 4.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          width / 2.0,
-                        ),
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    margin: EdgeInsets.zero,
+                    elevation: 4.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        width / 2.0,
                       ),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          ClipOval(
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Hero(
+                          tag: 'artist_art_${artist.artistName}',
+                          child: ClipOval(
                             child: ExtendedImage(
                               image: getAlbumArt(artist, small: true),
                               height: width - 8.0,
                               width: width - 8.0,
                             ),
                           ),
-                          Material(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                width / 2.0,
-                              ),
-                            ),
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () async {
-                                await precacheImage(
-                                    getAlbumArt(artist), context);
-                                Navigator.of(context).push(
-                                  PageRouteBuilder(
-                                    pageBuilder: (context, animation,
-                                            secondaryAnimation) =>
-                                        FadeThroughTransition(
-                                      animation: animation,
-                                      secondaryAnimation: secondaryAnimation,
-                                      child: ArtistScreen(
-                                        artist: artist,
-                                      ),
-                                    ),
-                                    transitionDuration:
-                                        Duration(milliseconds: 300),
-                                    reverseTransitionDuration:
-                                        Duration(milliseconds: 300),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                height: width,
-                                width: width,
-                                padding: EdgeInsets.all(4.0),
-                              ),
+                        ),
+                        Material(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              width / 2.0,
                             ),
                           ),
-                        ],
-                      ),
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () async {
+                              await precacheImage(getAlbumArt(artist), context);
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      FadeThroughTransition(
+                                    animation: animation,
+                                    secondaryAnimation: secondaryAnimation,
+                                    child: ArtistScreen(
+                                      artist: artist,
+                                    ),
+                                  ),
+                                  transitionDuration:
+                                      Duration(milliseconds: 300),
+                                  reverseTransitionDuration:
+                                      Duration(milliseconds: 300),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: width,
+                              width: width,
+                              padding: EdgeInsets.all(4.0),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Spacer(),

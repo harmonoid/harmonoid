@@ -139,14 +139,26 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(0.0),
-                                          child: ExtendedImage(
-                                            image: getAlbumArt(
-                                              playback.tracks[playback.index],
-                                              small: true,
+                                          child: AnimatedSwitcher(
+                                            duration: const Duration(
+                                                milliseconds: 300),
+                                            transitionBuilder:
+                                                (child, animation) =>
+                                                    FadeTransition(
+                                              opacity: animation,
+                                              child: child,
                                             ),
-                                            height: 84.0,
-                                            width: 84.0,
-                                            fit: BoxFit.cover,
+                                            child: ExtendedImage(
+                                              key: Key(
+                                                  playback.index.toString()),
+                                              image: getAlbumArt(
+                                                playback.tracks[playback.index],
+                                                small: true,
+                                              ),
+                                              height: 84.0,
+                                              width: 84.0,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
                                         TweenAnimationBuilder(
