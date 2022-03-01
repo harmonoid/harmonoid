@@ -37,6 +37,7 @@ Future<void> main(List<String> args) async {
   try {
     if (Platform.isWindows) {
       await Configuration.initialize();
+      await AppState.initialize();
       // Now hot-reload works in libmpv.dart. Thanks to https://github.com/YehudaKremer.
       await MPV.initialize();
       if (kReleaseMode || kProfileMode) {
@@ -44,7 +45,7 @@ Future<void> main(List<String> args) async {
       }
       await Intent.initialize(args: args);
       await HotKeys.initialize();
-      await AppState.initialize();
+
       DiscordRPC.initialize();
       doWhenWindowReady(() {
         appWindow.minSize = Size(960, 640);

@@ -275,6 +275,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                           track: tracks[index],
                                           index: 0,
                                           onPressed: () {
+                                            Playback.instance.play();
                                             Playback.instance.jump(index);
                                           },
                                           disableContextMenu: true,

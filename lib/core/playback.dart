@@ -223,20 +223,24 @@ class Playback extends ChangeNotifier {
   }
 
   /// Load the last played playback state.
-  void loadAppState() {
+  Future<void> loadAppState() async {
     final state = AppState.instance;
     tracks = state.playlist;
     index = state.playlistIndex;
     rate = state.rate;
     isShuffling = state.shuffle;
     playlistLoopMode = state.playlistLoopMode;
-    volume = state.volume;
+    volume = player.volume = state.volume;
 
-    player.open(_tracksToMediaList(tracks), play: false).then((_) {
-      player.jump(index).then((_) {
-        player.pause();
-      });
+    /// for some reason, await for player.open() is not enough
+    /// so we have to use a timer here before jump() to index.
+    await Future.delayed(Duration(milliseconds: 100), () async {
+      await player.open(_tracksToMediaList(tracks), play: false);
     });
+    await player.jump(index);
+
+    /// for some reason, player start to play after jump() to index.
+    await player.pause();
   }
 
   /// Save the current playback state.
@@ -245,21 +249,24 @@ class Playback extends ChangeNotifier {
 
   Playback() {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      loadAppState();
+      loadAppState().then((value) {
+        player.streams.index.listen((event) {
+          index = event.clamp(0, tracks.length);
+          if (AppState.instance.playlistIndex != index) {
+            saveAppState();
+          }
+          notifyListeners();
+          update();
+        });
+        player.streams.playlist.listen((event) {
+          tracks.clear();
+          tracks = event.map((media) => Track.fromJson(media.extras)).toList();
+          saveAppState();
+          notifyListeners();
+          update();
+        });
+      });
 
-      player.streams.index.listen((event) {
-        index = event.clamp(0, tracks.length);
-        saveAppState();
-        notifyListeners();
-        update();
-      });
-      player.streams.playlist.listen((event) {
-        tracks.clear();
-        tracks = event.map((media) => Track.fromJson(media.extras)).toList();
-        saveAppState();
-        notifyListeners();
-        update();
-      });
       player.streams.isPlaying.listen((event) {
         isPlaying = event;
         notifyListeners();
@@ -292,13 +299,7 @@ class Playback extends ChangeNotifier {
         duration = event;
         notifyListeners();
       });
-      player.volume = volume;
-      // A bug that results in [isPlaying] becoming `true` after attempting to change the volume.
-      // Calling [pause] after a delay to ensure that play button isn't in incorrect state at the
-      // startup of the application.
-      Future.delayed(const Duration(milliseconds: 500), () {
-        pause();
-      });
+
       try {
         if (Platform.isWindows) {
           smtc.create();
