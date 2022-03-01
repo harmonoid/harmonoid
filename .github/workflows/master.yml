@@ -13,16 +13,15 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          submodules: recursive
       - name: Set Git Commit Hash
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - name: Check Git Commit Hash
         run: echo ${{ steps.vars.outputs.sha_short }}
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          submodules: recursive
-
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
@@ -83,7 +82,11 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           submodules: recursive
-
+      - name: Set Git Commit Hash
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Check Git Commit Hash
+        run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
@@ -145,7 +148,11 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           submodules: recursive
-
+      - name: Set Git Commit Hash
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Check Git Commit Hash
+        run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
