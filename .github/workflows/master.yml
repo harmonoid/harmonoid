@@ -63,8 +63,8 @@ jobs:
         with:
           draft: false
           prerelease: true
-          body: ${{ env.GITHUB_SHA }}
-          tag_name: ${{ env.GITHUB_SHA }}
+          body: ${{ github.sha }}
+          tag_name: ${{ github.sha }}
           files: |
             Output/harmonoid-windows-setup.exe
             harmonoid-windows-exe.zip
@@ -127,8 +127,8 @@ jobs:
         with:
           draft: false
           prerelease: true
-          body: ${{ env.GITHUB_SHA }}
-          tag_name: ${{ env.GITHUB_SHA }}
+          body: ${{ github.sha }}
+          tag_name: ${{ github.sha }}
           files: harmonoid-linux-*
           token: ${{ secrets.GITHUB_TOKEN }}
 
