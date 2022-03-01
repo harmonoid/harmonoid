@@ -80,21 +80,25 @@ class Playback extends ChangeNotifier {
   }
 
   void next() {
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      player.next();
-    }
-    if (Platform.isAndroid || Platform.isIOS) {
-      assetsAudioPlayer.next();
-    }
+    player.play().then((value) {
+      if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+        player.next();
+      }
+      if (Platform.isAndroid || Platform.isIOS) {
+        assetsAudioPlayer.next();
+      }
+    });
   }
 
   void previous() {
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      player.back();
-    }
-    if (Platform.isAndroid || Platform.isIOS) {
-      assetsAudioPlayer.previous();
-    }
+    player.play().then((value) {
+      if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+        player.back();
+      }
+      if (Platform.isAndroid || Platform.isIOS) {
+        assetsAudioPlayer.previous();
+      }
+    });
   }
 
   void jump(int value) {
