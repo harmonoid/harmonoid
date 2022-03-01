@@ -231,8 +231,12 @@ class Playback extends ChangeNotifier {
     isShuffling = state.shuffle;
     playlistLoopMode = state.playlistLoopMode;
     volume = state.volume;
-    player.open(_tracksToMediaList(tracks), play: false);
-    player.jump(index);
+
+    player.open(_tracksToMediaList(tracks), play: false).then((_) {
+      player.jump(index).then((_) {
+        player.pause();
+      });
+    });
   }
 
   /// Save the current playback state.
