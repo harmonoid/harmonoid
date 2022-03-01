@@ -413,7 +413,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     ],
                                   ),
                                   IconButton(
-                                    onPressed: playback.previous,
+                                    onPressed: playback.isFirstTrack
+                                        ? null
+                                        : playback.previous,
                                     iconSize: 24.0,
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
@@ -421,6 +423,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         : Colors.black87,
                                     splashRadius: 18.0,
                                     tooltip: Language.instance.PREVIOUS,
+                                    mouseCursor: SystemMouseCursors.click,
                                     icon: Icon(
                                       Icons.skip_previous,
                                     ),
@@ -439,7 +442,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: playback.next,
+                                    onPressed: playback.isLastTrack
+                                        ? null
+                                        : playback.next,
                                     iconSize: 24.0,
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
@@ -447,6 +452,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         : Colors.black87,
                                     splashRadius: 18.0,
                                     tooltip: Language.instance.NEXT,
+                                    mouseCursor: SystemMouseCursors.click,
                                     icon: Icon(
                                       Icons.skip_next,
                                     ),
