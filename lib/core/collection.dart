@@ -540,7 +540,7 @@ class Collection extends ChangeNotifier {
         // Handle corrupt cache.
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
-        await index(onProgress: onProgress);
+        index(onProgress: onProgress);
       }
     }
     await saveToCache();
