@@ -116,12 +116,16 @@ class Track extends Media {
     if (media is Track) {
       return media.trackName == trackName &&
           media.trackNumber == media.trackNumber &&
-          media.albumArtistName == albumArtistName;
+          media.albumArtistName == albumArtistName &&
+          media.uri.toString() == uri.toString();
     }
     throw FormatException();
   }
 
   @override
   int get hashCode =>
-      trackName.hashCode ^ trackNumber.hashCode ^ albumArtistName.hashCode;
+      trackName.hashCode ^
+      trackNumber.hashCode ^
+      albumArtistName.hashCode ^
+      uri.toString().hashCode;
 }
