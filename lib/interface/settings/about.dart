@@ -310,17 +310,34 @@ class AboutPageState extends State<AboutPage> {
                           height: 16.0,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                          child: Text(
-                            'End-User License Agreement for Harmonoid',
-                            style: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white.withOpacity(0.8)
-                                  : Colors.black.withOpacity(0.8),
-                              fontSize: 14.0,
-                            ),
+                          padding: EdgeInsets.only(
+                            left: 16.0,
+                            right: 16.0,
+                            bottom: 8.0,
+                            top: 2.0,
                           ),
+                          child: (repository == null ||
+                                  repository!.containsKey('message'))
+                              ? Text(
+                                  '🎵 Elegant music app to play & manage music library.',
+                                  style: TextStyle(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white.withOpacity(1.0)
+                                        : Colors.black.withOpacity(0.8),
+                                    fontSize: 14.0,
+                                  ),
+                                )
+                              : Text(
+                                  repository!['description'],
+                                  style: TextStyle(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white.withOpacity(0.8)
+                                        : Colors.black.withOpacity(0.8),
+                                    fontSize: 14.0,
+                                  ),
+                                ),
                         ),
                         if (repository != null &&
                             !repository!.containsKey('message'))
@@ -353,42 +370,15 @@ class AboutPageState extends State<AboutPage> {
                               ),
                             ]),
                           ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 16.0,
-                            right: 16.0,
-                            bottom: 8.0,
-                            top: 2.0,
-                          ),
-                          child: (repository == null ||
-                                  repository!.containsKey('message'))
-                              ? Text(
-                                  '🎵 Elegant music app to play & manage music library.',
-                                  style: TextStyle(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white.withOpacity(1.0)
-                                        : Colors.black.withOpacity(0.8),
-                                    fontSize: 14.0,
-                                  ),
-                                )
-                              : Text(
-                                  repository!['description'],
-                                  style: TextStyle(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white.withOpacity(0.8)
-                                        : Colors.black.withOpacity(0.8),
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                        ),
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
                   Row(
                     children: [
-                      const SizedBox(width: 8.0),
+                      const SizedBox(width: 16.0),
                       // Remove these links. Just for the sake of existence...
                       MaterialButton(
                         onPressed: () {
