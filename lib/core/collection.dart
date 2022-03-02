@@ -149,17 +149,18 @@ class Collection extends ChangeNotifier {
     for (final directory in directories) {
       collectionDirectories.remove(directory);
     }
+    final current = <Track>[];
     for (int i = 0; i < tracks.length; i++) {
       final track = tracks[i];
-      bool remove = false;
-      for (final directory in directories) {
+      bool present = false;
+      for (final directory in collectionDirectories) {
         if (track.uri.toFilePath().startsWith(directory.path)) {
-          remove = true;
+          present = true;
           break;
         }
       }
-      if (remove) {
-        await delete(track, delete: false);
+      if (present) {
+        current.add(track);
       }
       try {
         onProgress?.call(i + 1, tracks.length, i + 1 == tracks.length);
@@ -167,6 +168,9 @@ class Collection extends ChangeNotifier {
     }
     try {
       onProgress?.call(tracks.length, tracks.length, true);
+      tracks = current;
+      await saveToCache(notifyListeners: false);
+      await refresh();
     } catch (_) {}
     notifyListeners();
   }
@@ -273,36 +277,43 @@ class Collection extends ChangeNotifier {
   Future<void> delete(Media object, {bool delete: true}) async {
     if (object is Track) {
       for (int index = 0; index < tracks.length; index++) {
-        if (object.trackName == tracks[index].trackName &&
-            object.trackNumber == tracks[index].trackNumber) {
+        if (object.uri.toFilePath() == tracks[index].uri.toFilePath()) {
           tracks.removeAt(index);
           break;
         }
       }
-      for (Album album in albums) {
+      for (int i = 0; i < albums.length; i++) {
+        final album = albums[i];
+        bool flag = false;
         if (object.albumName == album.albumName &&
             object.albumArtistName == album.albumArtistName) {
           for (int index = 0; index < album.tracks.length; index++) {
-            if (object.trackName == album.tracks[index].trackName) {
+            if (object.uri.toFilePath() ==
+                album.tracks[index].uri.toFilePath()) {
               album.tracks.removeAt(index);
+              if (album.tracks.isEmpty) {
+                albums.removeAt(i);
+                flag = true;
+              }
               break;
             }
           }
-          if (album.tracks.length == 0) albums.remove(album);
-          break;
+          if (flag) {
+            break;
+          }
         }
       }
       for (String artistName in object.trackArtistNames) {
         for (Artist artist in artists) {
           if (artistName == artist.artistName) {
             for (int index = 0; index < artist.tracks.length; index++) {
-              if (object.trackName == artist.tracks[index].trackName &&
-                  object.trackNumber == artist.tracks[index].trackNumber) {
+              if (object.uri.toFilePath() ==
+                  artist.tracks[index].uri.toFilePath()) {
                 artist.tracks.removeAt(index);
                 break;
               }
             }
-            if (artist.tracks.length == 0) {
+            if (artist.tracks.isEmpty) {
               artists.remove(artist);
               break;
             } else {
@@ -312,7 +323,7 @@ class Collection extends ChangeNotifier {
                   for (int index = 0; index < album.tracks.length; index++) {
                     if (object.trackName == album.tracks[index].trackName) {
                       album.tracks.removeAt(index);
-                      if (artist.albums.length == 0) artists.remove(artist);
+                      if (artist.albums.isEmpty) artists.remove(artist);
                       break;
                     }
                   }
@@ -337,6 +348,7 @@ class Collection extends ChangeNotifier {
       if (albumArtists[AlbumArtist(object.albumArtistName)]!.isEmpty) {
         albumArtists.remove(AlbumArtist(object.albumArtistName));
       }
+      files.remove(object.uri.toFilePath());
       if (delete && await File(object.uri.toFilePath()).exists_()) {
         await File(object.uri.toFilePath()).delete_();
       }
@@ -380,6 +392,9 @@ class Collection extends ChangeNotifier {
       if (albumArtists[AlbumArtist(object.albumArtistName)]!.isEmpty) {
         albumArtists.remove(AlbumArtist(object.albumArtistName));
       }
+      for (final track in object.tracks) {
+        files.remove(track);
+      }
       if (delete) {
         for (Track track in object.tracks) {
           if (await File(track.uri.toFilePath()).exists_()) {
@@ -388,7 +403,6 @@ class Collection extends ChangeNotifier {
         }
       }
     }
-    await sort();
     await saveToCache();
     notifyListeners();
   }
