@@ -45,7 +45,6 @@ Future<void> main(List<String> args) async {
       }
       await Intent.initialize(args: args);
       await HotKeys.initialize();
-
       DiscordRPC.initialize();
       doWhenWindowReady(() {
         appWindow.minSize = Size(960, 640);
@@ -56,6 +55,7 @@ Future<void> main(List<String> args) async {
     }
     if (Platform.isLinux) {
       await Configuration.initialize();
+      await AppState.initialize();
       await MPV.initialize();
       await Intent.initialize(args: args);
       await HotKeys.initialize();
@@ -73,6 +73,7 @@ Future<void> main(List<String> args) async {
         }
       }
       await Configuration.initialize();
+      await AppState.initialize();
       await Intent.initialize();
     }
     await Collection.initialize(
