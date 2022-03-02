@@ -53,7 +53,7 @@ const kContributors = [
   [
     'https://github.com/prateekmedia',
     'https://avatars.githubusercontent.com/u/41370460?s=80&v=4',
-    'Prateek SU',
+    'Prateek Sunal',
     'AppImage & Flatpak installers. Bug reports. Hindi translation.',
   ],
   [
@@ -185,6 +185,12 @@ const kTranslators = [
     'Lucifer25x',
     'Add Azerbaijani & update Turkish translation.'
   ],
+  [
+    'https://github.com/0xjohn',
+    'https://avatars.githubusercontent.com/u/50566073?s=80&v=4',
+    '0xjohn',
+    'Add Persian translation.'
+  ],
 ];
 
 class AboutSetting extends StatelessWidget {
@@ -210,18 +216,6 @@ class AboutSetting extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 2.0),
-        MaterialButton(
-          onPressed: () {
-            launch('https://www.patreon.com/harmonoid');
-          },
-          child: Text(
-            'BECOME PATREON',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-        )
       ],
     );
   }
@@ -391,6 +385,45 @@ class AboutPageState extends State<AboutPage> {
                         ),
                       ],
                     ),
+                  ),
+                  Row(
+                    children: [
+                      const SizedBox(width: 8.0),
+                      // Remove these links. Just for the sake of existence...
+                      MaterialButton(
+                        onPressed: () {
+                          launch('https://www.patreon.com/harmonoid');
+                        },
+                        child: Text(
+                          'PATREON',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          launch('https://www.paypal.me/alexmercerind');
+                        },
+                        child: Text(
+                          'PAYPAL',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          launch('https://www.buymeacoffee.com/alexmercerind');
+                        },
+                        child: Text(
+                          'BUY ME A COFFEE',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 12.0,

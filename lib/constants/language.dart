@@ -150,6 +150,14 @@ class LanguageRegion {
     translator: 'Yusuf Kamil Turan',
     github: 'https://github.com/TuranBerlin',
   );
+  static const azAZ = LanguageRegion(
+    code: 'az',
+    countryCode: 'AZ',
+    name: 'Azerbaijani',
+    country: 'Azərbaycan',
+    translator: 'Lucifer25x',
+    github: 'https://github.com/Lucifer25x',
+  );
 
   static const values = <LanguageRegion>[
     enUs,
@@ -166,7 +174,8 @@ class LanguageRegion {
     mgMG,
     zhCN,
     jaJP,
-    trTR
+    trTR,
+    azAZ,
   ];
 
   int get index => values.indexOf(this);

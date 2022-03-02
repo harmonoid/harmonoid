@@ -249,6 +249,12 @@ An incomplete list of people who are working (or worked) on the project in past:
       <li>User interface fixes, app persistence improvements. Dutch translation.</li>
     </ul>
   </li>
+  <li>
+    <img src='https://avatars.githubusercontent.com/u/75587960?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/LeonHoog'>Leon</a></strong>
+    <ul>
+      <li>User interface fixes, app persistence improvements. Dutch translation.</li>
+    </ul>
+  </li>
 </ul>
 
 ### Artists
@@ -365,6 +371,12 @@ An incomplete list of people who are working (or worked) on the project in past:
     <img src='https://avatars.githubusercontent.com/u/74368520?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/Lucifer25x'>Lucifer25x</a></strong>
     <ul>
       <li>Add Azerbaijani & update Turkish translation.</li>
+    </ul>
+  </li>
+  <li>
+    <img src='https://avatars.githubusercontent.com/u/50566073?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/0xj0hn'>0xj0hn</a></strong>
+    <ul>
+      <li>Add Persian translation.</li>
     </ul>
   </li>
 </ul>
