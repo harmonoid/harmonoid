@@ -577,25 +577,20 @@ class AlbumScreenState extends State<AlbumScreen>
     widget.album.tracks.sort(
         (first, second) => first.trackNumber.compareTo(second.trackNumber));
     if (isDesktop) {
-      Timer(
-        Duration(milliseconds: 300),
-        () {
-          if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(getAlbumArt(widget.album))
-                .then((palette) {
-              setState(() {
-                color = palette.colors.first;
-                secondary = palette.colors.last;
-                detailsVisible = true;
-              });
-            });
-          } else {
-            setState(() {
-              detailsVisible = true;
-            });
-          }
-        },
-      );
+      if (widget.palette == null) {
+        PaletteGenerator.fromImageProvider(getAlbumArt(widget.album))
+            .then((palette) {
+          setState(() {
+            color = palette.colors.first;
+            secondary = palette.colors.last;
+            detailsVisible = true;
+          });
+        });
+      } else {
+        setState(() {
+          detailsVisible = true;
+        });
+      }
     }
     if (isMobile) {
       Timer(Duration(milliseconds: 100), () {
@@ -695,7 +690,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                         ),
                                         curve: Curves.easeOut,
                                         duration: Duration(
-                                          milliseconds: 400,
+                                          milliseconds: 600,
                                         ),
                                         builder: (context, color, _) =>
                                             Positioned.fill(
