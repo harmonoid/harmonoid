@@ -70,16 +70,8 @@ class IndexingState extends State<IndexingSetting> {
                               }
                             }
                             if (directory != null) {
-                              await Configuration.instance.save(
-                                collectionDirectories: Configuration
-                                        .instance.collectionDirectories +
-                                    [directory],
-                              );
-                              Collection.instance.setDirectories(
-                                  collectionDirectories: Configuration
-                                      .instance.collectionDirectories,
-                                  cacheDirectory:
-                                      Configuration.instance.cacheDirectory,
+                              await Collection.instance.addDirectories(
+                                  directories: [directory],
                                   onProgress: (progress, total, isCompleted) {
                                     CollectionRefresh.instance
                                         .set(progress, total);
@@ -168,19 +160,17 @@ class IndexingState extends State<IndexingSetting> {
                                         );
                                         return;
                                       }
-                                      Configuration
-                                          .instance.collectionDirectories
-                                          .remove(directory);
-                                      await Configuration.instance.save(
-                                        collectionDirectories: Configuration
-                                            .instance.collectionDirectories,
-                                      );
-                                      Collection.instance.refresh(
+                                      Collection.instance.removeDirectories(
+                                        directories: [directory],
                                         onProgress:
                                             (progress, total, isCompleted) {
                                           CollectionRefresh.instance
                                               .set(progress, total);
                                         },
+                                      );
+                                      await Configuration.instance.save(
+                                        collectionDirectories: Configuration
+                                            .instance.collectionDirectories,
                                       );
                                     },
                                     child: Text(

@@ -28,7 +28,7 @@ class CollectionRefresh extends ChangeNotifier {
   /// [CollectionRefresh] object instance.
   static late CollectionRefresh instance = CollectionRefresh();
 
-  int? progress;
+  int? progress = 1;
   int total = 1;
 
   double? get relativeProgress {
