@@ -198,7 +198,13 @@ An incomplete list of people who are working (or worked) on the project in past:
   <li>
     <img src='https://avatars.githubusercontent.com/u/28951144?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/alexmercerind'>Hitesh Kumar Saini</a></strong>
     <ul>
-      <li>Lead Developer. Deals with playback & indexing of files. Writes UI, state management & lifecycle code. Manages native plugins.</li>
+      <li>Lead developer. Deals with playback & indexing of media. Writes UI, state management & lifecycle code. Manages native plugins.</li>
+    </ul>
+  </li>
+  <li>
+    <img src='https://avatars.githubusercontent.com/u/946652?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://www.github.com/YehudaKremer'>Yehuda Kremer</a></strong>
+    <ul>
+      <li>UI & animation improvements. Application persistence & other important features. MSIX package for the store publishing.</li>
     </ul>
   </li>
   <li>
@@ -217,12 +223,6 @@ An incomplete list of people who are working (or worked) on the project in past:
     <img src='https://avatars.githubusercontent.com/u/41370460?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/prateekmedia'>Prateek Sunal</a></strong>
     <ul>
       <li>RPM package. Bug reports. Hindi translation.</li>
-    </ul>
-  </li>
-  <li>
-    <img src='https://avatars.githubusercontent.com/u/946652?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://www.github.com/YehudaKremer'>Yehuda Kremer</a></strong>
-    <ul>
-      <li>Really great improvements to the UI & functionality. MSIX package for the store publishing.</li>
     </ul>
   </li>
   <li>
@@ -266,6 +266,18 @@ An incomplete list of people who are working (or worked) on the project in past:
 
 <ul>
   <li>
+    <img src='https://avatars.githubusercontent.com/u/23397550?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/Sombian'>Sombian</a></strong>
+    <ul>
+      <li>Testing & bug reports.</li>
+    </ul>
+  </li>
+  <li>
+    <img src='https://avatars.githubusercontent.com/u/88533953?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/SleepDaemon'>SleepDaemon</a></strong>
+    <ul>
+      <li>Testing & bug reports.</li>
+    </ul>
+  </li>
+  <li>
     <img src='https://avatars.githubusercontent.com/u/8049534?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/ilopX'>ilopX</a></strong>
     <ul>
       <li>Testing & bug reports.</li>
@@ -273,12 +285,6 @@ An incomplete list of people who are working (or worked) on the project in past:
   </li>
   <li>
     <img src='https://avatars.githubusercontent.com/u/56985621?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/7HAVEN'>Ankit Rana</a></strong>
-    <ul>
-      <li>Testing & bug reports.</li>
-    </ul>
-  </li>
-  <li>
-    <img src='https://avatars.githubusercontent.com/u/88533953?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/SleepDaemon'>SleepDaemon</a></strong>
     <ul>
       <li>Testing & bug reports.</li>
     </ul>
