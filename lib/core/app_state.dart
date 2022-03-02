@@ -8,7 +8,6 @@
 
 import 'dart:io';
 import 'dart:convert' as convert;
-import 'package:flutter/material.dart';
 import 'package:harmonoid/core/playback.dart'
     show DefaultPlaybackValues, PlaylistLoopMode;
 import 'package:harmonoid/models/media.dart';
@@ -20,7 +19,7 @@ import 'configuration.dart';
 /// -------------
 ///
 /// App state persistence for [Harmonoid](https://github.com/harmonoid/harmonoid).
-/// use to resume the state of the app after a restart.
+/// Used to resume the state of the app after a restart.
 class AppState extends AppStateKeys {
   /// [AppState] object instance.
   static late AppState instance = AppState();
