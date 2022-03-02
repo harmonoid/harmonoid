@@ -53,6 +53,8 @@
   "EXIT_SUBTITLE": "Você quer nos deixar?",
   "EXIT_TITLE": "Sair",
   "GO_TO_SETTINGS": "VÁ PARA AS CONFIGURAÇÕES",
+  "INDEXING_ALREADY_GOING_ON_SUBTITLE": "An indexing related operating is already going on. Please wait.",
+  "INDEXING_ALREADY_GOING_ON_TITLE": "Wait",
   "INTERNET_ERROR": "Verifique sua conexão com a internet...",
   "KNOW_MORE": "SABER MAIS",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Pelo menos uma pasta precisa permanecer em sua coleção.",

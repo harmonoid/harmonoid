@@ -53,6 +53,8 @@
   "EXIT_SUBTITLE": "Do you want to exit Harmonoid?",
   "EXIT_TITLE": "Exit",
   "GO_TO_SETTINGS": "GO TO SETTINGS",
+  "INDEXING_ALREADY_GOING_ON_SUBTITLE": "An indexing related operating is already going on. Please wait.",
+  "INDEXING_ALREADY_GOING_ON_TITLE": "Wait",
   "INTERNET_ERROR": "Überprüfen Sie Ihre Internetverbindung...",
   "KNOW_MORE": "KNOW MORE",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Atleast one folder needs to stay in your collection.",

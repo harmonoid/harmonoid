@@ -24,7 +24,13 @@ const kContributors = [
     'https://github.com/alexmercerind',
     'https://avatars.githubusercontent.com/u/28951144?s=80&v=4',
     'Hitesh Kumar Saini',
-    'Lead developer. Deals with playback & parsing of music. Writes UI, state management & lifecycle code. Maintains core C++ plugins.',
+    'Lead developer. Deals with playback & indexing of media. Writes UI, state management & lifecycle code. Manages native plugins.',
+  ],
+  [
+    'https://www.github.com/YehudaKremer',
+    'https://avatars.githubusercontent.com/u/946652?s=80&v=4',
+    'Yehuda Kremer',
+    'UI & animation improvements. Application persistence & other important features. MSIX package for the store publishing.',
   ],
   [
     'https://github.com/raitonoberu',
@@ -33,28 +39,22 @@ const kContributors = [
     'Windows installer & bug fixes. Russian translation.',
   ],
   [
+    'https://github.com/mytja',
+    'https://avatars.githubusercontent.com/u/52399966?s=80&v=4',
+    'mytja',
+    'WinGet package. Backward Windows compatiblity checks. Improvements to YouTube Music support. Bug reports. CI. Slovenian translation.',
+  ],
+  [
     'https://github.com/bdlukaa',
     'https://avatars.githubusercontent.com/u/45696119?s=80&v=4',
     'Bruno D\'Luka',
     'User interface & design. Portuguese translation.',
   ],
   [
-    'https://github.com/mytja',
-    'https://avatars.githubusercontent.com/u/52399966?s=80&v=4',
-    'mytja',
-    'WinGet package. Bug reports. CI. Slovenian translation.',
-  ],
-  [
     'https://github.com/prateekmedia',
     'https://avatars.githubusercontent.com/u/41370460?s=80&v=4',
-    'Prateek SU',
+    'Prateek Sunal',
     'AppImage & Flatpak installers. Bug reports. Hindi translation.',
-  ],
-  [
-    'https://www.instagram.com/shinybluebelll',
-    'https://drive.google.com/uc?export=view&id=1eI-dHiALVQM123_HnQIcYe9HtbX0uS_W',
-    'Bluebell',
-    'Artwork & iconography.'
   ],
   [
     'https://github.com/gaetan1903',
@@ -62,17 +62,62 @@ const kContributors = [
     'Gaetan Jonathan BAKARY',
     'Linux related bug-fixes. French translation.',
   ],
+];
+
+const kArtists = [
   [
-    'https://github.com/RedyAu',
-    'https://avatars.githubusercontent.com/u/12989935?s=80&v=4',
-    'Fodor Benedek',
-    'Hungarian translation.',
+    'https://www.instagram.com/shinybluebelll',
+    'https://drive.google.com/uc?export=view&id=1eI-dHiALVQM123_HnQIcYe9HtbX0uS_W',
+    'Bluebell',
+    'Artwork & iconography.'
   ],
   [
     'https://github.com/arafatamim',
     'https://avatars.githubusercontent.com/u/31634638?s=80&v=4',
     'Tamim Arafat',
     'User interface & design. Bug reports.',
+  ],
+  [
+    'https://github.com/LeonHoog',
+    'https://avatars.githubusercontent.com/u/75587960?s=80&v=4',
+    'Leon',
+    'User interface fixes, app persistence improvements. Dutch translation.'
+  ],
+];
+
+const kTesters = [
+  [
+    'https://github.com/Sombian',
+    'https://avatars.githubusercontent.com/u/23397550?s=80&v=4',
+    'Sombian',
+    'Testing & bug reports.'
+  ],
+  [
+    'https://github.com/SleepDaemon',
+    'https://avatars.githubusercontent.com/u/88533953?s=80&v=4',
+    'SleepDaemon',
+    'Testing & bug reports.',
+  ],
+  [
+    'https://github.com/ilopX',
+    'https://avatars.githubusercontent.com/u/8049534?s=80&v=4',
+    'ilopX',
+    'Testing & bug reports.',
+  ],
+  [
+    'https://github.com/7HAVEN',
+    'https://avatars.githubusercontent.com/u/56985621?s=80&v=4',
+    'Ankit Rana',
+    'Testing & bug reports.',
+  ],
+];
+
+const kTranslators = [
+  [
+    'https://github.com/RedyAu',
+    'https://avatars.githubusercontent.com/u/12989935?s=80&v=4',
+    'Fodor Benedek',
+    'Hungarian translation.',
   ],
   [
     'mailto:max.haureus@gmail.com',
@@ -91,24 +136,6 @@ const kContributors = [
     'https://avatars.githubusercontent.com/u/47820557?s=80&v=4',
     'CanbiZ',
     'German translation.',
-  ],
-  [
-    'https://github.com/ilopX',
-    'https://avatars.githubusercontent.com/u/8049534?s=80&v=4',
-    'ilopX',
-    'Testing & bug reports.',
-  ],
-  [
-    'https://github.com/7HAVEN',
-    'https://avatars.githubusercontent.com/u/56985621?s=80&v=4',
-    'Ankit Rana',
-    'Testing & bug reports.',
-  ],
-  [
-    'https://github.com/LeonHoog',
-    'https://avatars.githubusercontent.com/u/75587960?s=80&v=4',
-    'Leon',
-    'User interface fixes, app persistence improvements. Dutch translation.'
   ],
   [
     'https://github.com/stonega',
@@ -145,7 +172,25 @@ const kContributors = [
     'https://avatars.githubusercontent.com/u/11423362?s=80&v=4',
     'Maison',
     'Update Portuguese translation.'
-  ]
+  ],
+  [
+    'https://github.com/mi875',
+    'https://avatars.githubusercontent.com/u/64814866?s=80&v=4',
+    'mi875',
+    'Update Portuguese translation.'
+  ],
+  [
+    'https://github.com/Lucifer25x',
+    'https://avatars.githubusercontent.com/u/74368520?s=80&v=4',
+    'Lucifer25x',
+    'Add Azerbaijani & update Turkish translation.'
+  ],
+  [
+    'https://github.com/0xjohn',
+    'https://avatars.githubusercontent.com/u/50566073?s=80&v=4',
+    '0xjohn',
+    'Add Persian translation.'
+  ],
 ];
 
 class AboutSetting extends StatelessWidget {
@@ -171,18 +216,6 @@ class AboutSetting extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 16.0),
-        MaterialButton(
-          onPressed: () {
-            launch('https://github.com/harmonoid/harmonoid#support');
-          },
-          child: Text(
-            'BECOME SUPPORTER',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-        )
       ],
     );
   }
@@ -277,17 +310,34 @@ class AboutPageState extends State<AboutPage> {
                           height: 16.0,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                          child: Text(
-                            'End-User License Agreement for Harmonoid',
-                            style: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white.withOpacity(0.8)
-                                  : Colors.black.withOpacity(0.8),
-                              fontSize: 14.0,
-                            ),
+                          padding: EdgeInsets.only(
+                            left: 16.0,
+                            right: 16.0,
+                            bottom: 8.0,
+                            top: 2.0,
                           ),
+                          child: (repository == null ||
+                                  repository!.containsKey('message'))
+                              ? Text(
+                                  '🎵 Elegant music app to play & manage music library.',
+                                  style: TextStyle(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white.withOpacity(1.0)
+                                        : Colors.black.withOpacity(0.8),
+                                    fontSize: 14.0,
+                                  ),
+                                )
+                              : Text(
+                                  repository!['description'],
+                                  style: TextStyle(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white.withOpacity(0.8)
+                                        : Colors.black.withOpacity(0.8),
+                                    fontSize: 14.0,
+                                  ),
+                                ),
                         ),
                         if (repository != null &&
                             !repository!.containsKey('message'))
@@ -320,180 +370,271 @@ class AboutPageState extends State<AboutPage> {
                               ),
                             ]),
                           ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 16.0,
-                            right: 16.0,
-                            bottom: 8.0,
-                            top: 2.0,
-                          ),
-                          child: (repository == null ||
-                                  repository!.containsKey('message'))
-                              ? Text(
-                                  '🎵 Elegant music app to play & manage music library.',
-                                  style: TextStyle(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white.withOpacity(1.0)
-                                        : Colors.black.withOpacity(0.8),
-                                    fontSize: 14.0,
-                                  ),
-                                )
-                              : Text(
-                                  repository!['description'],
-                                  style: TextStyle(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white.withOpacity(0.8)
-                                        : Colors.black.withOpacity(0.8),
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Developer',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline2
-                                    ?.copyWith(fontSize: 20.0),
-                              ),
-                              Divider(color: Colors.transparent, height: 4.0),
-                              Text(
-                                'Maintainer & creator of the project.',
-                                style: Theme.of(context).textTheme.headline3,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8.0,
-                        ),
-                        ListTile(
-                          onTap: () => launch(
-                            'https://github.com/alexmercerind',
-                          ),
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              'https://avatars.githubusercontent.com/u/28951144?s=80&v=4',
-                            ),
-                            backgroundColor: Colors.transparent,
-                          ),
-                          title: Text(
-                            'Hitesh Kumar Saini',
-                            style: Theme.of(context).textTheme.headline2,
-                          ),
-                          subtitle: Text(
-                            'Deals with playback & parsing of music. Writes UI, state management & lifecycle code. Maintains core C++ plugins.',
-                            style: Theme.of(context).textTheme.headline3,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          trailing: Icon(
-                            FluentIcons.link_24_regular,
-                            size: 22.0,
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(
-                            left: 8.0,
-                          ),
-                          child: ButtonBar(
-                            alignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              MaterialButton(
-                                onPressed: () => launch(
-                                  'https://github.com/alexmercerind',
-                                ),
-                                child: Text(
-                                  'GITHUB',
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
-                                ),
-                              ),
-                              MaterialButton(
-                                onPressed: () => launch(
-                                  'https://twitter.com/alexmercerind',
-                                ),
-                                child: Text(
-                                  'TWITTER',
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
-                                ),
-                              ),
-                              MaterialButton(
-                                onPressed: () => launch(
-                                  'https://www.linkedin.com/in/hitesh-kumar-saini',
-                                ),
-                                child: Text(
-                                  'LINKEDIN',
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                   ),
-                  SettingsTile(
-                    title: 'Contributors',
-                    subtitle:
-                        'People who are currently working or worked on this project in the past.',
-                    child: Column(
-                      children: kContributors
-                          .map(
-                            (contributor) => ListTile(
-                              onTap: () => launch(
-                                contributor[0],
-                              ),
-                              leading: CircleAvatar(
-                                backgroundImage: contributor[1].isNotEmpty
-                                    ? NetworkImage(
-                                        contributor[1],
-                                      )
-                                    : null,
-                                child: contributor[1].isEmpty
-                                    ? Icon(
-                                        FluentIcons.person_48_regular,
-                                      )
-                                    : null,
-                                backgroundColor: Colors.transparent,
-                              ),
-                              title: Text(
-                                contributor[2],
-                                style: Theme.of(context).textTheme.headline2,
-                              ),
-                              subtitle: Text(
-                                contributor[3],
-                                style: Theme.of(context).textTheme.headline3,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              trailing: Icon(
-                                FluentIcons.link_24_regular,
-                                size: 22.0,
-                              ),
-                            ),
-                          )
-                          .toList(),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  Row(
+                    children: [
+                      const SizedBox(width: 16.0),
+                      // Remove these links. Just for the sake of existence...
+                      MaterialButton(
+                        onPressed: () {
+                          launch('https://www.patreon.com/harmonoid');
+                        },
+                        child: Text(
+                          'PATREON',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          launch('https://www.paypal.me/alexmercerind');
+                        },
+                        child: Text(
+                          'PAYPAL',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          launch('https://www.buymeacoffee.com/alexmercerind');
+                        },
+                        child: Text(
+                          'BUY ME A COFFEE',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 24.0),
+                    child: Text(
+                      'Developers',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline2
+                          ?.copyWith(fontSize: 20.0),
                     ),
                   ),
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                  ...kContributors
+                      .map(
+                        (contributor) => Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: ListTile(
+                            onTap: () => launch(
+                              contributor[0],
+                            ),
+                            leading: CircleAvatar(
+                              backgroundImage: contributor[1].isNotEmpty
+                                  ? NetworkImage(
+                                      contributor[1],
+                                    )
+                                  : null,
+                              child: contributor[1].isEmpty
+                                  ? Icon(
+                                      FluentIcons.person_48_regular,
+                                    )
+                                  : null,
+                              backgroundColor: Colors.transparent,
+                            ),
+                            title: Text(
+                              contributor[2],
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                            subtitle: Text(
+                              contributor[3],
+                              style: Theme.of(context).textTheme.headline3,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: Icon(
+                              Icons.link,
+                              size: 22.0,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 24.0),
+                    child: Text(
+                      'Artists',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline2
+                          ?.copyWith(fontSize: 20.0),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                  ...kArtists
+                      .map(
+                        (contributor) => Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: ListTile(
+                            onTap: () => launch(
+                              contributor[0],
+                            ),
+                            leading: CircleAvatar(
+                              backgroundImage: contributor[1].isNotEmpty
+                                  ? NetworkImage(
+                                      contributor[1],
+                                    )
+                                  : null,
+                              child: contributor[1].isEmpty
+                                  ? Icon(
+                                      FluentIcons.person_48_regular,
+                                    )
+                                  : null,
+                              backgroundColor: Colors.transparent,
+                            ),
+                            title: Text(
+                              contributor[2],
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                            subtitle: Text(
+                              contributor[3],
+                              style: Theme.of(context).textTheme.headline3,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: Icon(
+                              Icons.link,
+                              size: 22.0,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 24.0),
+                    child: Text(
+                      'Testers',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline2
+                          ?.copyWith(fontSize: 20.0),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                  ...kTesters
+                      .map(
+                        (contributor) => Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: ListTile(
+                            onTap: () => launch(
+                              contributor[0],
+                            ),
+                            leading: CircleAvatar(
+                              backgroundImage: contributor[1].isNotEmpty
+                                  ? NetworkImage(
+                                      contributor[1],
+                                    )
+                                  : null,
+                              child: contributor[1].isEmpty
+                                  ? Icon(
+                                      FluentIcons.person_48_regular,
+                                    )
+                                  : null,
+                              backgroundColor: Colors.transparent,
+                            ),
+                            title: Text(
+                              contributor[2],
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                            subtitle: Text(
+                              contributor[3],
+                              style: Theme.of(context).textTheme.headline3,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: Icon(
+                              Icons.link,
+                              size: 22.0,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 24.0),
+                    child: Text(
+                      'Translators',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline2
+                          ?.copyWith(fontSize: 20.0),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                  ...kTranslators
+                      .map(
+                        (contributor) => Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: ListTile(
+                            onTap: () => launch(
+                              contributor[0],
+                            ),
+                            leading: CircleAvatar(
+                              backgroundImage: contributor[1].isNotEmpty
+                                  ? NetworkImage(
+                                      contributor[1],
+                                    )
+                                  : null,
+                              child: contributor[1].isEmpty
+                                  ? Icon(
+                                      FluentIcons.person_48_regular,
+                                    )
+                                  : null,
+                              backgroundColor: Colors.transparent,
+                            ),
+                            title: Text(
+                              contributor[2],
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                            subtitle: Text(
+                              contributor[3],
+                              style: Theme.of(context).textTheme.headline3,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: Icon(
+                              Icons.link,
+                              size: 22.0,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList()
                 ],
               ),
             ),

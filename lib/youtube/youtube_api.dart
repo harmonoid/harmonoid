@@ -1,5 +1,4 @@
 import 'dart:convert' as convert;
-import 'dart:ffi';
 import 'package:http/http.dart' as http;
 
 import 'package:harmonoid/models/media.dart';

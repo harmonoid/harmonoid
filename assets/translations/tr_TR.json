@@ -53,6 +53,8 @@
   "EXIT_SUBTITLE": "Harmonoid'den çıkmak istediğine emin misin?",
   "EXIT_TITLE": "Çık",
   "GO_TO_SETTINGS": "AYARLARA GİT",
+  "INDEXING_ALREADY_GOING_ON_SUBTITLE": "An indexing related operating is already going on. Please wait.",
+  "INDEXING_ALREADY_GOING_ON_TITLE": "Wait",
   "INTERNET_ERROR": "İnternet bağlantını kontrol et",
   "KNOW_MORE": "Daha fazla bilgi",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Koleksiyonunda en az bir klasör kalmalıdır.",
