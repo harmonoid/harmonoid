@@ -32,7 +32,7 @@ extension DirectoryExtension on Directory {
       (event) {
         // Explicitly restricting to [kSupportedFileTypes] for avoiding long iterations in later operations.
         if (event is File && kSupportedFileTypes.contains(event.extension)) {
-          files.add(File(event.path.substring(4)));
+          files.add(File(event.path.substring(prefix.isNotEmpty ? 4: 0)));
         }
       },
       onError: (error) {
