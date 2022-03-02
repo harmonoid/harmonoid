@@ -53,6 +53,8 @@ class Strings {
   late String EXIT_SUBTITLE;
   late String EXIT_TITLE;
   late String GO_TO_SETTINGS;
+  late String INDEXING_ALREADY_GOING_ON_SUBTITLE;
+  late String INDEXING_ALREADY_GOING_ON_TITLE;
   late String INTERNET_ERROR;
   late String KNOW_MORE;
   late String LAST_COLLECTION_DIRECTORY_REMOVED;

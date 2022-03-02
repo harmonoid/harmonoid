@@ -266,6 +266,10 @@ class Language extends Strings with ChangeNotifier {
     this.EXIT_SUBTITLE = asset['EXIT_SUBTITLE']!;
     this.EXIT_TITLE = asset['EXIT_TITLE']!;
     this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
+    this.INDEXING_ALREADY_GOING_ON_SUBTITLE =
+        asset['INDEXING_ALREADY_GOING_ON_SUBTITLE']!;
+    this.INDEXING_ALREADY_GOING_ON_TITLE =
+        asset['INDEXING_ALREADY_GOING_ON_TITLE']!;
     this.INTERNET_ERROR = asset['INTERNET_ERROR']!;
     this.KNOW_MORE = asset['KNOW_MORE']!;
     this.LAST_COLLECTION_DIRECTORY_REMOVED =

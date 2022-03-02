@@ -53,6 +53,8 @@
   "EXIT_SUBTITLE": "Ali res hočeš zapreti aplikacijo?",
   "EXIT_TITLE": "Izhod",
   "GO_TO_SETTINGS": "POJDI V NASTAVITVE",
+  "INDEXING_ALREADY_GOING_ON_SUBTITLE": "An indexing related operating is already going on. Please wait.",
+  "INDEXING_ALREADY_GOING_ON_TITLE": "Wait",
   "INTERNET_ERROR": "Prosimo, preverite vašo internetno povezavo",
   "KNOW_MORE": "POGLEJ VEČ",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Vsaj en direktorij mora ostati v tvoji zbirki.",

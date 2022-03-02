@@ -53,6 +53,8 @@
   "EXIT_SUBTITLE": "Хотите выйти?",
   "EXIT_TITLE": "Выход",
   "GO_TO_SETTINGS": "В НАСТРОЙКИ",
+  "INDEXING_ALREADY_GOING_ON_SUBTITLE": "An indexing related operating is already going on. Please wait.",
+  "INDEXING_ALREADY_GOING_ON_TITLE": "Wait",
   "INTERNET_ERROR": "Проверьте интернет-соединение.",
   "KNOW_MORE": "УЗНАТЬ БОЛЬШЕ",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Оставьте хотя бы одну папку.",

@@ -53,6 +53,8 @@
   "EXIT_SUBTITLE": "Vill du avsluta Harmonoid?",
   "EXIT_TITLE": "Avsluta",
   "GO_TO_SETTINGS": "GÅ TILL INSTÄLLNINGAR",
+  "INDEXING_ALREADY_GOING_ON_SUBTITLE": "An indexing related operating is already going on. Please wait.",
+  "INDEXING_ALREADY_GOING_ON_TITLE": "Wait",
   "INTERNET_ERROR": "Granska din internetanslutning.",
   "KNOW_MORE": "VET MER",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Minst en mapp bör finnas i din samling.",

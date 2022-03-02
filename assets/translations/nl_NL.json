@@ -53,6 +53,8 @@
   "EXIT_SUBTITLE": "Wilt u Harmonoid afsluiten?",
   "EXIT_TITLE": "Afsluiten",
   "GO_TO_SETTINGS": "GO TO SETTINGS",
+  "INDEXING_ALREADY_GOING_ON_SUBTITLE": "An indexing related operating is already going on. Please wait.",
+  "INDEXING_ALREADY_GOING_ON_TITLE": "Wait",
   "INTERNET_ERROR": "Controleer uw internet verbinding...",
   "KNOW_MORE": "KNOW MORE",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Er moet ten minste één map in uw collectie blijven.",

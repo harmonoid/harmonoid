@@ -53,6 +53,8 @@
   "EXIT_SUBTITLE": "アプリを終了しますか？",
   "EXIT_TITLE": "終了",
   "GO_TO_SETTINGS": "設定に移動する",
+  "INDEXING_ALREADY_GOING_ON_SUBTITLE": "An indexing related operating is already going on. Please wait.",
+  "INDEXING_ALREADY_GOING_ON_TITLE": "Wait",
   "INTERNET_ERROR": "インターネット接続を確認してください。",
   "KNOW_MORE": "もっと見る",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "コレクションには1つ以上のフォルダを残しておく必要があります。",

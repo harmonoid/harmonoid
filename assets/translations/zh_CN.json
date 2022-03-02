@@ -53,6 +53,8 @@
   "EXIT_SUBTITLE": "您确定退出 Harmonoid 吗?",
   "EXIT_TITLE": "退出",
   "GO_TO_SETTINGS": "前往设置",
+  "INDEXING_ALREADY_GOING_ON_SUBTITLE": "An indexing related operating is already going on. Please wait.",
+  "INDEXING_ALREADY_GOING_ON_TITLE": "Wait",
   "INTERNET_ERROR": "检查您的网络连接。",
   "KNOW_MORE": "了解更多",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "您的收藏中需要只是包括一个目录。",

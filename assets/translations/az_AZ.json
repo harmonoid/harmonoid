@@ -53,6 +53,8 @@
   "EXIT_SUBTITLE": "Harmonoid'dən çıxmaq istədiyinə əminsənmi?",
   "EXIT_TITLE": "Çıx",
   "GO_TO_SETTINGS": "Tənzimləmələrə get",
+  "INDEXING_ALREADY_GOING_ON_SUBTITLE": "An indexing related operating is already going on. Please wait.",
+  "INDEXING_ALREADY_GOING_ON_TITLE": "Wait",
   "INTERNET_ERROR": "İnternet bağlantısını yoxla",
   "KNOW_MORE": "Daha çox bilgi",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "Kolleksiyanda ən az bir qovluq qalmalıdır.",

@@ -53,6 +53,8 @@
   "EXIT_SUBTITLE": "क्या आप Harmonoid को छोड़ना चाहते हैं?",
   "EXIT_TITLE": "बंद",
   "GO_TO_SETTINGS": "GO TO SETTINGS",
+  "INDEXING_ALREADY_GOING_ON_SUBTITLE": "An indexing related operating is already going on. Please wait.",
+  "INDEXING_ALREADY_GOING_ON_TITLE": "Wait",
   "INTERNET_ERROR": "अपना इंटरनेट कनेक्शन चेक करें।",
   "KNOW_MORE": "KNOW MORE",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "आपके कलेक्शन में कम से कम एक फ़ोल्डर रहने की आवश्यकता है।",
