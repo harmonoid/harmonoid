@@ -1,4 +1,5 @@
-# [Harmonoid](https://github.com/harmonoid/harmonoid)
+<div><p align="left"><img src="https://raw.githubusercontent.com/maisondasilva/harmonoid/master/harmonoid.ico" width="75" height="75" /></p></div>
+#[Harmonoid](https://github.com/harmonoid/harmonoid)
 
 **🎵 Elegant music app to play & manage music library. Lyrics & playlists. YouTube Music support.**
 
