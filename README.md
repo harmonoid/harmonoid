@@ -76,6 +76,7 @@ Similar instructions can be followed on your favorite distro.
 - Portable (if you wish).
 - Does not use [electron.js](https://www.electronjs.org/).
 - D-Bus MPRIS controls for Linux.
+- Gapless playback.
 
 ### Upcoming features
 
@@ -241,12 +242,6 @@ An incomplete list of people who are working (or worked) on the project in past:
     <img src='https://avatars.githubusercontent.com/u/31634638?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/arafatamim'>Tamim Arafat</a></strong>
     <ul>
       <li>User interface & design. Bug reports.</li>
-    </ul>
-  </li>
-  <li>
-    <img src='https://avatars.githubusercontent.com/u/75587960?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/LeonHoog'>Leon</a></strong>
-    <ul>
-      <li>User interface fixes, app persistence improvements. Dutch translation.</li>
     </ul>
   </li>
   <li>
