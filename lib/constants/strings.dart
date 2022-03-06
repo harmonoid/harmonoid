@@ -11,6 +11,7 @@ class Strings {
   late String ARTIST_SINGLE;
   late String ASCENDING;
   late String AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING;
+  late String AUTO_REFRESH_SETTING;
   late String A_TO_Z;
   late String BUFFERING;
   late String CANCEL;
@@ -52,6 +53,8 @@ class Strings {
   late String EXIT_NOW_PLAYING;
   late String EXIT_SUBTITLE;
   late String EXIT_TITLE;
+  late String EXPERIMENTAL;
+  late String EXPERIMENTAL_SUBTITLE;
   late String GO_TO_SETTINGS;
   late String INDEXING_ALREADY_GOING_ON_SUBTITLE;
   late String INDEXING_ALREADY_GOING_ON_TITLE;

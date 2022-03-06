@@ -82,9 +82,12 @@ Future<void> main(List<String> args) async {
       collectionSortType: Configuration.instance.collectionSortType,
       collectionOrderType: Configuration.instance.collectionOrderType,
     );
-    await Collection.instance.refresh(onProgress: (progress, total, _) {
-      CollectionRefresh.instance.set(progress, total);
-    });
+    await Collection.instance.refresh(
+      onProgress: (progress, total, _) {
+        CollectionRefresh.instance.set(progress, total);
+      },
+      update: Configuration.instance.automaticallyRefreshCollectionOnFreshStart,
+    );
     await Language.initialize();
     runApp(
       Harmonoid(),
