@@ -433,8 +433,12 @@ class Collection extends ChangeNotifier {
   ///
   /// Non-blocking in nature. Sends progress updates to the optional callback parameter [onProgress].
   ///
+  /// Passing [update] will also cause method to lookup for new & deleted files to update collection accordingly.
+  /// Earlier, this was enabled by default.
+  ///
   Future<void> refresh({
     void Function(int? completed, int total, bool isCompleted)? onProgress,
+    bool update = true,
   }) async {
     // For safety.
     if (!await cacheDirectory.exists_())
@@ -464,78 +468,83 @@ class Collection extends ChangeNotifier {
           await _arrange(track, () {});
         }
         await sort();
-        // Populate Check for newly added & deleted tracks in asynchronous suspension.
-        () async {
-          await _arrangeArtists();
-          // Remove deleted tracks.
-          final buffer = [...tracks];
-          for (final track in buffer) {
-            if (!await File(track.uri.toFilePath()).exists_()) delete(track);
-          }
-          // Add newly added tracks.
-          final directory = <File>[];
-          for (Directory collectionDirectory in collectionDirectories) {
-            for (final object in await collectionDirectory.list_()) {
-              directory.add(object);
+        // Check for newly added & deleted [Track]s in asynchronous suspension & update the [Collection] accordingly.
+        if (update) {
+          () async {
+            await _arrangeArtists();
+            // Remove deleted tracks.
+            final buffer = [...tracks];
+            for (final track in buffer) {
+              if (!await File(track.uri.toFilePath()).exists_()) delete(track);
             }
-          }
-          directory.sort((first, second) =>
-              first.lastModifiedSync().compareTo(second.lastModifiedSync()));
-          for (int index = 0; index < directory.length; index++) {
-            File file = directory[index];
-            // Add new tracks.
-            if (!files.contains(file.uri.toFilePath())) {
-              try {
-                final metadata = <String, String>{
-                  'uri': file.uri.toString(),
-                };
-                if (Platform.isWindows ||
-                    Platform.isLinux ||
-                    Platform.isMacOS) {
-                  try {
-                    metadata.addAll(await tagger.parse(
-                      file.uri.toString(),
-                      coverDirectory: albumArtDirectory,
-                      timeout: Duration(seconds: 2),
-                    ));
-                  } catch (exception, stacktrace) {
-                    debugPrint(exception.toString());
-                    debugPrint(stacktrace.toString());
-                  }
-                  final track = Track.fromTagger(metadata);
-                  await _arrange(
-                    track,
-                    () {},
-                  );
-                } else {
-                  final _metadata = await MetadataRetriever.fromFile(file);
-                  metadata.addAll(_metadata.toJson().cast());
-                  final track = Track.fromJson(metadata);
-                  await _arrange(
-                    track,
-                    () async {
-                      if (_metadata.albumArt != null) {
-                        await File(path.join(
-                          albumArtDirectory.path,
-                          track.albumArtFileName,
-                        )).writeAsBytes(_metadata.albumArt!);
-                      }
-                    },
-                  );
-                }
-              } catch (exception, stacktrace) {
-                debugPrint(exception.toString());
-                debugPrint(stacktrace.toString());
+            // Add newly added tracks.
+            final directory = <File>[];
+            for (Directory collectionDirectory in collectionDirectories) {
+              for (final object in await collectionDirectory.list_()) {
+                directory.add(object);
               }
-            } else {}
-            // try {
-            //   onProgress?.call(index + 1, directory.length, false);
-            // } catch (exception) {}
-          }
-          // try {
-          //   onProgress?.call(directory.length, directory.length, true);
-          // } catch (exception) {}
-        }();
+            }
+            directory.sort((first, second) =>
+                first.lastModifiedSync().compareTo(second.lastModifiedSync()));
+            for (int index = 0; index < directory.length; index++) {
+              File file = directory[index];
+              // Add new tracks.
+              if (!files.contains(file.uri.toFilePath())) {
+                try {
+                  final metadata = <String, String>{
+                    'uri': file.uri.toString(),
+                  };
+                  if (Platform.isWindows ||
+                      Platform.isLinux ||
+                      Platform.isMacOS) {
+                    try {
+                      metadata.addAll(await tagger.parse(
+                        file.uri.toString(),
+                        coverDirectory: albumArtDirectory,
+                        timeout: Duration(seconds: 2),
+                      ));
+                    } catch (exception, stacktrace) {
+                      debugPrint(exception.toString());
+                      debugPrint(stacktrace.toString());
+                    }
+                    final track = Track.fromTagger(metadata);
+                    await _arrange(
+                      track,
+                      () {},
+                    );
+                  } else {
+                    final _metadata = await MetadataRetriever.fromFile(file);
+                    metadata.addAll(_metadata.toJson().cast());
+                    final track = Track.fromJson(metadata);
+                    await _arrange(
+                      track,
+                      () async {
+                        if (_metadata.albumArt != null) {
+                          await File(path.join(
+                            albumArtDirectory.path,
+                            track.albumArtFileName,
+                          )).writeAsBytes(_metadata.albumArt!);
+                        }
+                      },
+                    );
+                  }
+                } catch (exception, stacktrace) {
+                  debugPrint(exception.toString());
+                  debugPrint(stacktrace.toString());
+                }
+              } else {}
+              // try {
+              //   onProgress?.call(index + 1, directory.length, false);
+              // } catch (exception) {}
+            }
+            // Cause UI redraw.
+            try {
+              onProgress?.call(directory.length, directory.length, true);
+            } catch (exception) {}
+            // Save to cache.
+            await saveToCache();
+          }();
+        }
       } catch (exception, stacktrace) {
         // Handle corrupt cache.
         debugPrint(exception.toString());
@@ -543,7 +552,6 @@ class Collection extends ChangeNotifier {
         index(onProgress: onProgress);
       }
     }
-    await saveToCache();
     await playlistsGetFromCache();
     notifyListeners();
   }
@@ -949,7 +957,7 @@ extension CollectionTrackExtension on Track {
       '.PNG';
 }
 
-/// `libdart` [Tagger] instance.
+/// `libmpv.dart` [Tagger] instance.
 final Tagger tagger = Tagger();
 
 /// Prettified JSON serialization.

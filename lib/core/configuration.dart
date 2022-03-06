@@ -91,6 +91,7 @@ class Configuration extends ConfigurationKeys {
     bool? showTrackProgressOnTaskbar,
     bool? automaticallyAddOtherSongsFromCollectionToNowPlaying,
     bool? automaticallyShowNowPlayingScreenAfterPlaying,
+    bool? automaticallyRefreshCollectionOnFreshStart,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -136,6 +137,10 @@ class Configuration extends ConfigurationKeys {
       this.automaticallyShowNowPlayingScreenAfterPlaying =
           automaticallyShowNowPlayingScreenAfterPlaying;
     }
+    if (automaticallyRefreshCollectionOnFreshStart != null) {
+      this.automaticallyRefreshCollectionOnFreshStart =
+          automaticallyRefreshCollectionOnFreshStart;
+    }
     await file.writeAsString(
       convert.JsonEncoder.withIndent('  ').convert(
         {
@@ -159,6 +164,8 @@ class Configuration extends ConfigurationKeys {
               this.automaticallyAddOtherSongsFromCollectionToNowPlaying,
           'automaticallyShowNowPlayingScreenAfterPlaying':
               this.automaticallyShowNowPlayingScreenAfterPlaying,
+          'automaticallyRefreshCollectionOnFreshStart':
+              this.automaticallyRefreshCollectionOnFreshStart,
         },
       ),
     );
@@ -201,6 +208,8 @@ class Configuration extends ConfigurationKeys {
           current['automaticallyAddOtherSongsFromCollectionToNowPlaying'];
       automaticallyShowNowPlayingScreenAfterPlaying =
           current['automaticallyShowNowPlayingScreenAfterPlaying'];
+      automaticallyRefreshCollectionOnFreshStart =
+          current['automaticallyRefreshCollectionOnFreshStart'];
     } catch (exception) {
       if (!retry) throw exception;
       if (!await file.exists_()) {
@@ -230,6 +239,7 @@ abstract class ConfigurationKeys {
   late bool showTrackProgressOnTaskbar;
   late bool automaticallyAddOtherSongsFromCollectionToNowPlaying;
   late bool automaticallyShowNowPlayingScreenAfterPlaying;
+  late bool automaticallyRefreshCollectionOnFreshStart;
 }
 
 final Map<String, dynamic> defaultConfiguration = {
@@ -254,4 +264,5 @@ final Map<String, dynamic> defaultConfiguration = {
   'showTrackProgressOnTaskbar': false,
   'automaticallyAddOtherSongsFromCollectionToNowPlaying': false,
   'automaticallyShowNowPlayingScreenAfterPlaying': true,
+  'automaticallyRefreshCollectionOnFreshStart': false,
 };
