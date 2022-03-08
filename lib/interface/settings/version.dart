@@ -1,9 +1,11 @@
 import 'dart:convert' as convert;
+import 'dart:io';
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'package:harmonoid/main.dart';
+import 'package:url_launcher/link.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -13,20 +15,101 @@ class VersionSetting extends StatefulWidget {
 }
 
 class VersionState extends State<VersionSetting> {
-  String? version = 'v' + kVersion;
+  Release latestRelease = Release();
+  Release installedRelease = Release();
+  bool isLoadingVersion = true;
+  bool fetchVersionFailed = false;
 
   @override
   void initState() {
     super.initState();
-    http
-        .get(Uri.parse(
-            'https://api.github.com/repos/harmonoid/harmonoid/releases'))
-        .then((http.Response response) {
-      setState(() {
-        List<dynamic> json = convert.jsonDecode(response.body);
-        version = json.first['tag_name'];
-      });
-    }).catchError((exception) {});
+    getAppVersion()
+        .catchError((_) => setState(() => fetchVersionFailed = true))
+        .whenComplete(() => setState(() => isLoadingVersion = false));
+  }
+
+  /// Get the the installed and the latest version from github releases:
+  /// https://api.github.com/repos/harmonoid/harmonoid/releases
+  Future<void> getAppVersion() async {
+    var response = await http.get(
+        Uri.parse('https://api.github.com/repos/harmonoid/harmonoid/releases'));
+
+    List<dynamic> releasesJson = convert.jsonDecode(response.body);
+    List<Release> releases = releasesJson
+        .map((release) => Release.fromJson(release))
+        .toList()
+        .cast<Release>();
+
+    /// We'll try to get the installed version by
+    /// the [lastModified] date of the executable file.
+    var exeDate =
+        (await File(Platform.resolvedExecutable).lastModified()).toUtc();
+
+    /// Find [Release] that the executable [lastModified]
+    /// is between the release [createdAt] and [publishedAt] dates.
+    var currentRelease = releases.firstWhereOrNull((release) =>
+        (exeDate.isAtSameMomentAs(release.createdAt!) ||
+            exeDate.isAfter(release.createdAt!)) &&
+        (exeDate.isAtSameMomentAs(release.publishedAt!) ||
+            exeDate.isBefore(release.publishedAt!)));
+
+    setState(() {
+      if (releases.length > 0) latestRelease = releases.first;
+      if (currentRelease != null) installedRelease = currentRelease;
+    });
+  }
+
+  TableRow getVersionTableRow(String versionLabel, Release release) {
+    final hasLink = release.htmlUrl != null && release.htmlUrl!.isNotEmpty;
+
+    return TableRow(
+      children: [
+        Text(versionLabel),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          transitionBuilder: (child, animation) => FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+          child: isLoadingVersion
+              ? Align(
+                  key: Key('loading_icon'),
+                  alignment: Alignment(-0.7, 0.0),
+                  child: SizedBox(
+                    height: Theme.of(context).textTheme.bodyText2!.fontSize,
+                    width: Theme.of(context).textTheme.bodyText2!.fontSize,
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.secondary,
+                      strokeWidth: 2,
+                    ),
+                  ),
+                )
+              : Align(
+                  key: Key('version_details'),
+                  alignment: Alignment.centerLeft,
+                  child: Link(
+                    uri: Uri.parse(release.htmlUrl ?? ''),
+                    builder: (context, openLink) => MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: hasLink ? openLink : null,
+                        child: Text(
+                          fetchVersionFailed
+                              ? Language.instance.NO_INTERNET_TITLE
+                              : release.tagName,
+                          style: TextStyle(
+                            color: hasLink
+                                ? Theme.of(context).colorScheme.secondary
+                                : Theme.of(context).disabledColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -36,24 +119,23 @@ class VersionState extends State<VersionSetting> {
       subtitle: Language.instance.SETTING_APP_VERSION_SUBTITLE,
       child: Column(
         children: [
-          Table(
-            children: [
-              TableRow(
-                children: [
-                  Text(Language.instance.SETTING_APP_VERSION_INSTALLED),
-                  Text('v' + kVersion),
-                ],
-              ),
-              TableRow(children: [
-                Text(Language.instance.SETTING_APP_VERSION_LATEST),
-                Text(version ?? Language.instance.NO_INTERNET_TITLE),
-              ]),
-            ],
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 360),
+            child: Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                getVersionTableRow(
+                    Language.instance.SETTING_APP_VERSION_INSTALLED,
+                    installedRelease),
+                getVersionTableRow(Language.instance.SETTING_APP_VERSION_LATEST,
+                    latestRelease),
+              ],
+            ),
           ),
         ],
       ),
       margin: EdgeInsets.all(16.0),
-      actions: version == 'v' + kVersion
+      actions: installedRelease.tagName == latestRelease.tagName
           ? null
           : [
               MaterialButton(
@@ -69,4 +151,27 @@ class VersionState extends State<VersionSetting> {
             ],
     );
   }
+}
+
+class Release {
+  String tagName;
+  DateTime? publishedAt;
+  DateTime? createdAt;
+  String? htmlUrl;
+
+  Release(
+      {this.tagName = kDebugMode
+          ? 'debug mode'
+          : kProfileMode
+              ? 'profile mode'
+              : 'unknown',
+      this.publishedAt,
+      this.createdAt,
+      this.htmlUrl});
+
+  Release.fromJson(Map<String, dynamic> json)
+      : tagName = json['tag_name'],
+        publishedAt = DateTime.parse(json['published_at']),
+        createdAt = DateTime.parse(json['created_at']),
+        htmlUrl = json['html_url'];
 }

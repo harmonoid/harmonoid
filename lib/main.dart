@@ -5,7 +5,6 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Intent;
@@ -28,7 +27,6 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/override_window_destroy.dart';
 
 const String kTitle = 'Harmonoid';
-const String kVersion = '0.2.1';
 const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 
