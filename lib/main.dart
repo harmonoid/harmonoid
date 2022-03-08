@@ -28,7 +28,6 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/override_window_destroy.dart';
 
 const String kTitle = 'Harmonoid';
-const String kVersion = '0.2.1';
 const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 
