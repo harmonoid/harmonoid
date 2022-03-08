@@ -67,29 +67,111 @@ class Collection extends ChangeNotifier {
   List<Album> albums = <Album>[];
   List<Track> tracks = <Track>[];
   List<Artist> artists = <Artist>[];
+  List<String> files = <String>[];
   SplayTreeMap<AlbumArtist, List<Album>> albumArtists =
       SplayTreeMap<AlbumArtist, List<Album>>();
 
-  /// Updates (or sets) the directories that are used for indexing of the music.
+  /// Adds new directories that will be used for indexing of the music.
   ///
-  Future<void> setDirectories({
-    required List<Directory>? collectionDirectories,
-    required Directory? cacheDirectory,
+  Future<void> addDirectories({
+    required List<Directory> directories,
     void Function(int?, int, bool)? onProgress,
   }) async {
-    this.collectionDirectories = collectionDirectories!;
-    this.cacheDirectory = cacheDirectory!;
-    for (Directory directory in collectionDirectories) {
-      if (!await directory.exists_()) await directory.create(recursive: true);
+    final directory = <File>[];
+    this.collectionDirectories.addAll(directories);
+    onProgress?.call(null, directory.length, true);
+    // Basically [Collection.index] the newly added directories, a lot more efficient.
+    for (final collectionDirectory in directories) {
+      directory.addAll(await (collectionDirectory.list_()));
     }
-    if (!await unknownAlbumArt.exists_()) {
-      await unknownAlbumArt.create(recursive: true);
-      await unknownAlbumArt.writeAsBytes(
-          (await rootBundle.load(kUnknownAlbumArtRootBundle))
-              .buffer
-              .asUint8List());
+    for (int index = 0; index < directory.length; index++) {
+      final object = directory[index];
+      try {
+        final metadata = <String, String>{
+          'uri': object.uri.toString(),
+        };
+        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+          try {
+            metadata.addAll(await tagger.parse(
+              object.uri.toString(),
+              coverDirectory: albumArtDirectory,
+              timeout: Duration(seconds: 2),
+            ));
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
+          }
+          final track = Track.fromTagger(metadata);
+          await _arrange(
+            track,
+            () {},
+          );
+        } else {
+          final _metadata = await MetadataRetriever.fromFile(object);
+          metadata.addAll(_metadata.toJson().cast());
+          final track = Track.fromJson(metadata);
+          await _arrange(
+            track,
+            () async {
+              if (_metadata.albumArt != null) {
+                await File(path.join(
+                  albumArtDirectory.path,
+                  track.albumArtFileName,
+                )).writeAsBytes(_metadata.albumArt!);
+              }
+            },
+          );
+        }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      try {
+        onProgress?.call(index + 1, directory.length, true);
+      } catch (exception) {}
     }
-    await refresh(onProgress: onProgress);
+    _arrangeArtists();
+    await sort();
+    await saveToCache();
+    try {
+      onProgress?.call(directory.length, directory.length, true);
+    } catch (exception) {}
+    notifyListeners();
+  }
+
+  /// Removes the asked directories from the collection & will no longer be used for indexing.
+  ///
+  Future<void> removeDirectories({
+    required List<Directory> directories,
+    void Function(int?, int, bool)? onProgress,
+  }) async {
+    onProgress?.call(null, 0, false);
+    for (final directory in directories) {
+      collectionDirectories.remove(directory);
+    }
+    final current = <Track>[];
+    for (int i = 0; i < tracks.length; i++) {
+      final track = tracks[i];
+      bool present = false;
+      for (final directory in collectionDirectories) {
+        if (track.uri.toFilePath().startsWith(directory.path)) {
+          present = true;
+          break;
+        }
+      }
+      if (present) {
+        current.add(track);
+      }
+      try {
+        onProgress?.call(i + 1, tracks.length, i + 1 == tracks.length);
+      } catch (exception) {}
+    }
+    try {
+      onProgress?.call(tracks.length, tracks.length, true);
+      tracks = current;
+      await saveToCache(notifyListeners: false);
+      await refresh();
+    } catch (_) {}
     notifyListeners();
   }
 
@@ -155,7 +237,7 @@ class Collection extends ChangeNotifier {
             debugPrint(stacktrace.toString());
           }
           final track = Track.fromTagger(metadata);
-          _arrange(
+          await _arrange(
             track,
             () {},
           );
@@ -163,7 +245,7 @@ class Collection extends ChangeNotifier {
           final _metadata = await MetadataRetriever.fromFile(file);
           metadata.addAll(_metadata.toJson().cast());
           final track = Track.fromJson(metadata);
-          _arrange(
+          await _arrange(
             track,
             () async {
               if (_metadata.albumArt != null) {
@@ -181,8 +263,8 @@ class Collection extends ChangeNotifier {
         debugPrint(stacktrace.toString());
       }
     }
-    await saveToCache();
-    sort();
+    // Calls [sort] internally.
+    await saveToCache(notifyListeners: notifyListeners);
     if (notifyListeners) {
       this.notifyListeners();
     }
@@ -192,39 +274,46 @@ class Collection extends ChangeNotifier {
   ///
   /// Automatically updates other structures & models. Also deletes the respective files.
   ///
-  Future<void> delete(Media object) async {
+  Future<void> delete(Media object, {bool delete: true}) async {
     if (object is Track) {
       for (int index = 0; index < tracks.length; index++) {
-        if (object.trackName == tracks[index].trackName &&
-            object.trackNumber == tracks[index].trackNumber) {
+        if (object.uri.toFilePath() == tracks[index].uri.toFilePath()) {
           tracks.removeAt(index);
           break;
         }
       }
-      for (Album album in albums) {
+      for (int i = 0; i < albums.length; i++) {
+        final album = albums[i];
+        bool flag = false;
         if (object.albumName == album.albumName &&
             object.albumArtistName == album.albumArtistName) {
           for (int index = 0; index < album.tracks.length; index++) {
-            if (object.trackName == album.tracks[index].trackName) {
+            if (object.uri.toFilePath() ==
+                album.tracks[index].uri.toFilePath()) {
               album.tracks.removeAt(index);
+              if (album.tracks.isEmpty) {
+                albums.removeAt(i);
+                flag = true;
+              }
               break;
             }
           }
-          if (album.tracks.length == 0) albums.remove(album);
-          break;
+          if (flag) {
+            break;
+          }
         }
       }
       for (String artistName in object.trackArtistNames) {
         for (Artist artist in artists) {
           if (artistName == artist.artistName) {
             for (int index = 0; index < artist.tracks.length; index++) {
-              if (object.trackName == artist.tracks[index].trackName &&
-                  object.trackNumber == artist.tracks[index].trackNumber) {
+              if (object.uri.toFilePath() ==
+                  artist.tracks[index].uri.toFilePath()) {
                 artist.tracks.removeAt(index);
                 break;
               }
             }
-            if (artist.tracks.length == 0) {
+            if (artist.tracks.isEmpty) {
               artists.remove(artist);
               break;
             } else {
@@ -234,7 +323,7 @@ class Collection extends ChangeNotifier {
                   for (int index = 0; index < album.tracks.length; index++) {
                     if (object.trackName == album.tracks[index].trackName) {
                       album.tracks.removeAt(index);
-                      if (artist.albums.length == 0) artists.remove(artist);
+                      if (artist.albums.isEmpty) artists.remove(artist);
                       break;
                     }
                   }
@@ -259,7 +348,8 @@ class Collection extends ChangeNotifier {
       if (albumArtists[AlbumArtist(object.albumArtistName)]!.isEmpty) {
         albumArtists.remove(AlbumArtist(object.albumArtistName));
       }
-      if (await File(object.uri.toFilePath()).exists_()) {
+      files.remove(object.uri.toFilePath());
+      if (delete && await File(object.uri.toFilePath()).exists_()) {
         await File(object.uri.toFilePath()).delete_();
       }
     } else if (object is Album) {
@@ -302,20 +392,24 @@ class Collection extends ChangeNotifier {
       if (albumArtists[AlbumArtist(object.albumArtistName)]!.isEmpty) {
         albumArtists.remove(AlbumArtist(object.albumArtistName));
       }
-      for (Track track in object.tracks) {
-        if (await File(track.uri.toFilePath()).exists_()) {
-          await File(track.uri.toFilePath()).delete_();
+      for (final track in object.tracks) {
+        files.remove(track);
+      }
+      if (delete) {
+        for (Track track in object.tracks) {
+          if (await File(track.uri.toFilePath()).exists_()) {
+            await File(track.uri.toFilePath()).delete_();
+          }
         }
       }
     }
-    await sort();
     await saveToCache();
     notifyListeners();
   }
 
   /// Saves the currently visible music collection to the cache.
   ///
-  Future<void> saveToCache() async {
+  Future<void> saveToCache({bool notifyListeners: true}) async {
     tracks.sort((first, second) => second.timeAdded.millisecondsSinceEpoch
         .compareTo(first.timeAdded.millisecondsSinceEpoch));
     await File(path.join(cacheDirectory.path, kCollectionCacheFileName))
@@ -326,18 +420,25 @@ class Collection extends ChangeNotifier {
         },
       ),
     );
-    sort();
+    sort(notifyListeners: notifyListeners);
   }
 
   /// Refreshes the music collection.
+  ///
+  /// Generally expected to automatically happen in background. [onProgress] only notifies when [index] was called internally.
+  /// Suitable for efficiently checking one or two newly added files or when refresh button is tapped by the user.
   ///
   /// Automatically calls [index] internally if no cache is found.
   /// Checks for newly added & deleted tracks to update the music collection.
   ///
   /// Non-blocking in nature. Sends progress updates to the optional callback parameter [onProgress].
   ///
+  /// Passing [update] will also cause method to lookup for new & deleted files to update collection accordingly.
+  /// Earlier, this was enabled by default.
+  ///
   Future<void> refresh({
     void Function(int? completed, int total, bool isCompleted)? onProgress,
+    bool update = true,
   }) async {
     // For safety.
     if (!await cacheDirectory.exists_())
@@ -349,6 +450,7 @@ class Collection extends ChangeNotifier {
     albums = <Album>[];
     tracks = <Track>[];
     artists = <Artist>[];
+    files = <String>[];
     // Indexing from scratch if no cache exists.
     if (!await File(path.join(cacheDirectory.path, kCollectionCacheFileName))
         .exists_()) {
@@ -363,67 +465,100 @@ class Collection extends ChangeNotifier {
                 .readAsString());
         for (final map in collection['tracks']) {
           final track = Track.fromJson(map);
-          _arrange(track, () {});
+          await _arrange(track, () {});
         }
         await sort();
-        // Populate Check for newly added & deleted tracks in asynchronous suspension.
-        () async {
-          await _arrangeArtists();
-          // Remove deleted tracks.
-          final buffer = [...tracks];
-          for (final track in buffer) {
-            if (!await File(track.uri.toFilePath()).exists_()) delete(track);
-          }
-          // Add newly added tracks.
-          List<File> directory = <File>[];
-          for (Directory collectionDirectory in collectionDirectories) {
-            for (FileSystemEntity object in await collectionDirectory.list_()) {
-              if (object is File &&
-                  kSupportedFileTypes.contains(object.extension)) {
+        // Check for newly added & deleted [Track]s in asynchronous suspension & update the [Collection] accordingly.
+        if (update) {
+          () async {
+            await _arrangeArtists();
+            // Remove deleted tracks.
+            final buffer = [...tracks];
+            for (final track in buffer) {
+              if (!await File(track.uri.toFilePath()).exists_()) delete(track);
+            }
+            // Add newly added tracks.
+            final directory = <File>[];
+            for (Directory collectionDirectory in collectionDirectories) {
+              for (final object in await collectionDirectory.list_()) {
                 directory.add(object);
               }
             }
-          }
-          directory.sort((first, second) =>
-              first.lastModifiedSync().compareTo(second.lastModifiedSync()));
-          for (int index = 0; index < directory.length; index++) {
-            File file = directory[index];
-            bool isTrackAdded = false;
-            for (Track track in tracks) {
-              if (track.uri.toFilePath() == file.uri.toFilePath()) {
-                isTrackAdded = true;
-                break;
-              }
+            directory.sort((first, second) =>
+                first.lastModifiedSync().compareTo(second.lastModifiedSync()));
+            for (int index = 0; index < directory.length; index++) {
+              File file = directory[index];
+              // Add new tracks.
+              if (!files.contains(file.uri.toFilePath())) {
+                try {
+                  final metadata = <String, String>{
+                    'uri': file.uri.toString(),
+                  };
+                  if (Platform.isWindows ||
+                      Platform.isLinux ||
+                      Platform.isMacOS) {
+                    try {
+                      metadata.addAll(await tagger.parse(
+                        file.uri.toString(),
+                        coverDirectory: albumArtDirectory,
+                        timeout: Duration(seconds: 2),
+                      ));
+                    } catch (exception, stacktrace) {
+                      debugPrint(exception.toString());
+                      debugPrint(stacktrace.toString());
+                    }
+                    final track = Track.fromTagger(metadata);
+                    await _arrange(
+                      track,
+                      () {},
+                    );
+                  } else {
+                    final _metadata = await MetadataRetriever.fromFile(file);
+                    metadata.addAll(_metadata.toJson().cast());
+                    final track = Track.fromJson(metadata);
+                    await _arrange(
+                      track,
+                      () async {
+                        if (_metadata.albumArt != null) {
+                          await File(path.join(
+                            albumArtDirectory.path,
+                            track.albumArtFileName,
+                          )).writeAsBytes(_metadata.albumArt!);
+                        }
+                      },
+                    );
+                  }
+                } catch (exception, stacktrace) {
+                  debugPrint(exception.toString());
+                  debugPrint(stacktrace.toString());
+                }
+              } else {}
+              // try {
+              //   onProgress?.call(index + 1, directory.length, false);
+              // } catch (exception) {}
             }
-            if (!isTrackAdded) {
-              await add(
-                file: file,
-                notifyListeners: false,
-              );
-            }
+            // Cause UI redraw.
             try {
-              onProgress?.call(index + 1, directory.length, false);
+              onProgress?.call(directory.length, directory.length, true);
             } catch (exception) {}
-          }
-          try {
-            onProgress?.call(directory.length, directory.length, true);
-          } catch (exception) {}
-        }();
+            // Save to cache.
+            await saveToCache();
+          }();
+        }
       } catch (exception, stacktrace) {
+        // Handle corrupt cache.
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
-        await index(onProgress: onProgress);
+        index(onProgress: onProgress);
       }
     }
-    await saveToCache();
     await playlistsGetFromCache();
-    await sort();
     notifyListeners();
   }
 
   /// Sorts the music collection contents based upon passed [type].
   ///
-  Future<void> sort({CollectionSort? type}) async {
+  Future<void> sort({CollectionSort? type, bool notifyListeners: true}) async {
     if (type == null) {
       type = collectionSortType;
     } else {
@@ -458,7 +593,9 @@ class Collection extends ChangeNotifier {
       albums = albums.reversed.toList();
       artists = artists.reversed.toList();
     }
-    notifyListeners();
+    if (notifyListeners) {
+      this.notifyListeners();
+    }
   }
 
   /// Orders the music collection contents based upon passed [type].
@@ -483,6 +620,7 @@ class Collection extends ChangeNotifier {
     albums = <Album>[];
     tracks = <Track>[];
     artists = <Artist>[];
+    files = <String>[];
     playlists = <Playlist>[];
     final directory = <File>[];
     onProgress?.call(null, directory.length, true);
@@ -490,48 +628,47 @@ class Collection extends ChangeNotifier {
       directory.addAll(await (collectionDirectory.list_()));
     for (int index = 0; index < directory.length; index++) {
       final object = directory[index];
-      if (kSupportedFileTypes.contains(object.extension)) {
-        try {
-          final metadata = <String, String>{
-            'uri': object.uri.toString(),
-          };
-          if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-            try {
-              metadata.addAll(await tagger.parse(
-                object.uri.toString(),
-                coverDirectory: albumArtDirectory,
-                timeout: Duration(seconds: 2),
-              ));
-            } catch (exception, stacktrace) {
-              debugPrint(exception.toString());
-              debugPrint(stacktrace.toString());
-            }
-            final track = Track.fromTagger(metadata);
-            _arrange(
-              track,
-              () {},
-            );
-          } else {
-            final _metadata = await MetadataRetriever.fromFile(object);
-            metadata.addAll(_metadata.toJson().cast());
-            final track = Track.fromJson(metadata);
-            _arrange(
-              track,
-              () async {
-                if (_metadata.albumArt != null) {
-                  await File(path.join(
-                    albumArtDirectory.path,
-                    track.albumArtFileName,
-                  )).writeAsBytes(_metadata.albumArt!);
-                }
-              },
-            );
+      try {
+        final metadata = <String, String>{
+          'uri': object.uri.toString(),
+        };
+        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+          try {
+            metadata.addAll(await tagger.parse(
+              object.uri.toString(),
+              coverDirectory: albumArtDirectory,
+              timeout: Duration(seconds: 2),
+            ));
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
           }
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
+          final track = Track.fromTagger(metadata);
+          await _arrange(
+            track,
+            () {},
+          );
+        } else {
+          final _metadata = await MetadataRetriever.fromFile(object);
+          metadata.addAll(_metadata.toJson().cast());
+          final track = Track.fromJson(metadata);
+          await _arrange(
+            track,
+            () async {
+              if (_metadata.albumArt != null) {
+                await File(path.join(
+                  albumArtDirectory.path,
+                  track.albumArtFileName,
+                )).writeAsBytes(_metadata.albumArt!);
+              }
+            },
+          );
         }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
       }
+
       try {
         onProgress?.call(index + 1, directory.length, true);
       } catch (exception) {}
@@ -655,8 +792,9 @@ class Collection extends ChangeNotifier {
 
   /// Indexes a track into album & artist models.
   ///
-  void _arrange(Track track, VoidCallback save) async {
-    if (tracks.contains(track)) return;
+  Future<void> _arrange(Track track, VoidCallback save) async {
+    if (files.contains(track.uri.toFilePath())) return;
+    files.add(track.uri.toFilePath());
     if (!albums.contains(
       Album(
         albumName: track.albumName,
@@ -819,7 +957,7 @@ extension CollectionTrackExtension on Track {
       '.PNG';
 }
 
-/// `libdart` [Tagger] instance.
+/// `libmpv.dart` [Tagger] instance.
 final Tagger tagger = Tagger();
 
 /// Prettified JSON serialization.

@@ -139,14 +139,26 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(0.0),
-                                          child: ExtendedImage(
-                                            image: getAlbumArt(
-                                              playback.tracks[playback.index],
-                                              small: true,
+                                          child: AnimatedSwitcher(
+                                            duration: const Duration(
+                                                milliseconds: 300),
+                                            transitionBuilder:
+                                                (child, animation) =>
+                                                    FadeTransition(
+                                              opacity: animation,
+                                              child: child,
                                             ),
-                                            height: 84.0,
-                                            width: 84.0,
-                                            fit: BoxFit.cover,
+                                            child: ExtendedImage(
+                                              key: Key(
+                                                  playback.index.toString()),
+                                              image: getAlbumArt(
+                                                playback.tracks[playback.index],
+                                                small: true,
+                                              ),
+                                              height: 84.0,
+                                              width: 84.0,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
                                         TweenAnimationBuilder(
@@ -413,7 +425,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     ],
                                   ),
                                   IconButton(
-                                    onPressed: playback.previous,
+                                    onPressed: playback.isFirstTrack
+                                        ? null
+                                        : playback.previous,
                                     iconSize: 24.0,
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
@@ -421,6 +435,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         : Colors.black87,
                                     splashRadius: 18.0,
                                     tooltip: Language.instance.PREVIOUS,
+                                    mouseCursor: SystemMouseCursors.click,
                                     icon: Icon(
                                       Icons.skip_previous,
                                     ),
@@ -439,7 +454,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: playback.next,
+                                    onPressed: playback.isLastTrack
+                                        ? null
+                                        : playback.next,
                                     iconSize: 24.0,
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
@@ -447,6 +464,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         : Colors.black87,
                                     splashRadius: 18.0,
                                     tooltip: Language.instance.NEXT,
+                                    mouseCursor: SystemMouseCursors.click,
                                     icon: Icon(
                                       Icons.skip_next,
                                     ),

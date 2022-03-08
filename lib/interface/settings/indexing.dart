@@ -47,8 +47,64 @@ class IndexingState extends State<IndexingSetting> {
                 children: [
                   MaterialButton(
                     onPressed: controller.isOngoing
-                        ? () {}
+                        ? () {
+                            if (controller.relativeProgress != 1.0) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor: Theme.of(context).cardColor,
+                                  title: Text(
+                                    Language.instance
+                                        .INDEXING_ALREADY_GOING_ON_TITLE,
+                                    style:
+                                        Theme.of(context).textTheme.headline1,
+                                  ),
+                                  content: Text(
+                                    Language.instance
+                                        .INDEXING_ALREADY_GOING_ON_SUBTITLE,
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
+                                  ),
+                                  actions: [
+                                    MaterialButton(
+                                      textColor: Theme.of(context).primaryColor,
+                                      onPressed: Navigator.of(context).pop,
+                                      child: Text(Language.instance.OK),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          }
                         : () async {
+                            if (controller.relativeProgress != 1.0) {
+                              await showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor: Theme.of(context).cardColor,
+                                  title: Text(
+                                    Language.instance
+                                        .INDEXING_ALREADY_GOING_ON_TITLE,
+                                    style:
+                                        Theme.of(context).textTheme.headline1,
+                                  ),
+                                  content: Text(
+                                    Language.instance
+                                        .INDEXING_ALREADY_GOING_ON_SUBTITLE,
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
+                                  ),
+                                  actions: [
+                                    MaterialButton(
+                                      textColor: Theme.of(context).primaryColor,
+                                      onPressed: Navigator.of(context).pop,
+                                      child: Text(Language.instance.OK),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              return;
+                            }
                             Directory? directory;
                             if (Platform.isWindows) {
                               DirectoryPicker picker = new DirectoryPicker();
@@ -69,21 +125,22 @@ class IndexingState extends State<IndexingSetting> {
                                 directory = Directory(path);
                               }
                             }
+
                             if (directory != null) {
-                              await Configuration.instance.save(
-                                collectionDirectories: Configuration
-                                        .instance.collectionDirectories +
-                                    [directory],
-                              );
-                              Collection.instance.setDirectories(
-                                  collectionDirectories: Configuration
-                                      .instance.collectionDirectories,
-                                  cacheDirectory:
-                                      Configuration.instance.cacheDirectory,
+                              if (Configuration.instance.collectionDirectories
+                                  .contains(directory.path)) {
+                                return;
+                              }
+
+                              await Collection.instance.addDirectories(
+                                  directories: [directory],
                                   onProgress: (progress, total, isCompleted) {
-                                    CollectionRefresh.instance
-                                        .set(progress, total);
+                                    controller.set(progress, total);
                                   });
+                              await Configuration.instance.save(
+                                collectionDirectories:
+                                    Collection.instance.collectionDirectories,
+                              );
                             }
                           },
                     child: Text(
@@ -133,6 +190,42 @@ class IndexingState extends State<IndexingSetting> {
                                   ),
                                   MaterialButton(
                                     onPressed: () async {
+                                      if (CollectionRefresh
+                                              .instance.relativeProgress !=
+                                          1.0) {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            backgroundColor:
+                                                Theme.of(context).cardColor,
+                                            title: Text(
+                                              Language.instance
+                                                  .INDEXING_ALREADY_GOING_ON_TITLE,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline1,
+                                            ),
+                                            content: Text(
+                                              Language.instance
+                                                  .INDEXING_ALREADY_GOING_ON_SUBTITLE,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline3,
+                                            ),
+                                            actions: [
+                                              MaterialButton(
+                                                textColor: Theme.of(context)
+                                                    .primaryColor,
+                                                onPressed:
+                                                    Navigator.of(context).pop,
+                                                child:
+                                                    Text(Language.instance.OK),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                        return;
+                                      }
                                       if (Configuration.instance
                                               .collectionDirectories.length ==
                                           1) {
@@ -168,19 +261,19 @@ class IndexingState extends State<IndexingSetting> {
                                         );
                                         return;
                                       }
-                                      Configuration
-                                          .instance.collectionDirectories
-                                          .remove(directory);
-                                      await Configuration.instance.save(
-                                        collectionDirectories: Configuration
-                                            .instance.collectionDirectories,
-                                      );
-                                      Collection.instance.refresh(
+
+                                      await Collection.instance
+                                          .removeDirectories(
+                                        directories: [directory],
                                         onProgress:
                                             (progress, total, isCompleted) {
-                                          CollectionRefresh.instance
-                                              .set(progress, total);
+                                          controller.set(progress, total);
                                         },
+                                      );
+                                      await Configuration.instance.save(
+                                        collectionDirectories: Configuration
+                                            .instance.collectionDirectories
+                                          ..remove(directory),
                                       );
                                     },
                                     child: Text(
@@ -338,7 +431,7 @@ class IndexingState extends State<IndexingSetting> {
                 : () async {
                     Collection.instance.index(
                       onProgress: (progress, total, isCompleted) {
-                        CollectionRefresh.instance.set(progress, total);
+                        controller.set(progress, total);
                       },
                     );
                   },

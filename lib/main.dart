@@ -5,7 +5,6 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Intent;
@@ -36,6 +35,7 @@ Future<void> main(List<String> args) async {
   try {
     if (Platform.isWindows) {
       await Configuration.initialize();
+      await AppState.initialize();
       // Now hot-reload works in libmpv.dart. Thanks to https://github.com/YehudaKremer.
       await MPV.initialize();
       if (kReleaseMode || kProfileMode) {
@@ -43,7 +43,6 @@ Future<void> main(List<String> args) async {
       }
       await Intent.initialize(args: args);
       await HotKeys.initialize();
-      await AppState.initialize();
       DiscordRPC.initialize();
       doWhenWindowReady(() {
         appWindow.minSize = Size(960, 640);
@@ -54,6 +53,7 @@ Future<void> main(List<String> args) async {
     }
     if (Platform.isLinux) {
       await Configuration.initialize();
+      await AppState.initialize();
       await MPV.initialize();
       await Intent.initialize(args: args);
       await HotKeys.initialize();
@@ -71,6 +71,7 @@ Future<void> main(List<String> args) async {
         }
       }
       await Configuration.initialize();
+      await AppState.initialize();
       await Intent.initialize();
     }
     await Collection.initialize(
@@ -79,9 +80,12 @@ Future<void> main(List<String> args) async {
       collectionSortType: Configuration.instance.collectionSortType,
       collectionOrderType: Configuration.instance.collectionOrderType,
     );
-    await Collection.instance.refresh(onProgress: (progress, total, _) {
-      CollectionRefresh.instance.set(progress, total);
-    });
+    await Collection.instance.refresh(
+      onProgress: (progress, total, _) {
+        CollectionRefresh.instance.set(progress, total);
+      },
+      update: Configuration.instance.automaticallyRefreshCollectionOnFreshStart,
+    );
     await Language.initialize();
     runApp(
       Harmonoid(),

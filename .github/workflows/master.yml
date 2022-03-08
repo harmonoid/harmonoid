@@ -17,7 +17,11 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           submodules: recursive
-
+      - name: Set Git Commit Hash
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Check Git Commit Hash
+        run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
@@ -55,7 +59,21 @@ jobs:
           files: |
             Output/harmonoid-windows-setup.exe
             harmonoid-windows-exe.zip
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
+      - name: Release Nightly
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_REPOSITORY: harmonoid/harmonoid-nightly
+        with:
+          repository: harmonoid/harmonoid-nightly
+          draft: false
+          prerelease: true
+          body: ${{ github.sha }}
+          tag_name: ${{ steps.vars.outputs.sha_short }}
+          files: |
+            Output/harmonoid-windows-setup.exe
+            harmonoid-windows-exe.zip
+          token: ${{ secrets.ACCESS_TOKEN_2 }}
 
   build_linux:
     name: Harmonoid Linux
@@ -65,7 +83,11 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           submodules: recursive
-
+      - name: Set Git Commit Hash
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Check Git Commit Hash
+        run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
@@ -106,7 +128,19 @@ jobs:
           body: ""
           tag_name: "vnext"
           files: harmonoid-linux-*
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
+      - name: Release Nightly
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_REPOSITORY: harmonoid/harmonoid-nightly
+        with:
+          repository: harmonoid/harmonoid-nightly
+          draft: false
+          prerelease: true
+          body: ${{ github.sha }}
+          tag_name: ${{ steps.vars.outputs.sha_short }}
+          files: harmonoid-linux-*
+          token: ${{ secrets.ACCESS_TOKEN_2 }}
 
   build_android:
     name: Harmonoid Android
@@ -116,7 +150,11 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           submodules: recursive
-
+      - name: Set Git Commit Hash
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Check Git Commit Hash
+        run: echo ${{ steps.vars.outputs.sha_short }}
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
@@ -152,4 +190,4 @@ jobs:
           tag_name: "vnext"
           files: |
             harmonoid-android.apk
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}

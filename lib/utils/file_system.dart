@@ -19,7 +19,8 @@ extension DirectoryExtension on Directory {
   /// * Returns only [List] of [File]s.
   ///
   Future<List<File>> list_() async {
-    final prefix = Platform.isWindows ? r'\\?\' : '';
+    final prefix =
+        Platform.isWindows && !path.startsWith('\\\\') ? r'\\?\' : '';
     final completer = Completer();
     final files = <File>[];
     Directory(prefix + path)
@@ -31,7 +32,7 @@ extension DirectoryExtension on Directory {
       (event) {
         // Explicitly restricting to [kSupportedFileTypes] for avoiding long iterations in later operations.
         if (event is File && kSupportedFileTypes.contains(event.extension)) {
-          files.add(File(event.path.substring(4)));
+          files.add(File(event.path.substring(prefix.isNotEmpty ? 4: 0)));
         }
       },
       onError: (error) {
@@ -49,7 +50,8 @@ extension FileSystemEntityExtension on FileSystemEntity {
   /// Safely deletes a [FileSystemEntity].
   FutureOr<void> delete_() async {
     if (await exists_()) {
-      final prefix = Platform.isWindows ? r'\\?\' : '';
+      final prefix =
+          Platform.isWindows && !path.startsWith('\\\\') ? r'\\?\' : '';
       if (this is File) {
         await File(prefix + path).delete();
       } else if (this is Directory) {
@@ -60,7 +62,8 @@ extension FileSystemEntityExtension on FileSystemEntity {
 
   /// Safely checks whether a [FileSystemEntity] exists or not.
   FutureOr<bool> exists_() {
-    final prefix = Platform.isWindows ? r'\\?\' : '';
+    final prefix =
+        Platform.isWindows && !path.startsWith('\\\\') ? r'\\?\' : '';
     if (this is File) {
       return File(prefix + path).exists();
     } else if (this is Directory) {
@@ -72,7 +75,8 @@ extension FileSystemEntityExtension on FileSystemEntity {
 
   /// Safely checks whether a [FileSystemEntity] exists or not.
   bool existsSync_() {
-    final prefix = Platform.isWindows ? r'\\?\' : '';
+    final prefix =
+        Platform.isWindows && !path.startsWith('\\\\') ? r'\\?\' : '';
     if (this is File) {
       return File(prefix + path).existsSync();
     } else if (this is Directory) {

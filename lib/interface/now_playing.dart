@@ -106,13 +106,23 @@ class NowPlayingState extends State<NowPlayingScreen>
                                   builder: (context, constraints) => Stack(
                                     alignment: Alignment.center,
                                     children: [
-                                      ExtendedImage(
-                                        image: getAlbumArt(tracks[index]),
-                                        fit: BoxFit.cover,
-                                        height: min(constraints.maxHeight,
-                                            constraints.maxWidth),
-                                        width: min(constraints.maxHeight,
-                                            constraints.maxWidth),
+                                      AnimatedSwitcher(
+                                        duration:
+                                            const Duration(milliseconds: 300),
+                                        transitionBuilder: (child, animation) =>
+                                            FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        ),
+                                        child: ExtendedImage(
+                                          key: Key(index.toString()),
+                                          image: getAlbumArt(tracks[index]),
+                                          fit: BoxFit.cover,
+                                          height: min(constraints.maxHeight,
+                                              constraints.maxWidth),
+                                          width: min(constraints.maxHeight,
+                                              constraints.maxWidth),
+                                        ),
                                       ),
                                       Row(
                                         mainAxisSize: MainAxisSize.min,
@@ -275,6 +285,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                           track: tracks[index],
                                           index: 0,
                                           onPressed: () {
+                                            Playback.instance.play();
                                             Playback.instance.jump(index);
                                           },
                                           disableContextMenu: true,
