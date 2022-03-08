@@ -13,18 +13,23 @@ class VersionSetting extends StatefulWidget {
 }
 
 class VersionState extends State<VersionSetting> {
-  String? version = 'v' + kVersion;
+  String? latestVersion = 'v' + kVersion;
 
   @override
   void initState() {
     super.initState();
+    getLatestVersion();
+  }
+
+  /// Get the latest version from github releases
+  void getLatestVersion() {
     http
         .get(Uri.parse(
             'https://api.github.com/repos/harmonoid/harmonoid/releases'))
         .then((http.Response response) {
       setState(() {
         List<dynamic> json = convert.jsonDecode(response.body);
-        version = json.first['tag_name'];
+        latestVersion = json.first['tag_name'];
       });
     }).catchError((exception) {});
   }
@@ -46,14 +51,14 @@ class VersionState extends State<VersionSetting> {
               ),
               TableRow(children: [
                 Text(Language.instance.SETTING_APP_VERSION_LATEST),
-                Text(version ?? Language.instance.NO_INTERNET_TITLE),
+                Text(latestVersion ?? Language.instance.NO_INTERNET_TITLE),
               ]),
             ],
           ),
         ],
       ),
       margin: EdgeInsets.all(16.0),
-      actions: version == 'v' + kVersion
+      actions: latestVersion == 'v' + kVersion
           ? null
           : [
               MaterialButton(
