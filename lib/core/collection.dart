@@ -468,10 +468,11 @@ class Collection extends ChangeNotifier {
           await _arrange(track, () {});
         }
         await sort();
+        // Populate [albumArtists] regardless of auto-refresh being enabled or not.
+        await _arrangeArtists();
         // Check for newly added & deleted [Track]s in asynchronous suspension & update the [Collection] accordingly.
         if (update) {
           () async {
-            await _arrangeArtists();
             // Remove deleted tracks.
             final buffer = [...tracks];
             for (final track in buffer) {
