@@ -371,20 +371,25 @@ class ArtistScreenState extends State<ArtistScreen>
   void initState() {
     super.initState();
     if (isDesktop) {
-      if (widget.palette == null) {
-        PaletteGenerator.fromImageProvider(getAlbumArt(widget.artist))
-            .then((palette) {
-          setState(() {
-            color = palette.colors.first;
-            secondary = palette.colors.last;
-            detailsVisible = true;
-          });
-        });
-      } else {
-        setState(() {
-          detailsVisible = true;
-        });
-      }
+      Timer(
+        Duration(milliseconds: 300),
+        () {
+          if (widget.palette == null) {
+            PaletteGenerator.fromImageProvider(getAlbumArt(widget.artist))
+                .then((palette) {
+              setState(() {
+                color = palette.colors.first;
+                secondary = palette.colors.last;
+                detailsVisible = true;
+              });
+            });
+          } else {
+            setState(() {
+              detailsVisible = true;
+            });
+          }
+        },
+      );
     }
     if (isMobile) {
       Timer(Duration(milliseconds: 100), () {

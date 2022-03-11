@@ -577,20 +577,25 @@ class AlbumScreenState extends State<AlbumScreen>
     widget.album.tracks.sort(
         (first, second) => first.trackNumber.compareTo(second.trackNumber));
     if (isDesktop) {
-      if (widget.palette == null) {
-        PaletteGenerator.fromImageProvider(getAlbumArt(widget.album))
-            .then((palette) {
-          setState(() {
-            color = palette.colors.first;
-            secondary = palette.colors.last;
-            detailsVisible = true;
-          });
-        });
-      } else {
-        setState(() {
-          detailsVisible = true;
-        });
-      }
+      Timer(
+        Duration(milliseconds: 300),
+        () {
+          if (widget.palette == null) {
+            PaletteGenerator.fromImageProvider(getAlbumArt(widget.album))
+                .then((palette) {
+              setState(() {
+                color = palette.colors.first;
+                secondary = palette.colors.last;
+                detailsVisible = true;
+              });
+            });
+          } else {
+            setState(() {
+              detailsVisible = true;
+            });
+          }
+        },
+      );
     }
     if (isMobile) {
       Timer(Duration(milliseconds: 100), () {
