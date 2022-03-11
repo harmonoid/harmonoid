@@ -13,6 +13,7 @@ import 'package:mpris_service/mpris_service.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
 import 'package:harmonoid/main.dart';
@@ -29,7 +30,7 @@ import 'package:harmonoid/constants/language.dart';
 /// --------
 ///
 /// Class to handle & control the [Media] playback in [Harmonoid](https://github.com/harmonoid/harmonoid).
-/// Implements [ChangeNotifier] to trigger UI updates.
+/// Implements [ChangeNotifier] to trigger UI _updates.
 ///
 /// Automatically handles:
 /// * `ITaskbarList3` & `SystemMediaTransportControls` controls on Windows.
@@ -122,7 +123,7 @@ class Playback extends ChangeNotifier {
     if (Platform.isLinux) {
       mpris?.rate = value;
     }
-    saveAppState();
+    _saveAppState();
     notifyListeners();
   }
 
@@ -137,7 +138,7 @@ class Playback extends ChangeNotifier {
     if (Platform.isLinux) {
       mpris?.volume = value;
     }
-    saveAppState();
+    _saveAppState();
     notifyListeners();
   }
 
@@ -147,7 +148,7 @@ class Playback extends ChangeNotifier {
     }
     if (Platform.isAndroid || Platform.isIOS) {}
     playlistLoopMode = value;
-    saveAppState();
+    _saveAppState();
     notifyListeners();
   }
 
@@ -170,7 +171,7 @@ class Playback extends ChangeNotifier {
       assetsAudioPlayer.toggleShuffle();
     }
     isShuffling = !isShuffling;
-    saveAppState();
+    _saveAppState();
     notifyListeners();
   }
 
@@ -182,14 +183,6 @@ class Playback extends ChangeNotifier {
       assetsAudioPlayer.seek(position);
     }
   }
-
-  /// Convert [Track] list to [Media] list.
-  List<Media> _tracksToMediaList(List<Track> tracks) => tracks
-      .map((e) => Media(
-            Plugins.redirect(e.uri).toString(),
-            extras: e.toJson(),
-          ))
-      .toList();
 
   void open(List<Track> tracks, {int index = 0}) {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
@@ -227,25 +220,16 @@ class Playback extends ChangeNotifier {
     final state = AppState.instance;
     tracks = state.playlist;
     index = state.playlistIndex;
-    rate = state.rate;
     isShuffling = state.shuffle;
     playlistLoopMode = state.playlistLoopMode;
+    rate = player.rate = state.rate;
     volume = player.volume = state.volume;
-
-    /// for some reason, await for player.open() is not enough
-    /// so we have to use a timer here before jump() to index.
-    await Future.delayed(Duration(milliseconds: 100), () async {
-      await player.open(_tracksToMediaList(tracks), play: false);
-    });
-    await player.jump(index);
-
-    /// for some reason, player start to play after jump() to index.
-    await player.pause();
+    await player.open(_tracksToMediaList(tracks), play: false);
+    // A bug that results in [isPlaying] becoming `true` after attempting
+    // to change the volume. Calling [pause] after a delay to ensure that
+    // play button isn't in incorrect state at the startup of the application.
+    Future.delayed(const Duration(milliseconds: 500), pause);
   }
-
-  /// Save the current playback state.
-  void saveAppState() => AppState.instance
-      .save(tracks, index, rate, isShuffling, playlistLoopMode, volume);
 
   Playback() {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -253,29 +237,28 @@ class Playback extends ChangeNotifier {
         player.streams.index.listen((event) {
           index = event.clamp(0, tracks.length);
           if (AppState.instance.playlistIndex != index) {
-            saveAppState();
+            _saveAppState();
           }
           notifyListeners();
-          update();
+          _update();
         });
         player.streams.playlist.listen((event) {
           tracks.clear();
           tracks = event.map((media) => Track.fromJson(media.extras)).toList();
-          saveAppState();
+          _saveAppState();
           notifyListeners();
-          update();
+          _update();
         });
       });
-
       player.streams.isPlaying.listen((event) {
         isPlaying = event;
         notifyListeners();
-        update();
+        _update();
       });
       player.streams.isBuffering.listen((event) {
         isBuffering = event;
         notifyListeners();
-        update();
+        _update();
       });
       player.streams.isCompleted.listen((event) async {
         isCompleted = event;
@@ -285,7 +268,8 @@ class Playback extends ChangeNotifier {
         position = event;
         notifyListeners();
         if (Platform.isWindows &&
-            Configuration.instance.showTrackProgressOnTaskbar) {
+            Configuration.instance.showTrackProgressOnTaskbar &&
+            appWindow.isVisible) {
           WindowsTaskbar.setProgress(
             position.inMilliseconds,
             duration.inMilliseconds,
@@ -329,11 +313,39 @@ class Playback extends ChangeNotifier {
     }
   }
 
-  void update() {
+  void _update() {
     try {
       final track = tracks[index];
       try {
         if (Platform.isWindows) {
+          if (appWindow.isVisible)
+            WindowsTaskbar.setProgressMode(isBuffering
+                ? TaskbarProgressMode.indeterminate
+                : TaskbarProgressMode.normal);
+          if (appWindow.isVisible)
+            WindowsTaskbar.setThumbnailToolbar([
+              ThumbnailToolbarButton(
+                ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
+                Language.instance.PREVIOUS,
+                previous,
+                mode: index == 0 ? ThumbnailToolbarButtonMode.disabled : 0,
+              ),
+              ThumbnailToolbarButton(
+                ThumbnailToolbarAssetIcon(isPlaying
+                    ? 'assets/icons/pause.ico'
+                    : 'assets/icons/play.ico'),
+                isPlaying ? Language.instance.PAUSE : Language.instance.PLAY,
+                isPlaying ? pause : play,
+              ),
+              ThumbnailToolbarButton(
+                ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
+                Language.instance.NEXT,
+                next,
+                mode: index == tracks.length - 1
+                    ? ThumbnailToolbarButtonMode.disabled
+                    : 0,
+              ),
+            ]);
           smtc.set_status(isPlaying ? SMTCStatus.playing : SMTCStatus.paused);
           smtc.set_music_data(
             album_title: track.albumName,
@@ -348,32 +360,6 @@ class Playback extends ChangeNotifier {
           } else if (artwork is NetworkImage) {
             smtc.set_artwork(artwork.url);
           }
-          WindowsTaskbar.setProgressMode(isBuffering
-              ? TaskbarProgressMode.indeterminate
-              : TaskbarProgressMode.normal);
-          WindowsTaskbar.setThumbnailToolbar([
-            ThumbnailToolbarButton(
-              ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
-              Language.instance.PREVIOUS,
-              previous,
-              mode: index == 0 ? ThumbnailToolbarButtonMode.disabled : 0,
-            ),
-            ThumbnailToolbarButton(
-              ThumbnailToolbarAssetIcon(isPlaying
-                  ? 'assets/icons/pause.ico'
-                  : 'assets/icons/play.ico'),
-              isPlaying ? Language.instance.PAUSE : Language.instance.PLAY,
-              isPlaying ? pause : play,
-            ),
-            ThumbnailToolbarButton(
-              ThumbnailToolbarAssetIcon('assets/icons/next.ico'),
-              Language.instance.NEXT,
-              next,
-              mode: index == tracks.length - 1
-                  ? ThumbnailToolbarButtonMode.disabled
-                  : 0,
-            ),
-          ]);
         }
         if (Platform.isLinux) {
           Uri? artworkUri;
@@ -409,14 +395,26 @@ class Playback extends ChangeNotifier {
             discord.clearPresence();
           }
         }
-      } catch (_, __) {
-        print(_);
-        print(__);
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
       }
       Lyrics.instance.update(
           track.trackName + ' ' + track.trackArtistNames.take(2).join(', '));
     } catch (_) {}
   }
+
+  /// Save the current playback state.
+  void _saveAppState() => AppState.instance
+      .save(tracks, index, rate, isShuffling, playlistLoopMode, volume);
+
+  /// Convert [Track] list to [Media] list.
+  List<Media> _tracksToMediaList(List<Track> tracks) => tracks
+      .map((e) => Media(
+            Plugins.redirect(e.uri).toString(),
+            extras: e.toJson(),
+          ))
+      .toList();
 
   static final Player player = Player(video: false, osc: false, title: kTitle);
   static final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
