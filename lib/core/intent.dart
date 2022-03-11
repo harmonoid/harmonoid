@@ -177,7 +177,8 @@ class Intent {
   /// Starts playing the possibly opened file & saves its metadata before doing it.
   ///
   Future<void> playUri(Uri uri) async {
-    if (uri.isScheme('FILE') || await File(uri.toString()).exists_()) {
+    if (FileSystemEntity.typeSync(uri.toFilePath()) ==
+        FileSystemEntityType.file) {
       final metadata = <String, String>{
         'uri': uri.toString(),
       };
@@ -210,6 +211,58 @@ class Intent {
         }
         Playback.instance.open([track]);
         NowPlayingLauncher.instance.maximized = true;
+      }
+    } else if (FileSystemEntity.typeSync(uri.toFilePath()) ==
+        FileSystemEntityType.directory) {
+      bool playing = false;
+      for (final file in await Directory(uri.toFilePath()).list_()) {
+        if (kSupportedFileTypes.contains(file.extension)) {
+          final metadata = <String, String>{
+            'uri': file.uri.toString(),
+          };
+          if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+            try {
+              metadata.addAll(await tagger.parse(
+                file.uri.toString(),
+                coverDirectory: Collection.instance.albumArtDirectory,
+              ));
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
+            final track = Track.fromTagger(metadata);
+            if (!playing) {
+              Playback.instance.open([track]);
+              NowPlayingLauncher.instance.maximized = true;
+              playing = true;
+            } else {
+              Playback.instance.add([track]);
+            }
+          } else {
+            try {
+              final _metadata = await MetadataRetriever.fromFile(file);
+              metadata.addAll(_metadata.toJson().cast());
+              final track = Track.fromJson(metadata);
+              if (_metadata.albumArt != null) {
+                await File(path.join(
+                  Collection.instance.cacheDirectory.path,
+                  kAlbumArtsDirectoryName,
+                  track.albumArtFileName,
+                )).writeAsBytes(_metadata.albumArt!);
+              }
+              if (!playing) {
+                Playback.instance.open([track]);
+                NowPlayingLauncher.instance.maximized = true;
+                playing = true;
+              } else {
+                Playback.instance.add([track]);
+              }
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
+          }
+        }
       }
     } else {
       if (Plugins.isExternalMedia(uri)) {
