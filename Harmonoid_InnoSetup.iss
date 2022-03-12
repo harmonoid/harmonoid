@@ -28,6 +28,8 @@ OutputBaseFilename=harmonoid-windows-setup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+SetupIconFile=windows\runner\resources\app_icon.ico
+UninstallDisplayIcon={app}\{#MyAppExeName}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
