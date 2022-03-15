@@ -95,7 +95,7 @@ class Intent {
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
         try {
           metadata.addAll(await tagger.parse(
-            file!.uri.toString(),
+            Media(file!.uri.toString()),
             coverDirectory: Collection.instance.albumArtDirectory,
           ));
         } catch (exception, stacktrace) {
@@ -130,7 +130,7 @@ class Intent {
           if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
             try {
               metadata.addAll(await tagger.parse(
-                file.uri.toString(),
+                Media(file.uri.toString()),
                 coverDirectory: Collection.instance.albumArtDirectory,
               ));
             } catch (exception, stacktrace) {
@@ -186,7 +186,7 @@ class Intent {
         try {
           metadata.addAll(
             await tagger.parse(
-              uri.toString(),
+              Media(uri.toString()),
               coverDirectory: Collection.instance.albumArtDirectory,
             ),
           );
@@ -223,7 +223,7 @@ class Intent {
           if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
             try {
               metadata.addAll(await tagger.parse(
-                file.uri.toString(),
+                Media(file.uri.toString()),
                 coverDirectory: Collection.instance.albumArtDirectory,
               ));
             } catch (exception, stacktrace) {

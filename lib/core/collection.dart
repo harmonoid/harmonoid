@@ -12,6 +12,7 @@ import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:libmpv/libmpv.dart' hide Playlist, Media;
+import 'package:libmpv/libmpv.dart' as libmpv;
 import 'package:path/path.dart' as path;
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
@@ -93,7 +94,7 @@ class Collection extends ChangeNotifier {
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           try {
             metadata.addAll(await tagger.parse(
-              object.uri.toString(),
+              libmpv.Media(object.uri.toString()),
               coverDirectory: albumArtDirectory,
               timeout: Duration(seconds: 2),
             ));
@@ -228,7 +229,7 @@ class Collection extends ChangeNotifier {
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           try {
             metadata.addAll(await tagger.parse(
-              file.uri.toString(),
+              libmpv.Media(file.uri.toString()),
               coverDirectory: albumArtDirectory,
               timeout: Duration(seconds: 2),
             ));
@@ -500,7 +501,7 @@ class Collection extends ChangeNotifier {
                       Platform.isMacOS) {
                     try {
                       metadata.addAll(await tagger.parse(
-                        file.uri.toString(),
+                        libmpv.Media(file.uri.toString()),
                         coverDirectory: albumArtDirectory,
                         timeout: Duration(seconds: 2),
                       ));
@@ -636,7 +637,7 @@ class Collection extends ChangeNotifier {
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           try {
             metadata.addAll(await tagger.parse(
-              object.uri.toString(),
+              libmpv.Media(object.uri.toString()),
               coverDirectory: albumArtDirectory,
               timeout: Duration(seconds: 2),
             ));
@@ -727,14 +728,12 @@ class Collection extends ChangeNotifier {
   /// Removes a track from a playlist.
   ///
   Future<void> playlistRemoveTrack(Playlist playlist, Track track) async {
-    for (int index = 0; index < playlists.length; index++) {
-      if (playlists[index].id == playlist.id) {
-        for (int trackIndex = 0; trackIndex < playlist.tracks.length; index++) {
-          if (playlists[index].tracks[trackIndex].trackName ==
-                  track.trackName &&
-              playlists[index].tracks[trackIndex].albumName ==
-                  track.albumName) {
-            playlists[index].tracks.removeAt(trackIndex);
+    for (int i = 0; i < playlists.length; i++) {
+      if (playlists[i].id == playlist.id) {
+        for (int j = 0; j < playlist.tracks.length; j++) {
+          print(playlists[i].tracks[j] == track);
+          if (playlists[i].tracks[j] == track) {
+            playlists[i].tracks.removeAt(j);
             break;
           }
         }
@@ -954,6 +953,12 @@ extension CollectionFileSystemEntityExtension on FileSystemEntity {
 
 extension CollectionTrackExtension on Track {
   String get albumArtFileName =>
+      '$trackName$albumName$albumArtistName'
+          .replaceAll(RegExp(r'[\\/:*?""<>| ]'), '') +
+      '.PNG';
+
+  /// To support older generated cache. Only used in [getAlbumArt] now as a fallback check.
+  String get legacyAlbumArtFileName =>
       '$albumName$albumArtistName'.replaceAll(RegExp(r'[\\/:*?""<>| ]'), '') +
       '.PNG';
 }
