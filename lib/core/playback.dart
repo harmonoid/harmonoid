@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:flutter/widgets.dart' hide Intent;
 import 'package:libmpv/libmpv.dart';
 import 'package:mpris_service/mpris_service.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
@@ -354,20 +355,23 @@ class Playback extends ChangeNotifier {
             title: track.trackName,
             track_number: track.trackNumber,
           );
-          final artwork = getAlbumArt(track);
-          if (artwork is FileImage) {
-            smtc.set_artwork(artwork.file);
-          } else if (artwork is NetworkImage) {
-            smtc.set_artwork(artwork.url);
+          if (Plugins.isExternalMedia(track.uri)) {
+            final artwork = getAlbumArt(track, small: true);
+            smtc.set_artwork((artwork as ExtendedNetworkImageProvider).url);
+          } else {
+            final artwork = getAlbumArt(track);
+            smtc.set_artwork((artwork as ExtendedFileImageProvider).file);
           }
         }
         if (Platform.isLinux) {
           Uri? artworkUri;
-          final artwork = getAlbumArt(track);
-          if (artwork is FileImage) {
-            artworkUri = artwork.file.uri;
-          } else if (artwork is NetworkImage) {
-            artworkUri = Uri.parse(artwork.url);
+          if (Plugins.isExternalMedia(track.uri)) {
+            final artwork = getAlbumArt(track, small: true);
+            artworkUri =
+                Uri.parse((artwork as ExtendedNetworkImageProvider).url);
+          } else {
+            final artwork = getAlbumArt(track);
+            artworkUri = (artwork as ExtendedFileImageProvider).file.uri;
           }
           mpris?.isPlaying = isPlaying;
           mpris?.isCompleted = isCompleted;
