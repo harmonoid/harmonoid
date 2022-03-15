@@ -563,21 +563,26 @@ class PlaylistScreenState extends State<PlaylistScreen>
   void initState() {
     super.initState();
     if (isDesktop && widget.playlist.tracks.isNotEmpty) {
-      if (widget.palette == null) {
-        PaletteGenerator.fromImageProvider(
-                getAlbumArt(widget.playlist.tracks.last))
-            .then((palette) {
-          setState(() {
-            color = palette.colors.first;
-            secondary = palette.colors.last;
-            detailsVisible = true;
-          });
-        });
-      } else {
-        setState(() {
-          detailsVisible = true;
-        });
-      }
+      Timer(
+        Duration(milliseconds: 300),
+        () {
+          if (widget.palette == null) {
+            PaletteGenerator.fromImageProvider(
+                    getAlbumArt(widget.playlist.tracks.last))
+                .then((palette) {
+              setState(() {
+                color = palette.colors.first;
+                secondary = palette.colors.last;
+                detailsVisible = true;
+              });
+            });
+          } else {
+            setState(() {
+              detailsVisible = true;
+            });
+          }
+        },
+      );
     }
     if (isMobile) {
       Timer(Duration(milliseconds: 100), () {
@@ -643,7 +648,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                     DesktopAppBar(
                       height: MediaQuery.of(context).size.height / 3,
                       elevation: 4.0,
-                      color: color as Color? ?? Colors.transparent,
+                      color: color ?? Colors.transparent,
                     ),
                     Container(
                       alignment: Alignment.center,

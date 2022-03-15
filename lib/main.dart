@@ -28,6 +28,7 @@ import 'package:harmonoid/utils/argument_vector_handler.dart';
 import 'package:harmonoid/utils/override_window_destroy.dart';
 
 const String kTitle = 'Harmonoid';
+const String kVersion = 'v0.2.1';
 const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 
@@ -37,7 +38,6 @@ Future<void> main(List<String> args) async {
     if (Platform.isWindows) {
       await Configuration.initialize();
       await AppState.initialize();
-      // Now hot-reload works in libmpv.dart. Thanks to https://github.com/YehudaKremer.
       await MPV.initialize();
       if (kReleaseMode || kProfileMode) {
         await SMTC.initialize();

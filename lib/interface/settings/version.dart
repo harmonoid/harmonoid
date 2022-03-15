@@ -1,11 +1,10 @@
 import 'dart:convert' as convert;
-import 'dart:io';
-import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/link.dart';
+
+import 'package:harmonoid/main.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -15,8 +14,7 @@ class VersionSetting extends StatefulWidget {
 }
 
 class VersionState extends State<VersionSetting> {
-  Release latestRelease = Release();
-  Release installedRelease = Release();
+  Release latestRelease = Release(tagName: kVersion);
   bool isLoadingVersion = true;
   bool fetchVersionFailed = false;
 
@@ -40,22 +38,8 @@ class VersionState extends State<VersionSetting> {
         .toList()
         .cast<Release>();
 
-    /// We'll try to get the installed version by
-    /// the [lastModified] date of the executable file.
-    var exeDate =
-        (await File(Platform.resolvedExecutable).lastModified()).toUtc();
-
-    /// Find [Release] that the executable [lastModified]
-    /// is between the release [createdAt] and [publishedAt] dates.
-    var currentRelease = releases.firstWhereOrNull((release) =>
-        (exeDate.isAtSameMomentAs(release.createdAt!) ||
-            exeDate.isAfter(release.createdAt!)) &&
-        (exeDate.isAtSameMomentAs(release.publishedAt!) ||
-            exeDate.isBefore(release.publishedAt!)));
-
     setState(() {
       if (releases.length > 0) latestRelease = releases.first;
-      if (currentRelease != null) installedRelease = currentRelease;
     });
   }
 
@@ -125,17 +109,20 @@ class VersionState extends State<VersionSetting> {
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               children: [
                 getVersionTableRow(
-                    Language.instance.SETTING_APP_VERSION_INSTALLED,
-                    installedRelease),
-                getVersionTableRow(Language.instance.SETTING_APP_VERSION_LATEST,
-                    latestRelease),
+                  Language.instance.SETTING_APP_VERSION_INSTALLED,
+                  Release(tagName: kVersion),
+                ),
+                getVersionTableRow(
+                  Language.instance.SETTING_APP_VERSION_LATEST,
+                  latestRelease,
+                ),
               ],
             ),
           ),
         ],
       ),
       margin: EdgeInsets.all(16.0),
-      actions: installedRelease.tagName == latestRelease.tagName
+      actions: kVersion == latestRelease.tagName
           ? null
           : [
               MaterialButton(
@@ -159,15 +146,12 @@ class Release {
   DateTime? createdAt;
   String? htmlUrl;
 
-  Release(
-      {this.tagName = kDebugMode
-          ? 'debug mode'
-          : kProfileMode
-              ? 'profile mode'
-              : 'unknown',
-      this.publishedAt,
-      this.createdAt,
-      this.htmlUrl});
+  Release({
+    required this.tagName,
+    this.publishedAt,
+    this.createdAt,
+    this.htmlUrl,
+  });
 
   Release.fromJson(Map<String, dynamic> json)
       : tagName = json['tag_name'],
