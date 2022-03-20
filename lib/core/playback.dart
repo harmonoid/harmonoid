@@ -40,7 +40,7 @@ import 'package:harmonoid/constants/language.dart';
 /// * Lyrics.
 ///
 class Playback extends ChangeNotifier {
-  /// Late initialized [Lyrics] object instance.
+  /// [Playback] object instance.
   static late Playback instance = Playback();
 
   int index = DefaultPlaybackValues.index;
@@ -122,7 +122,7 @@ class Playback extends ChangeNotifier {
     }
     rate = value;
     if (Platform.isLinux) {
-      mpris?.rate = value;
+      _Harmonoid.instance.rate = value;
     }
     _saveAppState();
     notifyListeners();
@@ -137,7 +137,7 @@ class Playback extends ChangeNotifier {
     }
     volume = value;
     if (Platform.isLinux) {
-      mpris?.volume = value;
+      _Harmonoid.instance.volume = value;
     }
     _saveAppState();
     notifyListeners();
@@ -277,7 +277,7 @@ class Playback extends ChangeNotifier {
           );
         }
         if (Platform.isLinux) {
-          mpris?.position = event;
+          _Harmonoid.instance.position = event;
         }
       });
       player.streams.duration.listen((event) {
@@ -307,10 +307,11 @@ class Playback extends ChangeNotifier {
             }
           });
         }
-        if (Platform.isLinux) {
-          _Harmonoid();
-        }
-      } catch (_) {}
+        if (Platform.isLinux) {}
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
     }
   }
 
@@ -373,10 +374,10 @@ class Playback extends ChangeNotifier {
             final artwork = getAlbumArt(track);
             artworkUri = (artwork as ExtendedFileImageProvider).file.uri;
           }
-          mpris?.isPlaying = isPlaying;
-          mpris?.isCompleted = isCompleted;
-          mpris?.index = index;
-          mpris?.playlist = tracks.map((e) {
+          _Harmonoid.instance.isPlaying = isPlaying;
+          _Harmonoid.instance.isCompleted = isCompleted;
+          _Harmonoid.instance.index = index;
+          _Harmonoid.instance.playlist = tracks.map((e) {
             final json = e.toJson();
             json['artworkUri'] = artworkUri.toString();
             return MPRISMedia.fromJson(json);
@@ -422,7 +423,6 @@ class Playback extends ChangeNotifier {
 
   static final Player player = Player(video: false, osc: false, title: kTitle);
   static final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
-  static MPRISService? mpris;
   static final discord = DiscordRPC(applicationId: '881480706545573918');
 
   @override
@@ -442,7 +442,7 @@ enum PlaylistLoopMode {
 }
 
 /// Default Playback class values.
-class DefaultPlaybackValues {
+abstract class DefaultPlaybackValues {
   static int index = 0;
   static List<Track> tracks = [];
   static double volume = 50.0;
@@ -453,6 +453,9 @@ class DefaultPlaybackValues {
 
 /// Implements `org.mpris.MediaPlayer2` & `org.mpris.MediaPlayer2.Player`.
 class _Harmonoid extends MPRISService {
+  /// [_Harmonoid] object instance.
+  static final instance = _Harmonoid();
+
   _Harmonoid()
       : super(
           'harmonoid',
@@ -511,6 +514,11 @@ class _Harmonoid extends MPRISService {
   @override
   void doPlay() {
     Playback.instance.play();
+  }
+
+  @override
+  void doPlayPause() {
+    Playback.instance.playOrPause();
   }
 
   @override
