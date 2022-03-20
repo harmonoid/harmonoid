@@ -1,8 +1,9 @@
-# [Harmonoid](https://github.com/harmonoid/harmonoid)
+<img align="left" src="https://raw.githubusercontent.com/harmonoid/harmonoid/master/windows/runner/resources/app_icon.ico" width="64" height="64"></img>
+<h1>Harmonoid</h1>
 
 **🎵 Elegant music app to play & manage music library. Lyrics & playlists. YouTube Music support.**
 
-_Still a work-in-progress (Windows & Linux is available)._
+_A work-in-progress (Windows & Linux is available for [download](#download)). Report bugs & make feature-requests._
 
 - [Download](#download)
 - [Discord](https://discord.gg/2Rc3edFWd8)
@@ -24,8 +25,6 @@ _Still a work-in-progress (Windows & Linux is available)._
 ![](https://user-images.githubusercontent.com/28951144/151239401-be199319-0a22-4139-8bef-fe1edac2d576.gif)
 
 ## Download
-
-See [limitations](#limitations) aswell.
 
 ### Windows
 
@@ -429,6 +428,8 @@ Source code and official releases/binaries are distributed under our [End-User L
 - Harmonoid is (for the most part) written in Dart programming language using [Flutter SDK](https://github.com/flutter/flutter). Refrences to all the other external "plugins" & "packages" used at the time of building application can be found [here](./pubspec.yaml).
 
 - Harmonoid uses a modified version of [libmpv](https://github.com/mpv-player/mpv/tree/master/libmpv) for media playback capabilities on desktop. The compilation setup & other information can be found [here](https://github.com/alexmercerind/harmonoid-custom-codec). The application bundles a minimal & LGPL compilant version of [mpv](https://github.com/mpv-player/mpv) shared library (`mpv-2.dll`). Users are free to update/change to their own preferred libmpv by replacing the `mpv-2.dll` file present in Harmonoid's application directory.
+
+- Harmonoid also depends upon some of the packages available on pub.dev. A complete list of those can be found [here](https://github.com/harmonoid/harmonoid/blob/47d879cdf7151069bc40722235e79e7144f92f4c/pubspec.yaml#L32-L81).
 
 ## Bonus
 
