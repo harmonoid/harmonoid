@@ -96,7 +96,7 @@ dependency_overrides:
 dev_dependencies:
   msix:
     git:
-      url: git://github.com/alexmercerind/msix.git
+      url: https://github.com/alexmercerind/msix.git
       ref: a2c15a8662dd346b2738ea89538179f532d4f437
 
 flutter:
