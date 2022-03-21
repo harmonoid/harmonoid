@@ -31,4 +31,15 @@ class Playlist extends Media {
     required this.name,
     required this.id,
   });
+
+  @override
+  bool operator ==(Object media) {
+    if (media is Playlist) {
+      return media.id == id && media.name == media.name;
+    }
+    throw FormatException();
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode;
 }

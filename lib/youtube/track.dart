@@ -1,17 +1,17 @@
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:youtube_music/youtube_music.dart';
+import 'package:extended_image/extended_image.dart';
 
-import 'package:harmonoid/models/media.dart';
+import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/utils/rendering.dart';
-
 import 'package:harmonoid/youtube/state/youtube.dart';
 
-class YoutubeTile extends StatefulWidget {
+class TrackTile extends StatefulWidget {
   final double height;
   final double width;
   final Track track;
 
-  const YoutubeTile({
+  const TrackTile({
     Key? key,
     required this.track,
     required this.height,
@@ -19,10 +19,10 @@ class YoutubeTile extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  YoutubeTileState createState() => YoutubeTileState();
+  TrackTileState createState() => TrackTileState();
 }
 
-class YoutubeTileState extends State<YoutubeTile> {
+class TrackTileState extends State<TrackTile> {
   double scale = 0.0;
 
   Widget build(BuildContext context) {
@@ -49,7 +49,8 @@ class YoutubeTileState extends State<YoutubeTile> {
                     child: Hero(
                       tag: widget.track.hashCode,
                       child: ExtendedImage(
-                        image: getAlbumArt(widget.track, small: true),
+                        image: NetworkImage(
+                            widget.track.thumbnails.values.skip(1).first),
                         fit: BoxFit.cover,
                         height: widget.width,
                         width: widget.width,
@@ -101,7 +102,8 @@ class YoutubeTileState extends State<YoutubeTile> {
                             onTap: () {
                               trackPopupMenuHandle(
                                 context,
-                                widget.track,
+                                media.Track.fromYouTubeMusic(
+                                    widget.track.toJson()),
                                 2,
                               );
                             },
@@ -145,7 +147,7 @@ class YoutubeTileState extends State<YoutubeTile> {
                       Padding(
                         padding: EdgeInsets.only(top: 2),
                         child: Text(
-                          '${widget.track.trackArtistNames.take(2).join(', ')}',
+                          '${widget.track.trackArtistNames?.take(2).join(', ')}',
                           style:
                               Theme.of(context).textTheme.headline3?.copyWith(
                                     fontSize: 12.0,
