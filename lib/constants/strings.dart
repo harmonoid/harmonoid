@@ -95,6 +95,7 @@ class Strings {
   late String PLAYLISTS_TEXT_FIELD_LABEL;
   late String PLAYLIST_ADD_DIALOG_BODY;
   late String PLAYLIST_ADD_DIALOG_TITLE;
+  late String PLAYLIST_SINGLE;
   late String PLAYLIST_TRACKS_SUBHEADER;
   late String PLAY_NOW;
   late String PREVIOUS;
@@ -164,6 +165,7 @@ class Strings {
   late String TRACK_SINGLE;
   late String TRANSFERS;
   late String UNMUTE;
+  late String VIDEO_SINGLE;
   late String WARNING;
   late String YEAR;
   late String YES;

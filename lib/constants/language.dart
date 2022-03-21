@@ -292,6 +292,7 @@ class Language extends Strings with ChangeNotifier {
     this.PLAYLISTS_TEXT_FIELD_LABEL = asset['PLAYLISTS_TEXT_FIELD_LABEL']!;
     this.PLAYLIST_ADD_DIALOG_BODY = asset['PLAYLIST_ADD_DIALOG_BODY']!;
     this.PLAYLIST_ADD_DIALOG_TITLE = asset['PLAYLIST_ADD_DIALOG_TITLE']!;
+    this.PLAYLIST_SINGLE = asset['PLAYLIST_SINGLE']!;
     this.PLAYLIST_TRACKS_SUBHEADER = asset['PLAYLIST_TRACKS_SUBHEADER']!;
     this.PLAY_NOW = asset['PLAY_NOW']!;
     this.PREVIOUS = asset['PREVIOUS']!;
@@ -361,6 +362,7 @@ class Language extends Strings with ChangeNotifier {
     this.TRACK_SINGLE = asset['TRACK_SINGLE']!;
     this.TRANSFERS = asset['TRANSFERS']!;
     this.UNMUTE = asset['UNMUTE']!;
+    this.VIDEO_SINGLE = asset['VIDEO_SINGLE']!;
     this.WARNING = asset['WARNING']!;
     this.YEAR = asset['YEAR']!;
     this.YES = asset['YES']!;
