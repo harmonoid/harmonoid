@@ -360,7 +360,7 @@ class PlaylistTileState extends State<PlaylistTile> {
       },
       onPointerUp: (e) async {
         if (!reactToSecondaryPress) return;
-        if (widget.playlist.id < 0) return;
+        if (widget.playlist.id <= 0) return;
         final result = await showMenu(
           elevation: 4.0,
           context: context,
@@ -519,12 +519,6 @@ class PlaylistTileState extends State<PlaylistTile> {
                       width: 64.0,
                       height: 64.0,
                       alignment: Alignment.center,
-                      // child: IconButton(
-                      //   onPressed: _showBottomSheet,
-                      //   icon: Icon(Icons.more_vert),
-                      //   iconSize: 24.0,
-                      //   splashRadius: 20.0,
-                      // ),
                     ),
                   ],
                 ),
