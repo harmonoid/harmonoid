@@ -62,15 +62,6 @@ const kContributors = [
     'Gaetan Jonathan BAKARY',
     'Linux related bug-fixes. French translation.',
   ],
-];
-
-const kArtists = [
-  [
-    'https://www.instagram.com/shinybluebelll',
-    'https://drive.google.com/uc?export=view&id=1eI-dHiALVQM123_HnQIcYe9HtbX0uS_W',
-    'Bluebell',
-    'Artwork & iconography.'
-  ],
   [
     'https://github.com/arafatamim',
     'https://avatars.githubusercontent.com/u/31634638?s=80&v=4',
@@ -82,6 +73,15 @@ const kArtists = [
     'https://avatars.githubusercontent.com/u/75587960?s=80&v=4',
     'Leon',
     'User interface fixes, app persistence improvements. Dutch translation.'
+  ],
+];
+
+const kArtists = [
+  [
+    'https://www.instagram.com/shinybluebelll',
+    'https://drive.google.com/uc?export=view&id=1eI-dHiALVQM123_HnQIcYe9HtbX0uS_W',
+    'Bluebell',
+    'Artwork & iconography.'
   ],
 ];
 
