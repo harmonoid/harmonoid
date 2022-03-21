@@ -12,14 +12,13 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:libmpv/libmpv.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:youtube_music/youtube_music.dart' as youtube;
 
 import 'package:harmonoid/models/media.dart' hide Media;
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/state/now_playing_launcher.dart';
 import 'package:harmonoid/utils/file_system.dart';
-
-import 'package:harmonoid/youtube/youtube_api.dart';
 
 /// Intent
 /// ------
@@ -266,7 +265,13 @@ class Intent {
       }
     } else {
       if (Plugins.isExternalMedia(uri)) {
-        Playback.instance.open([(await YoutubeApi.getTrack(uri.toString()))!]);
+        Playback.instance.open(
+          [
+            Track.fromYouTubeMusic(
+              (await youtube.YouTubeMusic.player(uri.toString()))!.toJson(),
+            ),
+          ],
+        );
       } else {
         Playback.instance.open([
           Track(

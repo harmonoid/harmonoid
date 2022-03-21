@@ -717,7 +717,7 @@ class Collection extends ChangeNotifier {
   Future<void> playlistAddTrack(Playlist playlist, Track track) async {
     for (int index = 0; index < playlists.length; index++) {
       if (playlists[index].id == playlist.id) {
-        playlists[index].tracks.add(track);
+        playlists[index].tracks.insert(0, track);
         break;
       }
     }
@@ -771,12 +771,16 @@ class Collection extends ChangeNotifier {
     playlists = <Playlist>[];
     File playlistFile =
         File(path.join(cacheDirectory.path, kPlaylistsCacheFileName));
-    // Keep playlist named "Liked Songs" persistently.
+    // Keep playlist named "Liked Songs" & "History" persistently.
     if (!await playlistFile.exists_()) {
       playlists = [
         Playlist(
-          id: -1,
+          id: kLikedSongsPlaylistId,
           name: 'Liked Songs',
+        ),
+        Playlist(
+          id: kHistoryPlaylistId,
+          name: 'History',
         ),
       ];
       playlistsSaveToCache();
@@ -944,6 +948,9 @@ const String kPlaylistsCacheFileName = 'Playlists.JSON';
 
 /// Name of the file to use as fallback when no album art is discovered.
 const String kUnknownAlbumArtFileName = 'UnknownAlbum.PNG';
+
+const int kLikedSongsPlaylistId = -1;
+const int kHistoryPlaylistId = 0;
 
 /// Returns extension of a particular file system entity like [File] or [Directory].
 ///

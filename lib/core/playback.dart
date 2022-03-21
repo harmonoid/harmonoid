@@ -19,6 +19,7 @@ import 'package:system_media_transport_controls/system_media_transport_controls.
 
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/core/intent.dart';
+import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/app_state.dart';
 import 'package:harmonoid/models/media.dart' hide Media;
@@ -319,6 +320,19 @@ class Playback extends ChangeNotifier {
     try {
       final track = tracks[index];
       try {
+        // Add to History in asynchronous suspension.
+        () async {
+          final history = Collection.instance.playlists
+              .where((element) => element.id == kHistoryPlaylistId)
+              .first;
+          if (history.tracks.isEmpty) {
+            Collection.instance.playlistAddTrack(history, track);
+            return;
+          }
+          if (history.tracks.last != track) {
+            Collection.instance.playlistAddTrack(history, track);
+          }
+        }();
         if (Platform.isWindows) {
           if (appWindow.isVisible)
             WindowsTaskbar.setProgressMode(isBuffering
