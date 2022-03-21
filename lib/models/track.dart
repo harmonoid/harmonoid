@@ -37,7 +37,7 @@ class Track extends Media {
     };
   }
 
-  /// Compatible with [MetadataRetriever] from `flutter_media_metadata`.
+  /// Compatible with [MetadataRetriever] from `package:flutter_media_metadata`.
   factory Track.fromJson(dynamic json) => Track(
         uri: Uri.parse(json['uri']),
         trackName: [null, ''].contains(json['trackName'])
@@ -67,7 +67,7 @@ class Track extends Media {
         bitrate: json['bitrate'],
       );
 
-  /// Compatible with [Tagger] from `libmpv.dart`.
+  /// Compatible with [Tagger] from `package:libmpv`.
   factory Track.fromTagger(dynamic json) => Track(
         uri: Uri.parse(json['uri']),
         trackName: [null, ''].contains(json['title'])
@@ -96,6 +96,20 @@ class Track extends Media {
         duration: Duration(
             milliseconds: int.tryParse(json['duration'] ?? '0')! ~/ 1000),
         bitrate: int.tryParse(json['bitrate'] ?? '0')! ~/ 1000,
+      );
+
+  /// Used for [Playback.open]. Compatible with `package:youtube_music`.
+  factory Track.fromYouTubeMusic(dynamic json) => Track(
+        uri: Uri.parse(json['uri']),
+        trackName: json['trackName'],
+        albumName: json['albumName'],
+        trackNumber: json['trackNumber'] ?? 1,
+        albumArtistName: json['albumArtistName'],
+        trackArtistNames: json['trackArtistNames'],
+        year: json['year'],
+        timeAdded: DateTime.now(),
+        duration: Duration(milliseconds: json['duration'] ?? 0),
+        bitrate: null,
       );
 
   Track({
