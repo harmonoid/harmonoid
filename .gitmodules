@@ -10,3 +10,6 @@
 [submodule "external/mpris_service.dart"]
 	path = external/mpris_service.dart
 	url = https://github.com/harmonoid/mpris_service.dart.git
+[submodule "external/youtube_music.dart"]
+	path = external/youtube_music.dart
+	url = https://github.com/harmonoid/youtube_music.dart
