@@ -656,3 +656,13 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
   }
   return result;
 }
+
+extension DurationExtension on Duration {
+  String get label {
+    int minutes = inSeconds ~/ 60;
+    String seconds = inSeconds - (minutes * 60) > 9
+        ? '${inSeconds - (minutes * 60)}'
+        : '0${inSeconds - (minutes * 60)}';
+    return '$minutes:$seconds';
+  }
+}

@@ -360,7 +360,7 @@ class PlaylistTileState extends State<PlaylistTile> {
       },
       onPointerUp: (e) async {
         if (!reactToSecondaryPress) return;
-        if (widget.playlist.id <= 0) return;
+        if (widget.playlist.id < 0) return;
         final result = await showMenu(
           elevation: 4.0,
           context: context,
@@ -1407,15 +1407,5 @@ class PlaylistScreenState extends State<PlaylistScreen>
               ],
             ),
           );
-  }
-}
-
-extension on Duration {
-  String get label {
-    int minutes = inSeconds ~/ 60;
-    String seconds = inSeconds - (minutes * 60) > 9
-        ? '${inSeconds - (minutes * 60)}'
-        : '0${inSeconds - (minutes * 60)}';
-    return '$minutes:$seconds';
   }
 }
