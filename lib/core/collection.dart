@@ -717,7 +717,13 @@ class Collection extends ChangeNotifier {
   Future<void> playlistAddTrack(Playlist playlist, Track track) async {
     for (int index = 0; index < playlists.length; index++) {
       if (playlists[index].id == playlist.id) {
-        playlists[index].tracks.insert(0, track);
+        if (playlist.id == kHistoryPlaylist) {
+          final tracks = [track] + [...playlists[index].tracks];
+          playlists[index].tracks.clear();
+          playlists[index].tracks.addAll(tracks.take(100));
+        } else {
+          playlists[index].tracks.insert(0, track);
+        }
         break;
       }
     }
@@ -775,12 +781,12 @@ class Collection extends ChangeNotifier {
     if (!await playlistFile.exists_()) {
       playlists = [
         Playlist(
-          id: kLikedSongsPlaylistId,
-          name: 'Liked Songs',
+          id: kHistoryPlaylist,
+          name: 'History',
         ),
         Playlist(
-          id: kHistoryPlaylistId,
-          name: 'History',
+          id: kLikedSongsPlaylist,
+          name: 'Liked Songs',
         ),
       ];
       playlistsSaveToCache();
@@ -789,6 +795,19 @@ class Collection extends ChangeNotifier {
           convert.jsonDecode(await playlistFile.readAsString())['playlists'];
       for (final element in json) {
         playlists.add(Playlist.fromJson(element));
+      }
+      // Handle "History" playlist creation when upgrading from older versions.
+      if (!playlists.contains(Playlist(
+        id: kHistoryPlaylist,
+        name: 'History',
+      ))) {
+        playlists.insert(
+            0,
+            Playlist(
+              id: kHistoryPlaylist,
+              name: 'History',
+            ));
+        await playlistsSaveToCache();
       }
     }
     notifyListeners();
@@ -949,8 +968,8 @@ const String kPlaylistsCacheFileName = 'Playlists.JSON';
 /// Name of the file to use as fallback when no album art is discovered.
 const String kUnknownAlbumArtFileName = 'UnknownAlbum.PNG';
 
-const int kLikedSongsPlaylistId = -1;
-const int kHistoryPlaylistId = 0;
+const int kHistoryPlaylist = -2;
+const int kLikedSongsPlaylist = -1;
 
 /// Returns extension of a particular file system entity like [File] or [Directory].
 ///
