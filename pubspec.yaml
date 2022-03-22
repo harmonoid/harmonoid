@@ -18,6 +18,8 @@ dependencies:
     path: external/smtc-win32/bindings/system_media_transport_controls.dart
   mpris_service:
     path: external/mpris_service.dart
+  youtube_music:
+    path: external/youtube_music.dart
   harmonoid_visual_assets:
     path: external/harmonoid_visual_assets
   override_window_destroy:
@@ -28,10 +30,6 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
       ref: harmonoid
-  youtube_music:
-    git:
-      url: https://github.com/harmonoid/youtube_music.dart.git
-      ref: c906b3525aa66b3dbcf1870afabfee2e8db21ab8
 
   # Third-party plugins.
 
