@@ -1,19 +1,11 @@
 <img align="left" src="https://raw.githubusercontent.com/harmonoid/harmonoid/master/windows/runner/resources/app_icon.ico" width="64" height="64"></img>
-<h1>Harmonoid</h1>
+<h1 align="left">Harmonoid</h1>
 
-**🎵 Elegant music app to play & manage music library. Lyrics & playlists. YouTube Music support.**
+**🎵 Elegant music app to play & manage music library. Lyrics & playlists. YouTube Music support.** 
 
-_A work-in-progress (Windows & Linux is available for [download](#download)). Report bugs & make feature-requests._
+[Download](#download) • [Discord](https://discord.gg/2Rc3edFWd8)
 
-- [Download](#download)
-- [Discord](https://discord.gg/2Rc3edFWd8)
-- [Features](#features)
-- [Limitations](#limitations)
-- [Guide](#guide)
-- [Acknowledgements](#acknowledgements)
-- [Compiling](#compiling)
-- [License](#license)
-- [Third-Party Credits](#third-party-credits)
+[work-in-progress]
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304862-f4d336c6-4559-477b-b82e-a876f78f5eec.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304870-6d1d18db-7120-43bd-87fa-9fa369244bfd.webp?raw=true)
@@ -24,9 +16,19 @@ _A work-in-progress (Windows & Linux is available for [download](#download)). Re
 
 ![](https://user-images.githubusercontent.com/28951144/151239401-be199319-0a22-4139-8bef-fe1edac2d576.gif)
 
+## Links
+
+- [Features](#features)
+- [Limitations](#limitations)
+- [Guide](#guide)
+- [Acknowledgements](#acknowledgements)
+- [Compiling](#compiling)
+- [License](#license)
+- [Third-Party Credits](#third-party-credits)
+
 ## Download
 
-### Windows
+### <img src='https://user-images.githubusercontent.com/28951144/159582997-2ccd85e1-5f1c-494f-938b-d9a2bd6ed0ae.png' height='24'></img>&nbsp; Windows
 
 Supports Windows 7 or later.
 
@@ -36,13 +38,13 @@ Supports Windows 7 or later.
 
 On Windows, [setup](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-windows-setup.exe) is recommended as it automatically links with files & file explorer context menus.
 
-### Linux
+### <img src='https://user-images.githubusercontent.com/28951144/159582965-706de4a3-6f9f-4da6-a944-36496b78d0df.png' height='24'></img>&nbsp; Linux
 
 Any modern Linux distribution.
 
 - [.deb](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.deb)
-- [.rpm](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.rpm)
 - [.tar.gz](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.tar.gz)
+- [.rpm](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.rpm) [untested]
 
 On Debian or Ubuntu based distros, you need to install `mpv` & `libmpv-dev` to be able to install & run the app.
 
@@ -53,9 +55,9 @@ sudo dpkg -i harmonoid-linux-x86_64.deb
 
 Similar instructions can be followed on your favorite distro.
 
-### Android
+### <img src='https://user-images.githubusercontent.com/28951144/159583302-322a01bd-c3bd-4b74-9834-99764f678485.png' height='24'></img>&nbsp; Android
 
-- Coming soon (again).
+- Coming soon.
 
 ## Features
 
