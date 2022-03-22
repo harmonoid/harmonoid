@@ -99,14 +99,28 @@ class Track extends Media {
       );
 
   /// Used for [Playback.open]. Compatible with `package:youtube_music`.
-  factory Track.fromYouTubeMusic(dynamic json) => Track(
+  factory Track.fromYouTubeMusicTrack(dynamic json) => Track(
         uri: Uri.parse(json['uri']),
         trackName: json['trackName'],
-        albumName: json['albumName'],
+        albumName: json['albumName'] ?? kUnknownAlbum,
         trackNumber: json['trackNumber'] ?? 1,
-        albumArtistName: json['albumArtistName'],
-        trackArtistNames: json['trackArtistNames'],
-        year: json['year'],
+        albumArtistName: json['albumArtistName'] ?? kUnknownArtist,
+        trackArtistNames: json['trackArtistNames'] ?? [kUnknownArtist],
+        year: json['year'] ?? '',
+        timeAdded: DateTime.now(),
+        duration: Duration(milliseconds: json['duration'] ?? 0),
+        bitrate: null,
+      );
+
+  /// Used for [Playback.open]. Compatible with `package:youtube_music`.
+  factory Track.fromYouTubeMusicVideo(dynamic json) => Track(
+        uri: Uri.parse(json['uri']),
+        trackName: json['videoName'],
+        albumName: json['albumName'] ?? kUnknownAlbum,
+        trackNumber: 1,
+        albumArtistName: json['channelName'] ?? kUnknownArtist,
+        trackArtistNames: [json['channelName'] ?? kUnknownArtist],
+        year: json['year'] ?? '',
         timeAdded: DateTime.now(),
         duration: Duration(milliseconds: json['duration'] ?? 0),
         bitrate: null,

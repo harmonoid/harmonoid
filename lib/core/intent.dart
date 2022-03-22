@@ -267,7 +267,7 @@ class Intent {
       if (Plugins.isExternalMedia(uri)) {
         Playback.instance.open(
           [
-            Track.fromYouTubeMusic(
+            Track.fromYouTubeMusicTrack(
               (await youtube.YouTubeMusic.player(uri.toString()))!.toJson(),
             ),
           ],
