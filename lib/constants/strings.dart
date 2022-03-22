@@ -84,6 +84,7 @@ class Strings {
   late String NO_PLAYLISTS_FOUND;
   late String N_TRACKS;
   late String OK;
+  late String OPEN_IN_BROWSER;
   late String OPTIONS;
   late String ORDER;
   late String PAUSE;

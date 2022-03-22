@@ -281,6 +281,7 @@ class Language extends Strings with ChangeNotifier {
     this.NO_PLAYLISTS_FOUND = asset['NO_PLAYLISTS_FOUND']!;
     this.N_TRACKS = asset['N_TRACKS']!;
     this.OK = asset['OK']!;
+    this.OPEN_IN_BROWSER = asset['OPEN_IN_BROWSER']!;
     this.OPTIONS = asset['OPTIONS']!;
     this.ORDER = asset['ORDER']!;
     this.PAUSE = asset['PAUSE']!;
