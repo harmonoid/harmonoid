@@ -172,6 +172,7 @@ class YoutubeTabState extends State<YoutubeTab> {
                 width: width,
                 track: youtube.recommendations![i],
               ),
+              showIncompleteRow: false,
             ),
           ],
         );

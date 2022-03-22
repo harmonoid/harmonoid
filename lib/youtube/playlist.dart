@@ -25,7 +25,11 @@ class PlaylistTile extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          // TODO: Handle [Playlist].
+          YouTubeMusic.browse(playlist.id).then((value) {
+            value.forEach((element) {
+              print(element.trackName);
+            });
+          });
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

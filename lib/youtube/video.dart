@@ -5,12 +5,18 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
+import 'dart:io';
+
 import 'package:extended_image/extended_image.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_music/youtube_music.dart';
 
+import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/youtube/state/youtube.dart';
 
 class VideoTile extends StatelessWidget {
@@ -80,6 +86,58 @@ class VideoTile extends StatelessWidget {
                   Container(
                     width: 64.0,
                     height: 64.0,
+                    child: ContextMenuButton<int>(
+                      onSelected: (value) {
+                        switch (value) {
+                          case 0:
+                            {
+                              launch(video.uri.toString());
+                              break;
+                            }
+                          case 1:
+                            {
+                              showAddToPlaylistDialog(
+                                context,
+                                media.Track.fromYouTubeMusicVideo(
+                                    video.toJson()),
+                              );
+                              break;
+                            }
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          padding: EdgeInsets.zero,
+                          value: 0,
+                          child: ListTile(
+                            leading: Icon(Platform.isWindows
+                                ? FluentIcons.earth_20_regular
+                                : Icons.delete),
+                            title: Text(
+                              Language.instance.OPEN_IN_BROWSER,
+                              style: isDesktop
+                                  ? Theme.of(context).textTheme.headline4
+                                  : null,
+                            ),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          padding: EdgeInsets.zero,
+                          value: 1,
+                          child: ListTile(
+                            leading: Icon(Platform.isWindows
+                                ? FluentIcons.list_16_regular
+                                : Icons.queue_music),
+                            title: Text(
+                              Language.instance.ADD_TO_PLAYLIST,
+                              style: isDesktop
+                                  ? Theme.of(context).textTheme.headline4
+                                  : null,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
