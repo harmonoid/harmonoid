@@ -264,7 +264,7 @@ class PlaylistThumbnail extends StatelessWidget {
         child: Row(
           children: [
             ExtendedImage(
-              image: getAlbumArt(tracks[tracks.length - 1], small: true),
+              image: getAlbumArt(tracks[0], small: true),
               height: width,
               width: width / 2 - (!mini ? 12.0 : 0.0),
               fit: BoxFit.cover,
@@ -273,14 +273,14 @@ class PlaylistThumbnail extends StatelessWidget {
             Column(
               children: [
                 ExtendedImage(
-                  image: getAlbumArt(tracks[tracks.length - 2], small: true),
+                  image: getAlbumArt(tracks[1], small: true),
                   height: width / 2 - (!mini ? 12.0 : 0.0),
                   width: width / 2 - (!mini ? 4.0 : 0.0),
                   fit: BoxFit.cover,
                 ),
                 if (!mini) SizedBox(height: 8.0),
                 ExtendedImage(
-                  image: getAlbumArt(tracks[tracks.length - 3], small: true),
+                  image: getAlbumArt(tracks[2], small: true),
                   height: width / 2 - (!mini ? 4.0 : 0.0),
                   width: width / 2 - (!mini ? 4.0 : 0.0),
                   fit: BoxFit.cover,
@@ -297,14 +297,14 @@ class PlaylistThumbnail extends StatelessWidget {
         child: Row(
           children: [
             ExtendedImage(
-              image: getAlbumArt(tracks[tracks.length - 1], small: true),
+              image: getAlbumArt(tracks[0], small: true),
               height: width,
               width: width / 2 - (!mini ? 12.0 : 0.0),
               fit: BoxFit.cover,
             ),
             if (!mini) SizedBox(width: 8.0),
             ExtendedImage(
-              image: getAlbumArt(tracks[tracks.length - 2], small: true),
+              image: getAlbumArt(tracks[1], small: true),
               height: width,
               width: width / 2 - (!mini ? 4.0 : 0.0),
               fit: BoxFit.cover,
@@ -314,7 +314,7 @@ class PlaylistThumbnail extends StatelessWidget {
       );
     } else if (tracks.length == 1) {
       return ExtendedImage(
-        image: getAlbumArt(tracks[tracks.length - 1], small: true),
+        image: getAlbumArt(tracks[0], small: true),
         height: width,
         width: width,
         fit: BoxFit.cover,
