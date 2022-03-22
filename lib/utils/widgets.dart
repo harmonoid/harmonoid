@@ -705,7 +705,7 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
           Icon(
             Icons.more_vert,
             size: 20.0,
-            color: Colors.black,
+            color: Theme.of(context).iconTheme.color,
           ),
       splashRadius: 20.0,
     );

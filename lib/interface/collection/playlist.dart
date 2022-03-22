@@ -970,7 +970,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                             20.0,
                                                                       )
                                                                     : Text(
-                                                                        '${track.trackNumber}',
+                                                                        '${widget.playlist.tracks.indexOf(track) + 1}',
                                                                         style: Theme.of(context)
                                                                             .textTheme
                                                                             .headline4,

@@ -358,6 +358,26 @@ class TrackTileState extends State<TrackTile> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
+                        if (!widget.disableContextMenu)
+                          Container(
+                            width: 64.0,
+                            height: 56.0,
+                            alignment: Alignment.center,
+                            child: ContextMenuButton<int>(
+                              onSelected: (result) {
+                                trackPopupMenuHandle(
+                                  context,
+                                  widget.track,
+                                  result,
+                                  recursivelyPopNavigatorOnDeleteIf: () => false,
+                                );
+                              },
+                              color: Theme.of(context).iconTheme.color,
+                              itemBuilder: (_) => trackPopupMenuItems(
+                                context,
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),

@@ -43,7 +43,8 @@ List<Widget> tileGridListWidgets({
   required String? leadingSubHeader,
   required Widget? leadingWidget,
   required int elementsPerRow,
-  MainAxisAlignment mainAxisAlignment: MainAxisAlignment.center,
+  MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center,
+  bool showIncompleteRow = true,
 }) {
   List<Widget> widgets = <Widget>[];
   widgets.addAll([
@@ -82,7 +83,7 @@ List<Widget> tileGridListWidgets({
       rowChildren = <Widget>[];
     }
   }
-  if (widgetCount % elementsPerRow != 0) {
+  if (widgetCount % elementsPerRow != 0 && showIncompleteRow) {
     rowChildren = <Widget>[];
     for (int index = widgetCount - (widgetCount % elementsPerRow);
         index < widgetCount;
@@ -361,69 +362,7 @@ Future<void> trackPopupMenuHandle(
         );
         break;
       case 2:
-        showDialog(
-          context: context,
-          builder: (subContext) => AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            actionsPadding: EdgeInsets.zero,
-            titlePadding: EdgeInsets.zero,
-            content: Container(
-              width: isDesktop ? 512.0 : 280.0,
-              height: isDesktop ? 480.0 : 280.0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(28, 20, 0, 0),
-                    child: Text(
-                      Language.instance.PLAYLIST_ADD_DIALOG_TITLE,
-                      style: Theme.of(subContext).textTheme.headline1?.copyWith(
-                            fontSize: 20.0,
-                          ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(28, 2, 0, 16),
-                    child: Text(
-                      Language.instance.PLAYLIST_ADD_DIALOG_BODY,
-                      style: Theme.of(subContext).textTheme.headline3,
-                    ),
-                  ),
-                  Container(
-                    height: (isDesktop ? 512.0 : 280.0) - 118.0,
-                    width: isDesktop ? 512.0 : 280.0,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: Collection.instance.playlists.length,
-                      itemBuilder: (context, i) => PlaylistTile(
-                        playlist: Collection.instance.playlists[i],
-                        onTap: () async {
-                          await Collection.instance.playlistAddTrack(
-                            Collection.instance.playlists[i],
-                            track,
-                          );
-                          Navigator.of(subContext).pop();
-                        },
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    height: 1.0,
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              MaterialButton(
-                textColor: Theme.of(context).primaryColor,
-                onPressed: Navigator.of(subContext).pop,
-                child: Text(Language.instance.CANCEL),
-              ),
-            ],
-          ),
-        );
+        showAddToPlaylistDialog(context, track);
         break;
       case 3:
         Playback.instance.add([track]);
@@ -460,6 +399,76 @@ Future<void> trackPopupMenuHandle(
         }
     }
   }
+}
+
+void showAddToPlaylistDialog(BuildContext context, Track track) {
+  showDialog(
+    context: context,
+    builder: (subContext) => AlertDialog(
+      contentPadding: EdgeInsets.zero,
+      actionsPadding: EdgeInsets.zero,
+      titlePadding: EdgeInsets.zero,
+      content: Container(
+        width: isDesktop ? 512.0 : 280.0,
+        height: isDesktop ? 480.0 : 280.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(28, 20, 0, 0),
+              child: Text(
+                Language.instance.PLAYLIST_ADD_DIALOG_TITLE,
+                style: Theme.of(subContext).textTheme.headline1?.copyWith(
+                      fontSize: 20.0,
+                    ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(28, 2, 0, 16),
+              child: Text(
+                Language.instance.PLAYLIST_ADD_DIALOG_BODY,
+                style: Theme.of(subContext).textTheme.headline3,
+              ),
+            ),
+            Container(
+              height: (isDesktop ? 512.0 : 280.0) - 118.0,
+              width: isDesktop ? 512.0 : 280.0,
+              child: CustomListViewBuilder(
+                itemExtents: List.generate(
+                  Collection.instance.playlists.length,
+                  (index) => 64.0 + 9.0,
+                ),
+                shrinkWrap: true,
+                itemCount: Collection.instance.playlists.length,
+                itemBuilder: (context, i) => PlaylistTile(
+                  playlist: Collection.instance.playlists[i],
+                  onTap: () async {
+                    await Collection.instance.playlistAddTrack(
+                      Collection.instance.playlists[i],
+                      track,
+                    );
+                    Navigator.of(subContext).pop();
+                  },
+                ),
+              ),
+            ),
+            Divider(
+              height: 1.0,
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        MaterialButton(
+          textColor: Theme.of(context).primaryColor,
+          onPressed: Navigator.of(subContext).pop,
+          child: Text(Language.instance.CANCEL),
+        ),
+      ],
+    ),
+  );
 }
 
 InputDecoration desktopInputDecoration(

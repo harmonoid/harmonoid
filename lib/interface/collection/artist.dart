@@ -684,6 +684,10 @@ class ArtistScreenState extends State<ArtistScreen>
                                                       ),
                                                       flex: 2,
                                                     ),
+                                                    Container(
+                                                      width: 64.0,
+                                                      height: 56.0,
+                                                    ),
                                                   ],
                                                 ),
                                                 Divider(height: 1.0),
@@ -865,6 +869,38 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                     ),
                                                                   ),
                                                                   flex: 2,
+                                                                ),
+                                                                Container(
+                                                                  width: 64.0,
+                                                                  height: 56.0,
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  child:
+                                                                      ContextMenuButton<
+                                                                          int>(
+                                                                    onSelected:
+                                                                        (result) {
+                                                                      trackPopupMenuHandle(
+                                                                        context,
+                                                                        track,
+                                                                        result,
+                                                                        recursivelyPopNavigatorOnDeleteIf: () => widget
+                                                                            .artist
+                                                                            .tracks
+                                                                            .isEmpty,
+                                                                      );
+                                                                    },
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .iconTheme
+                                                                        .color,
+                                                                    itemBuilder:
+                                                                        (_) =>
+                                                                            trackPopupMenuItems(
+                                                                      context,
+                                                                    ),
+                                                                  ),
                                                                 ),
                                                               ],
                                                             ),

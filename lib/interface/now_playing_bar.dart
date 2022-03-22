@@ -229,6 +229,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                       ],
                                     ),
                                   ),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
                                 ],
                               );
                             }
