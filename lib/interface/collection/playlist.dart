@@ -666,16 +666,26 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                   constraints.maxWidth,
                                   constraints.maxHeight,
                                 );
-                                return SizedBox.square(
-                                  dimension: dimension,
-                                  child: Hero(
-                                    tag: 'playlist_art_${widget.playlist.name}',
-                                    child: PlaylistThumbnail(
-                                      tracks: widget.playlist.tracks,
-                                      width: dimension,
-                                      mini: false,
+                                return Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: AspectRatio(
+                                          aspectRatio: 1.0,
+                                          child: Hero(
+                                            tag:
+                                                'playlist_art_${widget.playlist.name}',
+                                            child: PlaylistThumbnail(
+                                              tracks: widget.playlist.tracks,
+                                              width: dimension,
+                                              mini: false,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 );
                               }),
                             ),
