@@ -32,7 +32,7 @@ import 'package:harmonoid/constants/language.dart';
 /// --------
 ///
 /// Class to handle & control the [Media] playback in [Harmonoid](https://github.com/harmonoid/harmonoid).
-/// Implements [ChangeNotifier] to trigger UI _updates.
+/// Implements [ChangeNotifier] to trigger UI updates.
 ///
 /// Automatically handles:
 /// * `ITaskbarList3` & `SystemMediaTransportControls` controls on Windows.
@@ -329,7 +329,7 @@ class Playback extends ChangeNotifier {
             Collection.instance.playlistAddTrack(history, track);
             return;
           }
-          if (history.tracks.last != track) {
+          if (history.tracks.first != track) {
             Collection.instance.playlistAddTrack(history, track);
           }
         }();
