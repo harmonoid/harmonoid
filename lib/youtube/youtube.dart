@@ -1,9 +1,18 @@
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 import 'dart:math';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/youtube/playlist.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:youtube_music/youtube_music.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
 import 'package:harmonoid/core/hotkeys.dart';
@@ -12,9 +21,11 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/youtube/artist.dart';
 import 'package:harmonoid/youtube/track.dart';
+import 'package:harmonoid/youtube/album.dart';
+import 'package:harmonoid/youtube/video.dart';
 import 'package:harmonoid/youtube/state/youtube.dart';
-import 'package:youtube_music/youtube_music.dart';
 
 class YoutubeTab extends StatefulWidget {
   const YoutubeTab({Key? key}) : super(key: key);
@@ -156,7 +167,7 @@ class YoutubeTabState extends State<YoutubeTab> {
               leadingSubHeader: null,
               widgetCount: youtube.recommendations!.length,
               leadingWidget: Container(),
-              builder: (context, i) => TrackTile(
+              builder: (context, i) => TrackSquareTile(
                 height: height,
                 width: width,
                 track: youtube.recommendations![i],
@@ -399,530 +410,28 @@ class YouTubeSearch extends StatelessWidget {
                                     children: [
                                       SubHeader(key),
                                       Spacer(),
-                                      ShowAllButton(
-                                        onPressed: () {
-                                          // TODO: Handle [ShowAllButton].
-                                        },
-                                      ),
+                                      if (!key.contains('Top result'))
+                                        ShowAllButton(
+                                          onPressed: () {
+                                            // TODO: Handle [ShowAllButton].
+                                          },
+                                        ),
                                     ],
                                   ),
                                 );
                                 value.forEach(
                                   (element) {
                                     if (element is Track) {
-                                      widgets.add(
-                                        Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            onTap: () =>
-                                                YouTube.instance.open(element),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const Divider(
-                                                  height: 1.0,
-                                                  indent: 80.0,
-                                                ),
-                                                Container(
-                                                  height: 64.0,
-                                                  alignment: Alignment.center,
-                                                  margin: const EdgeInsets
-                                                      .symmetric(vertical: 4.0),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      ExtendedImage(
-                                                        image: NetworkImage(
-                                                          element.thumbnails
-                                                              .values.first,
-                                                        ),
-                                                        height: 56.0,
-                                                        width: 56.0,
-                                                      ),
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      Expanded(
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              element.trackName
-                                                                  .overflow,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 1,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline2,
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 2.0,
-                                                            ),
-                                                            Text(
-                                                              Language.instance
-                                                                      .TRACK_SINGLE +
-                                                                  ' • ' +
-                                                                  element
-                                                                      .albumName
-                                                                      ?.overflow +
-                                                                  ' • ' +
-                                                                  element
-                                                                      .albumArtistName
-                                                                      ?.overflow +
-                                                                  ' • ' +
-                                                                  (element.duration
-                                                                          ?.label ??
-                                                                      ''),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 1,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline3,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      Container(
-                                                        width: 64.0,
-                                                        height: 64.0,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
+                                      widgets.add(TrackTile(track: element));
                                     } else if (element is Artist) {
-                                      widgets.add(
-                                        Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            onTap: () {
-                                              // TODO: Handle [Artist].
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const Divider(
-                                                  height: 1.0,
-                                                  indent: 80.0,
-                                                ),
-                                                Container(
-                                                  height: 64.0,
-                                                  alignment: Alignment.center,
-                                                  margin: const EdgeInsets
-                                                      .symmetric(vertical: 4.0),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      Card(
-                                                        clipBehavior:
-                                                            Clip.antiAlias,
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      28.0),
-                                                        ),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  2.0),
-                                                          child: ClipOval(
-                                                            child:
-                                                                ExtendedImage(
-                                                              image:
-                                                                  NetworkImage(
-                                                                element
-                                                                    .thumbnails
-                                                                    .values
-                                                                    .first,
-                                                              ),
-                                                              height: 52.0,
-                                                              width: 52.0,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      Expanded(
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              element.artistName
-                                                                  .overflow,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 1,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline2,
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 2.0,
-                                                            ),
-                                                            Text(
-                                                              Language.instance
-                                                                      .ARTIST_SINGLE +
-                                                                  ' • ' +
-                                                                  element
-                                                                      .subscribersCount,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 1,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline3,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      Container(
-                                                        width: 64.0,
-                                                        height: 64.0,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
+                                      widgets.add(ArtistTile(artist: element));
                                     } else if (element is Video) {
-                                      widgets.add(
-                                        Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            onTap: () {
-                                              // TODO: Handle [Video].
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const Divider(
-                                                  height: 1.0,
-                                                  indent: 80.0,
-                                                ),
-                                                Container(
-                                                  height: 64.0,
-                                                  alignment: Alignment.center,
-                                                  margin: const EdgeInsets
-                                                      .symmetric(vertical: 4.0),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      ExtendedImage(
-                                                        image: NetworkImage(
-                                                          element.thumbnails
-                                                              .values.first,
-                                                        ),
-                                                        height: 56.0,
-                                                        width: 56.0,
-                                                      ),
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      Expanded(
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              element.videoName
-                                                                  .overflow,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 1,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline2,
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 2.0,
-                                                            ),
-                                                            Text(
-                                                              Language.instance
-                                                                      .VIDEO_SINGLE +
-                                                                  ' • ' +
-                                                                  element
-                                                                      .channelName +
-                                                                  ' • ' +
-                                                                  (element.duration
-                                                                          ?.label ??
-                                                                      ''),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 1,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline3,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      Container(
-                                                        width: 64.0,
-                                                        height: 64.0,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
+                                      widgets.add(VideoTile(video: element));
                                     } else if (element is Album) {
-                                      widgets.add(
-                                        Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            onTap: () {
-                                              // TODO: Handle [Album].
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const Divider(
-                                                  height: 1.0,
-                                                  indent: 80.0,
-                                                ),
-                                                Container(
-                                                  height: 64.0,
-                                                  alignment: Alignment.center,
-                                                  margin: const EdgeInsets
-                                                      .symmetric(vertical: 4.0),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      ExtendedImage(
-                                                        image: NetworkImage(
-                                                          element.thumbnails
-                                                              .values.first,
-                                                        ),
-                                                        height: 56.0,
-                                                        width: 56.0,
-                                                      ),
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      Expanded(
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              element.albumName
-                                                                  ?.overflow,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 1,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline2,
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 2.0,
-                                                            ),
-                                                            Text(
-                                                              Language.instance
-                                                                      .ALBUM_SINGLE +
-                                                                  ' • ' +
-                                                                  (element.albumArtistName ??
-                                                                      '') +
-                                                                  ' • ' +
-                                                                  (element.year ??
-                                                                      ''),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 1,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline3,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      Container(
-                                                        width: 64.0,
-                                                        height: 64.0,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
+                                      widgets.add(AlbumTile(album: element));
                                     } else if (element is Playlist) {
-                                      widgets.add(
-                                        Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            onTap: () {
-                                              // TODO: Handle [Playlist].
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const Divider(
-                                                  height: 1.0,
-                                                  indent: 80.0,
-                                                ),
-                                                Container(
-                                                  height: 64.0,
-                                                  alignment: Alignment.center,
-                                                  margin: const EdgeInsets
-                                                      .symmetric(vertical: 4.0),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      ExtendedImage(
-                                                        image: NetworkImage(
-                                                          element.thumbnails
-                                                              .values.first,
-                                                        ),
-                                                        height: 56.0,
-                                                        width: 56.0,
-                                                      ),
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      Expanded(
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              element.name
-                                                                  .overflow,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 1,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline2,
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 2.0,
-                                                            ),
-                                                            Text(
-                                                              Language.instance
-                                                                  .PLAYLIST_SINGLE,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 1,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline3,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                          width: 12.0),
-                                                      Container(
-                                                        width: 64.0,
-                                                        height: 64.0,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
+                                      widgets
+                                          .add(PlaylistTile(playlist: element));
                                     }
                                   },
                                 );
@@ -968,15 +477,5 @@ class YouTubeSearch extends StatelessWidget {
             ),
           )
         : Container();
-  }
-}
-
-extension on Duration {
-  String get label {
-    int minutes = inSeconds ~/ 60;
-    String seconds = inSeconds - (minutes * 60) > 9
-        ? '${inSeconds - (minutes * 60)}'
-        : '0${inSeconds - (minutes * 60)}';
-    return '$minutes:$seconds';
   }
 }

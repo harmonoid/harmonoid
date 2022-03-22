@@ -1,3 +1,10 @@
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 import 'package:flutter/material.dart';
 import 'package:youtube_music/youtube_music.dart';
 import 'package:extended_image/extended_image.dart';
@@ -5,13 +12,14 @@ import 'package:extended_image/extended_image.dart';
 import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/youtube/state/youtube.dart';
+import 'package:harmonoid/constants/language.dart';
 
-class TrackTile extends StatefulWidget {
+class TrackSquareTile extends StatefulWidget {
   final double height;
   final double width;
   final Track track;
 
-  const TrackTile({
+  const TrackSquareTile({
     Key? key,
     required this.track,
     required this.height,
@@ -19,10 +27,10 @@ class TrackTile extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  TrackTileState createState() => TrackTileState();
+  TrackSquareTileState createState() => TrackSquareTileState();
 }
 
-class TrackTileState extends State<TrackTile> {
+class TrackSquareTileState extends State<TrackSquareTile> {
   double scale = 0.0;
 
   Widget build(BuildContext context) {
@@ -50,7 +58,10 @@ class TrackTileState extends State<TrackTile> {
                       tag: widget.track.hashCode,
                       child: ExtendedImage(
                         image: NetworkImage(
-                            widget.track.thumbnails.values.skip(1).first),
+                          widget.track.thumbnails.length > 1
+                              ? widget.track.thumbnails.values.skip(1).first
+                              : widget.track.thumbnails.values.first,
+                        ),
                         fit: BoxFit.cover,
                         height: widget.width,
                         width: widget.width,
@@ -163,6 +174,86 @@ class TrackTileState extends State<TrackTile> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class TrackTile extends StatelessWidget {
+  final Track track;
+  const TrackTile({
+    Key? key,
+    required this.track,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => YouTube.instance.open(track),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Divider(
+              height: 1.0,
+              indent: 80.0,
+            ),
+            Container(
+              height: 64.0,
+              alignment: Alignment.center,
+              margin: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 12.0),
+                  ExtendedImage(
+                    image: NetworkImage(
+                      track.thumbnails.values.first,
+                    ),
+                    height: 56.0,
+                    width: 56.0,
+                  ),
+                  const SizedBox(width: 12.0),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          track.trackName.overflow,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: Theme.of(context).textTheme.headline2,
+                        ),
+                        const SizedBox(
+                          height: 2.0,
+                        ),
+                        Text(
+                          [
+                            Language.instance.TRACK_SINGLE,
+                            track.albumName?.overflow ?? '',
+                            track.albumArtistName?.overflow,
+                            track.duration?.label ?? ''
+                          ].join(' • '),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: Theme.of(context).textTheme.headline3,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12.0),
+                  Container(
+                    width: 64.0,
+                    height: 64.0,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,3 +1,10 @@
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
+///
 import 'package:flutter/widgets.dart';
 import 'package:libmpv/libmpv.dart';
 import 'package:youtube_music/youtube_music.dart';
