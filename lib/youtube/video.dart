@@ -11,6 +11,7 @@ import 'package:youtube_music/youtube_music.dart';
 
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/youtube/state/youtube.dart';
 
 class VideoTile extends StatelessWidget {
   final Video video;
@@ -22,7 +23,7 @@ class VideoTile extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          // TODO: Handle [Video].
+          YouTube.instance.open(video);
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

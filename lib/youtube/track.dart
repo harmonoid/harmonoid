@@ -113,7 +113,7 @@ class TrackSquareTileState extends State<TrackSquareTile> {
                             onTap: () {
                               trackPopupMenuHandle(
                                 context,
-                                media.Track.fromYouTubeMusic(
+                                media.Track.fromYouTubeMusicTrack(
                                     widget.track.toJson()),
                                 2,
                               );

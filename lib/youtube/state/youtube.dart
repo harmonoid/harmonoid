@@ -48,21 +48,39 @@ class YouTube extends ChangeNotifier {
     }
   }
 
-  Future<void> open(Track track) async {
-    Playback.instance.open(
-      [media.Track.fromJson(track.toJson())],
-    );
-    await Configuration.instance.save(
-      discoverRecent: [Plugins.redirect(track.uri).queryParameters['id']!],
-    );
-    await next();
-    if (recommendations != null) {
-      Playback.instance.add(
-        recommendations!
-            .sublist(1)
-            .map((e) => media.Track.fromJson(e.toJson()))
-            .toList(),
+  Future<void> open(dynamic value) async {
+    if (value is Track) {
+      Playback.instance.open(
+        [media.Track.fromYouTubeMusicTrack(value.toJson())],
       );
+      await Configuration.instance.save(
+        discoverRecent: [Plugins.redirect(value.uri).queryParameters['id']!],
+      );
+      await next();
+      if (recommendations != null) {
+        Playback.instance.add(
+          recommendations!
+              .sublist(1)
+              .map((e) => media.Track.fromJson(e.toJson()))
+              .toList(),
+        );
+      }
+    } else if (value is Video) {
+      Playback.instance.open(
+        [media.Track.fromYouTubeMusicVideo(value.toJson())],
+      );
+      await Configuration.instance.save(
+        discoverRecent: [Plugins.redirect(value.uri).queryParameters['id']!],
+      );
+      await next();
+      if (recommendations != null) {
+        Playback.instance.add(
+          recommendations!
+              .sublist(1)
+              .map((e) => media.Track.fromJson(e.toJson()))
+              .toList(),
+        );
+      }
     }
   }
 
