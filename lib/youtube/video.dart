@@ -5,11 +5,8 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-import 'dart:io';
-
-import 'package:extended_image/extended_image.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_music/youtube_music.dart';
 
@@ -18,39 +15,191 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/youtube/state/youtube.dart';
+import 'package:harmonoid/youtube/utils/rendering.dart';
+
+class VideoLargeTile extends StatefulWidget {
+  final double height;
+  final double width;
+  final Track track;
+
+  const VideoLargeTile({
+    Key? key,
+    required this.track,
+    required this.height,
+    required this.width,
+  }) : super(key: key);
+
+  @override
+  VideoLargeTileState createState() => VideoLargeTileState();
+}
+
+class VideoLargeTileState extends State<VideoLargeTile> {
+  double scale = 1.0;
+
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      elevation: 4.0,
+      margin: EdgeInsets.zero,
+      child: MouseRegion(
+        onEnter: (e) => setState(() {
+          scale = 1.1;
+        }),
+        onExit: (e) => setState(() {
+          scale = 1.0;
+        }),
+        child: Container(
+          height: widget.height,
+          width: widget.width,
+          child: Stack(
+            alignment: Alignment.bottomLeft,
+            children: [
+              Hero(
+                tag: widget.track.hashCode,
+                child: TweenAnimationBuilder(
+                  duration: const Duration(milliseconds: 100),
+                  tween: Tween<double>(begin: 1.0, end: scale),
+                  builder: (BuildContext context, double value, _) {
+                    return Transform.scale(
+                      scale: value,
+                      child: ExtendedImage(
+                        image: NetworkImage(
+                          widget.track.thumbnails[120] ??
+                              widget.track.thumbnails.values.first,
+                        ),
+                        fit: BoxFit.cover,
+                        width: widget.width,
+                        height: widget.height,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    YouTube.instance.open(widget.track);
+                  },
+                  child: Container(
+                    width: widget.width,
+                    height: widget.height,
+                    alignment: Alignment.bottomCenter,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black54,
+                        ],
+                        stops: [
+                          0.2,
+                          1.0,
+                        ],
+                      ),
+                    ),
+                    child: Container(
+                      height: 64.0,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.track.trackName.overflow,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline2
+                                      ?.copyWith(color: Colors.white),
+                                  textAlign: TextAlign.left,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 2),
+                                  child: Text(
+                                    '${widget.track.trackArtistNames?.take(2).join(', ')}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline3
+                                        ?.copyWith(
+                                          color: Colors.white54,
+                                          fontSize: 12.0,
+                                        ),
+                                    maxLines: 1,
+                                    textAlign: TextAlign.left,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 12.0),
+                          Text(
+                            widget.track.duration?.label ?? '',
+                            style: TextStyle(
+                              color: Colors.white54,
+                            ),
+                          ),
+                          const SizedBox(width: 4.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 4.0,
+                right: 4.0,
+                child: ContextMenuButton(
+                  itemBuilder: (BuildContext context) =>
+                      youtubeTrackPopupMenuItems(
+                    context,
+                  ),
+                  onSelected: (result) async {
+                    switch (result) {
+                      case 0:
+                        {
+                          await launch(widget.track.uri.toString());
+                          break;
+                        }
+                      case 1:
+                        {
+                          await showAddToPlaylistDialog(
+                            context,
+                            media.Track.fromYouTubeMusicTrack(
+                              widget.track.toJson(),
+                            ),
+                          );
+                          break;
+                        }
+                    }
+                  },
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: Colors.white70,
+                    size: 16.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class VideoTile extends StatelessWidget {
   final Video video;
   const VideoTile({Key? key, required this.video}) : super(key: key);
-
-  List<PopupMenuItem<int>> trackPopupMenuItems(context) => [
-        PopupMenuItem(
-          padding: EdgeInsets.zero,
-          value: 0,
-          child: ListTile(
-            leading: Icon(Platform.isWindows
-                ? FluentIcons.earth_20_regular
-                : Icons.delete),
-            title: Text(
-              Language.instance.OPEN_IN_BROWSER,
-              style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
-            ),
-          ),
-        ),
-        PopupMenuItem(
-          padding: EdgeInsets.zero,
-          value: 1,
-          child: ListTile(
-            leading: Icon(Platform.isWindows
-                ? FluentIcons.list_16_regular
-                : Icons.queue_music),
-            title: Text(
-              Language.instance.ADD_TO_PLAYLIST,
-              style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
-            ),
-          ),
-        ),
-      ];
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +219,7 @@ class VideoTile extends StatelessWidget {
                 MediaQuery.of(context).size.height,
               ),
             ),
-            items: trackPopupMenuItems(
+            items: youtubeTrackPopupMenuItems(
               context,
             ),
           );
@@ -168,7 +317,8 @@ class VideoTile extends StatelessWidget {
                               }
                           }
                         },
-                        itemBuilder: (context) =>trackPopupMenuItems(context),
+                        itemBuilder: (context) =>
+                            youtubeTrackPopupMenuItems(context),
                       ),
                     ),
                   ],

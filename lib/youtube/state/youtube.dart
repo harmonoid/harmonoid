@@ -46,9 +46,13 @@ class YouTube extends ChangeNotifier {
         notifyListeners();
       }
     }
+    for (final e in recommendations!) {
+      print(e.toJson());
+    }
   }
 
-  Future<void> open(dynamic value) async {
+  /// Plays a [Track] or a [Video] automatically handling conversion to local model [media.Track].
+  Future<void> open(value) async {
     if (value is Track) {
       Playback.instance.open(
         [media.Track.fromYouTubeMusicTrack(value.toJson())],

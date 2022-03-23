@@ -6,9 +6,7 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:math';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/youtube/playlist.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
@@ -25,6 +23,8 @@ import 'package:harmonoid/youtube/artist.dart';
 import 'package:harmonoid/youtube/track.dart';
 import 'package:harmonoid/youtube/album.dart';
 import 'package:harmonoid/youtube/video.dart';
+import 'package:harmonoid/youtube/playlist.dart';
+import 'package:harmonoid/youtube/utils/dimensions.dart';
 import 'package:harmonoid/youtube/state/youtube.dart';
 
 class YoutubeTab extends StatefulWidget {
@@ -90,15 +90,15 @@ class YoutubeTabState extends State<YoutubeTab> {
 
   Widget builder(BuildContext context, YouTube youtube) {
     final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin) ~/
-        (kAlbumTileWidth + tileMargin);
+        (kLargeTileWidth + tileMargin);
     final double width = isMobile
         ? (MediaQuery.of(context).size.width -
                 (elementsPerRow + 1) * tileMargin) /
-            elementsPerRow
-        : kAlbumTileWidth;
+            kLargeTileWidth
+        : kLargeTileWidth;
     final double height = isMobile
-        ? width * kAlbumTileHeight / kAlbumTileWidth
-        : kAlbumTileHeight;
+        ? width * kLargeTileHeight / kLargeTileWidth
+        : kLargeTileHeight;
     if (Configuration.instance.discoverRecent.isEmpty) {
       return Container(
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -128,9 +128,10 @@ class YoutubeTabState extends State<YoutubeTab> {
               children: [
                 ExceptionWidget(
                   title: Language.instance.NO_INTERNET_TITLE,
-                  subtitle: Language.instance.NO_INTERNET_SUBTITLE +
-                      '\n' +
-                      Language.instance.YOUTUBE_INTERNET_ERROR,
+                  subtitle: [
+                    Language.instance.NO_INTERNET_SUBTITLE,
+                    Language.instance.YOUTUBE_INTERNET_ERROR,
+                  ].join('\n'),
                 ),
                 Padding(
                   padding: EdgeInsets.all(12.0),
@@ -167,11 +168,18 @@ class YoutubeTabState extends State<YoutubeTab> {
               leadingSubHeader: null,
               widgetCount: youtube.recommendations!.length,
               leadingWidget: Container(),
-              builder: (context, i) => TrackSquareTile(
-                height: height,
-                width: width,
-                track: youtube.recommendations![i],
-              ),
+              builder: (context, i) =>
+                  youtube.recommendations![i].thumbnails.containsKey(120)
+                      ? TrackLargeTile(
+                          height: height,
+                          width: width,
+                          track: youtube.recommendations![i],
+                        )
+                      : VideoLargeTile(
+                          height: height,
+                          width: width,
+                          track: youtube.recommendations![i],
+                        ),
               showIncompleteRow: false,
             ),
           ],
