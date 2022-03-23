@@ -23,126 +23,159 @@ class VideoTile extends StatelessWidget {
   final Video video;
   const VideoTile({Key? key, required this.video}) : super(key: key);
 
+  List<PopupMenuItem<int>> trackPopupMenuItems(context) => [
+        PopupMenuItem(
+          padding: EdgeInsets.zero,
+          value: 0,
+          child: ListTile(
+            leading: Icon(Platform.isWindows
+                ? FluentIcons.earth_20_regular
+                : Icons.delete),
+            title: Text(
+              Language.instance.OPEN_IN_BROWSER,
+              style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          padding: EdgeInsets.zero,
+          value: 1,
+          child: ListTile(
+            leading: Icon(Platform.isWindows
+                ? FluentIcons.list_16_regular
+                : Icons.queue_music),
+            title: Text(
+              Language.instance.ADD_TO_PLAYLIST,
+              style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+            ),
+          ),
+        ),
+      ];
+
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          YouTube.instance.open(video);
-        },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Divider(
-              height: 1.0,
-              indent: 80.0,
-            ),
-            Container(
-              height: 64.0,
-              alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(width: 12.0),
-                  ExtendedImage(
-                    image: NetworkImage(
-                      video.thumbnails.values.first,
-                    ),
-                    height: 56.0,
-                    width: 56.0,
-                  ),
-                  const SizedBox(width: 12.0),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          video.videoName.overflow,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: Theme.of(context).textTheme.headline2,
-                        ),
-                        const SizedBox(
-                          height: 2.0,
-                        ),
-                        Text(
-                          [
-                            Language.instance.VIDEO_SINGLE,
-                            video.channelName,
-                            (video.duration?.label ?? '')
-                          ].join(' • '),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: Theme.of(context).textTheme.headline3,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12.0),
-                  Container(
-                    width: 64.0,
-                    height: 64.0,
-                    child: ContextMenuButton<int>(
-                      onSelected: (value) {
-                        switch (value) {
-                          case 0:
-                            {
-                              launch(video.uri.toString());
-                              break;
-                            }
-                          case 1:
-                            {
-                              showAddToPlaylistDialog(
-                                context,
-                                media.Track.fromYouTubeMusicVideo(
-                                    video.toJson()),
-                              );
-                              break;
-                            }
-                        }
-                      },
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          padding: EdgeInsets.zero,
-                          value: 0,
-                          child: ListTile(
-                            leading: Icon(Platform.isWindows
-                                ? FluentIcons.earth_20_regular
-                                : Icons.delete),
-                            title: Text(
-                              Language.instance.OPEN_IN_BROWSER,
-                              style: isDesktop
-                                  ? Theme.of(context).textTheme.headline4
-                                  : null,
-                            ),
-                          ),
-                        ),
-                        PopupMenuItem(
-                          padding: EdgeInsets.zero,
-                          value: 1,
-                          child: ListTile(
-                            leading: Icon(Platform.isWindows
-                                ? FluentIcons.list_16_regular
-                                : Icons.queue_music),
-                            title: Text(
-                              Language.instance.ADD_TO_PLAYLIST,
-                              style: isDesktop
-                                  ? Theme.of(context).textTheme.headline4
-                                  : null,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+      child: ContextMenuArea(
+        onPressed: (e) async {
+          final result = await showMenu(
+            elevation: 4.0,
+            context: context,
+            position: RelativeRect.fromRect(
+              Offset(e.position.dx, e.position.dy) & Size(228.0, 320.0),
+              Rect.fromLTWH(
+                0,
+                0,
+                MediaQuery.of(context).size.width,
+                MediaQuery.of(context).size.height,
               ),
             ),
-          ],
+            items: trackPopupMenuItems(
+              context,
+            ),
+          );
+          switch (result) {
+            case 0:
+              {
+                await launch(video.uri.toString());
+                break;
+              }
+            case 1:
+              {
+                await showAddToPlaylistDialog(
+                  context,
+                  media.Track.fromYouTubeMusicTrack(video.toJson()),
+                );
+                break;
+              }
+          }
+        },
+        child: InkWell(
+          onTap: () {
+            YouTube.instance.open(video);
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Divider(
+                height: 1.0,
+                indent: 80.0,
+              ),
+              Container(
+                height: 64.0,
+                alignment: Alignment.center,
+                margin: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 12.0),
+                    ExtendedImage(
+                      image: NetworkImage(
+                        video.thumbnails.values.first,
+                      ),
+                      height: 56.0,
+                      width: 56.0,
+                    ),
+                    const SizedBox(width: 12.0),
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            video.videoName.overflow,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: Theme.of(context).textTheme.headline2,
+                          ),
+                          const SizedBox(
+                            height: 2.0,
+                          ),
+                          Text(
+                            [
+                              Language.instance.VIDEO_SINGLE,
+                              video.channelName,
+                              (video.duration?.label ?? '')
+                            ].join(' • '),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12.0),
+                    Container(
+                      width: 64.0,
+                      height: 64.0,
+                      child: ContextMenuButton<int>(
+                        onSelected: (value) {
+                          switch (value) {
+                            case 0:
+                              {
+                                launch(video.uri.toString());
+                                break;
+                              }
+                            case 1:
+                              {
+                                showAddToPlaylistDialog(
+                                  context,
+                                  media.Track.fromYouTubeMusicVideo(
+                                      video.toJson()),
+                                );
+                                break;
+                              }
+                          }
+                        },
+                        itemBuilder: (context) =>trackPopupMenuItems(context),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

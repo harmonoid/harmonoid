@@ -401,8 +401,8 @@ Future<void> trackPopupMenuHandle(
   }
 }
 
-void showAddToPlaylistDialog(BuildContext context, Track track) {
-  showDialog(
+Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
+  return showDialog(
     context: context,
     builder: (subContext) => AlertDialog(
       contentPadding: EdgeInsets.zero,

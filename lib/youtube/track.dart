@@ -7,6 +7,7 @@
 ///
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_music/youtube_music.dart';
@@ -192,125 +193,158 @@ class TrackTile extends StatelessWidget {
     required this.track,
   }) : super(key: key);
 
+  List<PopupMenuItem<int>> trackPopupMenuItems(context) => [
+        PopupMenuItem(
+          padding: EdgeInsets.zero,
+          value: 0,
+          child: ListTile(
+            leading: Icon(Platform.isWindows
+                ? FluentIcons.earth_20_regular
+                : Icons.delete),
+            title: Text(
+              Language.instance.OPEN_IN_BROWSER,
+              style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          padding: EdgeInsets.zero,
+          value: 1,
+          child: ListTile(
+            leading: Icon(Platform.isWindows
+                ? FluentIcons.list_16_regular
+                : Icons.queue_music),
+            title: Text(
+              Language.instance.ADD_TO_PLAYLIST,
+              style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+            ),
+          ),
+        ),
+      ];
+
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        onTap: () => YouTube.instance.open(track),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Divider(
-              height: 1.0,
-              indent: 80.0,
-            ),
-            Container(
-              height: 64.0,
-              alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(width: 12.0),
-                  ExtendedImage(
-                    image: NetworkImage(
-                      track.thumbnails.values.first,
-                    ),
-                    height: 56.0,
-                    width: 56.0,
-                  ),
-                  const SizedBox(width: 12.0),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          track.trackName.overflow,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: Theme.of(context).textTheme.headline2,
-                        ),
-                        const SizedBox(
-                          height: 2.0,
-                        ),
-                        Text(
-                          [
-                            Language.instance.TRACK_SINGLE,
-                            track.albumName?.overflow ?? '',
-                            track.albumArtistName?.overflow,
-                            track.duration?.label ?? ''
-                          ].join(' • '),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: Theme.of(context).textTheme.headline3,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12.0),
-                  Container(
-                    width: 64.0,
-                    height: 64.0,
-                    child: ContextMenuButton<int>(
-                      onSelected: (value) {
-                        switch (value) {
-                          case 0:
-                            {
-                              launch(track.uri.toString());
-                              break;
-                            }
-                          case 1:
-                            {
-                              showAddToPlaylistDialog(
-                                context,
-                                media.Track.fromYouTubeMusicTrack(
-                                    track.toJson()),
-                              );
-                              break;
-                            }
-                        }
-                      },
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          padding: EdgeInsets.zero,
-                          value: 0,
-                          child: ListTile(
-                            leading: Icon(Platform.isWindows
-                                ? FluentIcons.earth_20_regular
-                                : Icons.delete),
-                            title: Text(
-                              Language.instance.OPEN_IN_BROWSER,
-                              style: isDesktop
-                                  ? Theme.of(context).textTheme.headline4
-                                  : null,
-                            ),
-                          ),
-                        ),
-                        PopupMenuItem(
-                          padding: EdgeInsets.zero,
-                          value: 1,
-                          child: ListTile(
-                            leading: Icon(Platform.isWindows
-                                ? FluentIcons.list_16_regular
-                                : Icons.queue_music),
-                            title: Text(
-                              Language.instance.ADD_TO_PLAYLIST,
-                              style: isDesktop
-                                  ? Theme.of(context).textTheme.headline4
-                                  : null,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+      child: ContextMenuArea(
+        onPressed: (e) async {
+          final result = await showMenu(
+            elevation: 4.0,
+            context: context,
+            position: RelativeRect.fromRect(
+              Offset(e.position.dx, e.position.dy) & Size(228.0, 320.0),
+              Rect.fromLTWH(
+                0,
+                0,
+                MediaQuery.of(context).size.width,
+                MediaQuery.of(context).size.height,
               ),
             ),
-          ],
+            items: trackPopupMenuItems(
+              context,
+            ),
+          );
+          switch (result) {
+            case 0:
+              {
+                await launch(track.uri.toString());
+                break;
+              }
+            case 1:
+              {
+                await showAddToPlaylistDialog(
+                  context,
+                  media.Track.fromYouTubeMusicTrack(track.toJson()),
+                );
+                break;
+              }
+          }
+        },
+        child: InkWell(
+          onTap: () => YouTube.instance.open(track),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Divider(
+                height: 1.0,
+                indent: 80.0,
+              ),
+              Container(
+                height: 64.0,
+                alignment: Alignment.center,
+                margin: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 12.0),
+                    ExtendedImage(
+                      image: NetworkImage(
+                        track.thumbnails.values.first,
+                      ),
+                      height: 56.0,
+                      width: 56.0,
+                    ),
+                    const SizedBox(width: 12.0),
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            track.trackName.overflow,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: Theme.of(context).textTheme.headline2,
+                          ),
+                          const SizedBox(
+                            height: 2.0,
+                          ),
+                          Text(
+                            [
+                              Language.instance.TRACK_SINGLE,
+                              track.albumName?.overflow ?? '',
+                              track.albumArtistName?.overflow,
+                              track.duration?.label ?? ''
+                            ].join(' • '),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12.0),
+                    Container(
+                      width: 64.0,
+                      height: 64.0,
+                      child: ContextMenuButton<int>(
+                        onSelected: (result) {
+                          switch (result) {
+                            case 0:
+                              {
+                                launch(track.uri.toString());
+                                break;
+                              }
+                            case 1:
+                              {
+                                showAddToPlaylistDialog(
+                                  context,
+                                  media.Track.fromYouTubeMusicTrack(
+                                      track.toJson()),
+                                );
+                                break;
+                              }
+                          }
+                        },
+                        itemBuilder: (context) => trackPopupMenuItems(context),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1165,3 +1165,35 @@ class CollectionSortButton extends StatelessWidget {
     );
   }
 }
+
+class ContextMenuArea extends StatefulWidget {
+  final Widget child;
+  final void Function(PointerUpEvent) onPressed;
+  ContextMenuArea({
+    Key? key,
+    required this.onPressed,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  State<ContextMenuArea> createState() => _ContextMenuAreaState();
+}
+
+class _ContextMenuAreaState extends State<ContextMenuArea> {
+  bool reactToSecondaryPress = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: (e) async {
+        reactToSecondaryPress = e.kind == PointerDeviceKind.mouse &&
+            e.buttons == kSecondaryMouseButton;
+      },
+      onPointerUp: (e) {
+        if (!reactToSecondaryPress) return;
+        widget.onPressed.call(e);
+      },
+      child: widget.child,
+    );
+  }
+}
