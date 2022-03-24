@@ -570,6 +570,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1+1"
+  readmore:
+    dependency: "direct main"
+    description:
+      name: readmore
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   rxdart:
     dependency: transitive
     description:
@@ -788,11 +795,9 @@ packages:
   youtube_music:
     dependency: "direct main"
     description:
-      path: "."
-      ref: c906b3525aa66b3dbcf1870afabfee2e8db21ab8
-      resolved-ref: c906b3525aa66b3dbcf1870afabfee2e8db21ab8
-      url: "https://github.com/harmonoid/youtube_music.dart.git"
-    source: git
+      path: "external/youtube_music.dart"
+      relative: true
+    source: path
     version: "1.0.0"
 sdks:
   dart: ">=2.16.0 <3.0.0"
