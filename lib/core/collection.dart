@@ -699,6 +699,14 @@ class Collection extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Creates a new playlist in the collection.
+  ///
+  Future<void> playlistCreate(Playlist playlist) async {
+    playlists.add(playlist);
+    await playlistsSaveToCache();
+    notifyListeners();
+  }
+
   /// Removes a playlist from the collection.
   ///
   Future<void> playlistRemove(Playlist playlist) async {
