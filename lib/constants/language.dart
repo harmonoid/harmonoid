@@ -258,11 +258,13 @@ class Language extends Strings with ChangeNotifier {
     this.INTERNET_ERROR = asset['INTERNET_ERROR']!;
     this.KNOW_MORE = asset['KNOW_MORE']!;
     this.LAST_COLLECTION_DIRECTORY_REMOVED = asset['LAST_COLLECTION_DIRECTORY_REMOVED']!;
+    this.LESS = asset['LESS']!;
     this.LISTENING_TO_MUSIC = asset['LISTENING_TO_MUSIC']!;
     this.LYRICS = asset['LYRICS']!;
     this.LYRICS_NOT_FOUND = asset['LYRICS_NOT_FOUND']!;
     this.LYRICS_RETRIEVING = asset['LYRICS_RETRIEVING']!;
     this.MENU = asset['MENU']!;
+    this.MORE = asset['MORE']!;
     this.MUTE = asset['MUTE']!;
     this.M_TRACKS_AND_N_ALBUMS = asset['M_TRACKS_AND_N_ALBUMS']!;
     this.NEXT = asset['NEXT']!;
@@ -306,6 +308,7 @@ class Language extends Strings with ChangeNotifier {
     this.RESULTS_FOR_QUERY = asset['RESULTS_FOR_QUERY']!;
     this.RETRIEVING_INFO = asset['RETRIEVING_INFO']!;
     this.RETRIEVING_LINK = asset['RETRIEVING_LINK']!;
+    this.SAVE_AS_PLAYLIST = asset['SAVE_AS_PLAYLIST']!;
     this.SAVE_TO_DOWNLOADS = asset['SAVE_TO_DOWNLOADS']!;
     this.SEARCH = asset['SEARCH']!;
     this.SEARCH_COLLECTION = asset['SEARCH_COLLECTION']!;

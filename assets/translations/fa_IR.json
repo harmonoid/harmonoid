@@ -61,11 +61,13 @@
   "INTERNET_ERROR": "وضعیت اتصال خود را بررسی کنید.",
   "KNOW_MORE": "بیشتر بدانید...",
   "LAST_COLLECTION_DIRECTORY_REMOVED": "حداقل یک پوشه باید در کالکشن شما باشد.",
+  "LESS": "LESS",
   "LISTENING_TO_MUSIC": "گوش دادن به موزیک💜",
   "LYRICS": "تکست‌ها",
   "LYRICS_NOT_FOUND": "تکست آهنگ پیدا نشد.",
   "LYRICS_RETRIEVING": "گرفتن تکست‌ها...",
   "MENU": "منو",
+  "MORE": "MORE",
   "MUTE": "بی‌صدا",
   "M_TRACKS_AND_N_ALBUMS": "M آهنگ و N آلبوم",
   "NEXT": "بعدی",
@@ -109,6 +111,7 @@
   "RESULTS_FOR_QUERY": "نتیجه‌های \"QUERY\"",
   "RETRIEVING_INFO": "در حال گرفتن اطلاعات",
   "RETRIEVING_LINK": "در حال گرفتن جریان",
+  "SAVE_AS_PLAYLIST": "Save as playlist",
   "SAVE_TO_DOWNLOADS": "ذخیره در دانلود‌ها",
   "SEARCH": "جستجو",
   "SEARCH_COLLECTION": "جستجو در مجموعه",

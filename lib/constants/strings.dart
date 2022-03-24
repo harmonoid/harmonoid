@@ -61,11 +61,13 @@ class Strings {
   late String INTERNET_ERROR;
   late String KNOW_MORE;
   late String LAST_COLLECTION_DIRECTORY_REMOVED;
+  late String LESS;
   late String LISTENING_TO_MUSIC;
   late String LYRICS;
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
   late String MENU;
+  late String MORE;
   late String MUTE;
   late String M_TRACKS_AND_N_ALBUMS;
   late String NEXT;
@@ -109,6 +111,7 @@ class Strings {
   late String RESULTS_FOR_QUERY;
   late String RETRIEVING_INFO;
   late String RETRIEVING_LINK;
+  late String SAVE_AS_PLAYLIST;
   late String SAVE_TO_DOWNLOADS;
   late String SEARCH;
   late String SEARCH_COLLECTION;
