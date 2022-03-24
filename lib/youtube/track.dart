@@ -211,9 +211,11 @@ class TrackLargeTileState extends State<TrackLargeTile> {
 
 class TrackTile extends StatelessWidget {
   final Track track;
+  final List<Track>? group;
   const TrackTile({
     Key? key,
     required this.track,
+    this.group,
   }) : super(key: key);
 
   @override
@@ -255,7 +257,16 @@ class TrackTile extends StatelessWidget {
           }
         },
         child: InkWell(
-          onTap: () => YouTube.instance.open(track),
+          onTap: () {
+            if (group != null) {
+              YouTube.instance.open(
+                group,
+                index: group!.indexOf(track),
+              );
+            } else {
+              YouTube.instance.open(track);
+            }
+          },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -271,13 +282,26 @@ class TrackTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(width: 12.0),
-                    ExtendedImage(
-                      image: NetworkImage(
-                        track.thumbnails.values.first,
+                    if (track.thumbnails.isNotEmpty)
+                      ExtendedImage(
+                        image: NetworkImage(
+                          track.thumbnails.values.first,
+                        ),
+                        height: 56.0,
+                        width: 56.0,
+                      )
+                    else
+                      Container(
+                        height: 56.0,
+                        width: 56.0,
+                        child: Text(
+                          '${track.trackNumber}',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        alignment: Alignment.center,
                       ),
-                      height: 56.0,
-                      width: 56.0,
-                    ),
                     const SizedBox(width: 12.0),
                     Expanded(
                       child: Column(
@@ -296,7 +320,8 @@ class TrackTile extends StatelessWidget {
                           ),
                           Text(
                             [
-                              Language.instance.TRACK_SINGLE,
+                              if (track.thumbnails.isNotEmpty)
+                                Language.instance.TRACK_SINGLE,
                               track.albumName?.overflow ?? '',
                               track.albumArtistName?.overflow,
                               track.duration?.label ?? ''

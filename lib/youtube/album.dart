@@ -7,8 +7,9 @@
 ///
 import 'dart:async';
 import 'package:animations/animations.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:readmore/readmore.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_music/youtube_music.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -17,7 +18,10 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/models/media.dart' as media;
+import 'package:harmonoid/youtube/track.dart';
+import 'package:harmonoid/youtube/state/youtube.dart';
 
 class AlbumTile extends StatelessWidget {
   final Album album;
@@ -33,8 +37,8 @@ class AlbumTile extends StatelessWidget {
       child: InkWell(
         onTap: () async {
           if (album.tracks.isEmpty) {
-            final result = await Future.wait([
-              YouTubeMusic.album(album.id),
+            await Future.wait([
+              YouTubeMusic.album(album),
               precacheImage(
                 ExtendedNetworkImageProvider(
                   album.thumbnails.values.skip(3).first,
@@ -42,17 +46,6 @@ class AlbumTile extends StatelessWidget {
                 context,
               ),
             ]);
-            (result.first as Album)
-                .tracks
-                .toList()
-                .asMap()
-                .forEach((i, element) {
-              element.trackNumber = i + 1;
-            });
-            album.subtitle = (result.first as Album).subtitle;
-            album.secondSubtitle = (result.first as Album).secondSubtitle;
-            album.description = (result.first as Album).description;
-            album.tracks.addAll((result.first as Album).tracks);
           }
           Navigator.of(context).push(
             PageRouteBuilder(
@@ -65,8 +58,6 @@ class AlbumTile extends StatelessWidget {
                   album: album,
                 ),
               ),
-              transitionDuration: Duration(milliseconds: 300),
-              reverseTransitionDuration: Duration(milliseconds: 300),
             ),
           );
         },
@@ -138,11 +129,9 @@ class AlbumTile extends StatelessWidget {
 
 class AlbumScreen extends StatefulWidget {
   final Album album;
-  final Iterable<Color>? palette;
   const AlbumScreen({
     Key? key,
     required this.album,
-    this.palette,
   }) : super(key: key);
   AlbumScreenState createState() => AlbumScreenState();
 }
@@ -150,12 +139,26 @@ class AlbumScreen extends StatefulWidget {
 class AlbumScreenState extends State<AlbumScreen>
     with SingleTickerProviderStateMixin {
   Color? color;
-  Color? secondary;
-  Track? hovered;
-  bool reactToSecondaryPress = false;
-  bool detailsVisible = false;
-  bool detailsLoaded = false;
-  ScrollController controller = ScrollController(initialScrollOffset: 136.0);
+  double elevation = 0.0;
+  ScrollController controller = ScrollController(initialScrollOffset: 0.0);
+
+  bool isDark(BuildContext context) =>
+      (0.299 *
+              (color?.red ??
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? 0.0
+                      : 255.0))) +
+          (0.587 *
+              (color?.green ??
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? 0.0
+                      : 255.0))) +
+          (0.114 *
+              (color?.blue ??
+                  (Theme.of(context).brightness == Brightness.dark
+                      ? 0.0
+                      : 255.0))) <
+      128.0;
 
   @override
   void initState() {
@@ -166,57 +169,34 @@ class AlbumScreenState extends State<AlbumScreen>
       Timer(
         Duration(milliseconds: 300),
         () {
-          if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
-                    widget.album.thumbnails.values.first))
-                .then((palette) {
-              setState(() {
-                color = palette.colors.first;
-                secondary = palette.colors.last;
-                detailsVisible = true;
-              });
-            });
-          } else {
+          PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
+                  widget.album.thumbnails.values.first))
+              .then((palette) {
             setState(() {
-              detailsVisible = true;
+              color = palette.colors.first;
             });
-          }
+          });
         },
       );
-    }
-    if (isMobile) {
-      Timer(Duration(milliseconds: 100), () {
-        this
-            .controller
-            .animateTo(
-              0.0,
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            )
-            .then((_) {
-          Timer(Duration(milliseconds: 50), () {
-            setState(() {
-              detailsLoaded = true;
-            });
-          });
-        });
-      });
-      if (widget.palette != null) {
-        color = widget.palette?.first;
-        secondary = widget.palette?.last;
-      }
       controller.addListener(() {
-        if (controller.offset == 0.0) {
+        if (controller.offset.isZero) {
           setState(() {
-            detailsVisible = true;
+            elevation = 0.0;
           });
-        } else if (detailsVisible) {
+        } else if (elevation == 0.0) {
           setState(() {
-            detailsVisible = false;
+            elevation = 4.0;
           });
         }
       });
+      // TODO: Handle mobile layouts.
     }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -227,70 +207,36 @@ class AlbumScreenState extends State<AlbumScreen>
               height: MediaQuery.of(context).size.height,
               child: Stack(
                 children: [
-                  TweenAnimationBuilder(
-                    tween: ColorTween(
-                      begin: Theme.of(context).appBarTheme.backgroundColor,
-                      end: color == null
-                          ? Theme.of(context).appBarTheme.backgroundColor
-                          : color!,
-                    ),
-                    curve: Curves.easeOut,
-                    duration: Duration(
-                      milliseconds: 400,
-                    ),
-                    builder: (context, color, _) => DesktopAppBar(
-                      height: MediaQuery.of(context).size.height / 2,
-                      elevation: 4.0,
-                      color: color as Color? ?? Colors.transparent,
-                    ),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height -
-                        kDesktopNowPlayingBarHeight,
-                    width: MediaQuery.of(context).size.width,
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Card(
-                        clipBehavior: Clip.antiAlias,
-                        margin: EdgeInsets.only(top: 96.0, bottom: 4.0),
-                        elevation: 4.0,
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: 12 / 6 * 720.0,
-                            maxHeight: 720.0,
-                          ),
-                          width: MediaQuery.of(context).size.width - 136.0,
-                          height: MediaQuery.of(context).size.height - 192.0,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Expanded(
-                                flex: 5,
-                                child: ClipRect(
-                                  child: Stack(
-                                    alignment: Alignment.center,
+                  CustomListView(
+                    controller: controller,
+                    padding: EdgeInsets.only(
+                        top: desktopTitleBarHeight + kDesktopAppBarHeight),
+                    children: [
+                      TweenAnimationBuilder(
+                        tween: ColorTween(
+                          begin: Theme.of(context).appBarTheme.backgroundColor,
+                          end: color == null
+                              ? Theme.of(context).appBarTheme.backgroundColor
+                              : color!,
+                        ),
+                        curve: Curves.easeOut,
+                        duration: Duration(
+                          milliseconds: 300,
+                        ),
+                        builder: (context, color, _) => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Transform.translate(
+                              offset: Offset(0, -8.0),
+                              child: Material(
+                                color: color as Color? ?? Colors.transparent,
+                                elevation: 4.0,
+                                borderRadius: BorderRadius.zero,
+                                child: Container(
+                                  height: 312.0,
+                                  child: Row(
                                     children: [
-                                      TweenAnimationBuilder(
-                                        tween: ColorTween(
-                                          begin: Theme.of(context)
-                                              .appBarTheme
-                                              .backgroundColor,
-                                          end: color == null
-                                              ? Theme.of(context).dividerColor
-                                              : secondary!,
-                                        ),
-                                        curve: Curves.easeOut,
-                                        duration: Duration(
-                                          milliseconds: 600,
-                                        ),
-                                        builder: (context, color, _) =>
-                                            Positioned.fill(
-                                          child: Container(
-                                            color: color as Color?,
-                                          ),
-                                        ),
-                                      ),
+                                      const SizedBox(width: 56.0),
                                       Padding(
                                         padding: EdgeInsets.all(20.0),
                                         child: Hero(
@@ -319,21 +265,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 7,
-                                child: CustomListView(
-                                  children: [
-                                    Stack(
-                                      alignment: Alignment.bottomRight,
-                                      children: [
-                                        Container(
-                                          height: 156.0,
-                                          padding: EdgeInsets.all(16.0),
-                                          alignment: Alignment.centerLeft,
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 20.0),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -345,275 +280,271 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline1
-                                                    ?.copyWith(fontSize: 24.0),
+                                                    ?.copyWith(
+                                                      fontSize: 24.0,
+                                                      color: isDark(context)
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                    ),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                               SizedBox(height: 8.0),
                                               Text(
-                                                '${widget.album.subtitle}\n${widget.album.secondSubtitle}\n${widget.album.description}',
+                                                '${widget.album.subtitle}\n${widget.album.secondSubtitle}',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline3,
+                                                    .headline3
+                                                    ?.copyWith(
+                                                      color: isDark(context)
+                                                          ? Colors.white70
+                                                          : Colors.black87,
+                                                    ),
+                                                maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(12.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              FloatingActionButton(
-                                                heroTag: 'play_now',
-                                                onPressed: () {},
-                                                mini: true,
-                                                child: Icon(
-                                                  Icons.play_arrow,
-                                                ),
-                                                tooltip:
-                                                    Language.instance.PLAY_NOW,
-                                              ),
-                                              SizedBox(
-                                                width: 8.0,
-                                              ),
-                                              FloatingActionButton(
-                                                heroTag: 'add_to_now_playing',
-                                                onPressed: () {},
-                                                mini: true,
-                                                child: Icon(
-                                                  Icons.queue_music,
-                                                ),
-                                                tooltip: Language.instance
-                                                    .ADD_TO_NOW_PLAYING,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(
-                                      height: 1.0,
-                                    ),
-                                    LayoutBuilder(
-                                      builder: (context, constraints) => Column(
-                                        children: [
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    width: 64.0,
-                                                    height: 56.0,
-                                                    alignment: Alignment.center,
-                                                    child: Text(
-                                                      '#',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline2,
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Container(
-                                                      height: 56.0,
-                                                      padding: EdgeInsets.only(
-                                                          right: 8.0),
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Text(
-                                                        Language.instance
-                                                            .TRACK_SINGLE,
+                                              SizedBox(height: 8.0),
+                                              Expanded(
+                                                child: CustomListView(
+                                                  padding: EdgeInsets.only(
+                                                      right: 8.0),
+                                                  children: [
+                                                    if (widget.album.description
+                                                        .isNotEmpty)
+                                                      ReadMoreText(
+                                                        '${widget.album.description}',
+                                                        trimLines: 6,
+                                                        trimMode: TrimMode.Line,
+                                                        trimExpandedText:
+                                                            Language
+                                                                .instance.LESS,
+                                                        trimCollapsedText:
+                                                            Language
+                                                                .instance.MORE,
+                                                        colorClickableText:
+                                                            Theme.of(context)
+                                                                .primaryColor,
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .headline2,
+                                                            .headline3
+                                                            ?.copyWith(
+                                                              color: isDark(
+                                                                      context)
+                                                                  ? Colors
+                                                                      .white70
+                                                                  : Colors
+                                                                      .black87,
+                                                            ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    width: 56.0,
-                                                    height: 56.0,
-                                                  ),
-                                                ],
-                                              ),
-                                              Divider(height: 1.0),
-                                            ] +
-                                            (widget.album.tracks
-                                                .map(
-                                                  (track) => MouseRegion(
-                                                    onEnter: (e) {
-                                                      setState(() {
-                                                        hovered = track;
-                                                      });
-                                                    },
-                                                    onExit: (e) {
-                                                      setState(() {
-                                                        hovered = null;
-                                                      });
-                                                    },
-                                                    child: Listener(
-                                                      onPointerDown: (e) {
-                                                        reactToSecondaryPress = e
-                                                                    .kind ==
-                                                                PointerDeviceKind
-                                                                    .mouse &&
-                                                            e.buttons ==
-                                                                kSecondaryMouseButton;
-                                                      },
-                                                      onPointerUp: (e) async {
-                                                        if (!reactToSecondaryPress)
-                                                          return;
-                                                        var result =
-                                                            await showMenu(
-                                                          elevation: 4.0,
-                                                          context: context,
-                                                          position: RelativeRect
-                                                              .fromRect(
-                                                            Offset(
-                                                                    e.position
-                                                                        .dx,
-                                                                    e.position
-                                                                        .dy) &
-                                                                Size(228.0,
-                                                                    320.0),
-                                                            Rect.fromLTWH(
-                                                              0,
-                                                              0,
-                                                              MediaQuery.of(
+                                                    const SizedBox(
+                                                        height: 12.0),
+                                                    ButtonBar(
+                                                      buttonPadding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 8.0),
+                                                      alignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        ElevatedButton.icon(
+                                                          onPressed: () {
+                                                            YouTube.instance
+                                                                .open(widget
+                                                                    .album
+                                                                    .tracks);
+                                                          },
+                                                          style: ButtonStyle(
+                                                            elevation:
+                                                                MaterialStateProperty
+                                                                    .all(0.0),
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all(isDark(
+                                                                            context)
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .black87),
+                                                            padding: MaterialStateProperty
+                                                                .all(EdgeInsets
+                                                                    .all(12.0)),
+                                                          ),
+                                                          icon: Icon(
+                                                            Icons.play_arrow,
+                                                            color: !isDark(
+                                                                    context)
+                                                                ? Colors.white
+                                                                : Colors
+                                                                    .black87,
+                                                          ),
+                                                          label: Text(
+                                                            Language.instance
+                                                                .PLAY_NOW
+                                                                .toUpperCase(),
+                                                            style: TextStyle(
+                                                              fontSize: 12.0,
+                                                              color: !isDark(
                                                                       context)
-                                                                  .size
-                                                                  .width,
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height,
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black87,
+                                                              letterSpacing:
+                                                                  -0.1,
                                                             ),
                                                           ),
-                                                          items:
-                                                              trackPopupMenuItems(
-                                                            context,
+                                                        ),
+                                                        OutlinedButton.icon(
+                                                          onPressed: () {
+                                                            Collection.instance
+                                                                .playlistCreate(
+                                                              media.Playlist(
+                                                                id: widget
+                                                                    .album
+                                                                    .albumName
+                                                                    .hashCode,
+                                                                name: widget
+                                                                    .album
+                                                                    .albumName!,
+                                                              )..tracks.addAll(widget
+                                                                  .album.tracks
+                                                                  .map((e) => media
+                                                                          .Track
+                                                                      .fromYouTubeMusicTrack(
+                                                                          e.toJson()))),
+                                                            );
+                                                          },
+                                                          style: OutlinedButton
+                                                              .styleFrom(
+                                                            primary:
+                                                                Colors.white,
+                                                            side: BorderSide(
+                                                                color: isDark(
+                                                                        context)
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black87),
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    12.0),
                                                           ),
-                                                        );
-                                                        await trackPopupMenuHandle(
-                                                          context,
-                                                          media.Track
-                                                              .fromYouTubeMusicTrack(
-                                                                  track),
-                                                          result,
-                                                          recursivelyPopNavigatorOnDeleteIf:
-                                                              () => widget
-                                                                  .album
-                                                                  .tracks
-                                                                  .isEmpty,
-                                                        );
-                                                      },
-                                                      child: Material(
-                                                        color:
-                                                            Colors.transparent,
-                                                        child: InkWell(
-                                                          onTap: () {},
-                                                          child: Row(
-                                                            children: [
-                                                              Container(
-                                                                width: 64.0,
-                                                                height: 48.0,
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        right:
-                                                                            8.0),
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: hovered ==
-                                                                        track
-                                                                    ? IconButton(
-                                                                        onPressed:
-                                                                            () {},
-                                                                        icon: Icon(
-                                                                            Icons.play_arrow),
-                                                                        splashRadius:
-                                                                            20.0,
-                                                                      )
-                                                                    : Text(
-                                                                        '${track.trackNumber}',
-                                                                        style: Theme.of(context)
-                                                                            .textTheme
-                                                                            .headline4,
-                                                                      ),
-                                                              ),
-                                                              Expanded(
-                                                                child:
-                                                                    Container(
-                                                                  height: 48.0,
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          right:
-                                                                              8.0),
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .centerLeft,
-                                                                  child: Text(
-                                                                    track
-                                                                        .trackName,
-                                                                    style: Theme.of(
-                                                                            context)
-                                                                        .textTheme
-                                                                        .headline4,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                width: 72.0,
-                                                                child:
-                                                                    Container(
-                                                                  height: 48.0,
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          right:
-                                                                              8.0),
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  child: Text(
-                                                                    track.duration
-                                                                            ?.label ??
-                                                                        '',
-                                                                    style: Theme.of(
-                                                                            context)
-                                                                        .textTheme
-                                                                        .headline4,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
+                                                          icon: Icon(
+                                                            Icons.playlist_add,
+                                                            color: isDark(
+                                                                    context)
+                                                                ? Colors.white
+                                                                : Colors
+                                                                    .black87,
+                                                          ),
+                                                          label: Text(
+                                                            Language.instance
+                                                                .SAVE_AS_PLAYLIST
+                                                                .toUpperCase(),
+                                                            style: TextStyle(
+                                                              fontSize: 12.0,
+                                                              color: isDark(
+                                                                      context)
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black87,
+                                                              letterSpacing:
+                                                                  -0.1,
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
+                                                        OutlinedButton.icon(
+                                                          onPressed: () {
+                                                            launch(
+                                                                'https://music.youtube.com/browse/${widget.album.id}');
+                                                          },
+                                                          style: OutlinedButton
+                                                              .styleFrom(
+                                                            primary:
+                                                                Colors.white,
+                                                            side: BorderSide(
+                                                                color: isDark(
+                                                                        context)
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black87),
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    12.0),
+                                                          ),
+                                                          icon: Icon(
+                                                            Icons.open_in_new,
+                                                            color: isDark(
+                                                                    context)
+                                                                ? Colors.white
+                                                                : Colors
+                                                                    .black87,
+                                                          ),
+                                                          label: Text(
+                                                            Language.instance
+                                                                .OPEN_IN_BROWSER
+                                                                .toUpperCase(),
+                                                            style: TextStyle(
+                                                              fontSize: 12.0,
+                                                              color: isDark(
+                                                                      context)
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black87,
+                                                              letterSpacing:
+                                                                  -0.1,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                )
-                                                .toList()),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(width: 56.0),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            ...widget.album.tracks.map(
+                              (e) => TrackTile(
+                                track: e,
+                                group: widget.album.tracks,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                    ],
+                  ),
+                  TweenAnimationBuilder(
+                    tween: ColorTween(
+                      begin: Theme.of(context).appBarTheme.backgroundColor,
+                      end: color == null
+                          ? Theme.of(context).appBarTheme.backgroundColor
+                          : color!,
+                    ),
+                    curve: Curves.easeOut,
+                    duration: Duration(
+                      milliseconds: 300,
+                    ),
+                    builder: (context, color, _) => DesktopAppBar(
+                      elevation: elevation,
+                      color: color as Color? ?? Colors.transparent,
+                      title: elevation.isZero ? null : widget.album.albumName,
                     ),
                   ),
                 ],
               ),
             ),
           )
+        :
         // TODO: Handle mobile layouts.
-        : Container();
+        Container();
   }
 }

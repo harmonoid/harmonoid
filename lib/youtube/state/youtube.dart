@@ -46,13 +46,13 @@ class YouTube extends ChangeNotifier {
         notifyListeners();
       }
     }
-    for (final e in recommendations!) {
-      print(e.toJson());
-    }
   }
 
   /// Plays a [Track] or a [Video] automatically handling conversion to local model [media.Track].
-  Future<void> open(value) async {
+  Future<void> open(
+    value, {
+    int index = 0,
+  }) async {
     if (value is Track) {
       Playback.instance.open(
         [media.Track.fromYouTubeMusicTrack(value.toJson())],
@@ -85,6 +85,13 @@ class YouTube extends ChangeNotifier {
               .toList(),
         );
       }
+    } else if (value is List<Track>) {
+      Playback.instance.open(
+        value
+            .map((e) => media.Track.fromYouTubeMusicTrack(e.toJson()))
+            .toList(),
+        index: index,
+      );
     }
   }
 
