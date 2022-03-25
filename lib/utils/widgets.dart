@@ -995,6 +995,8 @@ class ScrollableSlider extends StatelessWidget {
   final double min;
   final double max;
   final double value;
+  final Color? color;
+  final Color? secondaryColor;
   final VoidCallback onScrolledUp;
   final VoidCallback onScrolledDown;
   final void Function(double) onChanged;
@@ -1004,6 +1006,8 @@ class ScrollableSlider extends StatelessWidget {
     required this.min,
     required this.max,
     required this.value,
+    this.color,
+    this.secondaryColor,
     required this.onScrolledUp,
     required this.onScrolledDown,
     required this.onChanged,
@@ -1032,10 +1036,13 @@ class ScrollableSlider extends StatelessWidget {
             elevation: 2.0,
           ),
           overlayShape: RoundSliderOverlayShape(overlayRadius: 12.0),
-          overlayColor: Theme.of(context).primaryColor.withOpacity(0.4),
-          thumbColor: Theme.of(context).primaryColor,
-          activeTrackColor: Theme.of(context).primaryColor,
-          inactiveTrackColor: Theme.of(context).brightness == Brightness.dark
+          overlayColor:
+              (color ?? Theme.of(context).primaryColor).withOpacity(0.4),
+          thumbColor: (color ?? Theme.of(context).primaryColor),
+          activeTrackColor: (color ?? Theme.of(context).primaryColor),
+          inactiveTrackColor: (secondaryColor != null
+                  ? secondaryColor?.isDark
+                  : Theme.of(context).brightness == Brightness.dark)!
               ? Colors.white.withOpacity(0.4)
               : Colors.black.withOpacity(0.2),
         ),
@@ -1202,4 +1209,8 @@ class _ContextMenuAreaState extends State<ContextMenuArea> {
       child: widget.child,
     );
   }
+}
+
+extension on Color {
+  bool get isDark => (0.299 * red) + (0.587 * green) + (0.114 * blue) < 128.0;
 }

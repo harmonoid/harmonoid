@@ -420,29 +420,85 @@ class IndexingState extends State<IndexingSetting> {
                           ),
                       ],
                 ),
-              )
+              ),
+              ButtonBar(
+                alignment: MainAxisAlignment.start,
+                children: [
+                  MaterialButton(
+                    onPressed: controller.progress != controller.total
+                        ? () {}
+                        : () async {
+                            Collection.instance.refresh(
+                              onProgress: (progress, total, isCompleted) {
+                                controller.set(progress, total);
+                              },
+                            );
+                          },
+                    child: Text(
+                      Language.instance.REFRESH.toUpperCase(),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
+                  MaterialButton(
+                    onPressed: controller.progress != controller.total
+                        ? () {}
+                        : () async {
+                            Collection.instance.index(
+                              onProgress: (progress, total, isCompleted) {
+                                controller.set(progress, total);
+                              },
+                            );
+                          },
+                    child: Text(
+                      Language.instance.REINDEX.toUpperCase(),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: '${Language.instance.REFRESH}: ',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline3
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: Language.instance.REFRESH_INFORMATION,
+                              style: TextStyle(fontWeight: FontWeight.normal)),
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: '${Language.instance.REINDEX}: ',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline3
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: Language.instance.REINDEX_INFORMATION,
+                              style: TextStyle(fontWeight: FontWeight.normal)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
-        actions: [
-          MaterialButton(
-            onPressed: controller.progress != controller.total
-                ? () {}
-                : () async {
-                    Collection.instance.index(
-                      onProgress: (progress, total, isCompleted) {
-                        controller.set(progress, total);
-                      },
-                    );
-                  },
-            child: Text(
-              Language.instance.REINDEX.toUpperCase(),
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

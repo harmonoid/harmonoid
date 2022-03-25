@@ -491,7 +491,7 @@ InputDecoration desktopInputDecoration(
             ),
     ),
     contentPadding:
-        EdgeInsets.only(left: 10.0, bottom: trailingIcon == null ? 18.0 : 14.0),
+        EdgeInsets.only(left: 10.0, bottom: trailingIcon == null ? 10.0 : 10.0),
     hintText: hintText,
     hintStyle: Theme.of(context).textTheme.headline3?.copyWith(
           color: Theme.of(context).brightness == Brightness.light
@@ -500,29 +500,26 @@ InputDecoration desktopInputDecoration(
         ),
     filled: true,
     fillColor: Theme.of(context).brightness == Brightness.light
-        ? Colors.white
+        ? Theme.of(context).dividerColor.withOpacity(0.06)
         : Color(0xFF202020),
-    hoverColor: Theme.of(context).brightness == Brightness.light
-        ? Colors.white
-        : Color(0xFF202020),
-    border: OutlineInputBorder(
+    border: UnderlineInputBorder(
       borderSide: BorderSide(
-        color: Theme.of(context).dividerColor.withOpacity(0.32),
-        width: 0.6,
+        color: Theme.of(context).primaryColor,
+        width: 1.8,
       ),
       borderRadius: BorderRadius.zero,
     ),
-    enabledBorder: OutlineInputBorder(
+    enabledBorder: UnderlineInputBorder(
       borderSide: BorderSide(
-        color: Theme.of(context).dividerColor.withOpacity(0.32),
-        width: 0.6,
+        color: Theme.of(context).primaryColor,
+        width: 1.8,
       ),
       borderRadius: BorderRadius.zero,
     ),
-    focusedBorder: OutlineInputBorder(
+    focusedBorder: UnderlineInputBorder(
       borderSide: BorderSide(
-        color: Theme.of(context).dividerColor.withOpacity(0.32),
-        width: 0.6,
+        color: Theme.of(context).primaryColor,
+        width: 1.8,
       ),
       borderRadius: BorderRadius.zero,
     ),

@@ -104,7 +104,9 @@ class Strings {
   late String PREVIOUS;
   late String RECOMMENDATIONS;
   late String REFRESH;
+  late String REFRESH_INFORMATION;
   late String REINDEX;
+  late String REINDEX_INFORMATION;
   late String REMOVE;
   late String REMOVE_FROM_PLAYLIST;
   late String REPEAT;

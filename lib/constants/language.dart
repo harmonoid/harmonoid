@@ -301,7 +301,9 @@ class Language extends Strings with ChangeNotifier {
     this.PREVIOUS = asset['PREVIOUS']!;
     this.RECOMMENDATIONS = asset['RECOMMENDATIONS']!;
     this.REFRESH = asset['REFRESH']!;
+    this.REFRESH_INFORMATION = asset['REFRESH_INFORMATION']!;
     this.REINDEX = asset['REINDEX']!;
+    this.REINDEX_INFORMATION = asset['REINDEX_INFORMATION']!;
     this.REMOVE = asset['REMOVE']!;
     this.REMOVE_FROM_PLAYLIST = asset['REMOVE_FROM_PLAYLIST']!;
     this.REPEAT = asset['REPEAT']!;
