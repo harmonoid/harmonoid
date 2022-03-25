@@ -92,6 +92,7 @@ class Configuration extends ConfigurationKeys {
     bool? automaticallyAddOtherSongsFromCollectionToNowPlaying,
     bool? automaticallyShowNowPlayingScreenAfterPlaying,
     bool? automaticallyRefreshCollectionOnFreshStart,
+    bool? changeNowPlayingBarColorBasedOnPlayingMusic,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -141,6 +142,10 @@ class Configuration extends ConfigurationKeys {
       this.automaticallyRefreshCollectionOnFreshStart =
           automaticallyRefreshCollectionOnFreshStart;
     }
+    if (changeNowPlayingBarColorBasedOnPlayingMusic != null) {
+      this.changeNowPlayingBarColorBasedOnPlayingMusic =
+          changeNowPlayingBarColorBasedOnPlayingMusic;
+    }
     await file.writeAsString(
       convert.JsonEncoder.withIndent('  ').convert(
         {
@@ -166,6 +171,8 @@ class Configuration extends ConfigurationKeys {
               this.automaticallyShowNowPlayingScreenAfterPlaying,
           'automaticallyRefreshCollectionOnFreshStart':
               this.automaticallyRefreshCollectionOnFreshStart,
+          'changeNowPlayingBarColorBasedOnPlayingMusic':
+              this.changeNowPlayingBarColorBasedOnPlayingMusic,
         },
       ),
     );
@@ -210,6 +217,8 @@ class Configuration extends ConfigurationKeys {
           current['automaticallyShowNowPlayingScreenAfterPlaying'];
       automaticallyRefreshCollectionOnFreshStart =
           current['automaticallyRefreshCollectionOnFreshStart'];
+      changeNowPlayingBarColorBasedOnPlayingMusic =
+          current['changeNowPlayingBarColorBasedOnPlayingMusic'];
     } catch (exception) {
       if (!retry) throw exception;
       if (!await file.exists_()) {
@@ -240,6 +249,7 @@ abstract class ConfigurationKeys {
   late bool automaticallyAddOtherSongsFromCollectionToNowPlaying;
   late bool automaticallyShowNowPlayingScreenAfterPlaying;
   late bool automaticallyRefreshCollectionOnFreshStart;
+  late bool changeNowPlayingBarColorBasedOnPlayingMusic;
 }
 
 final Map<String, dynamic> defaultConfiguration = {
@@ -265,4 +275,5 @@ final Map<String, dynamic> defaultConfiguration = {
   'automaticallyAddOtherSongsFromCollectionToNowPlaying': false,
   'automaticallyShowNowPlayingScreenAfterPlaying': true,
   'automaticallyRefreshCollectionOnFreshStart': false,
+  'changeNowPlayingBarColorBasedOnPlayingMusic': true,
 };

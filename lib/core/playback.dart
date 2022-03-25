@@ -237,7 +237,7 @@ class Playback extends ChangeNotifier {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       loadAppState().then((value) {
         player.streams.index.listen((event) {
-          index = event.clamp(0, tracks.length);
+          index = event.clamp(0, tracks.length - 1);
           if (AppState.instance.playlistIndex != index) {
             _saveAppState();
           }

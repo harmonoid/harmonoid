@@ -10,8 +10,6 @@ import 'dart:math';
 import 'dart:core';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/models/media.dart';
-import 'package:harmonoid/utils/dimensions.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +18,9 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/state/now_playing_launcher.dart';
+import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/models/media.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 
 class NowPlayingBar extends StatefulWidget {
   const NowPlayingBar({Key? key}) : super(key: key);
@@ -48,6 +49,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
         playOrPause.forward();
       } else {
         playOrPause.reverse();
+      }
+      if (!Configuration.instance.changeNowPlayingBarColorBasedOnPlayingMusic ||
+          Playback.instance.index < 0 ||
+          Playback.instance.index >= Playback.instance.tracks.length) {
+        return;
       }
       final track = Playback.instance.tracks[Playback.instance.index];
       if (this.track != track) {
@@ -216,8 +222,12 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                   key: Key(playback.index
                                                       .toString()),
                                                   image: getAlbumArt(
-                                                    playback
-                                                        .tracks[playback.index],
+                                                    playback.tracks[
+                                                        playback.index.clamp(
+                                                            0,
+                                                            playback.tracks
+                                                                    .length -
+                                                                1)],
                                                     small: true,
                                                   ),
                                                   height: 84.0,
@@ -275,8 +285,13 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              playback.tracks[playback.index]
-                                                  .trackName.overflow,
+                                              playback
+                                                  .tracks[playback.index.clamp(
+                                                      0,
+                                                      playback.tracks.length -
+                                                          1)]
+                                                  .trackName
+                                                  .overflow,
                                               style:
                                                   Theme.of(context)
                                                       .textTheme
@@ -297,7 +312,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             Text(
-                                              playback.tracks[playback.index]
+                                              playback
+                                                  .tracks[playback.index.clamp(
+                                                      0,
+                                                      playback.tracks.length -
+                                                          1)]
                                                   .trackArtistNames
                                                   .take(2)
                                                   .join(', ')
