@@ -6,7 +6,7 @@
 
 [Download](#download) • [Discord](https://discord.gg/2Rc3edFWd8)
 
-[work-in-progress]
+[work-in-progress] [current-scope of work: #242] [[report-bugs-or-request-features](https://github.com/harmonoid/harmonoid/issues)][[patreon](https://www.patreon.com/harmonoid)]
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304862-f4d336c6-4559-477b-b82e-a876f78f5eec.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304870-6d1d18db-7120-43bd-87fa-9fa369244bfd.webp?raw=true)
