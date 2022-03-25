@@ -15,6 +15,7 @@ class Strings {
   late String A_TO_Z;
   late String BUFFERING;
   late String CANCEL;
+  late String CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC;
   late String COLLECTION;
   late String COLLECTION_ALBUM_DELETE_DIALOG_BODY;
   late String COLLECTION_ALBUM_DELETE_DIALOG_HEADER;
