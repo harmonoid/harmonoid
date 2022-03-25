@@ -36,7 +36,7 @@ const kContributors = [
     'https://github.com/raitonoberu',
     'https://avatars.githubusercontent.com/u/64320078?s=80&v=4',
     'Denis',
-    'Windows installer & bug fixes. Russian translation.',
+    'Major bug-fixes & Windows installer. Russian translation.',
   ],
   [
     'https://github.com/mytja',
@@ -190,6 +190,12 @@ const kTranslators = [
     'https://avatars.githubusercontent.com/u/50566073?s=80&v=4',
     '0xjohn',
     'Add Persian translation.'
+  ],
+  [
+    'https://github.com/Feelogil',
+    'https://avatars.githubusercontent.com/u/61083015?s=80&v=4',
+    'Feelogil',
+    'Update Russian translation.'
   ],
 ];
 

@@ -160,7 +160,7 @@ ThemeData createTheme({
     primaryColorLight: color,
     primaryColor: color,
     primaryColorDark: color,
-    scaffoldBackgroundColor: isLight ? Colors.grey.shade100 : Color(0xFF121212),
+    scaffoldBackgroundColor: isLight ? Colors.white : Color(0xFF121212),
     toggleableActiveColor: color,
     cardColor: isLight ? Colors.white : Color(0xFF202020),
     backgroundColor: color.withOpacity(0.24),

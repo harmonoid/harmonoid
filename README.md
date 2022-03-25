@@ -1,7 +1,8 @@
 <img align="left" src="https://raw.githubusercontent.com/harmonoid/harmonoid/master/windows/runner/resources/app_icon.ico" width="64" height="64"></img>
+
 <h1 align="left">Harmonoid</h1>
 
-**🎵 Elegant music app to play & manage music library. Lyrics & playlists. YouTube Music support.** 
+**🎵 Elegant music app to play & manage music library. Lyrics & playlists. YouTube Music support.**
 
 [Download](#download) • [Discord](https://discord.gg/2Rc3edFWd8)
 
@@ -212,7 +213,7 @@ An incomplete list of people who are working (or worked) on the project in past:
   <li>
     <img src='https://avatars.githubusercontent.com/u/64320078?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/raitonoberu'>Denis</a></strong>
     <ul>
-      <li>Windows installer & major bug fixes. Russian translation.</li>
+      <li>Major bug-fixes & Windows installer. Russian translation.</li>
     </ul>
   </li>
   <li>
@@ -373,6 +374,12 @@ An incomplete list of people who are working (or worked) on the project in past:
     <img src='https://avatars.githubusercontent.com/u/50566073?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/0xj0hn'>0xj0hn</a></strong>
     <ul>
       <li>Add Persian translation.</li>
+    </ul>
+  </li>
+  <li>
+    <img src='https://avatars.githubusercontent.com/u/61083015?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/Feelogil'>Feelogil</a></strong>
+    <ul>
+      <li>Update Russian translation.</li>
     </ul>
   </li>
 </ul>
