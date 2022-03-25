@@ -482,7 +482,7 @@ class AlbumTile extends StatelessWidget {
               onTap: () async {
                 if (palette == null) {
                   final result = await PaletteGenerator.fromImageProvider(
-                      getAlbumArt(album));
+                      getAlbumArt(album, small: true));
                   palette = result.colors;
                 }
                 await precacheImage(getAlbumArt(album), context);
@@ -581,7 +581,8 @@ class AlbumScreenState extends State<AlbumScreen>
         Duration(milliseconds: 300),
         () {
           if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(getAlbumArt(widget.album))
+            PaletteGenerator.fromImageProvider(
+                    getAlbumArt(widget.album, small: true))
                 .then((palette) {
               setState(() {
                 color = palette.colors.first;

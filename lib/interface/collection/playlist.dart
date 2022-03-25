@@ -440,7 +440,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                 Iterable<Color>? palette;
                 if (isMobile && widget.playlist.tracks.isNotEmpty) {
                   final result = await PaletteGenerator.fromImageProvider(
-                      getAlbumArt(widget.playlist.tracks.last));
+                      getAlbumArt(widget.playlist.tracks.last, small: true));
                   palette = result.colors;
                 }
                 Navigator.of(context).push(
@@ -562,7 +562,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
         () {
           if (widget.palette == null) {
             PaletteGenerator.fromImageProvider(
-                    getAlbumArt(widget.playlist.tracks.last))
+                    getAlbumArt(widget.playlist.tracks.last, small: true))
                 .then((palette) {
               setState(() {
                 color = palette.colors.first;
