@@ -4,6 +4,7 @@ Release:    1
 Summary:    Elegant music app to play & manage music library.
 License:    EULA
 Requires:   mpv, mpv-libs-devel
+AutoReqProv: no
 
 %description
 Elegant music app to play & manage music library.
