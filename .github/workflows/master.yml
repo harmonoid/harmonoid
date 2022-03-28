@@ -100,10 +100,12 @@ jobs:
 
       - name: Build RPM Package
         run: |
-          cp -fr build/linux/x64/release/bundle linux/debian/usr/bin
+          cp -fr build/linux/x64/release/bundle linux/debian/usr/share/harmonoid
+          mkdir linux/debian/usr/bin
+          ln -sr linux/debian/usr/share/harmonoid/harmonoid linux/debian/usr/bin/harmonoid
           sed -i "s:cp -rf :cp -rf $(pwd)/:" linux/rpm/harmonoid.spec
           cd linux/debian
-          sed -i "s:FILES_HERE:$(find usr -type f -follow -print | awk '{printf "/%s\\n", $0}'):" ../rpm/harmonoid.spec
+          sed -i "s:FILES_HERE:$(find usr \( -type l -o -type f \) -follow -print | awk '{printf "/%s\\n", $0}'):" ../rpm/harmonoid.spec
           cd ../../
           rpmbuild -bb linux/rpm/harmonoid.spec -D "_topdir $(pwd)/rpmbuild"
           cp rpmbuild/RPMS/x86_64/*.rpm harmonoid-linux-x86_64.rpm
