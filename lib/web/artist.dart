@@ -50,15 +50,19 @@ class ArtistTile extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(2.0),
-                      child: ClipOval(
-                        child: ExtendedImage(
-                          image: NetworkImage(
-                            artist.thumbnails.values.first,
-                          ),
-                          height: 52.0,
-                          width: 52.0,
-                        ),
-                      ),
+                      child: artist.thumbnails.isNotEmpty
+                          ? ClipOval(
+                              child: ExtendedImage(
+                                image: NetworkImage(
+                                  artist.thumbnails.values.first,
+                                ),
+                                height: 52.0,
+                                width: 52.0,
+                              ),
+                            )
+                          : SizedBox.square(
+                              dimension: 52.0,
+                            ),
                     ),
                   ),
                   const SizedBox(width: 12.0),
@@ -78,10 +82,7 @@ class ArtistTile extends StatelessWidget {
                           height: 2.0,
                         ),
                         Text(
-                          [
-                            Language.instance.ARTIST_SINGLE,
-                            artist.subscribersCount
-                          ].join(' • '),
+                          [artist.subscribersCount].join(' • '),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: Theme.of(context).textTheme.headline3,

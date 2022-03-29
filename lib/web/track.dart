@@ -282,7 +282,7 @@ class TrackTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(width: 12.0),
-                    if (track.thumbnails.isNotEmpty)
+                    if (track.thumbnails.isNotEmpty && group == null)
                       ExtendedImage(
                         image: NetworkImage(
                           track.thumbnails.values.first,
@@ -320,9 +320,9 @@ class TrackTile extends StatelessWidget {
                           ),
                           Text(
                             [
-                              if (track.thumbnails.isNotEmpty)
-                                Language.instance.TRACK_SINGLE,
-                              track.albumName.overflow ?? '',
+                              if (group == null) Language.instance.TRACK_SINGLE,
+                              if (track.albumName.isNotEmpty)
+                                track.albumName.overflow,
                               track.albumArtistName.overflow,
                               track.duration.label
                             ].join(' • '),

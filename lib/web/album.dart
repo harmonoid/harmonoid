@@ -257,6 +257,9 @@ class AlbumScreenState extends State<AlbumScreen>
                                                           .skip(3)
                                                           .first,
                                                     ),
+                                                    height: 256.0,
+                                                    width: 256.0,
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
                                               ],
@@ -453,7 +456,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                         OutlinedButton.icon(
                                                           onPressed: () {
                                                             launch(
-                                                                'https://music.Webcom/browse/${widget.album.id}');
+                                                                'https://music.youtube.com/browse/${widget.album.id}');
                                                           },
                                                           style: OutlinedButton
                                                               .styleFrom(
