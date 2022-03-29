@@ -18,12 +18,12 @@ dependencies:
     path: external/smtc-win32/bindings/system_media_transport_controls.dart
   mpris_service:
     path: external/mpris_service.dart
-  youtube_music:
-    path: external/youtube_music.dart
   harmonoid_visual_assets:
     path: external/harmonoid_visual_assets
   override_window_destroy:
     path: external/override_window_destroy
+  ytm_client:
+    path: external/ytm_client.dart
   windows_taskbar: ^1.1.0
   dart_discord_rpc: ^0.0.2
   flutter_media_metadata:
@@ -56,6 +56,7 @@ dependencies:
   animations: ^2.0.0
   palette_generator: ^0.3.2
   draggable_scrollbar: ^0.1.0
+  infinite_scroll_pagination: ^3.1.0
   readmore: ^2.1.0
   fluentui_system_icons: ^1.1.136
   material_floating_search_bar: ^0.3.6
