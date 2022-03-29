@@ -471,11 +471,12 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
   );
 }
 
-InputDecoration desktopInputDecoration(
+InputDecoration inputDecoration(
   BuildContext context,
   String hintText, {
   Widget? trailingIcon,
   VoidCallback? trailingIconOnPressed,
+  Color? fillColor,
 }) {
   return InputDecoration(
     suffixIcon: Material(
@@ -499,29 +500,27 @@ InputDecoration desktopInputDecoration(
               : Colors.white60,
         ),
     filled: true,
-    fillColor: Theme.of(context).brightness == Brightness.light
-        ? Theme.of(context).dividerColor.withOpacity(0.06)
-        : Color(0xFF202020),
+    fillColor: fillColor ??
+        (Theme.of(context).brightness == Brightness.light
+            ? Theme.of(context).dividerColor.withOpacity(0.04)
+            : Color(0xFF202020)),
     border: UnderlineInputBorder(
       borderSide: BorderSide(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).iconTheme.color!.withOpacity(0.4),
         width: 1.8,
       ),
-      borderRadius: BorderRadius.zero,
     ),
     enabledBorder: UnderlineInputBorder(
       borderSide: BorderSide(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).iconTheme.color!.withOpacity(0.4),
         width: 1.8,
       ),
-      borderRadius: BorderRadius.zero,
     ),
     focusedBorder: UnderlineInputBorder(
       borderSide: BorderSide(
         color: Theme.of(context).primaryColor,
         width: 1.8,
       ),
-      borderRadius: BorderRadius.zero,
     ),
   );
 }
@@ -557,7 +556,7 @@ extension DateTimeExtension on DateTime {
 ImageProvider getAlbumArt(Media media, {bool small: false}) {
   final result = () {
     if (media is Track) {
-      if (Plugins.isExternalMedia(media.uri)) {
+      if (Plugins.isWebMedia(media.uri)) {
         return ExtendedNetworkImageProvider(
           Plugins.artwork(media.uri, small: small),
           cache: true,
@@ -570,24 +569,26 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
       if (file.existsSync_()) {
         return ExtendedFileImageProvider(file);
       } else {
-        final file = File(path.join(
-          Collection.instance.albumArtDirectory.path,
-          media.legacyAlbumArtFileName,
-        ));
-        if (file.existsSync_()) {
-          return ExtendedFileImageProvider(file);
-        } else {
-          for (final name in kAlbumArtFileNames) {
-            final file =
-                File(path.join(path.basename(media.uri.toFilePath()), name));
-            if (file.existsSync_()) {
-              return ExtendedFileImageProvider(file);
+        try {
+          final file = File(path.join(
+            Collection.instance.albumArtDirectory.path,
+            media.legacyAlbumArtFileName,
+          ));
+          if (file.existsSync_()) {
+            return ExtendedFileImageProvider(file);
+          } else {
+            for (final name in kAlbumArtFileNames) {
+              final file =
+                  File(path.join(path.basename(media.uri.toFilePath()), name));
+              if (file.existsSync_()) {
+                return ExtendedFileImageProvider(file);
+              }
             }
           }
-        }
+        } catch (_) {}
       }
     } else if (media is Album) {
-      if (Plugins.isExternalMedia(media.tracks.first.uri)) {
+      if (Plugins.isWebMedia(media.tracks.first.uri)) {
         return ExtendedNetworkImageProvider(
           Plugins.artwork(
             media.tracks.first.uri,
@@ -603,24 +604,26 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
       if (file.existsSync_()) {
         return ExtendedFileImageProvider(file);
       } else {
-        final file = File(path.join(
-          Collection.instance.albumArtDirectory.path,
-          media.tracks.first.legacyAlbumArtFileName,
-        ));
-        if (file.existsSync_()) {
-          return ExtendedFileImageProvider(file);
-        } else {
-          for (final name in kAlbumArtFileNames) {
-            final file = File(path.join(
-                path.basename(media.tracks.first.uri.toFilePath()), name));
-            if (file.existsSync_()) {
-              return ExtendedFileImageProvider(file);
+        try {
+          final file = File(path.join(
+            Collection.instance.albumArtDirectory.path,
+            media.tracks.first.legacyAlbumArtFileName,
+          ));
+          if (file.existsSync_()) {
+            return ExtendedFileImageProvider(file);
+          } else {
+            for (final name in kAlbumArtFileNames) {
+              final file = File(path.join(
+                  path.basename(media.tracks.first.uri.toFilePath()), name));
+              if (file.existsSync_()) {
+                return ExtendedFileImageProvider(file);
+              }
             }
           }
-        }
+        } catch (_) {}
       }
     } else if (media is Artist) {
-      if (Plugins.isExternalMedia(media.tracks.first.uri)) {
+      if (Plugins.isWebMedia(media.tracks.first.uri)) {
         return ExtendedNetworkImageProvider(
           Plugins.artwork(
             media.tracks.first.uri,
@@ -636,21 +639,23 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
       if (file.existsSync_()) {
         return ExtendedFileImageProvider(file);
       } else {
-        final file = File(path.join(
-          Collection.instance.albumArtDirectory.path,
-          media.tracks.first.legacyAlbumArtFileName,
-        ));
-        if (file.existsSync_()) {
-          return ExtendedFileImageProvider(file);
-        } else {
-          for (final name in kAlbumArtFileNames) {
-            final file = File(path.join(
-                path.basename(media.tracks.first.uri.toFilePath()), name));
-            if (file.existsSync_()) {
-              return ExtendedFileImageProvider(file);
+        try {
+          final file = File(path.join(
+            Collection.instance.albumArtDirectory.path,
+            media.tracks.first.legacyAlbumArtFileName,
+          ));
+          if (file.existsSync_()) {
+            return ExtendedFileImageProvider(file);
+          } else {
+            for (final name in kAlbumArtFileNames) {
+              final file = File(path.join(
+                  path.basename(media.tracks.first.uri.toFilePath()), name));
+              if (file.existsSync_()) {
+                return ExtendedFileImageProvider(file);
+              }
             }
           }
-        }
+        } catch (_) {}
       }
     }
     return ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
