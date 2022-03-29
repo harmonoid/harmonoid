@@ -369,7 +369,8 @@ class TrackTileState extends State<TrackTile> {
                                   context,
                                   widget.track,
                                   result,
-                                  recursivelyPopNavigatorOnDeleteIf: () => false,
+                                  recursivelyPopNavigatorOnDeleteIf: () =>
+                                      false,
                                 );
                               },
                               color: Theme.of(context).iconTheme.color,

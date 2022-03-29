@@ -2,7 +2,6 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/link.dart';
 
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
@@ -59,36 +58,15 @@ class VersionState extends State<VersionSetting> {
               ? Align(
                   key: Key('loading_icon'),
                   alignment: Alignment(-0.7, 0.0),
-                  child: SizedBox(
-                    height: Theme.of(context).textTheme.bodyText2!.fontSize,
-                    width: Theme.of(context).textTheme.bodyText2!.fontSize,
-                    child: CircularProgressIndicator(
-                      color: Theme.of(context).colorScheme.secondary,
-                      strokeWidth: 2,
-                    ),
-                  ),
+                  child: Container(),
                 )
               : Align(
                   key: Key('version_details'),
                   alignment: Alignment.centerLeft,
-                  child: Link(
-                    uri: Uri.parse(release.htmlUrl ?? ''),
-                    builder: (context, openLink) => MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: hasLink ? openLink : null,
-                        child: Text(
-                          fetchVersionFailed
-                              ? Language.instance.NO_INTERNET_TITLE
-                              : release.tagName,
-                          style: TextStyle(
-                            color: hasLink
-                                ? Theme.of(context).colorScheme.secondary
-                                : Theme.of(context).disabledColor,
-                          ),
-                        ),
-                      ),
-                    ),
+                  child: Text(
+                    fetchVersionFailed
+                        ? Language.instance.NO_INTERNET_TITLE
+                        : release.tagName,
                   ),
                 ),
         ),
@@ -104,16 +82,16 @@ class VersionState extends State<VersionSetting> {
       child: Column(
         children: [
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 360),
+            constraints: BoxConstraints(maxWidth: 480),
             child: Table(
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               children: [
                 getVersionTableRow(
-                  Language.instance.SETTING_APP_VERSION_INSTALLED,
+                  Language.instance.SETTING_APP_VERSION_INSTALLED + ':',
                   Release(tagName: kVersion),
                 ),
                 getVersionTableRow(
-                  Language.instance.SETTING_APP_VERSION_LATEST,
+                  Language.instance.SETTING_APP_VERSION_LATEST + ':',
                   latestRelease,
                 ),
               ],

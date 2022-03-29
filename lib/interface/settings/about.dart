@@ -42,7 +42,7 @@ const kContributors = [
     'https://github.com/mytja',
     'https://avatars.githubusercontent.com/u/52399966?s=80&v=4',
     'mytja',
-    'WinGet package. Backward Windows compatiblity checks. Improvements to YouTube Music support. Bug reports. CI. Slovenian translation.',
+    'WinGet package. Backward Windows compatiblity checks. Bug reports. CI. Slovenian translation.',
   ],
   [
     'https://github.com/bdlukaa',
@@ -177,7 +177,7 @@ const kTranslators = [
     'https://github.com/mi875',
     'https://avatars.githubusercontent.com/u/64814866?s=80&v=4',
     'mi875',
-    'Update Portuguese translation.'
+    'Update Japanese translation.'
   ],
   [
     'https://github.com/Lucifer25x',

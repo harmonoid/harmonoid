@@ -461,38 +461,19 @@ class IndexingState extends State<IndexingSetting> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(left: 8.0),
+                padding: EdgeInsets.only(
+                  left: 8.0,
+                  top: 4.0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RichText(
-                      text: TextSpan(
-                        text: '${Language.instance.REFRESH}: ',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline3
-                            ?.copyWith(fontWeight: FontWeight.w600),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: Language.instance.REFRESH_INFORMATION,
-                              style: TextStyle(fontWeight: FontWeight.normal)),
-                        ],
-                      ),
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        text: '${Language.instance.REINDEX}: ',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline3
-                            ?.copyWith(fontWeight: FontWeight.w600),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: Language.instance.REINDEX_INFORMATION,
-                              style: TextStyle(fontWeight: FontWeight.normal)),
-                        ],
-                      ),
-                    ),
+                    Text(
+                        '${Language.instance.REFRESH}: ${Language.instance.REFRESH_INFORMATION}',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                    Text(
+                        '${Language.instance.REINDEX}: ${Language.instance.REINDEX_INFORMATION}',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
                   ],
                 ),
               ),

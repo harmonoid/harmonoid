@@ -147,85 +147,89 @@ class HomeState extends State<Home>
             ),
           ),
         ],
-        builder: (context, _) => isDesktop
-            ? Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(
-                      bottom: kDesktopNowPlayingBarHeight,
-                    ),
-                    child: Consumer<Language>(
-                      builder: (context, _, __) => Scaffold(
-                        resizeToAvoidBottomInset: false,
-                        body: HeroControllerScope(
-                          controller:
-                              MaterialApp.createMaterialHeroController(),
-                          child: Navigator(
-                            key: this.navigatorKey,
-                            initialRoute: '/collection_screen',
-                            onGenerateRoute: (RouteSettings routeSettings) {
-                              Route<dynamic>? route;
-                              if (routeSettings.name == '/collection_screen') {
-                                route = MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      CollectionScreen(
-                                    tabControllerNotifier:
-                                        tabControllerNotifier,
-                                  ),
-                                );
-                              }
-                              if (routeSettings.name == '/now_playing') {
-                                route = PageRouteBuilder(
-                                  transitionDuration:
-                                      Duration(milliseconds: 600),
-                                  reverseTransitionDuration:
-                                      Duration(milliseconds: 300),
-                                  pageBuilder: (context, animation,
-                                          secondaryAnimation) =>
-                                      SharedAxisTransition(
-                                    transitionType:
-                                        SharedAxisTransitionType.vertical,
-                                    fillColor: Colors.transparent,
-                                    animation: animation,
-                                    secondaryAnimation: secondaryAnimation,
-                                    child: NowPlayingScreen(),
-                                  ),
-                                );
-                              }
-                              return route;
-                            },
+        builder: (context, _) => LayoutBuilder(
+          builder: (context, _) => isDesktop
+              ? Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(
+                        bottom: kDesktopNowPlayingBarHeight,
+                      ),
+                      child: Consumer<Language>(
+                        builder: (context, _, __) => Scaffold(
+                          resizeToAvoidBottomInset: false,
+                          body: HeroControllerScope(
+                            controller:
+                                MaterialApp.createMaterialHeroController(),
+                            child: Navigator(
+                              key: this.navigatorKey,
+                              initialRoute: '/collection_screen',
+                              onGenerateRoute: (RouteSettings routeSettings) {
+                                Route<dynamic>? route;
+                                if (routeSettings.name ==
+                                    '/collection_screen') {
+                                  route = MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        CollectionScreen(
+                                      tabControllerNotifier:
+                                          tabControllerNotifier,
+                                    ),
+                                  );
+                                }
+                                if (routeSettings.name == '/now_playing') {
+                                  route = PageRouteBuilder(
+                                    transitionDuration:
+                                        Duration(milliseconds: 600),
+                                    reverseTransitionDuration:
+                                        Duration(milliseconds: 300),
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        SharedAxisTransition(
+                                      transitionType:
+                                          SharedAxisTransitionType.vertical,
+                                      fillColor: Colors.transparent,
+                                      animation: animation,
+                                      secondaryAnimation: secondaryAnimation,
+                                      child: NowPlayingScreen(),
+                                    ),
+                                  );
+                                }
+                                return route;
+                              },
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const NowPlayingBar(),
-                ],
-              )
-            : Consumer<Language>(
-                builder: (context, _, __) => Scaffold(
-                  resizeToAvoidBottomInset: false,
-                  body: HeroControllerScope(
-                    controller: MaterialApp.createMaterialHeroController(),
-                    child: Navigator(
-                      key: this.navigatorKey,
-                      initialRoute: '/collection_screen',
-                      onGenerateRoute: (RouteSettings routeSettings) {
-                        Route<dynamic>? route;
-                        if (routeSettings.name == '/collection_screen') {
-                          route = MaterialPageRoute(
-                            builder: (BuildContext context) => CollectionScreen(
-                              tabControllerNotifier: tabControllerNotifier,
-                            ),
-                          );
-                        }
-                        return route;
-                      },
+                    NowPlayingBar(),
+                  ],
+                )
+              : Consumer<Language>(
+                  builder: (context, _, __) => Scaffold(
+                    resizeToAvoidBottomInset: false,
+                    body: HeroControllerScope(
+                      controller: MaterialApp.createMaterialHeroController(),
+                      child: Navigator(
+                        key: this.navigatorKey,
+                        initialRoute: '/collection_screen',
+                        onGenerateRoute: (RouteSettings routeSettings) {
+                          Route<dynamic>? route;
+                          if (routeSettings.name == '/collection_screen') {
+                            route = MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  CollectionScreen(
+                                tabControllerNotifier: tabControllerNotifier,
+                              ),
+                            );
+                          }
+                          return route;
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
+        ),
       ),
     );
   }

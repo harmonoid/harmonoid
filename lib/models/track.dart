@@ -71,7 +71,17 @@ class Track extends Media {
   factory Track.fromTagger(dynamic json) => Track(
         uri: Uri.parse(json['uri']),
         trackName: [null, ''].contains(json['title'])
-            ? path.basename(Uri.parse(json['uri']).toFilePath())
+            ? () {
+                if (Uri.parse(json['uri']).isScheme('FILE')) {
+                  return path.basename(Uri.parse(json['uri']).toFilePath());
+                } else {
+                  String uri = Uri.parse(json['uri']).toString();
+                  if (uri.endsWith('/')) {
+                    uri = uri.substring(0, uri.length - 1);
+                  }
+                  return uri.split('/').last;
+                }
+              }()
             : json['title'],
         albumName:
             [null, ''].contains(json['album']) ? kUnknownAlbum : json['album'],
@@ -98,8 +108,7 @@ class Track extends Media {
         bitrate: int.tryParse(json['bitrate'] ?? '0')! ~/ 1000,
       );
 
-  /// Used for [Playback.open]. Compatible with `package:youtube_music`.
-  factory Track.fromYouTubeMusicTrack(dynamic json) => Track(
+  factory Track.fromWebTrack(dynamic json) => Track(
         uri: Uri.parse(json['uri']),
         trackName: json['trackName'],
         albumName: json['albumName'] ?? kUnknownAlbum,
@@ -112,8 +121,7 @@ class Track extends Media {
         bitrate: null,
       );
 
-  /// Used for [Playback.open]. Compatible with `package:youtube_music`.
-  factory Track.fromYouTubeMusicVideo(dynamic json) => Track(
+  factory Track.fromWebVideo(dynamic json) => Track(
         uri: Uri.parse(json['uri']),
         trackName: json['videoName'],
         albumName: json['albumName'] ?? kUnknownAlbum,

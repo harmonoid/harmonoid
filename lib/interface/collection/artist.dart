@@ -361,7 +361,7 @@ class ArtistScreenState extends State<ArtistScreen>
     with SingleTickerProviderStateMixin {
   Color? color;
   Color? secondary;
-  Track? hovered;
+  int? hovered;
   bool reactToSecondaryPress = false;
   bool detailsVisible = false;
   bool detailsLoaded = false;
@@ -638,6 +638,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     Container(
                                                       width: 64.0,
                                                       height: 56.0,
+                                                      padding: EdgeInsets.only(
+                                                          right: 8.0),
                                                       alignment:
                                                           Alignment.center,
                                                       child: Text(
@@ -694,11 +696,13 @@ class ArtistScreenState extends State<ArtistScreen>
                                                 Divider(height: 1.0),
                                               ] +
                                               widget.artist.tracks
+                                                  .asMap()
+                                                  .entries
                                                   .map(
                                                     (track) => MouseRegion(
                                                       onEnter: (e) {
                                                         setState(() {
-                                                          hovered = track;
+                                                          hovered = track.key;
                                                         });
                                                       },
                                                       onExit: (e) {
@@ -752,7 +756,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                           );
                                                           await trackPopupMenuHandle(
                                                             context,
-                                                            track,
+                                                            track.value,
                                                             result,
                                                             recursivelyPopNavigatorOnDeleteIf:
                                                                 () => widget
@@ -768,17 +772,20 @@ class ArtistScreenState extends State<ArtistScreen>
                                                             onTap: () {
                                                               Playback.instance
                                                                   .open(
-                                                                widget.artist
-                                                                        .tracks +
-                                                                    ([
+                                                                [
+                                                                  ...widget
+                                                                      .artist
+                                                                      .tracks,
+                                                                  if (Configuration
+                                                                      .instance
+                                                                      .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                                    ...([
                                                                       ...collection
                                                                           .tracks
-                                                                    ]..shuffle()),
-                                                                index: widget
-                                                                    .artist
-                                                                    .tracks
-                                                                    .indexOf(
-                                                                        track),
+                                                                    ]..shuffle())
+                                                                ],
+                                                                index:
+                                                                    track.key,
                                                               );
                                                             },
                                                             child: Row(
@@ -795,6 +802,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                           .center,
                                                                   child: hovered ==
                                                                           track
+                                                                              .key
                                                                       ? IconButton(
                                                                           onPressed:
                                                                               () {
@@ -806,7 +814,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                                     ...Collection.instance.tracks
                                                                                   ]..shuffle(),
                                                                               ],
-                                                                              index: widget.artist.tracks.indexOf(track),
+                                                                              index: track.key,
                                                                             );
                                                                           },
                                                                           icon:
@@ -815,7 +823,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                               20.0,
                                                                         )
                                                                       : Text(
-                                                                          '${track.trackNumber}',
+                                                                          '${track.value.trackNumber}',
                                                                           style: Theme.of(context)
                                                                               .textTheme
                                                                               .headline4,
@@ -834,6 +842,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                             .centerLeft,
                                                                     child: Text(
                                                                       track
+                                                                          .value
                                                                           .trackName,
                                                                       style: Theme.of(
                                                                               context)
@@ -859,6 +868,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                             .centerLeft,
                                                                     child: Text(
                                                                       track
+                                                                          .value
                                                                           .albumName,
                                                                       style: Theme.of(
                                                                               context)
@@ -884,7 +894,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                         (result) {
                                                                       trackPopupMenuHandle(
                                                                         context,
-                                                                        track,
+                                                                        track
+                                                                            .value,
                                                                         result,
                                                                         recursivelyPopNavigatorOnDeleteIf: () => widget
                                                                             .artist
