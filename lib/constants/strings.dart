@@ -101,6 +101,8 @@ class Strings {
   late String PLAYLIST_SINGLE;
   late String PLAYLIST_TRACKS_SUBHEADER;
   late String PLAY_NOW;
+  late String PLAY_URL;
+  late String PLAY_URL_SUBTITLE;
   late String PREVIOUS;
   late String RECOMMENDATIONS;
   late String REFRESH;
@@ -173,12 +175,12 @@ class Strings {
   late String UNMUTE;
   late String VIDEO_SINGLE;
   late String WARNING;
+  late String WEB;
+  late String WEB_INTERNET_ERROR;
+  late String WEB_NO_RESULTS;
+  late String WEB_WELCOME;
+  late String WEB_WELCOME_SUBTITLE;
+  late String WEB_WELCOME_TITLE;
   late String YEAR;
   late String YES;
-  late String YOUTUBE;
-  late String YOUTUBE_INTERNET_ERROR;
-  late String YOUTUBE_NO_RESULTS;
-  late String YOUTUBE_WELCOME;
-  late String YOUTUBE_WELCOME_SUBTITLE;
-  late String YOUTUBE_WELCOME_TITLE;
 }
