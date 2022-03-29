@@ -17,12 +17,12 @@ import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/web/utils/rendering.dart';
 
-class VideoLargeTile extends StatefulWidget {
+class WebVideoLargeTile extends StatefulWidget {
   final double height;
   final double width;
   final Track track;
 
-  const VideoLargeTile({
+  const WebVideoLargeTile({
     Key? key,
     required this.track,
     required this.height,
@@ -30,10 +30,10 @@ class VideoLargeTile extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  VideoLargeTileState createState() => VideoLargeTileState();
+  WebVideoLargeTileState createState() => WebVideoLargeTileState();
 }
 
-class VideoLargeTileState extends State<VideoLargeTile> {
+class WebVideoLargeTileState extends State<WebVideoLargeTile> {
   double scale = 1.0;
 
   Widget build(BuildContext context) {

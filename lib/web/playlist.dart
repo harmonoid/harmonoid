@@ -25,9 +25,9 @@ import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/constants/language.dart';
 
-class PlaylistTile extends StatelessWidget {
+class WebPlaylistTile extends StatelessWidget {
   final Playlist playlist;
-  const PlaylistTile({
+  const WebPlaylistTile({
     Key? key,
     required this.playlist,
   }) : super(key: key);
@@ -47,7 +47,7 @@ class PlaylistTile extends StatelessWidget {
           );
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => PlaylistScreen(
+              builder: (context) => WebPlaylistScreen(
                 playlist: playlist,
               ),
             ),
@@ -115,16 +115,16 @@ class PlaylistTile extends StatelessWidget {
   }
 }
 
-class PlaylistScreen extends StatefulWidget {
+class WebPlaylistScreen extends StatefulWidget {
   final Playlist playlist;
-  const PlaylistScreen({
+  const WebPlaylistScreen({
     Key? key,
     required this.playlist,
   }) : super(key: key);
-  PlaylistScreenState createState() => PlaylistScreenState();
+  WebPlaylistScreenState createState() => WebPlaylistScreenState();
 }
 
-class PlaylistScreenState extends State<PlaylistScreen>
+class WebPlaylistScreenState extends State<WebPlaylistScreen>
     with SingleTickerProviderStateMixin {
   Color? color;
   double elevation = 0.0;
@@ -491,7 +491,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                 ),
                               ),
                             )
-                          : TrackTile(
+                          : WebTrackTile(
                               track: track!,
                               group: widget.playlist.tracks,
                             ),

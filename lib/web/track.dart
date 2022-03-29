@@ -18,12 +18,12 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/web/utils/rendering.dart';
 
-class TrackLargeTile extends StatefulWidget {
+class WebTrackLargeTile extends StatefulWidget {
   final double height;
   final double width;
   final Track track;
 
-  const TrackLargeTile({
+  const WebTrackLargeTile({
     Key? key,
     required this.track,
     required this.height,
@@ -31,10 +31,10 @@ class TrackLargeTile extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  TrackLargeTileState createState() => TrackLargeTileState();
+  WebTrackLargeTileState createState() => WebTrackLargeTileState();
 }
 
-class TrackLargeTileState extends State<TrackLargeTile> {
+class WebTrackLargeTileState extends State<WebTrackLargeTile> {
   double scale = 1.0;
   Color? color;
 
@@ -209,10 +209,10 @@ class TrackLargeTileState extends State<TrackLargeTile> {
   }
 }
 
-class TrackTile extends StatelessWidget {
+class WebTrackTile extends StatelessWidget {
   final Track track;
   final List<Track>? group;
-  const TrackTile({
+  const WebTrackTile({
     Key? key,
     required this.track,
     this.group,

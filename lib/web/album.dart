@@ -23,9 +23,9 @@ import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/web/state/web.dart';
 
-class AlbumTile extends StatelessWidget {
+class WebAlbumTile extends StatelessWidget {
   final Album album;
-  const AlbumTile({
+  const WebAlbumTile({
     Key? key,
     required this.album,
   }) : super(key: key);
@@ -54,7 +54,7 @@ class AlbumTile extends StatelessWidget {
                 fillColor: Colors.transparent,
                 animation: animation,
                 secondaryAnimation: secondaryAnimation,
-                child: AlbumScreen(
+                child: WebAlbumScreen(
                   album: album,
                 ),
               ),
@@ -127,16 +127,16 @@ class AlbumTile extends StatelessWidget {
   }
 }
 
-class AlbumScreen extends StatefulWidget {
+class WebAlbumScreen extends StatefulWidget {
   final Album album;
-  const AlbumScreen({
+  const WebAlbumScreen({
     Key? key,
     required this.album,
   }) : super(key: key);
-  AlbumScreenState createState() => AlbumScreenState();
+  WebAlbumScreenState createState() => WebAlbumScreenState();
 }
 
-class AlbumScreenState extends State<AlbumScreen>
+class WebAlbumScreenState extends State<WebAlbumScreen>
     with SingleTickerProviderStateMixin {
   Color? color;
   double elevation = 0.0;
@@ -513,7 +513,7 @@ class AlbumScreenState extends State<AlbumScreen>
                               ),
                             ),
                             ...widget.album.tracks.map(
-                              (e) => TrackTile(
+                              (e) => WebTrackTile(
                                 track: e,
                                 group: widget.album.tracks,
                               ),

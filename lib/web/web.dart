@@ -148,12 +148,12 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
                       builderDelegate: PagedChildBuilderDelegate<Track>(
                         itemBuilder: (context, item, pageKey) =>
                             item.thumbnails.containsKey(120)
-                                ? TrackLargeTile(
+                                ? WebTrackLargeTile(
                                     height: height,
                                     width: width,
                                     track: item,
                                   )
-                                : VideoLargeTile(
+                                : WebVideoLargeTile(
                                     height: height,
                                     width: width,
                                     track: item,
@@ -474,16 +474,17 @@ class WebSearch extends StatelessWidget {
                                 value.forEach(
                                   (element) {
                                     if (element is Track) {
-                                      widgets.add(TrackTile(track: element));
+                                      widgets.add(WebTrackTile(track: element));
                                     } else if (element is Artist) {
-                                      widgets.add(ArtistTile(artist: element));
+                                      widgets
+                                          .add(WebArtistTile(artist: element));
                                     } else if (element is Video) {
                                       widgets.add(VideoTile(video: element));
                                     } else if (element is Album) {
-                                      widgets.add(AlbumTile(album: element));
+                                      widgets.add(WebAlbumTile(album: element));
                                     } else if (element is Playlist) {
-                                      widgets
-                                          .add(PlaylistTile(playlist: element));
+                                      widgets.add(
+                                          WebPlaylistTile(playlist: element));
                                     }
                                   },
                                 );

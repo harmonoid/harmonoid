@@ -13,6 +13,8 @@ import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 
+// TODO: Remove this bull-shit.
+
 class Web extends ChangeNotifier {
   static final instance = Web();
 

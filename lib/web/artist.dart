@@ -10,12 +10,11 @@ import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/constants/language.dart';
 
-class ArtistTile extends StatelessWidget {
+class WebArtistTile extends StatelessWidget {
   final Artist artist;
 
-  const ArtistTile({
+  const WebArtistTile({
     Key? key,
     required this.artist,
   }) : super(key: key);
