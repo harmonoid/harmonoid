@@ -8,14 +8,14 @@
 import 'package:flutter/material.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_music/youtube_music.dart';
+import 'package:ytm_client/ytm_client.dart';
 
 import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/youtube/state/youtube.dart';
-import 'package:harmonoid/youtube/utils/rendering.dart';
+import 'package:harmonoid/web/state/web.dart';
+import 'package:harmonoid/web/utils/rendering.dart';
 
 class VideoLargeTile extends StatefulWidget {
   final double height;
@@ -79,7 +79,7 @@ class VideoLargeTileState extends State<VideoLargeTile> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    YouTube.instance.open(widget.track);
+                    Web.instance.open(widget.track);
                   },
                   child: Container(
                     width: widget.width,
@@ -125,7 +125,7 @@ class VideoLargeTileState extends State<VideoLargeTile> {
                                 Padding(
                                   padding: EdgeInsets.only(top: 2),
                                   child: Text(
-                                    '${widget.track.trackArtistNames?.take(2).join(', ')}',
+                                    '${widget.track.trackArtistNames.take(2).join(', ')}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline3
@@ -143,7 +143,7 @@ class VideoLargeTileState extends State<VideoLargeTile> {
                           ),
                           const SizedBox(width: 12.0),
                           Text(
-                            widget.track.duration?.label ?? '',
+                            widget.track.duration.label,
                             style: TextStyle(
                               color: Colors.white54,
                             ),
@@ -159,8 +159,7 @@ class VideoLargeTileState extends State<VideoLargeTile> {
                 top: 4.0,
                 right: 4.0,
                 child: ContextMenuButton(
-                  itemBuilder: (BuildContext context) =>
-                      youtubeTrackPopupMenuItems(
+                  itemBuilder: (BuildContext context) => webTrackPopupMenuItems(
                     context,
                   ),
                   onSelected: (result) async {
@@ -174,7 +173,7 @@ class VideoLargeTileState extends State<VideoLargeTile> {
                         {
                           await showAddToPlaylistDialog(
                             context,
-                            media.Track.fromYouTubeMusicTrack(
+                            media.Track.fromWebTrack(
                               widget.track.toJson(),
                             ),
                           );
@@ -219,7 +218,7 @@ class VideoTile extends StatelessWidget {
                 MediaQuery.of(context).size.height,
               ),
             ),
-            items: youtubeTrackPopupMenuItems(
+            items: webTrackPopupMenuItems(
               context,
             ),
           );
@@ -233,7 +232,7 @@ class VideoTile extends StatelessWidget {
               {
                 await showAddToPlaylistDialog(
                   context,
-                  media.Track.fromYouTubeMusicTrack(video.toJson()),
+                  media.Track.fromWebTrack(video.toJson()),
                 );
                 break;
               }
@@ -241,7 +240,7 @@ class VideoTile extends StatelessWidget {
         },
         child: InkWell(
           onTap: () {
-            YouTube.instance.open(video);
+            Web.instance.open(video);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -310,15 +309,14 @@ class VideoTile extends StatelessWidget {
                               {
                                 showAddToPlaylistDialog(
                                   context,
-                                  media.Track.fromYouTubeMusicVideo(
-                                      video.toJson()),
+                                  media.Track.fromWebVideo(video.toJson()),
                                 );
                                 break;
                               }
                           }
                         },
                         itemBuilder: (context) =>
-                            youtubeTrackPopupMenuItems(context),
+                            webTrackPopupMenuItems(context),
                       ),
                     ),
                   ],

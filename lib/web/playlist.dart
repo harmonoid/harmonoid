@@ -6,18 +6,17 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'package:flutter/material.dart';
-import 'package:youtube_music/youtube_music.dart';
+import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
 
-class ArtistTile extends StatelessWidget {
-  final Artist artist;
-
-  const ArtistTile({
+class PlaylistTile extends StatelessWidget {
+  final Playlist playlist;
+  const PlaylistTile({
     Key? key,
-    required this.artist,
+    required this.playlist,
   }) : super(key: key);
 
   @override
@@ -25,9 +24,7 @@ class ArtistTile extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          // TODO: Handle [Artist].
-        },
+        onTap: () {},
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -43,23 +40,12 @@ class ArtistTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(width: 12.0),
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28.0),
+                  ExtendedImage(
+                    image: NetworkImage(
+                      playlist.thumbnails.values.first,
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: ClipOval(
-                        child: ExtendedImage(
-                          image: NetworkImage(
-                            artist.thumbnails.values.first,
-                          ),
-                          height: 52.0,
-                          width: 52.0,
-                        ),
-                      ),
-                    ),
+                    height: 56.0,
+                    width: 56.0,
                   ),
                   const SizedBox(width: 12.0),
                   Expanded(
@@ -69,7 +55,7 @@ class ArtistTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          artist.artistName.overflow,
+                          playlist.name.overflow,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: Theme.of(context).textTheme.headline2,
@@ -78,10 +64,7 @@ class ArtistTile extends StatelessWidget {
                           height: 2.0,
                         ),
                         Text(
-                          [
-                            Language.instance.ARTIST_SINGLE,
-                            artist.subscribersCount
-                          ].join(' • '),
+                          Language.instance.PLAYLIST_SINGLE,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: Theme.of(context).textTheme.headline3,

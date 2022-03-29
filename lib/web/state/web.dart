@@ -7,38 +7,38 @@
 ///
 import 'package:flutter/widgets.dart';
 import 'package:libmpv/libmpv.dart';
-import 'package:youtube_music/youtube_music.dart';
+import 'package:ytm_client/ytm_client.dart';
 
 import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 
-class YouTube extends ChangeNotifier {
-  static final instance = YouTube();
+class Web extends ChangeNotifier {
+  static final instance = Web();
 
   String current = '';
   bool exception = false;
   List<Track>? recommendations;
 
   Future<void> next() async {
-    if (Configuration.instance.discoverRecent.isEmpty) return;
-    if (current == Configuration.instance.discoverRecent.first) return;
+    if (Configuration.instance.webRecent.isEmpty) return;
+    if (current == Configuration.instance.webRecent.first) return;
     exception = false;
     notifyListeners();
-    if (Configuration.instance.discoverRecent.isNotEmpty) {
+    if (Configuration.instance.webRecent.isNotEmpty) {
       try {
-        recommendations = await YouTubeMusic.next(
-          Configuration.instance.discoverRecent.first,
+        recommendations = await YTMClient.next(
+          Configuration.instance.webRecent.first,
         );
         if (recommendations!.length == 1) {
           await next();
         }
         recommendations!.addAll(
-          (await YouTubeMusic.next(Plugins.redirect(recommendations!.last.uri)
+          (await YTMClient.next(Plugins.redirect(recommendations!.last.uri)
                   .queryParameters['id']!))
               .skip(1),
         );
-        current = Configuration.instance.discoverRecent.first;
+        current = Configuration.instance.webRecent.first;
         notifyListeners();
       } catch (_) {
         recommendations = [];
@@ -55,10 +55,10 @@ class YouTube extends ChangeNotifier {
   }) async {
     if (value is Track) {
       Playback.instance.open(
-        [media.Track.fromYouTubeMusicTrack(value.toJson())],
+        [media.Track.fromWebTrack(value.toJson())],
       );
       await Configuration.instance.save(
-        discoverRecent: [Plugins.redirect(value.uri).queryParameters['id']!],
+        webRecent: [Plugins.redirect(value.uri).queryParameters['id']!],
       );
       await next();
       if (recommendations != null) {
@@ -71,10 +71,10 @@ class YouTube extends ChangeNotifier {
       }
     } else if (value is Video) {
       Playback.instance.open(
-        [media.Track.fromYouTubeMusicVideo(value.toJson())],
+        [media.Track.fromWebVideo(value.toJson())],
       );
       await Configuration.instance.save(
-        discoverRecent: [Plugins.redirect(value.uri).queryParameters['id']!],
+        webRecent: [Plugins.redirect(value.uri).queryParameters['id']!],
       );
       await next();
       if (recommendations != null) {
@@ -87,9 +87,7 @@ class YouTube extends ChangeNotifier {
       }
     } else if (value is List<Track>) {
       Playback.instance.open(
-        value
-            .map((e) => media.Track.fromYouTubeMusicTrack(e.toJson()))
-            .toList(),
+        value.map((e) => media.Track.fromWebTrack(e.toJson())).toList(),
         index: index,
       );
     }

@@ -6,7 +6,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
-List<PopupMenuItem<int>> youtubeTrackPopupMenuItems(BuildContext context) => [
+List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
       PopupMenuItem(
         padding: EdgeInsets.zero,
         value: 1,
@@ -25,7 +25,7 @@ List<PopupMenuItem<int>> youtubeTrackPopupMenuItems(BuildContext context) => [
         value: 0,
         child: ListTile(
           leading: Icon(
-              Platform.isWindows ? FluentIcons.earth_20_regular : Icons.delete),
+              Platform.isWindows ? FluentIcons.earth_20_regular : Icons.web),
           title: Text(
             Language.instance.OPEN_IN_BROWSER,
             style: isDesktop ? Theme.of(context).textTheme.headline4 : null,

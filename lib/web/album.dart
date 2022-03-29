@@ -10,7 +10,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_music/youtube_music.dart';
+import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:palette_generator/palette_generator.dart';
 
@@ -20,8 +20,8 @@ import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/models/media.dart' as media;
-import 'package:harmonoid/youtube/track.dart';
-import 'package:harmonoid/youtube/state/youtube.dart';
+import 'package:harmonoid/web/track.dart';
+import 'package:harmonoid/web/state/web.dart';
 
 class AlbumTile extends StatelessWidget {
   final Album album;
@@ -38,7 +38,7 @@ class AlbumTile extends StatelessWidget {
         onTap: () async {
           if (album.tracks.isEmpty) {
             await Future.wait([
-              YouTubeMusic.album(album),
+              YTMClient.album(album),
               precacheImage(
                 ExtendedNetworkImageProvider(
                   album.thumbnails.values.skip(3).first,
@@ -91,7 +91,7 @@ class AlbumTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          album.albumName?.overflow,
+                          album.albumName.overflow,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: Theme.of(context).textTheme.headline2,
@@ -100,11 +100,11 @@ class AlbumTile extends StatelessWidget {
                           height: 2.0,
                         ),
                         Text(
-                          Language.instance.ALBUM_SINGLE +
-                              ' • ' +
-                              (album.albumArtistName ?? '') +
-                              ' • ' +
-                              (album.year ?? ''),
+                          [
+                            Language.instance.ALBUM_SINGLE,
+                            album.albumArtistName,
+                            album.year
+                          ].join(' • '),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: Theme.of(context).textTheme.headline3,
@@ -189,7 +189,6 @@ class AlbumScreenState extends State<AlbumScreen>
           });
         }
       });
-      // TODO: Handle mobile layouts.
     }
   }
 
@@ -276,7 +275,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                widget.album.albumName ?? '',
+                                                widget.album.albumName,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline1
@@ -348,9 +347,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       children: [
                                                         ElevatedButton.icon(
                                                           onPressed: () {
-                                                            YouTube.instance
-                                                                .open(widget
-                                                                    .album
+                                                            Web.instance.open(
+                                                                widget.album
                                                                     .tracks);
                                                           },
                                                           style: ButtonStyle(
@@ -404,12 +402,12 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                     .hashCode,
                                                                 name: widget
                                                                     .album
-                                                                    .albumName!,
+                                                                    .albumName,
                                                               )..tracks.addAll(widget
                                                                   .album.tracks
                                                                   .map((e) => media
                                                                           .Track
-                                                                      .fromYouTubeMusicTrack(
+                                                                      .fromWebTrack(
                                                                           e.toJson()))),
                                                             );
                                                           },
@@ -455,7 +453,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                         OutlinedButton.icon(
                                                           onPressed: () {
                                                             launch(
-                                                                'https://music.youtube.com/browse/${widget.album.id}');
+                                                                'https://music.Webcom/browse/${widget.album.id}');
                                                           },
                                                           style: OutlinedButton
                                                               .styleFrom(
@@ -543,8 +541,6 @@ class AlbumScreenState extends State<AlbumScreen>
               ),
             ),
           )
-        :
-        // TODO: Handle mobile layouts.
-        Container();
+        : Container();
   }
 }
