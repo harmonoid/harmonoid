@@ -29,7 +29,7 @@ The SOFTWARE PRODUCT is protected by copyright laws and international copyright 
    (g) Source code.
    You may compile and modify the source code of the SOFTWARE PRODUCT for your own personal purpose or to propose a contribution to the SOFTWARE PRODUCT, for which you have two choices:
       1. You can compile the SOFTWARE PRODUCT using private packages by donating to the project (at https://www.patreon.com/harmonoid) or requesting access as a contributor.
-         You'll be provided lifetime access to the source code of those private packages & also the "premium" variant of SOFTWARE PRODUCT (once it's available).
+         You'll be provided access to the source code of the private packages used in SOFTWARE PRODUCT & other perks mentioned at https://www.patreon.com/harmonoid.
          See https://github.com/harmonoid/harmonoid#compiling-with-private-packages
       2. You can compile the SOFTWARE PRODUCT with open-source libraries.
          See https://github.com/harmonoid/harmonoid#compiling-without-private-packages

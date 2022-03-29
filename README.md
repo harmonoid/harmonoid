@@ -2,11 +2,11 @@
 
 <h1 align="left">Harmonoid</h1>
 
-**🎵 Elegant music app to play & manage music library. Lyrics & playlists. YouTube Music support.**
+**🎵 Elegant music app to play & manage music library. Lyrics & playlists.**
 
 [Download](#download) • [Discord](https://discord.gg/2Rc3edFWd8)
 
-[work-in-progress] [current-scope of work: #242] [[report-bugs-or-request-features](https://github.com/harmonoid/harmonoid/issues)][[patreon](https://www.patreon.com/harmonoid)]
+[work-in-progress] [current-scope of work: #242] [[report-bugs-or-request-features](https://github.com/harmonoid/harmonoid/issues)] [[patreon](https://www.patreon.com/harmonoid)]
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304862-f4d336c6-4559-477b-b82e-a876f78f5eec.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/151304870-6d1d18db-7120-43bd-87fa-9fa369244bfd.webp?raw=true)
@@ -87,17 +87,13 @@ Similar instructions can be followed on your favorite distro.
 - Music visualizations.
 - Tag editor.
 - Time-synced lyrics.
-- Importing playlists from YouTube & Spotify using Web API.
 - Equalizer.
-- Improvising YouTube support to be close to official web-client.
 - Last.fm scrobbling.
 - Plugin API.
 - Windows 11 `IExplorerCommand` integration.
 - Publishing to Microsoft Store & other places.
 - Support for remaining macOS & iOS platforms.
 - YOU Tell 😄
-
-**NOTE:** Project is NEVER going to offer feature for downloading music from YouTube.
 
 ## Limitations
 
@@ -153,34 +149,36 @@ You can also configure to automatically play other songs from your collection wh
 
 To create a new playlist, you need to go the the "PLAYLISTS" tab & click "CREATE NEW PLAYLIST". This will ask you a name for your new shiny playlist. After its creation, you can click on your favorite song to add it to the required playlist. This can help you greatly organize your music collection.
 
-You can add both local music & music from YouTube Music to these playlists.
+You can add both local music & music from web URLs to these playlists.
 
 ### 5. Playing songs from YouTube Music
 
-Currently, YouTube Music support is very basic but it works _well_ in terms of performance & timing. Right now, you can:
+Currently, YouTube Music support works _well_ in terms of performance & features. However, authentication is not implemented yet.
+Right now, you can:
 
-- Play.
-- Play from URL.
-- Search.
+- Play songs.
+- Play songs from URL.
+- Search for songs, videos, albums, artists & playlists.
+- Browse albums, artists & playlists.
 - Get recommendations.
 - Get suggestions.
-- Add to playlist.
+- Save to playlists (still streamed over the internet).
 
 We intend to improve in future & you can contribute to this. Downloading is never going to be a feature inside the application.
 
-### 6. Viewing a YouTube Music song on website
-
-If you're playing a song from YouTube Music & want to hear it on website instead, you can simply go to the "Now Playing Screen" by an arrow in the bottom-right corner of the application. Hovering over the album art, you'll see an icon hinting to open the song in your web-browser. Click on it & you're on YouTube Music website.
-
-### 7. Playing a YouTube URL
-
-Just enter the YouTube or YouTube Music URL in the search field & hit enter. It'll start playing immediately.
-
-### 8. Playing from File Explorer
+### 6. Playing from File Explorer
 
 You can play music directly from file explorer if you installed Harmonoid using the setup installer or from Microsoft Store.
 
 You can also right click a folder to "Add to Harmonoid's Playlist".
+
+### 7. Viewing a YouTube Music song on website
+
+If you're playing a song from YouTube Music & want to hear it on website instead, you can simply go to the "Now Playing Screen" by an arrow in the bottom-right corner of the application. Hovering over the album art, you'll see an icon hinting to open the song in your web-browser. Click on it & you're on YouTube Music website.
+
+### 8. Playing a YouTube URL
+
+Just enter the YouTube or YouTube Music URL in the search field & hit enter. It'll start playing immediately.
 
 ### 9. Troubleshoot
 
@@ -219,7 +217,7 @@ An incomplete list of people who are working (or worked) on the project in past:
   <li>
     <img src='https://avatars.githubusercontent.com/u/52399966?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/mytja'>Mitja Ševerkar</a></strong>
     <ul>
-      <li>WinGet package. Backward Windows compatiblity checks. Improvements to YouTube Music support. Bug reports. CI. Slovenian translation.</li>
+      <li>WinGet package. Backward Windows compatiblity checks. Bug reports. CI. Slovenian translation.</li>
     </ul>
   </li>
   <li>
@@ -386,8 +384,8 @@ An incomplete list of people who are working (or worked) on the project in past:
 
 ## Compiling
 
-- [Compiling without private packages](#compiling-without-private-packages)
 - [Compiling with private packages](#compiling-with-private-packages)
+- [Compiling without private packages](#compiling-without-private-packages)
 
 Ensure that you have Flutter SDK & the required toolchain e.g. Visual Studio for Windows, Android Studio for Android installed.
 
@@ -399,21 +397,11 @@ flutter build linux
 ...
 ```
 
-### Compiling without private packages
-
-See [reasons to not provide private packages openly](#reasons-to-not-provide-private-packages-openly) first.
-
-You can still compile Harmonoid yourself by removing references to following private plugins & replacing them with my following other _already publicly available_ packages:
-|Private package |Open-source alternative |Notes |
-|------------------|---------------------------|--------|
-|[libmpv.dart](https://github.com/harmonoid/libmpv.dart)|[dart_vlc](https://github.com/alexmercerind/dart_vlc) & [flutter_media_metadata](https://github.com/alexmercerind/flutter_media_metadata)| YouTube playback may not work & performance may not be as _tuned_. The resultant bundle size _may_ be larger in size.|
-|[smtc-win32](https://github.com/harmonoid/smtc-win32)|[libwinmedia](https://github.com/harmonoid/libwinmedia)| libwinmedia was used in earlier versions of application for media playback & still available under MIT license.|
-|[mpris_service.dart](https://github.com/harmonoid/mpris_service.dart)| - | No alternatives available. |
-|[harmonoid_visual_assets](https://github.com/harmonoid/harmonoid_visual_assets)| - | Contains iconography & pictures used within the project. You can simply disable.|
-
 ### Compiling with private packages
 
-As of now, if you wish to gain access to all the private packages used in [Harmonoid](https://github.com/harmonoid/harmonoid), you may become a [Patreon](https://www.patreon.com/harmonoid). You'll be given all the private packages & lifetime updates to them (+ other perks).
+As of now, if you wish to gain access to all the private packages (and other source code within GitHub organization) used in [Harmonoid](https://github.com/harmonoid/harmonoid), you may become a [Patreon](https://www.patreon.com/harmonoid) & support the development.
+
+<!--
 
 ### Reasons to not provide private packages openly
 
@@ -428,9 +416,25 @@ As of now, if you wish to gain access to all the private packages used in [Harmo
 9. The new version of the app is complete rewrite & it no longer is the _old app_.
 10. With no doubt, there are better open-source alternatives present right now. But, we've just started & see [limitations](#limitations) for more details.
 
+    -->
+
+### Compiling without private packages
+
+<!--
+See [reasons to not provide private packages openly](#reasons-to-not-provide-private-packages-openly) first.
+-->
+
+You can compile Harmonoid yourself by removing references to following private plugins & replacing them with my following other _already publicly available_ packages:
+|Private package |Open-source alternative |Notes |
+|------------------|---------------------------|--------|
+|[libmpv.dart](https://github.com/harmonoid/libmpv.dart)|[dart_vlc](https://github.com/alexmercerind/dart_vlc) & [flutter_media_metadata](https://github.com/alexmercerind/flutter_media_metadata)| All features may not work, performance may not be as tuned. The resultant bundle size may be larger in size.|
+|[smtc-win32](https://github.com/harmonoid/smtc-win32)|[libwinmedia](https://github.com/harmonoid/libwinmedia)| libwinmedia was used in earlier versions of application for media playback & still available under MIT license.|
+|[mpris_service.dart](https://github.com/harmonoid/mpris_service.dart)| - | No alternatives available. |
+|[harmonoid_visual_assets](https://github.com/harmonoid/harmonoid_visual_assets)| - | Contains iconography & pictures used within the project. You can simply disable.|
+
 ## License
 
-Source code and official releases/binaries are distributed under our [End-User License Agreement for Harmonoid (EULA)](./EULA.txt).
+The source-code in this repository and official releases/binaries are distributed under our [End-User License Agreement for Harmonoid (EULA)](./EULA.txt).
 
 ## Third-Party Credits
 
@@ -438,7 +442,9 @@ Source code and official releases/binaries are distributed under our [End-User L
 
 - Harmonoid uses a modified version of [libmpv](https://github.com/mpv-player/mpv/tree/master/libmpv) for media playback capabilities on desktop. The compilation setup & other information can be found [here](https://github.com/alexmercerind/harmonoid-custom-codec). The application bundles a minimal & LGPL compilant version of [mpv](https://github.com/mpv-player/mpv) shared library (`mpv-2.dll`). Users are free to update/change to their own preferred libmpv by replacing the `mpv-2.dll` file present in Harmonoid's application directory.
 
-- Harmonoid also depends upon some of the packages available on pub.dev. A complete list of those can be found [here](https://github.com/harmonoid/harmonoid/blob/47d879cdf7151069bc40722235e79e7144f92f4c/pubspec.yaml#L32-L81).
+- Harmonoid also depends upon some of the awesome packages available on pub.dev. A complete list of those can be found [here](https://github.com/harmonoid/harmonoid/blob/47d879cdf7151069bc40722235e79e7144f92f4c/pubspec.yaml#L32-L81).
+
+- [YouTube](https://www.youtube.com/) & [YouTube Music](https://music.youtube.com/) is owned by [Google LLC](https://about.google/). Playback of videos & music is governed by [YouTube Terms of Service](https://www.youtube.com/t/terms). The application does not store any music/video streams locally, neither saves files on the disk. The content is shown in a manner similar to how a normal web-browser functions.
 
 ## Bonus
 
