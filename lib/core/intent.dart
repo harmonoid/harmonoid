@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:libmpv/libmpv.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
-import 'package:youtube_music/youtube_music.dart' as youtube;
+import 'package:ytm_client/ytm_client.dart' hide Media, Track;
 
 import 'package:harmonoid/models/media.dart' hide Media;
 import 'package:harmonoid/core/playback.dart';
@@ -173,10 +173,36 @@ class Intent {
     }
   }
 
-  /// Starts playing the possibly opened file & saves its metadata before doing it.
+  /// Identifies the object represented by the [uri].
+  /// If it's recognized [Media] format, then metadata is saved & playback is started.
+  /// Currently handles:
+  /// * [Directory]
+  /// * [File]
+  /// * [Media] [Uri]
+  /// * Web [Media] [Uri]
   ///
   Future<void> playUri(Uri uri) async {
-    if (FileSystemEntity.typeSync(uri.toFilePath()) ==
+    if (Plugins.isWebMedia(uri)) {
+      Playback.instance.open([
+        Track.fromWebTrack((await YTMClient.player(uri.toString()))!.toJson())
+      ]);
+    } else if (uri.isScheme('HTTP') ||
+        uri.isScheme('HTTPS') ||
+        uri.isScheme('FTP') ||
+        uri.isScheme('RSTP')) {
+      final metadata = <String, String>{
+        'uri': uri.toString(),
+      };
+      metadata.addAll(
+        await tagger.parse(
+          Media(uri.toString()),
+          coverDirectory: Collection.instance.albumArtDirectory,
+        ),
+      );
+      final track = Track.fromTagger(metadata);
+      Playback.instance.open([track]);
+      NowPlayingLauncher.instance.maximized = true;
+    } else if (FileSystemEntity.typeSync(uri.toFilePath()) ==
         FileSystemEntityType.file) {
       final metadata = <String, String>{
         'uri': uri.toString(),
@@ -262,31 +288,6 @@ class Intent {
             }
           }
         }
-      }
-    } else {
-      if (Plugins.isExternalMedia(uri)) {
-        Playback.instance.open(
-          [
-            Track.fromYouTubeMusicTrack(
-              (await youtube.YouTubeMusic.player(uri.toString()))!.toJson(),
-            ),
-          ],
-        );
-      } else {
-        Playback.instance.open([
-          Track(
-            uri: uri,
-            trackName: uri.toString(),
-            albumName: kUnknownAlbum,
-            trackNumber: 1,
-            albumArtistName: kUnknownArtist,
-            trackArtistNames: [kUnknownArtist],
-            year: '${DateTime.now().year}',
-            timeAdded: DateTime.now(),
-            duration: Duration.zero,
-            bitrate: 0,
-          )
-        ]);
       }
     }
   }

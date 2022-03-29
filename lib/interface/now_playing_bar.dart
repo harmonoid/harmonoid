@@ -114,8 +114,12 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                 ],
                               );
                             } else if (playback.tracks.isEmpty ||
-                                playback.tracks.length <= playback.index &&
-                                    0 > playback.index) {
+                                playback.tracks.length <=
+                                        playback.index.clamp(
+                                            0, playback.tracks.length - 1) &&
+                                    0 >
+                                        playback.index.clamp(
+                                            0, playback.tracks.length - 1)) {
                               return Container();
                             } else {
                               return Row(
@@ -149,10 +153,18 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               child: child,
                                             ),
                                             child: ExtendedImage(
-                                              key: Key(
-                                                  playback.index.toString()),
+                                              key: Key(playback.index
+                                                  .clamp(
+                                                      0,
+                                                      playback.tracks.length -
+                                                          1)
+                                                  .toString()),
                                               image: getAlbumArt(
-                                                playback.tracks[playback.index],
+                                                playback.tracks[playback.index
+                                                    .clamp(
+                                                        0,
+                                                        playback.tracks.length -
+                                                            1)],
                                                 small: true,
                                               ),
                                               height: 84.0,
@@ -206,8 +218,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          playback.tracks[playback.index]
-                                              .trackName.overflow,
+                                          playback
+                                              .tracks[playback.index.clamp(0,
+                                                  playback.tracks.length - 1)]
+                                              .trackName
+                                              .overflow,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline1,
@@ -215,7 +230,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                         Text(
-                                          playback.tracks[playback.index]
+                                          playback
+                                              .tracks[playback.index.clamp(0,
+                                                  playback.tracks.length - 1)]
                                               .trackArtistNames
                                               .take(2)
                                               .join(', ')
@@ -507,7 +524,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           }
                                           playback.setPlaylistLoopMode(
                                             PlaylistLoopMode.values[playback
-                                                    .playlistLoopMode.index +
+                                                    .playlistLoopMode.index
+                                                    .clamp(
+                                                        0,
+                                                        playback.tracks.length -
+                                                            1) +
                                                 1],
                                           );
                                         },

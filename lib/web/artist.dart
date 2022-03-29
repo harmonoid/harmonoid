@@ -6,17 +6,17 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'package:flutter/material.dart';
-import 'package:youtube_music/youtube_music.dart';
+import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/constants/language.dart';
 
-class PlaylistTile extends StatelessWidget {
-  final Playlist playlist;
-  const PlaylistTile({
+class WebArtistTile extends StatelessWidget {
+  final Artist artist;
+
+  const WebArtistTile({
     Key? key,
-    required this.playlist,
+    required this.artist,
   }) : super(key: key);
 
   @override
@@ -25,11 +25,7 @@ class PlaylistTile extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          YouTubeMusic.browse(playlist.id).then((value) {
-            value.forEach((element) {
-              print(element.trackName);
-            });
-          });
+          // TODO: Handle [Artist].
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -46,12 +42,27 @@ class PlaylistTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(width: 12.0),
-                  ExtendedImage(
-                    image: NetworkImage(
-                      playlist.thumbnails.values.first,
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28.0),
                     ),
-                    height: 56.0,
-                    width: 56.0,
+                    child: Padding(
+                      padding: EdgeInsets.all(2.0),
+                      child: artist.thumbnails.isNotEmpty
+                          ? ClipOval(
+                              child: ExtendedImage(
+                                image: NetworkImage(
+                                  artist.thumbnails.values.first,
+                                ),
+                                height: 52.0,
+                                width: 52.0,
+                              ),
+                            )
+                          : SizedBox.square(
+                              dimension: 52.0,
+                            ),
+                    ),
                   ),
                   const SizedBox(width: 12.0),
                   Expanded(
@@ -61,7 +72,7 @@ class PlaylistTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          playlist.name.overflow,
+                          artist.artistName.overflow,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: Theme.of(context).textTheme.headline2,
@@ -70,7 +81,7 @@ class PlaylistTile extends StatelessWidget {
                           height: 2.0,
                         ),
                         Text(
-                          Language.instance.PLAYLIST_SINGLE,
+                          [artist.subscribersCount].join(' • '),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: Theme.of(context).textTheme.headline3,

@@ -167,7 +167,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                             ),
                                           ),
                                           SizedBox(width: 12.0),
-                                          if (Plugins.isExternalMedia(
+                                          if (Plugins.isWebMedia(
                                               tracks[index].uri))
                                             AnimatedScale(
                                               scale: scale,

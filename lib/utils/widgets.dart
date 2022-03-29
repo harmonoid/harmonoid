@@ -11,7 +11,8 @@ import 'dart:math' as math;
 import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart' hide ReorderableDragStartListener;
+import 'package:flutter/material.dart'
+    hide ReorderableDragStartListener, Intent;
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -19,11 +20,14 @@ import 'package:known_extents_list_view_builder/known_extents_list_view_builder.
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/web/web.dart';
 
 class CustomListView extends StatelessWidget {
   late final ScrollController controller;
@@ -341,7 +345,13 @@ class DesktopAppBar extends StatelessWidget {
                         if (title != null)
                           Text(
                             title!,
-                            style: Theme.of(context).textTheme.headline1,
+                            style:
+                                Theme.of(context).textTheme.headline1?.copyWith(
+                                    color: color != null
+                                        ? isDark
+                                            ? Colors.white
+                                            : Colors.black
+                                        : null),
                           ),
                       ],
                     ),
@@ -458,7 +468,7 @@ class ExceptionWidget extends StatelessWidget {
                           visualAssets.collection,
                       Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE:
                           visualAssets.searchPage,
-                      Language.instance.YOUTUBE_WELCOME_TITLE:
+                      Language.instance.WEB_WELCOME_TITLE:
                           visualAssets.searchNotes,
                     }[title]!,
                     height: 196.0,
@@ -900,7 +910,7 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.play_circle),
-            label: Language.instance.YOUTUBE,
+            label: Language.instance.WEB,
             backgroundColor: Theme.of(context).primaryColor,
           ),
         ],
@@ -989,6 +999,8 @@ class ScrollableSlider extends StatelessWidget {
   final double min;
   final double max;
   final double value;
+  final Color? color;
+  final Color? secondaryColor;
   final VoidCallback onScrolledUp;
   final VoidCallback onScrolledDown;
   final void Function(double) onChanged;
@@ -998,6 +1010,8 @@ class ScrollableSlider extends StatelessWidget {
     required this.min,
     required this.max,
     required this.value,
+    this.color,
+    this.secondaryColor,
     required this.onScrolledUp,
     required this.onScrolledDown,
     required this.onChanged,
@@ -1026,10 +1040,13 @@ class ScrollableSlider extends StatelessWidget {
             elevation: 2.0,
           ),
           overlayShape: RoundSliderOverlayShape(overlayRadius: 12.0),
-          overlayColor: Theme.of(context).primaryColor.withOpacity(0.4),
-          thumbColor: Theme.of(context).primaryColor,
-          activeTrackColor: Theme.of(context).primaryColor,
-          inactiveTrackColor: Theme.of(context).brightness == Brightness.dark
+          overlayColor:
+              (color ?? Theme.of(context).primaryColor).withOpacity(0.4),
+          thumbColor: (color ?? Theme.of(context).primaryColor),
+          activeTrackColor: (color ?? Theme.of(context).primaryColor),
+          inactiveTrackColor: (secondaryColor != null
+                  ? secondaryColor?.isDark
+                  : Theme.of(context).brightness == Brightness.dark)!
               ? Colors.white.withOpacity(0.4)
               : Colors.black.withOpacity(0.2),
         ),
@@ -1075,7 +1092,7 @@ class CollectionSortButton extends StatelessWidget {
       child: ContextMenuButton<dynamic>(
         offset: Offset.fromDirection(pi / 2, 64.0),
         icon: Icon(
-          Icons.sort,
+          Icons.sort_by_alpha,
           size: 20.0,
         ),
         elevation: 4.0,
@@ -1106,7 +1123,7 @@ class CollectionSortButton extends StatelessWidget {
               style: Theme.of(context).textTheme.headline4,
             ),
           ),
-          if (tab == 0 || tab == 1)
+          if (tab == 0 || tab == 1 || tab == 4)
             CheckedPopupMenuItem(
               padding: EdgeInsets.zero,
               checked: Collection.instance.collectionSortType ==
@@ -1117,7 +1134,7 @@ class CollectionSortButton extends StatelessWidget {
                 style: Theme.of(context).textTheme.headline4,
               ),
             ),
-          if (tab == 0 || tab == 1)
+          if (tab == 0 || tab == 1 || tab == 4)
             CheckedPopupMenuItem(
               padding: EdgeInsets.zero,
               checked:
@@ -1166,6 +1183,160 @@ class CollectionSortButton extends StatelessWidget {
   }
 }
 
+class CollectionMoreButton extends StatelessWidget {
+  const CollectionMoreButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: Language.instance.MORE,
+      child: ContextMenuButton<int>(
+        offset: Offset.fromDirection(pi / 2, 64.0),
+        icon: Icon(
+          Icons.more_vert,
+          size: 20.0,
+        ),
+        elevation: 4.0,
+        onSelected: (value) async {
+          switch (value) {
+            case 0:
+              {
+                final controller = TextEditingController();
+                await showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    contentPadding:
+                        const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                    content: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          child: Text(
+                            Language.instance.PLAY_URL,
+                            style: Theme.of(context).textTheme.headline1,
+                            textAlign: TextAlign.start,
+                          ),
+                          padding: EdgeInsets.only(
+                            bottom: 16.0,
+                            left: 4.0,
+                          ),
+                        ),
+                        Container(
+                          height: 40.0,
+                          width: 420.0,
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+                          padding: EdgeInsets.only(top: 2.0),
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (hasFocus) {
+                                HotKeys.instance.disableSpaceHotKey();
+                              } else {
+                                HotKeys.instance.enableSpaceHotKey();
+                              }
+                            },
+                            child: TextField(
+                              autofocus: true,
+                              controller: controller,
+                              cursorWidth: 1.0,
+                              onSubmitted: (String value) async {
+                                if (value.isNotEmpty) {
+                                  FocusScope.of(context).unfocus();
+                                  await Intent.instance
+                                      .playUri(Uri.parse(value));
+                                }
+                              },
+                              cursorColor: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.black
+                                  : Colors.white,
+                              textAlignVertical: TextAlignVertical.bottom,
+                              style: Theme.of(context).textTheme.headline4,
+                              decoration: inputDecoration(
+                                context,
+                                Language.instance.PLAY_URL_SUBTITLE,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      MaterialButton(
+                        child: Text(
+                          Language.instance.PLAY.toUpperCase(),
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        onPressed: () async {
+                          if (controller.text.isNotEmpty) {
+                            await Intent.instance
+                                .playUri(Uri.parse(controller.text));
+                          }
+                        },
+                      ),
+                      MaterialButton(
+                        child: Text(
+                          Language.instance.CANCEL.toUpperCase(),
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        onPressed: Navigator.of(context).maybePop,
+                      ),
+                    ],
+                  ),
+                );
+                break;
+              }
+            case 1:
+              {
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      fillColor: Colors.transparent,
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: WebTab(),
+                    ),
+                  ),
+                );
+                break;
+              }
+          }
+        },
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: 0,
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.public),
+              title: Text(
+                Language.instance.PLAY_URL,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ),
+          ),
+          PopupMenuItem(
+            value: 1,
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.play_circle),
+              title: Text(
+                Language.instance.WEB,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class ContextMenuArea extends StatefulWidget {
   final Widget child;
   final void Function(PointerUpEvent) onPressed;
@@ -1196,4 +1367,8 @@ class _ContextMenuAreaState extends State<ContextMenuArea> {
       child: widget.child,
     );
   }
+}
+
+extension on Color {
+  bool get isDark => (0.299 * red) + (0.587 * green) + (0.114 * blue) < 128.0;
 }

@@ -420,29 +420,66 @@ class IndexingState extends State<IndexingSetting> {
                           ),
                       ],
                 ),
-              )
+              ),
+              ButtonBar(
+                alignment: MainAxisAlignment.start,
+                children: [
+                  MaterialButton(
+                    onPressed: controller.progress != controller.total
+                        ? () {}
+                        : () async {
+                            Collection.instance.refresh(
+                              onProgress: (progress, total, isCompleted) {
+                                controller.set(progress, total);
+                              },
+                            );
+                          },
+                    child: Text(
+                      Language.instance.REFRESH.toUpperCase(),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
+                  MaterialButton(
+                    onPressed: controller.progress != controller.total
+                        ? () {}
+                        : () async {
+                            Collection.instance.index(
+                              onProgress: (progress, total, isCompleted) {
+                                controller.set(progress, total);
+                              },
+                            );
+                          },
+                    child: Text(
+                      Language.instance.REINDEX.toUpperCase(),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 8.0,
+                  top: 4.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        '${Language.instance.REFRESH}: ${Language.instance.REFRESH_INFORMATION}',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                    Text(
+                        '${Language.instance.REINDEX}: ${Language.instance.REINDEX_INFORMATION}',
+                        style: TextStyle(fontWeight: FontWeight.normal)),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
-        actions: [
-          MaterialButton(
-            onPressed: controller.progress != controller.total
-                ? () {}
-                : () async {
-                    Collection.instance.index(
-                      onProgress: (progress, total, isCompleted) {
-                        controller.set(progress, total);
-                      },
-                    );
-                  },
-            child: Text(
-              Language.instance.REINDEX.toUpperCase(),
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

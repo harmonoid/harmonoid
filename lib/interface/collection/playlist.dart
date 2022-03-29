@@ -69,20 +69,17 @@ class PlaylistTab extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  Language.instance.CREATE,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline1
-                                      ?.copyWith(fontSize: 20.0),
-                                  textAlign: TextAlign.start,
-                                ),
-                                Text(
-                                  Language.instance.CREATE_PLAYLIST_SUBHEADER,
-                                  style: Theme.of(context).textTheme.headline3,
-                                ),
-                                const SizedBox(
-                                  height: 18.0,
+                                Padding(
+                                  child: Text(
+                                    Language.instance.CREATE,
+                                    style:
+                                        Theme.of(context).textTheme.headline1,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  padding: EdgeInsets.only(
+                                    bottom: 16.0,
+                                    left: 4.0,
+                                  ),
                                 ),
                                 Container(
                                   height: 40.0,
@@ -121,7 +118,7 @@ class PlaylistTab extends StatelessWidget {
                                           TextAlignVertical.bottom,
                                       style:
                                           Theme.of(context).textTheme.headline4,
-                                      decoration: desktopInputDecoration(
+                                      decoration: inputDecoration(
                                         context,
                                         Language
                                             .instance.PLAYLISTS_TEXT_FIELD_HINT,
@@ -440,7 +437,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                 Iterable<Color>? palette;
                 if (isMobile && widget.playlist.tracks.isNotEmpty) {
                   final result = await PaletteGenerator.fromImageProvider(
-                      getAlbumArt(widget.playlist.tracks.last));
+                      getAlbumArt(widget.playlist.tracks.last, small: true));
                   palette = result.colors;
                 }
                 Navigator.of(context).push(
@@ -547,7 +544,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
     with SingleTickerProviderStateMixin {
   Color? color;
   Color? secondary;
-  Track? hovered;
+  int? hovered;
   bool reactToSecondaryPress = false;
   bool detailsVisible = false;
   bool detailsLoaded = false;
@@ -562,7 +559,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
         () {
           if (widget.palette == null) {
             PaletteGenerator.fromImageProvider(
-                    getAlbumArt(widget.playlist.tracks.last))
+                    getAlbumArt(widget.playlist.tracks.last, small: true))
                 .then((palette) {
               setState(() {
                 color = palette.colors.first;
@@ -786,6 +783,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                   Container(
                                                     width: 64.0,
                                                     height: 56.0,
+                                                    padding: EdgeInsets.only(
+                                                        right: 8.0),
                                                     alignment: Alignment.center,
                                                     child: Text(
                                                       '#',
@@ -819,8 +818,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: Text(
-                                                        Language.instance
-                                                            .ALBUM_SINGLE,
+                                                        Language
+                                                            .instance.ARTIST,
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline2,
@@ -833,11 +832,13 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                               Divider(height: 1.0),
                                             ] +
                                             widget.playlist.tracks
+                                                .asMap()
+                                                .entries
                                                 .map(
                                                   (track) => MouseRegion(
                                                     onEnter: (e) {
                                                       setState(() {
-                                                        hovered = track;
+                                                        hovered = track.key;
                                                       });
                                                     },
                                                     onExit: (e) {
@@ -893,7 +894,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                     .playlistRemoveTrack(
                                                                         widget
                                                                             .playlist,
-                                                                        track);
+                                                                        track
+                                                                            .value);
                                                               },
                                                               value: 4,
                                                               child: ListTile(
@@ -932,11 +934,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                         .instance
                                                                         .tracks
                                                                   ]..shuffle()),
-                                                              index: widget
-                                                                  .playlist
-                                                                  .tracks
-                                                                  .indexOf(
-                                                                      track),
+                                                              index: track.key,
                                                             );
                                                           },
                                                           child: Row(
@@ -953,6 +951,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                         .center,
                                                                 child: hovered ==
                                                                         track
+                                                                            .key
                                                                     ? IconButton(
                                                                         onPressed:
                                                                             () {
@@ -961,7 +960,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                               .open(
                                                                             widget.playlist.tracks,
                                                                             index:
-                                                                                widget.playlist.tracks.indexOf(track),
+                                                                                track.key,
                                                                           );
                                                                         },
                                                                         icon: Icon(
@@ -970,7 +969,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                             20.0,
                                                                       )
                                                                     : Text(
-                                                                        '${widget.playlist.tracks.indexOf(track) + 1}',
+                                                                        '${track.key + 1}',
                                                                         style: Theme.of(context)
                                                                             .textTheme
                                                                             .headline4,
@@ -988,7 +987,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                       Alignment
                                                                           .centerLeft,
                                                                   child: Text(
-                                                                    track
+                                                                    track.value
                                                                         .trackName,
                                                                     style: Theme.of(
                                                                             context)
@@ -1013,8 +1012,8 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                       Alignment
                                                                           .centerLeft,
                                                                   child: Text(
-                                                                    track
-                                                                        .albumName,
+                                                                    track.value
+                                                                        .albumArtistName,
                                                                     style: Theme.of(
                                                                             context)
                                                                         .textTheme

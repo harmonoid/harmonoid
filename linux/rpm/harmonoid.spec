@@ -1,5 +1,5 @@
 Name:       harmonoid
-Version:    0.2.1
+Version:    0.2.2
 Release:    1
 Summary:    Elegant music app to play & manage music library.
 License:    EULA
@@ -10,6 +10,7 @@ AutoReqProv: no
 Elegant music app to play & manage music library.
 Distributes music into albums & artists.
 Has playlists & lyrics.
+YouTube Music support.
 
 %prep
 # we have no source, so nothing here

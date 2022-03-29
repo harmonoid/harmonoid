@@ -15,7 +15,7 @@
 	<url type="donation">https://github.com/harmonoid/harmonoid#support</url>
 	<url type="contact">https://discord.gg/2Rc3edFWd8</url>
 	<description>
-		<p>Elegant music app to play &amp; manage music library. Lyrics &amp; playlists. YouTube support.</p>
+		<p>Elegant music app to play &amp; manage music library. Lyrics &amp; playlists. YouTube Music support.</p>
 		<p></p>
 		<p>Features</p>
 		<ul>
@@ -59,6 +59,7 @@
 	</screenshots>
 	<launchable type="desktop-id">harmonoid.desktop</launchable>
 	<releases>
+		<release version="0.2.2" date="2022-03-24"/>
 		<release version="0.2.1" date="2022-02-18"/>
 		<release version="0.1.7" date="2021-09-22"/>
 		<release version="0.1.6" date="2021-09-21"/>

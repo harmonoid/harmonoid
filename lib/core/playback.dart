@@ -237,7 +237,8 @@ class Playback extends ChangeNotifier {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       loadAppState().then((value) {
         player.streams.index.listen((event) {
-          index = event.clamp(0, tracks.length);
+          index =
+              event.clamp(0, (tracks.length - 1).clamp(0, 9223372036854775807));
           if (AppState.instance.playlistIndex != index) {
             _saveAppState();
           }
@@ -370,7 +371,7 @@ class Playback extends ChangeNotifier {
             title: track.trackName,
             track_number: track.trackNumber,
           );
-          if (Plugins.isExternalMedia(track.uri)) {
+          if (Plugins.isWebMedia(track.uri)) {
             final artwork = getAlbumArt(track, small: true);
             smtc.set_artwork((artwork as ExtendedNetworkImageProvider).url);
           } else {
@@ -380,7 +381,7 @@ class Playback extends ChangeNotifier {
         }
         if (Platform.isLinux) {
           Uri? artworkUri;
-          if (Plugins.isExternalMedia(track.uri)) {
+          if (Plugins.isWebMedia(track.uri)) {
             final artwork = getAlbumArt(track, small: true);
             artworkUri =
                 Uri.parse((artwork as ExtendedNetworkImageProvider).url);

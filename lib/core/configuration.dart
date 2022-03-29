@@ -86,8 +86,8 @@ class Configuration extends ConfigurationKeys {
     bool? automaticAccent,
     bool? notificationLyrics,
     List<String>? collectionSearchRecent,
-    List<String>? discoverSearchRecent,
-    List<String>? discoverRecent,
+    List<String>? webSearchRecent,
+    List<String>? webRecent,
     bool? showTrackProgressOnTaskbar,
     bool? automaticallyAddOtherSongsFromCollectionToNowPlaying,
     bool? automaticallyShowNowPlayingScreenAfterPlaying,
@@ -114,11 +114,11 @@ class Configuration extends ConfigurationKeys {
     if (collectionSearchRecent != null) {
       this.collectionSearchRecent = collectionSearchRecent;
     }
-    if (discoverSearchRecent != null) {
-      this.discoverSearchRecent = discoverSearchRecent;
+    if (webSearchRecent != null) {
+      this.webSearchRecent = webSearchRecent;
     }
-    if (discoverRecent != null) {
-      this.discoverRecent = discoverRecent;
+    if (webRecent != null) {
+      this.webRecent = webRecent;
     }
     if (automaticAccent != null) {
       this.automaticAccent = automaticAccent;
@@ -142,7 +142,7 @@ class Configuration extends ConfigurationKeys {
           automaticallyRefreshCollectionOnFreshStart;
     }
     await file.writeAsString(
-      convert.JsonEncoder.withIndent('  ').convert(
+      const convert.JsonEncoder.withIndent('  ').convert(
         {
           'collectionDirectories': this
               .collectionDirectories
@@ -157,8 +157,8 @@ class Configuration extends ConfigurationKeys {
           'automaticAccent': this.automaticAccent,
           'notificationLyrics': this.notificationLyrics,
           'collectionSearchRecent': this.collectionSearchRecent,
-          'discoverSearchRecent': this.discoverSearchRecent,
-          'discoverRecent': this.discoverRecent,
+          'webSearchRecent': this.webSearchRecent,
+          'webRecent': this.webRecent,
           'showTrackProgressOnTaskbar': this.showTrackProgressOnTaskbar,
           'automaticallyAddOtherSongsFromCollectionToNowPlaying':
               this.automaticallyAddOtherSongsFromCollectionToNowPlaying,
@@ -201,8 +201,8 @@ class Configuration extends ConfigurationKeys {
       automaticAccent = current['automaticAccent'];
       notificationLyrics = current['notificationLyrics'];
       collectionSearchRecent = current['collectionSearchRecent'].cast<String>();
-      discoverSearchRecent = current['discoverSearchRecent'].cast<String>();
-      discoverRecent = current['discoverRecent'].cast<String>();
+      webSearchRecent = current['webSearchRecent'].cast<String>();
+      webRecent = current['webRecent'].cast<String>();
       showTrackProgressOnTaskbar = current['showTrackProgressOnTaskbar'];
       automaticallyAddOtherSongsFromCollectionToNowPlaying =
           current['automaticallyAddOtherSongsFromCollectionToNowPlaying'];
@@ -216,7 +216,8 @@ class Configuration extends ConfigurationKeys {
         await file.create(recursive: true);
       }
       await file.writeAsString(
-        convert.JsonEncoder.withIndent('  ').convert(defaultConfiguration),
+        const convert.JsonEncoder.withIndent('  ')
+            .convert(defaultConfiguration),
       );
       read(retry: false);
     }
@@ -234,8 +235,8 @@ abstract class ConfigurationKeys {
   late bool automaticAccent;
   late bool notificationLyrics;
   late List<String> collectionSearchRecent;
-  late List<String> discoverSearchRecent;
-  late List<String> discoverRecent;
+  late List<String> webSearchRecent;
+  late List<String> webRecent;
   late bool showTrackProgressOnTaskbar;
   late bool automaticallyAddOtherSongsFromCollectionToNowPlaying;
   late bool automaticallyShowNowPlayingScreenAfterPlaying;
@@ -259,8 +260,8 @@ final Map<String, dynamic> defaultConfiguration = {
   'automaticAccent': false,
   'notificationLyrics': true,
   'collectionSearchRecent': [],
-  'discoverSearchRecent': [],
-  'discoverRecent': [],
+  'webSearchRecent': [],
+  'webRecent': [],
   'showTrackProgressOnTaskbar': false,
   'automaticallyAddOtherSongsFromCollectionToNowPlaying': false,
   'automaticallyShowNowPlayingScreenAfterPlaying': true,

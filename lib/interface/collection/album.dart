@@ -482,7 +482,7 @@ class AlbumTile extends StatelessWidget {
               onTap: () async {
                 if (palette == null) {
                   final result = await PaletteGenerator.fromImageProvider(
-                      getAlbumArt(album));
+                      getAlbumArt(album, small: true));
                   palette = result.colors;
                 }
                 await precacheImage(getAlbumArt(album), context);
@@ -565,7 +565,7 @@ class AlbumScreenState extends State<AlbumScreen>
     with SingleTickerProviderStateMixin {
   Color? color;
   Color? secondary;
-  Track? hovered;
+  int? hovered;
   bool reactToSecondaryPress = false;
   bool detailsVisible = false;
   bool detailsLoaded = false;
@@ -581,7 +581,8 @@ class AlbumScreenState extends State<AlbumScreen>
         Duration(milliseconds: 300),
         () {
           if (widget.palette == null) {
-            PaletteGenerator.fromImageProvider(getAlbumArt(widget.album))
+            PaletteGenerator.fromImageProvider(
+                    getAlbumArt(widget.album, small: true))
                 .then((palette) {
               setState(() {
                 color = palette.colors.first;
@@ -858,6 +859,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   Container(
                                                     width: 64.0,
                                                     height: 56.0,
+                                                    padding: EdgeInsets.only(
+                                                        right: 8.0),
                                                     alignment: Alignment.center,
                                                     child: Text(
                                                       '#',
@@ -906,11 +909,13 @@ class AlbumScreenState extends State<AlbumScreen>
                                               Divider(height: 1.0),
                                             ] +
                                             (widget.album.tracks
+                                                .asMap()
+                                                .entries
                                                 .map(
                                                   (track) => MouseRegion(
                                                     onEnter: (e) {
                                                       setState(() {
-                                                        hovered = track;
+                                                        hovered = track.key;
                                                       });
                                                     },
                                                     onExit: (e) {
@@ -963,7 +968,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                         );
                                                         await trackPopupMenuHandle(
                                                           context,
-                                                          track,
+                                                          track.value,
                                                           result,
                                                           recursivelyPopNavigatorOnDeleteIf:
                                                               () => widget
@@ -991,10 +996,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                         .tracks
                                                                   ]..shuffle(),
                                                               ],
-                                                              index: widget
-                                                                  .album.tracks
-                                                                  .indexOf(
-                                                                      track),
+                                                              index: track.key,
                                                             );
                                                           },
                                                           child: Row(
@@ -1011,6 +1013,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                         .center,
                                                                 child: hovered ==
                                                                         track
+                                                                            .key
                                                                     ? IconButton(
                                                                         onPressed:
                                                                             () {
@@ -1019,7 +1022,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                               .open(
                                                                             widget.album.tracks,
                                                                             index:
-                                                                                widget.album.tracks.indexOf(track),
+                                                                                track.key,
                                                                           );
                                                                         },
                                                                         icon: Icon(
@@ -1028,7 +1031,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                             20.0,
                                                                       )
                                                                     : Text(
-                                                                        '${track.trackNumber}',
+                                                                        '${track.value.trackNumber}',
                                                                         style: Theme.of(context)
                                                                             .textTheme
                                                                             .headline4,
@@ -1046,7 +1049,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                       Alignment
                                                                           .centerLeft,
                                                                   child: Text(
-                                                                    track
+                                                                    track.value
                                                                         .trackName,
                                                                     style: Theme.of(
                                                                             context)
@@ -1070,7 +1073,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                       Alignment
                                                                           .centerLeft,
                                                                   child: Text(
-                                                                    track
+                                                                    track.value
                                                                         .trackArtistNames
                                                                         .join(
                                                                             ', '),
@@ -1097,7 +1100,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                       (result) {
                                                                     trackPopupMenuHandle(
                                                                       context,
-                                                                      track,
+                                                                      track
+                                                                          .value,
                                                                       result,
                                                                       recursivelyPopNavigatorOnDeleteIf: () => widget
                                                                           .album

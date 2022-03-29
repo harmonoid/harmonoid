@@ -8,22 +8,22 @@
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_music/youtube_music.dart';
+import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 
 import 'package:harmonoid/models/media.dart' as media;
-import 'package:harmonoid/youtube/state/youtube.dart';
+import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/youtube/utils/rendering.dart';
+import 'package:harmonoid/web/utils/rendering.dart';
 
-class TrackLargeTile extends StatefulWidget {
+class WebTrackLargeTile extends StatefulWidget {
   final double height;
   final double width;
   final Track track;
 
-  const TrackLargeTile({
+  const WebTrackLargeTile({
     Key? key,
     required this.track,
     required this.height,
@@ -31,10 +31,10 @@ class TrackLargeTile extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  TrackLargeTileState createState() => TrackLargeTileState();
+  WebTrackLargeTileState createState() => WebTrackLargeTileState();
 }
 
-class TrackLargeTileState extends State<TrackLargeTile> {
+class WebTrackLargeTileState extends State<WebTrackLargeTile> {
   double scale = 1.0;
   Color? color;
 
@@ -121,7 +121,7 @@ class TrackLargeTileState extends State<TrackLargeTile> {
                         Padding(
                           padding: EdgeInsets.only(top: 2),
                           child: Text(
-                            '${widget.track.trackArtistNames?.take(2).join(', ')}',
+                            '${widget.track.trackArtistNames.take(2).join(', ')}',
                             style: Theme.of(context)
                                 .textTheme
                                 .headline3
@@ -136,7 +136,7 @@ class TrackLargeTileState extends State<TrackLargeTile> {
                           ),
                         ),
                         Text(
-                          widget.track.duration?.label ?? '',
+                          widget.track.duration.label,
                           style: Theme.of(context)
                               .textTheme
                               .headline3
@@ -155,7 +155,7 @@ class TrackLargeTileState extends State<TrackLargeTile> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    YouTube.instance.open(widget.track);
+                    Web.instance.open(widget.track);
                   },
                   child: Container(
                     width: widget.width,
@@ -171,7 +171,7 @@ class TrackLargeTileState extends State<TrackLargeTile> {
                   borderRadius: BorderRadius.circular(16.0),
                   child: ContextMenuButton(
                     itemBuilder: (BuildContext context) =>
-                        youtubeTrackPopupMenuItems(
+                        webTrackPopupMenuItems(
                       context,
                     ),
                     onSelected: (result) async {
@@ -185,7 +185,7 @@ class TrackLargeTileState extends State<TrackLargeTile> {
                           {
                             await showAddToPlaylistDialog(
                               context,
-                              media.Track.fromYouTubeMusicTrack(
+                              media.Track.fromWebTrack(
                                 widget.track.toJson(),
                               ),
                             );
@@ -209,11 +209,13 @@ class TrackLargeTileState extends State<TrackLargeTile> {
   }
 }
 
-class TrackTile extends StatelessWidget {
+class WebTrackTile extends StatelessWidget {
   final Track track;
-  const TrackTile({
+  final List<Track>? group;
+  const WebTrackTile({
     Key? key,
     required this.track,
+    this.group,
   }) : super(key: key);
 
   @override
@@ -234,7 +236,7 @@ class TrackTile extends StatelessWidget {
                 MediaQuery.of(context).size.height,
               ),
             ),
-            items: youtubeTrackPopupMenuItems(
+            items: webTrackPopupMenuItems(
               context,
             ),
           );
@@ -248,14 +250,23 @@ class TrackTile extends StatelessWidget {
               {
                 await showAddToPlaylistDialog(
                   context,
-                  media.Track.fromYouTubeMusicTrack(track.toJson()),
+                  media.Track.fromWebTrack(track.toJson()),
                 );
                 break;
               }
           }
         },
         child: InkWell(
-          onTap: () => YouTube.instance.open(track),
+          onTap: () {
+            if (group != null) {
+              Web.instance.open(
+                group,
+                index: group!.indexOf(track),
+              );
+            } else {
+              Web.instance.open(track);
+            }
+          },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -271,13 +282,26 @@ class TrackTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(width: 12.0),
-                    ExtendedImage(
-                      image: NetworkImage(
-                        track.thumbnails.values.first,
+                    if (track.thumbnails.isNotEmpty && group == null)
+                      ExtendedImage(
+                        image: NetworkImage(
+                          track.thumbnails.values.first,
+                        ),
+                        height: 56.0,
+                        width: 56.0,
+                      )
+                    else
+                      Container(
+                        height: 56.0,
+                        width: 56.0,
+                        child: Text(
+                          '${track.trackNumber}',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        alignment: Alignment.center,
                       ),
-                      height: 56.0,
-                      width: 56.0,
-                    ),
                     const SizedBox(width: 12.0),
                     Expanded(
                       child: Column(
@@ -296,10 +320,11 @@ class TrackTile extends StatelessWidget {
                           ),
                           Text(
                             [
-                              Language.instance.TRACK_SINGLE,
-                              track.albumName?.overflow ?? '',
-                              track.albumArtistName?.overflow,
-                              track.duration?.label ?? ''
+                              if (group == null) Language.instance.TRACK_SINGLE,
+                              if (track.albumName.isNotEmpty)
+                                track.albumName.overflow,
+                              track.albumArtistName.overflow,
+                              track.duration.label
                             ].join(' • '),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -324,15 +349,14 @@ class TrackTile extends StatelessWidget {
                               {
                                 showAddToPlaylistDialog(
                                   context,
-                                  media.Track.fromYouTubeMusicTrack(
-                                      track.toJson()),
+                                  media.Track.fromWebTrack(track.toJson()),
                                 );
                                 break;
                               }
                           }
                         },
                         itemBuilder: (context) =>
-                            youtubeTrackPopupMenuItems(context),
+                            webTrackPopupMenuItems(context),
                       ),
                     ),
                   ],
