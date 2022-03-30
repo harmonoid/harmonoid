@@ -79,7 +79,7 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    Web.instance.open(widget.track);
+                    Web.open(widget.track);
                   },
                   child: Container(
                     width: widget.width,
@@ -240,7 +240,7 @@ class VideoTile extends StatelessWidget {
         },
         child: InkWell(
           onTap: () {
-            Web.instance.open(video);
+            Web.open(video);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -263,7 +263,7 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
     if (_query.isEmpty) return;
     final track = await YTMClient.player(_query);
     if (track != null) {
-      Web.instance.open(track);
+      Web.open(track);
     } else {
       Navigator.of(context).push(
         PageRouteBuilder(

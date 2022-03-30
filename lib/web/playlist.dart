@@ -351,7 +351,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                   children: [
                                                     ElevatedButton.icon(
                                                       onPressed: () {
-                                                        Web.instance.open(widget
+                                                        Web.open(widget
                                                             .playlist.tracks);
                                                       },
                                                       style: ButtonStyle(
