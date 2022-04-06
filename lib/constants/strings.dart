@@ -173,6 +173,7 @@ class Strings {
   late String TRACK_SINGLE;
   late String TRANSFERS;
   late String UNMUTE;
+  late String UPDATE_AVAILABLE;
   late String VIDEO_SINGLE;
   late String WARNING;
   late String WEB;

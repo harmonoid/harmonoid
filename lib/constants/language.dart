@@ -370,6 +370,7 @@ class Language extends Strings with ChangeNotifier {
     this.TRACK_SINGLE = asset['TRACK_SINGLE']!;
     this.TRANSFERS = asset['TRANSFERS']!;
     this.UNMUTE = asset['UNMUTE']!;
+    this.UPDATE_AVAILABLE = asset['UPDATE_AVAILABLE']!;
     this.VIDEO_SINGLE = asset['VIDEO_SINGLE']!;
     this.WARNING = asset['WARNING']!;
     this.WEB = asset['WEB']!;
