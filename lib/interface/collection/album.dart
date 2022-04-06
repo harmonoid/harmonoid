@@ -721,6 +721,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   child: ExtendedImage(
                                                     image: getAlbumArt(
                                                         widget.album),
+                                                    constraints: BoxConstraints(
+                                                      minWidth: 360.0,
+                                                      minHeight: 360.0,
+                                                    ),
                                                   ),
                                                 ),
                                                 Positioned(
