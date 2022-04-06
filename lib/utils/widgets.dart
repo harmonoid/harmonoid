@@ -396,7 +396,6 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
     return Consumer<CollectionRefresh>(
       builder: (context, refresh, _) => refresh.progress == refresh.total
           ? FloatingActionButton(
-              mini: true,
               elevation: 8.0,
               backgroundColor: Theme.of(context).colorScheme.secondary,
               child: TweenAnimationBuilder(
@@ -776,14 +775,29 @@ class DesktopTitleBar extends StatelessWidget {
                       ),
                 CloseWindowButton(
                   onPressed: () {
-                    if (CollectionRefresh.instance.isCompleted) {
-                      appWindow.close();
+                    if (!CollectionRefresh.instance.isCompleted) {
+                      showDialog(
+                        context: context,
+                        builder: (subContext) => AlertDialog(
+                          title: Text(
+                            Language.instance.WARNING,
+                            style: Theme.of(subContext).textTheme.headline1,
+                          ),
+                          content: Text(
+                            Language.instance.COLLECTION_INDEXING_LABEL,
+                            style: Theme.of(subContext).textTheme.headline3,
+                          ),
+                          actions: [
+                            MaterialButton(
+                              textColor: Theme.of(context).primaryColor,
+                              onPressed: Navigator.of(subContext).pop,
+                              child: Text(Language.instance.OK),
+                            ),
+                          ],
+                        ),
+                      );
                     } else {
-                      CollectionRefresh.instance.addListener(() {
-                        if (CollectionRefresh.instance.isCompleted) {
-                          appWindow.close();
-                        }
-                      });
+                      appWindow.close();
                     }
                   },
                   colors: windowButtonColors(context),
