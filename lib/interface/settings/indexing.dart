@@ -19,6 +19,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class IndexingSetting extends StatefulWidget {
@@ -48,7 +49,7 @@ class IndexingState extends State<IndexingSetting> {
                   MaterialButton(
                     onPressed: controller.isOngoing
                         ? () {
-                            if (controller.relativeProgress != 1.0) {
+                            if (!controller.isCompleted) {
                               showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
@@ -77,7 +78,7 @@ class IndexingState extends State<IndexingSetting> {
                             }
                           }
                         : () async {
-                            if (controller.relativeProgress != 1.0) {
+                            if (!controller.isCompleted) {
                               await showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
@@ -183,16 +184,14 @@ class IndexingState extends State<IndexingSetting> {
                                   SizedBox(width: 4.0),
                                   Expanded(
                                     child: Text(
-                                      directory.path,
+                                      directory.path.overflow,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   MaterialButton(
                                     onPressed: () async {
-                                      if (CollectionRefresh
-                                              .instance.relativeProgress !=
-                                          1.0) {
+                                      if (!controller.isCompleted) {
                                         await showDialog(
                                           context: context,
                                           builder: (context) => AlertDialog(

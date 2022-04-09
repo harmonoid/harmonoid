@@ -61,6 +61,7 @@ class CollectionScreenState extends State<CollectionScreen>
   @override
   void initState() {
     super.initState();
+    checkVersionAndShowUpdateSnackbar(context);
     widget.tabControllerNotifier.addListener(() {
       if (index != widget.tabControllerNotifier.value.index) {
         pageController.animateToPage(
@@ -131,78 +132,88 @@ class CollectionScreenState extends State<CollectionScreen>
                             fillColor: Colors.transparent,
                           ),
                         ),
-                        if (refresh.progress != refresh.total)
-                          Card(
-                            clipBehavior: Clip.antiAlias,
-                            margin: EdgeInsets.only(
-                              top: 16.0,
-                              bottom: 16.0,
-                              left: 16.0,
-                              right: 16.0,
-                            ),
-                            elevation: 4.0,
-                            child: Container(
-                              color: Theme.of(context).cardColor,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  refresh.progress == null
-                                      ? LinearProgressIndicator(
-                                          value: null,
-                                          valueColor: AlwaysStoppedAnimation(
-                                            Theme.of(context).primaryColor,
+                        if (!refresh.isCompleted)
+                          Positioned(
+                            child: Card(
+                              clipBehavior: Clip.antiAlias,
+                              margin: EdgeInsets.all(16.0),
+                              elevation: 4.0,
+                              child: Container(
+                                width: 328.0,
+                                height: 56.0,
+                                color: Theme.of(context).cardColor,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    refresh.progress == null
+                                        ? LinearProgressIndicator(
+                                            value: null,
+                                            valueColor: AlwaysStoppedAnimation(
+                                              Theme.of(context).primaryColor,
+                                            ),
+                                            backgroundColor: Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(0.4),
+                                          )
+                                        : LinearProgressIndicator(
+                                            value: (refresh.progress ?? 0) /
+                                                refresh.total,
+                                            valueColor: AlwaysStoppedAnimation(
+                                              Theme.of(context).primaryColor,
+                                            ),
+                                            backgroundColor: Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(0.4),
                                           ),
-                                          backgroundColor: Theme.of(context)
-                                              .primaryColor
-                                              .withOpacity(0.4),
-                                        )
-                                      : LinearProgressIndicator(
-                                          value: (refresh.progress ?? 0) /
-                                              refresh.total,
-                                          valueColor: AlwaysStoppedAnimation(
-                                            Theme.of(context).primaryColor,
-                                          ),
-                                          backgroundColor: Theme.of(context)
-                                              .primaryColor
-                                              .withOpacity(0.4),
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.all(12.0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 16.0,
+                                            ),
+                                            Icon(Icons.library_music),
+                                            SizedBox(
+                                              width: 16.0,
+                                            ),
+                                            Text(
+                                              refresh.progress == null
+                                                  ? Language.instance
+                                                      .DISCOVERING_FILES
+                                                  : Language.instance
+                                                      .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
+                                                      .replaceAll(
+                                                          'NUMBER_STRING',
+                                                          '${refresh.progress}')
+                                                      .replaceAll(
+                                                          'TOTAL_STRING',
+                                                          '${refresh.total}'),
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.center,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4,
+                                            ),
+                                            SizedBox(
+                                              width: 16.0,
+                                            ),
+                                          ],
                                         ),
-                                  Container(
-                                    padding: EdgeInsets.all(12.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          width: 16.0,
-                                        ),
-                                        Text(
-                                          refresh.progress == null
-                                              ? Language
-                                                  .instance.DISCOVERING_FILES
-                                              : '${refresh.progress}/${refresh.total}',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline2,
-                                        ),
-                                        SizedBox(
-                                          width: 16.0,
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            Language.instance
-                                                .COLLECTION_INDEXING_LABEL,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
+                            right: 0.0,
+                            top: 0.0,
                           ),
                       ],
                     ),
@@ -447,8 +458,11 @@ class CollectionScreenState extends State<CollectionScreen>
                       hint: refresh.isCompleted
                           ? Language.instance.SEARCH_WELCOME
                           : Language.instance.COLLECTION_INDEXING_HINT,
-                      progress:
-                          refresh.isCompleted ? null : refresh.relativeProgress,
+                      progress: refresh.isCompleted
+                          ? null
+                          : refresh.total == 0
+                              ? 1.0
+                              : refresh.progress! / refresh.total,
                       transitionCurve: Curves.easeInOut,
                       width: MediaQuery.of(context).size.width - 2 * tileMargin,
                       height: kMobileSearchBarHeight,

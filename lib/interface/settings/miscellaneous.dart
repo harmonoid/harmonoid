@@ -18,6 +18,20 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
       child: Column(
         children: [
           SwitchListTile(
+            value: Configuration
+                .instance.changeNowPlayingBarColorBasedOnPlayingMusic,
+            title: Text(
+              Language.instance.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            onChanged: (_) => Configuration.instance
+                .save(
+                  changeNowPlayingBarColorBasedOnPlayingMusic: !Configuration
+                      .instance.changeNowPlayingBarColorBasedOnPlayingMusic,
+                )
+                .then((value) => setState(() {})),
+          ),
+          SwitchListTile(
             value: Configuration.instance.showTrackProgressOnTaskbar,
             title: Text(
               Language.instance.SHOW_TRACK_PROGRESS_ON_TASKBAR,

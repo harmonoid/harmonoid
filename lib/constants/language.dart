@@ -212,6 +212,7 @@ class Language extends Strings with ChangeNotifier {
     this.A_TO_Z = asset['A_TO_Z']!;
     this.BUFFERING = asset['BUFFERING']!;
     this.CANCEL = asset['CANCEL']!;
+    this.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC = asset['CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC']!;
     this.COLLECTION = asset['COLLECTION']!;
     this.COLLECTION_ALBUM_DELETE_DIALOG_BODY = asset['COLLECTION_ALBUM_DELETE_DIALOG_BODY']!;
     this.COLLECTION_ALBUM_DELETE_DIALOG_HEADER = asset['COLLECTION_ALBUM_DELETE_DIALOG_HEADER']!;
@@ -370,6 +371,7 @@ class Language extends Strings with ChangeNotifier {
     this.TRACK_SINGLE = asset['TRACK_SINGLE']!;
     this.TRANSFERS = asset['TRANSFERS']!;
     this.UNMUTE = asset['UNMUTE']!;
+    this.UPDATE_AVAILABLE = asset['UPDATE_AVAILABLE']!;
     this.VIDEO_SINGLE = asset['VIDEO_SINGLE']!;
     this.WARNING = asset['WARNING']!;
     this.WEB = asset['WEB']!;

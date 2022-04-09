@@ -160,8 +160,15 @@ ThemeData createTheme({
     primaryColorLight: color,
     primaryColor: color,
     primaryColorDark: color,
-    scaffoldBackgroundColor: isLight ? Colors.grey.shade100 : Color(0xFF121212),
+    scaffoldBackgroundColor: isLight ? Colors.white : Color(0xFF121212),
     toggleableActiveColor: color,
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: isLight ? Color(0xFF202020) : Colors.white,
+      actionTextColor: color,
+      contentTextStyle: textTheme.headline4?.copyWith(
+        color: isLight ? Colors.white : Colors.black,
+      ),
+    ),
     cardColor: isLight ? Colors.white : Color(0xFF202020),
     backgroundColor: color.withOpacity(0.24),
     dividerColor: isLight ? Colors.black12 : Colors.white24,
@@ -238,7 +245,7 @@ ThemeData createTheme({
 }
 
 const kAccents = [
-  Accent(Color(0xFF651FFF), Color(0xFF7C4DFF)),
+  Accent(Color(0xFF7C4DFF), Color(0xFF7C4DFF)),
   Accent(Color(0xFFF55A34), Color(0xFFF55A34)),
   Accent(Color(0xFFE53935), Color(0xFFE53935)),
   Accent(Color(0xFF4285F4), Color(0xFF82B1FF)),

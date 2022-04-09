@@ -7,15 +7,20 @@
 ///
 
 import 'dart:io';
+import 'dart:convert' as convert;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:animations/animations.dart';
 import 'package:libmpv/libmpv.dart' hide Media;
 import 'package:share_plus/share_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
+import 'package:harmonoid/main.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/models/media.dart';
@@ -25,6 +30,7 @@ import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
+import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
 
 final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
@@ -398,6 +404,42 @@ Future<void> trackPopupMenuHandle(
           break;
         }
     }
+  }
+}
+
+Future<void> checkVersionAndShowUpdateSnackbar(BuildContext context) async {
+  if (kDebugMode) return;
+  final response = await http.get(
+      Uri.parse('https://api.github.com/repos/harmonoid/harmonoid/releases'));
+  final body = convert.jsonDecode(response.body);
+  final releases =
+      body.map((release) => Release.fromJson(release)).toList().cast<Release>();
+  if (kVersion != releases.first.tagName) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '🎉 ${Language.instance.UPDATE_AVAILABLE.replaceAll('VERSION', releases.first.tagName)}',
+        ),
+        action: SnackBarAction(
+          label: Language.instance.DOWNLOAD_UPDATE,
+          textColor: Theme.of(context).primaryColor,
+          onPressed: () async {
+            await launch(releases.first.htmlUrl);
+            // Show snackbar again since [onPressed] seems to cause dismissal.
+            checkVersionAndShowUpdateSnackbar(context);
+          },
+        ),
+        elevation: 4.0,
+        margin: EdgeInsets.only(
+          bottom: 16.0 + kDesktopNowPlayingBarHeight,
+          left: 16.0,
+          right: 16.0,
+        ),
+        behavior: SnackBarBehavior.floating,
+        dismissDirection: DismissDirection.none,
+        duration: Duration(days: 1),
+      ),
+    );
   }
 }
 
