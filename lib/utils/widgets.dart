@@ -1092,6 +1092,121 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
   }
 }
 
+class HorizontalList extends StatefulWidget {
+  final List<Widget> children;
+  final EdgeInsetsGeometry? padding;
+  HorizontalList({
+    Key? key,
+    required this.children,
+    this.padding,
+  }) : super(key: key);
+
+  @override
+  State<HorizontalList> createState() => _HorizontalListState();
+}
+
+class _HorizontalListState extends State<HorizontalList> {
+  final ScrollController controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (isDesktop) {
+      controller.addListener(() {
+        setState(() {});
+      });
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      if (isDesktop) {
+        setState(() {});
+      }
+    });
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  double get extentBefore {
+    return controller.hasClients ? controller.position.extentBefore : 0.0;
+  }
+
+  double get extentAfter {
+    return controller.hasClients ? controller.position.extentAfter : 1.0;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (_, c) => Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: ListView(
+              controller: controller,
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              padding: widget.padding,
+              children: widget.children,
+            ),
+          ),
+          if (extentAfter != 0 && isDesktop)
+            Positioned(
+              child: Container(
+                height: c.maxHeight,
+                child: Center(
+                  child: FloatingActionButton(
+                    mini: true,
+                    heroTag: ValueKey(math.Random().nextInt(1 << 32)),
+                    onPressed: () {
+                      controller.animateTo(
+                        controller.offset +
+                            MediaQuery.of(context).size.width / 2,
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    child: Icon(Icons.arrow_forward),
+                  ),
+                ),
+              ),
+              right: 32.0,
+            ),
+          if (extentBefore != 0 && isDesktop)
+            Positioned(
+              child: Container(
+                height: c.maxHeight,
+                child: Center(
+                  child: FloatingActionButton(
+                    mini: true,
+                    heroTag: ValueKey(math.Random().nextInt(1 << 32)),
+                    onPressed: () {
+                      controller.animateTo(
+                        controller.offset -
+                            MediaQuery.of(context).size.width / 2,
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    child: Icon(Icons.arrow_back),
+                  ),
+                ),
+              ),
+              left: 32.0,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class CollectionSortButton extends StatelessWidget {
   final int tab;
   const CollectionSortButton({
