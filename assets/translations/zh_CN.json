@@ -15,6 +15,7 @@
   "A_TO_Z": "A 到 Z",
   "BUFFERING": "缓冲中...",
   "CANCEL": "取消",
+  "CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC": "Change the color of \"Now Playing Bar\" based on music",
   "COLLECTION": "收藏",
   "COLLECTION_ALBUM_DELETE_DIALOG_BODY": "您确定删除已经保存在您设备上的专辑吗？",
   "COLLECTION_ALBUM_DELETE_DIALOG_HEADER": "您确定吗?",
