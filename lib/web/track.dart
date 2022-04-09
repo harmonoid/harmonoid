@@ -270,10 +270,6 @@ class WebTrackTile extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Divider(
-                height: 1.0,
-                indent: 80.0,
-              ),
               Container(
                 height: 64.0,
                 alignment: Alignment.center,
@@ -361,6 +357,10 @@ class WebTrackTile extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              const Divider(
+                height: 1.0,
+                indent: 80.0,
               ),
             ],
           ),

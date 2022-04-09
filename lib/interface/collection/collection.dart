@@ -458,8 +458,11 @@ class CollectionScreenState extends State<CollectionScreen>
                       hint: refresh.isCompleted
                           ? Language.instance.SEARCH_WELCOME
                           : Language.instance.COLLECTION_INDEXING_HINT,
-                      progress:
-                          refresh.isCompleted ? null : refresh.relativeProgress,
+                      progress: refresh.isCompleted
+                          ? null
+                          : refresh.total == 0
+                              ? 1.0
+                              : refresh.progress! / refresh.total,
                       transitionCurve: Curves.easeInOut,
                       width: MediaQuery.of(context).size.width - 2 * tileMargin,
                       height: kMobileSearchBarHeight,

@@ -229,7 +229,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                               offset: Offset(0, -8.0),
                               child: Material(
                                 color: color as Color? ?? Colors.transparent,
-                                elevation: 4.0,
+                                elevation: elevation == 0.0 ? 4.0 : 0.0,
                                 borderRadius: BorderRadius.zero,
                                 child: Container(
                                   height: 312.0,

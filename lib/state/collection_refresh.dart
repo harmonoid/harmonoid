@@ -31,11 +31,6 @@ class CollectionRefresh extends ChangeNotifier {
   int? progress = 1;
   int total = 1;
 
-  double? get relativeProgress {
-    if (progress == null) return null;
-    return progress! / total;
-  }
-
   bool get isOngoing => progress != total;
   bool get isCompleted => progress == total;
 
