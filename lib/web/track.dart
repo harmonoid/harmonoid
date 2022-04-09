@@ -319,8 +319,10 @@ class WebTrackTile extends StatelessWidget {
                               if (group == null) Language.instance.TRACK_SINGLE,
                               if (track.albumName.isNotEmpty)
                                 track.albumName.overflow,
-                              track.albumArtistName.overflow,
-                              track.duration.label
+                              if (track.albumArtistName.isNotEmpty)
+                                track.albumArtistName.overflow,
+                              if (track.duration != Duration.zero)
+                                track.duration.label
                             ].join(' • '),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,

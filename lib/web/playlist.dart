@@ -25,6 +25,89 @@ import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/constants/language.dart';
 
+class WebPlaylistLargeTile extends StatelessWidget {
+  final double width;
+  final double height;
+  final Playlist playlist;
+  const WebPlaylistLargeTile({
+    Key? key,
+    required this.playlist,
+    required this.width,
+    required this.height,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      elevation: 4.0,
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: () async {
+          playlist.tracks = [];
+          playlist.continuation = null;
+          final thumbnails = playlist.thumbnails.values.toList();
+          precacheImage(
+            ExtendedNetworkImageProvider(thumbnails[thumbnails.length - 2]),
+            context,
+          );
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => WebPlaylistScreen(
+                playlist: playlist,
+              ),
+            ),
+          );
+        },
+        child: Container(
+          height: height,
+          width: width,
+          child: Column(
+            children: [
+              ClipRect(
+                child: ScaleOnHover(
+                  child: Hero(
+                    tag: 'album_art_${playlist.id}',
+                    child: ExtendedImage(
+                      image: ExtendedNetworkImageProvider(
+                          playlist.thumbnails.values.skip(1).first),
+                      fit: BoxFit.cover,
+                      height: width,
+                      width: width,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                  ),
+                  width: width,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        playlist.name.overflow,
+                        style: Theme.of(context).textTheme.headline2,
+                        textAlign: TextAlign.left,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class WebPlaylistTile extends StatelessWidget {
   final Playlist playlist;
   const WebPlaylistTile({

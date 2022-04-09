@@ -142,12 +142,13 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                             ),
                           ),
                           const SizedBox(width: 12.0),
-                          Text(
-                            widget.track.duration.label,
-                            style: TextStyle(
-                              color: Colors.white54,
+                          if (widget.track.duration != Duration.zero)
+                            Text(
+                              widget.track.duration.label,
+                              style: TextStyle(
+                                color: Colors.white54,
+                              ),
                             ),
-                          ),
                           const SizedBox(width: 4.0),
                         ],
                       ),

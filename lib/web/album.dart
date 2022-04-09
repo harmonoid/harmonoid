@@ -23,6 +23,118 @@ import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/web/state/web.dart';
 
+class WebAlbumLargeTile extends StatelessWidget {
+  final double width;
+  final double height;
+  final Album album;
+  const WebAlbumLargeTile({
+    Key? key,
+    required this.album,
+    required this.width,
+    required this.height,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      elevation: 4.0,
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: () async {
+          if (album.tracks.isEmpty) {
+            await Future.wait([
+              YTMClient.album(album),
+              precacheImage(
+                ExtendedNetworkImageProvider(
+                  album.thumbnails.values.last,
+                ),
+                context,
+              ),
+            ]);
+          }
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  FadeThroughTransition(
+                fillColor: Colors.transparent,
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                child: WebAlbumScreen(
+                  album: album,
+                ),
+              ),
+            ),
+          );
+        },
+        child: Container(
+          height: height,
+          width: width,
+          child: Column(
+            children: [
+              ClipRect(
+                child: ScaleOnHover(
+                  child: Hero(
+                    tag:
+                        'album_art_${album.albumName}_${album.year}_${album.id}',
+                    child: ExtendedImage(
+                      image: ExtendedNetworkImageProvider(
+                          album.thumbnails.values.skip(1).first),
+                      fit: BoxFit.cover,
+                      height: width,
+                      width: width,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                  ),
+                  width: width,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        album.albumName.overflow,
+                        style: Theme.of(context).textTheme.headline2,
+                        textAlign: TextAlign.left,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 2),
+                        child: Text(
+                          [
+                            if (album.albumArtistName.isNotEmpty)
+                              album.albumArtistName.overflow,
+                            if (album.year.isNotEmpty) album.year.overflow,
+                          ].join(' • '),
+                          style: isDesktop
+                              ? Theme.of(context).textTheme.headline3?.copyWith(
+                                    fontSize: 12.0,
+                                  )
+                              : Theme.of(context).textTheme.headline3,
+                          maxLines: 1,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class WebAlbumTile extends StatelessWidget {
   final Album album;
   const WebAlbumTile({
@@ -41,7 +153,7 @@ class WebAlbumTile extends StatelessWidget {
               YTMClient.album(album),
               precacheImage(
                 ExtendedNetworkImageProvider(
-                  album.thumbnails.values.skip(3).first,
+                  album.thumbnails.values.last,
                 ),
                 context,
               ),
@@ -102,8 +214,9 @@ class WebAlbumTile extends StatelessWidget {
                         Text(
                           [
                             Language.instance.ALBUM_SINGLE,
-                            album.albumArtistName,
-                            album.year
+                            if (album.albumArtistName.isNotEmpty)
+                              album.albumArtistName,
+                            if (album.year.isNotEmpty) album.year
                           ].join(' • '),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -240,7 +353,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                         padding: EdgeInsets.all(20.0),
                                         child: Hero(
                                           tag:
-                                              'album_art_${widget.album.albumName}_${widget.album.albumArtistName}',
+                                              'album_art_${widget.album.albumName}_${widget.album.year}_${widget.album.id}',
                                           child: Card(
                                             color: Colors.white,
                                             elevation: 4.0,
@@ -253,9 +366,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                     image:
                                                         ExtendedNetworkImageProvider(
                                                       widget.album.thumbnails
-                                                          .values
-                                                          .skip(3)
-                                                          .first,
+                                                          .values.last,
                                                     ),
                                                     height: 256.0,
                                                     width: 256.0,
