@@ -160,7 +160,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
               height: 40.0,
               width: 280.0,
               padding: EdgeInsets.only(bottom: 1.0),
-              child: TextFormField(
+              child: TextField(
                 autofocus: isDesktop,
                 cursorWidth: 1.0,
                 focusNode: node,
@@ -176,8 +176,8 @@ class _WebSearchBarState extends State<WebSearchBar> {
                       : await YTMClient.music_get_search_suggestions(value);
                   setState(() {});
                 },
-                onEditingComplete: () {
-                  searchOrPlay(_query);
+                onSubmitted: (query) {
+                  searchOrPlay(query);
                 },
                 cursorColor: Theme.of(context).brightness == Brightness.light
                     ? Colors.black
