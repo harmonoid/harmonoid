@@ -589,8 +589,8 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
           ),
           DesktopAppBar(
             color: _isDark
-                ? Colors.white.withOpacity(0.2)
-                : Colors.black.withOpacity(0.2),
+                ? Colors.white.withOpacity(0.4)
+                : Colors.black.withOpacity(0.4),
             elevation: 0.0,
             child: Row(
               children: [
