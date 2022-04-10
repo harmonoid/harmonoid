@@ -290,6 +290,7 @@ class NavigatorPopButton extends StatelessWidget {
 
 class DesktopAppBar extends StatelessWidget {
   final String? title;
+  final Widget? child;
   final Color? color;
   final Widget? leading;
   final double? height;
@@ -298,6 +299,7 @@ class DesktopAppBar extends StatelessWidget {
   const DesktopAppBar({
     Key? key,
     this.title,
+    this.child,
     this.color,
     this.leading,
     this.height,
@@ -352,6 +354,11 @@ class DesktopAppBar extends StatelessWidget {
                                             ? Colors.white
                                             : Colors.black
                                         : null),
+                          ),
+                        if (child != null)
+                          Container(
+                            width: MediaQuery.of(context).size.width - 72.0,
+                            child: child!,
                           ),
                       ],
                     ),

@@ -542,10 +542,7 @@ InputDecoration inputDecoration(
               : Colors.white60,
         ),
     filled: true,
-    fillColor: fillColor ??
-        (Theme.of(context).brightness == Brightness.light
-            ? Theme.of(context).dividerColor.withOpacity(0.04)
-            : Color(0xFF202020)),
+    fillColor: fillColor ?? Theme.of(context).dividerColor.withOpacity(0.04),
     border: UnderlineInputBorder(
       borderSide: BorderSide(
         color: Theme.of(context).iconTheme.color!.withOpacity(0.4),

@@ -8,6 +8,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -24,6 +25,9 @@ import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/web/utils/widgets.dart';
 
 class WebPlaylistLargeTile extends StatelessWidget {
   final double width;
@@ -591,10 +595,66 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                     duration: Duration(
                       milliseconds: 300,
                     ),
-                    builder: (context, color, _) => DesktopAppBar(
-                      elevation: elevation,
-                      color: color as Color? ?? Colors.transparent,
-                      title: elevation.isZero ? null : widget.playlist.name,
+                    builder: (context, color, _) => Theme(
+                      data: createTheme(
+                        color: isDark(context)
+                            ? kAccents.first.dark
+                            : kAccents.first.light,
+                        themeMode:
+                            isDark(context) ? ThemeMode.dark : ThemeMode.light,
+                      ),
+                      child: DesktopAppBar(
+                        elevation: elevation,
+                        color: color as Color? ?? Colors.transparent,
+                        child: Row(
+                          children: [
+                            Text(
+                              elevation != 0.0 ? widget.playlist.name : '',
+                              style: Theme.of(context).textTheme.headline1,
+                            ),
+                            Spacer(),
+                            WebSearchBar(),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            Material(
+                              color: Colors.transparent,
+                              child: Tooltip(
+                                message: Language.instance.SETTING,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            FadeThroughTransition(
+                                          fillColor: Colors.transparent,
+                                          animation: animation,
+                                          secondaryAnimation:
+                                              secondaryAnimation,
+                                          child: Settings(),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  child: Container(
+                                    height: 40.0,
+                                    width: 40.0,
+                                    child: Icon(
+                                      Icons.settings,
+                                      size: 20.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 16.0,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],

@@ -8,14 +8,11 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:ytm_client/ytm_client.dart';
-import 'package:substring_highlight/substring_highlight.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -23,12 +20,12 @@ import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
+import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/web/artist.dart';
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/web/album.dart';
 import 'package:harmonoid/web/video.dart';
 import 'package:harmonoid/web/playlist.dart';
-import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/web/utils/dimensions.dart';
 
 class WebTab extends StatefulWidget {
@@ -38,38 +35,6 @@ class WebTab extends StatefulWidget {
 
 class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
   int _index = 0;
-  String _query = '';
-  List<String> _suggestions = <String>[];
-  int _highlightedSuggestionIndex = -1;
-  TextEditingController _searchBarController = TextEditingController();
-
-  Future<void> searchOrPlay(String value) async {
-    if (value.isEmpty) return;
-    final track = await YTMClient.player(value);
-    if (track != null) {
-      Web.open(track);
-    } else {
-      Configuration.instance.save(
-        webSearchRecent:
-            ([value] + Configuration.instance.webRecent).take(10).toList(),
-      );
-      Navigator.of(context).push(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              SharedAxisTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            transitionType: SharedAxisTransitionType.vertical,
-            child: WebSearch(
-              query: value,
-              future: YTMClient.search(value),
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
   @override
   bool get wantKeepAlive => true;
 
@@ -158,7 +123,7 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
                     ),
                   ),
                   Spacer(),
-                  searchBar,
+                  WebSearchBar(),
                   SizedBox(
                     width: 8.0,
                   ),
@@ -204,163 +169,6 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
       ),
     );
   }
-
-  void _updateHighlightSuggestionIndex(int newIndex) {
-    if (newIndex < -1) newIndex++;
-    setState(() {
-      _highlightedSuggestionIndex =
-          _suggestions.isEmpty ? -1 : newIndex % _suggestions.length;
-    });
-  }
-
-  void _updateSearchFieldWithHighlightSuggestion(
-      TextEditingController controller) {
-    controller.text = _suggestions.elementAt(_highlightedSuggestionIndex);
-    controller.selection =
-        TextSelection.collapsed(offset: controller.text.length);
-  }
-
-  Widget get searchBar => Autocomplete<String>(
-        optionsBuilder: (textEditingValue) =>
-            textEditingValue.text.isEmpty ? [] : _suggestions,
-        optionsViewBuilder: (context, callback, _) => Container(
-          width: MediaQuery.of(context).size.width,
-          child: Stack(
-            children: [
-              Container(
-                height: 7 * 32.0,
-                width: 280.0,
-                child: Material(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(4.0),
-                    bottomRight: Radius.circular(4.0),
-                  ),
-                  elevation: 2.0,
-                  child: ListView.builder(
-                    keyboardDismissBehavior:
-                        ScrollViewKeyboardDismissBehavior.onDrag,
-                    padding: EdgeInsets.zero,
-                    itemCount: _suggestions.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final String option = _suggestions.elementAt(index);
-                      return InkWell(
-                        onTap: () {
-                          callback(option);
-                          searchOrPlay(option);
-                        },
-                        child: Container(
-                          color: _highlightedSuggestionIndex == index
-                              ? Theme.of(context).focusColor
-                              : null,
-                          height: 32.0,
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.only(left: 10.0),
-                          child: SubstringHighlight(
-                            text: option,
-                            term: _searchBarController.text,
-                            textStyle: Theme.of(context).textTheme.headline3!,
-                            textStyleHighlight: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        fieldViewBuilder: (context, controller, node, callback) {
-          this._searchBarController = controller;
-          return Focus(
-            onFocusChange: (hasFocus) {
-              if (!hasFocus) {
-                HotKeys.instance.enableSpaceHotKey();
-              }
-            },
-            onKey: (node, event) {
-              var isArrowDownPressed =
-                  event.isKeyPressed(LogicalKeyboardKey.arrowDown);
-
-              if (isArrowDownPressed ||
-                  event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
-                _updateHighlightSuggestionIndex(isArrowDownPressed
-                    ? _highlightedSuggestionIndex + 1
-                    : _highlightedSuggestionIndex - 1);
-                _updateSearchFieldWithHighlightSuggestion(controller);
-              }
-
-              return KeyEventResult.ignored;
-            },
-            child: Focus(
-              onFocusChange: (hasFocus) {
-                if (hasFocus) {
-                  HotKeys.instance.disableSpaceHotKey();
-                } else {
-                  HotKeys.instance.enableSpaceHotKey();
-                }
-              },
-              child: Container(
-                height: 40.0,
-                width: 280.0,
-                padding: EdgeInsets.only(bottom: 1.0),
-                child: TextField(
-                  autofocus: isDesktop,
-                  cursorWidth: 1.0,
-                  focusNode: node,
-                  controller: controller,
-                  onChanged: (value) async {
-                    value = value.trim();
-                    setState(() {
-                      _highlightedSuggestionIndex = -1;
-                      _query = value;
-                    });
-                    _suggestions = value.isEmpty
-                        ? []
-                        : await YTMClient.music_get_search_suggestions(value);
-                    setState(() {});
-                  },
-                  onSubmitted: (value) {
-                    searchOrPlay(value);
-                  },
-                  cursorColor: Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white,
-                  textAlignVertical: TextAlignVertical.bottom,
-                  style: Theme.of(context).textTheme.headline4,
-                  decoration: inputDecoration(
-                    context,
-                    Language.instance.COLLECTION_SEARCH_WELCOME,
-                    trailingIcon: Transform.rotate(
-                      angle: pi / 2,
-                      child: Tooltip(
-                        message: Language.instance.SEARCH,
-                        child: Icon(
-                          Icons.search,
-                          size: 20.0,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                      ),
-                    ),
-                    trailingIconOnPressed: () {
-                      searchOrPlay(_query);
-                    },
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      );
 }
 
 class WebRecommendations extends StatefulWidget {
@@ -536,8 +344,54 @@ class WebSearch extends StatelessWidget {
       body: Stack(
         children: [
           DesktopAppBar(
-            title: Language.instance.RESULTS_FOR_QUERY
-                .replaceAll('QUERY', query.trim()),
+            child: Row(
+              children: [
+                Text(
+                  Language.instance.RESULTS_FOR_QUERY
+                      .replaceAll('QUERY', query.trim()),
+                  style: Theme.of(context).textTheme.headline1,
+                ),
+                Spacer(),
+                WebSearchBar(query: this.query),
+                SizedBox(
+                  width: 8.0,
+                ),
+                Material(
+                  color: Colors.transparent,
+                  child: Tooltip(
+                    message: Language.instance.SETTING,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    FadeThroughTransition(
+                              fillColor: Colors.transparent,
+                              animation: animation,
+                              secondaryAnimation: secondaryAnimation,
+                              child: Settings(),
+                            ),
+                          ),
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: Container(
+                        height: 40.0,
+                        width: 40.0,
+                        child: Icon(
+                          Icons.settings,
+                          size: 20.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 16.0,
+                ),
+              ],
+            ),
           ),
           Container(
               margin: EdgeInsets.only(

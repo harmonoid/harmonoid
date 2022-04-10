@@ -8,6 +8,9 @@
 import 'dart:async';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
@@ -644,10 +647,66 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                     duration: Duration(
                       milliseconds: 300,
                     ),
-                    builder: (context, color, _) => DesktopAppBar(
-                      elevation: elevation,
-                      color: color as Color? ?? Colors.transparent,
-                      title: elevation.isZero ? null : widget.album.albumName,
+                    builder: (context, color, _) => Theme(
+                      data: createTheme(
+                        color: isDark(context)
+                            ? kAccents.first.dark
+                            : kAccents.first.light,
+                        themeMode:
+                            isDark(context) ? ThemeMode.dark : ThemeMode.light,
+                      ),
+                      child: DesktopAppBar(
+                        elevation: elevation,
+                        color: color as Color? ?? Colors.transparent,
+                        child: Row(
+                          children: [
+                            Text(
+                              elevation != 0.0 ? widget.album.albumName : '',
+                              style: Theme.of(context).textTheme.headline1,
+                            ),
+                            Spacer(),
+                            WebSearchBar(),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            Material(
+                              color: Colors.transparent,
+                              child: Tooltip(
+                                message: Language.instance.SETTING,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            FadeThroughTransition(
+                                          fillColor: Colors.transparent,
+                                          animation: animation,
+                                          secondaryAnimation:
+                                              secondaryAnimation,
+                                          child: Settings(),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  child: Container(
+                                    height: 40.0,
+                                    width: 40.0,
+                                    child: Icon(
+                                      Icons.settings,
+                                      size: 20.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 16.0,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],

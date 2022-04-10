@@ -9,7 +9,6 @@ import 'dart:math';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/web/playlist.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,7 +23,10 @@ import 'package:harmonoid/web/album.dart';
 import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/web/video.dart';
+import 'package:harmonoid/web/playlist.dart';
+import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/web/utils/dimensions.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
 
 class WebArtistLargeTile extends StatelessWidget {
   final double height;
@@ -590,6 +592,49 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                 ? Colors.white.withOpacity(0.2)
                 : Colors.black.withOpacity(0.2),
             elevation: 0.0,
+            child: Row(
+              children: [
+                Spacer(),
+                WebSearchBar(),
+                SizedBox(
+                  width: 8.0,
+                ),
+                Material(
+                  color: Colors.transparent,
+                  child: Tooltip(
+                    message: Language.instance.SETTING,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    FadeThroughTransition(
+                              fillColor: Colors.transparent,
+                              animation: animation,
+                              secondaryAnimation: secondaryAnimation,
+                              child: Settings(),
+                            ),
+                          ),
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: Container(
+                        height: 40.0,
+                        width: 40.0,
+                        child: Icon(
+                          Icons.settings,
+                          size: 20.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 16.0,
+                ),
+              ],
+            ),
           ),
         ],
       ),
