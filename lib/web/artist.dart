@@ -465,12 +465,12 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                             style: Theme.of(context).textTheme.headline1,
                           ),
                           Spacer(),
-                          if (e.value.browseId != null)
-                            ShowAllButton(
-                              onPressed: () {
-                                // TODO: Handle [ShowAllButton].
-                              },
-                            ),
+                          // if (e.value.browseId != null)
+                          //   ShowAllButton(
+                          //     onPressed: () {
+                          //       // TODO: Handle [ShowAllButton].
+                          //     },
+                          //   ),
                         ],
                       ),
                     ),
@@ -579,6 +579,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                               .toList(),
                         ),
                       ),
+                    const SizedBox(height: 16.0),
                   ],
                 ),
               ),

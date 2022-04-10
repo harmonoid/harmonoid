@@ -532,98 +532,92 @@ class WebSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isDesktop
-        ? Scaffold(
-            body: Stack(
-              children: [
-                DesktopAppBar(
-                  title: Language.instance.RESULTS_FOR_QUERY
-                      .replaceAll('QUERY', query.trim()),
-                ),
-                Container(
-                    margin: EdgeInsets.only(
-                      top: desktopTitleBarHeight + kDesktopAppBarHeight,
-                    ),
-                    child: FutureBuilder<Map<String, List<Media>>>(
-                      future: future,
-                      builder: (context, asyncSnapshot) {
-                        if (asyncSnapshot.hasData) {
-                          if (asyncSnapshot.data!.isNotEmpty) {
-                            final widgets = <Widget>[];
-                            asyncSnapshot.data!.forEach(
-                              (key, value) {
-                                widgets.add(
-                                  Row(
-                                    children: [
-                                      SubHeader(key),
-                                      Spacer(),
-                                      if (!key.contains('Top result'))
-                                        ShowAllButton(
-                                          onPressed: () {
-                                            // TODO: Handle [ShowAllButton].
-                                          },
-                                        ),
-                                    ],
-                                  ),
-                                );
-                                value.forEach(
-                                  (element) {
-                                    if (element is Track) {
-                                      widgets.add(WebTrackTile(track: element));
-                                    } else if (element is Artist) {
-                                      widgets
-                                          .add(WebArtistTile(artist: element));
-                                    } else if (element is Video) {
-                                      widgets.add(VideoTile(video: element));
-                                    } else if (element is Album) {
-                                      widgets.add(WebAlbumTile(album: element));
-                                    } else if (element is Playlist) {
-                                      widgets.add(
-                                          WebPlaylistTile(playlist: element));
-                                    }
-                                  },
-                                );
-                              },
-                            );
-                            return CustomListView(
-                              shrinkWrap: true,
+    return Scaffold(
+      body: Stack(
+        children: [
+          DesktopAppBar(
+            title: Language.instance.RESULTS_FOR_QUERY
+                .replaceAll('QUERY', query.trim()),
+          ),
+          Container(
+              margin: EdgeInsets.only(
+                top: desktopTitleBarHeight + kDesktopAppBarHeight,
+              ),
+              child: FutureBuilder<Map<String, List<Media>>>(
+                future: future,
+                builder: (context, asyncSnapshot) {
+                  if (asyncSnapshot.hasData) {
+                    if (asyncSnapshot.data!.isNotEmpty) {
+                      final widgets = <Widget>[];
+                      asyncSnapshot.data!.forEach(
+                        (key, value) {
+                          widgets.add(
+                            Row(
                               children: [
-                                Center(
-                                  child: ConstrainedBox(
-                                    constraints:
-                                        BoxConstraints(maxWidth: 840.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: widgets,
-                                    ),
-                                  ),
-                                ),
+                                SubHeader(key),
+                                Spacer(),
+                                // if (!key.contains('Top result'))
+                                //   ShowAllButton(
+                                //     onPressed: () {
+                                //       // TODO: Handle [ShowAllButton].
+                                //     },
+                                //   ),
                               ],
-                            );
-                          } else {
-                            return Center(
-                              child: ExceptionWidget(
-                                title: Language.instance
-                                    .COLLECTION_SEARCH_NO_RESULTS_TITLE,
-                                subtitle: Language.instance.WEB_NO_RESULTS,
-                              ),
-                            );
-                          }
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation(
-                                Theme.of(context).primaryColor,
-                              ),
                             ),
                           );
-                        }
-                      },
-                    )),
-              ],
-            ),
-          )
-        : Container();
+                          value.forEach(
+                            (element) {
+                              if (element is Track) {
+                                widgets.add(WebTrackTile(track: element));
+                              } else if (element is Artist) {
+                                widgets.add(WebArtistTile(artist: element));
+                              } else if (element is Video) {
+                                widgets.add(VideoTile(video: element));
+                              } else if (element is Album) {
+                                widgets.add(WebAlbumTile(album: element));
+                              } else if (element is Playlist) {
+                                widgets.add(WebPlaylistTile(playlist: element));
+                              }
+                            },
+                          );
+                        },
+                      );
+                      return CustomListView(
+                        shrinkWrap: true,
+                        children: [
+                          Center(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: 840.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: widgets,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Center(
+                        child: ExceptionWidget(
+                          title: Language
+                              .instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                          subtitle: Language.instance.WEB_NO_RESULTS,
+                        ),
+                      );
+                    }
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(
+                          Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    );
+                  }
+                },
+              )),
+        ],
+      ),
+    );
   }
 }
