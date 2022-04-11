@@ -453,89 +453,75 @@ class ExceptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isDesktop
-        ? Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 4.0,
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 4.0,
+      ),
+      width: 480.0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Transform.scale(
+            scale: 1.4,
+            child: Image.memory(
+              {
+                Language.instance.NO_COLLECTION_TITLE: visualAssets.collection,
+                Language.instance.NO_INTERNET_TITLE: visualAssets.collection,
+                Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE:
+                    visualAssets.searchPage,
+                Language.instance.WEB_WELCOME_TITLE: visualAssets.searchNotes,
+              }[title]!,
+              height: 196.0,
+              width: 196.0,
+              filterQuality: FilterQuality.high,
+              fit: BoxFit.contain,
             ),
-            width: 480.0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Transform.scale(
-                  scale: 1.4,
-                  child: Image.memory(
-                    {
-                      Language.instance.NO_COLLECTION_TITLE:
-                          visualAssets.collection,
-                      Language.instance.NO_INTERNET_TITLE:
-                          visualAssets.collection,
-                      Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE:
-                          visualAssets.searchPage,
-                      Language.instance.WEB_WELCOME_TITLE:
-                          visualAssets.searchNotes,
-                    }[title]!,
-                    height: 196.0,
-                    width: 196.0,
-                    filterQuality: FilterQuality.high,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                Text(
-                  title!,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline1
-                      ?.copyWith(fontSize: 20.0),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 2.0,
-                ),
-                Text(
-                  subtitle!,
-                  style: Theme.of(context).textTheme.headline3,
-                  textAlign: TextAlign.center,
-                ),
-                if (title == Language.instance.NO_COLLECTION_TITLE) ...[
-                  const SizedBox(
-                    height: 8.0,
-                  ),
-                  MaterialButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        PageRouteBuilder(
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  FadeThroughTransition(
-                            fillColor: Colors.transparent,
-                            animation: animation,
-                            secondaryAnimation: secondaryAnimation,
-                            child: Settings(),
-                          ),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      Language.instance.GO_TO_SETTINGS,
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                      ),
+          ),
+          Text(
+            title!,
+            style:
+                Theme.of(context).textTheme.headline1?.copyWith(fontSize: 20.0),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(
+            height: 8.0,
+          ),
+          Text(
+            subtitle!,
+            style: Theme.of(context).textTheme.headline3,
+            textAlign: TextAlign.center,
+          ),
+          if (title == Language.instance.NO_COLLECTION_TITLE) ...[
+            const SizedBox(
+              height: 4.0,
+            ),
+            MaterialButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      fillColor: Colors.transparent,
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: Settings(),
                     ),
                   ),
-                ]
-              ],
+                );
+              },
+              child: Text(
+                Language.instance.GO_TO_SETTINGS,
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
             ),
-          )
-        : Center(
-            child: Text(
-              this.subtitle!,
-              style: Theme.of(context).textTheme.headline3,
-              textAlign: TextAlign.center,
-            ),
-          );
+          ]
+        ],
+      ),
+    );
   }
 }
 
@@ -910,7 +896,7 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.queue),
+            icon: Icon(Icons.playlist_play),
             label: Language.instance.PLAYLIST,
             backgroundColor: Theme.of(context).primaryColor,
           ),
@@ -1250,9 +1236,12 @@ class CollectionSortButton extends StatelessWidget {
             padding: EdgeInsets.zero,
             checked:
                 Collection.instance.collectionSortType == CollectionSort.aToZ ||
-                    (tab != 0 &&
+                    (tab == 1 &&
                         Collection.instance.collectionSortType ==
-                            CollectionSort.artist),
+                            CollectionSort.artist) ||
+                    (tab == 2 &&
+                        Collection.instance.collectionSortType !=
+                            CollectionSort.aToZ),
             value: CollectionSort.aToZ,
             child: Text(
               Language.instance.A_TO_Z,

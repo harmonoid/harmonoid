@@ -384,8 +384,9 @@ Future<void> trackPopupMenuHandle(
             }
           }
           if (isMobile) {
-            final result =
-                await PaletteGenerator.fromImageProvider(getAlbumArt(album));
+            final result = await PaletteGenerator.fromImageProvider(
+              getAlbumArt(album, small: true),
+            );
             palette = result.colors;
           }
           Navigator.of(context).push(
@@ -444,73 +445,115 @@ Future<void> checkVersionAndShowUpdateSnackbar(BuildContext context) async {
 }
 
 Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
-  return showDialog(
-    context: context,
-    builder: (subContext) => AlertDialog(
-      contentPadding: EdgeInsets.zero,
-      actionsPadding: EdgeInsets.zero,
-      titlePadding: EdgeInsets.zero,
-      content: Container(
-        width: isDesktop ? 512.0 : 280.0,
-        height: isDesktop ? 480.0 : 280.0,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(28, 20, 0, 0),
-              child: Text(
-                Language.instance.PLAYLIST_ADD_DIALOG_TITLE,
-                style: Theme.of(subContext).textTheme.headline1?.copyWith(
-                      fontSize: 20.0,
-                    ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(28, 2, 0, 16),
-              child: Text(
-                Language.instance.PLAYLIST_ADD_DIALOG_BODY,
-                style: Theme.of(subContext).textTheme.headline3,
-              ),
-            ),
-            Container(
-              height: (isDesktop ? 512.0 : 280.0) - 118.0,
-              width: isDesktop ? 512.0 : 280.0,
-              child: CustomListViewBuilder(
-                itemExtents: List.generate(
-                  Collection.instance.playlists.length,
-                  (index) => 64.0 + 9.0,
-                ),
-                shrinkWrap: true,
-                itemCount: Collection.instance.playlists.length,
-                itemBuilder: (context, i) => PlaylistTile(
-                  playlist: Collection.instance.playlists[i],
-                  onTap: () async {
-                    await Collection.instance.playlistAddTrack(
-                      Collection.instance.playlists[i],
-                      track,
-                    );
-                    Navigator.of(subContext).pop();
-                  },
+  if (isDesktop) {
+    return showDialog(
+      context: context,
+      builder: (subContext) => AlertDialog(
+        contentPadding: EdgeInsets.zero,
+        actionsPadding: EdgeInsets.zero,
+        titlePadding: EdgeInsets.zero,
+        content: Container(
+          width: isDesktop ? 512.0 : 280.0,
+          height: isDesktop ? 480.0 : 280.0,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(28, 20, 0, 0),
+                child: Text(
+                  Language.instance.PLAYLIST_ADD_DIALOG_TITLE,
+                  style: Theme.of(subContext).textTheme.headline1?.copyWith(
+                        fontSize: 20.0,
+                      ),
                 ),
               ),
-            ),
-            Divider(
-              height: 1.0,
-            ),
-          ],
+              Padding(
+                padding: EdgeInsets.fromLTRB(28, 2, 0, 16),
+                child: Text(
+                  Language.instance.PLAYLIST_ADD_DIALOG_BODY,
+                  style: Theme.of(subContext).textTheme.headline3,
+                ),
+              ),
+              Container(
+                height: (isDesktop ? 512.0 : 280.0) - 118.0,
+                width: isDesktop ? 512.0 : 280.0,
+                child: CustomListViewBuilder(
+                  itemExtents: List.generate(
+                    Collection.instance.playlists.length,
+                    (index) => 64.0 + 9.0,
+                  ),
+                  shrinkWrap: true,
+                  itemCount: Collection.instance.playlists.length,
+                  itemBuilder: (context, i) => PlaylistTile(
+                    playlist: Collection.instance.playlists[i],
+                    onTap: () async {
+                      await Collection.instance.playlistAddTrack(
+                        Collection.instance.playlists[i],
+                        track,
+                      );
+                      Navigator.of(subContext).pop();
+                    },
+                  ),
+                ),
+              ),
+              Divider(
+                height: 1.0,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            textColor: Theme.of(context).primaryColor,
+            onPressed: Navigator.of(subContext).pop,
+            child: Text(Language.instance.CANCEL),
+          ),
+        ],
+      ),
+    );
+  } else {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.8,
+        maxChildSize: 1.0,
+        expand: false,
+        builder: (context, controller) => ListView.builder(
+          padding: EdgeInsets.zero,
+          controller: controller,
+          shrinkWrap: true,
+          itemCount: Collection.instance.playlists.length,
+          itemBuilder: (context, i) {
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.transparent,
+                child: Icon(
+                  Icons.playlist_add,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+              ),
+              title: Text(Collection.instance.playlists[i].name),
+              subtitle: Text(
+                Language.instance.N_TRACKS.replaceAll(
+                  'N',
+                  Collection.instance.playlists[i].tracks.length.toString(),
+                ),
+              ),
+              onTap: () async {
+                await Collection.instance.playlistAddTrack(
+                  Collection.instance.playlists[i],
+                  track,
+                );
+                Navigator.of(context).pop();
+              },
+            );
+          },
         ),
       ),
-      actions: [
-        MaterialButton(
-          textColor: Theme.of(context).primaryColor,
-          onPressed: Navigator.of(subContext).pop,
-          child: Text(Language.instance.CANCEL),
-        ),
-      ],
-    ),
-  );
+    );
+  }
 }
 
 InputDecoration inputDecoration(
@@ -533,14 +576,18 @@ InputDecoration inputDecoration(
               iconSize: 24.0,
             ),
     ),
-    contentPadding:
-        EdgeInsets.only(left: 10.0, bottom: trailingIcon == null ? 10.0 : 10.0),
+    contentPadding: isDesktop
+        ? EdgeInsets.only(
+            left: 10.0, bottom: trailingIcon == null ? 10.0 : 10.0)
+        : null,
     hintText: hintText,
-    hintStyle: Theme.of(context).textTheme.headline3?.copyWith(
-          color: Theme.of(context).brightness == Brightness.light
-              ? Colors.black.withOpacity(0.6)
-              : Colors.white60,
-        ),
+    hintStyle: isDesktop
+        ? Theme.of(context).textTheme.headline3?.copyWith(
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black.withOpacity(0.6)
+                  : Colors.white60,
+            )
+        : null,
     filled: true,
     fillColor: fillColor ?? Theme.of(context).dividerColor.withOpacity(0.04),
     border: UnderlineInputBorder(
@@ -648,6 +695,7 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
             Collection.instance.albumArtDirectory.path,
             media.tracks.first.legacyAlbumArtFileName,
           ));
+          print(file.path);
           if (file.existsSync_()) {
             return ExtendedFileImageProvider(file);
           } else {

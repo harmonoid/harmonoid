@@ -184,8 +184,10 @@ ThemeData createTheme({
     ),
     appBarTheme: Platform.isAndroid || Platform.isIOS
         ? AppBarTheme(
-            backgroundColor: color,
-            systemOverlayStyle: SystemUiOverlayStyle.light,
+            backgroundColor: isLight ? Colors.white : Color(0xFF272727),
+            systemOverlayStyle: isLight
+                ? SystemUiOverlayStyle.light
+                : SystemUiOverlayStyle.dark,
             elevation: 4.0,
             iconTheme: IconThemeData(
               color: Colors.white,
@@ -245,7 +247,7 @@ ThemeData createTheme({
 }
 
 const kAccents = [
-  Accent(Color(0xFF7C4DFF), Color(0xFF7C4DFF)),
+  Accent(Color(0xFF6200EA), Color(0xFF7C4DFF)),
   Accent(Color(0xFFF55A34), Color(0xFFF55A34)),
   Accent(Color(0xFFE53935), Color(0xFFE53935)),
   Accent(Color(0xFF4285F4), Color(0xFF82B1FF)),
