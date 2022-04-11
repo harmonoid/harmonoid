@@ -88,7 +88,7 @@ class Collection extends ChangeNotifier {
     for (int index = 0; index < directory.length; index++) {
       final object = directory[index];
       try {
-        final metadata = <String, String>{
+        final metadata = <String, dynamic>{
           'uri': object.uri.toString(),
         };
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -223,7 +223,7 @@ class Collection extends ChangeNotifier {
     }
     if (kSupportedFileTypes.contains(file.extension) && !isAlreadyPresent) {
       try {
-        final metadata = <String, String>{
+        final metadata = <String, dynamic>{
           'uri': file.uri.toString(),
         };
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -493,7 +493,7 @@ class Collection extends ChangeNotifier {
               // Add new tracks.
               if (!files.contains(file.uri.toFilePath())) {
                 try {
-                  final metadata = <String, String>{
+                  final metadata = <String, dynamic>{
                     'uri': file.uri.toString(),
                   };
                   if (Platform.isWindows ||
@@ -631,7 +631,7 @@ class Collection extends ChangeNotifier {
     for (int index = 0; index < directory.length; index++) {
       final object = directory[index];
       try {
-        final metadata = <String, String>{
+        final metadata = <String, dynamic>{
           'uri': object.uri.toString(),
         };
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -826,6 +826,8 @@ class Collection extends ChangeNotifier {
   Future<void> _arrange(Track track, VoidCallback save) async {
     if (files.contains(track.uri.toFilePath())) return;
     files.add(track.uri.toFilePath());
+    // In newer versions, save album art for every single file regardless of the album.
+    save();
     if (!albums.contains(
       Album(
         albumName: track.albumName,
@@ -834,7 +836,6 @@ class Collection extends ChangeNotifier {
       ),
     )) {
       // Run as asynchronous suspension.
-      save();
       albums.add(
         Album(
           albumName: track.albumName,
