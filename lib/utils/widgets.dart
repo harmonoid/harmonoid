@@ -409,7 +409,6 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
                 child: Icon(
                   Icons.refresh,
                   color: Colors.white,
-                  size: 20.0,
                 ),
                 tween: tween,
                 duration: Duration(milliseconds: 800),
@@ -464,7 +463,7 @@ class ExceptionWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Transform.scale(
-            scale: 1.4,
+            scale: 1.2,
             child: Image.memory(
               {
                 Language.instance.NO_COLLECTION_TITLE: visualAssets.collection,
@@ -472,6 +471,8 @@ class ExceptionWidget extends StatelessWidget {
                 Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE:
                     visualAssets.searchPage,
                 Language.instance.WEB_WELCOME_TITLE: visualAssets.searchNotes,
+                Language.instance.COLLECTION_SEARCH_LABEL:
+                    visualAssets.searchPage,
               }[title]!,
               height: 196.0,
               width: 196.0,

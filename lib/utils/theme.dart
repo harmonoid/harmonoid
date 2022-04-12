@@ -101,6 +101,11 @@ ThemeData createTheme({
         color: isLight ? Colors.black54 : Colors.white.withOpacity(0.54),
         fontSize: 14.0,
       ),
+      headline6: TextStyle(
+        fontWeight: FontWeight.normal,
+        color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
+        fontSize: 18.0,
+      ),
     );
   }
   return ThemeData(
@@ -182,37 +187,22 @@ ThemeData createTheme({
       elevation: 2.0,
       color: isLight ? Colors.white : Color(0xFF242424),
     ),
-    appBarTheme: Platform.isAndroid || Platform.isIOS
-        ? AppBarTheme(
-            backgroundColor: isLight ? Colors.white : Color(0xFF272727),
-            systemOverlayStyle: isLight
-                ? SystemUiOverlayStyle.light
-                : SystemUiOverlayStyle.dark,
-            elevation: 4.0,
-            iconTheme: IconThemeData(
-              color: Colors.white,
-              size: 24.0,
-            ),
-            actionsIconTheme: IconThemeData(
-              color: Colors.white,
-              size: 24.0,
-            ),
-          )
-        : AppBarTheme(
-            backgroundColor: isLight ? Colors.white : Color(0xFF272727),
-            systemOverlayStyle: isLight
-                ? SystemUiOverlayStyle.light
-                : SystemUiOverlayStyle.dark,
-            elevation: 4.0,
-            iconTheme: IconThemeData(
-              color: isLight ? Colors.black54 : Colors.white54,
-              size: 24.0,
-            ),
-            actionsIconTheme: IconThemeData(
-              color: isLight ? Colors.black54 : Colors.white54,
-              size: 24.0,
-            ),
-          ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: isLight ? Colors.white : Color(0xFF272727),
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: isLight ? Colors.black12 : Colors.white12,
+        statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
+      ),
+      elevation: 4.0,
+      iconTheme: IconThemeData(
+        color: isLight ? Colors.black54 : Colors.white54,
+        size: 24.0,
+      ),
+      actionsIconTheme: IconThemeData(
+        color: isLight ? Colors.black54 : Colors.white54,
+        size: 24.0,
+      ),
+    ),
     iconTheme: IconThemeData(
       color: isLight ? Colors.black54 : Colors.white54,
       size: 24,
