@@ -14,6 +14,7 @@ import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:palette_generator/palette_generator.dart';
 
@@ -944,6 +945,16 @@ class ArtistScreenState extends State<ArtistScreen>
                     controller: controller,
                     slivers: [
                       SliverAppBar(
+                        systemOverlayStyle: SystemUiOverlayStyle(
+                          statusBarColor:
+                              (color?.computeLuminance() ?? 0.0) < 0.5
+                                  ? Colors.white12
+                                  : Colors.black12,
+                          statusBarIconBrightness:
+                              (color?.computeLuminance() ?? 0.0) < 0.5
+                                  ? Brightness.light
+                                  : Brightness.dark,
+                        ),
                         expandedHeight: MediaQuery.of(context).size.width +
                             96.0 -
                             MediaQuery.of(context).padding.top,
@@ -966,11 +977,19 @@ class ArtistScreenState extends State<ArtistScreen>
                           builder: (context, value, _) => Opacity(
                             opacity: value,
                             child: Text(
-                              Language.instance.ARTIST_SINGLE,
+                              widget.artist.artistName.overflow,
                               style: Theme.of(context)
                                   .textTheme
                                   .headline1
-                                  ?.copyWith(color: Colors.white),
+                                  ?.copyWith(
+                                      color: [
+                                    Colors.black,
+                                    Colors.white
+                                  ][(color?.computeLuminance() ?? 0.0) > 0.5
+                                          ? 0
+                                          : 1]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
@@ -1052,6 +1071,29 @@ class ArtistScreenState extends State<ArtistScreen>
                                               ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          Language
+                                              .instance.M_TRACKS_AND_N_ALBUMS
+                                              .replaceAll('M',
+                                                  '${widget.artist.tracks.length}')
+                                              .replaceAll('N',
+                                                  '${widget.artist.albums.length}'),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline3
+                                              ?.copyWith(
+                                                color: [
+                                                  Colors.white70,
+                                                  Colors.black54
+                                                ][(color?.computeLuminance() ??
+                                                            0.0) >
+                                                        0.5
+                                                    ? 1
+                                                    : 0],
+                                              ),
                                         ),
                                       ],
                                     ),

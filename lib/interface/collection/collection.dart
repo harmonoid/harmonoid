@@ -443,10 +443,15 @@ class CollectionScreenState extends State<CollectionScreen>
             ),
           )
         : AnnotatedRegion<SystemUiOverlayStyle>(
-            value: [
-              SystemUiOverlayStyle.light,
-              SystemUiOverlayStyle.dark,
-            ][Theme.of(context).brightness.index],
+            value: SystemUiOverlayStyle(
+              statusBarColor: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white12
+                  : Colors.black12,
+              statusBarIconBrightness:
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Brightness.light
+                      : Brightness.dark,
+            ),
             child: Consumer<CollectionRefresh>(
               builder: (context, refresh, _) => Scaffold(
                 resizeToAvoidBottomInset: false,
@@ -455,6 +460,7 @@ class CollectionScreenState extends State<CollectionScreen>
                   children: [
                     FloatingSearchBar(
                       controller: floatingSearchBarController,
+                      automaticallyImplyBackButton: false,
                       hint: refresh.isCompleted
                           ? Language.instance.SEARCH_WELCOME
                           : Language.instance.COLLECTION_INDEXING_HINT,
@@ -483,6 +489,107 @@ class CollectionScreenState extends State<CollectionScreen>
                         FloatingSearchBarAction.back(),
                       ],
                       actions: [
+                        if (index == 1 || index == 2 || index == 3)
+                          FloatingSearchBarAction(
+                            showIfOpened: false,
+                            child: CircularButton(
+                              icon: const Icon(Icons.sort_by_alpha),
+                              onPressed: () async {
+                                final position = RelativeRect.fromRect(
+                                  Offset(
+                                        MediaQuery.of(context).size.width -
+                                            tileMargin -
+                                            48.0,
+                                        MediaQuery.of(context).padding.top +
+                                            kMobileSearchBarHeight +
+                                            2 * tileMargin,
+                                      ) &
+                                      Size(160.0, 160.0),
+                                  Rect.fromLTWH(
+                                    0,
+                                    0,
+                                    MediaQuery.of(context).size.width,
+                                    MediaQuery.of(context).size.height,
+                                  ),
+                                );
+                                final value = await showMenu<dynamic>(
+                                  context: context,
+                                  position: position,
+                                  items: [
+                                    if (index == 1 || index == 2 || index == 3)
+                                      CheckedPopupMenuItem(
+                                        padding: EdgeInsets.zero,
+                                        checked: Collection
+                                                .instance.collectionSortType ==
+                                            CollectionSort.aToZ,
+                                        value: CollectionSort.aToZ,
+                                        child: Text(
+                                          Language.instance.A_TO_Z,
+                                        ),
+                                      ),
+                                    if (index == 1 || index == 2 || index == 3)
+                                      CheckedPopupMenuItem(
+                                        padding: EdgeInsets.zero,
+                                        checked: Collection
+                                                .instance.collectionSortType ==
+                                            CollectionSort.dateAdded,
+                                        value: CollectionSort.dateAdded,
+                                        child: Text(
+                                          Language.instance.DATE_ADDED,
+                                        ),
+                                      ),
+                                    if (index == 1 || index == 2)
+                                      CheckedPopupMenuItem(
+                                        padding: EdgeInsets.zero,
+                                        checked: Collection
+                                                .instance.collectionSortType ==
+                                            CollectionSort.year,
+                                        value: CollectionSort.year,
+                                        child: Text(
+                                          Language.instance.YEAR,
+                                        ),
+                                      ),
+                                    PopupMenuDivider(),
+                                    CheckedPopupMenuItem(
+                                      padding: EdgeInsets.zero,
+                                      checked: Collection
+                                              .instance.collectionOrderType ==
+                                          CollectionOrder.ascending,
+                                      value: CollectionOrder.ascending,
+                                      child: Text(
+                                        Language.instance.ASCENDING,
+                                      ),
+                                    ),
+                                    CheckedPopupMenuItem(
+                                      padding: EdgeInsets.zero,
+                                      checked: Collection
+                                              .instance.collectionOrderType ==
+                                          CollectionOrder.descending,
+                                      value: CollectionOrder.descending,
+                                      child: Text(
+                                        Language.instance.DESCENDING,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                                if (value is CollectionSort) {
+                                  Provider.of<Collection>(context,
+                                          listen: false)
+                                      .sort(type: value);
+                                  await Configuration.instance.save(
+                                    collectionSortType: value,
+                                  );
+                                } else if (value is CollectionOrder) {
+                                  Provider.of<Collection>(context,
+                                          listen: false)
+                                      .order(type: value);
+                                  await Configuration.instance.save(
+                                    collectionOrderType: value,
+                                  );
+                                }
+                              },
+                            ),
+                          ),
                         FloatingSearchBarAction(
                           showIfOpened: false,
                           child: CircularButton(
@@ -510,13 +617,6 @@ class CollectionScreenState extends State<CollectionScreen>
                                 position: position,
                                 items: [
                                   PopupMenuItem(
-                                    value: 0,
-                                    child: ListTile(
-                                      leading: Icon(Icons.sort),
-                                      title: Text(Language.instance.SORT_BY),
-                                    ),
-                                  ),
-                                  PopupMenuItem(
                                     value: 1,
                                     child: ListTile(
                                       leading: Icon(Icons.settings),
@@ -532,88 +632,6 @@ class CollectionScreenState extends State<CollectionScreen>
                                     ),
                                   ),
                                 ],
-                              ).then(
-                                (value) async {
-                                  switch (value) {
-                                    case 0:
-                                      {
-                                        final value = await showMenu<dynamic>(
-                                          context: context,
-                                          position: position,
-                                          items: [
-                                            CheckedPopupMenuItem(
-                                              padding: EdgeInsets.zero,
-                                              checked: Collection.instance
-                                                      .collectionSortType ==
-                                                  CollectionSort.aToZ,
-                                              value: CollectionSort.aToZ,
-                                              child: Text(
-                                                Language.instance.A_TO_Z,
-                                              ),
-                                            ),
-                                            CheckedPopupMenuItem(
-                                              padding: EdgeInsets.zero,
-                                              checked: Collection.instance
-                                                      .collectionSortType ==
-                                                  CollectionSort.dateAdded,
-                                              value: CollectionSort.dateAdded,
-                                              child: Text(
-                                                Language.instance.DATE_ADDED,
-                                              ),
-                                            ),
-                                            CheckedPopupMenuItem(
-                                              padding: EdgeInsets.zero,
-                                              checked: Collection.instance
-                                                      .collectionSortType ==
-                                                  CollectionSort.year,
-                                              value: CollectionSort.year,
-                                              child: Text(
-                                                Language.instance.YEAR,
-                                              ),
-                                            ),
-                                            PopupMenuDivider(),
-                                            CheckedPopupMenuItem(
-                                              padding: EdgeInsets.zero,
-                                              checked: Collection.instance
-                                                      .collectionOrderType ==
-                                                  CollectionOrder.ascending,
-                                              value: CollectionOrder.ascending,
-                                              child: Text(
-                                                Language.instance.ASCENDING,
-                                              ),
-                                            ),
-                                            CheckedPopupMenuItem(
-                                              padding: EdgeInsets.zero,
-                                              checked: Collection.instance
-                                                      .collectionOrderType ==
-                                                  CollectionOrder.descending,
-                                              value: CollectionOrder.descending,
-                                              child: Text(
-                                                Language.instance.DESCENDING,
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                        if (value is CollectionSort) {
-                                          Provider.of<Collection>(context,
-                                                  listen: false)
-                                              .sort(type: value);
-                                          await Configuration.instance.save(
-                                            collectionSortType: value,
-                                          );
-                                          break;
-                                        } else if (value is CollectionOrder) {
-                                          Provider.of<Collection>(context,
-                                                  listen: false)
-                                              .order(type: value);
-                                          await Configuration.instance.save(
-                                            collectionOrderType: value,
-                                          );
-                                          break;
-                                        }
-                                      }
-                                  }
-                                },
                               );
                             },
                           ),
@@ -638,21 +656,42 @@ class CollectionScreenState extends State<CollectionScreen>
                         );
                       },
                       body: FloatingSearchBarScrollNotifier(
-                        child: PageView(
-                          controller: pageController,
-                          onPageChanged: (page) {
-                            if (index != page) {
-                              index = page;
-                              widget.tabControllerNotifier.value =
-                                  TabRoute(page, TabRouteSender.pageView);
-                            }
-                          },
+                        child: Stack(
                           children: [
-                            PlaylistTab(),
-                            TrackTab(),
-                            AlbumTab(),
-                            ArtistTab(),
-                            WebTab(),
+                            if (Collection.instance.tracks.isNotEmpty)
+                              Positioned.fill(
+                                child: Opacity(
+                                  opacity: 0.2,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Image.memory(
+                                      visualAssets.collection,
+                                      height: 512.0,
+                                      width: 512.0,
+                                      filterQuality: FilterQuality.high,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            PageView(
+                              controller: pageController,
+                              onPageChanged: (page) {
+                                if (index != page) {
+                                  index = page;
+                                  widget.tabControllerNotifier.value =
+                                      TabRoute(page, TabRouteSender.pageView);
+                                  setState(() {});
+                                }
+                              },
+                              children: [
+                                PlaylistTab(),
+                                TrackTab(),
+                                AlbumTab(),
+                                ArtistTab(),
+                                WebTab(),
+                              ],
+                            ),
                           ],
                         ),
                       ),

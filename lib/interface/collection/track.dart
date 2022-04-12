@@ -468,13 +468,21 @@ class TrackTileState extends State<TrackTile> {
   }
 
   void _showBottomSheet() async {
-    var result;
+    int? result;
     await showModalBottomSheet(
       context: context,
       builder: (context) => Container(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: trackPopupMenuItems(context),
+          children: trackPopupMenuItems(context).map((item) {
+            return PopupMenuItem<int>(
+              value: item.value,
+              onTap: () {
+                result = item.value;
+              },
+              child: item.child,
+            );
+          }).toList(),
         ),
       ),
     );

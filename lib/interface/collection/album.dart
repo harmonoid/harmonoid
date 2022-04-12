@@ -13,6 +13,7 @@ import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
@@ -1154,6 +1155,15 @@ class AlbumScreenState extends State<AlbumScreen>
                   controller: controller,
                   slivers: [
                     SliverAppBar(
+                      systemOverlayStyle: SystemUiOverlayStyle(
+                        statusBarColor: (color?.computeLuminance() ?? 0.0) < 0.5
+                            ? Colors.white12
+                            : Colors.black12,
+                        statusBarIconBrightness:
+                            (color?.computeLuminance() ?? 0.0) < 0.5
+                                ? Brightness.light
+                                : Brightness.dark,
+                      ),
                       expandedHeight: MediaQuery.of(context).size.width +
                           136.0 -
                           MediaQuery.of(context).padding.top,
@@ -1162,6 +1172,10 @@ class AlbumScreenState extends State<AlbumScreen>
                         onPressed: Navigator.of(context).maybePop,
                         icon: Icon(
                           Icons.arrow_back,
+                          color: [
+                            Colors.black,
+                            Colors.white
+                          ][(color?.computeLuminance() ?? 0.0) > 0.5 ? 0 : 1],
                         ),
                         iconSize: 24.0,
                         splashRadius: 20.0,
@@ -1218,6 +1232,10 @@ class AlbumScreenState extends State<AlbumScreen>
                           },
                           icon: Icon(
                             Icons.delete,
+                            color: [
+                              Colors.black,
+                              Colors.white
+                            ][(color?.computeLuminance() ?? 0.0) > 0.5 ? 0 : 1],
                           ),
                           iconSize: 24.0,
                           splashRadius: 20.0,
@@ -1232,11 +1250,17 @@ class AlbumScreenState extends State<AlbumScreen>
                         builder: (context, value, _) => Opacity(
                           opacity: value,
                           child: Text(
-                            Language.instance.ALBUM_SINGLE,
+                            widget.album.albumName.overflow,
                             style: Theme.of(context)
                                 .textTheme
                                 .headline1
-                                ?.copyWith(color: Colors.white),
+                                ?.copyWith(
+                                    color: [Colors.black, Colors.white][
+                                        (color?.computeLuminance() ?? 0.0) > 0.5
+                                            ? 0
+                                            : 1]),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ),
