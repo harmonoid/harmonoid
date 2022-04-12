@@ -17,6 +17,7 @@ import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:ytm_client/ytm_client.dart';
 
 /// Configuration
 /// -------------
@@ -72,6 +73,7 @@ class Configuration extends ConfigurationKeys {
         '.Harmonoid',
       ),
     );
+    ytm_request_authority = instance.proxyURL == "" ? null : instance.proxyURL;
   }
 
   /// Updates a particular key in the Harmonoid's configuration.
@@ -93,6 +95,7 @@ class Configuration extends ConfigurationKeys {
     bool? automaticallyShowNowPlayingScreenAfterPlaying,
     bool? automaticallyRefreshCollectionOnFreshStart,
     bool? changeNowPlayingBarColorBasedOnPlayingMusic,
+    String? proxyURL,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -146,6 +149,9 @@ class Configuration extends ConfigurationKeys {
       this.changeNowPlayingBarColorBasedOnPlayingMusic =
           changeNowPlayingBarColorBasedOnPlayingMusic;
     }
+    if (proxyURL != null) {
+      this.proxyURL = proxyURL;
+    }
     await file.writeAsString(
       const convert.JsonEncoder.withIndent('  ').convert(
         {
@@ -173,6 +179,7 @@ class Configuration extends ConfigurationKeys {
               this.automaticallyRefreshCollectionOnFreshStart,
           'changeNowPlayingBarColorBasedOnPlayingMusic':
               this.changeNowPlayingBarColorBasedOnPlayingMusic,
+          'proxyURL': this.proxyURL,
         },
       ),
     );
@@ -219,6 +226,7 @@ class Configuration extends ConfigurationKeys {
           current['automaticallyRefreshCollectionOnFreshStart'];
       changeNowPlayingBarColorBasedOnPlayingMusic =
           current['changeNowPlayingBarColorBasedOnPlayingMusic'];
+      proxyURL = current["proxyURL"];
     } catch (exception) {
       if (!retry) throw exception;
       if (!await file.exists_()) {
@@ -251,6 +259,7 @@ abstract class ConfigurationKeys {
   late bool automaticallyShowNowPlayingScreenAfterPlaying;
   late bool automaticallyRefreshCollectionOnFreshStart;
   late bool changeNowPlayingBarColorBasedOnPlayingMusic;
+  late String proxyURL;
 }
 
 final Map<String, dynamic> defaultConfiguration = {
@@ -277,4 +286,5 @@ final Map<String, dynamic> defaultConfiguration = {
   'automaticallyShowNowPlayingScreenAfterPlaying': true,
   'automaticallyRefreshCollectionOnFreshStart': false,
   'changeNowPlayingBarColorBasedOnPlayingMusic': true,
+  'proxyURL': '',
 };

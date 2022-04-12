@@ -8,6 +8,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/interface/settings/proxy.dart';
 
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -36,7 +37,7 @@ class Settings extends StatelessWidget {
             child: CustomListView(
               shrinkWrap: true,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 4.0,
                 ),
                 IndexingSetting(),
@@ -44,9 +45,10 @@ class Settings extends StatelessWidget {
                 MiscellaneousSetting(),
                 ExperimentalSetting(),
                 LanguageSetting(),
+                ProxySetting(),
                 AboutSetting(),
                 VersionSetting(),
-                SizedBox(
+                const SizedBox(
                   height: 8.0,
                 ),
               ],

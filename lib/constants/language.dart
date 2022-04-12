@@ -302,6 +302,8 @@ class Language extends Strings with ChangeNotifier {
     this.PLAY_URL = asset['PLAY_URL']!;
     this.PLAY_URL_SUBTITLE = asset['PLAY_URL_SUBTITLE']!;
     this.PREVIOUS = asset['PREVIOUS']!;
+    this.PROXY_SUBTITLE = asset['PROXY_SUBTITLE']!;
+    this.PROXY_TITLE = asset['PROXY_TITLE']!;
     this.RECOMMENDATIONS = asset['RECOMMENDATIONS']!;
     this.REFRESH = asset['REFRESH']!;
     this.REFRESH_INFORMATION = asset['REFRESH_INFORMATION']!;

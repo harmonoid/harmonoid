@@ -105,6 +105,8 @@
   "PLAY_URL": "Play URL",
   "PLAY_URL_SUBTITLE": "Enter URI to the media resource",
   "PREVIOUS": "Öncəki",
+  "PROXY_SUBTITLE": "Setup a proxy for YouTube & YouTube Music (not applicable to MPV yet). This can certainly decrease fetching speed, but should be used if your country doesn't support YouTube Music or has blocked it.",
+  "PROXY_TITLE": "Proxy",
   "RECOMMENDATIONS": "Önərilənlər",
   "REFRESH": "YENİLƏ",
   "REFRESH_INFORMATION": "Just checks for the new added & deleted files to updates the music library (faster)",
