@@ -946,10 +946,7 @@ class ArtistScreenState extends State<ArtistScreen>
                     slivers: [
                       SliverAppBar(
                         systemOverlayStyle: SystemUiOverlayStyle(
-                          statusBarColor:
-                              (color?.computeLuminance() ?? 0.0) < 0.5
-                                  ? Colors.white12
-                                  : Colors.black12,
+                          statusBarColor: Colors.transparent,
                           statusBarIconBrightness:
                               (color?.computeLuminance() ?? 0.0) < 0.5
                                   ? Brightness.light
@@ -963,6 +960,10 @@ class ArtistScreenState extends State<ArtistScreen>
                           onPressed: Navigator.of(context).maybePop,
                           icon: Icon(
                             Icons.arrow_back,
+                            color: [
+                              Colors.black,
+                              Colors.white
+                            ][(color?.computeLuminance() ?? 0.0) > 0.5 ? 0 : 1],
                           ),
                           iconSize: 24.0,
                           splashRadius: 20.0,

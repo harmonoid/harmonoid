@@ -1190,20 +1190,14 @@ class PlaylistScreenState extends State<PlaylistScreen>
                     SliverAppBar(
                       systemOverlayStyle: widget.playlist.tracks.isNotEmpty
                           ? SystemUiOverlayStyle(
-                              statusBarColor:
-                                  (color?.computeLuminance() ?? 0.0) < 0.5
-                                      ? Colors.white12
-                                      : Colors.black12,
+                              statusBarColor: Colors.transparent,
                               statusBarIconBrightness:
                                   (color?.computeLuminance() ?? 0.0) < 0.5
                                       ? Brightness.light
                                       : Brightness.dark,
                             )
                           : SystemUiOverlayStyle(
-                              statusBarColor: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white12
-                                  : Colors.black12,
+                              statusBarColor: Colors.transparent,
                               statusBarIconBrightness:
                                   Theme.of(context).brightness ==
                                           Brightness.dark
@@ -1218,6 +1212,14 @@ class PlaylistScreenState extends State<PlaylistScreen>
                         onPressed: Navigator.of(context).maybePop,
                         icon: Icon(
                           Icons.arrow_back,
+                          color: widget.playlist.tracks.isNotEmpty
+                              ? ([Colors.white, Colors.black][
+                                  (color?.computeLuminance() ?? 0.0) > 0.5
+                                      ? 1
+                                      : 0])
+                              : Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                         ),
                         iconSize: 24.0,
                         splashRadius: 20.0,

@@ -1156,9 +1156,7 @@ class AlbumScreenState extends State<AlbumScreen>
                   slivers: [
                     SliverAppBar(
                       systemOverlayStyle: SystemUiOverlayStyle(
-                        statusBarColor: (color?.computeLuminance() ?? 0.0) < 0.5
-                            ? Colors.white12
-                            : Colors.black12,
+                        statusBarColor: Colors.transparent,
                         statusBarIconBrightness:
                             (color?.computeLuminance() ?? 0.0) < 0.5
                                 ? Brightness.light

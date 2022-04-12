@@ -36,9 +36,11 @@ class CollectionScreen extends StatefulWidget {
   /// It was necessary to use this to support Android's back button to jump back to previous tabs.
   ///
   final ValueNotifier<TabRoute> tabControllerNotifier;
+  final FloatingSearchBarController floatingSearchBarController;
   const CollectionScreen({
     Key? key,
     required this.tabControllerNotifier,
+    required this.floatingSearchBarController,
   }) : super(key: key);
   CollectionScreenState createState() => CollectionScreenState();
 }
@@ -46,11 +48,8 @@ class CollectionScreen extends StatefulWidget {
 class CollectionScreenState extends State<CollectionScreen>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   final FocusNode node = FocusNode();
-  final PageController pageController = PageController(
-    initialPage: isMobile ? 2 : 0,
-  );
-  final FloatingSearchBarController floatingSearchBarController =
-      FloatingSearchBarController();
+  final PageController pageController =
+      PageController(initialPage: isMobile ? 2 : 0);
   final ValueNotifier<String> query = ValueNotifier<String>('');
   int index = isMobile ? 2 : 0;
   String string = '';
@@ -72,7 +71,7 @@ class CollectionScreenState extends State<CollectionScreen>
       }
     });
     pageController.addListener(() {
-      floatingSearchBarController.show();
+      widget.floatingSearchBarController.show();
     });
     Future.delayed(const Duration(seconds: 1), () {
       Intent.instance.play();
@@ -455,11 +454,12 @@ class CollectionScreenState extends State<CollectionScreen>
             child: Consumer<CollectionRefresh>(
               builder: (context, refresh, _) => Scaffold(
                 resizeToAvoidBottomInset: false,
+                floatingActionButton: RefreshCollectionButton(),
                 body: Stack(
                   fit: StackFit.expand,
                   children: [
                     FloatingSearchBar(
-                      controller: floatingSearchBarController,
+                      controller: widget.floatingSearchBarController,
                       automaticallyImplyBackButton: false,
                       hint: refresh.isCompleted
                           ? Language.instance.SEARCH_WELCOME
@@ -476,7 +476,8 @@ class CollectionScreenState extends State<CollectionScreen>
                         top: MediaQuery.of(context).padding.top + tileMargin,
                       ),
                       accentColor: Theme.of(context).primaryColor,
-                      onQueryChanged: (query) {},
+                      onQueryChanged: (value) => query.value = value,
+                      clearQueryOnClose: true,
                       transition: CircularFloatingSearchBarTransition(),
                       leadingActions: [
                         FloatingSearchBarAction(
@@ -521,13 +522,13 @@ class CollectionScreenState extends State<CollectionScreen>
                                         padding: EdgeInsets.zero,
                                         checked: Collection
                                                 .instance.collectionSortType ==
-                                            CollectionSort.aToZ,
+                                            CollectionSort.aToZ || index == 3,
                                         value: CollectionSort.aToZ,
                                         child: Text(
                                           Language.instance.A_TO_Z,
                                         ),
                                       ),
-                                    if (index == 1 || index == 2 || index == 3)
+                                    if (index == 1 || index == 2)
                                       CheckedPopupMenuItem(
                                         padding: EdgeInsets.zero,
                                         checked: Collection
@@ -641,18 +642,8 @@ class CollectionScreenState extends State<CollectionScreen>
                         ),
                       ],
                       builder: (context, transition) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Material(
-                            color: Colors.white,
-                            elevation: 4.0,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: Colors.accents.map((color) {
-                                return Container(height: 112, color: color);
-                              }).toList(),
-                            ),
-                          ),
+                        return FloatingSearchBarSearchTab(
+                          query: query,
                         );
                       },
                       body: FloatingSearchBarScrollNotifier(

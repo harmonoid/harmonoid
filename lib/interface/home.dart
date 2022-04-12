@@ -10,6 +10,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/state/now_playing_launcher.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -38,6 +39,8 @@ class HomeState extends State<Home>
     TabRoute(isMobile ? 2 : 0, TabRouteSender.systemNavigationBackButton),
   ];
   bool isSystemNavigationBackButtonPressed = false;
+  final FloatingSearchBarController floatingSearchBarController =
+      FloatingSearchBarController();
 
   @override
   void initState() {
@@ -69,7 +72,10 @@ class HomeState extends State<Home>
 
   @override
   Future<bool> didPopRoute() async {
-    if (this.navigatorKey.currentState!.canPop()) {
+    // Intercept [FloatingSearchBar].
+    if (floatingSearchBarController.isOpen) {
+      floatingSearchBarController.close();
+    } else if (this.navigatorKey.currentState!.canPop()) {
       // Any route was pushed to nested [Navigator].
       this.navigatorKey.currentState!.pop();
     }
@@ -174,6 +180,8 @@ class HomeState extends State<Home>
                                         CollectionScreen(
                                       tabControllerNotifier:
                                           tabControllerNotifier,
+                                      floatingSearchBarController:
+                                          floatingSearchBarController,
                                     ),
                                   );
                                 }
@@ -220,6 +228,8 @@ class HomeState extends State<Home>
                               builder: (BuildContext context) =>
                                   CollectionScreen(
                                 tabControllerNotifier: tabControllerNotifier,
+                                floatingSearchBarController:
+                                    floatingSearchBarController,
                               ),
                             );
                           }

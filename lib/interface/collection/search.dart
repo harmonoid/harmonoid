@@ -9,10 +9,8 @@
 import 'package:flutter/material.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -22,13 +20,12 @@ import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
 
 class SearchTab extends StatefulWidget {
-  final ValueNotifier<String>? query;
-  SearchTab({Key? key, this.query}) : super(key: key);
+  final ValueNotifier<String> query;
+  SearchTab({Key? key, required this.query}) : super(key: key);
   SearchTabState createState() => SearchTabState();
 }
 
 class SearchTabState extends State<SearchTab> {
-  TextEditingController controller = new TextEditingController();
   List<Widget> albums = <Widget>[];
   List<Widget> tracks = <Widget>[];
   List<Widget> artists = <Widget>[];
@@ -38,58 +35,56 @@ class SearchTabState extends State<SearchTab> {
   @override
   void initState() {
     super.initState();
-    if (widget.query != null) {
-      listener = () async {
-        albums = <Widget>[];
-        tracks = <Widget>[];
-        artists = <Widget>[];
-        var result = Collection.instance.search(widget.query!.value);
-        for (var media in result) {
-          if (media is Album) {
-            albums.addAll(
-              [
-                AlbumTile(
-                  height: kAlbumTileHeight,
-                  width: kAlbumTileWidth,
-                  album: media,
-                ),
-                const SizedBox(
-                  width: 16.0,
-                ),
-              ],
-            );
-          }
-          if (media is Artist) {
-            artists.addAll(
-              [
-                ArtistTile(
-                  height: kDesktopArtistTileHeight,
-                  width: kDesktopArtistTileWidth,
-                  artist: media,
-                ),
-                const SizedBox(
-                  width: 16.0,
-                ),
-              ],
-            );
-          } else if (media is Track) {
-            tracks.add(
-              TrackTile(
-                track: media,
-                index: Collection.instance.tracks.indexOf(media),
+    listener = () async {
+      albums = <Widget>[];
+      tracks = <Widget>[];
+      artists = <Widget>[];
+      final result = Collection.instance.search(widget.query.value);
+      for (final media in result) {
+        if (media is Album) {
+          albums.addAll(
+            [
+              AlbumTile(
+                height: kAlbumTileHeight,
+                width: kAlbumTileWidth,
+                album: media,
               ),
-            );
-          }
+              const SizedBox(
+                width: 16.0,
+              ),
+            ],
+          );
         }
-      };
-      widget.query!.addListener(listener);
-      listener();
-    }
+        if (media is Artist) {
+          artists.addAll(
+            [
+              ArtistTile(
+                height: kDesktopArtistTileHeight,
+                width: kDesktopArtistTileWidth,
+                artist: media,
+              ),
+              const SizedBox(
+                width: 16.0,
+              ),
+            ],
+          );
+        } else if (media is Track) {
+          tracks.add(
+            TrackTile(
+              track: media,
+              index: Collection.instance.tracks.indexOf(media),
+            ),
+          );
+        }
+      }
+    };
+    widget.query.addListener(listener);
+    listener();
   }
 
   @override
   void dispose() {
-    widget.query!.removeListener(listener);
+    widget.query.removeListener(listener);
     super.dispose();
   }
 
@@ -100,341 +95,435 @@ class SearchTabState extends State<SearchTab> {
         listener();
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          body: Column(
-            children: [
-              if (widget.query == null)
-                Container(
-                  margin: EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          right: 8.0,
-                        ),
-                        child: Container(
-                          width: 56.0,
-                          child: Icon(
-                            FluentIcons.search_24_regular,
-                            size: 24.0,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Focus(
-                          onFocusChange: (hasFocus) {
-                            if (hasFocus) {
-                              HotKeys.instance.disableSpaceHotKey();
-                            } else {
-                              HotKeys.instance.enableSpaceHotKey();
-                            }
-                          },
-                          child: TextField(
-                            controller: controller,
-                            onChanged: (String query) async {
-                              int _index = index;
-                              index++;
-                              List<dynamic> result = collection.search(query);
-                              List<Widget> _albums = <Widget>[];
-                              List<Widget> _tracks = <Widget>[];
-                              List<Widget> _artists = <Widget>[];
-                              for (final media in result) {
-                                if (media is Album) {
-                                  _albums.addAll(
-                                    [
-                                      AlbumTile(
-                                        height: kAlbumTileHeight,
-                                        width: kAlbumTileWidth,
-                                        album: media,
+          body: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
+              ? CustomListView(
+                  children: <Widget>[
+                        if (albums.isNotEmpty)
+                          Row(
+                            children: [
+                              SubHeader(Language.instance.ALBUM),
+                              const Spacer(),
+                              ShowAllButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => Scaffold(
+                                        body: Container(
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          child: Stack(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: desktopTitleBarHeight +
+                                                        kDesktopAppBarHeight),
+                                                child: CustomListView(
+                                                  padding: EdgeInsets.only(
+                                                    top: tileMargin,
+                                                  ),
+                                                  children: tileGridListWidgets(
+                                                    context: context,
+                                                    tileHeight:
+                                                        kAlbumTileHeight,
+                                                    tileWidth: kAlbumTileWidth,
+                                                    elementsPerRow:
+                                                        (MediaQuery.of(context)
+                                                                    .size
+                                                                    .width -
+                                                                tileMargin) ~/
+                                                            (kAlbumTileWidth +
+                                                                tileMargin),
+                                                    subHeader: null,
+                                                    leadingSubHeader: null,
+                                                    widgetCount:
+                                                        this.albums.length ~/ 2,
+                                                    leadingWidget: Container(),
+                                                    builder:
+                                                        (BuildContext context,
+                                                                int index) =>
+                                                            albums[2 * index],
+                                                  ),
+                                                ),
+                                              ),
+                                              DesktopAppBar(
+                                                title: Language.instance.ALBUM,
+                                                elevation: 4.0,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                      const SizedBox(
-                                        width: 16.0,
-                                      ),
-                                    ],
-                                  );
-                                }
-                                if (media is Artist) {
-                                  _artists.addAll(
-                                    [
-                                      ArtistTile(
-                                        height: kDesktopArtistTileHeight,
-                                        width: kDesktopArtistTileWidth,
-                                        artist: media,
-                                      ),
-                                      const SizedBox(
-                                        width: 16.0,
-                                      ),
-                                    ],
-                                  );
-                                } else if (media is Track) {
-                                  _tracks.add(
-                                    TrackTile(
-                                      track: media,
-                                      index: collection.tracks.indexOf(media),
                                     ),
                                   );
-                                }
-                              }
-                              if (_index == index - 1) {
-                                albums = _albums;
-                                artists = _artists;
-                                tracks = _tracks;
-                                setState(() {});
-                              }
-                            },
-                            style: Theme.of(context).textTheme.headline4,
-                            cursorWidth: 1.0,
-                            decoration: InputDecoration(
-                              hintText:
-                                  Language.instance.COLLECTION_SEARCH_LABEL,
-                              hintStyle: Theme.of(context).textTheme.headline3,
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  width: 1.0,
-                                ),
+                                },
                               ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).dividerColor,
-                                  width: 1.0,
-                                ),
+                              const SizedBox(
+                                width: 20.0,
                               ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  width: 1.0,
-                                ),
+                            ],
+                          ),
+                        if (albums.isNotEmpty)
+                          Container(
+                            height: kAlbumTileHeight + 10.0,
+                            width: MediaQuery.of(context).size.width,
+                            child: ListView(
+                              padding: EdgeInsets.only(
+                                left: 16.0,
+                                top: 2.0,
+                                bottom: 8.0,
                               ),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              children: albums,
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 24.0,
-                      ),
-                    ],
-                  ),
+                        if (artists.isNotEmpty)
+                          Row(
+                            children: [
+                              SubHeader(Language.instance.ARTIST),
+                              const Spacer(),
+                              ShowAllButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => Scaffold(
+                                        body: Container(
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          child: Stack(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: desktopTitleBarHeight +
+                                                        kDesktopAppBarHeight),
+                                                child: CustomListView(
+                                                  padding: EdgeInsets.only(
+                                                    top: tileMargin,
+                                                  ),
+                                                  children: tileGridListWidgets(
+                                                    context: context,
+                                                    tileHeight:
+                                                        kDesktopArtistTileHeight,
+                                                    tileWidth:
+                                                        kDesktopArtistTileWidth,
+                                                    elementsPerRow: (MediaQuery
+                                                                    .of(context)
+                                                                .size
+                                                                .width -
+                                                            tileMargin) ~/
+                                                        (kDesktopArtistTileWidth +
+                                                            tileMargin),
+                                                    subHeader: null,
+                                                    leadingSubHeader: null,
+                                                    widgetCount:
+                                                        this.artists.length ~/
+                                                            2,
+                                                    leadingWidget: Container(),
+                                                    builder:
+                                                        (BuildContext context,
+                                                                int index) =>
+                                                            artists[2 * index],
+                                                  ),
+                                                ),
+                                              ),
+                                              DesktopAppBar(
+                                                title: Language.instance.ARTIST,
+                                                elevation: 4.0,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(
+                                width: 20.0,
+                              ),
+                            ],
+                          ),
+                        if (artists.isNotEmpty)
+                          Container(
+                            height: kDesktopArtistTileHeight + 10.0,
+                            width: MediaQuery.of(context).size.width,
+                            child: ListView(
+                              padding: EdgeInsets.only(
+                                left: 16.0,
+                                top: 2.0,
+                                bottom: 8.0,
+                              ),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              children: artists,
+                            ),
+                          ),
+                        if (tracks.isNotEmpty)
+                          Row(
+                            children: [
+                              SubHeader(Language.instance.TRACK),
+                              const Spacer(),
+                              const SizedBox(
+                                width: 20.0,
+                              ),
+                            ],
+                          ),
+                      ] +
+                      tracks,
+                )
+              : ExceptionWidget(
+                  title: Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                  subtitle:
+                      Language.instance.COLLECTION_SEARCH_NO_RESULTS_SUBTITLE,
                 ),
-              Expanded(
-                child: albums.isNotEmpty ||
-                        artists.isNotEmpty ||
-                        tracks.isNotEmpty
-                    ? CustomListView(
-                        children: <Widget>[
-                              if (albums.isNotEmpty)
-                                Row(
-                                  children: [
-                                    SubHeader(Language.instance.ALBUM),
-                                    const Spacer(),
-                                    ShowAllButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => Scaffold(
-                                              body: Container(
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                child: Stack(
-                                                  children: [
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          top: desktopTitleBarHeight +
-                                                              kDesktopAppBarHeight),
-                                                      child: CustomListView(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                          top: tileMargin,
-                                                        ),
-                                                        children:
-                                                            tileGridListWidgets(
-                                                          context: context,
-                                                          tileHeight:
-                                                              kAlbumTileHeight,
-                                                          tileWidth:
-                                                              kAlbumTileWidth,
-                                                          elementsPerRow: (MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width -
-                                                                  tileMargin) ~/
-                                                              (kAlbumTileWidth +
-                                                                  tileMargin),
-                                                          subHeader: null,
-                                                          leadingSubHeader:
-                                                              null,
-                                                          widgetCount: this
-                                                                  .albums
-                                                                  .length ~/
-                                                              2,
-                                                          leadingWidget:
-                                                              Container(),
-                                                          builder: (BuildContext
-                                                                      context,
-                                                                  int index) =>
-                                                              albums[2 * index],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    DesktopAppBar(
-                                                      title: Language
-                                                          .instance.ALBUM,
-                                                      elevation: 4.0,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    const SizedBox(
-                                      width: 20.0,
-                                    ),
-                                  ],
-                                ),
-                              if (albums.isNotEmpty)
-                                Container(
-                                  height: kAlbumTileHeight + 10.0,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: ListView(
-                                    padding: EdgeInsets.only(
-                                      left: 16.0,
-                                      top: 2.0,
-                                      bottom: 8.0,
-                                    ),
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    children: albums,
-                                  ),
-                                ),
-                              if (artists.isNotEmpty)
-                                Row(
-                                  children: [
-                                    SubHeader(Language.instance.ARTIST),
-                                    const Spacer(),
-                                    ShowAllButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => Scaffold(
-                                              body: Container(
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                child: Stack(
-                                                  children: [
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          top: desktopTitleBarHeight +
-                                                              kDesktopAppBarHeight),
-                                                      child: CustomListView(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                          top: tileMargin,
-                                                        ),
-                                                        children:
-                                                            tileGridListWidgets(
-                                                          context: context,
-                                                          tileHeight:
-                                                              kDesktopArtistTileHeight,
-                                                          tileWidth:
-                                                              kDesktopArtistTileWidth,
-                                                          elementsPerRow: (MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width -
-                                                                  tileMargin) ~/
-                                                              (kDesktopArtistTileWidth +
-                                                                  tileMargin),
-                                                          subHeader: null,
-                                                          leadingSubHeader:
-                                                              null,
-                                                          widgetCount: this
-                                                                  .artists
-                                                                  .length ~/
-                                                              2,
-                                                          leadingWidget:
-                                                              Container(),
-                                                          builder: (BuildContext
-                                                                      context,
-                                                                  int index) =>
-                                                              artists[
-                                                                  2 * index],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    DesktopAppBar(
-                                                      title: Language
-                                                          .instance.ARTIST,
-                                                      elevation: 4.0,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    const SizedBox(
-                                      width: 20.0,
-                                    ),
-                                  ],
-                                ),
-                              if (artists.isNotEmpty)
-                                Container(
-                                  height: kDesktopArtistTileHeight + 10.0,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: ListView(
-                                    padding: EdgeInsets.only(
-                                      left: 16.0,
-                                      top: 2.0,
-                                      bottom: 8.0,
-                                    ),
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    children: artists,
-                                  ),
-                                ),
-                              if (tracks.isNotEmpty)
-                                Row(
-                                  children: [
-                                    SubHeader(Language.instance.TRACK),
-                                    const Spacer(),
-                                    const SizedBox(
-                                      width: 20.0,
-                                    ),
-                                  ],
-                                ),
-                            ] +
-                            tracks,
-                      )
-                    : (controller.text.isNotEmpty ||
-                            (widget.query?.value.isNotEmpty ?? false)
-                        ? Center(
-                            child: ExceptionWidget(
-                              title: Language
-                                  .instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
-                              subtitle: Language.instance
-                                  .COLLECTION_SEARCH_NO_RESULTS_SUBTITLE,
-                            ),
-                          )
-                        : Center(
-                            child: Icon(
-                              FluentIcons.search_20_regular,
-                              size: 72.0,
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                          )),
-              ),
-            ],
-          ),
         );
       },
+    );
+  }
+}
+
+class FloatingSearchBarSearchTab extends StatefulWidget {
+  final ValueNotifier<String> query;
+  FloatingSearchBarSearchTab({
+    Key? key,
+    required this.query,
+  }) : super(key: key);
+
+  @override
+  State<FloatingSearchBarSearchTab> createState() =>
+      _FloatingSearchBarSearchTabState();
+}
+
+class _FloatingSearchBarSearchTabState
+    extends State<FloatingSearchBarSearchTab> {
+  List<Widget> albums = <Widget>[];
+  List<Widget> tracks = <Widget>[];
+  List<Widget> artists = <Widget>[];
+  int index = 0;
+  late VoidCallback listener;
+
+  @override
+  void initState() {
+    super.initState();
+    listener = () {
+      final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin) ~/
+          (kAlbumTileWidth + tileMargin);
+      final double width = isMobile
+          ? (MediaQuery.of(context).size.width -
+                  (elementsPerRow + 1) * tileMargin) /
+              elementsPerRow
+          : kAlbumTileWidth;
+      final double height = isMobile
+          ? width * kAlbumTileHeight / kAlbumTileWidth
+          : kAlbumTileHeight;
+      albums = <Widget>[];
+      tracks = <Widget>[];
+      artists = <Widget>[];
+      final result = Collection.instance.search(widget.query.value);
+      for (final media in result) {
+        if (media is Album) {
+          albums.addAll(
+            [
+              AlbumTile(
+                width: width,
+                height: height,
+                album: media,
+              ),
+              const SizedBox(
+                width: 16.0,
+              ),
+            ],
+          );
+        }
+        if (media is Artist) {
+          artists.addAll(
+            [
+              ArtistTile(
+                width: kDesktopArtistTileWidth,
+                height: kDesktopArtistTileHeight,
+                artist: media,
+              ),
+              const SizedBox(
+                width: 16.0,
+              ),
+            ],
+          );
+        } else if (media is Track) {
+          tracks.add(
+            TrackTile(
+              track: media,
+              index: Collection.instance.tracks.indexOf(media),
+            ),
+          );
+        }
+      }
+      setState(() {});
+    };
+    widget.query.addListener(listener);
+  }
+
+  @override
+  void dispose() {
+    widget.query.removeListener(listener);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin) ~/
+        (kAlbumTileWidth + tileMargin);
+    final double width = isMobile
+        ? (MediaQuery.of(context).size.width -
+                (elementsPerRow + 1) * tileMargin) /
+            elementsPerRow
+        : kAlbumTileWidth;
+    final double height = isMobile
+        ? width * kAlbumTileHeight / kAlbumTileWidth
+        : kAlbumTileHeight;
+    return Card(
+      elevation: 4.0,
+      margin: EdgeInsets.zero,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height -
+            kMobileSearchBarHeight -
+            16.0 -
+            MediaQuery.of(context).padding.vertical -
+            MediaQuery.of(context).viewInsets.vertical,
+        width: MediaQuery.of(context).size.width,
+        child: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
+            ? CustomListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  if (albums.isNotEmpty)
+                    Row(
+                      children: [
+                        SubHeader(Language.instance.ALBUM),
+                        const Spacer(),
+                        ShowAllButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => Scaffold(
+                                  appBar: AppBar(
+                                    leading: NavigatorPopButton(),
+                                    title: Text(
+                                      Language.instance.ALBUM,
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
+                                    ),
+                                  ),
+                                  body: CustomListView(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: tileMargin),
+                                    children: tileGridListWidgets(
+                                      context: context,
+                                      tileHeight: height,
+                                      tileWidth: width,
+                                      elementsPerRow:
+                                          (MediaQuery.of(context).size.width -
+                                                  tileMargin) ~/
+                                              (kAlbumTileWidth + tileMargin),
+                                      subHeader: null,
+                                      leadingSubHeader: null,
+                                      widgetCount: this.albums.length ~/ 2,
+                                      leadingWidget: Container(),
+                                      builder:
+                                          (BuildContext context, int index) =>
+                                              albums[2 * index],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          width: 20.0,
+                        ),
+                      ],
+                    ),
+                  if (albums.isNotEmpty)
+                    Container(
+                      height: height + 10.0,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView(
+                        padding: EdgeInsets.only(
+                          left: 16.0,
+                          top: 2.0,
+                          bottom: 8.0,
+                        ),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        children: albums,
+                      ),
+                    ),
+                  if (artists.isNotEmpty)
+                    Row(
+                      children: [
+                        SubHeader(Language.instance.ARTIST),
+                        const Spacer(),
+                        ShowAllButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => Scaffold(
+                                  appBar: AppBar(
+                                    leading: NavigatorPopButton(),
+                                    title: Text(
+                                      Language.instance.ARTIST,
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
+                                    ),
+                                  ),
+                                  body: Container(
+                                    height: MediaQuery.of(context).size.height,
+                                    child: Stack(
+                                      children: [
+                                        CustomListView(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: tileMargin),
+                                          children: artists,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          width: 20.0,
+                        ),
+                      ],
+                    ),
+                  ...artists.take(4),
+                  if (tracks.isNotEmpty)
+                    Row(
+                      children: [
+                        SubHeader(Language.instance.TRACK),
+                        const Spacer(),
+                        const SizedBox(
+                          width: 20.0,
+                        ),
+                      ],
+                    ),
+                  ...tracks,
+                ],
+              )
+            : widget.query.value.isNotEmpty
+                ? ExceptionWidget(
+                    title: Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                    subtitle:
+                        Language.instance.COLLECTION_SEARCH_NO_RESULTS_SUBTITLE,
+                  )
+                : ExceptionWidget(
+                    title: Language.instance.COLLECTION_SEARCH_LABEL,
+                    subtitle: Language.instance.COLLECTION_SEARCH_WELCOME,
+                  ),
+      ),
     );
   }
 }
