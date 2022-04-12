@@ -520,9 +520,10 @@ class CollectionScreenState extends State<CollectionScreen>
                                     if (index == 1 || index == 2 || index == 3)
                                       CheckedPopupMenuItem(
                                         padding: EdgeInsets.zero,
-                                        checked: Collection
-                                                .instance.collectionSortType ==
-                                            CollectionSort.aToZ || index == 3,
+                                        checked: Collection.instance
+                                                    .collectionSortType ==
+                                                CollectionSort.aToZ ||
+                                            index == 3,
                                         value: CollectionSort.aToZ,
                                         child: Text(
                                           Language.instance.A_TO_Z,
@@ -618,14 +619,14 @@ class CollectionScreenState extends State<CollectionScreen>
                                 position: position,
                                 items: [
                                   PopupMenuItem(
-                                    value: 1,
+                                    value: 0,
                                     child: ListTile(
                                       leading: Icon(Icons.settings),
                                       title: Text(Language.instance.SETTING),
                                     ),
                                   ),
                                   PopupMenuItem(
-                                    value: 2,
+                                    value: 1,
                                     child: ListTile(
                                       leading: Icon(Icons.info),
                                       title:
@@ -633,7 +634,24 @@ class CollectionScreenState extends State<CollectionScreen>
                                     ),
                                   ),
                                 ],
-                              );
+                              ).then((value) {
+                                switch (value) {
+                                  case 0:
+                                    {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Settings(),
+                                        ),
+                                      );
+                                      break;
+                                    }
+                                  case 1:
+                                    {
+                                      break;
+                                    }
+                                }
+                              });
                             },
                           ),
                         ),

@@ -463,7 +463,7 @@ class ExceptionWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Transform.scale(
-            scale: 1.2,
+            scale: title == Language.instance.NO_COLLECTION_TITLE ? 1.4 : 1.2,
             child: Image.memory(
               {
                 Language.instance.NO_COLLECTION_TITLE: visualAssets.collection,

@@ -188,7 +188,13 @@ ThemeData createTheme({
       color: isLight ? Colors.white : Color(0xFF242424),
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: isLight ? Colors.white : Color(0xFF272727),
+      backgroundColor: Platform.isWindows || Platform.isAndroid
+          ? isLight
+              ? Colors.white
+              : Color(0xFF202020)
+          : isLight
+              ? Colors.white
+              : Color(0xFF272727),
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: isLight ? Colors.black12 : Colors.white12,
         statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,

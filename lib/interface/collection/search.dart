@@ -393,125 +393,128 @@ class _FloatingSearchBarSearchTabState
             MediaQuery.of(context).viewInsets.vertical,
         width: MediaQuery.of(context).size.width,
         child: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
-            ? CustomListView(
-                shrinkWrap: true,
-                children: <Widget>[
-                  if (albums.isNotEmpty)
-                    Row(
-                      children: [
-                        SubHeader(Language.instance.ALBUM),
-                        const Spacer(),
-                        ShowAllButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => Scaffold(
-                                  appBar: AppBar(
-                                    leading: NavigatorPopButton(),
-                                    title: Text(
-                                      Language.instance.ALBUM,
-                                      style:
-                                          Theme.of(context).textTheme.headline6,
+            ? Consumer<Collection>(
+                builder: (context, _, __) => CustomListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    if (albums.isNotEmpty)
+                      Row(
+                        children: [
+                          SubHeader(Language.instance.ALBUM),
+                          const Spacer(),
+                          ShowAllButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => Scaffold(
+                                    appBar: AppBar(
+                                      title: Text(
+                                        Language.instance.ALBUM,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6,
+                                      ),
                                     ),
-                                  ),
-                                  body: CustomListView(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: tileMargin),
-                                    children: tileGridListWidgets(
-                                      context: context,
-                                      tileHeight: height,
-                                      tileWidth: width,
-                                      elementsPerRow:
-                                          (MediaQuery.of(context).size.width -
-                                                  tileMargin) ~/
-                                              (kAlbumTileWidth + tileMargin),
-                                      subHeader: null,
-                                      leadingSubHeader: null,
-                                      widgetCount: this.albums.length ~/ 2,
-                                      leadingWidget: Container(),
-                                      builder:
-                                          (BuildContext context, int index) =>
-                                              albums[2 * index],
+                                    body: CustomListView(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: tileMargin),
+                                      children: tileGridListWidgets(
+                                        context: context,
+                                        tileHeight: height,
+                                        tileWidth: width,
+                                        elementsPerRow:
+                                            (MediaQuery.of(context).size.width -
+                                                    tileMargin) ~/
+                                                (kAlbumTileWidth + tileMargin),
+                                        subHeader: null,
+                                        leadingSubHeader: null,
+                                        widgetCount: this.albums.length ~/ 2,
+                                        leadingWidget: Container(),
+                                        builder:
+                                            (BuildContext context, int index) =>
+                                                albums[2 * index],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(
-                          width: 20.0,
-                        ),
-                      ],
-                    ),
-                  if (albums.isNotEmpty)
-                    Container(
-                      height: height + 10.0,
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView(
-                        padding: EdgeInsets.only(
-                          left: 16.0,
-                          top: 2.0,
-                          bottom: 8.0,
-                        ),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        children: albums,
+                              );
+                            },
+                          ),
+                          const SizedBox(
+                            width: 20.0,
+                          ),
+                        ],
                       ),
-                    ),
-                  if (artists.isNotEmpty)
-                    Row(
-                      children: [
-                        SubHeader(Language.instance.ARTIST),
-                        const Spacer(),
-                        ShowAllButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => Scaffold(
-                                  appBar: AppBar(
-                                    leading: NavigatorPopButton(),
-                                    title: Text(
-                                      Language.instance.ARTIST,
-                                      style:
-                                          Theme.of(context).textTheme.headline6,
+                    if (albums.isNotEmpty)
+                      Container(
+                        height: height + 10.0,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView(
+                          padding: EdgeInsets.only(
+                            left: 16.0,
+                            top: 2.0,
+                            bottom: 8.0,
+                          ),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          children: albums,
+                        ),
+                      ),
+                    if (artists.isNotEmpty)
+                      Row(
+                        children: [
+                          SubHeader(Language.instance.ARTIST),
+                          const Spacer(),
+                          ShowAllButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => Scaffold(
+                                    appBar: AppBar(
+                                      title: Text(
+                                        Language.instance.ARTIST,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6,
+                                      ),
                                     ),
-                                  ),
-                                  body: Container(
-                                    height: MediaQuery.of(context).size.height,
-                                    child: Stack(
-                                      children: [
-                                        CustomListView(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: tileMargin),
-                                          children: artists,
-                                        ),
-                                      ],
+                                    body: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      child: Stack(
+                                        children: [
+                                          CustomListView(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: tileMargin),
+                                            children: artists,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(
-                          width: 20.0,
-                        ),
-                      ],
-                    ),
-                  ...artists.take(4),
-                  if (tracks.isNotEmpty)
-                    Row(
-                      children: [
-                        SubHeader(Language.instance.TRACK),
-                        const Spacer(),
-                        const SizedBox(
-                          width: 20.0,
-                        ),
-                      ],
-                    ),
-                  ...tracks,
-                ],
+                              );
+                            },
+                          ),
+                          const SizedBox(
+                            width: 20.0,
+                          ),
+                        ],
+                      ),
+                    ...artists.take(4),
+                    if (tracks.isNotEmpty)
+                      Row(
+                        children: [
+                          SubHeader(Language.instance.TRACK),
+                          const Spacer(),
+                          const SizedBox(
+                            width: 20.0,
+                          ),
+                        ],
+                      ),
+                    ...tracks,
+                  ],
+                ),
               )
             : widget.query.value.isNotEmpty
                 ? ExceptionWidget(
