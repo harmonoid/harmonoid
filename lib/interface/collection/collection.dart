@@ -9,6 +9,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
+import 'package:harmonoid/state/now_playing_scroll_hider.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -51,7 +52,7 @@ class CollectionScreenState extends State<CollectionScreen>
   final PageController pageController =
       PageController(initialPage: isMobile ? 2 : 0);
   final ValueNotifier<String> query = ValueNotifier<String>('');
-  int index = isMobile ? 2 : 0;
+  final ValueNotifier<int> index = ValueNotifier(isMobile ? 2 : 0);
   String string = '';
 
   @override
@@ -62,7 +63,7 @@ class CollectionScreenState extends State<CollectionScreen>
     super.initState();
     checkVersionAndShowUpdateSnackbar(context);
     widget.tabControllerNotifier.addListener(() {
-      if (index != widget.tabControllerNotifier.value.index) {
+      if (index.value != widget.tabControllerNotifier.value.index) {
         pageController.animateToPage(
           widget.tabControllerNotifier.value.index,
           duration: Duration(milliseconds: 200),
@@ -72,6 +73,7 @@ class CollectionScreenState extends State<CollectionScreen>
     });
     pageController.addListener(() {
       widget.floatingSearchBarController.show();
+      NowPlayingScrollHider.instance.show();
     });
     Future.delayed(const Duration(seconds: 1), () {
       Intent.instance.play();
@@ -84,7 +86,8 @@ class CollectionScreenState extends State<CollectionScreen>
     return isDesktop
         ? Scaffold(
             resizeToAvoidBottomInset: false,
-            floatingActionButton: index != 4 ? RefreshCollectionButton() : null,
+            floatingActionButton:
+                index.value != 4 ? RefreshCollectionButton() : null,
             body: Stack(
               children: [
                 Container(
@@ -120,7 +123,7 @@ class CollectionScreenState extends State<CollectionScreen>
                             ArtistTab(),
                             PlaylistTab(),
                             SearchTab(query: query),
-                          ][index],
+                          ][index.value],
                           transitionBuilder:
                               (child, animation, secondaryAnimation) =>
                                   SharedAxisTransition(
@@ -258,9 +261,9 @@ class CollectionScreenState extends State<CollectionScreen>
                                           borderRadius:
                                               BorderRadius.circular(4.0),
                                           onTap: () {
-                                            if (index == _index) return;
+                                            if (index.value == _index) return;
                                             setState(() {
-                                              index = _index;
+                                              index.value = _index;
                                             });
                                           },
                                           child: Container(
@@ -274,17 +277,19 @@ class CollectionScreenState extends State<CollectionScreen>
                                               tab.toUpperCase(),
                                               style: TextStyle(
                                                 fontSize: 20.0,
-                                                fontWeight: index == _index
-                                                    ? FontWeight.w600
-                                                    : FontWeight.w300,
+                                                fontWeight:
+                                                    index.value == _index
+                                                        ? FontWeight.w600
+                                                        : FontWeight.w300,
                                                 color: (Theme.of(context)
                                                                 .brightness ==
                                                             Brightness.dark
                                                         ? Colors.white
                                                         : Colors.black)
-                                                    .withOpacity(index == _index
-                                                        ? 1.0
-                                                        : 0.67),
+                                                    .withOpacity(
+                                                        index.value == _index
+                                                            ? 1.0
+                                                            : 0.67),
                                               ),
                                             ),
                                           ),
@@ -328,7 +333,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                             query.value = value;
                                             if (string.isNotEmpty)
                                               setState(() {
-                                                index = 4;
+                                                index.value = 4;
                                               });
                                             node.requestFocus();
                                           },
@@ -364,7 +369,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                               query.value = string;
                                               if (string.isNotEmpty)
                                                 setState(() {
-                                                  index = 4;
+                                                  index.value = 4;
                                                 });
                                               node.requestFocus();
                                             },
@@ -378,11 +383,11 @@ class CollectionScreenState extends State<CollectionScreen>
                                     TweenAnimationBuilder<double>(
                                       tween: Tween<double>(
                                         begin: 0.0,
-                                        end: index == 3 ? 0.0 : 1.0,
+                                        end: index.value == 3 ? 0.0 : 1.0,
                                       ),
                                       duration: Duration(milliseconds: 200),
                                       child: CollectionSortButton(
-                                        tab: index,
+                                        tab: index.value,
                                       ),
                                       builder: (context, value, child) =>
                                           Opacity(
@@ -444,8 +449,8 @@ class CollectionScreenState extends State<CollectionScreen>
         : AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle(
               statusBarColor: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white12
-                  : Colors.black12,
+                  ? Colors.black12
+                  : Colors.white12,
               statusBarIconBrightness:
                   Theme.of(context).brightness == Brightness.dark
                       ? Brightness.light
@@ -490,106 +495,13 @@ class CollectionScreenState extends State<CollectionScreen>
                         FloatingSearchBarAction.back(),
                       ],
                       actions: [
-                        if (index == 1 || index == 2 || index == 3)
+                        if (index.value == 1 ||
+                            index.value == 2 ||
+                            index.value == 3)
                           FloatingSearchBarAction(
                             showIfOpened: false,
-                            child: CircularButton(
-                              icon: const Icon(Icons.sort_by_alpha),
-                              onPressed: () async {
-                                final position = RelativeRect.fromRect(
-                                  Offset(
-                                        MediaQuery.of(context).size.width -
-                                            tileMargin -
-                                            48.0,
-                                        MediaQuery.of(context).padding.top +
-                                            kMobileSearchBarHeight +
-                                            2 * tileMargin,
-                                      ) &
-                                      Size(160.0, 160.0),
-                                  Rect.fromLTWH(
-                                    0,
-                                    0,
-                                    MediaQuery.of(context).size.width,
-                                    MediaQuery.of(context).size.height,
-                                  ),
-                                );
-                                final value = await showMenu<dynamic>(
-                                  context: context,
-                                  position: position,
-                                  items: [
-                                    if (index == 1 || index == 2 || index == 3)
-                                      CheckedPopupMenuItem(
-                                        padding: EdgeInsets.zero,
-                                        checked: Collection.instance
-                                                    .collectionSortType ==
-                                                CollectionSort.aToZ ||
-                                            index == 3,
-                                        value: CollectionSort.aToZ,
-                                        child: Text(
-                                          Language.instance.A_TO_Z,
-                                        ),
-                                      ),
-                                    if (index == 1 || index == 2)
-                                      CheckedPopupMenuItem(
-                                        padding: EdgeInsets.zero,
-                                        checked: Collection
-                                                .instance.collectionSortType ==
-                                            CollectionSort.dateAdded,
-                                        value: CollectionSort.dateAdded,
-                                        child: Text(
-                                          Language.instance.DATE_ADDED,
-                                        ),
-                                      ),
-                                    if (index == 1 || index == 2)
-                                      CheckedPopupMenuItem(
-                                        padding: EdgeInsets.zero,
-                                        checked: Collection
-                                                .instance.collectionSortType ==
-                                            CollectionSort.year,
-                                        value: CollectionSort.year,
-                                        child: Text(
-                                          Language.instance.YEAR,
-                                        ),
-                                      ),
-                                    PopupMenuDivider(),
-                                    CheckedPopupMenuItem(
-                                      padding: EdgeInsets.zero,
-                                      checked: Collection
-                                              .instance.collectionOrderType ==
-                                          CollectionOrder.ascending,
-                                      value: CollectionOrder.ascending,
-                                      child: Text(
-                                        Language.instance.ASCENDING,
-                                      ),
-                                    ),
-                                    CheckedPopupMenuItem(
-                                      padding: EdgeInsets.zero,
-                                      checked: Collection
-                                              .instance.collectionOrderType ==
-                                          CollectionOrder.descending,
-                                      value: CollectionOrder.descending,
-                                      child: Text(
-                                        Language.instance.DESCENDING,
-                                      ),
-                                    ),
-                                  ],
-                                );
-                                if (value is CollectionSort) {
-                                  Provider.of<Collection>(context,
-                                          listen: false)
-                                      .sort(type: value);
-                                  await Configuration.instance.save(
-                                    collectionSortType: value,
-                                  );
-                                } else if (value is CollectionOrder) {
-                                  Provider.of<Collection>(context,
-                                          listen: false)
-                                      .order(type: value);
-                                  await Configuration.instance.save(
-                                    collectionOrderType: value,
-                                  );
-                                }
-                              },
+                            child: MobileSortByButton(
+                              value: index,
                             ),
                           ),
                         FloatingSearchBarAction(
@@ -617,6 +529,7 @@ class CollectionScreenState extends State<CollectionScreen>
                               showMenu<int>(
                                 context: context,
                                 position: position,
+                                elevation: 4.0,
                                 items: [
                                   PopupMenuItem(
                                     value: 0,
@@ -640,8 +553,15 @@ class CollectionScreenState extends State<CollectionScreen>
                                     {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Settings(),
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation,
+                                                  secondaryAnimation) =>
+                                              FadeThroughTransition(
+                                            animation: animation,
+                                            secondaryAnimation:
+                                                secondaryAnimation,
+                                            child: Settings(),
+                                          ),
                                         ),
                                       );
                                       break;
@@ -687,10 +607,9 @@ class CollectionScreenState extends State<CollectionScreen>
                               controller: pageController,
                               onPageChanged: (page) {
                                 if (index != page) {
-                                  index = page;
+                                  index.value = page;
                                   widget.tabControllerNotifier.value =
                                       TabRoute(page, TabRouteSender.pageView);
-                                  setState(() {});
                                 }
                               },
                               children: [
@@ -707,11 +626,6 @@ class CollectionScreenState extends State<CollectionScreen>
                     ),
                   ],
                 ),
-                bottomNavigationBar: isMobile
-                    ? MobileBottomNavigationBar(
-                        tabControllerNotifier: widget.tabControllerNotifier,
-                      )
-                    : null,
               ),
             ),
           );

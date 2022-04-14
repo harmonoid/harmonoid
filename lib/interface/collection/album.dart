@@ -495,7 +495,7 @@ class AlbumTile extends StatelessWidget {
                 child: Column(
                   children: [
                     Ink.image(
-                      image: getAlbumArt(album),
+                      image: getAlbumArt(album, small: true),
                       fit: BoxFit.cover,
                       height: width,
                       width: width,
@@ -1151,85 +1151,26 @@ class AlbumScreenState extends State<AlbumScreen>
         : Scaffold(
             body: Stack(
               children: [
-                CustomScrollView(
-                  controller: controller,
-                  slivers: [
-                    SliverAppBar(
-                      systemOverlayStyle: SystemUiOverlayStyle(
-                        statusBarColor: Colors.transparent,
-                        statusBarIconBrightness:
-                            (color?.computeLuminance() ?? 0.0) < 0.5
-                                ? Brightness.light
-                                : Brightness.dark,
-                      ),
-                      expandedHeight: MediaQuery.of(context).size.width +
-                          136.0 -
-                          MediaQuery.of(context).padding.top,
-                      pinned: true,
-                      leading: IconButton(
-                        onPressed: Navigator.of(context).maybePop,
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: [
-                            Colors.black,
-                            Colors.white
-                          ][(color?.computeLuminance() ?? 0.0) > 0.5 ? 0 : 1],
+                NowPlayingBarScrollHideNotifier(
+                  child: CustomScrollView(
+                    controller: controller,
+                    slivers: [
+                      SliverAppBar(
+                        systemOverlayStyle: SystemUiOverlayStyle(
+                          statusBarColor: Colors.transparent,
+                          statusBarIconBrightness:
+                              (color?.computeLuminance() ?? 0.0) < 0.5
+                                  ? Brightness.light
+                                  : Brightness.dark,
                         ),
-                        iconSize: 24.0,
-                        splashRadius: 20.0,
-                      ),
-                      forceElevated: true,
-                      actions: [
-                        // IconButton(
-                        //   onPressed: () {},
-                        //   icon: Icon(
-                        //     Icons.favorite,
-                        //   ),
-                        //   iconSize: 24.0,
-                        //   splashRadius: 20.0,
-                        // ),
-                        IconButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (subContext) => AlertDialog(
-                                title: Text(
-                                  Language.instance
-                                      .COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-                                  style:
-                                      Theme.of(subContext).textTheme.headline1,
-                                ),
-                                content: Text(
-                                  Language.instance
-                                      .COLLECTION_ALBUM_DELETE_DIALOG_BODY
-                                      .replaceAll(
-                                    'NAME',
-                                    widget.album.albumName,
-                                  ),
-                                  style:
-                                      Theme.of(subContext).textTheme.headline3,
-                                ),
-                                actions: [
-                                  MaterialButton(
-                                    textColor: Theme.of(context).primaryColor,
-                                    onPressed: () async {
-                                      await Collection.instance
-                                          .delete(widget.album);
-                                      Navigator.of(subContext).pop();
-                                    },
-                                    child: Text(Language.instance.YES),
-                                  ),
-                                  MaterialButton(
-                                    textColor: Theme.of(context).primaryColor,
-                                    onPressed: Navigator.of(subContext).pop,
-                                    child: Text(Language.instance.NO),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                        expandedHeight: MediaQuery.of(context).size.width +
+                            136.0 -
+                            MediaQuery.of(context).padding.top,
+                        pinned: true,
+                        leading: IconButton(
+                          onPressed: Navigator.of(context).maybePop,
                           icon: Icon(
-                            Icons.delete,
+                            Icons.arrow_back,
                             color: [
                               Colors.black,
                               Colors.white
@@ -1238,303 +1179,374 @@ class AlbumScreenState extends State<AlbumScreen>
                           iconSize: 24.0,
                           splashRadius: 20.0,
                         ),
-                      ],
-                      title: TweenAnimationBuilder<double>(
-                        tween: Tween<double>(
-                          begin: 1.0,
-                          end: detailsVisible ? 0.0 : 1.0,
-                        ),
-                        duration: Duration(milliseconds: 200),
-                        builder: (context, value, _) => Opacity(
-                          opacity: value,
-                          child: Text(
-                            widget.album.albumName.overflow,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline1
-                                ?.copyWith(
-                                    color: [Colors.black, Colors.white][
-                                        (color?.computeLuminance() ?? 0.0) > 0.5
-                                            ? 0
-                                            : 1]),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                      backgroundColor: color,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Column(
-                          children: [
-                            ExtendedImage(
-                              image: getAlbumArt(widget.album),
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width,
-                            ),
-                            TweenAnimationBuilder<double>(
-                              tween: Tween<double>(
-                                begin: 1.0,
-                                end: detailsVisible ? 1.0 : 0.0,
-                              ),
-                              duration: Duration(milliseconds: 200),
-                              builder: (context, value, _) => Opacity(
-                                opacity: value,
-                                child: Container(
-                                  color: color,
-                                  height: 136.0,
-                                  width: MediaQuery.of(context).size.width,
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        widget.album.albumName.overflow,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline1
-                                            ?.copyWith(
-                                              color: [
-                                                Colors.white,
-                                                Colors.black
-                                              ][(color?.computeLuminance() ??
-                                                          0.0) >
-                                                      0.5
-                                                  ? 1
-                                                  : 0],
-                                              fontSize: 24.0,
-                                            ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 4.0),
-                                      Text(
-                                        widget.album.albumArtistName.overflow,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline1
-                                            ?.copyWith(
-                                              color: [
-                                                Color(0xFFD9D9D9),
-                                                Color(0xFF363636)
-                                              ][(color?.computeLuminance() ??
-                                                          0.0) >
-                                                      0.5
-                                                  ? 1
-                                                  : 0],
-                                              fontSize: 16.0,
-                                            ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 2.0),
-                                      Text(
-                                        '${widget.album.year}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline1
-                                            ?.copyWith(
-                                              color: [
-                                                Color(0xFFD9D9D9),
-                                                Color(0xFF363636)
-                                              ][(color?.computeLuminance() ??
-                                                          0.0) >
-                                                      0.5
-                                                  ? 1
-                                                  : 0],
-                                              fontSize: 16.0,
-                                            ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SliverPadding(
-                      padding: EdgeInsets.only(
-                        top: 12.0,
-                      ),
-                    ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, i) => Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => Playback.instance.open(
-                              [
-                                ...widget.album.tracks,
-                                if (Configuration.instance
-                                    .automaticallyAddOtherSongsFromCollectionToNowPlaying)
-                                  ...[...Collection.instance.tracks]..shuffle(),
-                              ],
-                              index: i,
-                            ),
-                            onLongPress: () async {
-                              var result;
-                              await showModalBottomSheet(
+                        forceElevated: true,
+                        actions: [
+                          // IconButton(
+                          //   onPressed: () {},
+                          //   icon: Icon(
+                          //     Icons.favorite,
+                          //   ),
+                          //   iconSize: 24.0,
+                          //   splashRadius: 20.0,
+                          // ),
+                          IconButton(
+                            onPressed: () {
+                              showDialog(
                                 context: context,
-                                builder: (context) => Container(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: trackPopupMenuItems(context)
-                                        .map(
-                                          (item) => PopupMenuItem(
-                                            child: item.child,
-                                            onTap: () => result = item.value,
-                                          ),
-                                        )
-                                        .toList(),
+                                builder: (subContext) => AlertDialog(
+                                  title: Text(
+                                    Language.instance
+                                        .COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
+                                    style: Theme.of(subContext)
+                                        .textTheme
+                                        .headline1,
                                   ),
+                                  content: Text(
+                                    Language.instance
+                                        .COLLECTION_ALBUM_DELETE_DIALOG_BODY
+                                        .replaceAll(
+                                      'NAME',
+                                      widget.album.albumName,
+                                    ),
+                                    style: Theme.of(subContext)
+                                        .textTheme
+                                        .headline3,
+                                  ),
+                                  actions: [
+                                    MaterialButton(
+                                      textColor: Theme.of(context).primaryColor,
+                                      onPressed: () async {
+                                        await Collection.instance
+                                            .delete(widget.album);
+                                        Navigator.of(subContext).pop();
+                                      },
+                                      child: Text(Language.instance.YES),
+                                    ),
+                                    MaterialButton(
+                                      textColor: Theme.of(context).primaryColor,
+                                      onPressed: Navigator.of(subContext).pop,
+                                      child: Text(Language.instance.NO),
+                                    ),
+                                  ],
                                 ),
-                              );
-                              await trackPopupMenuHandle(
-                                context,
-                                widget.album.tracks[i],
-                                result,
-                                recursivelyPopNavigatorOnDeleteIf: () =>
-                                    widget.album.tracks.isEmpty,
                               );
                             },
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 64.0,
-                                  alignment: Alignment.center,
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      const SizedBox(width: 12.0),
-                                      Container(
-                                        height: 56.0,
-                                        width: 56.0,
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          '${widget.album.tracks[i].trackNumber}',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline3
-                                              ?.copyWith(fontSize: 18.0),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12.0),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              widget.album.tracks[i].trackName
-                                                  .overflow,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline2,
-                                            ),
-                                            const SizedBox(
-                                              height: 2.0,
-                                            ),
-                                            Text(
-                                              (widget.album.tracks[i]
-                                                              .duration ??
-                                                          Duration.zero)
-                                                      .label +
-                                                  ' • ' +
-                                                  widget.album.tracks[i]
-                                                      .trackArtistNames
-                                                      .take(2)
-                                                      .join(', '),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline3,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12.0),
-                                      Container(
-                                        width: 64.0,
-                                        height: 64.0,
-                                        alignment: Alignment.center,
-                                        child: IconButton(
-                                          onPressed: () async {
-                                            var result;
-                                            await showModalBottomSheet(
-                                              context: context,
-                                              builder: (context) => Container(
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: trackPopupMenuItems(
-                                                          context)
-                                                      .map(
-                                                        (item) => PopupMenuItem(
-                                                          child: item.child,
-                                                          onTap: () => result =
-                                                              item.value,
-                                                        ),
-                                                      )
-                                                      .toList(),
-                                                ),
-                                              ),
-                                            );
-                                            await trackPopupMenuHandle(
-                                              context,
-                                              widget.album.tracks[i],
-                                              result,
-                                              recursivelyPopNavigatorOnDeleteIf:
-                                                  () => widget
-                                                      .album.tracks.isEmpty,
-                                            );
-                                          },
-                                          icon: Icon(
-                                            Icons.more_vert,
-                                          ),
-                                          iconSize: 24.0,
-                                          splashRadius: 20.0,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const Divider(
-                                  height: 1.0,
-                                  indent: 80.0,
-                                ),
-                              ],
+                            icon: Icon(
+                              Icons.delete,
+                              color: [Colors.black, Colors.white][
+                                  (color?.computeLuminance() ?? 0.0) > 0.5
+                                      ? 0
+                                      : 1],
+                            ),
+                            iconSize: 24.0,
+                            splashRadius: 20.0,
+                          ),
+                        ],
+                        title: TweenAnimationBuilder<double>(
+                          tween: Tween<double>(
+                            begin: 1.0,
+                            end: detailsVisible ? 0.0 : 1.0,
+                          ),
+                          duration: Duration(milliseconds: 200),
+                          builder: (context, value, _) => Opacity(
+                            opacity: value,
+                            child: Text(
+                              widget.album.albumName.overflow,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline1
+                                  ?.copyWith(
+                                      color: [
+                                    Colors.black,
+                                    Colors.white
+                                  ][(color?.computeLuminance() ?? 0.0) > 0.5
+                                          ? 0
+                                          : 1]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
-                        childCount: widget.album.tracks.length,
+                        backgroundColor: color,
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: Column(
+                            children: [
+                              ExtendedImage(
+                                image: getAlbumArt(widget.album),
+                                fit: BoxFit.cover,
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.width,
+                              ),
+                              TweenAnimationBuilder<double>(
+                                tween: Tween<double>(
+                                  begin: 1.0,
+                                  end: detailsVisible ? 1.0 : 0.0,
+                                ),
+                                duration: Duration(milliseconds: 200),
+                                builder: (context, value, _) => Opacity(
+                                  opacity: value,
+                                  child: Container(
+                                    color: color,
+                                    height: 136.0,
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.all(16.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          widget.album.albumName.overflow,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline1
+                                              ?.copyWith(
+                                                color: [
+                                                  Colors.white,
+                                                  Colors.black
+                                                ][(color?.computeLuminance() ??
+                                                            0.0) >
+                                                        0.5
+                                                    ? 1
+                                                    : 0],
+                                                fontSize: 24.0,
+                                              ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 4.0),
+                                        Text(
+                                          widget.album.albumArtistName.overflow,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline1
+                                              ?.copyWith(
+                                                color: [
+                                                  Color(0xFFD9D9D9),
+                                                  Color(0xFF363636)
+                                                ][(color?.computeLuminance() ??
+                                                            0.0) >
+                                                        0.5
+                                                    ? 1
+                                                    : 0],
+                                                fontSize: 16.0,
+                                              ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 2.0),
+                                        Text(
+                                          '${widget.album.year}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline1
+                                              ?.copyWith(
+                                                color: [
+                                                  Color(0xFFD9D9D9),
+                                                  Color(0xFF363636)
+                                                ][(color?.computeLuminance() ??
+                                                            0.0) >
+                                                        0.5
+                                                    ? 1
+                                                    : 0],
+                                                fontSize: 16.0,
+                                              ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                    SliverPadding(
-                      padding: EdgeInsets.only(
-                        top: 12.0 +
-                            (detailsLoaded
-                                ? 0.0
-                                : MediaQuery.of(context).size.height),
+                      SliverPadding(
+                        padding: EdgeInsets.only(
+                          top: 12.0,
+                        ),
                       ),
-                    ),
-                  ],
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, i) => Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => Playback.instance.open(
+                                [
+                                  ...widget.album.tracks,
+                                  if (Configuration.instance
+                                      .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                    ...[...Collection.instance.tracks]
+                                      ..shuffle(),
+                                ],
+                                index: i,
+                              ),
+                              onLongPress: () async {
+                                var result;
+                                await showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => Container(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: trackPopupMenuItems(context)
+                                          .map(
+                                            (item) => PopupMenuItem(
+                                              child: item.child,
+                                              onTap: () => result = item.value,
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                );
+                                await trackPopupMenuHandle(
+                                  context,
+                                  widget.album.tracks[i],
+                                  result,
+                                  recursivelyPopNavigatorOnDeleteIf: () =>
+                                      widget.album.tracks.isEmpty,
+                                );
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 64.0,
+                                    alignment: Alignment.center,
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 4.0),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(width: 12.0),
+                                        Container(
+                                          height: 56.0,
+                                          width: 56.0,
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            '${widget.album.tracks[i].trackNumber}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline3
+                                                ?.copyWith(fontSize: 18.0),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12.0),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                widget.album.tracks[i].trackName
+                                                    .overflow,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline2,
+                                              ),
+                                              const SizedBox(
+                                                height: 2.0,
+                                              ),
+                                              Text(
+                                                (widget.album.tracks[i]
+                                                                .duration ??
+                                                            Duration.zero)
+                                                        .label +
+                                                    ' • ' +
+                                                    widget.album.tracks[i]
+                                                        .trackArtistNames
+                                                        .take(2)
+                                                        .join(', '),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline3,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12.0),
+                                        Container(
+                                          width: 64.0,
+                                          height: 64.0,
+                                          alignment: Alignment.center,
+                                          child: IconButton(
+                                            onPressed: () async {
+                                              var result;
+                                              await showModalBottomSheet(
+                                                context: context,
+                                                builder: (context) => Container(
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children:
+                                                        trackPopupMenuItems(
+                                                                context)
+                                                            .map(
+                                                              (item) =>
+                                                                  PopupMenuItem(
+                                                                child:
+                                                                    item.child,
+                                                                onTap: () =>
+                                                                    result = item
+                                                                        .value,
+                                                              ),
+                                                            )
+                                                            .toList(),
+                                                  ),
+                                                ),
+                                              );
+                                              await trackPopupMenuHandle(
+                                                context,
+                                                widget.album.tracks[i],
+                                                result,
+                                                recursivelyPopNavigatorOnDeleteIf:
+                                                    () => widget
+                                                        .album.tracks.isEmpty,
+                                              );
+                                            },
+                                            icon: Icon(
+                                              Icons.more_vert,
+                                            ),
+                                            iconSize: 24.0,
+                                            splashRadius: 20.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Divider(
+                                    height: 1.0,
+                                    indent: 80.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          childCount: widget.album.tracks.length,
+                        ),
+                      ),
+                      SliverPadding(
+                        padding: EdgeInsets.only(
+                          top: 12.0 +
+                              (detailsLoaded
+                                  ? 0.0
+                                  : MediaQuery.of(context).size.height),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Positioned(
                   top: MediaQuery.of(context).size.width +

@@ -14,6 +14,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/state/now_playing_scroll_hider.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -178,10 +179,14 @@ class PlaylistTab extends StatelessWidget {
                               backgroundColor: Theme.of(context).cardColor,
                               builder: (context) => StatefulBuilder(
                                 builder: (context, setState) {
-                                  return SizedBox(
+                                  return Container(
+                                    height: 72.0 +
+                                        MediaQuery.of(context)
+                                            .viewInsets
+                                            .vertical,
                                     child: ListView(
-                                      padding: EdgeInsets.all(8.0) +
-                                          MediaQuery.of(context).viewInsets,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      padding: EdgeInsets.all(8.0),
                                       shrinkWrap: true,
                                       children: [
                                         const SizedBox(height: 4.0),

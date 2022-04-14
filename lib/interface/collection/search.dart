@@ -415,24 +415,29 @@ class _FloatingSearchBarSearchTabState
                                             .headline6,
                                       ),
                                     ),
-                                    body: CustomListView(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: tileMargin),
-                                      children: tileGridListWidgets(
-                                        context: context,
-                                        tileHeight: height,
-                                        tileWidth: width,
-                                        elementsPerRow:
-                                            (MediaQuery.of(context).size.width -
-                                                    tileMargin) ~/
-                                                (kAlbumTileWidth + tileMargin),
-                                        subHeader: null,
-                                        leadingSubHeader: null,
-                                        widgetCount: this.albums.length ~/ 2,
-                                        leadingWidget: Container(),
-                                        builder:
-                                            (BuildContext context, int index) =>
-                                                albums[2 * index],
+                                    body: NowPlayingBarScrollHideNotifier(
+                                      child: CustomListView(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: tileMargin),
+                                        children: tileGridListWidgets(
+                                          context: context,
+                                          tileHeight: height,
+                                          tileWidth: width,
+                                          elementsPerRow:
+                                              (MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      tileMargin) ~/
+                                                  (kAlbumTileWidth +
+                                                      tileMargin),
+                                          subHeader: null,
+                                          leadingSubHeader: null,
+                                          widgetCount: this.albums.length ~/ 2,
+                                          leadingWidget: Container(),
+                                          builder: (BuildContext context,
+                                                  int index) =>
+                                              albums[2 * index],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -483,10 +488,12 @@ class _FloatingSearchBarSearchTabState
                                           MediaQuery.of(context).size.height,
                                       child: Stack(
                                         children: [
-                                          CustomListView(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: tileMargin),
-                                            children: artists,
+                                          NowPlayingBarScrollHideNotifier(
+                                            child: CustomListView(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: tileMargin),
+                                              children: artists,
+                                            ),
                                           ),
                                         ],
                                       ),
