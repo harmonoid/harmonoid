@@ -480,6 +480,40 @@ class AlbumTile extends StatelessWidget {
             openElevation: 0.0,
             openColor: Theme.of(context).scaffoldBackgroundColor,
             closedBuilder: (context, open) => InkWell(
+              onLongPress: () {
+                showDialog(
+                  context: context,
+                  builder: (subContext) => AlertDialog(
+                    title: Text(
+                      Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
+                      style: Theme.of(subContext).textTheme.headline1,
+                    ),
+                    content: Text(
+                      Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_BODY
+                          .replaceAll(
+                        'NAME',
+                        album.albumName,
+                      ),
+                      style: Theme.of(subContext).textTheme.headline3,
+                    ),
+                    actions: [
+                      MaterialButton(
+                        textColor: Theme.of(context).primaryColor,
+                        onPressed: () async {
+                          await Collection.instance.delete(album);
+                          Navigator.of(subContext).pop();
+                        },
+                        child: Text(Language.instance.YES),
+                      ),
+                      MaterialButton(
+                        textColor: Theme.of(context).primaryColor,
+                        onPressed: Navigator.of(subContext).pop,
+                        child: Text(Language.instance.NO),
+                      ),
+                    ],
+                  ),
+                );
+              },
               onTap: () async {
                 if (palette == null) {
                   final result = await PaletteGenerator.fromImageProvider(
@@ -621,10 +655,12 @@ class AlbumScreenState extends State<AlbumScreen>
         secondary = widget.palette?.last;
       }
       controller.addListener(() {
-        if (controller.offset == 0.0) {
-          setState(() {
-            detailsVisible = true;
-          });
+        if (controller.offset < 36.0) {
+          if (!detailsVisible) {
+            setState(() {
+              detailsVisible = true;
+            });
+          }
         } else if (detailsVisible) {
           setState(() {
             detailsVisible = false;
@@ -1268,101 +1304,183 @@ class AlbumScreenState extends State<AlbumScreen>
                           ),
                         ),
                         backgroundColor: color,
-                        flexibleSpace: FlexibleSpaceBar(
-                          background: Column(
-                            children: [
-                              ExtendedImage(
-                                image: getAlbumArt(widget.album),
-                                fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.width,
-                              ),
-                              TweenAnimationBuilder<double>(
-                                tween: Tween<double>(
-                                  begin: 1.0,
-                                  end: detailsVisible ? 1.0 : 0.0,
-                                ),
-                                duration: Duration(milliseconds: 200),
-                                builder: (context, value, _) => Opacity(
-                                  opacity: value,
-                                  child: Container(
-                                    color: color,
-                                    height: 136.0,
+                        flexibleSpace: Stack(
+                          children: [
+                            FlexibleSpaceBar(
+                              background: Column(
+                                children: [
+                                  ExtendedImage(
+                                    image: getAlbumArt(widget.album),
+                                    fit: BoxFit.cover,
                                     width: MediaQuery.of(context).size.width,
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          widget.album.albumName.overflow,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline1
-                                              ?.copyWith(
-                                                color: [
-                                                  Colors.white,
-                                                  Colors.black
-                                                ][(color?.computeLuminance() ??
-                                                            0.0) >
-                                                        0.5
-                                                    ? 1
-                                                    : 0],
-                                                fontSize: 24.0,
-                                              ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
+                                    height: MediaQuery.of(context).size.width,
+                                  ),
+                                  TweenAnimationBuilder<double>(
+                                    tween: Tween<double>(
+                                      begin: 1.0,
+                                      end: detailsVisible ? 1.0 : 0.0,
+                                    ),
+                                    duration: Duration(milliseconds: 200),
+                                    builder: (context, value, _) => Opacity(
+                                      opacity: value,
+                                      child: Container(
+                                        color: color,
+                                        height: 136.0,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        padding: EdgeInsets.all(16.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.album.albumName.overflow,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline1
+                                                  ?.copyWith(
+                                                    color: [
+                                                      Colors.white,
+                                                      Colors.black
+                                                    ][(color?.computeLuminance() ??
+                                                                0.0) >
+                                                            0.5
+                                                        ? 1
+                                                        : 0],
+                                                    fontSize: 24.0,
+                                                  ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 4.0),
+                                            Text(
+                                              widget.album.albumArtistName
+                                                  .overflow,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline1
+                                                  ?.copyWith(
+                                                    color: [
+                                                      Color(0xFFD9D9D9),
+                                                      Color(0xFF363636)
+                                                    ][(color?.computeLuminance() ??
+                                                                0.0) >
+                                                            0.5
+                                                        ? 1
+                                                        : 0],
+                                                    fontSize: 16.0,
+                                                  ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 2.0),
+                                            Text(
+                                              '${widget.album.year}',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline1
+                                                  ?.copyWith(
+                                                    color: [
+                                                      Color(0xFFD9D9D9),
+                                                      Color(0xFF363636)
+                                                    ][(color?.computeLuminance() ??
+                                                                0.0) >
+                                                            0.5
+                                                        ? 1
+                                                        : 0],
+                                                    fontSize: 16.0,
+                                                  ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(height: 4.0),
-                                        Text(
-                                          widget.album.albumArtistName.overflow,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline1
-                                              ?.copyWith(
-                                                color: [
-                                                  Color(0xFFD9D9D9),
-                                                  Color(0xFF363636)
-                                                ][(color?.computeLuminance() ??
-                                                            0.0) >
-                                                        0.5
-                                                    ? 1
-                                                    : 0],
-                                                fontSize: 16.0,
-                                              ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 2.0),
-                                        Text(
-                                          '${widget.album.year}',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline1
-                                              ?.copyWith(
-                                                color: [
-                                                  Color(0xFFD9D9D9),
-                                                  Color(0xFF363636)
-                                                ][(color?.computeLuminance() ??
-                                                            0.0) >
-                                                        0.5
-                                                    ? 1
-                                                    : 0],
-                                                fontSize: 16.0,
-                                              ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              top: MediaQuery.of(context).size.width +
+                                  MediaQuery.of(context).padding.top -
+                                  64.0,
+                              right: 16.0 + 64.0,
+                              child: TweenAnimationBuilder(
+                                curve: Curves.easeOut,
+                                tween: Tween<double>(
+                                    begin: 0.0,
+                                    end: detailsVisible ? 1.0 : 0.0),
+                                duration: Duration(milliseconds: 200),
+                                builder: (context, value, _) => Transform.scale(
+                                  scale: value as double,
+                                  child: Transform.rotate(
+                                    angle: value * pi + pi,
+                                    child: FloatingActionButton(
+                                      heroTag: 'play_now',
+                                      backgroundColor: secondary,
+                                      foregroundColor: [
+                                        Colors.white,
+                                        Colors.black
+                                      ][(secondary?.computeLuminance() ?? 0.0) >
+                                              0.5
+                                          ? 1
+                                          : 0],
+                                      child: Icon(Icons.play_arrow),
+                                      onPressed: () {
+                                        Playback.instance.open([
+                                          ...widget.album.tracks,
+                                          if (Configuration.instance
+                                              .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                            ...[...Collection.instance.tracks]
+                                              ..shuffle(),
+                                        ]);
+                                      },
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            Positioned(
+                              top: MediaQuery.of(context).size.width +
+                                  MediaQuery.of(context).padding.top -
+                                  64.0,
+                              right: 16.0,
+                              child: TweenAnimationBuilder(
+                                curve: Curves.easeOut,
+                                tween: Tween<double>(
+                                    begin: 0.0,
+                                    end: detailsVisible ? 1.0 : 0.0),
+                                duration: Duration(milliseconds: 200),
+                                builder: (context, value, _) => Transform.scale(
+                                  scale: value as double,
+                                  child: Transform.rotate(
+                                    angle: value * pi + pi,
+                                    child: FloatingActionButton(
+                                      heroTag: 'shuffle',
+                                      backgroundColor: secondary,
+                                      foregroundColor: [
+                                        Colors.white,
+                                        Colors.black
+                                      ][(secondary?.computeLuminance() ?? 0.0) >
+                                              0.5
+                                          ? 1
+                                          : 0],
+                                      child: Icon(Icons.shuffle),
+                                      onPressed: () {
+                                        Playback.instance.open(
+                                          [...widget.album.tracks]..shuffle(),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       SliverPadding(
@@ -1546,73 +1664,6 @@ class AlbumScreenState extends State<AlbumScreen>
                         ),
                       ),
                     ],
-                  ),
-                ),
-                Positioned(
-                  top: MediaQuery.of(context).size.width +
-                      MediaQuery.of(context).padding.top -
-                      64.0,
-                  right: 16.0 + 64.0,
-                  child: TweenAnimationBuilder(
-                    curve: Curves.easeOut,
-                    tween: Tween<double>(
-                        begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
-                    duration: Duration(milliseconds: 200),
-                    builder: (context, value, _) => Transform.scale(
-                      scale: value as double,
-                      child: Transform.rotate(
-                        angle: value * pi + pi,
-                        child: FloatingActionButton(
-                          heroTag: 'play_now',
-                          backgroundColor: secondary,
-                          foregroundColor: [Colors.white, Colors.black][
-                              (secondary?.computeLuminance() ?? 0.0) > 0.5
-                                  ? 1
-                                  : 0],
-                          child: Icon(Icons.play_arrow),
-                          onPressed: () {
-                            Playback.instance.open([
-                              ...widget.album.tracks,
-                              if (Configuration.instance
-                                  .automaticallyAddOtherSongsFromCollectionToNowPlaying)
-                                ...[...Collection.instance.tracks]..shuffle(),
-                            ]);
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: MediaQuery.of(context).size.width +
-                      MediaQuery.of(context).padding.top -
-                      64.0,
-                  right: 16.0,
-                  child: TweenAnimationBuilder(
-                    curve: Curves.easeOut,
-                    tween: Tween<double>(
-                        begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
-                    duration: Duration(milliseconds: 200),
-                    builder: (context, value, _) => Transform.scale(
-                      scale: value as double,
-                      child: Transform.rotate(
-                        angle: value * pi + pi,
-                        child: FloatingActionButton(
-                          heroTag: 'shuffle',
-                          backgroundColor: secondary,
-                          foregroundColor: [Colors.white, Colors.black][
-                              (secondary?.computeLuminance() ?? 0.0) > 0.5
-                                  ? 1
-                                  : 0],
-                          child: Icon(Icons.shuffle),
-                          onPressed: () {
-                            Playback.instance.open(
-                              [...widget.album.tracks]..shuffle(),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
                   ),
                 ),
               ],

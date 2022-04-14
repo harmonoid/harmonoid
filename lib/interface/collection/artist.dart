@@ -414,10 +414,12 @@ class ArtistScreenState extends State<ArtistScreen>
         secondary = widget.palette?.last;
       }
       controller.addListener(() {
-        if (controller.offset == 0.0) {
-          setState(() {
-            detailsVisible = true;
-          });
+        if (controller.offset < 36.0) {
+          if (!detailsVisible) {
+            setState(() {
+              detailsVisible = true;
+            });
+          }
         } else if (detailsVisible) {
           setState(() {
             detailsVisible = false;
@@ -996,114 +998,209 @@ class ArtistScreenState extends State<ArtistScreen>
                             ),
                           ),
                           backgroundColor: color,
-                          flexibleSpace: FlexibleSpaceBar(
-                            background: Column(
-                              children: [
-                                Container(
-                                  height: MediaQuery.of(context).size.width,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: LayoutBuilder(
-                                    builder: (context, constraints) => Hero(
-                                      tag:
-                                          'artist_art_${widget.artist.artistName}',
-                                      child: Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              min(constraints.maxHeight,
-                                                      constraints.maxWidth) -
-                                                  28.0),
-                                        ),
-                                        elevation: 4.0,
-                                        margin: EdgeInsets.all(
-                                          56.0,
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: ClipOval(
-                                            child: ExtendedImage(
-                                              image: getAlbumArt(widget.artist),
-                                              height: min(constraints.maxHeight,
-                                                      constraints.maxWidth) -
-                                                  64.0,
-                                              width: min(constraints.maxHeight,
-                                                      constraints.maxWidth) -
-                                                  64.0,
+                          flexibleSpace: Stack(
+                            children: [
+                              FlexibleSpaceBar(
+                                background: Column(
+                                  children: [
+                                    Container(
+                                      height: MediaQuery.of(context).size.width,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: LayoutBuilder(
+                                        builder: (context, constraints) => Hero(
+                                          tag:
+                                              'artist_art_${widget.artist.artistName}',
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(min(
+                                                          constraints.maxHeight,
+                                                          constraints
+                                                              .maxWidth) -
+                                                      28.0),
+                                            ),
+                                            elevation: 4.0,
+                                            margin: EdgeInsets.all(
+                                              56.0,
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.all(4.0),
+                                              child: ClipOval(
+                                                child: ExtendedImage(
+                                                  image: getAlbumArt(
+                                                      widget.artist),
+                                                  height: min(
+                                                          constraints.maxHeight,
+                                                          constraints
+                                                              .maxWidth) -
+                                                      64.0,
+                                                  width: min(
+                                                          constraints.maxHeight,
+                                                          constraints
+                                                              .maxWidth) -
+                                                      64.0,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
+                                    TweenAnimationBuilder<double>(
+                                      tween: Tween<double>(
+                                        begin: 1.0,
+                                        end: detailsVisible ? 1.0 : 0.0,
+                                      ),
+                                      duration: Duration(milliseconds: 200),
+                                      builder: (context, value, _) => Opacity(
+                                        opacity: value,
+                                        child: Container(
+                                          color: color,
+                                          height: 96.0,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          padding: EdgeInsets.all(16.0),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                widget
+                                                    .artist.artistName.overflow,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline1
+                                                    ?.copyWith(
+                                                      color: [
+                                                        Colors.white,
+                                                        Colors.black
+                                                      ][(color?.computeLuminance() ??
+                                                                  0.0) >
+                                                              0.5
+                                                          ? 1
+                                                          : 0],
+                                                      fontSize: 24.0,
+                                                    ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              Text(
+                                                Language.instance
+                                                    .M_TRACKS_AND_N_ALBUMS
+                                                    .replaceAll('M',
+                                                        '${widget.artist.tracks.length}')
+                                                    .replaceAll('N',
+                                                        '${widget.artist.albums.length}'),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline3
+                                                    ?.copyWith(
+                                                      color: [
+                                                        Colors.white70,
+                                                        Colors.black54
+                                                      ][(color?.computeLuminance() ??
+                                                                  0.0) >
+                                                              0.5
+                                                          ? 1
+                                                          : 0],
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                TweenAnimationBuilder<double>(
+                              ),
+                              Positioned(
+                                top: MediaQuery.of(context).size.width +
+                                    MediaQuery.of(context).padding.top -
+                                    64.0,
+                                right: 16.0 + 64.0,
+                                child: TweenAnimationBuilder(
+                                  curve: Curves.easeOut,
                                   tween: Tween<double>(
-                                    begin: 1.0,
-                                    end: detailsVisible ? 1.0 : 0.0,
-                                  ),
+                                      begin: 0.0,
+                                      end: detailsVisible ? 1.0 : 0.0),
                                   duration: Duration(milliseconds: 200),
-                                  builder: (context, value, _) => Opacity(
-                                    opacity: value,
-                                    child: Container(
-                                      color: color,
-                                      height: 96.0,
-                                      width: MediaQuery.of(context).size.width,
-                                      padding: EdgeInsets.all(16.0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            widget.artist.artistName.overflow,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline1
-                                                ?.copyWith(
-                                                  color: [
-                                                    Colors.white,
-                                                    Colors.black
-                                                  ][(color?.computeLuminance() ??
-                                                              0.0) >
-                                                          0.5
-                                                      ? 1
-                                                      : 0],
-                                                  fontSize: 24.0,
-                                                ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Text(
-                                            Language
-                                                .instance.M_TRACKS_AND_N_ALBUMS
-                                                .replaceAll('M',
-                                                    '${widget.artist.tracks.length}')
-                                                .replaceAll('N',
-                                                    '${widget.artist.albums.length}'),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline3
-                                                ?.copyWith(
-                                                  color: [
-                                                    Colors.white70,
-                                                    Colors.black54
-                                                  ][(color?.computeLuminance() ??
-                                                              0.0) >
-                                                          0.5
-                                                      ? 1
-                                                      : 0],
-                                                ),
-                                          ),
-                                        ],
+                                  builder: (context, value, _) =>
+                                      Transform.scale(
+                                    scale: value as double,
+                                    child: Transform.rotate(
+                                      angle: value * pi + pi,
+                                      child: FloatingActionButton(
+                                        heroTag: 'play_now',
+                                        backgroundColor: secondary,
+                                        foregroundColor: [
+                                          Colors.white,
+                                          Colors.black
+                                        ][(secondary?.computeLuminance() ??
+                                                    0.0) >
+                                                0.5
+                                            ? 1
+                                            : 0],
+                                        child: Icon(Icons.play_arrow),
+                                        onPressed: () {
+                                          Playback.instance.open([
+                                            ...widget.artist.tracks,
+                                            if (Configuration.instance
+                                                .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                              ...[...Collection.instance.tracks]
+                                                ..shuffle(),
+                                          ]);
+                                        },
                                       ),
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                              Positioned(
+                                top: MediaQuery.of(context).size.width +
+                                    MediaQuery.of(context).padding.top -
+                                    64.0,
+                                right: 16.0,
+                                child: TweenAnimationBuilder(
+                                  curve: Curves.easeOut,
+                                  tween: Tween<double>(
+                                      begin: 0.0,
+                                      end: detailsVisible ? 1.0 : 0.0),
+                                  duration: Duration(milliseconds: 200),
+                                  builder: (context, value, _) =>
+                                      Transform.scale(
+                                    scale: value as double,
+                                    child: Transform.rotate(
+                                      angle: value * pi + pi,
+                                      child: FloatingActionButton(
+                                        heroTag: 'shuffle',
+                                        backgroundColor: secondary,
+                                        foregroundColor: [
+                                          Colors.white,
+                                          Colors.black
+                                        ][(secondary?.computeLuminance() ??
+                                                    0.0) >
+                                                0.5
+                                            ? 1
+                                            : 0],
+                                        child: Icon(Icons.shuffle),
+                                        onPressed: () {
+                                          Playback.instance.open(
+                                            [...widget.artist.tracks]
+                                              ..shuffle(),
+                                            index: 0,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         SliverPadding(
@@ -1289,74 +1386,6 @@ class ArtistScreenState extends State<ArtistScreen>
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                  Positioned(
-                    top: MediaQuery.of(context).size.width +
-                        MediaQuery.of(context).padding.top -
-                        64.0,
-                    right: 16.0 + 64.0,
-                    child: TweenAnimationBuilder(
-                      curve: Curves.easeOut,
-                      tween: Tween<double>(
-                          begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
-                      duration: Duration(milliseconds: 200),
-                      builder: (context, value, _) => Transform.scale(
-                        scale: value as double,
-                        child: Transform.rotate(
-                          angle: value * pi + pi,
-                          child: FloatingActionButton(
-                            heroTag: 'play_now',
-                            backgroundColor: secondary,
-                            foregroundColor: [Colors.white, Colors.black][
-                                (secondary?.computeLuminance() ?? 0.0) > 0.5
-                                    ? 1
-                                    : 0],
-                            child: Icon(Icons.play_arrow),
-                            onPressed: () {
-                              Playback.instance.open([
-                                ...widget.artist.tracks,
-                                if (Configuration.instance
-                                    .automaticallyAddOtherSongsFromCollectionToNowPlaying)
-                                  ...[...Collection.instance.tracks]..shuffle(),
-                              ]);
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: MediaQuery.of(context).size.width +
-                        MediaQuery.of(context).padding.top -
-                        64.0,
-                    right: 16.0,
-                    child: TweenAnimationBuilder(
-                      curve: Curves.easeOut,
-                      tween: Tween<double>(
-                          begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
-                      duration: Duration(milliseconds: 200),
-                      builder: (context, value, _) => Transform.scale(
-                        scale: value as double,
-                        child: Transform.rotate(
-                          angle: value * pi + pi,
-                          child: FloatingActionButton(
-                            heroTag: 'shuffle',
-                            backgroundColor: secondary,
-                            foregroundColor: [Colors.white, Colors.black][
-                                (secondary?.computeLuminance() ?? 0.0) > 0.5
-                                    ? 1
-                                    : 0],
-                            child: Icon(Icons.shuffle),
-                            onPressed: () {
-                              Playback.instance.open(
-                                [...widget.artist.tracks]..shuffle(),
-                                index: 0,
-                              );
-                            },
-                          ),
-                        ),
-                      ),
                     ),
                   ),
                 ],

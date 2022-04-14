@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/state/now_playing_scroll_hider.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 class MiscellaneousSetting extends StatefulWidget {
@@ -31,7 +32,12 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                   changeNowPlayingBarColorBasedOnPlayingMusic: !Configuration
                       .instance.changeNowPlayingBarColorBasedOnPlayingMusic,
                 )
-                .then((value) => setState(() {})),
+                .then((value) => setState(() {
+                      if (!Configuration.instance
+                          .changeNowPlayingBarColorBasedOnPlayingMusic) {
+                        NowPlayingScrollHider.instance.palette.value = null;
+                      }
+                    })),
             value: Configuration
                 .instance.changeNowPlayingBarColorBasedOnPlayingMusic,
           ),
