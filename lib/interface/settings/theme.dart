@@ -8,6 +8,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/interface/settings/settings.dart';
@@ -28,7 +29,9 @@ class ThemeSetting extends StatelessWidget {
                   value: ThemeMode.system,
                   title: Text(
                     Language.instance.THEME_MODE_SYSTEM,
-                    style: Theme.of(context).textTheme.headline4,
+                    style: isDesktop
+                        ? Theme.of(context).textTheme.headline4
+                        : null,
                   ),
                   groupValue: visuals.themeMode,
                   onChanged: (dynamic themeMode) => visuals.update(
@@ -40,7 +43,8 @@ class ThemeSetting extends StatelessWidget {
                 value: ThemeMode.light,
                 title: Text(
                   Language.instance.THEME_MODE_LIGHT,
-                  style: Theme.of(context).textTheme.headline4,
+                  style:
+                      isDesktop ? Theme.of(context).textTheme.headline4 : null,
                 ),
                 groupValue: visuals.themeMode,
                 onChanged: (dynamic themeMode) => visuals.update(
@@ -52,7 +56,8 @@ class ThemeSetting extends StatelessWidget {
                 value: ThemeMode.dark,
                 title: Text(
                   Language.instance.THEME_MODE_DARK,
-                  style: Theme.of(context).textTheme.headline4,
+                  style:
+                      isDesktop ? Theme.of(context).textTheme.headline4 : null,
                 ),
                 groupValue: visuals.themeMode,
                 onChanged: (dynamic themeMode) => visuals.update(

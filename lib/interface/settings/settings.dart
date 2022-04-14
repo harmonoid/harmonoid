@@ -23,38 +23,61 @@ import 'package:harmonoid/interface/settings/version.dart';
 class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          DesktopAppBar(
-            title: Language.instance.SETTING,
-          ),
-          Container(
-            margin: EdgeInsets.only(
-              top: desktopTitleBarHeight + kDesktopAppBarHeight,
-            ),
-            child: CustomListView(
-              shrinkWrap: true,
+    return isDesktop
+        ? Scaffold(
+            body: Stack(
               children: [
-                SizedBox(
-                  height: 4.0,
+                DesktopAppBar(
+                  title: Language.instance.SETTING,
                 ),
-                IndexingSetting(),
-                ThemeSetting(),
-                MiscellaneousSetting(),
-                ExperimentalSetting(),
-                LanguageSetting(),
-                AboutSetting(),
-                VersionSetting(),
-                SizedBox(
-                  height: 8.0,
+                Container(
+                  margin: EdgeInsets.only(
+                    top: desktopTitleBarHeight + kDesktopAppBarHeight,
+                  ),
+                  child: CustomListView(
+                    shrinkWrap: true,
+                    children: [
+                      const SizedBox(height: 4.0),
+                      IndexingSetting(),
+                      ThemeSetting(),
+                      MiscellaneousSetting(),
+                      ExperimentalSetting(),
+                      LanguageSetting(),
+                      AboutSetting(),
+                      VersionSetting(),
+                      const SizedBox(height: 8.0),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: Text(
+                Language.instance.SETTING,
+                style: Theme.of(context).textTheme.headline1,
+              ),
+            ),
+            body: CustomListView(
+              shrinkWrap: true,
+              children: [
+                const SizedBox(height: 4.0),
+                IndexingSetting(),
+                if (isMobile) Divider(thickness: 1.0),
+                ThemeSetting(),
+                if (isMobile) Divider(thickness: 1.0),
+                MiscellaneousSetting(),
+                if (isMobile) Divider(thickness: 1.0),
+                ExperimentalSetting(),
+                if (isMobile) Divider(thickness: 1.0),
+                LanguageSetting(),
+                if (isMobile) Divider(thickness: 1.0),
+                VersionSetting(),
+                const SizedBox(height: 8.0),
+              ],
+            ),
+          );
   }
 }
 
@@ -77,42 +100,59 @@ class SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: 8.0,
-        vertical: 0.0,
-      ),
+      margin: isDesktop
+          ? EdgeInsets.symmetric(
+              horizontal: 8.0,
+            )
+          : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-              top: 16.0,
-              left: 16.0,
-              right: 16.0,
-              bottom: 8.0,
+          if (isDesktop)
+            Padding(
+              padding: EdgeInsets.only(
+                top: 16.0,
+                left: 16.0,
+                right: 16.0,
+                bottom: 8.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    this.title!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline1
+                        ?.copyWith(fontSize: 20.0),
+                  ),
+                  SizedBox(height: 2.0),
+                  Text(
+                    this.subtitle!,
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                ],
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  this.title!,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline1
-                      ?.copyWith(fontSize: 20.0),
-                ),
-                SizedBox(height: 2.0),
-                Text(
-                  this.subtitle!,
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-              ],
+          if (isMobile)
+            Padding(
+              padding: EdgeInsets.only(
+                left: 16.0,
+                top: 12.0,
+                bottom: 8.0,
+              ),
+              child: Text(
+                this.title!.toUpperCase(),
+                style: Theme.of(context).textTheme.overline?.copyWith(
+                      color: Theme.of(context).textTheme.headline3?.color,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
             ),
-          ),
           Container(
             margin: this.margin ?? EdgeInsets.zero,
             child: this.child,

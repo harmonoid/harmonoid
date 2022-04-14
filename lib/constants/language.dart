@@ -199,6 +199,7 @@ class Language extends Strings with ChangeNotifier {
     this.ABOUT_SUBTITLE = asset['ABOUT_SUBTITLE']!;
     this.ABOUT_TITLE = asset['ABOUT_TITLE']!;
     this.ADD_NEW_FOLDER = asset['ADD_NEW_FOLDER']!;
+    this.ADD_NEW_FOLDER_SUBTITLE = asset['ADD_NEW_FOLDER_SUBTITLE']!;
     this.ADD_TO_NOW_PLAYING = asset['ADD_TO_NOW_PLAYING']!;
     this.ADD_TO_PLAYLIST = asset['ADD_TO_PLAYLIST']!;
     this.ALBUM = asset['ALBUM']!;
@@ -208,11 +209,14 @@ class Language extends Strings with ChangeNotifier {
     this.ARTIST_SINGLE = asset['ARTIST_SINGLE']!;
     this.ASCENDING = asset['ASCENDING']!;
     this.AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING = asset['AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING']!;
+    this.AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING_TITLE = asset['AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING_TITLE']!;
     this.AUTO_REFRESH_SETTING = asset['AUTO_REFRESH_SETTING']!;
+    this.AUTO_REFRESH_SETTING_TITLE = asset['AUTO_REFRESH_SETTING_TITLE']!;
     this.A_TO_Z = asset['A_TO_Z']!;
     this.BUFFERING = asset['BUFFERING']!;
     this.CANCEL = asset['CANCEL']!;
     this.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC = asset['CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC']!;
+    this.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE = asset['CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE']!;
     this.COLLECTION = asset['COLLECTION']!;
     this.COLLECTION_ALBUM_DELETE_DIALOG_BODY = asset['COLLECTION_ALBUM_DELETE_DIALOG_BODY']!;
     this.COLLECTION_ALBUM_DELETE_DIALOG_HEADER = asset['COLLECTION_ALBUM_DELETE_DIALOG_HEADER']!;
@@ -305,8 +309,10 @@ class Language extends Strings with ChangeNotifier {
     this.RECOMMENDATIONS = asset['RECOMMENDATIONS']!;
     this.REFRESH = asset['REFRESH']!;
     this.REFRESH_INFORMATION = asset['REFRESH_INFORMATION']!;
+    this.REFRESH_SUBTITLE = asset['REFRESH_SUBTITLE']!;
     this.REINDEX = asset['REINDEX']!;
     this.REINDEX_INFORMATION = asset['REINDEX_INFORMATION']!;
+    this.REINDEX_SUBTITLE = asset['REINDEX_SUBTITLE']!;
     this.REMOVE = asset['REMOVE']!;
     this.REMOVE_FROM_PLAYLIST = asset['REMOVE_FROM_PLAYLIST']!;
     this.REPEAT = asset['REPEAT']!;
@@ -356,7 +362,9 @@ class Language extends Strings with ChangeNotifier {
     this.SHARE = asset['SHARE']!;
     this.SHOW_ALBUM = asset['SHOW_ALBUM']!;
     this.SHOW_NOW_PLAYING_AFTER_PLAYING = asset['SHOW_NOW_PLAYING_AFTER_PLAYING']!;
+    this.SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE = asset['SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE']!;
     this.SHOW_TRACK_PROGRESS_ON_TASKBAR = asset['SHOW_TRACK_PROGRESS_ON_TASKBAR']!;
+    this.SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE = asset['SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE']!;
     this.SHUFFLE = asset['SHUFFLE']!;
     this.SORT = asset['SORT']!;
     this.SORT_BY = asset['SORT_BY']!;
