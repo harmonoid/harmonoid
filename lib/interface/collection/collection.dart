@@ -9,6 +9,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
+import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 import 'package:harmonoid/state/now_playing_scroll_hider.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
@@ -459,7 +460,9 @@ class CollectionScreenState extends State<CollectionScreen>
             child: Consumer<CollectionRefresh>(
               builder: (context, refresh, _) => Scaffold(
                 resizeToAvoidBottomInset: false,
-                floatingActionButton: RefreshCollectionButton(),
+                floatingActionButton: MiniNowPlayingBarRefreshCollectionButton(
+                  key: NowPlayingScrollHider.instance.fabKey,
+                ),
                 body: Stack(
                   fit: StackFit.expand,
                   children: [

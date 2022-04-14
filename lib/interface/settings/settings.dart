@@ -59,23 +59,25 @@ class Settings extends StatelessWidget {
                 style: Theme.of(context).textTheme.headline1,
               ),
             ),
-            body: CustomListView(
-              shrinkWrap: true,
-              children: [
-                const SizedBox(height: 4.0),
-                IndexingSetting(),
-                if (isMobile) Divider(thickness: 1.0),
-                ThemeSetting(),
-                if (isMobile) Divider(thickness: 1.0),
-                MiscellaneousSetting(),
-                if (isMobile) Divider(thickness: 1.0),
-                ExperimentalSetting(),
-                if (isMobile) Divider(thickness: 1.0),
-                LanguageSetting(),
-                if (isMobile) Divider(thickness: 1.0),
-                VersionSetting(),
-                const SizedBox(height: 8.0),
-              ],
+            body: NowPlayingBarScrollHideNotifier(
+              child: CustomListView(
+                shrinkWrap: true,
+                children: [
+                  const SizedBox(height: 4.0),
+                  IndexingSetting(),
+                  if (isMobile) Divider(thickness: 1.0),
+                  ThemeSetting(),
+                  if (isMobile) Divider(thickness: 1.0),
+                  MiscellaneousSetting(),
+                  if (isMobile) Divider(thickness: 1.0),
+                  ExperimentalSetting(),
+                  if (isMobile) Divider(thickness: 1.0),
+                  LanguageSetting(),
+                  if (isMobile) Divider(thickness: 1.0),
+                  VersionSetting(),
+                  const SizedBox(height: 8.0),
+                ],
+              ),
             ),
           );
   }

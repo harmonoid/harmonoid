@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/core/configuration.dart';
@@ -33,17 +35,19 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
             value: Configuration
                 .instance.changeNowPlayingBarColorBasedOnPlayingMusic,
           ),
-          CorrectedSwitchListTile(
-            title: Language.instance.SHOW_TRACK_PROGRESS_ON_TASKBAR,
-            subtitle: Language.instance.SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE,
-            onChanged: (_) => Configuration.instance
-                .save(
-                  showTrackProgressOnTaskbar:
-                      !Configuration.instance.showTrackProgressOnTaskbar,
-                )
-                .then((value) => setState(() {})),
-            value: Configuration.instance.showTrackProgressOnTaskbar,
-          ),
+          if (Platform.isWindows)
+            CorrectedSwitchListTile(
+              title: Language.instance.SHOW_TRACK_PROGRESS_ON_TASKBAR,
+              subtitle:
+                  Language.instance.SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE,
+              onChanged: (_) => Configuration.instance
+                  .save(
+                    showTrackProgressOnTaskbar:
+                        !Configuration.instance.showTrackProgressOnTaskbar,
+                  )
+                  .then((value) => setState(() {})),
+              value: Configuration.instance.showTrackProgressOnTaskbar,
+            ),
           CorrectedSwitchListTile(
             title: Language
                 .instance.AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING_TITLE,

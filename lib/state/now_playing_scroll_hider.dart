@@ -12,12 +12,22 @@ import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 class NowPlayingScrollHider {
   static late NowPlayingScrollHider instance;
 
-  final GlobalKey<MiniNowPlayingBarState> key =
+  final GlobalKey<MiniNowPlayingBarState> barKey =
       GlobalKey<MiniNowPlayingBarState>();
+  final GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState> fabKey =
+      GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState>();
 
-  void show() => key.currentState!.show();
-  void hide() => key.currentState!.hide();
-  bool get isHidden => key.currentState!.isHidden;
+  void show() {
+    barKey.currentState!.show();
+    fabKey.currentState!.show();
+  }
+
+  void hide() {
+    barKey.currentState!.hide();
+    fabKey.currentState!.hide();
+  }
+
+  bool get isHidden => barKey.currentState!.isHidden;
 
   NowPlayingScrollHider() {
     NowPlayingScrollHider.instance = this;

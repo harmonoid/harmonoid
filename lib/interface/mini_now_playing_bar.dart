@@ -6,6 +6,7 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:extended_image/extended_image.dart';
 
@@ -32,7 +33,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar> {
   }
 
   void hide() {
-    if (_yOffset != 1.0) {
+    if (_yOffset == 0.0) {
       setState(
         () => _yOffset = kMobileNowPlayingBarHeight /
             (MediaQuery.of(context).size.height -
@@ -126,6 +127,41 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar> {
           );
         },
       ),
+    );
+  }
+}
+
+class MiniNowPlayingBarRefreshCollectionButton extends StatefulWidget {
+  MiniNowPlayingBarRefreshCollectionButton({Key? key}) : super(key: key);
+
+  @override
+  State<MiniNowPlayingBarRefreshCollectionButton> createState() =>
+      MiniNowPlayingBarRefreshCollectionButtonState();
+}
+
+class MiniNowPlayingBarRefreshCollectionButtonState
+    extends State<MiniNowPlayingBarRefreshCollectionButton> {
+  double _yOffset = 0.0;
+
+  void show() {
+    if (_yOffset == 0.0) {
+      setState(() => _yOffset = -1.0);
+    }
+  }
+
+  void hide() {
+    if (_yOffset != 0.0) {
+      setState(() => _yOffset = 0.0);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSlide(
+      offset: Offset(0, _yOffset),
+      duration: Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+      child: RefreshCollectionButton(),
     );
   }
 }

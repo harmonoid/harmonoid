@@ -251,7 +251,7 @@ class HomeState extends State<Home>
                           ),
                         ),
                         MiniNowPlayingBar(
-                          key: nowPlayingScrollHider.key,
+                          key: nowPlayingScrollHider.barKey,
                         ),
                       ],
                     ),
