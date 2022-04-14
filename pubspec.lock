@@ -421,6 +421,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  miniplayer:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: fc4421729dd10230e040741eeee086d835576cdf
+      url: "https://github.com/alexmercerind/miniplayer.git"
+    source: git
+    version: "1.0.1"
   mpris_service:
     dependency: "direct main"
     description:
@@ -814,5 +823,5 @@ packages:
     source: path
     version: "0.0.1"
 sdks:
-  dart: ">=2.15.0 <3.0.0"
+  dart: ">=2.15.1 <3.0.0"
   flutter: ">=2.10.0"

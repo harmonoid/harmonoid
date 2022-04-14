@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Plugins maintained by github.com/alexmercerind or private to the Harmonoid.
+  # Plugins maintained by github.com/alexmercerind or first-party to the Harmonoid.
 
   libmpv:
     path: external/libmpv.dart
@@ -65,8 +65,11 @@ dependencies:
   substring_highlight: ^1.0.33
   extended_image: ^6.0.1
 
-  # Forked plugins & packages to meet requirements.
+  # Third-party forked plugins & packages to meet requirements.
 
+  miniplayer:
+    git:
+      url: https://github.com/alexmercerind/miniplayer.git
   desktop:
     git:
       url: https://github.com/alexmercerind/desktop.git
