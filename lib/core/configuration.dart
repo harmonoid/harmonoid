@@ -276,5 +276,5 @@ final Map<String, dynamic> defaultConfiguration = {
   'automaticallyAddOtherSongsFromCollectionToNowPlaying': false,
   'automaticallyShowNowPlayingScreenAfterPlaying': true,
   'automaticallyRefreshCollectionOnFreshStart': false,
-  'changeNowPlayingBarColorBasedOnPlayingMusic': true,
+  'changeNowPlayingBarColorBasedOnPlayingMusic': isMobile ? false : true,
 };
