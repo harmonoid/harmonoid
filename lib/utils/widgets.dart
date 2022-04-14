@@ -382,7 +382,11 @@ class DesktopAppBar extends StatelessWidget {
 }
 
 class RefreshCollectionButton extends StatefulWidget {
-  RefreshCollectionButton({Key? key}) : super(key: key);
+  final Color? color;
+  RefreshCollectionButton({
+    Key? key,
+    this.color,
+  }) : super(key: key);
 
   @override
   _RefreshCollectionButtonState createState() =>
@@ -406,7 +410,8 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
       builder: (context, refresh, _) => refresh.progress == refresh.total
           ? FloatingActionButton(
               elevation: 8.0,
-              backgroundColor: Theme.of(context).colorScheme.secondary,
+              backgroundColor:
+                  widget.color ?? Theme.of(context).colorScheme.secondary,
               child: TweenAnimationBuilder(
                 child: Icon(
                   Icons.refresh,
@@ -879,51 +884,61 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(color: Colors.black45, blurRadius: 8.0),
-        ],
-      ),
-      child: BottomNavigationBar(
-        currentIndex: _index,
-        type: BottomNavigationBarType.shifting,
-        onTap: (index) {
-          if (index != _index) {
-            widget.tabControllerNotifier.value =
-                TabRoute(index, TabRouteSender.bottomNavigationBar);
-          }
-          setState(() {
-            _index = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.playlist_play),
-            label: Language.instance.PLAYLIST,
-            backgroundColor: Theme.of(context).primaryColor,
+    return ValueListenableBuilder<Iterable<Color>?>(
+      valueListenable: NowPlayingScrollHider.instance.palette,
+      builder: (context, value, _) => TweenAnimationBuilder<Color?>(
+        duration: Duration(milliseconds: 400),
+        tween: ColorTween(
+          begin: Theme.of(context).primaryColor,
+          end: value?.first ?? Theme.of(context).primaryColor,
+        ),
+        builder: (context, color, _) => Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(color: Colors.black45, blurRadius: 8.0),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.music_note),
-            label: Language.instance.TRACK,
-            backgroundColor: Theme.of(context).primaryColor,
+          child: BottomNavigationBar(
+            currentIndex: _index,
+            type: BottomNavigationBarType.shifting,
+            onTap: (index) {
+              if (index != _index) {
+                widget.tabControllerNotifier.value =
+                    TabRoute(index, TabRouteSender.bottomNavigationBar);
+              }
+              setState(() {
+                _index = index;
+              });
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.playlist_play),
+                label: Language.instance.PLAYLIST,
+                backgroundColor: color ?? Theme.of(context).primaryColor,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.music_note),
+                label: Language.instance.TRACK,
+                backgroundColor: color ?? Theme.of(context).primaryColor,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.album),
+                label: Language.instance.ALBUM,
+                backgroundColor: color ?? Theme.of(context).primaryColor,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: Language.instance.ARTIST,
+                backgroundColor: color ?? Theme.of(context).primaryColor,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.play_circle),
+                label: Language.instance.WEB,
+                backgroundColor: color ?? Theme.of(context).primaryColor,
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.album),
-            label: Language.instance.ALBUM,
-            backgroundColor: Theme.of(context).primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: Language.instance.ARTIST,
-            backgroundColor: Theme.of(context).primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.play_circle),
-            label: Language.instance.WEB,
-            backgroundColor: Theme.of(context).primaryColor,
-          ),
-        ],
+        ),
       ),
     );
   }

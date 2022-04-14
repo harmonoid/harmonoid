@@ -210,7 +210,7 @@ ThemeData createTheme({
       ),
     ),
     iconTheme: IconThemeData(
-      color: isLight ? Colors.black54 : Colors.white54,
+      color: isLight ? Color(0xFF757575) : Color(0xFF8A8A8A),
       size: 24,
     ),
     dialogBackgroundColor: isLight ? Colors.white : Color(0xFF202020),

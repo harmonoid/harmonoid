@@ -16,6 +16,7 @@ class NowPlayingScrollHider {
       GlobalKey<MiniNowPlayingBarState>();
   final GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState> fabKey =
       GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState>();
+  ValueNotifier<Iterable<Color>?> palette = ValueNotifier(null);
 
   void show() {
     barKey.currentState!.show();
