@@ -188,7 +188,7 @@ ThemeData createTheme({
       color: isLight ? Colors.white : Color(0xFF242424),
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: Platform.isWindows || Platform.isAndroid
+      backgroundColor: Platform.isAndroid || Platform.isIOS
           ? isLight
               ? Colors.white
               : Color(0xFF202020)
@@ -196,7 +196,7 @@ ThemeData createTheme({
               ? Colors.white
               : Color(0xFF272727),
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: isLight ? Colors.black12 : Colors.white12,
+        statusBarColor: isLight ? Colors.white12 : Colors.black12,
         statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
       ),
       elevation: 4.0,

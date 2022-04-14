@@ -16,4 +16,5 @@ const double kDesktopTileMargin = 16.0;
 const double kDesktopAppBarHeight = 64.0;
 const double kDesktopArtistTileWidth = 142.0;
 const double kDesktopArtistTileHeight = 142.0 + 28.0;
+const double kMobileNowPlayingBarHeight = 66.0;
 const double kDesktopNowPlayingBarHeight = 84.0;

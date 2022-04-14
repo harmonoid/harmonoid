@@ -9,7 +9,9 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 import 'package:harmonoid/state/now_playing_launcher.dart';
+import 'package:harmonoid/state/now_playing_scroll_hider.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +23,7 @@ import 'package:harmonoid/interface/now_playing.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';
 import 'package:harmonoid/interface/collection/collection.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
@@ -41,6 +44,7 @@ class HomeState extends State<Home>
   bool isSystemNavigationBackButtonPressed = false;
   final FloatingSearchBarController floatingSearchBarController =
       FloatingSearchBarController();
+  final NowPlayingScrollHider nowPlayingScrollHider = NowPlayingScrollHider();
 
   @override
   void initState() {
@@ -61,7 +65,9 @@ class HomeState extends State<Home>
         TabRouteSender.systemNavigationBackButton) {
       this.isSystemNavigationBackButtonPressed = true;
     }
-    // Since [PageView] reacts to the route change caused by `TabRouteSender.systemNavigationBackButton` as well & ends up adding it to the stack, we avoid it like this.
+    // Since [PageView] reacts to the route change caused by
+    // `TabRouteSender.systemNavigationBackButton` as well &
+    // ends up adding it to the stack, we avoid it like this.
     else if (this.isSystemNavigationBackButtonPressed) {
       this.isSystemNavigationBackButtonPressed = false;
     } else if (this.tabControllerNotifier.value.sender ==
@@ -72,7 +78,8 @@ class HomeState extends State<Home>
 
   @override
   Future<bool> didPopRoute() async {
-    // Intercept [FloatingSearchBar].
+    // Intercept [didPopRoute] to close the [FloatingSearchBar]
+    // with hardware back button.
     if (floatingSearchBarController.isOpen) {
       floatingSearchBarController.close();
     } else if (this.navigatorKey.currentState!.canPop()) {
@@ -216,27 +223,43 @@ class HomeState extends State<Home>
               : Consumer<Language>(
                   builder: (context, _, __) => Scaffold(
                     resizeToAvoidBottomInset: false,
-                    body: HeroControllerScope(
-                      controller: MaterialApp.createMaterialHeroController(),
-                      child: Navigator(
-                        key: this.navigatorKey,
-                        initialRoute: '/collection_screen',
-                        onGenerateRoute: (RouteSettings routeSettings) {
-                          Route<dynamic>? route;
-                          if (routeSettings.name == '/collection_screen') {
-                            route = MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  CollectionScreen(
-                                tabControllerNotifier: tabControllerNotifier,
-                                floatingSearchBarController:
-                                    floatingSearchBarController,
-                              ),
-                            );
-                          }
-                          return route;
-                        },
-                      ),
+                    body: Stack(
+                      children: [
+                        HeroControllerScope(
+                          controller:
+                              MaterialApp.createMaterialHeroController(),
+                          child: Navigator(
+                            key: this.navigatorKey,
+                            initialRoute: '/collection_screen',
+                            onGenerateRoute: (RouteSettings routeSettings) {
+                              Route<dynamic>? route;
+                              if (routeSettings.name == '/collection_screen') {
+                                route = MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      NowPlayingBarScrollHideNotifier(
+                                    child: CollectionScreen(
+                                      tabControllerNotifier:
+                                          tabControllerNotifier,
+                                      floatingSearchBarController:
+                                          floatingSearchBarController,
+                                    ),
+                                  ),
+                                );
+                              }
+                              return route;
+                            },
+                          ),
+                        ),
+                        MiniNowPlayingBar(
+                          key: nowPlayingScrollHider.key,
+                        ),
+                      ],
                     ),
+                    bottomNavigationBar: isMobile
+                        ? MobileBottomNavigationBar(
+                            tabControllerNotifier: tabControllerNotifier,
+                          )
+                        : null,
                   ),
                 ),
         ),

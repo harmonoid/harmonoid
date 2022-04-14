@@ -13,6 +13,8 @@ import 'package:animations/animations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart'
     hide ReorderableDragStartListener, Intent;
+import 'package:harmonoid/state/now_playing_scroll_hider.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -1306,6 +1308,298 @@ class CollectionSortButton extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class CorrectedSwitchListTile extends StatelessWidget {
+  final bool value;
+  final void Function(bool) onChanged;
+  final String title;
+  final String subtitle;
+  CorrectedSwitchListTile({
+    Key? key,
+    required this.value,
+    required this.onChanged,
+    required this.title,
+    required this.subtitle,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (isDesktop) {
+      return SwitchListTile(
+        value: value,
+        title: Text(
+          subtitle,
+          style: Theme.of(context).textTheme.headline4,
+        ),
+        onChanged: (value) {
+          onChanged.call(value);
+        },
+      );
+    } else {
+      return InkWell(
+        onTap: () {
+          onChanged.call(!value);
+        },
+        child: Container(
+          height: 88.0,
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                    const SizedBox(height: 4.0),
+                    Text(
+                      subtitle,
+                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                            color: Theme.of(context).textTheme.headline3?.color,
+                          ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Switch(
+                value: value,
+                onChanged: (value) {
+                  onChanged.call(value);
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+}
+
+class CorrectedListTile extends StatelessWidget {
+  final void Function() onTap;
+  final IconData iconData;
+  final String title;
+  final String subtitle;
+  CorrectedListTile({
+    Key? key,
+    required this.onTap,
+    required this.iconData,
+    required this.title,
+    required this.subtitle,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        onTap.call();
+      },
+      child: Container(
+        height: 88.0,
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 16.0, right: 16.0),
+              width: 40.0,
+              height: 40.0,
+              child: Icon(iconData),
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  const SizedBox(height: 4.0),
+                  Text(
+                    subtitle,
+                    style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                          color: Theme.of(context).textTheme.headline3?.color,
+                        ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 16.0),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MobileSortByButton extends StatefulWidget {
+  final ValueNotifier<int> value;
+  MobileSortByButton({
+    Key? key,
+    required this.value,
+  }) : super(key: key);
+
+  @override
+  State<MobileSortByButton> createState() => _MobileSortByButtonState();
+}
+
+class _MobileSortByButtonState extends State<MobileSortByButton> {
+  late int index;
+  late final VoidCallback listener;
+
+  @override
+  void initState() {
+    super.initState();
+    index = widget.value.value;
+    listener = () => setState(() {
+          index = widget.value.value;
+        });
+    widget.value.addListener(listener);
+  }
+
+  @override
+  void dispose() {
+    widget.value.removeListener(listener);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOpacity(
+      opacity: [1, 2, 3].contains(index) ? 1.0 : 0.0,
+      duration: Duration(milliseconds: 200),
+      child: CircularButton(
+        icon: const Icon(Icons.sort_by_alpha),
+        onPressed: () async {
+          final position = RelativeRect.fromRect(
+            Offset(
+                  MediaQuery.of(context).size.width - tileMargin - 48.0,
+                  MediaQuery.of(context).padding.top +
+                      kMobileSearchBarHeight +
+                      2 * tileMargin,
+                ) &
+                Size(160.0, 160.0),
+            Rect.fromLTWH(
+              0,
+              0,
+              MediaQuery.of(context).size.width,
+              MediaQuery.of(context).size.height,
+            ),
+          );
+          final value = await showMenu<dynamic>(
+            context: context,
+            position: position,
+            elevation: 4.0,
+            items: [
+              if (index == 1 || index == 2 || index == 3)
+                CheckedPopupMenuItem(
+                  padding: EdgeInsets.zero,
+                  checked: Collection.instance.collectionSortType ==
+                          CollectionSort.aToZ ||
+                      index == 3,
+                  value: CollectionSort.aToZ,
+                  child: Text(
+                    Language.instance.A_TO_Z,
+                  ),
+                ),
+              if (index == 1 || index == 2)
+                CheckedPopupMenuItem(
+                  padding: EdgeInsets.zero,
+                  checked: Collection.instance.collectionSortType ==
+                      CollectionSort.dateAdded,
+                  value: CollectionSort.dateAdded,
+                  child: Text(
+                    Language.instance.DATE_ADDED,
+                  ),
+                ),
+              if (index == 1 || index == 2)
+                CheckedPopupMenuItem(
+                  padding: EdgeInsets.zero,
+                  checked: Collection.instance.collectionSortType ==
+                      CollectionSort.year,
+                  value: CollectionSort.year,
+                  child: Text(
+                    Language.instance.YEAR,
+                  ),
+                ),
+              PopupMenuDivider(),
+              CheckedPopupMenuItem(
+                padding: EdgeInsets.zero,
+                checked: Collection.instance.collectionOrderType ==
+                    CollectionOrder.ascending,
+                value: CollectionOrder.ascending,
+                child: Text(
+                  Language.instance.ASCENDING,
+                ),
+              ),
+              CheckedPopupMenuItem(
+                padding: EdgeInsets.zero,
+                checked: Collection.instance.collectionOrderType ==
+                    CollectionOrder.descending,
+                value: CollectionOrder.descending,
+                child: Text(
+                  Language.instance.DESCENDING,
+                ),
+              ),
+            ],
+          );
+          if (value is CollectionSort) {
+            Provider.of<Collection>(context, listen: false).sort(type: value);
+            await Configuration.instance.save(
+              collectionSortType: value,
+            );
+          } else if (value is CollectionOrder) {
+            Provider.of<Collection>(context, listen: false).order(type: value);
+            await Configuration.instance.save(
+              collectionOrderType: value,
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class NowPlayingBarScrollHideNotifier extends StatelessWidget {
+  final Widget child;
+  const NowPlayingBarScrollHideNotifier({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (isDesktop) {
+      return child;
+    } else {
+      return NotificationListener<ScrollUpdateNotification>(
+        onNotification: (notification) {
+          final scrollDelta = notification.scrollDelta ?? 0.0;
+          if (notification.metrics.axis == Axis.vertical) {
+            if (scrollDelta > 0.0) {
+              NowPlayingScrollHider.instance.hide();
+            } else {
+              NowPlayingScrollHider.instance.show();
+            }
+          }
+          return false;
+        },
+        child: child,
+      );
+    }
   }
 }
 
