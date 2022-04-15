@@ -46,8 +46,8 @@ class Visuals extends ChangeNotifier {
       SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(
           statusBarColor: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white12
-              : Colors.black12,
+              ? Colors.black12
+              : Colors.white12,
           statusBarIconBrightness:
               Theme.of(context).brightness == Brightness.dark
                   ? Brightness.light

@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/state/now_playing_scroll_hider.dart';
+import 'package:harmonoid/utils/widgets.dart';
 
 class MiscellaneousSetting extends StatefulWidget {
   MiscellaneousSetting({Key? key}) : super(key: key);
@@ -16,41 +20,45 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
       title: Language.instance.SETTING_MISCELLANEOUS_TITLE,
       subtitle: Language.instance.SETTING_MISCELLANEOUS_SUBTITLE,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SwitchListTile(
-            value: Configuration
-                .instance.changeNowPlayingBarColorBasedOnPlayingMusic,
-            title: Text(
-              Language.instance.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC,
-              style: Theme.of(context).textTheme.headline4,
-            ),
+          CorrectedSwitchListTile(
+            title: Language
+                .instance.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE,
+            subtitle:
+                Language.instance.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC,
             onChanged: (_) => Configuration.instance
                 .save(
                   changeNowPlayingBarColorBasedOnPlayingMusic: !Configuration
                       .instance.changeNowPlayingBarColorBasedOnPlayingMusic,
                 )
-                .then((value) => setState(() {})),
-          ),
-          SwitchListTile(
-            value: Configuration.instance.showTrackProgressOnTaskbar,
-            title: Text(
-              Language.instance.SHOW_TRACK_PROGRESS_ON_TASKBAR,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            onChanged: (_) => Configuration.instance
-                .save(
-                  showTrackProgressOnTaskbar:
-                      !Configuration.instance.showTrackProgressOnTaskbar,
-                )
-                .then((value) => setState(() {})),
-          ),
-          SwitchListTile(
+                .then((value) => setState(() {
+                      if (!Configuration.instance
+                          .changeNowPlayingBarColorBasedOnPlayingMusic) {
+                        NowPlayingScrollHider.instance.palette.value = null;
+                      }
+                    })),
             value: Configuration
-                .instance.automaticallyAddOtherSongsFromCollectionToNowPlaying,
-            title: Text(
-              Language.instance.AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING,
-              style: Theme.of(context).textTheme.headline4,
+                .instance.changeNowPlayingBarColorBasedOnPlayingMusic,
+          ),
+          if (Platform.isWindows)
+            CorrectedSwitchListTile(
+              title: Language.instance.SHOW_TRACK_PROGRESS_ON_TASKBAR,
+              subtitle:
+                  Language.instance.SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE,
+              onChanged: (_) => Configuration.instance
+                  .save(
+                    showTrackProgressOnTaskbar:
+                        !Configuration.instance.showTrackProgressOnTaskbar,
+                  )
+                  .then((value) => setState(() {})),
+              value: Configuration.instance.showTrackProgressOnTaskbar,
             ),
+          CorrectedSwitchListTile(
+            title: Language
+                .instance.AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING_TITLE,
+            subtitle:
+                Language.instance.AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING,
             onChanged: (_) => Configuration.instance
                 .save(
                   automaticallyAddOtherSongsFromCollectionToNowPlaying:
@@ -58,20 +66,20 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                           .automaticallyAddOtherSongsFromCollectionToNowPlaying,
                 )
                 .then((value) => setState(() {})),
-          ),
-          SwitchListTile(
             value: Configuration
-                .instance.automaticallyShowNowPlayingScreenAfterPlaying,
-            title: Text(
-              Language.instance.SHOW_NOW_PLAYING_AFTER_PLAYING,
-              style: Theme.of(context).textTheme.headline4,
-            ),
+                .instance.automaticallyAddOtherSongsFromCollectionToNowPlaying,
+          ),
+          CorrectedSwitchListTile(
+            title: Language.instance.SHOW_NOW_PLAYING_AFTER_PLAYING,
+            subtitle: Language.instance.SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE,
             onChanged: (_) => Configuration.instance
                 .save(
                   automaticallyShowNowPlayingScreenAfterPlaying: !Configuration
                       .instance.automaticallyShowNowPlayingScreenAfterPlaying,
                 )
                 .then((value) => setState(() {})),
+            value: Configuration
+                .instance.automaticallyShowNowPlayingScreenAfterPlaying,
           ),
         ],
       ),

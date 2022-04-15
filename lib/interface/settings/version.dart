@@ -42,12 +42,14 @@ class VersionState extends State<VersionSetting> {
     });
   }
 
-  TableRow getVersionTableRow(String versionLabel, Release release) {
+  Row getVersionTableRow(String versionLabel, Release release) {
     final hasLink = release.htmlUrl != null && release.htmlUrl!.isNotEmpty;
 
-    return TableRow(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(versionLabel),
+        const SizedBox(width: 8.0),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           transitionBuilder: (child, animation) => FadeTransition(
@@ -81,21 +83,14 @@ class VersionState extends State<VersionSetting> {
       subtitle: Language.instance.SETTING_APP_VERSION_SUBTITLE,
       child: Column(
         children: [
-          ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 480),
-            child: Table(
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: [
-                getVersionTableRow(
-                  Language.instance.SETTING_APP_VERSION_INSTALLED + ':',
-                  Release(tagName: kVersion),
-                ),
-                getVersionTableRow(
-                  Language.instance.SETTING_APP_VERSION_LATEST + ':',
-                  latestRelease,
-                ),
-              ],
-            ),
+          getVersionTableRow(
+            Language.instance.SETTING_APP_VERSION_INSTALLED + ':',
+            Release(tagName: kVersion),
+          ),
+          const SizedBox(height: 4.0),
+          getVersionTableRow(
+            Language.instance.SETTING_APP_VERSION_LATEST + ':',
+            latestRelease,
           ),
         ],
       ),
@@ -104,6 +99,7 @@ class VersionState extends State<VersionSetting> {
           ? null
           : [
               MaterialButton(
+                padding: EdgeInsets.zero,
                 onPressed: () =>
                     launch('https://github.com/harmonoid/harmonoid/releases'),
                 child: Text(

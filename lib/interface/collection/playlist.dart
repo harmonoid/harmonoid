@@ -178,10 +178,14 @@ class PlaylistTab extends StatelessWidget {
                               backgroundColor: Theme.of(context).cardColor,
                               builder: (context) => StatefulBuilder(
                                 builder: (context, setState) {
-                                  return SizedBox(
+                                  return Container(
+                                    height: 72.0 +
+                                        MediaQuery.of(context)
+                                            .viewInsets
+                                            .vertical,
                                     child: ListView(
-                                      padding: EdgeInsets.all(8.0) +
-                                          MediaQuery.of(context).viewInsets,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      padding: EdgeInsets.all(8.0),
                                       shrinkWrap: true,
                                       children: [
                                         const SizedBox(height: 4.0),
@@ -1259,110 +1263,189 @@ class PlaylistScreenState extends State<PlaylistScreen>
                         ),
                       ),
                       backgroundColor: color,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Column(
-                          children: [
-                            Container(
-                              height: MediaQuery.of(context).size.width,
-                              width: MediaQuery.of(context).size.width,
-                              child: LayoutBuilder(
-                                builder: (context, constraints) => Hero(
-                                  tag: 'playlist_art_${widget.playlist.name}',
-                                  child: Padding(
-                                    padding: EdgeInsets.all(48.0),
-                                    child: PlaylistThumbnail(
-                                      tracks: widget.playlist.tracks,
-                                      width: min(constraints.maxHeight,
-                                              constraints.maxWidth) -
-                                          96.0,
-                                      mini: false,
+                      flexibleSpace: Stack(
+                        children: [
+                          FlexibleSpaceBar(
+                            background: Column(
+                              children: [
+                                Container(
+                                  height: MediaQuery.of(context).size.width,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) => Hero(
+                                      tag:
+                                          'playlist_art_${widget.playlist.name}',
+                                      child: Padding(
+                                        padding: EdgeInsets.all(48.0),
+                                        child: PlaylistThumbnail(
+                                          tracks: widget.playlist.tracks,
+                                          width: min(constraints.maxHeight,
+                                                  constraints.maxWidth) -
+                                              96.0,
+                                          mini: false,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                                TweenAnimationBuilder<double>(
+                                  tween: Tween<double>(
+                                    begin: 1.0,
+                                    end: detailsVisible ? 1.0 : 0.0,
+                                  ),
+                                  duration: Duration(milliseconds: 200),
+                                  builder: (context, value, _) => Opacity(
+                                    opacity: value,
+                                    child: Container(
+                                      color: color,
+                                      height: 96.0,
+                                      width: MediaQuery.of(context).size.width,
+                                      padding: EdgeInsets.all(16.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            widget.playlist.name.overflow,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline1
+                                                ?.copyWith(
+                                                  color: widget.playlist.tracks
+                                                          .isNotEmpty
+                                                      ? ([
+                                                          Colors.white,
+                                                          Colors.black
+                                                        ][(color?.computeLuminance() ??
+                                                                  0.0) >
+                                                              0.5
+                                                          ? 1
+                                                          : 0])
+                                                      : Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                  fontSize: 24.0,
+                                                ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          Text(
+                                            Language.instance.N_TRACKS
+                                                .replaceAll(
+                                              'N',
+                                              '${widget.playlist.tracks.length}',
+                                            ),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline1
+                                                ?.copyWith(
+                                                  color: widget.playlist.tracks
+                                                          .isNotEmpty
+                                                      ? ([
+                                                          Color(0xFFD9D9D9),
+                                                          Color(0xFF363636)
+                                                        ][(color?.computeLuminance() ??
+                                                                  0.0) >
+                                                              0.5
+                                                          ? 1
+                                                          : 0])
+                                                      : Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? Color(0xFFD9D9D9)
+                                                          : Color(0xFF363636),
+                                                  fontSize: 16.0,
+                                                ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            TweenAnimationBuilder<double>(
+                          ),
+                          Positioned(
+                            top: MediaQuery.of(context).size.width +
+                                MediaQuery.of(context).padding.top -
+                                64.0,
+                            right: 16.0 + 64.0,
+                            child: TweenAnimationBuilder(
+                              curve: Curves.easeOut,
                               tween: Tween<double>(
-                                begin: 1.0,
-                                end: detailsVisible ? 1.0 : 0.0,
-                              ),
+                                  begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
                               duration: Duration(milliseconds: 200),
-                              builder: (context, value, _) => Opacity(
-                                opacity: value,
-                                child: Container(
-                                  color: color,
-                                  height: 96.0,
-                                  width: MediaQuery.of(context).size.width,
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        widget.playlist.name.overflow,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline1
-                                            ?.copyWith(
-                                              color: widget.playlist.tracks
-                                                      .isNotEmpty
-                                                  ? ([
-                                                      Colors.white,
-                                                      Colors.black
-                                                    ][(color?.computeLuminance() ??
-                                                              0.0) >
-                                                          0.5
-                                                      ? 1
-                                                      : 0])
-                                                  : Theme.of(context)
-                                                              .brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                              fontSize: 24.0,
-                                            ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 4.0),
-                                      Text(
-                                        Language.instance.N_TRACKS.replaceAll(
-                                          'N',
-                                          '${widget.playlist.tracks.length}',
-                                        ),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline1
-                                            ?.copyWith(
-                                              color: widget.playlist.tracks
-                                                      .isNotEmpty
-                                                  ? ([
-                                                      Color(0xFFD9D9D9),
-                                                      Color(0xFF363636)
-                                                    ][(color?.computeLuminance() ??
-                                                              0.0) >
-                                                          0.5
-                                                      ? 1
-                                                      : 0])
-                                                  : Theme.of(context)
-                                                              .brightness ==
-                                                          Brightness.dark
-                                                      ? Color(0xFFD9D9D9)
-                                                      : Color(0xFF363636),
-                                              fontSize: 16.0,
-                                            ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
+                              builder: (context, value, _) => Transform.scale(
+                                scale: value as double,
+                                child: Transform.rotate(
+                                  angle: value * pi + pi,
+                                  child: FloatingActionButton(
+                                    heroTag: 'play_now',
+                                    backgroundColor: secondary,
+                                    foregroundColor: [
+                                      Colors.white,
+                                      Colors.black
+                                    ][(secondary?.computeLuminance() ?? 0.0) >
+                                            0.5
+                                        ? 1
+                                        : 0],
+                                    child: Icon(Icons.play_arrow),
+                                    onPressed: () {
+                                      Playback.instance.open(
+                                        widget.playlist.tracks +
+                                            ([...Collection.instance.tracks]
+                                              ..shuffle()),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Positioned(
+                            top: MediaQuery.of(context).size.width +
+                                MediaQuery.of(context).padding.top -
+                                64.0,
+                            right: 16.0,
+                            child: TweenAnimationBuilder(
+                              curve: Curves.easeOut,
+                              tween: Tween<double>(
+                                  begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                              duration: Duration(milliseconds: 200),
+                              builder: (context, value, _) => Transform.scale(
+                                scale: value as double,
+                                child: Transform.rotate(
+                                  angle: value * pi + pi,
+                                  child: FloatingActionButton(
+                                    heroTag: 'shuffle',
+                                    backgroundColor: secondary,
+                                    foregroundColor: [
+                                      Colors.white,
+                                      Colors.black
+                                    ][(secondary?.computeLuminance() ?? 0.0) >
+                                            0.5
+                                        ? 1
+                                        : 0],
+                                    child: Icon(Icons.shuffle),
+                                    onPressed: () {
+                                      Playback.instance.open(
+                                        [...widget.playlist.tracks]..shuffle(),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SliverPadding(
@@ -1529,71 +1612,6 @@ class PlaylistScreenState extends State<PlaylistScreen>
                       ),
                     ),
                   ],
-                ),
-                Positioned(
-                  top: MediaQuery.of(context).size.width +
-                      MediaQuery.of(context).padding.top -
-                      64.0,
-                  right: 16.0 + 64.0,
-                  child: TweenAnimationBuilder(
-                    curve: Curves.easeOut,
-                    tween: Tween<double>(
-                        begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
-                    duration: Duration(milliseconds: 200),
-                    builder: (context, value, _) => Transform.scale(
-                      scale: value as double,
-                      child: Transform.rotate(
-                        angle: value * pi + pi,
-                        child: FloatingActionButton(
-                          heroTag: 'play_now',
-                          backgroundColor: secondary,
-                          foregroundColor: [Colors.white, Colors.black][
-                              (secondary?.computeLuminance() ?? 0.0) > 0.5
-                                  ? 1
-                                  : 0],
-                          child: Icon(Icons.play_arrow),
-                          onPressed: () {
-                            Playback.instance.open(
-                              widget.playlist.tracks +
-                                  ([...Collection.instance.tracks]..shuffle()),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: MediaQuery.of(context).size.width +
-                      MediaQuery.of(context).padding.top -
-                      64.0,
-                  right: 16.0,
-                  child: TweenAnimationBuilder(
-                    curve: Curves.easeOut,
-                    tween: Tween<double>(
-                        begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
-                    duration: Duration(milliseconds: 200),
-                    builder: (context, value, _) => Transform.scale(
-                      scale: value as double,
-                      child: Transform.rotate(
-                        angle: value * pi + pi,
-                        child: FloatingActionButton(
-                          heroTag: 'shuffle',
-                          backgroundColor: secondary,
-                          foregroundColor: [Colors.white, Colors.black][
-                              (secondary?.computeLuminance() ?? 0.0) > 0.5
-                                  ? 1
-                                  : 0],
-                          child: Icon(Icons.shuffle),
-                          onPressed: () {
-                            Playback.instance.open(
-                              [...widget.playlist.tracks]..shuffle(),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),

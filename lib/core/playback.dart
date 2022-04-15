@@ -8,7 +8,8 @@
 
 import 'dart:io';
 import 'package:flutter/widgets.dart' hide Intent;
-import 'package:libmpv/libmpv.dart';
+import 'package:harmonoid/state/now_playing_scroll_hider.dart';
+import 'package:libmpv/libmpv.dart' hide Playlist;
 import 'package:mpris_service/mpris_service.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
@@ -22,7 +23,7 @@ import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/app_state.dart';
-import 'package:harmonoid/models/media.dart' hide Media;
+import 'package:harmonoid/models/media.dart' hide Media, Playlist;
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/now_playing_launcher.dart';
@@ -148,7 +149,9 @@ class Playback extends ChangeNotifier {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       player.setPlaylistMode(PlaylistMode.values[value.index]);
     }
-    if (Platform.isAndroid || Platform.isIOS) {}
+    if (Platform.isAndroid || Platform.isIOS) {
+      assetsAudioPlayer.setLoopMode(LoopMode.values[value.index]);
+    }
     playlistLoopMode = value;
     _saveAppState();
     notifyListeners();
@@ -200,7 +203,64 @@ class Playback extends ChangeNotifier {
         });
       }
     }
-    if (Platform.isAndroid || Platform.isIOS) {}
+    if (Platform.isAndroid || Platform.isIOS) {
+      assetsAudioPlayer.open(
+        Playlist(
+            startIndex: index,
+            audios: tracks.map((e) {
+              Uri? image;
+              if (Plugins.isWebMedia(e.uri)) {
+                final artwork = getAlbumArt(e, small: true);
+                image =
+                    Uri.parse((artwork as ExtendedNetworkImageProvider).url);
+              } else {
+                final artwork = getAlbumArt(e);
+                image = (artwork as ExtendedFileImageProvider).file.uri;
+              }
+              return Plugins.isWebMedia(e.uri)
+                  ? Audio.network(
+                      e.uri.toString(),
+                      metas: Metas(
+                        id: e.uri.toString(),
+                        title: e.trackName,
+                        artist: e.trackArtistNames.take(2).join(', '),
+                        album: e.albumName,
+                        image: MetasImage(
+                          path: image.toString(),
+                          type: ImageType.network,
+                        ),
+                        extra: e.toJson(),
+                      ),
+                    )
+                  : Audio.file(
+                      e.uri.toFilePath(),
+                      metas: Metas(
+                        id: e.uri.toString(),
+                        title: e.trackName,
+                        artist: e.trackArtistNames.take(2).join(', '),
+                        album: e.albumName,
+                        image: MetasImage(
+                          path: image.toString(),
+                          type: ImageType.file,
+                        ),
+                        extra: e.toJson(),
+                      ),
+                    );
+            }).toList()),
+        showNotification: true,
+        loopMode: LoopMode.values[playlistLoopMode.index],
+        notificationSettings: NotificationSettings(
+          playPauseEnabled: true,
+          nextEnabled: true,
+          prevEnabled: true,
+          seekBarEnabled: true,
+          stopEnabled: false,
+        ),
+      );
+      Future.delayed(const Duration(milliseconds: 400), () {
+        NowPlayingScrollHider.instance.show();
+      });
+    }
   }
 
   void add(List<Track> tracks) {
@@ -214,7 +274,9 @@ class Playback extends ChangeNotifier {
         );
       });
     }
-    if (Platform.isAndroid || Platform.isIOS) {}
+    if (Platform.isAndroid || Platform.isIOS) {
+      // TODO:
+    }
   }
 
   /// Load the last played playback state.
@@ -226,11 +288,69 @@ class Playback extends ChangeNotifier {
     playlistLoopMode = state.playlistLoopMode;
     rate = player.rate = state.rate;
     volume = player.volume = state.volume;
-    await player.open(_tracksToMediaList(tracks), play: false);
-    // A bug that results in [isPlaying] becoming `true` after attempting
-    // to change the volume. Calling [pause] after a delay to ensure that
-    // play button isn't in incorrect state at the startup of the application.
-    Future.delayed(const Duration(milliseconds: 500), pause);
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      await player.open(_tracksToMediaList(tracks), play: false);
+      // A bug that results in [isPlaying] becoming `true` after attempting
+      // to change the volume. Calling [pause] after a delay to ensure that
+      // play button isn't in incorrect state at the startup of the application.
+      Future.delayed(const Duration(milliseconds: 500), pause);
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      assetsAudioPlayer.open(
+        Playlist(
+            startIndex: index,
+            audios: tracks.map((e) {
+              Uri? image;
+              if (Plugins.isWebMedia(e.uri)) {
+                final artwork = getAlbumArt(e, small: true);
+                image =
+                    Uri.parse((artwork as ExtendedNetworkImageProvider).url);
+              } else {
+                final artwork = getAlbumArt(e);
+                image = (artwork as ExtendedFileImageProvider).file.uri;
+              }
+              return Plugins.isWebMedia(e.uri)
+                  ? Audio.network(
+                      e.uri.toString(),
+                      metas: Metas(
+                        id: e.uri.toString(),
+                        title: e.trackName,
+                        artist: e.trackArtistNames.take(2).join(', '),
+                        album: e.albumName,
+                        image: MetasImage(
+                          path: image.toString(),
+                          type: ImageType.network,
+                        ),
+                        extra: e.toJson(),
+                      ),
+                    )
+                  : Audio.file(
+                      e.uri.toFilePath(),
+                      metas: Metas(
+                        id: e.uri.toString(),
+                        title: e.trackName,
+                        artist: e.trackArtistNames.take(2).join(', '),
+                        album: e.albumName,
+                        image: MetasImage(
+                          path: image.toString(),
+                          type: ImageType.file,
+                        ),
+                        extra: e.toJson(),
+                      ),
+                    );
+            }).toList()),
+        showNotification: true,
+        loopMode: LoopMode.values[playlistLoopMode.index],
+        notificationSettings: NotificationSettings(
+          playPauseEnabled: true,
+          nextEnabled: true,
+          prevEnabled: true,
+          seekBarEnabled: true,
+          stopEnabled: false,
+        ),
+        autoStart: false,
+      );
+    }
   }
 
   Playback() {
@@ -286,7 +406,6 @@ class Playback extends ChangeNotifier {
         duration = event;
         notifyListeners();
       });
-
       try {
         if (Platform.isWindows) {
           smtc.create();
@@ -314,6 +433,43 @@ class Playback extends ChangeNotifier {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
       }
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      loadAppState().then((value) {
+        assetsAudioPlayer.current.listen((event) {
+          if (event != null) {
+            index = event.index
+                .clamp(0, (tracks.length - 1).clamp(0, 9223372036854775807));
+            if (AppState.instance.playlistIndex != index) {
+              _saveAppState();
+            }
+            duration = event.audio.duration;
+            tracks = event.playlist.audios
+                .map((e) => Track.fromJson(e.metas.extra))
+                .toList();
+            notifyListeners();
+            _update();
+          }
+        });
+      });
+      assetsAudioPlayer.isPlaying.listen((event) {
+        isPlaying = event;
+        notifyListeners();
+        _update();
+      });
+      assetsAudioPlayer.isBuffering.listen((event) {
+        isBuffering = event;
+        notifyListeners();
+        _update();
+      });
+      assetsAudioPlayer.currentPosition.listen((event) {
+        position = event;
+        notifyListeners();
+      });
+      assetsAudioPlayer.playSpeed.listen((event) {
+        rate = event;
+        notifyListeners();
+      });
     }
   }
 

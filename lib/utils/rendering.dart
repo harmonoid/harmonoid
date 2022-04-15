@@ -10,6 +10,7 @@ import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/state/now_playing_scroll_hider.dart';
 import 'package:path/path.dart' as path;
 import 'package:animations/animations.dart';
 import 'package:libmpv/libmpv.dart' hide Media;
@@ -311,6 +312,11 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
         ),
       ),
     ),
+    if (!NowPlayingScrollHider.instance.isHidden)
+      PopupMenuItem<int>(
+        padding: EdgeInsets.zero,
+        child: SizedBox(height: 64.0),
+      ),
   ];
 }
 

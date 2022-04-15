@@ -188,9 +188,15 @@ ThemeData createTheme({
       color: isLight ? Colors.white : Color(0xFF242424),
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: isLight ? Colors.white : Color(0xFF272727),
+      backgroundColor: Platform.isAndroid || Platform.isIOS
+          ? isLight
+              ? Colors.white
+              : Color(0xFF202020)
+          : isLight
+              ? Colors.white
+              : Color(0xFF272727),
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: isLight ? Colors.black12 : Colors.white12,
+        statusBarColor: isLight ? Colors.white12 : Colors.black12,
         statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
       ),
       elevation: 4.0,
@@ -204,7 +210,7 @@ ThemeData createTheme({
       ),
     ),
     iconTheme: IconThemeData(
-      color: isLight ? Colors.black54 : Colors.white54,
+      color: isLight ? Color(0xFF757575) : Color(0xFF8A8A8A),
       size: 24,
     ),
     dialogBackgroundColor: isLight ? Colors.white : Color(0xFF202020),

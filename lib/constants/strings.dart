@@ -2,6 +2,7 @@ class Strings {
   late String ABOUT_SUBTITLE;
   late String ABOUT_TITLE;
   late String ADD_NEW_FOLDER;
+  late String ADD_NEW_FOLDER_SUBTITLE;
   late String ADD_TO_NOW_PLAYING;
   late String ADD_TO_PLAYLIST;
   late String ALBUM;
@@ -11,11 +12,14 @@ class Strings {
   late String ARTIST_SINGLE;
   late String ASCENDING;
   late String AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING;
+  late String AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING_TITLE;
   late String AUTO_REFRESH_SETTING;
+  late String AUTO_REFRESH_SETTING_TITLE;
   late String A_TO_Z;
   late String BUFFERING;
   late String CANCEL;
   late String CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC;
+  late String CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC_TITLE;
   late String COLLECTION;
   late String COLLECTION_ALBUM_DELETE_DIALOG_BODY;
   late String COLLECTION_ALBUM_DELETE_DIALOG_HEADER;
@@ -110,8 +114,10 @@ class Strings {
   late String RECOMMENDATIONS;
   late String REFRESH;
   late String REFRESH_INFORMATION;
+  late String REFRESH_SUBTITLE;
   late String REINDEX;
   late String REINDEX_INFORMATION;
+  late String REINDEX_SUBTITLE;
   late String REMOVE;
   late String REMOVE_FROM_PLAYLIST;
   late String REPEAT;
@@ -161,7 +167,9 @@ class Strings {
   late String SHARE;
   late String SHOW_ALBUM;
   late String SHOW_NOW_PLAYING_AFTER_PLAYING;
+  late String SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE;
   late String SHOW_TRACK_PROGRESS_ON_TASKBAR;
+  late String SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE;
   late String SHUFFLE;
   late String SORT;
   late String SORT_BY;

@@ -7,6 +7,8 @@
 ///
 
 import 'package:flutter/material.dart' hide ExpansionTile;
+import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 
@@ -17,6 +19,30 @@ import 'package:provider/provider.dart';
 class LanguageSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    if (isMobile) {
+      return SettingsTile(
+        title: Language.instance.SETTING_LANGUAGE_TITLE,
+        subtitle: Language.instance.SETTING_LANGUAGE_SUBTITLE,
+        child: Column(
+          children: LanguageRegion.values
+              .map(
+                (e) => RadioListTile<LanguageRegion>(
+                  title: Text(e.name),
+                  subtitle: Text(e.country),
+                  value: e,
+                  groupValue: Configuration.instance.languageRegion,
+                  onChanged: (value) async {
+                    if (value != null) {
+                      await Language.instance.set(languageRegion: value);
+                      Configuration.instance.save(languageRegion: value);
+                    }
+                  },
+                ),
+              )
+              .toList(),
+        ),
+      );
+    }
     final regions = LanguageRegion.values.toList()
       ..removeWhere((languageRegion) =>
           languageRegion ==

@@ -63,6 +63,10 @@ Future<void> main(List<String> args) async {
       DiscordRPC.initialize();
     }
     if (Platform.isAndroid) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
       if (await Permission.storage.isDenied) {
         PermissionStatus storagePermissionState =
             await Permission.storage.request();
