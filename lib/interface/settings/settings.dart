@@ -8,6 +8,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/interface/settings/proxy.dart';
 
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';

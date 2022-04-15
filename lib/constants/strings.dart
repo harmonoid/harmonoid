@@ -109,6 +109,8 @@ class Strings {
   late String PLAY_URL;
   late String PLAY_URL_SUBTITLE;
   late String PREVIOUS;
+  late String PROXY_SUBTITLE;
+  late String PROXY_TITLE;
   late String RECOMMENDATIONS;
   late String REFRESH;
   late String REFRESH_INFORMATION;
