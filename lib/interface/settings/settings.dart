@@ -8,7 +8,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/interface/settings/proxy.dart';
 
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -20,6 +19,7 @@ import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/experimental.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/version.dart';
+import 'package:harmonoid/interface/settings/proxy.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -43,6 +43,7 @@ class Settings extends StatelessWidget {
                       ThemeSetting(),
                       MiscellaneousSetting(),
                       ExperimentalSetting(),
+                      ProxySetting(),
                       LanguageSetting(),
                       AboutSetting(),
                       VersionSetting(),
