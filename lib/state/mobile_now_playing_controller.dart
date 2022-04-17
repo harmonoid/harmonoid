@@ -9,14 +9,19 @@ import 'package:flutter/widgets.dart';
 
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 
-class NowPlayingScrollHider {
-  static late NowPlayingScrollHider instance;
+class MobileNowPlayingController {
+  static late MobileNowPlayingController instance;
 
   final GlobalKey<MiniNowPlayingBarState> barKey =
       GlobalKey<MiniNowPlayingBarState>();
   final GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState> fabKey =
       GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState>();
   ValueNotifier<Iterable<Color>?> palette = ValueNotifier(null);
+  bool get isHidden => barKey.currentState!.isHidden;
+
+  MobileNowPlayingController() {
+    MobileNowPlayingController.instance = this;
+  }
 
   void show() {
     barKey.currentState!.show();
@@ -28,9 +33,7 @@ class NowPlayingScrollHider {
     fabKey.currentState!.hide();
   }
 
-  bool get isHidden => barKey.currentState!.isHidden;
-
-  NowPlayingScrollHider() {
-    NowPlayingScrollHider.instance = this;
+  void maximize() {
+    barKey.currentState!.maximize();
   }
 }

@@ -7,33 +7,41 @@
 ///
 import 'package:flutter/widgets.dart';
 
-class NowPlayingLauncher extends ChangeNotifier {
-  static late NowPlayingLauncher instance;
+class DesktopNowPlayingController extends ChangeNotifier {
+  static late DesktopNowPlayingController instance;
 
   final VoidCallback launch;
   final VoidCallback exit;
+  bool isHidden = true;
 
-  NowPlayingLauncher({
+  DesktopNowPlayingController({
     required this.launch,
     required this.exit,
   }) {
-    NowPlayingLauncher.instance = this;
+    DesktopNowPlayingController.instance = this;
   }
 
-  void toggle() => maximized = !maximized;
+  void maximize() {
+    if (isHidden) {
+      launch();
+      isHidden = false;
+      notifyListeners();
+    }
+  }
 
-  bool get maximized => _maximized;
+  void hide() {
+    if (!isHidden) {
+      exit();
+      isHidden = true;
+      notifyListeners();
+    }
+  }
 
-  set maximized(bool value) {
-    if (value == _maximized) return;
-    if (value) {
+  void toggle() {
+    if (isHidden) {
       launch();
     } else {
       exit();
     }
-    _maximized = value;
-    notifyListeners();
   }
-
-  bool _maximized = false;
 }
