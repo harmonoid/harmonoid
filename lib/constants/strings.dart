@@ -77,6 +77,7 @@ class Strings {
   late String M_TRACKS_AND_N_ALBUMS;
   late String NEXT;
   late String NO;
+  late String NOTHING_IN_QUEUE;
   late String NOTIFICATION_LYRICS_SUBTITLE;
   late String NOTIFICATION_LYRICS_TITLE;
   late String NOW_PLAYING;

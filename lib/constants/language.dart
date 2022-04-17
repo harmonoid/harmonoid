@@ -274,6 +274,7 @@ class Language extends Strings with ChangeNotifier {
     this.M_TRACKS_AND_N_ALBUMS = asset['M_TRACKS_AND_N_ALBUMS']!;
     this.NEXT = asset['NEXT']!;
     this.NO = asset['NO']!;
+    this.NOTHING_IN_QUEUE = asset['NOTHING_IN_QUEUE']!;
     this.NOTIFICATION_LYRICS_SUBTITLE = asset['NOTIFICATION_LYRICS_SUBTITLE']!;
     this.NOTIFICATION_LYRICS_TITLE = asset['NOTIFICATION_LYRICS_TITLE']!;
     this.NOW_PLAYING = asset['NOW_PLAYING']!;
