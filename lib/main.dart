@@ -90,7 +90,7 @@ Future<void> main(List<String> args) async {
       onProgress: (progress, total, _) {
         CollectionRefresh.instance.set(progress, total);
       },
-      update: Configuration.instance.automaticallyRefreshCollectionOnFreshStart,
+      update: Configuration.instance.automaticMusicLookup,
     );
     await Language.initialize();
     runApp(

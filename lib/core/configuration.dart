@@ -73,7 +73,6 @@ class Configuration extends ConfigurationKeys {
         '.Harmonoid',
       ),
     );
-    ytm_request_authority = instance.proxyURL == "" ? null : instance.proxyURL;
   }
 
   /// Updates a particular key in the Harmonoid's configuration.
@@ -90,11 +89,11 @@ class Configuration extends ConfigurationKeys {
     List<String>? collectionSearchRecent,
     List<String>? webSearchRecent,
     List<String>? webRecent,
-    bool? showTrackProgressOnTaskbar,
-    bool? automaticallyAddOtherSongsFromCollectionToNowPlaying,
-    bool? automaticallyShowNowPlayingScreenAfterPlaying,
-    bool? automaticallyRefreshCollectionOnFreshStart,
-    bool? changeNowPlayingBarColorBasedOnPlayingMusic,
+    bool? taskbarIndicator,
+    bool? seamlessPlayback,
+    bool? jumpToNowPlayingScreenOnPlay,
+    bool? automaticMusicLookup,
+    bool? dynamicNowPlayingBarColoring,
     String? proxyURL,
   }) async {
     if (collectionDirectories != null) {
@@ -130,24 +129,20 @@ class Configuration extends ConfigurationKeys {
     if (notificationLyrics != null) {
       this.notificationLyrics = notificationLyrics;
     }
-    if (showTrackProgressOnTaskbar != null) {
-      this.showTrackProgressOnTaskbar = showTrackProgressOnTaskbar;
+    if (taskbarIndicator != null) {
+      this.taskbarIndicator = taskbarIndicator;
     }
-    if (automaticallyAddOtherSongsFromCollectionToNowPlaying != null) {
-      this.automaticallyAddOtherSongsFromCollectionToNowPlaying =
-          automaticallyAddOtherSongsFromCollectionToNowPlaying;
+    if (seamlessPlayback != null) {
+      this.seamlessPlayback = seamlessPlayback;
     }
-    if (automaticallyShowNowPlayingScreenAfterPlaying != null) {
-      this.automaticallyShowNowPlayingScreenAfterPlaying =
-          automaticallyShowNowPlayingScreenAfterPlaying;
+    if (jumpToNowPlayingScreenOnPlay != null) {
+      this.jumpToNowPlayingScreenOnPlay = jumpToNowPlayingScreenOnPlay;
     }
-    if (automaticallyRefreshCollectionOnFreshStart != null) {
-      this.automaticallyRefreshCollectionOnFreshStart =
-          automaticallyRefreshCollectionOnFreshStart;
+    if (automaticMusicLookup != null) {
+      this.automaticMusicLookup = automaticMusicLookup;
     }
-    if (changeNowPlayingBarColorBasedOnPlayingMusic != null) {
-      this.changeNowPlayingBarColorBasedOnPlayingMusic =
-          changeNowPlayingBarColorBasedOnPlayingMusic;
+    if (dynamicNowPlayingBarColoring != null) {
+      this.dynamicNowPlayingBarColoring = dynamicNowPlayingBarColoring;
     }
     if (proxyURL != null) {
       this.proxyURL = proxyURL;
@@ -170,15 +165,11 @@ class Configuration extends ConfigurationKeys {
           'collectionSearchRecent': this.collectionSearchRecent,
           'webSearchRecent': this.webSearchRecent,
           'webRecent': this.webRecent,
-          'showTrackProgressOnTaskbar': this.showTrackProgressOnTaskbar,
-          'automaticallyAddOtherSongsFromCollectionToNowPlaying':
-              this.automaticallyAddOtherSongsFromCollectionToNowPlaying,
-          'automaticallyShowNowPlayingScreenAfterPlaying':
-              this.automaticallyShowNowPlayingScreenAfterPlaying,
-          'automaticallyRefreshCollectionOnFreshStart':
-              this.automaticallyRefreshCollectionOnFreshStart,
-          'changeNowPlayingBarColorBasedOnPlayingMusic':
-              this.changeNowPlayingBarColorBasedOnPlayingMusic,
+          'taskbarIndicator': this.taskbarIndicator,
+          'seamlessPlayback': this.seamlessPlayback,
+          'jumpToNowPlayingScreenOnPlay': this.jumpToNowPlayingScreenOnPlay,
+          'automaticMusicLookup': this.automaticMusicLookup,
+          'dynamicNowPlayingBarColoring': this.dynamicNowPlayingBarColoring,
           'proxyURL': this.proxyURL,
         },
       ),
@@ -217,15 +208,11 @@ class Configuration extends ConfigurationKeys {
       collectionSearchRecent = current['collectionSearchRecent'].cast<String>();
       webSearchRecent = current['webSearchRecent'].cast<String>();
       webRecent = current['webRecent'].cast<String>();
-      showTrackProgressOnTaskbar = current['showTrackProgressOnTaskbar'];
-      automaticallyAddOtherSongsFromCollectionToNowPlaying =
-          current['automaticallyAddOtherSongsFromCollectionToNowPlaying'];
-      automaticallyShowNowPlayingScreenAfterPlaying =
-          current['automaticallyShowNowPlayingScreenAfterPlaying'];
-      automaticallyRefreshCollectionOnFreshStart =
-          current['automaticallyRefreshCollectionOnFreshStart'];
-      changeNowPlayingBarColorBasedOnPlayingMusic =
-          current['changeNowPlayingBarColorBasedOnPlayingMusic'];
+      taskbarIndicator = current['taskbarIndicator'];
+      seamlessPlayback = current['seamlessPlayback'];
+      jumpToNowPlayingScreenOnPlay = current['jumpToNowPlayingScreenOnPlay'];
+      automaticMusicLookup = current['automaticMusicLookup'];
+      dynamicNowPlayingBarColoring = current['dynamicNowPlayingBarColoring'];
       proxyURL = current["proxyURL"];
     } catch (exception) {
       if (!retry) throw exception;
@@ -254,12 +241,12 @@ abstract class ConfigurationKeys {
   late List<String> collectionSearchRecent;
   late List<String> webSearchRecent;
   late List<String> webRecent;
-  late bool showTrackProgressOnTaskbar;
-  late bool automaticallyAddOtherSongsFromCollectionToNowPlaying;
-  late bool automaticallyShowNowPlayingScreenAfterPlaying;
-  late bool automaticallyRefreshCollectionOnFreshStart;
-  late bool changeNowPlayingBarColorBasedOnPlayingMusic;
-  late String proxyURL;
+  late bool taskbarIndicator;
+  late bool seamlessPlayback;
+  late bool jumpToNowPlayingScreenOnPlay;
+  late bool automaticMusicLookup;
+  late bool dynamicNowPlayingBarColoring;
+  late String? proxyURL;
 }
 
 final Map<String, dynamic> defaultConfiguration = {
@@ -281,10 +268,10 @@ final Map<String, dynamic> defaultConfiguration = {
   'collectionSearchRecent': [],
   'webSearchRecent': [],
   'webRecent': [],
-  'showTrackProgressOnTaskbar': false,
-  'automaticallyAddOtherSongsFromCollectionToNowPlaying': false,
-  'automaticallyShowNowPlayingScreenAfterPlaying': true,
-  'automaticallyRefreshCollectionOnFreshStart': false,
-  'changeNowPlayingBarColorBasedOnPlayingMusic': isMobile ? false : true,
-  'proxyURL': '',
+  'taskbarIndicator': false,
+  'seamlessPlayback': false,
+  'jumpToNowPlayingScreenOnPlay': isMobile ? false : true,
+  'automaticMusicLookup': false,
+  'dynamicNowPlayingBarColoring': isMobile ? false : true,
+  'proxyURL': null,
 };
