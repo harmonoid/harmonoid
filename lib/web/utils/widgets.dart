@@ -68,8 +68,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
     return Autocomplete<String>(
       initialValue:
           widget.query != null ? TextEditingValue(text: widget.query!) : null,
-      optionsBuilder: (textEditingValue) =>
-          textEditingValue.text.isEmpty ? [] : _suggestions,
+      optionsBuilder: (value) => value.text.isEmpty ? [] : _suggestions,
       optionsViewBuilder: (context, callback, _) => Container(
         width: MediaQuery.of(context).size.width,
         child: Stack(
@@ -148,18 +147,18 @@ class _WebSearchBarState extends State<WebSearchBar> {
 
             return KeyEventResult.ignored;
           },
-          child: Focus(
-            onFocusChange: (hasFocus) {
-              if (hasFocus) {
-                HotKeys.instance.disableSpaceHotKey();
-              } else {
-                HotKeys.instance.enableSpaceHotKey();
-              }
-            },
-            child: Container(
-              height: 40.0,
-              width: 280.0,
-              padding: EdgeInsets.only(bottom: 1.0),
+          child: Container(
+            height: 40.0,
+            width: 280.0,
+            padding: EdgeInsets.only(bottom: 1.0),
+            child: Focus(
+              onFocusChange: (hasFocus) {
+                if (hasFocus) {
+                  HotKeys.instance.disableSpaceHotKey();
+                } else {
+                  HotKeys.instance.enableSpaceHotKey();
+                }
+              },
               child: TextField(
                 autofocus: isDesktop,
                 cursorWidth: 1.0,

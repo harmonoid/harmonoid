@@ -9,7 +9,6 @@ import 'dart:math';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
@@ -245,29 +244,24 @@ class WebArtistScreen extends StatefulWidget {
 }
 
 class _WebArtistScreenState extends State<WebArtistScreen> {
-  Color? _color;
+  final ScrollController scrollController = ScrollController();
+  bool appBarVisible = true;
 
   @override
   void initState() {
     super.initState();
-    PaletteGenerator.fromImageProvider(
-      NetworkImage(widget.artist.thumbnails.values.first),
-    ).then(
-      (value) {
+    scrollController.addListener(() {
+      if (scrollController.offset == 0.0 && !appBarVisible) {
         setState(() {
-          value.colors.forEach((element) {
-            element.computeLuminance();
-          });
+          appBarVisible = true;
         });
-      },
-    );
+      } else if (appBarVisible) {
+        setState(() {
+          appBarVisible = false;
+        });
+      }
+    });
   }
-
-  bool get _isDark =>
-      (0.299 * (_color?.red ?? 256.0)) +
-          (0.587 * (_color?.green ?? 256.0)) +
-          (0.114 * (_color?.blue ?? 256.0)) <
-      128.0;
 
   @override
   Widget build(BuildContext context) {
@@ -276,6 +270,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
         alignment: Alignment.topCenter,
         children: [
           CustomListView(
+            controller: scrollController,
             children: [
               ExtendedImage.network(
                 widget.artist.coverUrl,
@@ -587,53 +582,64 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
               ),
             ],
           ),
-          DesktopAppBar(
-            color: _isDark
-                ? Colors.white.withOpacity(0.4)
-                : Colors.black.withOpacity(0.4),
-            elevation: 0.0,
+          TweenAnimationBuilder<Color?>(
             child: Row(
               children: [
                 Spacer(),
-                WebSearchBar(),
+                if (appBarVisible) WebSearchBar(),
                 SizedBox(
                   width: 8.0,
                 ),
-                Material(
-                  color: Colors.transparent,
-                  child: Tooltip(
-                    message: Language.instance.SETTING,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    FadeThroughTransition(
-                              fillColor: Colors.transparent,
-                              animation: animation,
-                              secondaryAnimation: secondaryAnimation,
-                              child: Settings(),
+                if (appBarVisible)
+                  Material(
+                    color: Colors.transparent,
+                    child: Tooltip(
+                      message: Language.instance.SETTING,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      FadeThroughTransition(
+                                fillColor: Colors.transparent,
+                                animation: animation,
+                                secondaryAnimation: secondaryAnimation,
+                                child: Settings(),
+                              ),
                             ),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Container(
+                          height: 40.0,
+                          width: 40.0,
+                          child: Icon(
+                            Icons.settings,
+                            size: 20.0,
                           ),
-                        );
-                      },
-                      borderRadius: BorderRadius.circular(20.0),
-                      child: Container(
-                        height: 40.0,
-                        width: 40.0,
-                        child: Icon(
-                          Icons.settings,
-                          size: 20.0,
                         ),
                       ),
                     ),
                   ),
-                ),
                 SizedBox(
                   width: 16.0,
                 ),
               ],
+            ),
+            builder: (context, value, child) {
+              return DesktopAppBar(
+                color: value,
+                elevation: appBarVisible ? 0.0 : 4.0,
+                child: child,
+              );
+            },
+            duration: Duration(milliseconds: 200),
+            tween: ColorTween(
+              begin: Colors.transparent,
+              end: appBarVisible
+                  ? Colors.transparent
+                  : Theme.of(context).appBarTheme.backgroundColor,
             ),
           ),
         ],
