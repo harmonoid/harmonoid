@@ -274,8 +274,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: harmonoid
-      resolved-ref: "7b2280a3652b97c021dd960bacfa4cbe2d7f29cd"
+      ref: "18a018b8e278ba8565bd7d0ab9c7b01847b2d5cc"
+      resolved-ref: "18a018b8e278ba8565bd7d0ab9c7b01847b2d5cc"
       url: "https://github.com/alexmercerind/flutter_media_metadata.git"
     source: git
     version: "0.1.2"

@@ -29,7 +29,7 @@ dependencies:
   flutter_media_metadata:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
-      ref: harmonoid
+      ref: 18a018b8e278ba8565bd7d0ab9c7b01847b2d5cc
 
   # Third-party plugins.
 
