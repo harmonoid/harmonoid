@@ -13,7 +13,8 @@ import 'package:animations/animations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart'
     hide ReorderableDragStartListener, Intent;
-import 'package:harmonoid/state/now_playing_scroll_hider.dart';
+import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
@@ -242,8 +243,9 @@ class _ScaleOnHoverState extends State<ScaleOnHover> {
 
 class SubHeader extends StatelessWidget {
   final String? text;
+  final TextStyle? style;
 
-  const SubHeader(this.text, {Key? key}) : super(key: key);
+  const SubHeader(this.text, {this.style, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -254,7 +256,7 @@ class SubHeader extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(24.0, 0, 0, 0),
             child: Text(
               text!,
-              style: Theme.of(context).textTheme.headline1,
+              style: style ?? Theme.of(context).textTheme.headline1,
             ),
           )
         : Container();
@@ -324,6 +326,7 @@ class DesktopAppBar extends StatelessWidget {
               alignment: Alignment.topLeft,
               padding: EdgeInsets.only(bottom: 8.0),
               child: Material(
+                animationDuration: Duration.zero,
                 elevation: elevation ?? 4.0,
                 color: color ?? Theme.of(context).appBarTheme.backgroundColor,
                 child: Container(
@@ -775,9 +778,9 @@ class DesktopTitleBar extends StatelessWidget {
                         colors: windowButtonColors(context),
                       ),
                 CloseWindowButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (!CollectionRefresh.instance.isCompleted) {
-                      showDialog(
+                      await showDialog(
                         context: context,
                         builder: (subContext) => AlertDialog(
                           title: Text(
@@ -798,6 +801,7 @@ class DesktopTitleBar extends StatelessWidget {
                         ),
                       );
                     } else {
+                      await Playback.instance.saveAppState();
                       appWindow.close();
                     }
                   },
@@ -885,7 +889,7 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<Iterable<Color>?>(
-      valueListenable: NowPlayingScrollHider.instance.palette,
+      valueListenable: MobileNowPlayingController.instance.palette,
       builder: (context, value, _) => TweenAnimationBuilder<Color?>(
         duration: Duration(milliseconds: 400),
         tween: ColorTween(
@@ -1605,9 +1609,9 @@ class NowPlayingBarScrollHideNotifier extends StatelessWidget {
           final scrollDelta = notification.scrollDelta ?? 0.0;
           if (notification.metrics.axis == Axis.vertical) {
             if (scrollDelta > 0.0) {
-              NowPlayingScrollHider.instance.hide();
+              MobileNowPlayingController.instance.hide();
             } else {
-              NowPlayingScrollHider.instance.show();
+              MobileNowPlayingController.instance.show();
             }
           }
           return false;

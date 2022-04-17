@@ -49,75 +49,141 @@ class _ExceptionApp extends StatelessWidget {
   }) : super(key: key);
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          DesktopAppBar(
-            leading: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Container(
-                height: 40.0,
-                width: 40.0,
-                child: Icon(Icons.error),
-              ),
-            ),
-            title: 'Exception',
-          ),
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.symmetric(vertical: 4.0),
+    return Platform.isWindows || Platform.isLinux || Platform.isMacOS
+        ? Scaffold(
+            body: Column(
               children: [
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                DesktopAppBar(
+                  leading: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 40.0,
+                      width: 40.0,
+                      child: Icon(Icons.error),
+                    ),
+                  ),
+                  title: 'Exception',
+                ),
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.symmetric(vertical: 4.0),
                     children: [
-                      Text(
-                        exception.toString(),
-                        style: Theme.of(context).textTheme.headline2,
-                      ),
-                      SizedBox(height: 8.0),
-                      Text(
-                        stacktrace.toString(),
-                        style: Theme.of(context).textTheme.headline3,
+                      Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              exception.toString(),
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                            SizedBox(height: 8.0),
+                            Text(
+                              stacktrace.toString(),
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                          ],
+                        ),
+                        margin: EdgeInsets.symmetric(horizontal: 16.0),
                       ),
                     ],
                   ),
-                  margin: EdgeInsets.symmetric(horizontal: 16.0),
+                ),
+                ButtonBar(
+                  children: [
+                    MaterialButton(
+                      onPressed: () => launch(
+                          'https://github.com/harmonoid/harmonoid/issues'),
+                      child: Text(
+                        'REPORT',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        if (Platform.isWindows) {
+                          appWindow.close();
+                        } else {
+                          SystemNavigator.pop();
+                        }
+                      },
+                      child: Text(
+                        'EXIT',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ),
-          ButtonBar(
-            children: [
-              MaterialButton(
-                onPressed: () =>
-                    launch('https://github.com/harmonoid/harmonoid/issues'),
-                child: Text(
-                  'REPORT',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Exception',
+                style: Theme.of(context).textTheme.headline1,
+              ),
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    children: [
+                      Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              exception.toString(),
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                            SizedBox(height: 8.0),
+                            Text(
+                              stacktrace.toString(),
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                          ],
+                        ),
+                        margin: EdgeInsets.symmetric(horizontal: 16.0),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              MaterialButton(
-                onPressed: () {
-                  if (Platform.isWindows) {
-                    appWindow.close();
-                  } else {
-                    SystemNavigator.pop();
-                  }
-                },
-                child: Text(
-                  'EXIT',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                  ),
+                ButtonBar(
+                  children: [
+                    MaterialButton(
+                      onPressed: () => launch(
+                          'https://github.com/harmonoid/harmonoid/issues'),
+                      child: Text(
+                        'REPORT',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        if (Platform.isWindows) {
+                          appWindow.close();
+                        } else {
+                          SystemNavigator.pop();
+                        }
+                      },
+                      child: Text(
+                        'EXIT',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+              ],
+            ),
+          );
   }
 }

@@ -34,8 +34,8 @@ ThemeData createTheme({
       ),
       headline3: TextStyle(
         color: isLight
-            ? Colors.black.withOpacity(0.67)
-            : Colors.white.withOpacity(0.67),
+            ? Colors.black.withOpacity(0.87)
+            : Colors.white.withOpacity(0.87),
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
       ),
@@ -46,8 +46,8 @@ ThemeData createTheme({
       ),
       headline5: TextStyle(
         color: isLight
-            ? Colors.black.withOpacity(0.67)
-            : Colors.white.withOpacity(0.67),
+            ? Colors.black.withOpacity(0.87)
+            : Colors.white.withOpacity(0.87),
         fontSize: 12.0,
         fontWeight: FontWeight.normal,
       ),
@@ -61,15 +61,15 @@ ThemeData createTheme({
       ),
       bodyText2: TextStyle(
         color: isLight
-            ? Colors.black.withOpacity(0.67)
-            : Colors.white.withOpacity(0.67),
+            ? Colors.black.withOpacity(0.87)
+            : Colors.white.withOpacity(0.87),
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
       ),
       caption: TextStyle(
         color: isLight
-            ? Colors.black.withOpacity(0.67)
-            : Colors.white.withOpacity(0.67),
+            ? Colors.black.withOpacity(0.87)
+            : Colors.white.withOpacity(0.87),
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
       ),
@@ -165,7 +165,7 @@ ThemeData createTheme({
     primaryColorLight: color,
     primaryColor: color,
     primaryColorDark: color,
-    scaffoldBackgroundColor: isLight ? Colors.white : Color(0xFF121212),
+    scaffoldBackgroundColor: isLight ? Colors.grey.shade100 : Color(0xFF121212),
     toggleableActiveColor: color,
     snackBarTheme: SnackBarThemeData(
       backgroundColor: isLight ? Color(0xFF202020) : Colors.white,
