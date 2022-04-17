@@ -41,7 +41,7 @@ class HomeState extends State<Home>
   final List<TabRoute> tabControllerRouteStack = <TabRoute>[
     TabRoute(isMobile ? 2 : 0, TabRouteSender.systemNavigationBackButton),
   ];
-  bool isSystemNavigationBackButtonPressed = false;
+  bool isSystemNavigationBackButtonUsed = false;
   final FloatingSearchBarController floatingSearchBarController =
       FloatingSearchBarController();
   final MobileNowPlayingController mobileNowPlayingController =
@@ -51,7 +51,7 @@ class HomeState extends State<Home>
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
-    this.tabControllerNotifier.addListener(onTabChange);
+    tabControllerNotifier.addListener(onTabChange);
   }
 
   @override
@@ -62,18 +62,31 @@ class HomeState extends State<Home>
   }
 
   void onTabChange() {
-    if (this.tabControllerNotifier.value.sender ==
-        TabRouteSender.systemNavigationBackButton) {
-      this.isSystemNavigationBackButtonPressed = true;
+    // Avoid adding to the history stack because subsequent
+    // call from [TabRouteSender.pageView] is sent additionally.
+    if (isSystemNavigationBackButtonUsed) {
     }
     // Since [PageView] reacts to the route change caused by
-    // `TabRouteSender.systemNavigationBackButton` as well &
-    // ends up adding it to the stack, we avoid it like this.
-    else if (this.isSystemNavigationBackButtonPressed) {
-      this.isSystemNavigationBackButtonPressed = false;
-    } else if (this.tabControllerNotifier.value.sender ==
-        TabRouteSender.pageView) {
-      this.tabControllerRouteStack.add(this.tabControllerNotifier.value);
+    // [TabRouteSender.bottomNavigationBar] as well & ends up
+    // adding it to the stack, the subsequent listener call is
+    // avoided.
+    else if (this.tabControllerNotifier.value.sender ==
+        TabRouteSender.systemNavigationBackButton) {
+      isSystemNavigationBackButtonUsed = true;
+    } else if (tabControllerNotifier.value.sender ==
+        TabRouteSender.bottomNavigationBar) {
+      // Do nothing. Additional [TabRouteSender.pageView] sender
+      // call will be sent later on.
+    }
+    // Essentially, only [TabRouteSender.pageView] sender when
+    // NOT caused by [TabRouteSender.systemNavigationBackButton]
+    // is added to the stack.
+    else {
+      if (isSystemNavigationBackButtonUsed) {
+        isSystemNavigationBackButtonUsed = false;
+      } else {
+        tabControllerRouteStack.add(tabControllerNotifier.value);
+      }
     }
   }
 
@@ -83,21 +96,22 @@ class HomeState extends State<Home>
     // with hardware back button.
     if (floatingSearchBarController.isOpen) {
       floatingSearchBarController.close();
-    } else if (this.navigatorKey.currentState!.canPop()) {
+    } else if (navigatorKey.currentState!.canPop()) {
       // Any route was pushed to nested [Navigator].
-      this.navigatorKey.currentState!.pop();
+      navigatorKey.currentState!.pop();
     }
     // No route was left in nested [Navigator]'s stack.
     else {
       // Check for previously opened tabs & switch.
-      if (this.tabControllerRouteStack.length > 1) {
+      if (tabControllerRouteStack.length > 1) {
         tabControllerRouteStack.removeLast();
-        this.tabControllerNotifier.value = TabRoute(
+        tabControllerNotifier.value = TabRoute(
           tabControllerRouteStack.last.index,
           TabRouteSender.systemNavigationBackButton,
         );
       } else {
-        // Show exist confirmation dialog.
+        isSystemNavigationBackButtonUsed = false;
+        // Show application exit dialog.
         showDialog(
           context: context,
           builder: (subContext) => AlertDialog(
