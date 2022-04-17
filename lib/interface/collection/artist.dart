@@ -592,7 +592,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                         ...widget.artist.tracks,
                                                         if (Configuration
                                                             .instance
-                                                            .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                            .seamlessPlayback)
                                                           ...[
                                                             ...Collection
                                                                 .instance.tracks
@@ -781,7 +781,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                       .tracks,
                                                                   if (Configuration
                                                                       .instance
-                                                                      .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                                      .seamlessPlayback)
                                                                     ...([
                                                                       ...collection
                                                                           .tracks
@@ -812,7 +812,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                             Playback.instance.open(
                                                                               [
                                                                                 ...widget.artist.tracks,
-                                                                                if (Configuration.instance.automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                                                if (Configuration.instance.seamlessPlayback)
                                                                                   ...[
                                                                                     ...Collection.instance.tracks
                                                                                   ]..shuffle(),
@@ -963,7 +963,7 @@ class ArtistScreenState extends State<ArtistScreen>
                             onPressed: Navigator.of(context).maybePop,
                             icon: Icon(
                               Icons.arrow_back,
-                              color: [Colors.black, Colors.white][
+                              color: [Color(0xFF212121), Colors.white][
                                   (color?.computeLuminance() ?? 0.0) > 0.5
                                       ? 0
                                       : 1],
@@ -987,7 +987,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                     .headline1
                                     ?.copyWith(
                                         color: [
-                                      Colors.black,
+                                      Color(0xFF212121),
                                       Colors.white
                                     ][(color?.computeLuminance() ?? 0.0) > 0.5
                                             ? 0
@@ -1076,7 +1076,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     ?.copyWith(
                                                       color: [
                                                         Colors.white,
-                                                        Colors.black
+                                                        Color(0xFF212121)
                                                       ][(color?.computeLuminance() ??
                                                                   0.0) >
                                                               0.5
@@ -1139,7 +1139,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                         backgroundColor: secondary,
                                         foregroundColor: [
                                           Colors.white,
-                                          Colors.black
+                                          Color(0xFF212121)
                                         ][(secondary?.computeLuminance() ??
                                                     0.0) >
                                                 0.5
@@ -1149,8 +1149,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                         onPressed: () {
                                           Playback.instance.open([
                                             ...widget.artist.tracks,
-                                            if (Configuration.instance
-                                                .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                            if (Configuration
+                                                .instance.seamlessPlayback)
                                               ...[...Collection.instance.tracks]
                                                 ..shuffle(),
                                           ]);
@@ -1181,7 +1181,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                         backgroundColor: secondary,
                                         foregroundColor: [
                                           Colors.white,
-                                          Colors.black
+                                          Color(0xFF212121)
                                         ][(secondary?.computeLuminance() ??
                                                     0.0) >
                                                 0.5
@@ -1216,8 +1216,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                 onTap: () => Playback.instance.open(
                                   [
                                     ...widget.artist.tracks,
-                                    if (Configuration.instance
-                                        .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                    if (Configuration.instance.seamlessPlayback)
                                       ...[...Collection.instance.tracks]
                                         ..shuffle(),
                                   ],

@@ -853,7 +853,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   Playback.instance.open([
                                                     ...widget.album.tracks,
                                                     if (Configuration.instance
-                                                        .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                        .seamlessPlayback)
                                                       ...[
                                                         ...Collection
                                                             .instance.tracks
@@ -1030,7 +1030,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                     .tracks,
                                                                 if (Configuration
                                                                     .instance
-                                                                    .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                                                    .seamlessPlayback)
                                                                   ...[
                                                                     ...Collection
                                                                         .instance
@@ -1208,7 +1208,7 @@ class AlbumScreenState extends State<AlbumScreen>
                           icon: Icon(
                             Icons.arrow_back,
                             color: [
-                              Colors.black,
+                              Color(0xFF212121),
                               Colors.white
                             ][(color?.computeLuminance() ?? 0.0) > 0.5 ? 0 : 1],
                           ),
@@ -1269,7 +1269,7 @@ class AlbumScreenState extends State<AlbumScreen>
                             },
                             icon: Icon(
                               Icons.delete,
-                              color: [Colors.black, Colors.white][
+                              color: [Color(0xFF212121), Colors.white][
                                   (color?.computeLuminance() ?? 0.0) > 0.5
                                       ? 0
                                       : 1],
@@ -1293,7 +1293,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                   .headline1
                                   ?.copyWith(
                                       color: [
-                                    Colors.black,
+                                    Color(0xFF212121),
                                     Colors.white
                                   ][(color?.computeLuminance() ?? 0.0) > 0.5
                                           ? 0
@@ -1344,7 +1344,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   ?.copyWith(
                                                     color: [
                                                       Colors.white,
-                                                      Colors.black
+                                                      Color(0xFF212121)
                                                     ][(color?.computeLuminance() ??
                                                                 0.0) >
                                                             0.5
@@ -1424,7 +1424,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       backgroundColor: secondary,
                                       foregroundColor: [
                                         Colors.white,
-                                        Colors.black
+                                        Color(0xFF212121)
                                       ][(secondary?.computeLuminance() ?? 0.0) >
                                               0.5
                                           ? 1
@@ -1433,8 +1433,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                       onPressed: () {
                                         Playback.instance.open([
                                           ...widget.album.tracks,
-                                          if (Configuration.instance
-                                              .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                          if (Configuration
+                                              .instance.seamlessPlayback)
                                             ...[...Collection.instance.tracks]
                                               ..shuffle(),
                                         ]);
@@ -1464,7 +1464,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       backgroundColor: secondary,
                                       foregroundColor: [
                                         Colors.white,
-                                        Colors.black
+                                        Color(0xFF212121)
                                       ][(secondary?.computeLuminance() ?? 0.0) >
                                               0.5
                                           ? 1
@@ -1496,8 +1496,7 @@ class AlbumScreenState extends State<AlbumScreen>
                               onTap: () => Playback.instance.open(
                                 [
                                   ...widget.album.tracks,
-                                  if (Configuration.instance
-                                      .automaticallyAddOtherSongsFromCollectionToNowPlaying)
+                                  if (Configuration.instance.seamlessPlayback)
                                     ...[...Collection.instance.tracks]
                                       ..shuffle(),
                                 ],

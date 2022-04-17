@@ -124,7 +124,7 @@ class PlaylistTab extends StatelessWidget {
                                           cursorColor:
                                               Theme.of(context).brightness ==
                                                       Brightness.light
-                                                  ? Colors.black
+                                                  ? Color(0xFF212121)
                                                   : Colors.white,
                                           textAlignVertical:
                                               TextAlignVertical.bottom,
@@ -1217,13 +1217,13 @@ class PlaylistScreenState extends State<PlaylistScreen>
                         icon: Icon(
                           Icons.arrow_back,
                           color: widget.playlist.tracks.isNotEmpty
-                              ? ([Colors.white, Colors.black][
+                              ? ([Colors.white, Color(0xFF212121)][
                                   (color?.computeLuminance() ?? 0.0) > 0.5
                                       ? 1
                                       : 0])
                               : Theme.of(context).brightness == Brightness.dark
                                   ? Colors.white
-                                  : Colors.black,
+                                  : Color(0xFF212121),
                         ),
                         iconSize: 24.0,
                         splashRadius: 20.0,
@@ -1255,7 +1255,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                 .textTheme
                                 .headline1
                                 ?.copyWith(
-                                    color: [Colors.black, Colors.white][
+                                    color: [Color(0xFF212121), Colors.white][
                                         (color?.computeLuminance() ?? 0.0) > 0.5
                                             ? 0
                                             : 1]),
@@ -1318,7 +1318,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                           .isNotEmpty
                                                       ? ([
                                                           Colors.white,
-                                                          Colors.black
+                                                          Color(0xFF212121)
                                                         ][(color?.computeLuminance() ??
                                                                   0.0) >
                                                               0.5
@@ -1328,7 +1328,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                                   .brightness ==
                                                               Brightness.dark
                                                           ? Colors.white
-                                                          : Colors.black,
+                                                          : Color(0xFF212121),
                                                   fontSize: 24.0,
                                                 ),
                                             maxLines: 1,
@@ -1392,7 +1392,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                     backgroundColor: secondary,
                                     foregroundColor: [
                                       Colors.white,
-                                      Colors.black
+                                      Color(0xFF212121)
                                     ][(secondary?.computeLuminance() ?? 0.0) >
                                             0.5
                                         ? 1
@@ -1429,7 +1429,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                     backgroundColor: secondary,
                                     foregroundColor: [
                                       Colors.white,
-                                      Colors.black
+                                      Color(0xFF212121)
                                     ][(secondary?.computeLuminance() ?? 0.0) >
                                             0.5
                                         ? 1

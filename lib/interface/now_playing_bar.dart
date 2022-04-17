@@ -17,7 +17,7 @@ import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/state/now_playing_launcher.dart';
+import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -50,7 +50,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
       } else {
         playOrPause.reverse();
       }
-      if (!Configuration.instance.changeNowPlayingBarColorBasedOnPlayingMusic ||
+      if (!Configuration.instance.dynamicNowPlayingBarColoring ||
           Playback.instance.index < 0 ||
           Playback.instance.index >= Playback.instance.tracks.length) {
         return;
@@ -250,8 +250,9 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 color: Colors.transparent,
                                                 child: InkWell(
                                                   onTap: () {
-                                                    NowPlayingLauncher.instance
-                                                        .maximized = true;
+                                                    DesktopNowPlayingController
+                                                        .instance
+                                                        .maximize();
                                                   },
                                                   child: Container(
                                                     color: Colors.black38,
@@ -420,7 +421,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                         Duration(seconds: 10),
                                                   );
                                                 },
-                                              ))
+                                              ),
+                                            )
                                           : Container(),
                                       SizedBox(
                                         width: 12.0,
@@ -513,7 +515,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                   BorderRadius.circular(20.0),
                                               border: playback.isShuffling
                                                   ? Border.all(
-                                                      width: 2.0,
+                                                      width: 1.0,
                                                       color: (palette ??
                                                                   [
                                                                     Theme.of(
@@ -588,7 +590,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 .last
                                                 .isDark
                                             ? Colors.white
-                                            : Colors.black,
+                                            : Color(0xFF212121),
                                         backgroundColor: (palette ??
                                                 [
                                                   Theme.of(context).primaryColor
@@ -648,7 +650,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                   playback.playlistLoopMode !=
                                                           PlaylistLoopMode.none
                                                       ? Border.all(
-                                                          width: 2.0,
+                                                          width: 1.0,
                                                           color: (palette ??
                                                                       [
                                                                         Theme.of(context)
@@ -757,34 +759,35 @@ class NowPlayingBarState extends State<NowPlayingBar>
                               ],
                             ),
                             Expanded(
-                              child: Consumer<NowPlayingLauncher>(
-                                builder: (context, nowPlayingLauncher, _) =>
-                                    Row(
+                              child: Consumer<DesktopNowPlayingController>(
+                                builder:
+                                    (context, DesktopNowPlayingController, _) =>
+                                        Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
                                       onPressed: playback.tracks.isEmpty
                                           ? null
-                                          : nowPlayingLauncher.toggle,
+                                          : DesktopNowPlayingController.toggle,
                                       iconSize: 24.0,
                                       color: (palette ??
                                                   [Theme.of(context).cardColor])
                                               .first
                                               .isDark
                                           ? Colors.white
-                                          : Colors.black,
+                                          : Color(0xFF212121),
                                       splashRadius: 18.0,
                                       tooltip: playback.tracks.isEmpty
                                           ? ''
-                                          : nowPlayingLauncher.maximized
-                                              ? Language
-                                                  .instance.EXIT_NOW_PLAYING
-                                              : Language.instance.NOW_PLAYING,
+                                          : DesktopNowPlayingController.isHidden
+                                              ? Language.instance.NOW_PLAYING
+                                              : Language
+                                                  .instance.EXIT_NOW_PLAYING,
                                       icon: Icon(
-                                        nowPlayingLauncher.maximized
-                                            ? Icons.expand_more
-                                            : Icons.expand_less,
+                                        DesktopNowPlayingController.isHidden
+                                            ? Icons.expand_less
+                                            : Icons.expand_more,
                                       ),
                                     ),
                                     SizedBox(

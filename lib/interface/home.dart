@@ -10,8 +10,8 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
-import 'package:harmonoid/state/now_playing_launcher.dart';
-import 'package:harmonoid/state/now_playing_scroll_hider.dart';
+import 'package:harmonoid/state/desktop_now_playing_controller.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -44,7 +44,8 @@ class HomeState extends State<Home>
   bool isSystemNavigationBackButtonPressed = false;
   final FloatingSearchBarController floatingSearchBarController =
       FloatingSearchBarController();
-  final NowPlayingScrollHider nowPlayingScrollHider = NowPlayingScrollHider();
+  final MobileNowPlayingController mobileNowPlayingController =
+      MobileNowPlayingController();
 
   @override
   void initState() {
@@ -150,7 +151,7 @@ class HomeState extends State<Home>
             create: (context) => Language.instance,
           ),
           ChangeNotifierProvider(
-            create: (context) => NowPlayingLauncher(
+            create: (context) => DesktopNowPlayingController(
               launch: () {
                 navigatorKey.currentState?.pushNamed('/now_playing');
               },
@@ -251,7 +252,7 @@ class HomeState extends State<Home>
                           ),
                         ),
                         MiniNowPlayingBar(
-                          key: nowPlayingScrollHider.barKey,
+                          key: mobileNowPlayingController.barKey,
                         ),
                       ],
                     ),
