@@ -24,8 +24,9 @@ abstract class OverrideWindowDestroy {
   static void initialize() async {
     const channel = const MethodChannel('override_window_destroy');
     channel.setMethodCallHandler((call) async {
-      await Playback.player.dispose();
       await tagger.dispose();
+      await Playback.instance.player.dispose();
+      await Playback.instance.saveAppState();
       channel.invokeMethod('destroy_window');
     });
   }
