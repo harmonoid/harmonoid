@@ -27,6 +27,17 @@ import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
+class _NavigatorObserver extends NavigatorObserver {
+  final VoidCallback onPushRoute;
+
+  _NavigatorObserver(this.onPushRoute);
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    onPushRoute.call();
+  }
+}
+
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
   HomeState createState() => HomeState();
@@ -41,16 +52,28 @@ class HomeState extends State<Home>
   final List<TabRoute> tabControllerRouteStack = <TabRoute>[
     TabRoute(isMobile ? 2 : 0, TabRouteSender.systemNavigationBackButton),
   ];
-  bool isSystemNavigationBackButtonUsed = false;
   final FloatingSearchBarController floatingSearchBarController =
       FloatingSearchBarController();
   final MobileNowPlayingController mobileNowPlayingController =
       MobileNowPlayingController();
 
+  /// [WidgetsBindingObserver.didPushRoute] does not work.
+  late final _NavigatorObserver observer;
+  bool isSystemNavigationBackButtonUsed = false;
+  int routePushCountAfterFloatingSearchBarOpened = 0;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
+    observer = _NavigatorObserver(() {
+      // If some route is pushed after [floatingSearchBarController.isOpen],
+      // then we shouldn't close the [FloatingSearchBar], but rather just
+      // pop the pushed route.
+      if (floatingSearchBarController.isOpen) {
+        routePushCountAfterFloatingSearchBarOpened++;
+      }
+    });
     tabControllerNotifier.addListener(onTabChange);
   }
 
@@ -62,9 +85,17 @@ class HomeState extends State<Home>
   }
 
   void onTabChange() {
+    debugPrint(tabControllerNotifier.value.sender.toString());
+    if (tabControllerRouteStack.last.index ==
+        tabControllerNotifier.value.index) {
+      return;
+    }
     // Avoid adding to the history stack because subsequent
-    // call from [TabRouteSender.pageView] is sent additionally.
+    // call from [TabRouteSender.pageView] is sent additionally
+    // & we don't want to add page-change history caused by
+    // back-button to the navigator stack.
     if (isSystemNavigationBackButtonUsed) {
+      isSystemNavigationBackButtonUsed = false;
     }
     // Since [PageView] reacts to the route change caused by
     // [TabRouteSender.bottomNavigationBar] as well & ends up
@@ -73,29 +104,32 @@ class HomeState extends State<Home>
     else if (this.tabControllerNotifier.value.sender ==
         TabRouteSender.systemNavigationBackButton) {
       isSystemNavigationBackButtonUsed = true;
-    } else if (tabControllerNotifier.value.sender ==
-        TabRouteSender.bottomNavigationBar) {
-      // Do nothing. Additional [TabRouteSender.pageView] sender
-      // call will be sent later on.
     }
-    // Essentially, only [TabRouteSender.pageView] sender when
-    // NOT caused by [TabRouteSender.systemNavigationBackButton]
-    // is added to the stack.
+    // Do nothing. Additional [TabRouteSender.pageView] sender
+    // call will be sent later on.
+    // else if (tabControllerNotifier.value.sender ==
+    //     TabRouteSender.bottomNavigationBar) {
+    // }
     else {
-      if (isSystemNavigationBackButtonUsed) {
-        isSystemNavigationBackButtonUsed = false;
-      } else {
-        tabControllerRouteStack.add(tabControllerNotifier.value);
-      }
+      tabControllerRouteStack.add(tabControllerNotifier.value);
     }
+    debugPrint(tabControllerRouteStack.map((e) => e.index).toString());
   }
 
   @override
-  Future<bool> didPopRoute() async {
+  Future<bool> didPopRoute() {
     // Intercept [didPopRoute] to close the [FloatingSearchBar]
-    // with hardware back button.
+    // with system navigation back button.
     if (floatingSearchBarController.isOpen) {
-      floatingSearchBarController.close();
+      if (routePushCountAfterFloatingSearchBarOpened > 0) {
+        navigatorKey.currentState!.pop();
+        routePushCountAfterFloatingSearchBarOpened--;
+      }
+      // No more route left to pop. Close the [FloatingSearchBar].
+      else {
+        floatingSearchBarController.close();
+        routePushCountAfterFloatingSearchBarOpened = 0;
+      }
     } else if (navigatorKey.currentState!.canPop()) {
       // Any route was pushed to nested [Navigator].
       navigatorKey.currentState!.pop();
@@ -109,8 +143,9 @@ class HomeState extends State<Home>
           tabControllerRouteStack.last.index,
           TabRouteSender.systemNavigationBackButton,
         );
+        debugPrint(
+            '${TabRouteSender.systemNavigationBackButton}: ${tabControllerRouteStack.last.index}');
       } else {
-        isSystemNavigationBackButtonUsed = false;
         // Show application exit dialog.
         showDialog(
           context: context,
@@ -140,7 +175,7 @@ class HomeState extends State<Home>
         );
       }
     }
-    return true;
+    return Future.value(true);
   }
 
   @override
@@ -246,6 +281,7 @@ class HomeState extends State<Home>
                           child: Navigator(
                             key: this.navigatorKey,
                             initialRoute: '/collection_screen',
+                            observers: [observer],
                             onGenerateRoute: (RouteSettings routeSettings) {
                               Route<dynamic>? route;
                               if (routeSettings.name == '/collection_screen') {
