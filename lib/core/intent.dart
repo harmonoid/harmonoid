@@ -9,7 +9,6 @@
 import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
-import 'package:path/path.dart' as path;
 import 'package:libmpv/libmpv.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:ytm_client/ytm_client.dart' hide Media, Track;
@@ -17,7 +16,8 @@ import 'package:ytm_client/ytm_client.dart' hide Media, Track;
 import 'package:harmonoid/models/media.dart' hide Media;
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/state/now_playing_launcher.dart';
+import 'package:harmonoid/state/desktop_now_playing_controller.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/file_system.dart';
 
 /// Intent
@@ -85,10 +85,13 @@ class Intent {
   }
 
   /// Starts playing the possibly opened file & saves its metadata before doing it.
+  /// If no file was opened, then load the last playing playlist from [AppState].
   ///
   Future<void> play() async {
+    final Tagger tagger = Tagger();
     if (file != null) {
-      final metadata = <String, String>{
+      await Playback.instance.loadAppState(open: false);
+      final metadata = <String, dynamic>{
         'uri': file!.uri.toString(),
       };
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -102,28 +105,24 @@ class Intent {
           debugPrint(stacktrace.toString());
         }
         final track = Track.fromTagger(metadata);
-        Playback.instance.open([track]);
-        NowPlayingLauncher.instance.maximized = true;
+        await Playback.instance.open([track]);
+        DesktopNowPlayingController.instance.maximize();
       } else {
-        final _metadata = await MetadataRetriever.fromFile(file!);
+        final _metadata = await MetadataRetriever.fromUri(
+          file!.uri,
+          coverDirectory: Collection.instance.albumArtDirectory,
+        );
         metadata.addAll(_metadata.toJson().cast());
         final track = Track.fromJson(metadata);
-        if (_metadata.albumArt != null) {
-          await File(path.join(
-            Collection.instance.cacheDirectory.path,
-            kAlbumArtsDirectoryName,
-            track.albumArtFileName,
-          )).writeAsBytes(_metadata.albumArt!);
-        }
-        Playback.instance.open([track]);
-        NowPlayingLauncher.instance.maximized = true;
+        await Playback.instance.open([track]);
+        MobileNowPlayingController.instance.maximize();
       }
-    }
-    if (directory != null) {
+    } else if (directory != null) {
+      await Playback.instance.loadAppState(open: false);
       bool playing = false;
       for (final file in await directory!.list_()) {
         if (kSupportedFileTypes.contains(file.extension)) {
-          final metadata = <String, String>{
+          final metadata = <String, dynamic>{
             'uri': file.uri.toString(),
           };
           if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -138,27 +137,23 @@ class Intent {
             }
             final track = Track.fromTagger(metadata);
             if (!playing) {
-              Playback.instance.open([track]);
-              NowPlayingLauncher.instance.maximized = true;
+              await Playback.instance.open([track]);
+              DesktopNowPlayingController.instance.maximize();
               playing = true;
             } else {
               Playback.instance.add([track]);
             }
           } else {
             try {
-              final _metadata = await MetadataRetriever.fromFile(file);
+              final _metadata = await MetadataRetriever.fromUri(
+                file.uri,
+                coverDirectory: Collection.instance.albumArtDirectory,
+              );
               metadata.addAll(_metadata.toJson().cast());
               final track = Track.fromJson(metadata);
-              if (_metadata.albumArt != null) {
-                await File(path.join(
-                  Collection.instance.cacheDirectory.path,
-                  kAlbumArtsDirectoryName,
-                  track.albumArtFileName,
-                )).writeAsBytes(_metadata.albumArt!);
-              }
               if (!playing) {
-                Playback.instance.open([track]);
-                NowPlayingLauncher.instance.maximized = true;
+                await Playback.instance.open([track]);
+                MobileNowPlayingController.instance.maximize();
                 playing = true;
               } else {
                 Playback.instance.add([track]);
@@ -169,6 +164,14 @@ class Intent {
             }
           }
         }
+      }
+    } else {
+      await Playback.instance.loadAppState();
+      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        // no-op for desktop platforms.
+      } else if (Platform.isAndroid || Platform.isIOS) {
+        // Show the [MiniNowPlayingBar] if a playlist was opened during last running instance of the app.
+        MobileNowPlayingController.instance.show();
       }
     }
   }
@@ -183,14 +186,19 @@ class Intent {
   ///
   Future<void> playUri(Uri uri) async {
     if (Plugins.isWebMedia(uri)) {
-      Playback.instance.open([
+      await Playback.instance.open([
         Track.fromWebTrack((await YTMClient.player(uri.toString()))!.toJson())
       ]);
+      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        DesktopNowPlayingController.instance.maximize();
+      } else if (Platform.isAndroid || Platform.isIOS) {
+        MobileNowPlayingController.instance.maximize();
+      }
     } else if (uri.isScheme('HTTP') ||
         uri.isScheme('HTTPS') ||
         uri.isScheme('FTP') ||
         uri.isScheme('RSTP')) {
-      final metadata = <String, String>{
+      final metadata = <String, dynamic>{
         'uri': uri.toString(),
       };
       metadata.addAll(
@@ -200,11 +208,15 @@ class Intent {
         ),
       );
       final track = Track.fromTagger(metadata);
-      Playback.instance.open([track]);
-      NowPlayingLauncher.instance.maximized = true;
+      await Playback.instance.open([track]);
+      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+        DesktopNowPlayingController.instance.maximize();
+      } else if (Platform.isAndroid || Platform.isIOS) {
+        MobileNowPlayingController.instance.maximize();
+      }
     } else if (FileSystemEntity.typeSync(uri.toFilePath()) ==
         FileSystemEntityType.file) {
-      final metadata = <String, String>{
+      final metadata = <String, dynamic>{
         'uri': uri.toString(),
       };
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -220,29 +232,32 @@ class Intent {
           debugPrint(stacktrace.toString());
         }
         final track = Track.fromTagger(metadata);
-        Playback.instance.open([track]);
-        NowPlayingLauncher.instance.maximized = true;
+        await Playback.instance.open([track]);
+        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+          DesktopNowPlayingController.instance.maximize();
+        } else if (Platform.isAndroid || Platform.isIOS) {
+          MobileNowPlayingController.instance.maximize();
+        }
       } else {
-        final _metadata =
-            await MetadataRetriever.fromFile(File(uri.toFilePath()));
+        final _metadata = await MetadataRetriever.fromUri(
+          uri,
+          coverDirectory: Collection.instance.albumArtDirectory,
+        );
         metadata.addAll(_metadata.toJson().cast());
         final track = Track.fromJson(metadata);
-        if (_metadata.albumArt != null) {
-          await File(path.join(
-            Collection.instance.cacheDirectory.path,
-            kAlbumArtsDirectoryName,
-            track.albumArtFileName,
-          )).writeAsBytes(_metadata.albumArt!);
+        await Playback.instance.open([track]);
+        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+          DesktopNowPlayingController.instance.maximize();
+        } else if (Platform.isAndroid || Platform.isIOS) {
+          MobileNowPlayingController.instance.maximize();
         }
-        Playback.instance.open([track]);
-        NowPlayingLauncher.instance.maximized = true;
       }
     } else if (FileSystemEntity.typeSync(uri.toFilePath()) ==
         FileSystemEntityType.directory) {
       bool playing = false;
       for (final file in await Directory(uri.toFilePath()).list_()) {
         if (kSupportedFileTypes.contains(file.extension)) {
-          final metadata = <String, String>{
+          final metadata = <String, dynamic>{
             'uri': file.uri.toString(),
           };
           if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -257,27 +272,33 @@ class Intent {
             }
             final track = Track.fromTagger(metadata);
             if (!playing) {
-              Playback.instance.open([track]);
-              NowPlayingLauncher.instance.maximized = true;
+              await Playback.instance.open([track]);
+              if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+                DesktopNowPlayingController.instance.maximize();
+              } else if (Platform.isAndroid || Platform.isIOS) {
+                MobileNowPlayingController.instance.maximize();
+              }
               playing = true;
             } else {
               Playback.instance.add([track]);
             }
           } else {
             try {
-              final _metadata = await MetadataRetriever.fromFile(file);
+              final _metadata = await MetadataRetriever.fromUri(
+                file.uri,
+                coverDirectory: Collection.instance.albumArtDirectory,
+              );
               metadata.addAll(_metadata.toJson().cast());
               final track = Track.fromJson(metadata);
-              if (_metadata.albumArt != null) {
-                await File(path.join(
-                  Collection.instance.cacheDirectory.path,
-                  kAlbumArtsDirectoryName,
-                  track.albumArtFileName,
-                )).writeAsBytes(_metadata.albumArt!);
-              }
               if (!playing) {
-                Playback.instance.open([track]);
-                NowPlayingLauncher.instance.maximized = true;
+                await Playback.instance.open([track]);
+                if (Platform.isWindows ||
+                    Platform.isLinux ||
+                    Platform.isMacOS) {
+                  DesktopNowPlayingController.instance.maximize();
+                } else if (Platform.isAndroid || Platform.isIOS) {
+                  MobileNowPlayingController.instance.maximize();
+                }
                 playing = true;
               } else {
                 Playback.instance.add([track]);
