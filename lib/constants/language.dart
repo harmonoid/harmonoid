@@ -249,6 +249,7 @@ class Language extends Strings with ChangeNotifier {
     this.DESCENDING = asset['DESCENDING']!;
     this.DISCORD = asset['DISCORD']!;
     this.DISCOVERING_FILES = asset['DISCOVERING_FILES']!;
+    this.DONATE = asset['DONATE']!;
     this.DOWNLOAD_UPDATE = asset['DOWNLOAD_UPDATE']!;
     this.ENABLE_125_SCALING = asset['ENABLE_125_SCALING']!;
     this.ENABLE_ACRYLIC_BLUR = asset['ENABLE_ACRYLIC_BLUR']!;
@@ -309,6 +310,7 @@ class Language extends Strings with ChangeNotifier {
     this.PREVIOUS = asset['PREVIOUS']!;
     this.PROXY_SUBTITLE = asset['PROXY_SUBTITLE']!;
     this.PROXY_TITLE = asset['PROXY_TITLE']!;
+    this.PROXY_URL = asset['PROXY_URL']!;
     this.RECOMMENDATIONS = asset['RECOMMENDATIONS']!;
     this.REFRESH = asset['REFRESH']!;
     this.REFRESH_INFORMATION = asset['REFRESH_INFORMATION']!;

@@ -52,6 +52,7 @@ class Strings {
   late String DESCENDING;
   late String DISCORD;
   late String DISCOVERING_FILES;
+  late String DONATE;
   late String DOWNLOAD_UPDATE;
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;
@@ -112,6 +113,7 @@ class Strings {
   late String PREVIOUS;
   late String PROXY_SUBTITLE;
   late String PROXY_TITLE;
+  late String PROXY_URL;
   late String RECOMMENDATIONS;
   late String REFRESH;
   late String REFRESH_INFORMATION;
