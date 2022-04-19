@@ -40,8 +40,11 @@ class DesktopNowPlayingController extends ChangeNotifier {
   void toggle() {
     if (isHidden) {
       launch();
+      isHidden = false;
     } else {
       exit();
+      isHidden = true;
     }
+    notifyListeners();
   }
 }
