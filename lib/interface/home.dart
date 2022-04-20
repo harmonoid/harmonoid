@@ -90,6 +90,17 @@ class HomeState extends State<Home>
         tabControllerNotifier.value.index) {
       return;
     }
+    // Remove any pushed [Route]s from the navigator stack upon tab
+    // change.
+    if (tabControllerNotifier.value.sender ==
+        TabRouteSender.bottomNavigationBar) {
+      if (floatingSearchBarController.isOpen) {
+        floatingSearchBarController.close();
+      }
+      if (navigatorKey.currentState!.canPop()) {
+        navigatorKey.currentState!.popUntil((route) => route.isFirst);
+      }
+    }
     // Avoid adding to the history stack because subsequent
     // call from [TabRouteSender.pageView] is sent additionally
     // & we don't want to add page-change history caused by
@@ -122,7 +133,9 @@ class HomeState extends State<Home>
     // with system navigation back button.
     if (floatingSearchBarController.isOpen) {
       if (routePushCountAfterFloatingSearchBarOpened > 0) {
-        navigatorKey.currentState!.pop();
+        if (navigatorKey.currentState!.canPop()) {
+          navigatorKey.currentState!.pop();
+        }
         routePushCountAfterFloatingSearchBarOpened--;
       }
       // No more route left to pop. Close the [FloatingSearchBar].
@@ -180,120 +193,80 @@ class HomeState extends State<Home>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (context) => Collection.instance,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => Collection.instance,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CollectionRefresh.instance,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Playback.instance,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Lyrics.instance,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Language.instance,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => DesktopNowPlayingController(
+            launch: () {
+              navigatorKey.currentState?.pushNamed('/now_playing');
+            },
+            exit: () {
+              navigatorKey.currentState?.maybePop();
+            },
           ),
-          ChangeNotifierProvider(
-            create: (context) => CollectionRefresh.instance,
-          ),
-          ChangeNotifierProvider(
-            create: (context) => Playback.instance,
-          ),
-          ChangeNotifierProvider(
-            create: (context) => Lyrics.instance,
-          ),
-          ChangeNotifierProvider(
-            create: (context) => Language.instance,
-          ),
-          ChangeNotifierProvider(
-            create: (context) => DesktopNowPlayingController(
-              launch: () {
-                navigatorKey.currentState?.pushNamed('/now_playing');
-              },
-              exit: () {
-                navigatorKey.currentState?.maybePop();
-              },
-            ),
-          ),
-        ],
-        builder: (context, _) => LayoutBuilder(
-          builder: (context, _) => isDesktop
-              ? Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(
-                        bottom: kDesktopNowPlayingBarHeight,
-                      ),
-                      child: Consumer<Language>(
-                        builder: (context, _, __) => Scaffold(
-                          resizeToAvoidBottomInset: false,
-                          body: HeroControllerScope(
-                            controller:
-                                MaterialApp.createMaterialHeroController(),
-                            child: Navigator(
-                              key: this.navigatorKey,
-                              initialRoute: '/collection_screen',
-                              onGenerateRoute: (RouteSettings routeSettings) {
-                                Route<dynamic>? route;
-                                if (routeSettings.name ==
-                                    '/collection_screen') {
-                                  route = MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        CollectionScreen(
-                                      tabControllerNotifier:
-                                          tabControllerNotifier,
-                                      floatingSearchBarController:
-                                          floatingSearchBarController,
-                                    ),
-                                  );
-                                }
-                                if (routeSettings.name == '/now_playing') {
-                                  route = PageRouteBuilder(
-                                    transitionDuration:
-                                        Duration(milliseconds: 600),
-                                    reverseTransitionDuration:
-                                        Duration(milliseconds: 300),
-                                    pageBuilder: (context, animation,
-                                            secondaryAnimation) =>
-                                        SharedAxisTransition(
-                                      transitionType:
-                                          SharedAxisTransitionType.vertical,
-                                      fillColor: Colors.transparent,
-                                      animation: animation,
-                                      secondaryAnimation: secondaryAnimation,
-                                      child: NowPlayingScreen(),
-                                    ),
-                                  );
-                                }
-                                return route;
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
+        ),
+      ],
+      builder: (context, _) => LayoutBuilder(
+        builder: (context, _) => isDesktop
+            ? Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(
+                      bottom: kDesktopNowPlayingBarHeight,
                     ),
-                    NowPlayingBar(),
-                  ],
-                )
-              : Consumer<Language>(
-                  builder: (context, _, __) => Scaffold(
-                    resizeToAvoidBottomInset: false,
-                    body: Stack(
-                      children: [
-                        HeroControllerScope(
+                    child: Consumer<Language>(
+                      builder: (context, _, __) => Scaffold(
+                        resizeToAvoidBottomInset: false,
+                        body: HeroControllerScope(
                           controller:
                               MaterialApp.createMaterialHeroController(),
                           child: Navigator(
                             key: this.navigatorKey,
                             initialRoute: '/collection_screen',
-                            observers: [observer],
                             onGenerateRoute: (RouteSettings routeSettings) {
                               Route<dynamic>? route;
                               if (routeSettings.name == '/collection_screen') {
                                 route = MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      NowPlayingBarScrollHideNotifier(
-                                    child: CollectionScreen(
-                                      tabControllerNotifier:
-                                          tabControllerNotifier,
-                                      floatingSearchBarController:
-                                          floatingSearchBarController,
-                                    ),
+                                      CollectionScreen(
+                                    tabControllerNotifier:
+                                        tabControllerNotifier,
+                                    floatingSearchBarController:
+                                        floatingSearchBarController,
+                                  ),
+                                );
+                              }
+                              if (routeSettings.name == '/now_playing') {
+                                route = PageRouteBuilder(
+                                  transitionDuration:
+                                      Duration(milliseconds: 600),
+                                  reverseTransitionDuration:
+                                      Duration(milliseconds: 300),
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      SharedAxisTransition(
+                                    transitionType:
+                                        SharedAxisTransitionType.vertical,
+                                    fillColor: Colors.transparent,
+                                    animation: animation,
+                                    secondaryAnimation: secondaryAnimation,
+                                    child: NowPlayingScreen(),
                                   ),
                                 );
                               }
@@ -301,19 +274,54 @@ class HomeState extends State<Home>
                             },
                           ),
                         ),
-                        MiniNowPlayingBar(
-                          key: mobileNowPlayingController.barKey,
-                        ),
-                      ],
+                      ),
                     ),
-                    bottomNavigationBar: isMobile
-                        ? MobileBottomNavigationBar(
-                            tabControllerNotifier: tabControllerNotifier,
-                          )
-                        : null,
                   ),
+                  NowPlayingBar(),
+                ],
+              )
+            : Consumer<Language>(
+                builder: (context, _, __) => Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  body: Stack(
+                    children: [
+                      HeroControllerScope(
+                        controller: MaterialApp.createMaterialHeroController(),
+                        child: Navigator(
+                          key: this.navigatorKey,
+                          initialRoute: '/collection_screen',
+                          observers: [observer],
+                          onGenerateRoute: (RouteSettings routeSettings) {
+                            Route<dynamic>? route;
+                            if (routeSettings.name == '/collection_screen') {
+                              route = MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    NowPlayingBarScrollHideNotifier(
+                                  child: CollectionScreen(
+                                    tabControllerNotifier:
+                                        tabControllerNotifier,
+                                    floatingSearchBarController:
+                                        floatingSearchBarController,
+                                  ),
+                                ),
+                              );
+                            }
+                            return route;
+                          },
+                        ),
+                      ),
+                      MiniNowPlayingBar(
+                        key: mobileNowPlayingController.barKey,
+                      ),
+                    ],
+                  ),
+                  bottomNavigationBar: isMobile
+                      ? MobileBottomNavigationBar(
+                          tabControllerNotifier: tabControllerNotifier,
+                        )
+                      : null,
                 ),
-        ),
+              ),
       ),
     );
   }
