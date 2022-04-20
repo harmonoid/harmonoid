@@ -108,6 +108,7 @@ class SearchTabState extends State<SearchTab> {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => Scaffold(
+                                        resizeToAvoidBottomInset: false,
                                         body: Container(
                                           height: MediaQuery.of(context)
                                               .size
@@ -188,6 +189,7 @@ class SearchTabState extends State<SearchTab> {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => Scaffold(
+                                        resizeToAvoidBottomInset: false,
                                         body: Container(
                                           height: MediaQuery.of(context)
                                               .size
@@ -407,6 +409,7 @@ class _FloatingSearchBarSearchTabState
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => Scaffold(
+                                    resizeToAvoidBottomInset: false,
                                     appBar: AppBar(
                                       title: Text(
                                         Language.instance.ALBUM,
@@ -475,6 +478,7 @@ class _FloatingSearchBarSearchTabState
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => Scaffold(
+                                    resizeToAvoidBottomInset: false,
                                     appBar: AppBar(
                                       title: Text(
                                         Language.instance.ARTIST,

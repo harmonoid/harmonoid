@@ -686,6 +686,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
   bool detailsVisible = false;
   bool detailsLoaded = false;
   ScrollController controller = ScrollController(initialScrollOffset: 96.0);
+  ScrollPhysics? physics = NeverScrollableScrollPhysics();
 
   @override
   void initState() {
@@ -725,6 +726,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
           Timer(Duration(milliseconds: 50), () {
             setState(() {
               detailsLoaded = true;
+              physics = null;
             });
           });
         });
@@ -1190,6 +1192,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
               children: [
                 CustomScrollView(
                   controller: controller,
+                  physics: physics,
                   slivers: [
                     SliverAppBar(
                       systemOverlayStyle: widget.playlist.tracks.isNotEmpty

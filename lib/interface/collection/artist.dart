@@ -367,6 +367,7 @@ class ArtistScreenState extends State<ArtistScreen>
   bool detailsVisible = false;
   bool detailsLoaded = false;
   ScrollController controller = ScrollController(initialScrollOffset: 96.0);
+  ScrollPhysics? physics = NeverScrollableScrollPhysics();
 
   @override
   void initState() {
@@ -405,6 +406,7 @@ class ArtistScreenState extends State<ArtistScreen>
           Timer(Duration(milliseconds: 50), () {
             setState(() {
               detailsLoaded = true;
+              physics = null;
             });
           });
         });
@@ -945,6 +947,7 @@ class ArtistScreenState extends State<ArtistScreen>
                 children: [
                   NowPlayingBarScrollHideNotifier(
                     child: CustomScrollView(
+                      physics: physics,
                       controller: controller,
                       slivers: [
                         SliverAppBar(

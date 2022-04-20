@@ -50,6 +50,7 @@ class TrackTab extends StatelessWidget {
                     },
                     onSecondaryPress: (index, position) async {
                       var result = await showMenu(
+                        elevation: 4.0,
                         context: context,
                         position: RelativeRect.fromRect(
                           Offset(position.left, position.top) &
@@ -388,13 +389,14 @@ class TrackTileState extends State<TrackTile> {
           : Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () => Playback.instance.open(
-                  widget.index == null
-                      ? <Track>[widget.track]
-                      : widget.group ?? collection.tracks,
-                  index: widget.index ?? 0,
-                ),
-                onLongPress: _showBottomSheet,
+                onTap: widget.onPressed ??
+                    () => Playback.instance.open(
+                          widget.index == null
+                              ? <Track>[widget.track]
+                              : widget.group ?? collection.tracks,
+                          index: widget.index ?? 0,
+                        ),
+                onLongPress: widget.onPressed != null ? null : _showBottomSheet,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -433,11 +435,16 @@ class TrackTileState extends State<TrackTile> {
                                   height: 2.0,
                                 ),
                                 Text(
-                                  widget.track.albumName.overflow +
-                                      ' • ' +
+                                  [
+                                    if (widget.track.albumName.isNotEmpty)
+                                      widget.track.albumName.overflow,
+                                    if (widget.track.trackArtistNames
+                                        .join('')
+                                        .isNotEmpty)
                                       widget.track.trackArtistNames
                                           .take(2)
-                                          .join(', '),
+                                          .join(', ')
+                                  ].join(' • '),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: Theme.of(context).textTheme.headline3,
@@ -446,17 +453,18 @@ class TrackTileState extends State<TrackTile> {
                             ),
                           ),
                           const SizedBox(width: 12.0),
-                          Container(
-                            width: 64.0,
-                            height: 64.0,
-                            alignment: Alignment.center,
-                            child: IconButton(
-                              onPressed: _showBottomSheet,
-                              icon: Icon(Icons.more_vert),
-                              iconSize: 24.0,
-                              splashRadius: 20.0,
+                          if (widget.onPressed == null)
+                            Container(
+                              width: 64.0,
+                              height: 64.0,
+                              alignment: Alignment.center,
+                              child: IconButton(
+                                onPressed: _showBottomSheet,
+                                icon: Icon(Icons.more_vert),
+                                iconSize: 24.0,
+                                splashRadius: 20.0,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),

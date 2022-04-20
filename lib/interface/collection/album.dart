@@ -502,6 +502,7 @@ class AlbumTile extends StatelessWidget {
                         onPressed: () async {
                           await Collection.instance.delete(album);
                           Navigator.of(subContext).pop();
+                          Navigator.of(context).pop();
                         },
                         child: Text(Language.instance.YES),
                       ),
@@ -605,6 +606,7 @@ class AlbumScreenState extends State<AlbumScreen>
   bool detailsVisible = false;
   bool detailsLoaded = false;
   ScrollController controller = ScrollController(initialScrollOffset: 136.0);
+  ScrollPhysics? physics = NeverScrollableScrollPhysics();
 
   @override
   void initState() {
@@ -646,6 +648,7 @@ class AlbumScreenState extends State<AlbumScreen>
           Timer(Duration(milliseconds: 50), () {
             setState(() {
               detailsLoaded = true;
+              physics = null;
             });
           });
         });
@@ -1190,6 +1193,7 @@ class AlbumScreenState extends State<AlbumScreen>
                 NowPlayingBarScrollHideNotifier(
                   child: CustomScrollView(
                     controller: controller,
+                    physics: physics,
                     slivers: [
                       SliverAppBar(
                         systemOverlayStyle: SystemUiOverlayStyle(
