@@ -31,12 +31,11 @@ class ExperimentalSettingState extends State<ExperimentalSetting> {
             subtitle: Language.instance.AUTO_REFRESH_SETTING,
             onChanged: (_) => Configuration.instance
                 .save(
-                  automaticallyRefreshCollectionOnFreshStart: !Configuration
-                      .instance.automaticallyRefreshCollectionOnFreshStart,
+                  automaticMusicLookup:
+                      !Configuration.instance.automaticMusicLookup,
                 )
                 .then((value) => setState(() {})),
-            value: Configuration
-                .instance.automaticallyRefreshCollectionOnFreshStart,
+            value: Configuration.instance.automaticMusicLookup,
           ),
         ],
       ),

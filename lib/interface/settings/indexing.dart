@@ -38,9 +38,7 @@ class IndexingState extends State<IndexingSetting> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 2.0,
-            ),
+            const SizedBox(height: 2.0),
             if (isMobile)
               CorrectedListTile(
                 onTap: controller.isCompleted
@@ -97,17 +95,16 @@ class IndexingState extends State<IndexingSetting> {
                                 ? _addNewFolder
                                 : _showProgressDialog,
                             child: Text(
-                              Language.instance.ADD_NEW_FOLDER,
+                              Language.instance.ADD_NEW_FOLDER.toUpperCase(),
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
                             ),
-                            padding: EdgeInsets.zero,
                           ),
                         ],
                       ),
                     ),
-                  if (isMobile) SizedBox(height: 8.0),
+                  SizedBox(height: 8.0),
                   Container(
                     margin: EdgeInsets.only(left: 8.0),
                     child: Column(
@@ -141,7 +138,7 @@ class IndexingState extends State<IndexingSetting> {
                                           size: 32.0,
                                         ),
                                       ),
-                                      SizedBox(width: 16.0),
+                                      SizedBox(width: isDesktop ? 2.0 : 16.0),
                                       Expanded(
                                         child: Text(
                                           directory.path
@@ -150,9 +147,11 @@ class IndexingState extends State<IndexingSetting> {
                                                 '',
                                               )
                                               .overflow,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle1,
+                                          style: isMobile
+                                              ? Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1
+                                              : null,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -350,6 +349,7 @@ class IndexingState extends State<IndexingSetting> {
                   if (isDesktop)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
                         MaterialButton(
                           onPressed: controller.progress != controller.total
@@ -367,8 +367,8 @@ class IndexingState extends State<IndexingSetting> {
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
-                          padding: EdgeInsets.zero,
                         ),
+                        const SizedBox(width: 2.0),
                         MaterialButton(
                           onPressed: controller.progress != controller.total
                               ? _showProgressDialog
@@ -385,13 +385,15 @@ class IndexingState extends State<IndexingSetting> {
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
-                          padding: EdgeInsets.zero,
                         ),
                       ],
                     ),
                   if (isDesktop)
                     Padding(
-                      padding: EdgeInsets.only(left: 8.0),
+                      padding: EdgeInsets.only(
+                        left: 8.0,
+                        top: 4.0,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

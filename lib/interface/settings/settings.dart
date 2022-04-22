@@ -8,6 +8,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/interface/settings/desktop_header.dart';
 
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -36,8 +37,10 @@ class Settings extends StatelessWidget {
                     top: desktopTitleBarHeight + kDesktopAppBarHeight,
                   ),
                   child: CustomListView(
+                    cacheExtent: MediaQuery.of(context).size.height * 4,
                     shrinkWrap: true,
                     children: [
+                      const DesktopHeader(),
                       const SizedBox(height: 4.0),
                       IndexingSetting(),
                       ThemeSetting(),
@@ -45,7 +48,6 @@ class Settings extends StatelessWidget {
                       ExperimentalSetting(),
                       ProxySetting(),
                       LanguageSetting(),
-                      AboutSetting(),
                       VersionSetting(),
                       const SizedBox(height: 8.0),
                     ],
@@ -55,6 +57,7 @@ class Settings extends StatelessWidget {
             ),
           )
         : Scaffold(
+            resizeToAvoidBottomInset: false,
             appBar: AppBar(
               title: Text(
                 Language.instance.SETTING,
@@ -67,15 +70,17 @@ class Settings extends StatelessWidget {
                 children: [
                   const SizedBox(height: 4.0),
                   IndexingSetting(),
-                  if (isMobile) Divider(thickness: 1.0),
+                  Divider(thickness: 1.0),
                   ThemeSetting(),
-                  if (isMobile) Divider(thickness: 1.0),
+                  Divider(thickness: 1.0),
                   MiscellaneousSetting(),
-                  if (isMobile) Divider(thickness: 1.0),
+                  Divider(thickness: 1.0),
                   ExperimentalSetting(),
-                  if (isMobile) Divider(thickness: 1.0),
+                  Divider(thickness: 1.0),
+                  ProxySetting(),
+                  Divider(thickness: 1.0),
                   LanguageSetting(),
-                  if (isMobile) Divider(thickness: 1.0),
+                  Divider(thickness: 1.0),
                   VersionSetting(),
                   const SizedBox(height: 8.0),
                 ],
@@ -142,21 +147,7 @@ class SettingsTile extends StatelessWidget {
                 ],
               ),
             ),
-          if (isMobile)
-            Padding(
-              padding: EdgeInsets.only(
-                left: 16.0,
-                top: 12.0,
-                bottom: 8.0,
-              ),
-              child: Text(
-                this.title!.toUpperCase(),
-                style: Theme.of(context).textTheme.overline?.copyWith(
-                      color: Theme.of(context).textTheme.headline3?.color,
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
-            ),
+          if (isMobile) SubHeader(this.title!),
           Container(
             margin: this.margin ?? EdgeInsets.zero,
             child: this.child,

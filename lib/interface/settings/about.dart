@@ -286,14 +286,8 @@ class AboutPageState extends State<AboutPage> {
                                 child: CircleAvatar(
                                   radius: 36.0,
                                   backgroundColor: Theme.of(context).cardColor,
-                                  backgroundImage: (repository == null ||
-                                          this
-                                              .repository!
-                                              .containsKey('message'))
-                                      ? null
-                                      : NetworkImage(
-                                          'https://avatars.githubusercontent.com/u/75374037?s=200&v=4',
-                                        ),
+                                  backgroundImage:
+                                      AssetImage('assets/images/project.png'),
                                 ),
                               ),
                               Column(
@@ -381,45 +375,6 @@ class AboutPageState extends State<AboutPage> {
                   ),
                   SizedBox(
                     height: 8.0,
-                  ),
-                  Row(
-                    children: [
-                      const SizedBox(width: 16.0),
-                      // Remove these links. Just for the sake of existence...
-                      MaterialButton(
-                        onPressed: () {
-                          launch('https://www.patreon.com/harmonoid');
-                        },
-                        child: Text(
-                          'PATREON',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                        ),
-                      ),
-                      MaterialButton(
-                        onPressed: () {
-                          launch('https://www.paypal.me/alexmercerind');
-                        },
-                        child: Text(
-                          'PAYPAL',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                        ),
-                      ),
-                      MaterialButton(
-                        onPressed: () {
-                          launch('https://www.buymeacoffee.com/alexmercerind');
-                        },
-                        child: Text(
-                          'BUY ME A COFFEE',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                   SizedBox(
                     height: 12.0,
