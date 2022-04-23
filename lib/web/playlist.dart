@@ -11,6 +11,8 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:harmonoid/web/web.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -52,7 +54,8 @@ class WebPlaylistLargeTile extends StatelessWidget {
           playlist.continuation = null;
           final thumbnails = playlist.thumbnails.values.toList();
           precacheImage(
-            ExtendedNetworkImageProvider(thumbnails[thumbnails.length - 2]),
+            ExtendedNetworkImageProvider(thumbnails[thumbnails.length - 2],
+                cache: true),
             context,
           );
           Navigator.of(context).push(
@@ -74,7 +77,8 @@ class WebPlaylistLargeTile extends StatelessWidget {
                     tag: 'album_art_${playlist.id}',
                     child: ExtendedImage(
                       image: ExtendedNetworkImageProvider(
-                          playlist.thumbnails.values.skip(1).first),
+                          playlist.thumbnails.values.skip(1).first,
+                          cache: true),
                       fit: BoxFit.cover,
                       height: width,
                       width: width,
@@ -129,7 +133,8 @@ class WebPlaylistTile extends StatelessWidget {
           playlist.continuation = null;
           final thumbnails = playlist.thumbnails.values.toList();
           precacheImage(
-            ExtendedNetworkImageProvider(thumbnails[thumbnails.length - 2]),
+            ExtendedNetworkImageProvider(thumbnails[thumbnails.length - 2],
+                cache: true),
             context,
           );
           Navigator.of(context).push(
@@ -143,10 +148,6 @@ class WebPlaylistTile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Divider(
-              height: 1.0,
-              indent: 80.0,
-            ),
             Container(
               height: 64.0,
               alignment: Alignment.center,
@@ -195,6 +196,10 @@ class WebPlaylistTile extends StatelessWidget {
                 ],
               ),
             ),
+            const Divider(
+              height: 1.0,
+              indent: 80.0,
+            ),
           ],
         ),
       ),
@@ -219,7 +224,13 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
       PagingController(firstPageKey: 0);
   int last = 0;
   ScrollController scrollController =
-      ScrollController(initialScrollOffset: 0.0);
+      ScrollController(initialScrollOffset: isMobile ? 96.0 : 0.0);
+  Color? secondary;
+  int? hovered;
+  bool reactToSecondaryPress = false;
+  bool detailsVisible = false;
+  bool detailsLoaded = false;
+  ScrollPhysics? physics = NeverScrollableScrollPhysics();
 
   bool isDark(BuildContext context) =>
       (0.299 *
@@ -303,6 +314,53 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
           }
         },
       );
+    }
+    if (isMobile) {
+      PaletteGenerator.fromImageProvider(ResizeImage.resizeIfNeeded(
+              100,
+              100,
+              ExtendedNetworkImageProvider(
+                  widget.playlist.thumbnails.values
+                      .toList()[widget.playlist.thumbnails.length - 2],
+                  cache: true)))
+          .then((palette) {
+        setState(() {
+          color = palette.colors.first;
+          secondary = palette.colors.last;
+          detailsVisible = true;
+        });
+      });
+      Timer(Duration(milliseconds: 100), () {
+        this
+            .scrollController
+            .animateTo(
+              0.0,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            )
+            .then((_) {
+          Timer(Duration(milliseconds: 50), () {
+            setState(() {
+              detailsLoaded = true;
+              physics = null;
+            });
+          });
+        });
+      });
+
+      scrollController.addListener(() {
+        if (scrollController.offset < 36.0) {
+          if (!detailsVisible) {
+            setState(() {
+              detailsVisible = true;
+            });
+          }
+        } else if (detailsVisible) {
+          setState(() {
+            detailsVisible = false;
+          });
+        }
+      });
     }
   }
 
@@ -391,12 +449,11 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                       padding:
                                                           EdgeInsets.all(8.0),
                                                       child: ExtendedImage(
-                                                        image:
-                                                            ExtendedNetworkImageProvider(
-                                                          thumbnails[thumbnails
-                                                                  .length -
-                                                              2],
-                                                        ),
+                                                        image: ExtendedNetworkImageProvider(
+                                                            thumbnails[thumbnails
+                                                                    .length -
+                                                                2],
+                                                            cache: true),
                                                         height: 256.0,
                                                         width: 256.0,
                                                         fit: BoxFit.cover,
@@ -610,7 +667,14 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                           children: [
                             Text(
                               elevation != 0.0 ? widget.playlist.name : '',
-                              style: Theme.of(context).textTheme.headline1,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline1
+                                  ?.copyWith(
+                                    color: isDark(context)
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                             ),
                             Spacer(),
                             WebSearchBar(),
@@ -661,6 +725,245 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
               ),
             ),
           )
-        : Container();
+        : Scaffold(
+            body: NowPlayingBarScrollHideNotifier(
+              child: CustomScrollView(
+                physics: physics,
+                controller: scrollController,
+                slivers: [
+                  SliverAppBar(
+                    actions: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(PageRouteBuilder(
+                              pageBuilder: (context, animation,
+                                      secondaryAnimation) =>
+                                  FadeThroughTransition(
+                                      fillColor: Colors.transparent,
+                                      animation: animation,
+                                      secondaryAnimation: secondaryAnimation,
+                                      child:
+                                          FloatingSearchBarWebSearchScreen())));
+                        },
+                        icon: Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
+                        iconSize: 24.0,
+                        splashRadius: 20.0,
+                      ),
+                      contextMenu(context, color: Colors.white),
+                    ],
+                    systemOverlayStyle: SystemUiOverlayStyle(
+                      statusBarColor: Colors.transparent,
+                      statusBarIconBrightness: Brightness.light,
+                    ),
+                    expandedHeight: MediaQuery.of(context).size.width +
+                        128.0 -
+                        MediaQuery.of(context).padding.top,
+                    pinned: true,
+                    leading: IconButton(
+                      onPressed: Navigator.of(context).maybePop,
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      iconSize: 24.0,
+                      splashRadius: 20.0,
+                    ),
+                    forceElevated: true,
+                    title: TweenAnimationBuilder<double>(
+                      tween: Tween<double>(
+                        begin: 1.0,
+                        end: detailsVisible ? 0.0 : 1.0,
+                      ),
+                      duration: Duration(milliseconds: 200),
+                      builder: (context, value, _) => Opacity(
+                        opacity: value,
+                        child: Text(
+                          widget.playlist.name.overflow,
+                          style:
+                              Theme.of(context).textTheme.headline1?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    backgroundColor: Colors.grey.shade900,
+                    flexibleSpace: Stack(
+                      children: [
+                        FlexibleSpaceBar(
+                          background: Column(
+                            children: [
+                              ExtendedImage.network(
+                                widget.playlist.thumbnails.values.toList()[
+                                    widget.playlist.thumbnails.length - 2],
+                                fit: BoxFit.cover,
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.width,
+                                enableLoadState: true,
+                                enableMemoryCache: false,
+                                cache: true,
+                                loadStateChanged: (ExtendedImageState state) {
+                                  return state.extendedImageLoadState ==
+                                          LoadState.completed
+                                      ? TweenAnimationBuilder(
+                                          tween: Tween<double>(
+                                              begin: 0.0, end: 1.0),
+                                          duration:
+                                              const Duration(milliseconds: 800),
+                                          child: state.completedWidget,
+                                          builder: (context, value, child) =>
+                                              Opacity(
+                                            opacity: value as double,
+                                            child: state.completedWidget,
+                                          ),
+                                        )
+                                      : SizedBox.shrink();
+                                },
+                              ),
+                              TweenAnimationBuilder<double>(
+                                tween: Tween<double>(
+                                  begin: 1.0,
+                                  end: detailsVisible ? 1.0 : 0.0,
+                                ),
+                                duration: Duration(milliseconds: 200),
+                                builder: (context, value, _) => Opacity(
+                                  opacity: value,
+                                  child: Container(
+                                    color: Colors.grey.shade900,
+                                    alignment: Alignment.centerLeft,
+                                    height: 128.0,
+                                    width: MediaQuery.of(context).size.width,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: Text(
+                                      widget.playlist.name.overflow,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline1
+                                          ?.copyWith(
+                                            color: Colors.white,
+                                            fontSize: 24.0,
+                                          ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          top: MediaQuery.of(context).size.width +
+                              MediaQuery.of(context).padding.top -
+                              64.0,
+                          right: 16.0 + 64.0,
+                          child: TweenAnimationBuilder(
+                            curve: Curves.easeOut,
+                            tween: Tween<double>(
+                                begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                            duration: Duration(milliseconds: 200),
+                            builder: (context, value, _) => Transform.scale(
+                              scale: value as double,
+                              child: Transform.rotate(
+                                angle: value * pi + pi,
+                                child: FloatingActionButton(
+                                  heroTag: Random().nextInt(1 << 32),
+                                  backgroundColor: secondary,
+                                  foregroundColor: [
+                                    Colors.white,
+                                    Color(0xFF212121)
+                                  ][(secondary?.computeLuminance() ?? 0.0) > 0.5
+                                      ? 1
+                                      : 0],
+                                  tooltip: Language.instance.PLAY_NOW,
+                                  child: Icon(Icons.play_arrow),
+                                  onPressed: () {
+                                    Web.open(widget.playlist.tracks);
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: MediaQuery.of(context).size.width +
+                              MediaQuery.of(context).padding.top -
+                              64.0,
+                          right: 16.0,
+                          child: TweenAnimationBuilder(
+                            curve: Curves.easeOut,
+                            tween: Tween<double>(
+                                begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                            duration: Duration(milliseconds: 200),
+                            builder: (context, value, _) => Transform.scale(
+                              scale: value as double,
+                              child: Transform.rotate(
+                                angle: value * pi + pi,
+                                child: FloatingActionButton(
+                                  heroTag: Random().nextInt(1 << 32),
+                                  backgroundColor: secondary,
+                                  foregroundColor: [
+                                    Colors.white,
+                                    Color(0xFF212121)
+                                  ][(secondary?.computeLuminance() ?? 0.0) > 0.5
+                                      ? 1
+                                      : 0],
+                                  tooltip: Language.instance.SAVE_AS_PLAYLIST,
+                                  child: Icon(Icons.save),
+                                  onPressed: () {
+                                    Collection.instance.playlistCreate(
+                                      media.Playlist(
+                                        id: widget.playlist.name.hashCode,
+                                        name: widget.playlist.name,
+                                      )..tracks.addAll(widget.playlist.tracks
+                                          .map((e) => media.Track.fromWebTrack(
+                                              e.toJson()))),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  PagedSliverList(
+                    pagingController: pagingController,
+                    builderDelegate: PagedChildBuilderDelegate<Track?>(
+                      newPageProgressIndicatorBuilder: (_) => Container(
+                        height: 96.0,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                      firstPageProgressIndicatorBuilder: (_) => Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(
+                            Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                      itemBuilder: (context, track, pageKey) => pageKey == 0
+                          ? SizedBox.shrink()
+                          : WebTrackTile(
+                              track: track!,
+                              group: widget.playlist.tracks,
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
   }
 }
