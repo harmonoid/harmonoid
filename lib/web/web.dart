@@ -44,128 +44,138 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
     return PageStorage(
       bucket: PageStorageBucket(),
       child: Scaffold(
-        body: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: desktopTitleBarHeight + kDesktopAppBarHeight,
-              ),
-              child: PageTransitionSwitcher(
-                transitionBuilder:
-                    (child, primaryAnimation, secondaryAnimation) =>
-                        SharedAxisTransition(
-                  fillColor: Theme.of(context).scaffoldBackgroundColor,
-                  animation: primaryAnimation,
-                  secondaryAnimation: secondaryAnimation,
-                  child: child,
-                  transitionType: SharedAxisTransitionType.vertical,
-                ),
-                child: [
-                  WebRecommendations(
-                    key: PageStorageKey(0),
-                  ),
-                  PlaylistTab(),
-                ][_index],
-              ),
-            ),
-            DesktopAppBar(),
-            Container(
-              margin: EdgeInsets.only(top: desktopTitleBarHeight),
-              alignment: Alignment.center,
-              height: kDesktopAppBarHeight,
-              child: Row(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.transparent,
+        body: isMobile
+            ? WebRecommendations(
+                key: PageStorageKey(0),
+              )
+            : Stack(
                 children: [
-                  const SizedBox(width: 64.0),
-                  Material(
-                    color: Colors.transparent,
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: desktopTitleBarHeight + kDesktopAppBarHeight,
+                    ),
+                    child: PageTransitionSwitcher(
+                      transitionBuilder:
+                          (child, primaryAnimation, secondaryAnimation) =>
+                              SharedAxisTransition(
+                        fillColor: Theme.of(context).scaffoldBackgroundColor,
+                        animation: primaryAnimation,
+                        secondaryAnimation: secondaryAnimation,
+                        child: child,
+                        transitionType: SharedAxisTransitionType.vertical,
+                      ),
+                      child: [
+                        WebRecommendations(
+                          key: PageStorageKey(0),
+                        ),
+                        PlaylistTab(),
+                      ][_index],
+                    ),
+                  ),
+                  DesktopAppBar(),
+                  Container(
+                    margin: EdgeInsets.only(top: desktopTitleBarHeight),
+                    alignment: Alignment.center,
+                    height: kDesktopAppBarHeight,
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Language.instance.RECOMMENDATIONS,
-                        Language.instance.PLAYLIST,
-                      ].map(
-                        (tab) {
-                          final i = [
-                            Language.instance.RECOMMENDATIONS,
-                            Language.instance.PLAYLIST,
-                          ].indexOf(tab);
-                          return InkWell(
-                            borderRadius: BorderRadius.circular(4.0),
-                            onTap: () {
-                              if (_index == i) return;
-                              setState(() {
-                                _index = i;
-                              });
-                            },
-                            child: Container(
-                              height: 40.0,
-                              padding: EdgeInsets.symmetric(horizontal: 4.0),
-                              alignment: Alignment.center,
-                              margin: EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Text(
-                                tab.toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: _index == i
-                                      ? FontWeight.w600
-                                      : FontWeight.w300,
-                                  color: (Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.white
-                                          : Colors.black)
-                                      .withOpacity(_index == i ? 1.0 : 0.67),
+                        const SizedBox(width: 64.0),
+                        Material(
+                          color: Colors.transparent,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Language.instance.RECOMMENDATIONS,
+                              Language.instance.PLAYLIST,
+                            ].map(
+                              (tab) {
+                                final i = [
+                                  Language.instance.RECOMMENDATIONS,
+                                  Language.instance.PLAYLIST,
+                                ].indexOf(tab);
+                                return InkWell(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                  onTap: () {
+                                    if (_index == i) return;
+                                    setState(() {
+                                      _index = i;
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 40.0,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    alignment: Alignment.center,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    child: Text(
+                                      tab.toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: _index == i
+                                            ? FontWeight.w600
+                                            : FontWeight.w300,
+                                        color: (Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white
+                                                : Colors.black)
+                                            .withOpacity(
+                                                _index == i ? 1.0 : 0.67),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ).toList(),
+                          ),
+                        ),
+                        Spacer(),
+                        WebSearchBar(),
+                        SizedBox(
+                          width: 8.0,
+                        ),
+                        if (isDesktop)
+                          Material(
+                            color: Colors.transparent,
+                            child: Tooltip(
+                              message: Language.instance.SETTING,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          FadeThroughTransition(
+                                        fillColor: Colors.transparent,
+                                        animation: animation,
+                                        secondaryAnimation: secondaryAnimation,
+                                        child: Settings(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                borderRadius: BorderRadius.circular(20.0),
+                                child: Container(
+                                  height: 40.0,
+                                  width: 40.0,
+                                  child: Icon(
+                                    Icons.settings,
+                                    size: 20.0,
+                                  ),
                                 ),
                               ),
                             ),
-                          );
-                        },
-                      ).toList(),
-                    ),
-                  ),
-                  Spacer(),
-                  WebSearchBar(),
-                  SizedBox(
-                    width: 8.0,
-                  ),
-                  Material(
-                    color: Colors.transparent,
-                    child: Tooltip(
-                      message: Language.instance.SETTING,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      FadeThroughTransition(
-                                fillColor: Colors.transparent,
-                                animation: animation,
-                                secondaryAnimation: secondaryAnimation,
-                                child: Settings(),
-                              ),
-                            ),
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(20.0),
-                        child: Container(
-                          height: 40.0,
-                          width: 40.0,
-                          child: Icon(
-                            Icons.settings,
-                            size: 20.0,
                           ),
+                        SizedBox(
+                          width: 16.0,
                         ),
-                      ),
+                      ],
                     ),
-                  ),
-                  SizedBox(
-                    width: 16.0,
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -239,7 +249,7 @@ class _WebRecommendationsState extends State<WebRecommendations>
     final double width = isMobile
         ? (MediaQuery.of(context).size.width -
                 (elementsPerRow + 1) * tileMargin) /
-            kLargeTileWidth
+            elementsPerRow
         : kLargeTileWidth;
     final double height = isMobile
         ? width * kLargeTileHeight / kLargeTileWidth
@@ -267,15 +277,23 @@ class _WebRecommendationsState extends State<WebRecommendations>
                 child: PagedGridView<int, Track>(
                   scrollController: _scrollController,
                   padding: EdgeInsets.only(
-                    left: (MediaQuery.of(context).size.width -
-                            (elementsPerRow * kLargeTileWidth +
-                                (elementsPerRow - 1) * tileMargin)) /
-                        2,
-                    right: (MediaQuery.of(context).size.width -
-                            (elementsPerRow * kLargeTileWidth +
-                                (elementsPerRow - 1) * tileMargin)) /
-                        2,
-                    top: tileMargin,
+                    left: isDesktop
+                        ? (MediaQuery.of(context).size.width -
+                                (elementsPerRow * kLargeTileWidth +
+                                    (elementsPerRow - 1) * tileMargin)) /
+                            2
+                        : tileMargin,
+                    right: isDesktop
+                        ? (MediaQuery.of(context).size.width -
+                                (elementsPerRow * kLargeTileWidth +
+                                    (elementsPerRow - 1) * tileMargin)) /
+                            2
+                        : tileMargin,
+                    top: isDesktop
+                        ? tileMargin
+                        : kMobileSearchBarHeight +
+                            2 * tileMargin +
+                            MediaQuery.of(context).padding.top,
                   ),
                   showNewPageProgressIndicatorAsGridChild: false,
                   pagingController: _pagingController,
@@ -340,138 +358,455 @@ class WebSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          DesktopAppBar(
-            child: Row(
+    return isDesktop
+        ? Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: Stack(
               children: [
-                Text(
-                  Language.instance.RESULTS_FOR_QUERY
-                      .replaceAll('QUERY', query.trim()),
-                  style: Theme.of(context).textTheme.headline1,
-                ),
-                Spacer(),
-                WebSearchBar(query: this.query),
-                SizedBox(
-                  width: 8.0,
-                ),
-                Material(
-                  color: Colors.transparent,
-                  child: Tooltip(
-                    message: Language.instance.SETTING,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    FadeThroughTransition(
-                              fillColor: Colors.transparent,
-                              animation: animation,
-                              secondaryAnimation: secondaryAnimation,
-                              child: Settings(),
-                            ),
-                          ),
-                        );
-                      },
-                      borderRadius: BorderRadius.circular(20.0),
-                      child: Container(
-                        height: 40.0,
-                        width: 40.0,
-                        child: Icon(
-                          Icons.settings,
-                          size: 20.0,
-                        ),
+                DesktopAppBar(
+                  child: Row(
+                    children: [
+                      Text(
+                        Language.instance.RESULTS_FOR_QUERY
+                            .replaceAll('QUERY', query.trim()),
+                        style: Theme.of(context).textTheme.headline1,
                       ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 16.0,
-                ),
-              ],
-            ),
-          ),
-          Container(
-              margin: EdgeInsets.only(
-                top: desktopTitleBarHeight + kDesktopAppBarHeight,
-              ),
-              child: FutureBuilder<Map<String, List<Media>>>(
-                future: future,
-                builder: (context, asyncSnapshot) {
-                  if (asyncSnapshot.hasData) {
-                    if (asyncSnapshot.data!.isNotEmpty) {
-                      final widgets = <Widget>[];
-                      asyncSnapshot.data!.forEach(
-                        (key, value) {
-                          widgets.add(
-                            Row(
-                              children: [
-                                SubHeader(key),
-                                Spacer(),
-                                // if (!key.contains('Top result'))
-                                //   ShowAllButton(
-                                //     onPressed: () {
-                                //       // TODO: Handle [ShowAllButton].
-                                //     },
-                                //   ),
-                              ],
-                            ),
-                          );
-                          value.forEach(
-                            (element) {
-                              if (element is Track) {
-                                widgets.add(WebTrackTile(track: element));
-                              } else if (element is Artist) {
-                                widgets.add(WebArtistTile(artist: element));
-                              } else if (element is Video) {
-                                widgets.add(VideoTile(video: element));
-                              } else if (element is Album) {
-                                widgets.add(WebAlbumTile(album: element));
-                              } else if (element is Playlist) {
-                                widgets.add(WebPlaylistTile(playlist: element));
-                              }
+                      Spacer(),
+                      WebSearchBar(query: this.query),
+                      SizedBox(
+                        width: 8.0,
+                      ),
+                      Material(
+                        color: Colors.transparent,
+                        child: Tooltip(
+                          message: Language.instance.SETTING,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      FadeThroughTransition(
+                                    fillColor: Colors.transparent,
+                                    animation: animation,
+                                    secondaryAnimation: secondaryAnimation,
+                                    child: Settings(),
+                                  ),
+                                ),
+                              );
                             },
-                          );
-                        },
-                      );
-                      return CustomListView(
-                        shrinkWrap: true,
-                        children: [
-                          Center(
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(maxWidth: 840.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: widgets,
+                            borderRadius: BorderRadius.circular(20.0),
+                            child: Container(
+                              height: 40.0,
+                              width: 40.0,
+                              child: Icon(
+                                Icons.settings,
+                                size: 20.0,
                               ),
                             ),
                           ),
-                        ],
-                      );
-                    } else {
-                      return Center(
-                        child: ExceptionWidget(
-                          title: Language
-                              .instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
-                          subtitle: Language.instance.WEB_NO_RESULTS,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 16.0,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                    top: desktopTitleBarHeight + kDesktopAppBarHeight,
+                  ),
+                  child: FutureBuilder<Map<String, List<Media>>>(
+                    future: future,
+                    builder: (context, asyncSnapshot) {
+                      if (asyncSnapshot.hasData) {
+                        if (asyncSnapshot.data!.isNotEmpty) {
+                          final widgets = <Widget>[];
+                          asyncSnapshot.data!.forEach(
+                            (key, value) {
+                              widgets.add(
+                                Row(
+                                  children: [
+                                    SubHeader(key),
+                                    Spacer(),
+                                  ],
+                                ),
+                              );
+                              value.forEach(
+                                (element) {
+                                  if (element is Track) {
+                                    widgets.add(WebTrackTile(track: element));
+                                  } else if (element is Artist) {
+                                    widgets.add(WebArtistTile(artist: element));
+                                  } else if (element is Video) {
+                                    widgets.add(VideoTile(video: element));
+                                  } else if (element is Album) {
+                                    widgets.add(WebAlbumTile(album: element));
+                                  } else if (element is Playlist) {
+                                    widgets.add(
+                                        WebPlaylistTile(playlist: element));
+                                  }
+                                },
+                              );
+                            },
+                          );
+                          return CustomListView(
+                            shrinkWrap: true,
+                            children: [
+                              Center(
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(maxWidth: 840.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: widgets,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Center(
+                            child: ExceptionWidget(
+                              title: Language
+                                  .instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                              subtitle: Language.instance.WEB_NO_RESULTS,
+                            ),
+                          );
+                        }
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          )
+        : FutureBuilder<Map<String, List<Media>>>(
+            future: future,
+            builder: (context, asyncSnapshot) {
+              if (asyncSnapshot.hasData) {
+                if (asyncSnapshot.data!.isNotEmpty) {
+                  final widgets = <Widget>[];
+                  asyncSnapshot.data!.forEach(
+                    (key, value) {
+                      widgets.add(
+                        Row(
+                          children: [
+                            SubHeader(key),
+                            Spacer(),
+                          ],
                         ),
                       );
-                    }
+                      value.forEach(
+                        (element) {
+                          if (element is Track) {
+                            widgets.add(WebTrackTile(track: element));
+                          } else if (element is Artist) {
+                            widgets.add(WebArtistTile(artist: element));
+                          } else if (element is Video) {
+                            widgets.add(VideoTile(video: element));
+                          } else if (element is Album) {
+                            widgets.add(WebAlbumTile(album: element));
+                          } else if (element is Playlist) {
+                            widgets.add(WebPlaylistTile(playlist: element));
+                          }
+                        },
+                      );
+                    },
+                  );
+                  return CustomListView(
+                    shrinkWrap: true,
+                    children: [
+                      Center(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: 840.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: widgets,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return Center(
+                    child: ExceptionWidget(
+                      title:
+                          Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                      subtitle: Language.instance.WEB_NO_RESULTS,
+                    ),
+                  );
+                }
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(
+                      Theme.of(context).primaryColor,
+                    ),
+                  ),
+                );
+              }
+            },
+          );
+  }
+}
+
+class FloatingSearchBarWebSearchTab extends StatefulWidget {
+  final ValueNotifier<String> query;
+  FloatingSearchBarWebSearchTab({
+    Key? key,
+    required this.query,
+  }) : super(key: key);
+
+  @override
+  State<FloatingSearchBarWebSearchTab> createState() =>
+      _FloatingSearchBarWebSearchTabState();
+}
+
+class _FloatingSearchBarWebSearchTabState
+    extends State<FloatingSearchBarWebSearchTab> {
+  List<String> result = [];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.query.addListener(() {
+      YTMClient.music_get_search_suggestions(widget.query.value).then((value) {
+        setState(() {
+          result = value;
+        });
+      });
+    });
+  }
+
+  Widget build(BuildContext context) {
+    if (widget.query.value.isEmpty) {
+      return Card(
+        elevation: 4.0,
+        margin: EdgeInsets.zero,
+        child: SizedBox(
+          height: 56.0 * 7,
+          width: MediaQuery.of(context).size.width,
+          child: Center(
+            child: ExceptionWidget(
+              title: Language.instance.WEB_WELCOME_TITLE,
+              subtitle: Language.instance.COLLECTION_SEARCH_WELCOME,
+            ),
+          ),
+        ),
+      );
+    }
+    if (result.isEmpty) {
+      return Card(
+        elevation: 4.0,
+        margin: EdgeInsets.zero,
+        child: SizedBox(
+          height: 56.0 * 7,
+          width: MediaQuery.of(context).size.width,
+          child: Center(
+            child: ExceptionWidget(
+              title: Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+              subtitle: Language.instance.WEB_NO_RESULTS,
+            ),
+          ),
+        ),
+      );
+    }
+    return Card(
+      elevation: 4.0,
+      margin: EdgeInsets.zero,
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          children: result
+              .map(
+                (e) => ListTile(
+                  title: Text(e),
+                  onTap: () {
+                    Navigator.of(context).push(PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            FadeThroughTransition(
+                                fillColor: Colors.transparent,
+                                animation: animation,
+                                secondaryAnimation: secondaryAnimation,
+                                child: FloatingSearchBarWebSearchScreen(
+                                  future: YTMClient.search(e),
+                                  query: e,
+                                ))));
+                  },
+                  leading: Icon(
+                    Icons.search,
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class FloatingSearchBarWebSearchScreen extends StatelessWidget {
+  final String? query;
+  final Future<Map<String, List<Media>>>? future;
+
+  FloatingSearchBarWebSearchScreen({
+    Key? key,
+    this.query,
+    this.future,
+  }) : super(key: key) {
+    controller = TextEditingController(text: this.query);
+  }
+
+  TextEditingController? controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: Navigator.of(context).pop,
+          icon: Icon(Icons.arrow_back),
+          splashRadius: 24.0,
+        ),
+        title: TextField(
+          autofocus: future == null,
+          controller: controller,
+          onSubmitted: (value) {
+            Navigator.of(context).pushReplacement(PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    FadeThroughTransition(
+                        fillColor: Colors.transparent,
+                        animation: animation,
+                        secondaryAnimation: secondaryAnimation,
+                        child: FloatingSearchBarWebSearchScreen(
+                          query: value,
+                          future: YTMClient.search(value),
+                        ))));
+          },
+          decoration: InputDecoration.collapsed(
+            hintText: Language.instance.SEARCH,
+            border: InputBorder.none,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: controller?.clear,
+            icon: Icon(Icons.close),
+            splashRadius: 24.0,
+          ),
+        ],
+      ),
+      body: future == null
+          ? Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Center(
+                child: ExceptionWidget(
+                  title: Language.instance.WEB_WELCOME_TITLE,
+                  subtitle: Language.instance.COLLECTION_SEARCH_WELCOME,
+                ),
+              ),
+            )
+          : FutureBuilder<Map<String, List<Media>>>(
+              future: future,
+              builder: (context, asyncSnapshot) {
+                if (asyncSnapshot.hasData) {
+                  if (asyncSnapshot.data!.isNotEmpty) {
+                    final widgets = <Widget>[];
+                    asyncSnapshot.data!.forEach(
+                      (key, value) {
+                        widgets.add(
+                          Row(
+                            children: [
+                              SubHeader(key),
+                              Spacer(),
+                            ],
+                          ),
+                        );
+                        value.forEach(
+                          (element) {
+                            if (element is Track) {
+                              widgets.add(WebTrackTile(track: element));
+                            } else if (element is Artist) {
+                              widgets.add(WebArtistTile(artist: element));
+                            } else if (element is Video) {
+                              widgets.add(VideoTile(video: element));
+                            } else if (element is Album) {
+                              widgets.add(WebAlbumTile(album: element));
+                            } else if (element is Playlist) {
+                              widgets.add(WebPlaylistTile(playlist: element));
+                            }
+                          },
+                        );
+                      },
+                    );
+                    return NowPlayingBarScrollHideNotifier(
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: Opacity(
+                              opacity: 0.2,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Image.memory(
+                                  visualAssets.collection,
+                                  height: 512.0,
+                                  width: 512.0,
+                                  filterQuality: FilterQuality.high,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                          ),
+                          CustomListView(
+                            shrinkWrap: true,
+                            children: [
+                              Center(
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(maxWidth: 840.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: widgets,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
                   } else {
                     return Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(
-                          Theme.of(context).primaryColor,
-                        ),
+                      child: ExceptionWidget(
+                        title: Language
+                            .instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                        subtitle: Language.instance.WEB_NO_RESULTS,
                       ),
                     );
                   }
-                },
-              )),
-        ],
-      ),
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(
+                        Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
     );
   }
 }

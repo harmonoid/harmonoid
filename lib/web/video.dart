@@ -63,9 +63,10 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                     return Transform.scale(
                       scale: value,
                       child: ExtendedImage(
-                        image: NetworkImage(
+                        image: ExtendedNetworkImageProvider(
                           widget.track.thumbnails[120] ??
                               widget.track.thumbnails.values.first,
+                          cache: true,
                         ),
                         fit: BoxFit.cover,
                         width: widget.width,
@@ -86,7 +87,7 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                     height: widget.height,
                     alignment: Alignment.bottomCenter,
                     padding: EdgeInsets.symmetric(
-                      horizontal: 8.0,
+                      horizontal: 16.0,
                     ),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -156,39 +157,41 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                   ),
                 ),
               ),
-              Positioned(
-                top: 4.0,
-                right: 4.0,
-                child: ContextMenuButton(
-                  itemBuilder: (BuildContext context) => webTrackPopupMenuItems(
-                    context,
-                  ),
-                  onSelected: (result) async {
-                    switch (result) {
-                      case 0:
-                        {
-                          await launch(widget.track.uri.toString());
-                          break;
-                        }
-                      case 1:
-                        {
-                          await showAddToPlaylistDialog(
-                            context,
-                            media.Track.fromWebTrack(
-                              widget.track.toJson(),
-                            ),
-                          );
-                          break;
-                        }
-                    }
-                  },
-                  icon: Icon(
-                    Icons.more_vert,
-                    color: Colors.white70,
-                    size: 16.0,
+              if (isDesktop)
+                Positioned(
+                  top: 4.0,
+                  right: 4.0,
+                  child: ContextMenuButton(
+                    itemBuilder: (BuildContext context) =>
+                        webTrackPopupMenuItems(
+                      context,
+                    ),
+                    onSelected: (result) async {
+                      switch (result) {
+                        case 0:
+                          {
+                            await launch(widget.track.uri.toString());
+                            break;
+                          }
+                        case 1:
+                          {
+                            await showAddToPlaylistDialog(
+                              context,
+                              media.Track.fromWebTrack(
+                                widget.track.toJson(),
+                              ),
+                            );
+                            break;
+                          }
+                      }
+                    },
+                    icon: Icon(
+                      Icons.more_vert,
+                      color: Colors.white70,
+                      size: 16.0,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),
@@ -259,8 +262,9 @@ class VideoTile extends StatelessWidget {
                   children: [
                     const SizedBox(width: 12.0),
                     ExtendedImage(
-                      image: NetworkImage(
+                      image: ExtendedNetworkImageProvider(
                         video.thumbnails.values.first,
+                        cache: true,
                       ),
                       height: 56.0,
                       width: 56.0,
@@ -295,31 +299,32 @@ class VideoTile extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12.0),
-                    Container(
-                      width: 64.0,
-                      height: 64.0,
-                      child: ContextMenuButton<int>(
-                        onSelected: (value) {
-                          switch (value) {
-                            case 0:
-                              {
-                                launch(video.uri.toString());
-                                break;
-                              }
-                            case 1:
-                              {
-                                showAddToPlaylistDialog(
-                                  context,
-                                  media.Track.fromWebVideo(video.toJson()),
-                                );
-                                break;
-                              }
-                          }
-                        },
-                        itemBuilder: (context) =>
-                            webTrackPopupMenuItems(context),
+                    if (isDesktop)
+                      Container(
+                        width: 64.0,
+                        height: 64.0,
+                        child: ContextMenuButton<int>(
+                          onSelected: (value) {
+                            switch (value) {
+                              case 0:
+                                {
+                                  launch(video.uri.toString());
+                                  break;
+                                }
+                              case 1:
+                                {
+                                  showAddToPlaylistDialog(
+                                    context,
+                                    media.Track.fromWebVideo(video.toJson()),
+                                  );
+                                  break;
+                                }
+                            }
+                          },
+                          itemBuilder: (context) =>
+                              webTrackPopupMenuItems(context),
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),

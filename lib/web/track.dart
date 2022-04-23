@@ -47,8 +47,9 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
   @override
   void initState() {
     super.initState();
-    PaletteGenerator.fromImageProvider(
-            ExtendedNetworkImageProvider(widget.track.thumbnails.values.first))
+    PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
+            widget.track.thumbnails.values.first,
+            cache: true))
         .then((palette) {
       setState(() {
         color = palette.colors.first;
@@ -89,7 +90,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                             scale: value,
                             child: ExtendedImage(
                               image: NetworkImage(
-                                widget.track.thumbnails[120] ??
+                                widget.track.thumbnails[180] ??
                                     widget.track.thumbnails.values.first,
                               ),
                               fit: BoxFit.cover,
@@ -101,15 +102,16 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8.0),
+                  const SizedBox(width: 16.0),
                   Expanded(
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 16.0),
                         Text(
-                          widget.track.trackName.replaceAll('(', '\n('),
+                          widget.track.trackName.replaceFirst('(', '\n('),
                           style:
                               Theme.of(context).textTheme.headline2?.copyWith(
                                     color: isDark ? Colors.white : Colors.black,
@@ -118,33 +120,32 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 2),
-                          child: Text(
-                            '${widget.track.trackArtistNames.take(2).join(', ')}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3
-                                ?.copyWith(
-                                  fontSize: 12.0,
-                                  color:
-                                      isDark ? Colors.white54 : Colors.black54,
-                                ),
-                            maxLines: 1,
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                        const SizedBox(height: 2.0),
+                        Text(
+                          '${widget.track.trackArtistNames.take(2).join(', ')}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline3
+                              ?.copyWith(
+                                fontSize: isDesktop ? 12.0 : null,
+                                color: isDark ? Colors.white54 : Colors.black54,
+                              ),
+                          maxLines: 1,
+                          textAlign: TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
                         ),
+                        const SizedBox(height: 2.0),
                         Text(
                           widget.track.duration.label,
                           style: Theme.of(context)
                               .textTheme
                               .headline3
                               ?.copyWith(
-                                fontSize: 12.0,
+                                fontSize: isDesktop ? 12.0 : null,
                                 color: isDark ? Colors.white54 : Colors.black54,
                               ),
                         ),
+                        const SizedBox(height: 16.0),
                       ],
                     ),
                   ),
@@ -163,44 +164,45 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 4.0,
-                right: 4.0,
-                child: Material(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(16.0),
-                  child: ContextMenuButton(
-                    itemBuilder: (BuildContext context) =>
-                        webTrackPopupMenuItems(
-                      context,
-                    ),
-                    onSelected: (result) async {
-                      switch (result) {
-                        case 0:
-                          {
-                            await launch(widget.track.uri.toString());
-                            break;
-                          }
-                        case 1:
-                          {
-                            await showAddToPlaylistDialog(
-                              context,
-                              media.Track.fromWebTrack(
-                                widget.track.toJson(),
-                              ),
-                            );
-                            break;
-                          }
-                      }
-                    },
-                    icon: Icon(
-                      Icons.more_vert,
-                      size: 16.0,
-                      color: isDark ? Colors.white54 : Colors.black54,
+              if (isDesktop)
+                Positioned(
+                  bottom: 4.0,
+                  right: 4.0,
+                  child: Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: ContextMenuButton(
+                      itemBuilder: (BuildContext context) =>
+                          webTrackPopupMenuItems(
+                        context,
+                      ),
+                      onSelected: (result) async {
+                        switch (result) {
+                          case 0:
+                            {
+                              await launch(widget.track.uri.toString());
+                              break;
+                            }
+                          case 1:
+                            {
+                              await showAddToPlaylistDialog(
+                                context,
+                                media.Track.fromWebTrack(
+                                  widget.track.toJson(),
+                                ),
+                              );
+                              break;
+                            }
+                        }
+                      },
+                      icon: Icon(
+                        Icons.more_vert,
+                        size: 16.0,
+                        color: isDark ? Colors.white54 : Colors.black54,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),
@@ -316,7 +318,9 @@ class WebTrackTile extends StatelessWidget {
                           ),
                           Text(
                             [
-                              if (group == null) Language.instance.TRACK_SINGLE,
+                              if (group == null &&
+                                  track.duration != Duration.zero)
+                                Language.instance.TRACK_SINGLE,
                               if (track.albumName.isNotEmpty)
                                 track.albumName.overflow,
                               if (track.albumArtistName.isNotEmpty)
@@ -332,31 +336,32 @@ class WebTrackTile extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12.0),
-                    Container(
-                      width: 64.0,
-                      height: 64.0,
-                      child: ContextMenuButton<int>(
-                        onSelected: (result) {
-                          switch (result) {
-                            case 0:
-                              {
-                                launch(track.uri.toString());
-                                break;
-                              }
-                            case 1:
-                              {
-                                showAddToPlaylistDialog(
-                                  context,
-                                  media.Track.fromWebTrack(track.toJson()),
-                                );
-                                break;
-                              }
-                          }
-                        },
-                        itemBuilder: (context) =>
-                            webTrackPopupMenuItems(context),
+                    if (isDesktop)
+                      Container(
+                        width: 64.0,
+                        height: 64.0,
+                        child: ContextMenuButton<int>(
+                          onSelected: (result) {
+                            switch (result) {
+                              case 0:
+                                {
+                                  launch(track.uri.toString());
+                                  break;
+                                }
+                              case 1:
+                                {
+                                  showAddToPlaylistDialog(
+                                    context,
+                                    media.Track.fromWebTrack(track.toJson()),
+                                  );
+                                  break;
+                                }
+                            }
+                          },
+                          itemBuilder: (context) =>
+                              webTrackPopupMenuItems(context),
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
