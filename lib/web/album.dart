@@ -6,12 +6,16 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:async';
+import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/web/utils/widgets.dart';
+import 'package:harmonoid/web/web.dart';
 import 'package:readmore/readmore.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
@@ -49,9 +53,8 @@ class WebAlbumLargeTile extends StatelessWidget {
             await Future.wait([
               YTMClient.album(album),
               precacheImage(
-                ExtendedNetworkImageProvider(
-                  album.thumbnails.values.last,
-                ),
+                ExtendedNetworkImageProvider(album.thumbnails.values.last,
+                    cache: true),
                 context,
               ),
             ]);
@@ -82,7 +85,8 @@ class WebAlbumLargeTile extends StatelessWidget {
                         'album_art_${album.albumName}_${album.year}_${album.id}',
                     child: ExtendedImage(
                       image: ExtendedNetworkImageProvider(
-                          album.thumbnails.values.skip(1).first),
+                          album.thumbnails.values.skip(1).first,
+                          cache: true),
                       fit: BoxFit.cover,
                       height: width,
                       width: width,
@@ -155,9 +159,8 @@ class WebAlbumTile extends StatelessWidget {
             await Future.wait([
               YTMClient.album(album),
               precacheImage(
-                ExtendedNetworkImageProvider(
-                  album.thumbnails.values.last,
-                ),
+                ExtendedNetworkImageProvider(album.thumbnails.values.last,
+                    cache: true),
                 context,
               ),
             ]);
@@ -179,10 +182,6 @@ class WebAlbumTile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Divider(
-              height: 1.0,
-              indent: 80.0,
-            ),
             Container(
               height: 64.0,
               alignment: Alignment.center,
@@ -236,6 +235,10 @@ class WebAlbumTile extends StatelessWidget {
                 ],
               ),
             ),
+            const Divider(
+              height: 1.0,
+              indent: 80.0,
+            ),
           ],
         ),
       ),
@@ -256,7 +259,14 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
     with SingleTickerProviderStateMixin {
   Color? color;
   double elevation = 0.0;
-  ScrollController controller = ScrollController(initialScrollOffset: 0.0);
+  ScrollController controller =
+      ScrollController(initialScrollOffset: isMobile ? 96.0 : 0.0);
+  Color? secondary;
+  int? hovered;
+  bool reactToSecondaryPress = false;
+  bool detailsVisible = false;
+  bool detailsLoaded = false;
+  ScrollPhysics? physics = NeverScrollableScrollPhysics();
 
   bool isDark(BuildContext context) =>
       (0.299 *
@@ -286,7 +296,8 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
         Duration(milliseconds: 300),
         () {
           PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
-                  widget.album.thumbnails.values.first))
+                  widget.album.thumbnails.values.first,
+                  cache: true))
               .then((palette) {
             setState(() {
               color = palette.colors.first;
@@ -302,6 +313,47 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
         } else if (elevation == 0.0) {
           setState(() {
             elevation = 4.0;
+          });
+        }
+      });
+    }
+    if (isMobile) {
+      PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
+              widget.album.thumbnails.values.first,
+              cache: true))
+          .then((palette) {
+        setState(() {
+          color = palette.colors.first;
+          secondary = palette.colors.last;
+        });
+      });
+      Timer(Duration(milliseconds: 100), () {
+        this
+            .controller
+            .animateTo(
+              0.0,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            )
+            .then((_) {
+          Timer(Duration(milliseconds: 50), () {
+            setState(() {
+              detailsLoaded = true;
+              physics = null;
+            });
+          });
+        });
+      });
+      controller.addListener(() {
+        if (controller.offset < 36.0) {
+          if (!detailsVisible) {
+            setState(() {
+              detailsVisible = true;
+            });
+          }
+        } else if (detailsVisible) {
+          setState(() {
+            detailsVisible = false;
           });
         }
       });
@@ -368,9 +420,12 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                   child: ExtendedImage(
                                                     image:
                                                         ExtendedNetworkImageProvider(
-                                                      widget.album.thumbnails
-                                                          .values.last,
-                                                    ),
+                                                            widget
+                                                                .album
+                                                                .thumbnails
+                                                                .values
+                                                                .last,
+                                                            cache: true),
                                                     height: 256.0,
                                                     width: 256.0,
                                                     fit: BoxFit.cover,
@@ -662,7 +717,14 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                           children: [
                             Text(
                               elevation != 0.0 ? widget.album.albumName : '',
-                              style: Theme.of(context).textTheme.headline1,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline1
+                                  ?.copyWith(
+                                    color: isDark(context)
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                             ),
                             Spacer(),
                             WebSearchBar(),
@@ -713,6 +775,283 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
               ),
             ),
           )
-        : Container();
+        : Scaffold(
+            body: Stack(
+              children: [
+                NowPlayingBarScrollHideNotifier(
+                  child: CustomScrollView(
+                    controller: controller,
+                    slivers: [
+                      SliverAppBar(
+                        systemOverlayStyle: SystemUiOverlayStyle(
+                          statusBarColor: Colors.transparent,
+                          statusBarIconBrightness: Brightness.light,
+                        ),
+                        expandedHeight: MediaQuery.of(context).size.width +
+                            128.0 -
+                            MediaQuery.of(context).padding.top,
+                        pinned: true,
+                        leading: IconButton(
+                          onPressed: Navigator.of(context).maybePop,
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
+                          iconSize: 24.0,
+                          splashRadius: 20.0,
+                        ),
+                        actions: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).push(PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      FadeThroughTransition(
+                                          fillColor: Colors.transparent,
+                                          animation: animation,
+                                          secondaryAnimation:
+                                              secondaryAnimation,
+                                          child:
+                                              FloatingSearchBarWebSearchScreen())));
+                            },
+                            icon: Icon(
+                              Icons.search,
+                              color: Colors.white,
+                            ),
+                            iconSize: 24.0,
+                            splashRadius: 20.0,
+                          ),
+                          contextMenu(context, color: Colors.white),
+                        ],
+                        forceElevated: true,
+                        title: TweenAnimationBuilder<double>(
+                          tween: Tween<double>(
+                            begin: 1.0,
+                            end: detailsVisible ? 0.0 : 1.0,
+                          ),
+                          duration: Duration(milliseconds: 200),
+                          builder: (context, value, _) => Opacity(
+                            opacity: value,
+                            child: Text(
+                              widget.album.albumName.overflow,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline1
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                        backgroundColor: Colors.grey.shade900,
+                        flexibleSpace: Stack(
+                          children: [
+                            FlexibleSpaceBar(
+                              background: Column(
+                                children: [
+                                  ExtendedImage.network(
+                                    widget.album.thumbnails.values.last,
+                                    fit: BoxFit.cover,
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.width,
+                                    enableLoadState: true,
+                                    enableMemoryCache: false,
+                                    cache: true,
+                                    loadStateChanged:
+                                        (ExtendedImageState state) {
+                                      return state.extendedImageLoadState ==
+                                              LoadState.completed
+                                          ? TweenAnimationBuilder(
+                                              tween: Tween<double>(
+                                                  begin: 0.0, end: 1.0),
+                                              duration: const Duration(
+                                                  milliseconds: 800),
+                                              child: state.completedWidget,
+                                              builder:
+                                                  (context, value, child) =>
+                                                      Opacity(
+                                                opacity: value as double,
+                                                child: state.completedWidget,
+                                              ),
+                                            )
+                                          : SizedBox.shrink();
+                                    },
+                                  ),
+                                  TweenAnimationBuilder<double>(
+                                    tween: Tween<double>(
+                                      begin: 1.0,
+                                      end: detailsVisible ? 1.0 : 0.0,
+                                    ),
+                                    duration: Duration(milliseconds: 200),
+                                    builder: (context, value, _) => Opacity(
+                                      opacity: value,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => SimpleDialog(
+                                              contentPadding:
+                                                  EdgeInsets.all(20.0),
+                                              children: [
+                                                Text(
+                                                  widget.album.description
+                                                      .split('From Wikipedia')
+                                                      .first
+                                                      .trim(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline3,
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          color: Colors.grey.shade900,
+                                          height: 128.0,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 16.0),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                widget.album.albumName,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline1
+                                                    ?.copyWith(
+                                                      color: Colors.white,
+                                                      fontSize: 24.0,
+                                                    ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              const SizedBox(height: 8.0),
+                                              Text(
+                                                widget.album.description,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline3
+                                                    ?.copyWith(
+                                                      color: Colors.white70,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              top: MediaQuery.of(context).size.width +
+                                  MediaQuery.of(context).padding.top -
+                                  64.0,
+                              right: 16.0 + 64.0,
+                              child: TweenAnimationBuilder(
+                                curve: Curves.easeOut,
+                                tween: Tween<double>(
+                                    begin: 0.0,
+                                    end: detailsVisible ? 1.0 : 0.0),
+                                duration: Duration(milliseconds: 200),
+                                builder: (context, value, _) => Transform.scale(
+                                  scale: value as double,
+                                  child: Transform.rotate(
+                                    angle: value * pi + pi,
+                                    child: FloatingActionButton(
+                                      heroTag: Random().nextInt(1 << 32),
+                                      backgroundColor: secondary,
+                                      foregroundColor: [
+                                        Colors.white,
+                                        Color(0xFF212121)
+                                      ][(secondary?.computeLuminance() ?? 0.0) >
+                                              0.5
+                                          ? 1
+                                          : 0],
+                                      child: Icon(Icons.share),
+                                      onPressed: () {
+                                        Share.share(
+                                            'https://music.youtube.com/browse/${widget.album.id}');
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: MediaQuery.of(context).size.width +
+                                  MediaQuery.of(context).padding.top -
+                                  64.0,
+                              right: 16.0,
+                              child: TweenAnimationBuilder(
+                                curve: Curves.easeOut,
+                                tween: Tween<double>(
+                                    begin: 0.0,
+                                    end: detailsVisible ? 1.0 : 0.0),
+                                duration: Duration(milliseconds: 200),
+                                builder: (context, value, _) => Transform.scale(
+                                  scale: value as double,
+                                  child: Transform.rotate(
+                                    angle: value * pi + pi,
+                                    child: FloatingActionButton(
+                                      heroTag: Random().nextInt(1 << 32),
+                                      backgroundColor: secondary,
+                                      foregroundColor: [
+                                        Colors.white,
+                                        Color(0xFF212121)
+                                      ][(secondary?.computeLuminance() ?? 0.0) >
+                                              0.5
+                                          ? 1
+                                          : 0],
+                                      child: Icon(Icons.shuffle),
+                                      onPressed: () {
+                                        Web.open(widget.album.tracks);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SliverPadding(
+                        padding: EdgeInsets.only(
+                          top: 20.0,
+                        ),
+                      ),
+                      SliverList(
+                        delegate: SliverChildListDelegate([
+                          ...widget.album.tracks.map(
+                            (e) => WebTrackTile(
+                              track: e,
+                              group: widget.album.tracks,
+                            ),
+                          ),
+                        ]),
+                      ),
+                      SliverPadding(
+                        padding: EdgeInsets.only(
+                          top: 20.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 }
