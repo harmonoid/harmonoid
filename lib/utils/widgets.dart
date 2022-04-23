@@ -34,6 +34,7 @@ import 'package:harmonoid/web/web.dart';
 
 class CustomListView extends StatelessWidget {
   late final ScrollController controller;
+  final double? cacheExtent;
   final int velocity = 40;
   final List<Widget> children;
   final Axis? scrollDirection;
@@ -48,6 +49,7 @@ class CustomListView extends StatelessWidget {
     this.shrinkWrap,
     this.padding,
     this.itemExtent,
+    this.cacheExtent,
   }) {
     if (controller != null) {
       this.controller = controller;
@@ -75,6 +77,7 @@ class CustomListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      cacheExtent: cacheExtent,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       padding: padding ?? EdgeInsets.zero,
       controller: controller,
@@ -250,15 +253,29 @@ class SubHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return text != null
-        ? Container(
-            alignment: Alignment.centerLeft,
-            height: 56.0,
-            padding: EdgeInsets.fromLTRB(24.0, 0, 0, 0),
-            child: Text(
-              text!,
-              style: style ?? Theme.of(context).textTheme.headline1,
-            ),
-          )
+        ? isDesktop
+            ? Container(
+                alignment: Alignment.centerLeft,
+                height: 56.0,
+                padding: EdgeInsets.fromLTRB(24.0, 0, 0, 0),
+                child: Text(
+                  text!,
+                  style: style ?? Theme.of(context).textTheme.headline1,
+                ),
+              )
+            : Container(
+                alignment: Alignment.centerLeft,
+                height: 56.0,
+                padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
+                child: Text(
+                  text!.toUpperCase(),
+                  style: Theme.of(context).textTheme.overline?.copyWith(
+                        color: Theme.of(context).textTheme.headline3?.color,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              )
         : Container();
   }
 }

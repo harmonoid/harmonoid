@@ -8,7 +8,9 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:path/path.dart' as path;
 import 'package:animations/animations.dart';
 import 'package:libmpv/libmpv.dart' hide Media;
@@ -519,6 +521,71 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
     );
   }
 }
+
+CircularButton contextMenu(BuildContext context, {Color? color}) =>
+    CircularButton(
+      icon: Icon(Icons.more_vert, color: color),
+      onPressed: () {
+        final position = RelativeRect.fromRect(
+          Offset(
+                MediaQuery.of(context).size.width - tileMargin - 48.0,
+                MediaQuery.of(context).padding.top +
+                    kMobileSearchBarHeight +
+                    2 * tileMargin,
+              ) &
+              Size(160.0, 160.0),
+          Rect.fromLTWH(
+            0,
+            0,
+            MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height,
+          ),
+        );
+        showMenu<int>(
+          context: context,
+          position: position,
+          elevation: 4.0,
+          items: [
+            PopupMenuItem(
+              value: 0,
+              child: ListTile(
+                leading: Icon(Icons.settings),
+                title: Text(Language.instance.SETTING),
+              ),
+            ),
+            PopupMenuItem(
+              value: 1,
+              child: ListTile(
+                leading: Icon(Icons.info),
+                title: Text(Language.instance.ABOUT_TITLE),
+              ),
+            ),
+          ],
+        ).then((value) {
+          switch (value) {
+            case 0:
+              {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: Settings(),
+                    ),
+                  ),
+                );
+                break;
+              }
+            case 1:
+              {
+                break;
+              }
+          }
+        });
+      },
+    );
 
 InputDecoration inputDecoration(
   BuildContext context,
