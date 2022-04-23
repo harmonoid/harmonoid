@@ -9,17 +9,16 @@
 import 'dart:math';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
-import 'package:harmonoid/interface/mini_now_playing_bar.dart';
-import 'package:harmonoid/state/now_playing_scroll_hider.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:ytm_client/ytm_client.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -29,6 +28,7 @@ import 'package:harmonoid/interface/collection/artist.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid/interface/collection/search.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/web.dart';
 
@@ -53,8 +53,9 @@ class CollectionScreenState extends State<CollectionScreen>
   final PageController pageController =
       PageController(initialPage: isMobile ? 2 : 0);
   final ValueNotifier<String> query = ValueNotifier<String>('');
+  String queryStr = '';
   final ValueNotifier<int> index = ValueNotifier(isMobile ? 2 : 0);
-  String string = '';
+  int currentIndex = isMobile ? 2 : 0;
 
   @override
   bool get wantKeepAlive => true;
@@ -62,7 +63,6 @@ class CollectionScreenState extends State<CollectionScreen>
   @override
   void initState() {
     super.initState();
-    checkVersionAndShowUpdateSnackbar(context);
     widget.tabControllerNotifier.addListener(() {
       if (index.value != widget.tabControllerNotifier.value.index) {
         pageController.animateToPage(
@@ -72,11 +72,13 @@ class CollectionScreenState extends State<CollectionScreen>
         );
       }
     });
-    pageController.addListener(() {
-      widget.floatingSearchBarController.show();
-      NowPlayingScrollHider.instance.show();
-    });
-    Future.delayed(const Duration(seconds: 1), () {
+    if (isMobile) {
+      pageController.addListener(() {
+        widget.floatingSearchBarController.show();
+        MobileNowPlayingController.instance.show();
+      });
+    }
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       Intent.instance.play();
     });
   }
@@ -328,11 +330,11 @@ class CollectionScreenState extends State<CollectionScreen>
                                           focusNode: node,
                                           cursorWidth: 1.0,
                                           onChanged: (value) {
-                                            string = value;
+                                            queryStr = value;
                                           },
                                           onSubmitted: (value) {
                                             query.value = value;
-                                            if (string.isNotEmpty)
+                                            if (queryStr.isNotEmpty)
                                               setState(() {
                                                 index.value = 4;
                                               });
@@ -341,7 +343,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                           cursorColor:
                                               Theme.of(context).brightness ==
                                                       Brightness.light
-                                                  ? Colors.black
+                                                  ? Color(0xFF212121)
                                                   : Colors.white,
                                           textAlignVertical:
                                               TextAlignVertical.bottom,
@@ -367,8 +369,8 @@ class CollectionScreenState extends State<CollectionScreen>
                                               ),
                                             ),
                                             trailingIconOnPressed: () {
-                                              query.value = string;
-                                              if (string.isNotEmpty)
+                                              query.value = queryStr;
+                                              if (queryStr.isNotEmpty)
                                                 setState(() {
                                                   index.value = 4;
                                                 });
@@ -461,7 +463,7 @@ class CollectionScreenState extends State<CollectionScreen>
               builder: (context, refresh, _) => Scaffold(
                 resizeToAvoidBottomInset: false,
                 floatingActionButton: MiniNowPlayingBarRefreshCollectionButton(
-                  key: NowPlayingScrollHider.instance.fabKey,
+                  key: MobileNowPlayingController.instance.fabKey,
                 ),
                 body: Stack(
                   fit: StackFit.expand,
@@ -483,6 +485,21 @@ class CollectionScreenState extends State<CollectionScreen>
                       margins: EdgeInsets.only(
                         top: MediaQuery.of(context).padding.top + tileMargin,
                       ),
+                      onSubmitted: (query) {
+                        if (index.value == 4) {
+                          Navigator.of(context).push(PageRouteBuilder(
+                              pageBuilder: (context, animation,
+                                      secondaryAnimation) =>
+                                  FadeThroughTransition(
+                                      fillColor: Colors.transparent,
+                                      animation: animation,
+                                      secondaryAnimation: secondaryAnimation,
+                                      child: FloatingSearchBarWebSearchScreen(
+                                        query: query,
+                                        future: YTMClient.search(query),
+                                      ))));
+                        }
+                      },
                       accentColor: Theme.of(context).primaryColor,
                       onQueryChanged: (value) => query.value = value,
                       clearQueryOnClose: true,
@@ -508,84 +525,15 @@ class CollectionScreenState extends State<CollectionScreen>
                             ),
                           ),
                         FloatingSearchBarAction(
-                          showIfOpened: false,
-                          child: CircularButton(
-                            icon: const Icon(Icons.more_vert),
-                            onPressed: () {
-                              final position = RelativeRect.fromRect(
-                                Offset(
-                                      MediaQuery.of(context).size.width -
-                                          tileMargin -
-                                          48.0,
-                                      MediaQuery.of(context).padding.top +
-                                          kMobileSearchBarHeight +
-                                          2 * tileMargin,
-                                    ) &
-                                    Size(160.0, 160.0),
-                                Rect.fromLTWH(
-                                  0,
-                                  0,
-                                  MediaQuery.of(context).size.width,
-                                  MediaQuery.of(context).size.height,
-                                ),
-                              );
-                              showMenu<int>(
-                                context: context,
-                                position: position,
-                                elevation: 4.0,
-                                items: [
-                                  PopupMenuItem(
-                                    value: 0,
-                                    child: ListTile(
-                                      leading: Icon(Icons.settings),
-                                      title: Text(Language.instance.SETTING),
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    value: 1,
-                                    child: ListTile(
-                                      leading: Icon(Icons.info),
-                                      title:
-                                          Text(Language.instance.ABOUT_TITLE),
-                                    ),
-                                  ),
-                                ],
-                              ).then((value) {
-                                switch (value) {
-                                  case 0:
-                                    {
-                                      Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                          pageBuilder: (context, animation,
-                                                  secondaryAnimation) =>
-                                              FadeThroughTransition(
-                                            animation: animation,
-                                            secondaryAnimation:
-                                                secondaryAnimation,
-                                            child: Settings(),
-                                          ),
-                                        ),
-                                      );
-                                      break;
-                                    }
-                                  case 1:
-                                    {
-                                      break;
-                                    }
-                                }
-                              });
-                            },
-                          ),
-                        ),
+                            showIfOpened: false, child: contextMenu(context)),
                         FloatingSearchBarAction.searchToClear(
                           showIfClosed: false,
                         ),
                       ],
                       builder: (context, transition) {
-                        return FloatingSearchBarSearchTab(
-                          query: query,
-                        );
+                        return index.value != 4
+                            ? FloatingSearchBarSearchTab(query: query)
+                            : FloatingSearchBarWebSearchTab(query: query);
                       },
                       body: FloatingSearchBarScrollNotifier(
                         child: Stack(
@@ -606,22 +554,32 @@ class CollectionScreenState extends State<CollectionScreen>
                                   ),
                                 ),
                               ),
-                            PageView(
-                              controller: pageController,
-                              onPageChanged: (page) {
-                                if (index != page) {
-                                  index.value = page;
-                                  widget.tabControllerNotifier.value =
-                                      TabRoute(page, TabRouteSender.pageView);
+                            NotificationListener<ScrollNotification>(
+                              onNotification:
+                                  (ScrollNotification notification) {
+                                if (notification.depth == 0 &&
+                                    notification is ScrollEndNotification &&
+                                    notification.metrics.axis ==
+                                        Axis.horizontal) {
+                                  index.value = currentIndex;
+                                  widget.tabControllerNotifier.value = TabRoute(
+                                      currentIndex, TabRouteSender.pageView);
                                 }
+                                return false;
                               },
-                              children: [
-                                PlaylistTab(),
-                                TrackTab(),
-                                AlbumTab(),
-                                ArtistTab(),
-                                WebTab(),
-                              ],
+                              child: PageView(
+                                controller: pageController,
+                                onPageChanged: (page) {
+                                  currentIndex = page;
+                                },
+                                children: [
+                                  PlaylistTab(),
+                                  TrackTab(),
+                                  AlbumTab(),
+                                  ArtistTab(),
+                                  WebTab(),
+                                ],
+                              ),
                             ),
                           ],
                         ),

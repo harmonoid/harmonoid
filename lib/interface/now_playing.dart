@@ -17,7 +17,7 @@ import 'package:collection/collection.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/state/lyrics.dart';
-import 'package:harmonoid/state/now_playing_launcher.dart';
+import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -71,9 +71,7 @@ class NowPlayingState extends State<NowPlayingScreen>
               children: [
                 DesktopAppBar(
                   leading: NavigatorPopButton(
-                    onTap: () {
-                      NowPlayingLauncher.instance.maximized = false;
-                    },
+                    onTap: DesktopNowPlayingController.instance.hide,
                   ),
                   title: Language.instance.NOW_PLAYING,
                 ),
