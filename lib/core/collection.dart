@@ -105,22 +105,16 @@ class Collection extends ChangeNotifier {
           final track = Track.fromTagger(metadata);
           await _arrange(
             track,
-            () {},
           );
         } else {
-          final _metadata = await MetadataRetriever.fromFile(object);
+          final _metadata = await MetadataRetriever.fromUri(
+            object.uri,
+            coverDirectory: albumArtDirectory,
+          );
           metadata.addAll(_metadata.toJson().cast());
           final track = Track.fromJson(metadata);
           await _arrange(
             track,
-            () async {
-              if (_metadata.albumArt != null) {
-                await File(path.join(
-                  albumArtDirectory.path,
-                  track.albumArtFileName,
-                )).writeAsBytes(_metadata.albumArt!);
-              }
-            },
           );
         }
       } catch (exception, stacktrace) {
@@ -240,22 +234,16 @@ class Collection extends ChangeNotifier {
           final track = Track.fromTagger(metadata);
           await _arrange(
             track,
-            () {},
           );
         } else {
-          final _metadata = await MetadataRetriever.fromFile(file);
+          final _metadata = await MetadataRetriever.fromUri(
+            file.uri,
+            coverDirectory: albumArtDirectory,
+          );
           metadata.addAll(_metadata.toJson().cast());
           final track = Track.fromJson(metadata);
           await _arrange(
             track,
-            () async {
-              if (_metadata.albumArt != null) {
-                await File(path.join(
-                  albumArtDirectory.path,
-                  track.albumArtFileName,
-                )).writeAsBytes(_metadata.albumArt!);
-              }
-            },
           );
         }
         _arrangeArtists();
@@ -361,26 +349,24 @@ class Collection extends ChangeNotifier {
           break;
         }
       }
-      for (int index = 0; index < tracks.length; index++) {
-        List<Track> _tracks = <Track>[];
-        for (Track track in tracks) {
-          if (object.albumName != track.albumName &&
-              object.albumArtistName != track.albumArtistName) {
-            _tracks.add(track);
-          }
+      List<Track> _tracks = <Track>[];
+      for (final track in tracks) {
+        if (object.albumName != track.albumName &&
+            object.albumArtistName != track.albumArtistName) {
+          _tracks.add(track);
         }
-        tracks = _tracks;
       }
-      for (Artist artist in artists) {
-        for (Track track in artist.tracks) {
-          List<Track> _tracks = <Track>[];
+      tracks = _tracks;
+      for (final artist in artists) {
+        List<Track> _tracks = <Track>[];
+        for (final track in artist.tracks) {
           if (object.albumName != track.albumName &&
               object.albumArtistName != track.albumArtistName) {
             _tracks.add(track);
           }
-          artist.tracks.clear();
-          artist.tracks.addAll(_tracks);
         }
+        artist.tracks.clear();
+        artist.tracks.addAll(_tracks);
         for (Album album in artist.albums) {
           if (object.albumName == album.albumName &&
               object.albumArtistName == album.albumArtistName) {
@@ -466,7 +452,7 @@ class Collection extends ChangeNotifier {
                 .readAsString());
         for (final map in collection['tracks']) {
           final track = Track.fromJson(map);
-          await _arrange(track, () {});
+          await _arrange(track);
         }
         await sort();
         // Populate [albumArtists] regardless of auto-refresh being enabled or not.
@@ -512,22 +498,16 @@ class Collection extends ChangeNotifier {
                     final track = Track.fromTagger(metadata);
                     await _arrange(
                       track,
-                      () {},
                     );
                   } else {
-                    final _metadata = await MetadataRetriever.fromFile(file);
+                    final _metadata = await MetadataRetriever.fromUri(
+                      file.uri,
+                      coverDirectory: albumArtDirectory,
+                    );
                     metadata.addAll(_metadata.toJson().cast());
                     final track = Track.fromJson(metadata);
                     await _arrange(
                       track,
-                      () async {
-                        if (_metadata.albumArt != null) {
-                          await File(path.join(
-                            albumArtDirectory.path,
-                            track.albumArtFileName,
-                          )).writeAsBytes(_metadata.albumArt!);
-                        }
-                      },
                     );
                   }
                 } catch (exception, stacktrace) {
@@ -648,22 +628,16 @@ class Collection extends ChangeNotifier {
           final track = Track.fromTagger(metadata);
           await _arrange(
             track,
-            () {},
           );
         } else {
-          final _metadata = await MetadataRetriever.fromFile(object);
+          final _metadata = await MetadataRetriever.fromUri(
+            object.uri,
+            coverDirectory: albumArtDirectory,
+          );
           metadata.addAll(_metadata.toJson().cast());
           final track = Track.fromJson(metadata);
           await _arrange(
             track,
-            () async {
-              if (_metadata.albumArt != null) {
-                await File(path.join(
-                  albumArtDirectory.path,
-                  track.albumArtFileName,
-                )).writeAsBytes(_metadata.albumArt!);
-              }
-            },
           );
         }
       } catch (exception, stacktrace) {
@@ -745,7 +719,6 @@ class Collection extends ChangeNotifier {
     for (int i = 0; i < playlists.length; i++) {
       if (playlists[i].id == playlist.id) {
         for (int j = 0; j < playlist.tracks.length; j++) {
-          print(playlists[i].tracks[j] == track);
           if (playlists[i].tracks[j] == track) {
             playlists[i].tracks.removeAt(j);
             break;
@@ -783,10 +756,9 @@ class Collection extends ChangeNotifier {
   ///
   Future<void> playlistsGetFromCache() async {
     playlists = <Playlist>[];
-    File playlistFile =
-        File(path.join(cacheDirectory.path, kPlaylistsCacheFileName));
+    final file = File(path.join(cacheDirectory.path, kPlaylistsCacheFileName));
     // Keep playlist named "Liked Songs" & "History" persistently.
-    if (!await playlistFile.exists_()) {
+    if (!await file.exists_()) {
       playlists = [
         Playlist(
           id: kHistoryPlaylist,
@@ -799,23 +771,41 @@ class Collection extends ChangeNotifier {
       ];
       playlistsSaveToCache();
     } else {
-      final json =
-          convert.jsonDecode(await playlistFile.readAsString())['playlists'];
-      for (final element in json) {
-        playlists.add(Playlist.fromJson(element));
-      }
-      // Handle "History" playlist creation when upgrading from older versions.
-      if (!playlists.contains(Playlist(
-        id: kHistoryPlaylist,
-        name: 'History',
-      ))) {
-        playlists.insert(
-            0,
-            Playlist(
-              id: kHistoryPlaylist,
-              name: 'History',
-            ));
-        await playlistsSaveToCache();
+      try {
+        final json = convert.jsonDecode(await file.readAsString())['playlists'];
+        for (final element in json) {
+          playlists.add(Playlist.fromJson(element));
+        }
+        // Handle "History" playlist creation when upgrading from older versions.
+        if (!playlists.contains(Playlist(
+          id: kHistoryPlaylist,
+          name: 'History',
+        ))) {
+          playlists.insert(
+              0,
+              Playlist(
+                id: kHistoryPlaylist,
+                name: 'History',
+              ));
+          await playlistsSaveToCache();
+        }
+      } catch (exception, stacktrace) {
+        // Playlist cache likely became corrupted.
+        await file.copy(file.path + '.bak');
+        await file.delete();
+        playlists = [
+          Playlist(
+            id: kHistoryPlaylist,
+            name: 'History',
+          ),
+          Playlist(
+            id: kLikedSongsPlaylist,
+            name: 'Liked Songs',
+          ),
+        ];
+        playlistsSaveToCache();
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
       }
     }
     notifyListeners();
@@ -823,11 +813,9 @@ class Collection extends ChangeNotifier {
 
   /// Indexes a track into album & artist models.
   ///
-  Future<void> _arrange(Track track, VoidCallback save) async {
+  Future<void> _arrange(Track track) async {
     if (files.contains(track.uri.toFilePath())) return;
     files.add(track.uri.toFilePath());
-    // In newer versions, save album art for every single file regardless of the album.
-    save();
     if (!albums.contains(
       Album(
         albumName: track.albumName,
