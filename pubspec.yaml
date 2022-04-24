@@ -86,6 +86,7 @@ dependencies:
   known_extents_list_view_builder:
     git:
       url: https://github.com/alexmercerind/known_extents_list_view_builder.git
+  auto_size_text: ^3.0.0
 
 dependency_overrides:
   bitsdojo_window_windows:
