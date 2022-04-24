@@ -7,9 +7,12 @@
 ///
 
 import 'dart:io';
-import 'package:flutter/widgets.dart' hide Intent;
-import 'package:harmonoid/state/now_playing_scroll_hider.dart';
+import 'dart:math';
+import 'package:flutter/material.dart' hide Intent;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:libmpv/libmpv.dart' hide Playlist;
+import 'package:ytm_client/ytm_client.dart' hide Media, Track, Playlist;
 import 'package:mpris_service/mpris_service.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
@@ -26,7 +29,7 @@ import 'package:harmonoid/core/app_state.dart';
 import 'package:harmonoid/models/media.dart' hide Media, Playlist;
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/lyrics.dart';
-import 'package:harmonoid/state/now_playing_launcher.dart';
+import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/constants/language.dart';
 
 /// Playback
@@ -89,10 +92,10 @@ class Playback extends ChangeNotifier {
       if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
         player.next();
       }
-      if (Platform.isAndroid || Platform.isIOS) {
-        assetsAudioPlayer.next();
-      }
     });
+    if (Platform.isAndroid || Platform.isIOS) {
+      assetsAudioPlayer.next();
+    }
   }
 
   void previous() {
@@ -100,10 +103,10 @@ class Playback extends ChangeNotifier {
       if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
         player.back();
       }
-      if (Platform.isAndroid || Platform.isIOS) {
-        assetsAudioPlayer.previous();
-      }
     });
+    if (Platform.isAndroid || Platform.isIOS) {
+      assetsAudioPlayer.previous();
+    }
   }
 
   void jump(int value) {
@@ -126,7 +129,6 @@ class Playback extends ChangeNotifier {
     if (Platform.isLinux) {
       _Harmonoid.instance.rate = value;
     }
-    _saveAppState();
     notifyListeners();
   }
 
@@ -141,7 +143,6 @@ class Playback extends ChangeNotifier {
     if (Platform.isLinux) {
       _Harmonoid.instance.volume = value;
     }
-    _saveAppState();
     notifyListeners();
   }
 
@@ -153,7 +154,6 @@ class Playback extends ChangeNotifier {
       assetsAudioPlayer.setLoopMode(LoopMode.values[value.index]);
     }
     playlistLoopMode = value;
-    _saveAppState();
     notifyListeners();
   }
 
@@ -176,7 +176,6 @@ class Playback extends ChangeNotifier {
       assetsAudioPlayer.toggleShuffle();
     }
     isShuffling = !isShuffling;
-    _saveAppState();
     notifyListeners();
   }
 
@@ -189,22 +188,22 @@ class Playback extends ChangeNotifier {
     }
   }
 
-  void open(List<Track> tracks, {int index = 0}) {
+  Future<void> open(List<Track> tracks, {int index = 0}) async {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      player.open(_tracksToMediaList(tracks));
-      player.jump(index);
-      player.play();
+      await player.open(tracks
+          .map((e) => Media(
+                Plugins.redirect(e.uri).toString(),
+                extras: e.toJson(),
+              ))
+          .toList());
+      await player.jump(index);
+      await player.play();
       isShuffling = false;
       notifyListeners();
-      if (Configuration
-          .instance.automaticallyShowNowPlayingScreenAfterPlaying) {
-        Future.delayed(const Duration(milliseconds: 500), () {
-          NowPlayingLauncher.instance.maximized = true;
-        });
-      }
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      assetsAudioPlayer.open(
+      this.tracks = tracks;
+      await assetsAudioPlayer.open(
         Playlist(
             startIndex: index,
             audios: tracks.map((e) {
@@ -219,7 +218,7 @@ class Playback extends ChangeNotifier {
               }
               return Plugins.isWebMedia(e.uri)
                   ? Audio.network(
-                      e.uri.toString(),
+                      Plugins.redirect(e.uri).toString(),
                       metas: Metas(
                         id: e.uri.toString(),
                         title: e.trackName,
@@ -257,8 +256,22 @@ class Playback extends ChangeNotifier {
           stopEnabled: false,
         ),
       );
-      Future.delayed(const Duration(milliseconds: 400), () {
-        NowPlayingScrollHider.instance.show();
+    }
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      if (Configuration.instance.jumpToNowPlayingScreenOnPlay) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          DesktopNowPlayingController.instance.maximize();
+        });
+      }
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        MobileNowPlayingController.instance.show();
+        if (Configuration.instance.jumpToNowPlayingScreenOnPlay) {
+          Future.delayed(const Duration(milliseconds: 500), () {
+            MobileNowPlayingController.instance.maximize();
+          });
+        }
       });
     }
   }
@@ -275,25 +288,36 @@ class Playback extends ChangeNotifier {
       });
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      // TODO:
+      // TODO: Missing Android implementation.
     }
   }
 
   /// Load the last played playback state.
-  Future<void> loadAppState() async {
-    final state = AppState.instance;
-    tracks = state.playlist;
-    index = state.playlistIndex;
-    isShuffling = state.shuffle;
-    playlistLoopMode = state.playlistLoopMode;
-    rate = player.rate = state.rate;
-    volume = player.volume = state.volume;
+  ///
+  /// Passing [open] as `false` causes file to not be opened inside [player] or [assetsAudioPlayer].
+  ///
+  Future<void> loadAppState({bool open = true}) async {
+    isShuffling = AppState.instance.shuffle;
+    playlistLoopMode = AppState.instance.playlistLoopMode;
+    rate = player.rate = AppState.instance.rate;
+    volume = player.volume = AppState.instance.volume;
+    if (!open) return;
+    tracks = AppState.instance.playlist;
+    index = AppState.instance.index;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      await player.open(_tracksToMediaList(tracks), play: false);
+      await player.open(
+        tracks
+            .map((e) => Media(
+                  Plugins.redirect(e.uri).toString(),
+                  extras: e.toJson(),
+                ))
+            .toList(),
+        play: false,
+      );
       // A bug that results in [isPlaying] becoming `true` after attempting
       // to change the volume. Calling [pause] after a delay to ensure that
       // play button isn't in incorrect state at the startup of the application.
-      Future.delayed(const Duration(milliseconds: 500), pause);
+      await Future.delayed(const Duration(milliseconds: 500), pause);
     }
     if (Platform.isAndroid || Platform.isIOS) {
       assetsAudioPlayer.open(
@@ -310,8 +334,7 @@ class Playback extends ChangeNotifier {
                 image = (artwork as ExtendedFileImageProvider).file.uri;
               }
               return Plugins.isWebMedia(e.uri)
-                  ? Audio.network(
-                      e.uri.toString(),
+                  ? Audio.network(e.uri.toString(),
                       metas: Metas(
                         id: e.uri.toString(),
                         title: e.trackName,
@@ -322,10 +345,8 @@ class Playback extends ChangeNotifier {
                           type: ImageType.network,
                         ),
                         extra: e.toJson(),
-                      ),
-                    )
-                  : Audio.file(
-                      e.uri.toFilePath(),
+                      ))
+                  : Audio.file(e.uri.toFilePath(),
                       metas: Metas(
                         id: e.uri.toString(),
                         title: e.trackName,
@@ -336,8 +357,7 @@ class Playback extends ChangeNotifier {
                           type: ImageType.file,
                         ),
                         extra: e.toJson(),
-                      ),
-                    );
+                      ));
             }).toList()),
         showNotification: true,
         loopMode: LoopMode.values[playlistLoopMode.index],
@@ -354,24 +374,18 @@ class Playback extends ChangeNotifier {
   }
 
   Playback() {
+    // libmpv.dart specific.
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      loadAppState().then((value) {
-        player.streams.index.listen((event) {
-          index =
-              event.clamp(0, (tracks.length - 1).clamp(0, 9223372036854775807));
-          if (AppState.instance.playlistIndex != index) {
-            _saveAppState();
-          }
-          notifyListeners();
-          _update();
-        });
-        player.streams.playlist.listen((event) {
-          tracks.clear();
-          tracks = event.map((media) => Track.fromJson(media.extras)).toList();
-          _saveAppState();
-          notifyListeners();
-          _update();
-        });
+      player.streams.index.listen((event) {
+        index = event.clamp(0, (tracks.length - 1).clamp(0, 1 << 32));
+        notifyListeners();
+        _update();
+      });
+      player.streams.playlist.listen((event) {
+        tracks.clear();
+        tracks = event.map((media) => Track.fromJson(media.extras)).toList();
+        notifyListeners();
+        _update();
       });
       player.streams.isPlaying.listen((event) {
         isPlaying = event;
@@ -391,7 +405,7 @@ class Playback extends ChangeNotifier {
         position = event;
         notifyListeners();
         if (Platform.isWindows &&
-            Configuration.instance.showTrackProgressOnTaskbar &&
+            Configuration.instance.taskbarIndicator &&
             appWindow.isVisible) {
           WindowsTaskbar.setProgress(
             position.inMilliseconds,
@@ -407,6 +421,7 @@ class Playback extends ChangeNotifier {
         notifyListeners();
       });
       try {
+        // System Media Transport Controls. Windows specific.
         if (Platform.isWindows) {
           smtc.create();
           smtc.events.listen((value) {
@@ -428,29 +443,26 @@ class Playback extends ChangeNotifier {
             }
           });
         }
-        if (Platform.isLinux) {}
+        // Prevent dynamic library late initialization error on unsupported platforms.
+        // TODO: Address issue within dart_discord_rpc.
+        discord = DiscordRPC(applicationId: '881480706545573918');
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
       }
     }
+    // assets_audio_player specific.
     if (Platform.isAndroid || Platform.isIOS) {
-      loadAppState().then((value) {
-        assetsAudioPlayer.current.listen((event) {
-          if (event != null) {
-            index = event.index
-                .clamp(0, (tracks.length - 1).clamp(0, 9223372036854775807));
-            if (AppState.instance.playlistIndex != index) {
-              _saveAppState();
-            }
-            duration = event.audio.duration;
-            tracks = event.playlist.audios
-                .map((e) => Track.fromJson(e.metas.extra))
-                .toList();
-            notifyListeners();
-            _update();
-          }
-        });
+      assetsAudioPlayer.current.listen((event) {
+        if (event != null) {
+          index = event.index.clamp(0, (tracks.length - 1).clamp(0, 1 << 32));
+          duration = event.audio.duration;
+          tracks = event.playlist.audios
+              .map((e) => Track.fromJson(e.metas.extra))
+              .toList();
+          notifyListeners();
+          _update();
+        }
       });
       assetsAudioPlayer.isPlaying.listen((event) {
         isPlaying = event;
@@ -465,12 +477,43 @@ class Playback extends ChangeNotifier {
       assetsAudioPlayer.currentPosition.listen((event) {
         position = event;
         notifyListeners();
+        if (Lyrics.instance.current.isNotEmpty &&
+            Configuration.instance.notificationLyrics) {
+          if (Platform.isAndroid) {
+            for (final lyric in Lyrics.instance.current)
+              if (lyric.time ~/ 1000 == position.inSeconds) {
+                const settings = AndroidNotificationDetails(
+                  'com.alexmercerind.harmonoid',
+                  'Harmonoid',
+                  '',
+                  icon: 'drawable/splash',
+                  importance: Importance.high,
+                  priority: Priority.high,
+                  showWhen: false,
+                  onlyAlertOnce: true,
+                  playSound: false,
+                  enableVibration: false,
+                );
+                _notification.show(
+                  69420,
+                  tracks[index].trackName +
+                      ' • ' +
+                      tracks[index].trackArtistNames.join(', '),
+                  lyric.words,
+                  NotificationDetails(android: settings),
+                );
+                break;
+              }
+          }
+        }
       });
       assetsAudioPlayer.playSpeed.listen((event) {
         rate = event;
         notifyListeners();
       });
     }
+    // TODO: Restructure.
+    ytm_request_authority = Configuration.instance.proxyURL;
   }
 
   void _update() {
@@ -491,7 +534,7 @@ class Playback extends ChangeNotifier {
           }
         }();
         if (Platform.isWindows) {
-          if (appWindow.isVisible)
+          if (appWindow.isVisible && Configuration.instance.taskbarIndicator)
             WindowsTaskbar.setProgressMode(isBuffering
                 ? TaskbarProgressMode.indeterminate
                 : TaskbarProgressMode.normal);
@@ -556,11 +599,11 @@ class Playback extends ChangeNotifier {
         }
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           if (!isCompleted) {
-            discord.start(autoRegister: true);
-            discord.updatePresence(
+            discord?.start(autoRegister: true);
+            discord?.updatePresence(
               DiscordPresence(
-                state: '${track.albumName}',
-                details: '${track.trackName} • ${track.albumArtistName}',
+                state: '${track.albumArtistName}',
+                details: '${track.trackName}',
                 largeImageKey: 'icon',
                 largeImageText: Language.instance.LISTENING_TO_MUSIC,
                 smallImageText: kTitle,
@@ -568,33 +611,32 @@ class Playback extends ChangeNotifier {
             );
           }
           if (isCompleted) {
-            discord.clearPresence();
+            discord?.clearPresence();
           }
         }
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
       }
-      Lyrics.instance.update(
-          track.trackName + ' ' + track.trackArtistNames.take(2).join(', '));
+      Lyrics.instance.update(track.trackName +
+          ' ' +
+          (track.albumArtistName.isNotEmpty &&
+                  track.albumArtistName == kUnknownArtist
+              ? track.albumArtistName
+              : track.trackArtistNames.take(1).join('')));
     } catch (_) {}
   }
 
   /// Save the current playback state.
-  void _saveAppState() => AppState.instance
+  Future<void> saveAppState() => AppState.instance
       .save(tracks, index, rate, isShuffling, playlistLoopMode, volume);
 
-  /// Convert [Track] list to [Media] list.
-  List<Media> _tracksToMediaList(List<Track> tracks) => tracks
-      .map((e) => Media(
-            Plugins.redirect(e.uri).toString(),
-            extras: e.toJson(),
-          ))
-      .toList();
-
-  static final Player player = Player(video: false, osc: false, title: kTitle);
-  static final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
-  static final discord = DiscordRPC(applicationId: '881480706545573918');
+  final Player player = Player(video: false, osc: false, title: kTitle);
+  final AssetsAudioPlayer assetsAudioPlayer =
+      AssetsAudioPlayer.withId(Random().nextInt(1 << 32).toString());
+  final FlutterLocalNotificationsPlugin _notification =
+      FlutterLocalNotificationsPlugin();
+  DiscordRPC? discord;
 
   @override
   // ignore: must_call_super
