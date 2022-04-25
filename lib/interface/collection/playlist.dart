@@ -34,162 +34,75 @@ class PlaylistTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Collection>(
       builder: (context, collection, _) {
-        return CustomListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.symmetric(
-            vertical: isDesktop
-                ? 20.0
-                : kMobileSearchBarHeight +
-                    16.0 +
-                    MediaQuery.of(context).padding.top,
-          ),
-          children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (isDesktop) ...[
-                        Text(
-                          Language.instance.PLAYLIST,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline1
-                              ?.copyWith(fontSize: 20.0),
-                          textAlign: TextAlign.start,
-                        ),
-                        const SizedBox(height: 2.0),
-                        Text(Language.instance.PLAYLISTS_SUBHEADER),
-                        const SizedBox(
-                          height: 18.0,
-                        ),
-                      ],
-                      MaterialButton(
-                        onPressed: () {
-                          if (isDesktop) {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                contentPadding: const EdgeInsets.fromLTRB(
-                                    16.0, 16.0, 16.0, 8.0),
-                                content: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Padding(
-                                      child: Text(
-                                        Language.instance.CREATE,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline1,
-                                        textAlign: TextAlign.start,
-                                      ),
-                                      padding: EdgeInsets.only(
-                                        bottom: 16.0,
-                                        left: 4.0,
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 40.0,
-                                      width: 280.0,
-                                      alignment: Alignment.center,
-                                      margin: EdgeInsets.only(
-                                          top: 0.0, bottom: 0.0),
-                                      padding: EdgeInsets.only(top: 2.0),
-                                      child: Focus(
-                                        onFocusChange: (hasFocus) {
-                                          if (hasFocus) {
-                                            HotKeys.instance
-                                                .disableSpaceHotKey();
-                                          } else {
-                                            HotKeys.instance
-                                                .enableSpaceHotKey();
-                                          }
-                                        },
-                                        child: TextField(
-                                          autofocus: true,
-                                          controller: _controller,
-                                          cursorWidth: 1.0,
-                                          onSubmitted: (String value) async {
-                                            if (value.isNotEmpty) {
-                                              FocusScope.of(context).unfocus();
-                                              await Collection.instance
-                                                  .playlistAdd(value);
-                                              _controller.clear();
-                                              Navigator.of(context).maybePop();
-                                            }
-                                          },
-                                          cursorColor:
-                                              Theme.of(context).brightness ==
-                                                      Brightness.light
-                                                  ? Color(0xFF212121)
-                                                  : Colors.white,
-                                          textAlignVertical:
-                                              TextAlignVertical.bottom,
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.transparent,
+          body: CustomListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.symmetric(
+              vertical: isDesktop
+                  ? 20.0
+                  : kMobileSearchBarHeight +
+                      16.0 +
+                      MediaQuery.of(context).padding.top,
+            ),
+            children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (isDesktop) ...[
+                          Text(
+                            Language.instance.PLAYLIST,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline1
+                                ?.copyWith(fontSize: 20.0),
+                            textAlign: TextAlign.start,
+                          ),
+                          const SizedBox(height: 2.0),
+                          Text(Language.instance.PLAYLISTS_SUBHEADER),
+                          const SizedBox(
+                            height: 18.0,
+                          ),
+                        ],
+                        MaterialButton(
+                          onPressed: () {
+                            if (isDesktop) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  contentPadding: const EdgeInsets.fromLTRB(
+                                      16.0, 16.0, 16.0, 8.0),
+                                  content: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        child: Text(
+                                          Language.instance.CREATE,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline4,
-                                          decoration: inputDecoration(
-                                            context,
-                                            Language.instance
-                                                .PLAYLISTS_TEXT_FIELD_HINT,
-                                          ),
+                                              .headline1,
+                                          textAlign: TextAlign.start,
+                                        ),
+                                        padding: EdgeInsets.only(
+                                          bottom: 16.0,
+                                          left: 4.0,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  MaterialButton(
-                                    child: Text(
-                                      Language.instance.OK,
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      if (_controller.text.isNotEmpty) {
-                                        FocusScope.of(context).unfocus();
-                                        await collection
-                                            .playlistAdd(_controller.text);
-                                        _controller.clear();
-                                        Navigator.of(context).maybePop();
-                                      }
-                                    },
-                                  ),
-                                  MaterialButton(
-                                    child: Text(
-                                      Language.instance.CANCEL,
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                    onPressed: Navigator.of(context).maybePop,
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else {
-                            showModalBottomSheet(
-                              context: context,
-                              elevation: 8.0,
-                              backgroundColor: Theme.of(context).cardColor,
-                              builder: (context) => StatefulBuilder(
-                                builder: (context, setState) {
-                                  return Container(
-                                    height: 72.0 +
-                                        MediaQuery.of(context)
-                                            .viewInsets
-                                            .vertical,
-                                    child: ListView(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      padding: EdgeInsets.all(8.0),
-                                      shrinkWrap: true,
-                                      children: [
-                                        const SizedBox(height: 4.0),
-                                        Focus(
+                                      Container(
+                                        height: 40.0,
+                                        width: 280.0,
+                                        alignment: Alignment.center,
+                                        margin: EdgeInsets.only(
+                                            top: 0.0, bottom: 0.0),
+                                        padding: EdgeInsets.only(top: 2.0),
+                                        child: Focus(
                                           onFocusChange: (hasFocus) {
                                             if (hasFocus) {
                                               HotKeys.instance
@@ -200,12 +113,9 @@ class PlaylistTab extends StatelessWidget {
                                             }
                                           },
                                           child: TextField(
-                                            textCapitalization:
-                                                TextCapitalization.words,
-                                            textInputAction:
-                                                TextInputAction.done,
                                             autofocus: true,
                                             controller: _controller,
+                                            cursorWidth: 1.0,
                                             onSubmitted: (String value) async {
                                               if (value.isNotEmpty) {
                                                 FocusScope.of(context)
@@ -217,95 +127,198 @@ class PlaylistTab extends StatelessWidget {
                                                     .maybePop();
                                               }
                                             },
-                                            decoration: InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.fromLTRB(
-                                                      12, 26, 12, 10),
-                                              hintText: Language.instance
-                                                  .PLAYLISTS_TEXT_FIELD_LABEL,
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .iconTheme
-                                                      .color!
-                                                      .withOpacity(0.4),
-                                                  width: 1.8,
-                                                ),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .iconTheme
-                                                      .color!
-                                                      .withOpacity(0.4),
-                                                  width: 1.8,
-                                                ),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                  width: 1.8,
-                                                ),
-                                              ),
+                                            cursorColor:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.light
+                                                    ? Color(0xFF212121)
+                                                    : Colors.white,
+                                            textAlignVertical:
+                                                TextAlignVertical.bottom,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
+                                            decoration: inputDecoration(
+                                              context,
+                                              Language.instance
+                                                  .PLAYLISTS_TEXT_FIELD_HINT,
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(height: 4.0),
-                                        ElevatedButton(
-                                          onPressed: () async {
-                                            if (_controller.text.isNotEmpty) {
-                                              FocusScope.of(context).unfocus();
-                                              await Collection.instance
-                                                  .playlistAdd(
-                                                      _controller.text);
-                                              _controller.clear();
-                                              Navigator.of(context).maybePop();
-                                            }
-                                          },
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                              Theme.of(context).primaryColor,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            Language.instance.CREATE
-                                                .toUpperCase(),
-                                            style:
-                                                TextStyle(letterSpacing: 2.0),
-                                          ),
+                                      ),
+                                    ],
+                                  ),
+                                  actions: [
+                                    MaterialButton(
+                                      child: Text(
+                                        Language.instance.OK,
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
                                         ),
-                                      ],
+                                      ),
+                                      onPressed: () async {
+                                        if (_controller.text.isNotEmpty) {
+                                          FocusScope.of(context).unfocus();
+                                          await collection
+                                              .playlistAdd(_controller.text);
+                                          _controller.clear();
+                                          Navigator.of(context).maybePop();
+                                        }
+                                      },
                                     ),
-                                  );
-                                },
-                              ),
-                            );
-                          }
-                        },
-                        padding: EdgeInsets.zero,
-                        child: Text(
-                          Language.instance.CREATE_NEW_PLAYLIST,
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                                    MaterialButton(
+                                      child: Text(
+                                        Language.instance.CANCEL,
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                      onPressed: Navigator.of(context).maybePop,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              showModalBottomSheet(
+                                context: context,
+                                elevation: 8.0,
+                                backgroundColor: Theme.of(context).cardColor,
+                                builder: (context) => StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return Container(
+                                      height: 72.0 +
+                                          MediaQuery.of(context)
+                                              .viewInsets
+                                              .vertical,
+                                      child: ListView(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        padding: EdgeInsets.all(8.0),
+                                        shrinkWrap: true,
+                                        children: [
+                                          const SizedBox(height: 4.0),
+                                          Focus(
+                                            onFocusChange: (hasFocus) {
+                                              if (hasFocus) {
+                                                HotKeys.instance
+                                                    .disableSpaceHotKey();
+                                              } else {
+                                                HotKeys.instance
+                                                    .enableSpaceHotKey();
+                                              }
+                                            },
+                                            child: TextField(
+                                              textCapitalization:
+                                                  TextCapitalization.words,
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              autofocus: true,
+                                              controller: _controller,
+                                              onSubmitted:
+                                                  (String value) async {
+                                                if (value.isNotEmpty) {
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                  await Collection.instance
+                                                      .playlistAdd(value);
+                                                  _controller.clear();
+                                                  Navigator.of(context)
+                                                      .maybePop();
+                                                }
+                                              },
+                                              decoration: InputDecoration(
+                                                contentPadding:
+                                                    EdgeInsets.fromLTRB(
+                                                        12, 26, 12, 10),
+                                                hintText: Language.instance
+                                                    .PLAYLISTS_TEXT_FIELD_LABEL,
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .iconTheme
+                                                        .color!
+                                                        .withOpacity(0.4),
+                                                    width: 1.8,
+                                                  ),
+                                                ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .iconTheme
+                                                        .color!
+                                                        .withOpacity(0.4),
+                                                    width: 1.8,
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    width: 1.8,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              if (_controller.text.isNotEmpty) {
+                                                FocusScope.of(context)
+                                                    .unfocus();
+                                                await Collection.instance
+                                                    .playlistAdd(
+                                                        _controller.text);
+                                                _controller.clear();
+                                                Navigator.of(context)
+                                                    .maybePop();
+                                              }
+                                            },
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                Theme.of(context).primaryColor,
+                                              ),
+                                            ),
+                                            child: Text(
+                                              Language.instance.CREATE
+                                                  .toUpperCase(),
+                                              style:
+                                                  TextStyle(letterSpacing: 2.0),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            }
+                          },
+                          padding: EdgeInsets.zero,
+                          child: Text(
+                            Language.instance.CREATE_NEW_PLAYLIST,
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 4.0,
-                      ),
-                      if (isDesktop)
                         const SizedBox(
-                          height: 16.0,
+                          height: 4.0,
                         ),
-                    ],
+                        if (isDesktop)
+                          const SizedBox(
+                            height: 16.0,
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-              ] +
-              Collection.instance.playlists
-                  .map((Playlist playlist) => PlaylistTile(playlist: playlist))
-                  .toList(),
+                ] +
+                Collection.instance.playlists
+                    .map(
+                        (Playlist playlist) => PlaylistTile(playlist: playlist))
+                    .toList(),
+          ),
         );
       },
     );

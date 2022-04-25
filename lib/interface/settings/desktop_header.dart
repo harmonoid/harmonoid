@@ -19,7 +19,8 @@ class DesktopHeader extends StatefulWidget {
   DesktopHeaderState createState() => DesktopHeaderState();
 }
 
-class DesktopHeaderState extends State<DesktopHeader> {
+class DesktopHeaderState extends State<DesktopHeader>
+    with AutomaticKeepAliveClientMixin {
   Release latestRelease = Release(tagName: kVersion);
   bool isLoadingVersion = true;
   bool fetchVersionFailed = false;
@@ -50,54 +51,53 @@ class DesktopHeaderState extends State<DesktopHeader> {
   }
 
   Widget getVersionTableRow(String versionLabel, Release release) {
-    return isLoadingVersion || fetchVersionFailed
-        ? SizedBox.shrink()
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(versionLabel,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline4
-                      ?.copyWith(color: Colors.white)),
-              const SizedBox(width: 8.0),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                transitionBuilder: (child, animation) => FadeTransition(
-                  opacity: animation,
-                  child: child,
-                ),
-                child: Align(
-                  key: Key('version_details'),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    release.tagName,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline4
-                        ?.copyWith(color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          );
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(versionLabel,
+            style: Theme.of(context)
+                .textTheme
+                .headline4
+                ?.copyWith(color: Colors.white)),
+        const SizedBox(width: 8.0),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          transitionBuilder: (child, animation) => FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+          child: Align(
+            key: Key('version_details'),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              release.tagName,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline4
+                  ?.copyWith(color: Colors.white),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
         Container(
-          height: 128.0,
+          height: 96.0,
           width: MediaQuery.of(context).size.width,
           color: Color(0xFF6200EA),
           child: Row(
             children: [
               Image.asset(
                 'assets/images/project.png',
-                height: 128.0,
-                width: 128.0,
+                height: 96.0,
+                width: 96.0,
               ),
               Expanded(
                 child: Column(
@@ -118,10 +118,6 @@ class DesktopHeaderState extends State<DesktopHeader> {
                     getVersionTableRow(
                       Language.instance.SETTING_APP_VERSION_INSTALLED + ':',
                       Release(tagName: kVersion),
-                    ),
-                    getVersionTableRow(
-                      Language.instance.SETTING_APP_VERSION_LATEST + ':',
-                      latestRelease,
                     ),
                   ],
                 ),
@@ -190,6 +186,9 @@ class DesktopHeaderState extends State<DesktopHeader> {
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class Release {

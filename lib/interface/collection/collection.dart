@@ -399,10 +399,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                             value == 0.0 ? Container() : child,
                                       ),
                                     ),
-                                    Tooltip(
-                                      message: Language.instance.MORE,
-                                      child: CollectionMoreButton(),
-                                    ),
+                                    CollectionMoreButton(),
                                     Tooltip(
                                       message: Language.instance.SETTING,
                                       child: InkWell(

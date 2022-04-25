@@ -17,7 +17,6 @@ import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:ytm_client/ytm_client.dart';
 
 /// Configuration
 /// -------------

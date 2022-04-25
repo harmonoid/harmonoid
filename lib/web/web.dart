@@ -52,6 +52,25 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
               )
             : Stack(
                 children: [
+                  if (Configuration.instance.webRecent.isNotEmpty)
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: 0.2,
+                        child: Container(
+                          margin: EdgeInsets.only(
+                              top:
+                                  desktopTitleBarHeight + kDesktopAppBarHeight),
+                          alignment: Alignment.center,
+                          child: Image.memory(
+                            visualAssets.collection,
+                            height: 512.0,
+                            width: 512.0,
+                            filterQuality: FilterQuality.high,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ),
                   Padding(
                     padding: EdgeInsets.only(
                       top: desktopTitleBarHeight + kDesktopAppBarHeight,
@@ -60,7 +79,7 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
                       transitionBuilder:
                           (child, primaryAnimation, secondaryAnimation) =>
                               SharedAxisTransition(
-                        fillColor: Theme.of(context).scaffoldBackgroundColor,
+                        fillColor: Colors.transparent,
                         animation: primaryAnimation,
                         secondaryAnimation: secondaryAnimation,
                         child: child,

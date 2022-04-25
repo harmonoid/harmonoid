@@ -726,7 +726,6 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
             Collection.instance.albumArtDirectory.path,
             media.tracks.first.legacyAlbumArtFileName,
           ));
-          print(file.path);
           if (file.existsSync_()) {
             return ExtendedFileImageProvider(file);
           } else {

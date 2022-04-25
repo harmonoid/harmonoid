@@ -1645,11 +1645,11 @@ class CollectionMoreButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: Language.instance.MORE,
+      message: Language.instance.PLAY_INTERNET,
       child: ContextMenuButton<int>(
         offset: Offset.fromDirection(pi / 2, 64.0),
         icon: Icon(
-          Icons.more_vert,
+          Icons.public,
           size: 20.0,
         ),
         elevation: 4.0,
@@ -1769,7 +1769,7 @@ class CollectionMoreButton extends StatelessWidget {
             value: 0,
             child: ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.public),
+              leading: Icon(Icons.link),
               title: Text(
                 Language.instance.PLAY_URL,
                 style: Theme.of(context).textTheme.headline4,

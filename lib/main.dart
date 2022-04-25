@@ -97,8 +97,8 @@ Future<void> main(List<String> args) async {
       Harmonoid(),
     );
   } catch (exception, stacktrace) {
-    print(exception);
-    print(stacktrace);
+    debugPrint(exception.toString());
+    debugPrint(stacktrace.toString());
     runApp(
       ExceptionApp(
         exception: exception,

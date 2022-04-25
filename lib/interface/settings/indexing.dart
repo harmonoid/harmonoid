@@ -91,6 +91,8 @@ class IndexingState extends State<IndexingSetting> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           MaterialButton(
+                            minWidth: 0.0,
+                            padding: EdgeInsets.zero,
                             onPressed: CollectionRefresh.instance.isCompleted
                                 ? _addNewFolder
                                 : _showProgressDialog,
@@ -351,7 +353,10 @@ class IndexingState extends State<IndexingSetting> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
+                        const SizedBox(width: 8.0),
                         MaterialButton(
+                          minWidth: 0.0,
+                          padding: EdgeInsets.zero,
                           onPressed: controller.progress != controller.total
                               ? _showProgressDialog
                               : () async {
@@ -368,8 +373,10 @@ class IndexingState extends State<IndexingSetting> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 2.0),
+                        const SizedBox(width: 12.0),
                         MaterialButton(
+                          minWidth: 0.0,
+                          padding: EdgeInsets.zero,
                           onPressed: controller.progress != controller.total
                               ? _showProgressDialog
                               : () async {

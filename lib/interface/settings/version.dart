@@ -12,7 +12,8 @@ class VersionSetting extends StatefulWidget {
   VersionState createState() => VersionState();
 }
 
-class VersionState extends State<VersionSetting> {
+class VersionState extends State<VersionSetting>
+    with AutomaticKeepAliveClientMixin {
   Release latestRelease = Release(tagName: kVersion);
   bool isLoadingVersion = true;
   bool fetchVersionFailed = false;
@@ -43,8 +44,6 @@ class VersionState extends State<VersionSetting> {
   }
 
   Row getVersionTableRow(String versionLabel, Release release) {
-    final hasLink = release.htmlUrl != null && release.htmlUrl!.isNotEmpty;
-
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -78,6 +77,7 @@ class VersionState extends State<VersionSetting> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SettingsTile(
       title: Language.instance.SETTING_APP_VERSION_TITLE,
       subtitle: Language.instance.SETTING_APP_VERSION_SUBTITLE,
@@ -112,6 +112,9 @@ class VersionState extends State<VersionSetting> {
             ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class Release {

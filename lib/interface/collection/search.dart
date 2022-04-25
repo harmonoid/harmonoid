@@ -275,10 +275,12 @@ class SearchTabState extends State<SearchTab> {
                       ] +
                       tracks,
                 )
-              : ExceptionWidget(
-                  title: Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
-                  subtitle:
-                      Language.instance.COLLECTION_SEARCH_NO_RESULTS_SUBTITLE,
+              : Center(
+                  child: ExceptionWidget(
+                    title: Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                    subtitle:
+                        Language.instance.COLLECTION_SEARCH_NO_RESULTS_SUBTITLE,
+                  ),
                 ),
         );
       },
