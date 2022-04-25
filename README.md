@@ -2,20 +2,24 @@
 
 <h1 align="left">Harmonoid</h1>
 
-**🎵 Elegant music app to play & manage music library & YouTube Music client.**
+**🎵 Elegant music app to play & manage music library. YouTube Music client.**
 
-[Download](#download) • [Discord](https://discord.gg/2Rc3edFWd8)
+- [Download](#download) [Windows, Linux, Android]
+- [Discord](https://discord.gg/2Rc3edFWd8)
 
 [work-in-progress] [[report-bugs-or-request-features](https://github.com/harmonoid/harmonoid/issues)] [[patreon](https://www.patreon.com/harmonoid)]
 
-![](https://github.com/harmonoid/harmonoid/blob/assets/151304862-f4d336c6-4559-477b-b82e-a876f78f5eec.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/151304870-6d1d18db-7120-43bd-87fa-9fa369244bfd.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/151304875-dc120964-3b98-4460-beaf-d28c75b45109.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/151304879-cdb10677-30c5-45bb-9e67-f520297280da.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/staged/collection/harmonoid_vLK0DRMxiI.png?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/staged/collection/dark-mode.png?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/staged/collection/album-view.png?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/staged/collection/album-artist.png?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/staged/collection/now-playing.png?raw=true)
 
 ## Motion
 
-![](https://user-images.githubusercontent.com/28951144/151239401-be199319-0a22-4139-8bef-fe1edac2d576.gif)
+Enjoy that 🧈 buttery experience.
+
+https://user-images.githubusercontent.com/28951144/165089217-451646fe-7cfa-4ba8-8394-ee8a89d91a5a.mp4
 
 ## Links
 
@@ -26,7 +30,9 @@
 - [Compiling](#compiling)
 - [License](#license)
 - [Third-Party Credits](#third-party-credits)
-
+- [Discord](https://discord.gg/2Rc3edFWd8)
+- [Patreon](https://www.patreon.com/harmonoid)
+ 
 ## Download
 
 ### <img src='https://user-images.githubusercontent.com/28951144/159582997-2ccd85e1-5f1c-494f-938b-d9a2bd6ed0ae.png' height='24'></img>&nbsp; Windows
@@ -92,8 +98,7 @@ Similar instructions can be followed on your favorite distro.
 - Plugin API.
 - Windows 11 `IExplorerCommand` integration.
 - Publishing to Microsoft Store & other places.
-- Support for remaining macOS & iOS platforms.
-- YOU Tell 😄
+- YOU Tell 😄.
 
 ## Limitations
 
@@ -139,21 +144,29 @@ Next time when you start the app, your music collection will be retrieved from t
 
 To remove a folder from your music collection, just click on "REMOVE" next to the folder you might wanna remove in the settings page.
 
-### 3. Managing playback queue
+### 3. Refresh your music
+
+Just tap the circular "refresh" button in bottom-right of the application, it'll look for new files & remove the deleted ones from your library.
+
+If you wish to completely re-build your music library (from scratch), go to Settings & press "REINDEX" under "Collection" section.
+
+### 4. Managing playback queue
 
 By default, the app will attempt to play the song that you click on, while adding songs after it to the queue. To add more songs to the queue, simply right click on the new song & click "Add to now playing".
 
 You can also configure to automatically play other songs from your collection when the queue is finished.
 
-### 4. Creating a playlist
+### 5. Creating a playlist
 
 To create a new playlist, you need to go the the "PLAYLISTS" tab & click "CREATE NEW PLAYLIST". This will ask you a name for your new shiny playlist. After its creation, you can click on your favorite song to add it to the required playlist. This can help you greatly organize your music collection.
 
 You can add both local music & music from web URLs to these playlists.
 
-### 5. Playing songs from YouTube Music
+### 6. Playing songs from YouTube Music
 
-Currently, YouTube Music support works _well_ in terms of performance & features. However, authentication is not implemented yet.
+Click on the "earth icon" in top-right of the application, select "YT Music".
+
+Currently, YouTube Music support works _well_ in terms of performance & features.
 Right now, you can:
 
 - Play songs.
@@ -164,28 +177,26 @@ Right now, you can:
 - Get suggestions.
 - Save to playlists (still streamed over the internet).
 
-We intend to improve in future & you can contribute to this. Downloading is never going to be a feature inside the application.
-
-### 6. Playing from File Explorer
+### 7. Playing from File Explorer
 
 You can play music directly from file explorer if you installed Harmonoid using the setup installer or from Microsoft Store.
 
 You can also right click a folder to "Add to Harmonoid's Playlist".
 
-### 7. Viewing a YouTube Music song on website
+### 8. Viewing a YouTube Music song on website
 
 If you're playing a song from YouTube Music & want to hear it on website instead, you can simply go to the "Now Playing Screen" by an arrow in the bottom-right corner of the application. Hovering over the album art, you'll see an icon hinting to open the song in your web-browser. Click on it & you're on YouTube Music website.
 
-### 8. Playing a YouTube URL
+### 9. Playing an online media URL
 
-Just enter the YouTube or YouTube Music URL in the search field & hit enter. It'll start playing immediately.
+Click on the "earth icon" in top-right of the application, select "Play URL".
 
-### 9. Troubleshoot
+### 10. Troubleshoot
 
 If you encounter some problem like you're unable to start the app or see an error screen, you can try to delete the `.Harmonoid` folder in your home directory.
 WARNING: This will also delete your music indexing cache & playlists. Best decision can be to report us at our Discord.
 
-### 10. Hacking
+### 11. Hacking
 
 If you wish to really configure properties of the app which are not available in the UI yet, you may edit the `.JSON` files in `~/.Harmonoid` directory.
 
@@ -440,11 +451,11 @@ The source-code in this repository and official releases/binaries are distribute
 
 - Harmonoid is (for the most part) written in Dart programming language using [Flutter SDK](https://github.com/flutter/flutter). Refrences to all the other external "plugins" & "packages" used at the time of building application can be found [here](./pubspec.yaml).
 
-- Harmonoid uses a modified version of [libmpv](https://github.com/mpv-player/mpv/tree/master/libmpv) for media playback capabilities on desktop. The compilation setup & other information can be found [here](https://github.com/alexmercerind/harmonoid-custom-codec). The application bundles a minimal & LGPL compilant version of [mpv](https://github.com/mpv-player/mpv) shared library (`mpv-2.dll`). Users are free to update/change to their own preferred libmpv by replacing the `mpv-2.dll` file present in Harmonoid's application directory.
+- Harmonoid uses a modified version of [libmpv](https://github.com/mpv-player/mpv/tree/master/libmpv) for media playback capabilities on desktop. The compilation setup & other information (for Microsoft Windows) can be found [here](https://github.com/alexmercerind/harmonoid-custom-codec). The application bundles a minimal & LGPL compilant version of [mpv](https://github.com/mpv-player/mpv) shared library (for Microsoft Windows) (`mpv-2.dll`). Users are free to update/change to their own preferred libmpv by replacing the `mpv-2.dll` file present in Harmonoid's application directory.
 
 - Harmonoid also depends upon some of the awesome packages available on pub.dev. A complete list of those can be found [here](https://github.com/harmonoid/harmonoid/blob/47d879cdf7151069bc40722235e79e7144f92f4c/pubspec.yaml#L32-L81).
 
-- [YouTube](https://www.youtube.com/) & [YouTube Music](https://music.youtube.com/) is owned by [Google LLC](https://about.google/). Playback of videos & music is governed by [YouTube Terms of Service](https://www.youtube.com/t/terms). The application does not store any music/video streams locally, neither saves files on the disk. The content is shown in a manner similar to how a normal web-browser functions.
+- [YouTube](https://www.youtube.com/) & [YouTube Music](https://music.youtube.com/) is owned by [Google LLC](https://about.google/). Playback of videos & music is governed by [YouTube Terms of Service](https://www.youtube.com/t/terms). The application does not store any music/video streams locally, neither saves files on the disk. The content is shown in a manner similar to how a normal web-browser functions. This is not a "core" functionality of the application and just something application supports for the sake of completion.
 
 ## Bonus
 
