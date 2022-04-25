@@ -107,6 +107,7 @@
   "PLAYLIST_ADD_DIALOG_TITLE": "プレイリストに追加",
   "PLAYLIST_SINGLE": "Playlist",
   "PLAYLIST_TRACKS_SUBHEADER": "このプレイリストには以下のトラックがあります",
+  "PLAY_INTERNET": "Play from internet",
   "PLAY_NOW": "今すぐ再生",
   "PLAY_URL": "Play URL",
   "PLAY_URL_SUBTITLE": "Enter URI to the media resource",

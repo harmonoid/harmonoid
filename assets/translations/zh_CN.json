@@ -107,6 +107,7 @@
   "PLAYLIST_ADD_DIALOG_TITLE": "添加到播放列表",
   "PLAYLIST_SINGLE": "Playlist",
   "PLAYLIST_TRACKS_SUBHEADER": "这里展示的是播放列表中的歌曲",
+  "PLAY_INTERNET": "Play from internet",
   "PLAY_NOW": "现在播放",
   "PLAY_URL": "Play URL",
   "PLAY_URL_SUBTITLE": "Enter URI to the media resource",

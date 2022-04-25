@@ -107,6 +107,7 @@ class Strings {
   late String PLAYLIST_ADD_DIALOG_TITLE;
   late String PLAYLIST_SINGLE;
   late String PLAYLIST_TRACKS_SUBHEADER;
+  late String PLAY_INTERNET;
   late String PLAY_NOW;
   late String PLAY_URL;
   late String PLAY_URL_SUBTITLE;

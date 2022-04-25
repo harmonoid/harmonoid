@@ -304,6 +304,7 @@ class Language extends Strings with ChangeNotifier {
     this.PLAYLIST_ADD_DIALOG_TITLE = asset['PLAYLIST_ADD_DIALOG_TITLE']!;
     this.PLAYLIST_SINGLE = asset['PLAYLIST_SINGLE']!;
     this.PLAYLIST_TRACKS_SUBHEADER = asset['PLAYLIST_TRACKS_SUBHEADER']!;
+    this.PLAY_INTERNET = asset['PLAY_INTERNET']!;
     this.PLAY_NOW = asset['PLAY_NOW']!;
     this.PLAY_URL = asset['PLAY_URL']!;
     this.PLAY_URL_SUBTITLE = asset['PLAY_URL_SUBTITLE']!;
