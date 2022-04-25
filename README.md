@@ -88,12 +88,13 @@ Similar instructions can be followed on your favorite distro.
 
 ### Upcoming features
 
-- Mini-window mode.
-- Minimization to system tray.
 - Music visualizations.
-- Tag editor.
 - Time-synced lyrics.
 - Equalizer.
+- Details editor.
+- Re-ordering "Now Playing" list.
+- Mini-window mode.
+- Minimization to system tray.
 - Last.fm scrobbling.
 - Plugin API.
 - Windows 11 `IExplorerCommand` integration.
