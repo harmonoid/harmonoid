@@ -1497,27 +1497,50 @@ class PlaylistScreenState extends State<PlaylistScreen>
                               ],
                             ),
                             onLongPress: () async {
-                              var result;
-                              await showModalBottomSheet(
+                              showDialog(
                                 context: context,
-                                builder: (context) => Container(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: trackPopupMenuItems(context)
-                                        .map(
-                                          (item) => PopupMenuItem(
-                                            child: item.child,
-                                            onTap: () => result = item.value,
-                                          ),
-                                        )
-                                        .toList(),
+                                builder: (subContext) => AlertDialog(
+                                  title: Text(
+                                    Language.instance.REMOVE,
+                                    style: Theme.of(subContext)
+                                        .textTheme
+                                        .headline1,
                                   ),
+                                  content: Text(
+                                    Language.instance
+                                        .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
+                                        .replaceAll(
+                                          'TRACK_NAME',
+                                          widget.playlist.tracks[i].trackName,
+                                        )
+                                        .replaceAll('PLAYLIST_NAME',
+                                            widget.playlist.name),
+                                    style: Theme.of(subContext)
+                                        .textTheme
+                                        .headline3,
+                                  ),
+                                  actions: [
+                                    MaterialButton(
+                                      textColor: Theme.of(context).primaryColor,
+                                      onPressed: () async {
+                                        await Collection.instance
+                                            .playlistRemoveTrack(
+                                          widget.playlist,
+                                          widget.playlist.tracks[i],
+                                        );
+
+                                        Navigator.of(subContext).pop();
+                                        setState(() {});
+                                      },
+                                      child: Text(Language.instance.YES),
+                                    ),
+                                    MaterialButton(
+                                      textColor: Theme.of(context).primaryColor,
+                                      onPressed: Navigator.of(subContext).pop,
+                                      child: Text(Language.instance.NO),
+                                    ),
+                                  ],
                                 ),
-                              );
-                              await trackPopupMenuHandle(
-                                context,
-                                widget.playlist.tracks[i],
-                                result,
                               );
                             },
                             child: Column(
@@ -1533,17 +1556,13 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                         CrossAxisAlignment.center,
                                     children: [
                                       const SizedBox(width: 12.0),
-                                      Container(
+                                      ExtendedImage(
+                                        image: getAlbumArt(
+                                            widget.playlist.tracks[i],
+                                            small: true),
                                         height: 56.0,
                                         width: 56.0,
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          '${widget.playlist.tracks[i].trackNumber}',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline3
-                                              ?.copyWith(fontSize: 18.0),
-                                        ),
+                                        fit: BoxFit.cover,
                                       ),
                                       const SizedBox(width: 12.0),
                                       Expanded(
@@ -1590,30 +1609,63 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                         alignment: Alignment.center,
                                         child: IconButton(
                                           onPressed: () async {
-                                            var result;
-                                            await showModalBottomSheet(
+                                            showDialog(
                                               context: context,
-                                              builder: (context) => Container(
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: trackPopupMenuItems(
-                                                          context)
-                                                      .map(
-                                                        (item) => PopupMenuItem(
-                                                          child: item.child,
-                                                          onTap: () => result =
-                                                              item.value,
-                                                        ),
-                                                      )
-                                                      .toList(),
+                                              builder: (subContext) =>
+                                                  AlertDialog(
+                                                title: Text(
+                                                  Language.instance.REMOVE,
+                                                  style: Theme.of(subContext)
+                                                      .textTheme
+                                                      .headline1,
                                                 ),
+                                                content: Text(
+                                                  Language.instance
+                                                      .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
+                                                      .replaceAll(
+                                                        'TRACK_NAME',
+                                                        widget
+                                                            .playlist
+                                                            .tracks[i]
+                                                            .trackName,
+                                                      )
+                                                      .replaceAll(
+                                                          'PLAYLIST_NAME',
+                                                          widget.playlist.name),
+                                                  style: Theme.of(subContext)
+                                                      .textTheme
+                                                      .headline3,
+                                                ),
+                                                actions: [
+                                                  MaterialButton(
+                                                    textColor: Theme.of(context)
+                                                        .primaryColor,
+                                                    onPressed: () async {
+                                                      await Collection.instance
+                                                          .playlistRemoveTrack(
+                                                        widget.playlist,
+                                                        widget
+                                                            .playlist.tracks[i],
+                                                      );
+
+                                                      Navigator.of(subContext)
+                                                          .pop();
+                                                      setState(() {});
+                                                    },
+                                                    child: Text(
+                                                        Language.instance.YES),
+                                                  ),
+                                                  MaterialButton(
+                                                    textColor: Theme.of(context)
+                                                        .primaryColor,
+                                                    onPressed:
+                                                        Navigator.of(subContext)
+                                                            .pop,
+                                                    child: Text(
+                                                        Language.instance.NO),
+                                                  ),
+                                                ],
                                               ),
-                                            );
-                                            await trackPopupMenuHandle(
-                                              context,
-                                              widget.playlist.tracks[i],
-                                              result,
                                             );
                                           },
                                           icon: Icon(

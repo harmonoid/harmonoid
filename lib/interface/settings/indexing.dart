@@ -217,7 +217,8 @@ class IndexingState extends State<IndexingSetting> {
                                           );
                                         },
                                         child: Text(
-                                          Language.instance.REMOVE,
+                                          Language.instance.REMOVE
+                                              .toUpperCase(),
                                           style: TextStyle(
                                             color:
                                                 Theme.of(context).primaryColor,
