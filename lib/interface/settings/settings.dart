@@ -36,7 +36,7 @@ class Settings extends StatelessWidget {
                     cacheExtent: MediaQuery.of(context).size.height * 4,
                     shrinkWrap: true,
                     children: [
-                      const DesktopHeader(),
+                      const Header(),
                       const SizedBox(height: 4.0),
                       IndexingSetting(),
                       ThemeSetting(),

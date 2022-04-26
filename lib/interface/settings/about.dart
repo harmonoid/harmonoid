@@ -7,6 +7,7 @@
 ///
 
 import 'dart:convert' as convert;
+import 'package:harmonoid/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -16,8 +17,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/constants/language.dart';
 
 const kContributors = [
   [
@@ -199,34 +198,6 @@ const kTranslators = [
   ],
 ];
 
-class AboutSetting extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SettingsTile(
-      title: Language.instance.ABOUT_TITLE,
-      subtitle: Language.instance.ABOUT_SUBTITLE,
-      child: Container(),
-      actions: [
-        MaterialButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => AboutPage(),
-              ),
-            );
-          },
-          child: Text(
-            Language.instance.KNOW_MORE,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class AboutPage extends StatefulWidget {
   const AboutPage({
     Key? key,
@@ -251,357 +222,471 @@ class AboutPageState extends State<AboutPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          DesktopAppBar(
-            title: Language.instance.ABOUT_TITLE,
-          ),
-          Container(
-            margin: EdgeInsets.only(
-              top: desktopTitleBarHeight + kDesktopAppBarHeight,
-            ),
-            child: Container(
-              child: CustomListView(
-                padding: EdgeInsets.symmetric(vertical: 4.0),
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(
-                      left: 8.0,
-                      right: 8.0,
-                      top: 4.0,
-                      bottom: 4.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+    return isDesktop
+        ? Scaffold(
+            body: Stack(
+              children: [
+                DesktopAppBar(
+                  title: 'About',
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                    top: desktopTitleBarHeight + kDesktopAppBarHeight,
+                  ),
+                  child: Container(
+                    child: CustomListView(
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                        Container(
+                          margin: EdgeInsets.only(
+                            left: 8.0,
+                            right: 8.0,
+                            top: 4.0,
+                            bottom: 4.0,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding:
-                                    EdgeInsets.only(left: 16.0, right: 16.0),
-                                child: CircleAvatar(
-                                  radius: 36.0,
-                                  backgroundColor: Theme.of(context).cardColor,
-                                  backgroundImage:
-                                      AssetImage('assets/images/project.png'),
+                                    EdgeInsets.only(top: 16.0, bottom: 8.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 16.0, right: 16.0),
+                                      child: CircleAvatar(
+                                        radius: 36.0,
+                                        backgroundColor:
+                                            Theme.of(context).cardColor,
+                                        backgroundImage: AssetImage(
+                                            'assets/images/project.png'),
+                                      ),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Harmonoid',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline1
+                                              ?.copyWith(fontSize: 24.0),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Harmonoid',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline1
-                                        ?.copyWith(fontSize: 24.0),
-                                  ),
-                                ],
+                              SizedBox(
+                                height: 16.0,
                               ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 16.0,
+                                  right: 16.0,
+                                  bottom: 8.0,
+                                  top: 2.0,
+                                ),
+                                child: (repository == null ||
+                                        repository!.containsKey('message'))
+                                    ? Text(
+                                        '🎵 Elegant music app to play & manage music library.',
+                                        style: TextStyle(
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white.withOpacity(1.0)
+                                              : Colors.black.withOpacity(0.8),
+                                          fontSize: 14.0,
+                                        ),
+                                      )
+                                    : Text(
+                                        repository!['description'],
+                                        style: TextStyle(
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white.withOpacity(0.8)
+                                              : Colors.black.withOpacity(0.8),
+                                          fontSize: 14.0,
+                                        ),
+                                      ),
+                              ),
+                              if (repository != null &&
+                                  !repository!.containsKey('message'))
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 8.0),
+                                  child: Row(children: [
+                                    Chip(
+                                      avatar: Icon(FluentIcons.star_20_regular,
+                                          size: 20.0, color: Colors.white),
+                                      label: Text(
+                                        '${repository!['stargazers_count']} stars',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                                    SizedBox(width: 8.0),
+                                    Chip(
+                                      avatar: Icon(
+                                          FluentIcons.branch_fork_20_regular,
+                                          size: 20.0,
+                                          color: Colors.white),
+                                      label: Text(
+                                        '${repository!['forks']} forks',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                                  ]),
+                                ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          height: 16.0,
+                          height: 8.0,
+                        ),
+                        SizedBox(
+                          height: 12.0,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(
-                            left: 16.0,
-                            right: 16.0,
-                            bottom: 8.0,
-                            top: 2.0,
+                          padding: EdgeInsets.only(left: 24.0),
+                          child: Text(
+                            'Developers',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline2
+                                ?.copyWith(fontSize: 20.0),
                           ),
-                          child: (repository == null ||
-                                  repository!.containsKey('message'))
-                              ? Text(
-                                  '🎵 Elegant music app to play & manage music library.',
-                                  style: TextStyle(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white.withOpacity(1.0)
-                                        : Colors.black.withOpacity(0.8),
-                                    fontSize: 14.0,
-                                  ),
-                                )
-                              : Text(
-                                  repository!['description'],
-                                  style: TextStyle(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white.withOpacity(0.8)
-                                        : Colors.black.withOpacity(0.8),
-                                    fontSize: 14.0,
-                                  ),
-                                ),
                         ),
-                        if (repository != null &&
-                            !repository!.containsKey('message'))
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
-                            child: Row(children: [
-                              Chip(
-                                avatar: Icon(FluentIcons.star_20_regular,
-                                    size: 20.0, color: Colors.white),
-                                label: Text(
-                                  '${repository!['stargazers_count']} stars',
-                                  style: TextStyle(
-                                    color: Colors.white,
+                        SizedBox(
+                          height: 12.0,
+                        ),
+                        ...kContributors
+                            .map(
+                              (contributor) => Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                child: ListTile(
+                                  onTap: () => launch(
+                                    contributor[0],
+                                  ),
+                                  leading: CircleAvatar(
+                                    backgroundImage: contributor[1].isNotEmpty
+                                        ? NetworkImage(
+                                            contributor[1],
+                                          )
+                                        : null,
+                                    child: contributor[1].isEmpty
+                                        ? Icon(
+                                            FluentIcons.person_48_regular,
+                                          )
+                                        : null,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                  title: Text(
+                                    contributor[2],
+                                    style:
+                                        Theme.of(context).textTheme.headline2,
+                                  ),
+                                  subtitle: Text(
+                                    contributor[3],
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  trailing: Icon(
+                                    Icons.link,
+                                    size: 22.0,
                                   ),
                                 ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.secondary,
                               ),
-                              SizedBox(width: 8.0),
-                              Chip(
-                                avatar: Icon(FluentIcons.branch_fork_20_regular,
-                                    size: 20.0, color: Colors.white),
-                                label: Text(
-                                  '${repository!['forks']} forks',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.secondary,
-                              ),
-                            ]),
+                            )
+                            .toList(),
+                        SizedBox(
+                          height: 12.0,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 24.0),
+                          child: Text(
+                            'Artists',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline2
+                                ?.copyWith(fontSize: 20.0),
                           ),
+                        ),
+                        SizedBox(
+                          height: 12.0,
+                        ),
+                        ...kArtists
+                            .map(
+                              (contributor) => Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                child: ListTile(
+                                  onTap: () => launch(
+                                    contributor[0],
+                                  ),
+                                  leading: CircleAvatar(
+                                    backgroundImage: contributor[1].isNotEmpty
+                                        ? NetworkImage(
+                                            contributor[1],
+                                          )
+                                        : null,
+                                    child: contributor[1].isEmpty
+                                        ? Icon(
+                                            FluentIcons.person_48_regular,
+                                          )
+                                        : null,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                  title: Text(
+                                    contributor[2],
+                                    style:
+                                        Theme.of(context).textTheme.headline2,
+                                  ),
+                                  subtitle: Text(
+                                    contributor[3],
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  trailing: Icon(
+                                    Icons.link,
+                                    size: 22.0,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        SizedBox(
+                          height: 12.0,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 24.0),
+                          child: Text(
+                            'Testers',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline2
+                                ?.copyWith(fontSize: 20.0),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 12.0,
+                        ),
+                        ...kTesters
+                            .map(
+                              (contributor) => Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                child: ListTile(
+                                  onTap: () => launch(
+                                    contributor[0],
+                                  ),
+                                  leading: CircleAvatar(
+                                    backgroundImage: contributor[1].isNotEmpty
+                                        ? NetworkImage(
+                                            contributor[1],
+                                          )
+                                        : null,
+                                    child: contributor[1].isEmpty
+                                        ? Icon(
+                                            FluentIcons.person_48_regular,
+                                          )
+                                        : null,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                  title: Text(
+                                    contributor[2],
+                                    style:
+                                        Theme.of(context).textTheme.headline2,
+                                  ),
+                                  subtitle: Text(
+                                    contributor[3],
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  trailing: Icon(
+                                    Icons.link,
+                                    size: 22.0,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        SizedBox(
+                          height: 12.0,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 24.0),
+                          child: Text(
+                            'Translators',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline2
+                                ?.copyWith(fontSize: 20.0),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 12.0,
+                        ),
+                        ...kTranslators
+                            .map(
+                              (contributor) => Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                child: ListTile(
+                                  onTap: () => launch(
+                                    contributor[0],
+                                  ),
+                                  leading: CircleAvatar(
+                                    backgroundImage: contributor[1].isNotEmpty
+                                        ? NetworkImage(
+                                            contributor[1],
+                                          )
+                                        : null,
+                                    child: contributor[1].isEmpty
+                                        ? Icon(
+                                            FluentIcons.person_48_regular,
+                                          )
+                                        : null,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                  title: Text(
+                                    contributor[2],
+                                    style:
+                                        Theme.of(context).textTheme.headline2,
+                                  ),
+                                  subtitle: Text(
+                                    contributor[3],
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  trailing: Icon(
+                                    Icons.link,
+                                    size: 22.0,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList()
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 24.0),
-                    child: Text(
-                      'Developers',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2
-                          ?.copyWith(fontSize: 20.0),
+                ),
+              ],
+            ),
+          )
+        : Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              title: Text(
+                'About',
+                style: Theme.of(context).textTheme.headline1,
+              ),
+            ),
+            body: NowPlayingBarScrollHideNotifier(
+              child: CustomListView(
+                children: [
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    margin: EdgeInsets.only(
+                      left: 8.0,
+                      right: 8.0,
+                      top: 8.0,
+                      bottom: 8.0,
+                    ),
+                    elevation: 4.0,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: CircleAvatar(
+                                backgroundImage:
+                                    AssetImage('assets/images/project.png'),
+                                radius: 28.0,
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Harmonoid',
+                                    style:
+                                        Theme.of(context).textTheme.headline1,
+                                  ),
+                                  Text(
+                                    '@alexmercerind',
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 16.0),
+                          ],
+                        ),
+                        const Divider(height: 1.0, thickness: 1.0),
+                        CorrectedListTile(
+                          height: 72.0,
+                          iconData: Icons.info,
+                          title: 'Installed version',
+                          subtitle: kVersion,
+                        ),
+                        CorrectedListTile(
+                          height: 72.0,
+                          iconData: Icons.code,
+                          onTap: () =>
+                              launch('https://github.com/harmonoid/harmonoid'),
+                          title: 'GitHub',
+                          subtitle: 'Visit development repository',
+                        ),
+                        CorrectedListTile(
+                          height: 72.0,
+                          iconData: Icons.attach_money,
+                          onTap: () =>
+                              launch('https://alexmercerind.github.io/donate'),
+                          title: 'Donate',
+                          subtitle: 'Support the project development',
+                        ),
+                        CorrectedListTile(
+                          height: 72.0,
+                          iconData: Icons.translate,
+                          onTap: () => launch(
+                              'https://github.com/harmonoid/harmonoid/tree/master/assets/translations'),
+                          title: 'Translate',
+                          subtitle: 'Provide or update existing translations',
+                        ),
+                        CorrectedListTile(
+                          height: 64.0,
+                          iconData: Icons.book,
+                          onTap: () => launch(
+                              'https://github.com/harmonoid/harmonoid/wiki/License'),
+                          title: 'License',
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  ...kContributors
-                      .map(
-                        (contributor) => Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: ListTile(
-                            onTap: () => launch(
-                              contributor[0],
-                            ),
-                            leading: CircleAvatar(
-                              backgroundImage: contributor[1].isNotEmpty
-                                  ? NetworkImage(
-                                      contributor[1],
-                                    )
-                                  : null,
-                              child: contributor[1].isEmpty
-                                  ? Icon(
-                                      FluentIcons.person_48_regular,
-                                    )
-                                  : null,
-                              backgroundColor: Colors.transparent,
-                            ),
-                            title: Text(
-                              contributor[2],
-                              style: Theme.of(context).textTheme.headline2,
-                            ),
-                            subtitle: Text(
-                              contributor[3],
-                              style: Theme.of(context).textTheme.headline3,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing: Icon(
-                              Icons.link,
-                              size: 22.0,
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 24.0),
-                    child: Text(
-                      'Artists',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2
-                          ?.copyWith(fontSize: 20.0),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  ...kArtists
-                      .map(
-                        (contributor) => Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: ListTile(
-                            onTap: () => launch(
-                              contributor[0],
-                            ),
-                            leading: CircleAvatar(
-                              backgroundImage: contributor[1].isNotEmpty
-                                  ? NetworkImage(
-                                      contributor[1],
-                                    )
-                                  : null,
-                              child: contributor[1].isEmpty
-                                  ? Icon(
-                                      FluentIcons.person_48_regular,
-                                    )
-                                  : null,
-                              backgroundColor: Colors.transparent,
-                            ),
-                            title: Text(
-                              contributor[2],
-                              style: Theme.of(context).textTheme.headline2,
-                            ),
-                            subtitle: Text(
-                              contributor[3],
-                              style: Theme.of(context).textTheme.headline3,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing: Icon(
-                              Icons.link,
-                              size: 22.0,
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 24.0),
-                    child: Text(
-                      'Testers',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2
-                          ?.copyWith(fontSize: 20.0),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  ...kTesters
-                      .map(
-                        (contributor) => Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: ListTile(
-                            onTap: () => launch(
-                              contributor[0],
-                            ),
-                            leading: CircleAvatar(
-                              backgroundImage: contributor[1].isNotEmpty
-                                  ? NetworkImage(
-                                      contributor[1],
-                                    )
-                                  : null,
-                              child: contributor[1].isEmpty
-                                  ? Icon(
-                                      FluentIcons.person_48_regular,
-                                    )
-                                  : null,
-                              backgroundColor: Colors.transparent,
-                            ),
-                            title: Text(
-                              contributor[2],
-                              style: Theme.of(context).textTheme.headline2,
-                            ),
-                            subtitle: Text(
-                              contributor[3],
-                              style: Theme.of(context).textTheme.headline3,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing: Icon(
-                              Icons.link,
-                              size: 22.0,
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 24.0),
-                    child: Text(
-                      'Translators',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2
-                          ?.copyWith(fontSize: 20.0),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  ...kTranslators
-                      .map(
-                        (contributor) => Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: ListTile(
-                            onTap: () => launch(
-                              contributor[0],
-                            ),
-                            leading: CircleAvatar(
-                              backgroundImage: contributor[1].isNotEmpty
-                                  ? NetworkImage(
-                                      contributor[1],
-                                    )
-                                  : null,
-                              child: contributor[1].isEmpty
-                                  ? Icon(
-                                      FluentIcons.person_48_regular,
-                                    )
-                                  : null,
-                              backgroundColor: Colors.transparent,
-                            ),
-                            title: Text(
-                              contributor[2],
-                              style: Theme.of(context).textTheme.headline2,
-                            ),
-                            subtitle: Text(
-                              contributor[3],
-                              style: Theme.of(context).textTheme.headline3,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing: Icon(
-                              Icons.link,
-                              size: 22.0,
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList()
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 }

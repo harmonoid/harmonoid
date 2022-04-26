@@ -14,13 +14,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/constants/language.dart';
 
-class DesktopHeader extends StatefulWidget {
-  const DesktopHeader({Key? key}) : super(key: key);
-  DesktopHeaderState createState() => DesktopHeaderState();
+class Header extends StatefulWidget {
+  const Header({Key? key}) : super(key: key);
+  HeaderState createState() => HeaderState();
 }
 
-class DesktopHeaderState extends State<DesktopHeader>
-    with AutomaticKeepAliveClientMixin {
+class HeaderState extends State<Header> with AutomaticKeepAliveClientMixin {
   Release latestRelease = Release(tagName: kVersion);
   bool isLoadingVersion = true;
   bool fetchVersionFailed = false;
