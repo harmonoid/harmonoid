@@ -39,6 +39,8 @@ import 'package:harmonoid/constants/language.dart';
 /// Implements [ChangeNotifier] to trigger UI updates.
 ///
 /// Automatically handles:
+/// * State changes.
+/// * Platform independence.
 /// * `ITaskbarList3` & `SystemMediaTransportControls` controls on Windows.
 /// * D-Bus MPRIS controls on Linux.
 /// * Discord RPC.
@@ -288,7 +290,48 @@ class Playback extends ChangeNotifier {
       });
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      // TODO: Missing Android implementation.
+      this.tracks.addAll(tracks);
+      notifyListeners();
+      tracks.forEach((e) {
+        Uri? image;
+        if (Plugins.isWebMedia(e.uri)) {
+          final artwork = getAlbumArt(e, small: true);
+          image = Uri.parse((artwork as ExtendedNetworkImageProvider).url);
+        } else {
+          final artwork = getAlbumArt(e);
+          image = (artwork as ExtendedFileImageProvider).file.uri;
+        }
+        final audio = Plugins.isWebMedia(e.uri)
+            ? Audio.network(
+                Plugins.redirect(e.uri).toString(),
+                metas: Metas(
+                  id: e.uri.toString(),
+                  title: e.trackName,
+                  artist: e.trackArtistNames.take(2).join(', '),
+                  album: e.albumName,
+                  image: MetasImage(
+                    path: image.toString(),
+                    type: ImageType.network,
+                  ),
+                  extra: e.toJson(),
+                ),
+              )
+            : Audio.file(
+                e.uri.toFilePath(),
+                metas: Metas(
+                  id: e.uri.toString(),
+                  title: e.trackName,
+                  artist: e.trackArtistNames.take(2).join(', '),
+                  album: e.albumName,
+                  image: MetasImage(
+                    path: image.toString(),
+                    type: ImageType.file,
+                  ),
+                  extra: e.toJson(),
+                ),
+              );
+        assetsAudioPlayer.playlist?.add(audio);
+      });
     }
   }
 
