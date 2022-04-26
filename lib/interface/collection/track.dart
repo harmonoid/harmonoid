@@ -436,7 +436,8 @@ class TrackTileState extends State<TrackTile> {
                                 ),
                                 Text(
                                   [
-                                    if (widget.track.albumName.isNotEmpty)
+                                    if (widget.track.albumName.isNotEmpty &&
+                                        widget.track.albumName != kUnknownAlbum)
                                       widget.track.albumName.overflow,
                                     if (widget.track.trackArtistNames
                                         .join('')

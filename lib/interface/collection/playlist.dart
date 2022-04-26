@@ -14,6 +14,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -888,11 +889,15 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                 heroTag: 'play_now',
                                                 onPressed: () {
                                                   Playback.instance.open(
-                                                    widget.playlist.tracks +
-                                                        ([
+                                                    [
+                                                      ...widget.playlist.tracks,
+                                                      if (Configuration.instance
+                                                          .seamlessPlayback)
+                                                        ...[
                                                           ...Collection
                                                               .instance.tracks
-                                                        ]..shuffle()),
+                                                        ]..shuffle()
+                                                    ],
                                                   );
                                                 },
                                                 mini: true,
@@ -1079,13 +1084,19 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                           onTap: () {
                                                             Playback.instance
                                                                 .open(
-                                                              widget.playlist
-                                                                      .tracks +
-                                                                  ([
+                                                              [
+                                                                ...widget
+                                                                    .playlist
+                                                                    .tracks,
+                                                                if (Configuration
+                                                                    .instance
+                                                                    .seamlessPlayback)
+                                                                  ...[
                                                                     ...Collection
                                                                         .instance
                                                                         .tracks
-                                                                  ]..shuffle()),
+                                                                  ]..shuffle()
+                                                              ],
                                                               index: track.key,
                                                             );
                                                           },
@@ -1416,9 +1427,13 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                     child: Icon(Icons.play_arrow),
                                     onPressed: () {
                                       Playback.instance.open(
-                                        widget.playlist.tracks +
-                                            ([...Collection.instance.tracks]
-                                              ..shuffle()),
+                                        [
+                                          ...widget.playlist.tracks,
+                                          if (Configuration
+                                              .instance.seamlessPlayback)
+                                            ...[...Collection.instance.tracks]
+                                              ..shuffle()
+                                        ],
                                       );
                                     },
                                   ),
@@ -1475,8 +1490,11 @@ class PlaylistScreenState extends State<PlaylistScreen>
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () => Playback.instance.open(
-                              widget.playlist.tracks +
-                                  ([...Collection.instance.tracks]..shuffle()),
+                              [
+                                ...widget.playlist.tracks,
+                                if (Configuration.instance.seamlessPlayback)
+                                  ...[...Collection.instance.tracks]..shuffle()
+                              ],
                             ),
                             onLongPress: () async {
                               var result;

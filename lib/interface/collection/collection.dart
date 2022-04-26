@@ -512,17 +512,17 @@ class CollectionScreenState extends State<CollectionScreen>
                         FloatingSearchBarAction.back(),
                       ],
                       actions: [
-                        if (index.value == 1 ||
-                            index.value == 2 ||
-                            index.value == 3)
-                          FloatingSearchBarAction(
-                            showIfOpened: false,
-                            child: MobileSortByButton(
-                              value: index,
-                            ),
-                          ),
                         FloatingSearchBarAction(
-                            showIfOpened: false, child: contextMenu(context)),
+                          showIfOpened: true,
+                          showIfClosed: true,
+                          child: MobileSortByButton(
+                            value: index,
+                          ),
+                        ),
+                        FloatingSearchBarAction(
+                          showIfOpened: false,
+                          child: contextMenu(context),
+                        ),
                         FloatingSearchBarAction.searchToClear(
                           showIfClosed: false,
                         ),
