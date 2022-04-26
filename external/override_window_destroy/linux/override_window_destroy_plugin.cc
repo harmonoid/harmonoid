@@ -14,7 +14,7 @@
 #include <sys/utsname.h>
 
 #include <cstring>
-#include <iostream>
+#include <thread>
 
 #define OVERRIDE_WINDOW_DESTROY_PLUGIN(obj)                              \
   (G_TYPE_CHECK_INSTANCE_CAST((obj),                                     \
@@ -25,7 +25,6 @@ struct _OverrideWindowDestroyPlugin {
   GObject parent_instance;
   FlPluginRegistrar* registrar;
   FlMethodChannel* channel;
-  gboolean is_delete_event_detected = FALSE;
 };
 
 G_DEFINE_TYPE(OverrideWindowDestroyPlugin, override_window_destroy_plugin,
@@ -42,13 +41,14 @@ static gboolean delete_event_callback(GtkWidget* widget, GdkEvent* event,
   fl_method_channel_invoke_method(((OverrideWindowDestroyPlugin*)data)->channel,
                                   "destroy_window", fl_value_new_null(),
                                   nullptr, nullptr, nullptr);
-  ((OverrideWindowDestroyPlugin*)data)->is_delete_event_detected = TRUE;
-  return !((OverrideWindowDestroyPlugin*)data)->is_delete_event_detected;
+  return TRUE;
 }
 
 static void override_window_destroy_plugin_handle_method_call(
     OverrideWindowDestroyPlugin* self, FlMethodCall* method_call) {
-  gtk_window_close(get_window(self));
+  std::thread([=]() {
+    g_signal_emit_by_name(G_OBJECT(get_window(self)), "destroy");
+  }).detach();
   fl_method_call_respond(
       method_call,
       FL_METHOD_RESPONSE(fl_method_success_response_new(fl_value_new_null())),

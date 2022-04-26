@@ -7,13 +7,13 @@
 - [Download](#download) [Windows, Linux, Android]
 - [Discord](https://discord.gg/2Rc3edFWd8)
 
-[work-in-progress] [[report-bugs-or-request-features](https://github.com/harmonoid/harmonoid/issues)] [[patreon](https://www.patreon.com/harmonoid)]
+[work-in-progress] [[report-bugs-or-request-features](https://github.com/harmonoid/harmonoid/issues)] [[patreon](https://www.patreon.com/harmonoid)] [[primary-guide](#guide)] [[youtube-music-guide](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support)]
 
-![](https://github.com/harmonoid/harmonoid/blob/assets/staged/collection/harmonoid_vLK0DRMxiI.png?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/staged/collection/dark-mode.png?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/staged/collection/album-view.png?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/staged/collection/album-artist.png?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/staged/collection/now-playing.png?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/album-artist.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/dark-mode.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/album-view.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/main.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/now-playing.webp?raw=true)
 
 ## Motion
 
@@ -64,7 +64,7 @@ Similar instructions can be followed on your favorite distro.
 
 ### <img src='https://user-images.githubusercontent.com/28951144/159583302-322a01bd-c3bd-4b74-9834-99764f678485.png' height='24'></img>&nbsp; Android
 
-- Coming soon.
+- [.apk](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-android.apk)
 
 ## Features
 
