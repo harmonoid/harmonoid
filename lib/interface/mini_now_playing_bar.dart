@@ -90,7 +90,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
         return;
       }
       final track = Playback.instance.tracks[Playback.instance.index];
-      if (this.track != track) {
+      if (this.track != track ||
+          tracks.length.compareTo(Playback.instance.tracks.length) != 0) {
         this.track = track;
         PaletteGenerator.fromImageProvider(getAlbumArt(track, small: true))
             .then(
@@ -763,7 +764,7 @@ class MiniNowPlayingBarRefreshCollectionButtonState
   void show() {
     if (Playback.instance.tracks.isEmpty) return;
     if (_yOffset == 0.0) {
-      setState(() => _yOffset = -1.2);
+      setState(() => _yOffset = kMobileNowPlayingBarHeight);
     }
   }
 
@@ -775,22 +776,32 @@ class MiniNowPlayingBarRefreshCollectionButtonState
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSlide(
-      offset: Offset(0, _yOffset),
-      duration: Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-      child: ValueListenableBuilder<Iterable<Color>?>(
-        valueListenable: MobileNowPlayingController.instance.palette,
-        builder: (context, value, _) => TweenAnimationBuilder(
-          duration: Duration(milliseconds: 400),
-          tween: ColorTween(
-            begin: Theme.of(context).primaryColor,
-            end: value?.first ?? Theme.of(context).primaryColor,
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ValueListenableBuilder<Iterable<Color>?>(
+            valueListenable: MobileNowPlayingController.instance.palette,
+            builder: (context, value, _) => TweenAnimationBuilder(
+              duration: Duration(milliseconds: 400),
+              tween: ColorTween(
+                begin: Theme.of(context).primaryColor,
+                end: value?.first ?? Theme.of(context).primaryColor,
+              ),
+              builder: (context, color, _) => Container(
+                child: RefreshCollectionButton(
+                  color: color as Color?,
+                ),
+              ),
+            ),
           ),
-          builder: (context, color, _) => RefreshCollectionButton(
-            color: color as Color?,
+          AnimatedContainer(
+            height: _yOffset,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
           ),
-        ),
+        ],
       ),
     );
   }
