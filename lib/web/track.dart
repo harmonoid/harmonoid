@@ -42,18 +42,18 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
           (0.114 * (color?.blue ?? 256.0)) <
       128.0;
 
-  @override
-  void initState() {
-    super.initState();
-    PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
-            widget.track.thumbnails.values.first,
-            cache: true))
-        .then((palette) {
-      setState(() {
-        color = palette.colors.first;
-      });
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  // PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
+  //         widget.track.thumbnails.values.first,
+  //         cache: true))
+  //     .then((palette) {
+  //   setState(() {
+  //     color = palette.colors.first;
+  //   });
+  // });
+  // }
 
   Widget build(BuildContext context) {
     return Card(
@@ -110,10 +110,10 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         const SizedBox(height: 16.0),
                         Text(
                           widget.track.trackName.replaceFirst('(', '\n('),
-                          style:
-                              Theme.of(context).textTheme.headline2?.copyWith(
-                                    color: isDark ? Colors.white : Colors.black,
-                                  ),
+                          style: Theme.of(context).textTheme.headline2,
+                          // ?.copyWith(
+                          //       color: isDark ? Colors.white : Colors.black,
+                          //     ),
                           textAlign: TextAlign.left,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -121,13 +121,11 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         const SizedBox(height: 2.0),
                         Text(
                           '${widget.track.trackArtistNames.take(2).join(', ')}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline3
-                              ?.copyWith(
-                                fontSize: isDesktop ? 12.0 : null,
-                                color: isDark ? Colors.white54 : Colors.black54,
-                              ),
+                          style: Theme.of(context).textTheme.headline3,
+                          // ?.copyWith(
+                          //   fontSize: isDesktop ? 12.0 : null,
+                          //   color: isDark ? Colors.white54 : Colors.black54,
+                          // ),
                           maxLines: 1,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.ellipsis,
@@ -135,13 +133,11 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         const SizedBox(height: 2.0),
                         Text(
                           widget.track.duration.label,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline3
-                              ?.copyWith(
-                                fontSize: isDesktop ? 12.0 : null,
-                                color: isDark ? Colors.white54 : Colors.black54,
-                              ),
+                          style: Theme.of(context).textTheme.headline3,
+                          // ?.copyWith(
+                          //   fontSize: isDesktop ? 12.0 : null,
+                          //   color: isDark ? Colors.white54 : Colors.black54,
+                          // ),
                         ),
                         const SizedBox(height: 16.0),
                       ],
