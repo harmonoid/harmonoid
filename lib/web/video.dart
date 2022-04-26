@@ -7,10 +7,8 @@
 ///
 import 'package:flutter/material.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
 
-import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -81,6 +79,26 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                 child: InkWell(
                   onTap: () {
                     Web.open(widget.track);
+                  },
+                  onLongPress: () async {
+                    int? result;
+                    await showModalBottomSheet(
+                      context: context,
+                      builder: (context) => Container(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: webTrackPopupMenuItems(context)
+                              .map(
+                                (item) => PopupMenuItem(
+                                  child: item.child,
+                                  onTap: () => result = item.value,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    );
+                    webTrackPopupMenuHandle(context, widget.track, result);
                   },
                   child: Container(
                     width: widget.width,
@@ -167,23 +185,8 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                       context,
                     ),
                     onSelected: (result) async {
-                      switch (result) {
-                        case 0:
-                          {
-                            await launch(widget.track.uri.toString());
-                            break;
-                          }
-                        case 1:
-                          {
-                            await showAddToPlaylistDialog(
-                              context,
-                              media.Track.fromWebTrack(
-                                widget.track.toJson(),
-                              ),
-                            );
-                            break;
-                          }
-                      }
+                      webTrackPopupMenuHandle(
+                          context, widget.track, result as int?);
                     },
                     icon: Icon(
                       Icons.more_vert,
@@ -226,25 +229,31 @@ class VideoTile extends StatelessWidget {
               context,
             ),
           );
-          switch (result) {
-            case 0:
-              {
-                await launch(video.uri.toString());
-                break;
-              }
-            case 1:
-              {
-                await showAddToPlaylistDialog(
-                  context,
-                  media.Track.fromWebTrack(video.toJson()),
-                );
-                break;
-              }
-          }
+          webTrackPopupMenuHandle(context, video, result);
         },
         child: InkWell(
           onTap: () {
             Web.open(video);
+          },
+          onLongPress: () async {
+            int? result;
+            await showModalBottomSheet(
+              context: context,
+              builder: (context) => Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: webTrackPopupMenuItems(context)
+                      .map(
+                        (item) => PopupMenuItem(
+                          child: item.child,
+                          onTap: () => result = item.value,
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            );
+            webTrackPopupMenuHandle(context, video, result);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -304,22 +313,8 @@ class VideoTile extends StatelessWidget {
                         width: 64.0,
                         height: 64.0,
                         child: ContextMenuButton<int>(
-                          onSelected: (value) {
-                            switch (value) {
-                              case 0:
-                                {
-                                  launch(video.uri.toString());
-                                  break;
-                                }
-                              case 1:
-                                {
-                                  showAddToPlaylistDialog(
-                                    context,
-                                    media.Track.fromWebVideo(video.toJson()),
-                                  );
-                                  break;
-                                }
-                            }
+                          onSelected: (result) {
+                            webTrackPopupMenuHandle(context, video, result);
                           },
                           itemBuilder: (context) =>
                               webTrackPopupMenuItems(context),

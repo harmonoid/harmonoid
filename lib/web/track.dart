@@ -7,11 +7,9 @@
 ///
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 
-import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -158,6 +156,26 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                   onTap: () {
                     Web.open(widget.track);
                   },
+                  onLongPress: () async {
+                    int? result;
+                    await showModalBottomSheet(
+                      context: context,
+                      builder: (context) => Container(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: webTrackPopupMenuItems(context)
+                              .map(
+                                (item) => PopupMenuItem(
+                                  child: item.child,
+                                  onTap: () => result = item.value,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    );
+                    webTrackPopupMenuHandle(context, widget.track, result);
+                  },
                   child: Container(
                     width: widget.width,
                     height: widget.height,
@@ -177,23 +195,8 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         context,
                       ),
                       onSelected: (result) async {
-                        switch (result) {
-                          case 0:
-                            {
-                              await launch(widget.track.uri.toString());
-                              break;
-                            }
-                          case 1:
-                            {
-                              await showAddToPlaylistDialog(
-                                context,
-                                media.Track.fromWebTrack(
-                                  widget.track.toJson(),
-                                ),
-                              );
-                              break;
-                            }
-                        }
+                        webTrackPopupMenuHandle(
+                            context, widget.track, result as int?);
                       },
                       icon: Icon(
                         Icons.more_vert,
@@ -242,21 +245,7 @@ class WebTrackTile extends StatelessWidget {
               context,
             ),
           );
-          switch (result) {
-            case 0:
-              {
-                await launch(track.uri.toString());
-                break;
-              }
-            case 1:
-              {
-                await showAddToPlaylistDialog(
-                  context,
-                  media.Track.fromWebTrack(track.toJson()),
-                );
-                break;
-              }
-          }
+          webTrackPopupMenuHandle(context, track, result);
         },
         child: InkWell(
           onTap: () {
@@ -268,6 +257,26 @@ class WebTrackTile extends StatelessWidget {
             } else {
               Web.open(track);
             }
+          },
+          onLongPress: () async {
+            int? result;
+            await showModalBottomSheet(
+              context: context,
+              builder: (context) => Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: webTrackPopupMenuItems(context)
+                      .map(
+                        (item) => PopupMenuItem(
+                          child: item.child,
+                          onTap: () => result = item.value,
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            );
+            webTrackPopupMenuHandle(context, track, result);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -342,21 +351,7 @@ class WebTrackTile extends StatelessWidget {
                         height: 64.0,
                         child: ContextMenuButton<int>(
                           onSelected: (result) {
-                            switch (result) {
-                              case 0:
-                                {
-                                  launch(track.uri.toString());
-                                  break;
-                                }
-                              case 1:
-                                {
-                                  showAddToPlaylistDialog(
-                                    context,
-                                    media.Track.fromWebTrack(track.toJson()),
-                                  );
-                                  break;
-                                }
-                            }
+                            webTrackPopupMenuHandle(context, track, result);
                           },
                           itemBuilder: (context) =>
                               webTrackPopupMenuItems(context),
