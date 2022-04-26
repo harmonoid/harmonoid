@@ -1212,122 +1212,351 @@ class PlaylistScreenState extends State<PlaylistScreen>
             ),
           )
         : Scaffold(
-            body: Stack(
-              children: [
-                CustomScrollView(
-                  controller: controller,
-                  physics: physics,
-                  slivers: [
-                    SliverAppBar(
-                      systemOverlayStyle: widget.playlist.tracks.isNotEmpty
-                          ? SystemUiOverlayStyle(
-                              statusBarColor: Colors.transparent,
-                              statusBarIconBrightness:
-                                  (color?.computeLuminance() ?? 0.0) < 0.5
-                                      ? Brightness.light
-                                      : Brightness.dark,
-                            )
-                          : SystemUiOverlayStyle(
-                              statusBarColor: Colors.transparent,
-                              statusBarIconBrightness:
-                                  Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Brightness.light
-                                      : Brightness.dark,
-                            ),
-                      expandedHeight: MediaQuery.of(context).size.width +
-                          96.0 -
-                          MediaQuery.of(context).padding.top,
-                      pinned: true,
-                      leading: IconButton(
-                        onPressed: Navigator.of(context).maybePop,
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: widget.playlist.tracks.isNotEmpty
-                              ? ([Colors.white, Color(0xFF212121)][
-                                  (color?.computeLuminance() ?? 0.0) > 0.5
-                                      ? 1
-                                      : 0])
-                              : Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Color(0xFF212121),
-                        ),
-                        iconSize: 24.0,
-                        splashRadius: 20.0,
-                      ),
-                      forceElevated: true,
-                      // actions: [
-                      //  IconButton(
-                      //    onPressed: () {},
-                      //    icon: Icon(
-                      //      Icons.favorite,
-                      //    ),
-                      //     iconSize: 24.0,
-                      //     splashRadius: 20.0,
-                      //   ),
-                      // ],
-                      title: TweenAnimationBuilder<double>(
-                        tween: Tween<double>(
-                          begin: 1.0,
-                          end: detailsVisible ? 0.0 : 1.0,
-                        ),
-                        duration: Duration(milliseconds: 200),
-                        builder: (context, value, _) => Opacity(
-                          opacity: value,
-                          child: Text(
-                            widget.playlist.tracks.isNotEmpty
-                                ? widget.playlist.name
-                                : '',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline1
-                                ?.copyWith(
-                                    color: [Color(0xFF212121), Colors.white][
-                                        (color?.computeLuminance() ?? 0.0) > 0.5
-                                            ? 0
-                                            : 1]),
+            body: NowPlayingBarScrollHideNotifier(
+              child: CustomScrollView(
+                controller: controller,
+                physics: physics,
+                slivers: [
+                  SliverAppBar(
+                    systemOverlayStyle: widget.playlist.tracks.isNotEmpty
+                        ? SystemUiOverlayStyle(
+                            statusBarColor: Colors.transparent,
+                            statusBarIconBrightness:
+                                (color?.computeLuminance() ?? 0.0) < 0.5
+                                    ? Brightness.light
+                                    : Brightness.dark,
+                          )
+                        : SystemUiOverlayStyle(
+                            statusBarColor: Colors.transparent,
+                            statusBarIconBrightness:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Brightness.light
+                                    : Brightness.dark,
                           ),
+                    expandedHeight: MediaQuery.of(context).size.width +
+                        96.0 -
+                        MediaQuery.of(context).padding.top,
+                    pinned: true,
+                    leading: IconButton(
+                      onPressed: Navigator.of(context).maybePop,
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: widget.playlist.tracks.isNotEmpty
+                            ? ([Colors.white, Color(0xFF212121)][
+                                (color?.computeLuminance() ?? 0.0) > 0.5
+                                    ? 1
+                                    : 0])
+                            : Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Color(0xFF212121),
+                      ),
+                      iconSize: 24.0,
+                      splashRadius: 20.0,
+                    ),
+                    forceElevated: true,
+                    // actions: [
+                    //  IconButton(
+                    //    onPressed: () {},
+                    //    icon: Icon(
+                    //      Icons.favorite,
+                    //    ),
+                    //     iconSize: 24.0,
+                    //     splashRadius: 20.0,
+                    //   ),
+                    // ],
+                    title: TweenAnimationBuilder<double>(
+                      tween: Tween<double>(
+                        begin: 1.0,
+                        end: detailsVisible ? 0.0 : 1.0,
+                      ),
+                      duration: Duration(milliseconds: 200),
+                      builder: (context, value, _) => Opacity(
+                        opacity: value,
+                        child: Text(
+                          widget.playlist.tracks.isNotEmpty
+                              ? widget.playlist.name
+                              : '',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline1
+                              ?.copyWith(
+                                  color: [Color(0xFF212121), Colors.white][
+                                      (color?.computeLuminance() ?? 0.0) > 0.5
+                                          ? 0
+                                          : 1]),
                         ),
                       ),
-                      backgroundColor: color,
-                      flexibleSpace: Stack(
-                        children: [
-                          FlexibleSpaceBar(
-                            background: Column(
-                              children: [
-                                Container(
-                                  height: MediaQuery.of(context).size.width,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: LayoutBuilder(
-                                    builder: (context, constraints) => Hero(
-                                      tag:
-                                          'playlist_art_${widget.playlist.name}',
-                                      child: Padding(
-                                        padding: EdgeInsets.all(48.0),
-                                        child: PlaylistThumbnail(
-                                          tracks: widget.playlist.tracks,
-                                          width: min(constraints.maxHeight,
-                                                  constraints.maxWidth) -
-                                              96.0,
-                                          mini: false,
-                                        ),
+                    ),
+                    backgroundColor: color,
+                    flexibleSpace: Stack(
+                      children: [
+                        FlexibleSpaceBar(
+                          background: Column(
+                            children: [
+                              Container(
+                                height: MediaQuery.of(context).size.width,
+                                width: MediaQuery.of(context).size.width,
+                                child: LayoutBuilder(
+                                  builder: (context, constraints) => Hero(
+                                    tag: 'playlist_art_${widget.playlist.name}',
+                                    child: Padding(
+                                      padding: EdgeInsets.all(48.0),
+                                      child: PlaylistThumbnail(
+                                        tracks: widget.playlist.tracks,
+                                        width: min(constraints.maxHeight,
+                                                constraints.maxWidth) -
+                                            96.0,
+                                        mini: false,
                                       ),
                                     ),
                                   ),
                                 ),
-                                TweenAnimationBuilder<double>(
-                                  tween: Tween<double>(
-                                    begin: 1.0,
-                                    end: detailsVisible ? 1.0 : 0.0,
+                              ),
+                              TweenAnimationBuilder<double>(
+                                tween: Tween<double>(
+                                  begin: 1.0,
+                                  end: detailsVisible ? 1.0 : 0.0,
+                                ),
+                                duration: Duration(milliseconds: 200),
+                                builder: (context, value, _) => Opacity(
+                                  opacity: value,
+                                  child: Container(
+                                    color: color,
+                                    height: 96.0,
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.all(16.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          widget.playlist.name.overflow,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline1
+                                              ?.copyWith(
+                                                color: widget.playlist.tracks
+                                                        .isNotEmpty
+                                                    ? ([
+                                                        Colors.white,
+                                                        Color(0xFF212121)
+                                                      ][(color?.computeLuminance() ??
+                                                                0.0) >
+                                                            0.5
+                                                        ? 1
+                                                        : 0])
+                                                    : Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Color(0xFF212121),
+                                                fontSize: 24.0,
+                                              ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 4.0),
+                                        Text(
+                                          Language.instance.N_TRACKS.replaceAll(
+                                            'N',
+                                            '${widget.playlist.tracks.length}',
+                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline1
+                                              ?.copyWith(
+                                                color: widget.playlist.tracks
+                                                        .isNotEmpty
+                                                    ? ([
+                                                        Color(0xFFD9D9D9),
+                                                        Color(0xFF363636)
+                                                      ][(color?.computeLuminance() ??
+                                                                0.0) >
+                                                            0.5
+                                                        ? 1
+                                                        : 0])
+                                                    : Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? Color(0xFFD9D9D9)
+                                                        : Color(0xFF363636),
+                                                fontSize: 16.0,
+                                              ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  duration: Duration(milliseconds: 200),
-                                  builder: (context, value, _) => Opacity(
-                                    opacity: value,
-                                    child: Container(
-                                      color: color,
-                                      height: 96.0,
-                                      width: MediaQuery.of(context).size.width,
-                                      padding: EdgeInsets.all(16.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          top: MediaQuery.of(context).size.width +
+                              MediaQuery.of(context).padding.top -
+                              64.0,
+                          right: 16.0 + 64.0,
+                          child: TweenAnimationBuilder(
+                            curve: Curves.easeOut,
+                            tween: Tween<double>(
+                                begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                            duration: Duration(milliseconds: 200),
+                            builder: (context, value, _) => Transform.scale(
+                              scale: value as double,
+                              child: Transform.rotate(
+                                angle: value * pi + pi,
+                                child: FloatingActionButton(
+                                  heroTag: 'play_now',
+                                  backgroundColor: secondary,
+                                  foregroundColor: [
+                                    Colors.white,
+                                    Color(0xFF212121)
+                                  ][(secondary?.computeLuminance() ?? 0.0) > 0.5
+                                      ? 1
+                                      : 0],
+                                  child: Icon(Icons.play_arrow),
+                                  onPressed: () {
+                                    Playback.instance.open(
+                                      [
+                                        ...widget.playlist.tracks,
+                                        if (Configuration
+                                            .instance.seamlessPlayback)
+                                          ...[...Collection.instance.tracks]
+                                            ..shuffle()
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: MediaQuery.of(context).size.width +
+                              MediaQuery.of(context).padding.top -
+                              64.0,
+                          right: 16.0,
+                          child: TweenAnimationBuilder(
+                            curve: Curves.easeOut,
+                            tween: Tween<double>(
+                                begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                            duration: Duration(milliseconds: 200),
+                            builder: (context, value, _) => Transform.scale(
+                              scale: value as double,
+                              child: Transform.rotate(
+                                angle: value * pi + pi,
+                                child: FloatingActionButton(
+                                  heroTag: 'shuffle',
+                                  backgroundColor: secondary,
+                                  foregroundColor: [
+                                    Colors.white,
+                                    Color(0xFF212121)
+                                  ][(secondary?.computeLuminance() ?? 0.0) > 0.5
+                                      ? 1
+                                      : 0],
+                                  child: Icon(Icons.shuffle),
+                                  onPressed: () {
+                                    Playback.instance.open(
+                                      [...widget.playlist.tracks]..shuffle(),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.only(
+                      top: 12.0,
+                    ),
+                  ),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, i) => Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => Playback.instance.open(
+                            [
+                              ...widget.playlist.tracks,
+                              if (Configuration.instance.seamlessPlayback)
+                                ...[...Collection.instance.tracks]..shuffle()
+                            ],
+                          ),
+                          onLongPress: () async {
+                            showDialog(
+                              context: context,
+                              builder: (subContext) => AlertDialog(
+                                title: Text(
+                                  Language.instance.REMOVE,
+                                  style:
+                                      Theme.of(subContext).textTheme.headline1,
+                                ),
+                                content: Text(
+                                  Language.instance
+                                      .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
+                                      .replaceAll(
+                                        'TRACK_NAME',
+                                        widget.playlist.tracks[i].trackName,
+                                      )
+                                      .replaceAll('PLAYLIST_NAME',
+                                          widget.playlist.name),
+                                  style:
+                                      Theme.of(subContext).textTheme.headline3,
+                                ),
+                                actions: [
+                                  MaterialButton(
+                                    textColor: Theme.of(context).primaryColor,
+                                    onPressed: () async {
+                                      await Collection.instance
+                                          .playlistRemoveTrack(
+                                        widget.playlist,
+                                        widget.playlist.tracks[i],
+                                      );
+
+                                      Navigator.of(subContext).pop();
+                                      setState(() {});
+                                    },
+                                    child: Text(Language.instance.YES),
+                                  ),
+                                  MaterialButton(
+                                    textColor: Theme.of(context).primaryColor,
+                                    onPressed: Navigator.of(subContext).pop,
+                                    child: Text(Language.instance.NO),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 64.0,
+                                alignment: Alignment.center,
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 4.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(width: 12.0),
+                                    ExtendedImage(
+                                      image: getAlbumArt(
+                                          widget.playlist.tracks[i],
+                                          small: true),
+                                      height: 56.0,
+                                      width: 56.0,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    const SizedBox(width: 12.0),
+                                    Expanded(
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
@@ -1336,370 +1565,127 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            widget.playlist.name.overflow,
+                                            widget.playlist.tracks[i].trackName
+                                                .overflow,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline1
-                                                ?.copyWith(
-                                                  color: widget.playlist.tracks
-                                                          .isNotEmpty
-                                                      ? ([
-                                                          Colors.white,
-                                                          Color(0xFF212121)
-                                                        ][(color?.computeLuminance() ??
-                                                                  0.0) >
-                                                              0.5
-                                                          ? 1
-                                                          : 0])
-                                                      : Theme.of(context)
-                                                                  .brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.white
-                                                          : Color(0xFF212121),
-                                                  fontSize: 24.0,
-                                                ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                                .headline2,
                                           ),
-                                          const SizedBox(height: 4.0),
+                                          const SizedBox(
+                                            height: 2.0,
+                                          ),
                                           Text(
-                                            Language.instance.N_TRACKS
-                                                .replaceAll(
-                                              'N',
-                                              '${widget.playlist.tracks.length}',
-                                            ),
+                                            (widget.playlist.tracks[i]
+                                                            .duration ??
+                                                        Duration.zero)
+                                                    .label +
+                                                ' • ' +
+                                                widget.playlist.tracks[i]
+                                                    .albumName,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline1
-                                                ?.copyWith(
-                                                  color: widget.playlist.tracks
-                                                          .isNotEmpty
-                                                      ? ([
-                                                          Color(0xFFD9D9D9),
-                                                          Color(0xFF363636)
-                                                        ][(color?.computeLuminance() ??
-                                                                  0.0) >
-                                                              0.5
-                                                          ? 1
-                                                          : 0])
-                                                      : Theme.of(context)
-                                                                  .brightness ==
-                                                              Brightness.dark
-                                                          ? Color(0xFFD9D9D9)
-                                                          : Color(0xFF363636),
-                                                  fontSize: 16.0,
-                                                ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                                .headline3,
                                           ),
                                         ],
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Positioned(
-                            top: MediaQuery.of(context).size.width +
-                                MediaQuery.of(context).padding.top -
-                                64.0,
-                            right: 16.0 + 64.0,
-                            child: TweenAnimationBuilder(
-                              curve: Curves.easeOut,
-                              tween: Tween<double>(
-                                  begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
-                              duration: Duration(milliseconds: 200),
-                              builder: (context, value, _) => Transform.scale(
-                                scale: value as double,
-                                child: Transform.rotate(
-                                  angle: value * pi + pi,
-                                  child: FloatingActionButton(
-                                    heroTag: 'play_now',
-                                    backgroundColor: secondary,
-                                    foregroundColor: [
-                                      Colors.white,
-                                      Color(0xFF212121)
-                                    ][(secondary?.computeLuminance() ?? 0.0) >
-                                            0.5
-                                        ? 1
-                                        : 0],
-                                    child: Icon(Icons.play_arrow),
-                                    onPressed: () {
-                                      Playback.instance.open(
-                                        [
-                                          ...widget.playlist.tracks,
-                                          if (Configuration
-                                              .instance.seamlessPlayback)
-                                            ...[...Collection.instance.tracks]
-                                              ..shuffle()
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: MediaQuery.of(context).size.width +
-                                MediaQuery.of(context).padding.top -
-                                64.0,
-                            right: 16.0,
-                            child: TweenAnimationBuilder(
-                              curve: Curves.easeOut,
-                              tween: Tween<double>(
-                                  begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
-                              duration: Duration(milliseconds: 200),
-                              builder: (context, value, _) => Transform.scale(
-                                scale: value as double,
-                                child: Transform.rotate(
-                                  angle: value * pi + pi,
-                                  child: FloatingActionButton(
-                                    heroTag: 'shuffle',
-                                    backgroundColor: secondary,
-                                    foregroundColor: [
-                                      Colors.white,
-                                      Color(0xFF212121)
-                                    ][(secondary?.computeLuminance() ?? 0.0) >
-                                            0.5
-                                        ? 1
-                                        : 0],
-                                    child: Icon(Icons.shuffle),
-                                    onPressed: () {
-                                      Playback.instance.open(
-                                        [...widget.playlist.tracks]..shuffle(),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SliverPadding(
-                      padding: EdgeInsets.only(
-                        top: 12.0,
-                      ),
-                    ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, i) => Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => Playback.instance.open(
-                              [
-                                ...widget.playlist.tracks,
-                                if (Configuration.instance.seamlessPlayback)
-                                  ...[...Collection.instance.tracks]..shuffle()
-                              ],
-                            ),
-                            onLongPress: () async {
-                              showDialog(
-                                context: context,
-                                builder: (subContext) => AlertDialog(
-                                  title: Text(
-                                    Language.instance.REMOVE,
-                                    style: Theme.of(subContext)
-                                        .textTheme
-                                        .headline1,
-                                  ),
-                                  content: Text(
-                                    Language.instance
-                                        .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
-                                        .replaceAll(
-                                          'TRACK_NAME',
-                                          widget.playlist.tracks[i].trackName,
-                                        )
-                                        .replaceAll('PLAYLIST_NAME',
-                                            widget.playlist.name),
-                                    style: Theme.of(subContext)
-                                        .textTheme
-                                        .headline3,
-                                  ),
-                                  actions: [
-                                    MaterialButton(
-                                      textColor: Theme.of(context).primaryColor,
-                                      onPressed: () async {
-                                        await Collection.instance
-                                            .playlistRemoveTrack(
-                                          widget.playlist,
-                                          widget.playlist.tracks[i],
-                                        );
+                                    const SizedBox(width: 12.0),
+                                    Container(
+                                      width: 64.0,
+                                      height: 64.0,
+                                      alignment: Alignment.center,
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          showDialog(
+                                            context: context,
+                                            builder: (subContext) =>
+                                                AlertDialog(
+                                              title: Text(
+                                                Language.instance.REMOVE,
+                                                style: Theme.of(subContext)
+                                                    .textTheme
+                                                    .headline1,
+                                              ),
+                                              content: Text(
+                                                Language.instance
+                                                    .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
+                                                    .replaceAll(
+                                                      'TRACK_NAME',
+                                                      widget.playlist.tracks[i]
+                                                          .trackName,
+                                                    )
+                                                    .replaceAll('PLAYLIST_NAME',
+                                                        widget.playlist.name),
+                                                style: Theme.of(subContext)
+                                                    .textTheme
+                                                    .headline3,
+                                              ),
+                                              actions: [
+                                                MaterialButton(
+                                                  textColor: Theme.of(context)
+                                                      .primaryColor,
+                                                  onPressed: () async {
+                                                    await Collection.instance
+                                                        .playlistRemoveTrack(
+                                                      widget.playlist,
+                                                      widget.playlist.tracks[i],
+                                                    );
 
-                                        Navigator.of(subContext).pop();
-                                        setState(() {});
-                                      },
-                                      child: Text(Language.instance.YES),
-                                    ),
-                                    MaterialButton(
-                                      textColor: Theme.of(context).primaryColor,
-                                      onPressed: Navigator.of(subContext).pop,
-                                      child: Text(Language.instance.NO),
+                                                    Navigator.of(subContext)
+                                                        .pop();
+                                                    setState(() {});
+                                                  },
+                                                  child: Text(
+                                                      Language.instance.YES),
+                                                ),
+                                                MaterialButton(
+                                                  textColor: Theme.of(context)
+                                                      .primaryColor,
+                                                  onPressed:
+                                                      Navigator.of(subContext)
+                                                          .pop,
+                                                  child: Text(
+                                                      Language.instance.NO),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                        icon: Icon(
+                                          Icons.more_vert,
+                                        ),
+                                        iconSize: 24.0,
+                                        splashRadius: 20.0,
+                                      ),
                                     ),
                                   ],
                                 ),
-                              );
-                            },
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 64.0,
-                                  alignment: Alignment.center,
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      const SizedBox(width: 12.0),
-                                      ExtendedImage(
-                                        image: getAlbumArt(
-                                            widget.playlist.tracks[i],
-                                            small: true),
-                                        height: 56.0,
-                                        width: 56.0,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      const SizedBox(width: 12.0),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              widget.playlist.tracks[i]
-                                                  .trackName.overflow,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline2,
-                                            ),
-                                            const SizedBox(
-                                              height: 2.0,
-                                            ),
-                                            Text(
-                                              (widget.playlist.tracks[i]
-                                                              .duration ??
-                                                          Duration.zero)
-                                                      .label +
-                                                  ' • ' +
-                                                  widget.playlist.tracks[i]
-                                                      .albumName,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline3,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12.0),
-                                      Container(
-                                        width: 64.0,
-                                        height: 64.0,
-                                        alignment: Alignment.center,
-                                        child: IconButton(
-                                          onPressed: () async {
-                                            showDialog(
-                                              context: context,
-                                              builder: (subContext) =>
-                                                  AlertDialog(
-                                                title: Text(
-                                                  Language.instance.REMOVE,
-                                                  style: Theme.of(subContext)
-                                                      .textTheme
-                                                      .headline1,
-                                                ),
-                                                content: Text(
-                                                  Language.instance
-                                                      .COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY
-                                                      .replaceAll(
-                                                        'TRACK_NAME',
-                                                        widget
-                                                            .playlist
-                                                            .tracks[i]
-                                                            .trackName,
-                                                      )
-                                                      .replaceAll(
-                                                          'PLAYLIST_NAME',
-                                                          widget.playlist.name),
-                                                  style: Theme.of(subContext)
-                                                      .textTheme
-                                                      .headline3,
-                                                ),
-                                                actions: [
-                                                  MaterialButton(
-                                                    textColor: Theme.of(context)
-                                                        .primaryColor,
-                                                    onPressed: () async {
-                                                      await Collection.instance
-                                                          .playlistRemoveTrack(
-                                                        widget.playlist,
-                                                        widget
-                                                            .playlist.tracks[i],
-                                                      );
-
-                                                      Navigator.of(subContext)
-                                                          .pop();
-                                                      setState(() {});
-                                                    },
-                                                    child: Text(
-                                                        Language.instance.YES),
-                                                  ),
-                                                  MaterialButton(
-                                                    textColor: Theme.of(context)
-                                                        .primaryColor,
-                                                    onPressed:
-                                                        Navigator.of(subContext)
-                                                            .pop,
-                                                    child: Text(
-                                                        Language.instance.NO),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                          icon: Icon(
-                                            Icons.more_vert,
-                                          ),
-                                          iconSize: 24.0,
-                                          splashRadius: 20.0,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const Divider(
-                                  height: 1.0,
-                                  indent: 80.0,
-                                ),
-                              ],
-                            ),
+                              ),
+                              const Divider(
+                                height: 1.0,
+                                indent: 80.0,
+                              ),
+                            ],
                           ),
                         ),
-                        childCount: widget.playlist.tracks.length,
                       ),
+                      childCount: widget.playlist.tracks.length,
                     ),
-                    SliverPadding(
-                      padding: EdgeInsets.only(
-                        top: 12.0 +
-                            (detailsLoaded
-                                ? 0.0
-                                : MediaQuery.of(context).size.height),
-                      ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.only(
+                      top: 12.0 +
+                          (detailsLoaded
+                              ? 0.0
+                              : MediaQuery.of(context).size.height),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           );
   }
