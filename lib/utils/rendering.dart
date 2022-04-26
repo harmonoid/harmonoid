@@ -695,7 +695,7 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
         Collection.instance.albumArtDirectory.path,
         media.albumArtFileName,
       ));
-      if (file.existsSync_()) {
+      if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
         return ExtendedFileImageProvider(file);
       } else {
         try {
@@ -703,13 +703,13 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
             Collection.instance.albumArtDirectory.path,
             media.legacyAlbumArtFileName,
           ));
-          if (file.existsSync_()) {
+          if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
             return ExtendedFileImageProvider(file);
           } else {
             for (final name in kAlbumArtFileNames) {
               final file =
                   File(path.join(path.basename(media.uri.toFilePath()), name));
-              if (file.existsSync_()) {
+              if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
                 return ExtendedFileImageProvider(file);
               }
             }
@@ -730,7 +730,7 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
         Collection.instance.albumArtDirectory.path,
         media.tracks.first.albumArtFileName,
       ));
-      if (file.existsSync_()) {
+      if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
         return ExtendedFileImageProvider(file);
       } else {
         try {
@@ -738,13 +738,13 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
             Collection.instance.albumArtDirectory.path,
             media.tracks.first.legacyAlbumArtFileName,
           ));
-          if (file.existsSync_()) {
+          if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
             return ExtendedFileImageProvider(file);
           } else {
             for (final name in kAlbumArtFileNames) {
               final file = File(path.join(
                   path.basename(media.tracks.first.uri.toFilePath()), name));
-              if (file.existsSync_()) {
+              if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
                 return ExtendedFileImageProvider(file);
               }
             }
@@ -765,7 +765,7 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
         Collection.instance.albumArtDirectory.path,
         media.tracks.first.albumArtFileName,
       ));
-      if (file.existsSync_()) {
+      if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
         return ExtendedFileImageProvider(file);
       } else {
         try {
@@ -773,13 +773,13 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
             Collection.instance.albumArtDirectory.path,
             media.tracks.first.legacyAlbumArtFileName,
           ));
-          if (file.existsSync_()) {
+          if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
             return ExtendedFileImageProvider(file);
           } else {
             for (final name in kAlbumArtFileNames) {
               final file = File(path.join(
                   path.basename(media.tracks.first.uri.toFilePath()), name));
-              if (file.existsSync_()) {
+              if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
                 return ExtendedFileImageProvider(file);
               }
             }
