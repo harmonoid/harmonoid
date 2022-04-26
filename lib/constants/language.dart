@@ -240,6 +240,7 @@ class Language extends Strings with ChangeNotifier {
     this.COLLECTION_TRACK_DELETE_DIALOG_BODY = asset['COLLECTION_TRACK_DELETE_DIALOG_BODY']!;
     this.COLLECTION_TRACK_DELETE_DIALOG_HEADER = asset['COLLECTION_TRACK_DELETE_DIALOG_HEADER']!;
     this.COMING_UP = asset['COMING_UP']!;
+    this.COPY_LINK = asset['COPY_LINK']!;
     this.CREATE = asset['CREATE']!;
     this.CREATE_NEW_PLAYLIST = asset['CREATE_NEW_PLAYLIST']!;
     this.CREATE_PLAYLIST_SUBHEADER = asset['CREATE_PLAYLIST_SUBHEADER']!;

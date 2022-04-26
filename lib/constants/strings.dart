@@ -43,6 +43,7 @@ class Strings {
   late String COLLECTION_TRACK_DELETE_DIALOG_BODY;
   late String COLLECTION_TRACK_DELETE_DIALOG_HEADER;
   late String COMING_UP;
+  late String COPY_LINK;
   late String CREATE;
   late String CREATE_NEW_PLAYLIST;
   late String CREATE_PLAYLIST_SUBHEADER;

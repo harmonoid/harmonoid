@@ -43,6 +43,7 @@
   "COLLECTION_TRACK_DELETE_DIALOG_BODY": "您确定删除已经保存在您设备上的歌曲吗?",
   "COLLECTION_TRACK_DELETE_DIALOG_HEADER": "您确定吗?",
   "COMING_UP": "当前播放",
+  "COPY_LINK": "Copy link",
   "CREATE": "创建",
   "CREATE_NEW_PLAYLIST": "创建新的播放列表",
   "CREATE_PLAYLIST_SUBHEADER": "创建新的播放列表以添加您的歌曲",
