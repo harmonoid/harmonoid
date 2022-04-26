@@ -1421,33 +1421,36 @@ class CorrectedSwitchListTile extends StatelessWidget {
 }
 
 class CorrectedListTile extends StatelessWidget {
-  final void Function() onTap;
+  final void Function()? onTap;
   final IconData iconData;
   final String title;
-  final String subtitle;
+  final String? subtitle;
+  final double? height;
   CorrectedListTile({
     Key? key,
-    required this.onTap,
     required this.iconData,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
+    this.onTap,
+    this.height,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        onTap.call();
-      },
+      onTap: onTap,
       child: Container(
-        height: 88.0,
+        height: height ?? 88.0,
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: subtitle == null
+              ? CrossAxisAlignment.center
+              : CrossAxisAlignment.start,
           children: [
             Container(
-              margin: EdgeInsets.only(top: 16.0, right: 16.0),
+              margin: EdgeInsets.only(
+                  top: subtitle == null ? 0.0 : 16.0, right: 16.0),
               width: 40.0,
               height: 40.0,
               child: Icon(iconData),
@@ -1461,15 +1464,16 @@ class CorrectedListTile extends StatelessWidget {
                     title,
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    subtitle,
-                    style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                          color: Theme.of(context).textTheme.headline3?.color,
-                        ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  if (subtitle != null) const SizedBox(height: 4.0),
+                  if (subtitle != null)
+                    Text(
+                      subtitle!,
+                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                            color: Theme.of(context).textTheme.headline3?.color,
+                          ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                 ],
               ),
             ),

@@ -8,6 +8,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -580,6 +581,17 @@ CircularButton contextMenu(BuildContext context, {Color? color}) =>
               }
             case 1:
               {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: AboutPage(),
+                    ),
+                  ),
+                );
                 break;
               }
           }
