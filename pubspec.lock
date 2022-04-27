@@ -45,6 +45,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.8.2"
+  auto_size_text:
+    dependency: "direct main"
+    description:
+      name: auto_size_text
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   bitsdojo_window:
     dependency: "direct main"
     description:
@@ -274,8 +281,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "18a018b8e278ba8565bd7d0ab9c7b01847b2d5cc"
-      resolved-ref: "18a018b8e278ba8565bd7d0ab9c7b01847b2d5cc"
+      ref: e24643c1ab4ac0795829de8cfa80d63a9af52187
+      resolved-ref: e24643c1ab4ac0795829de8cfa80d63a9af52187
       url: "https://github.com/alexmercerind/flutter_media_metadata.git"
     source: git
     version: "0.1.2"
