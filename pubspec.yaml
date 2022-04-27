@@ -29,7 +29,7 @@ dependencies:
   flutter_media_metadata:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git
-      ref: 311e9a43a1feff5b665256084c99e4cb4e74b27d
+      ref: 81ebab65a7b72117d18aa744c4bc60399405bc5b
 
   # Third-party plugins.
 
