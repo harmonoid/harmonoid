@@ -32,6 +32,7 @@ https://user-images.githubusercontent.com/28951144/165089217-451646fe-7cfa-4ba8-
 - [Third-Party Credits](#third-party-credits)
 - [Discord](https://discord.gg/2Rc3edFWd8)
 - [Patreon](https://www.patreon.com/harmonoid)
+- [Controversies](#controversies)
  
 ## Download
 
@@ -457,6 +458,37 @@ The source-code in this repository and official releases/binaries are distribute
 - Harmonoid also depends upon some of the awesome packages available on pub.dev. A complete list of those can be found [here](https://github.com/harmonoid/harmonoid/blob/47d879cdf7151069bc40722235e79e7144f92f4c/pubspec.yaml#L32-L81).
 
 - [YouTube](https://www.youtube.com/) & [YouTube Music](https://music.youtube.com/) is owned by [Google LLC](https://about.google/). Playback of videos & music is governed by [YouTube Terms of Service](https://www.youtube.com/t/terms). The application does not store any music/video streams locally, neither saves files on the disk. The content is shown in a manner similar to how a normal web-browser functions. This is not a "core" functionality of the application and just something application supports for the sake of completion.
+
+## Controversies 
+
+A lot of things were (are still) inexistent for Flutter Desktop or had to be made on-my-own for this project specifically. Thus, few of the things are written with a _compromise_.
+
+**Few of the common arguments can be:**
+
+1. You are using singletons in the project. 
+2. Stop saving cache in JSON.
+3. Don't use Provider, use Riverpod.
+4. No tests?
+
+<!-- --->
+**Answers:**
+
+1. Singletons might be _"bad"_, but here the application internally requires reference to these singleton objects/`ChangeNotifier`s outside `Widget` tree quite often (without `BuildContext`) (possibly using [`get_it`](https://pub.dev/packages/get_it) like dependency-injection at some point will be good idea). e.g. few situtations like:
+- Triggering seekbar re-draw whenever position-update is sent from native code.
+- A file is opened from file explorer & app should open the clicked file within same instance.
+- Showing media-buffering state.
+- Indexing a `File` (retreving its tags) & showing progress update in UI.
+- System media control button(s) are clicked, the playback should be paused & UI re-draws should be triggered.
+- Some `TextField` is focused, keyboard shortcuts should be prevented.
+- Music files are being indexed, progress updates should be shown while saving metadata/tags to cache. And we can't make UI redraw for every single file that is parsed, but rather in a definite period interval (so that everything stays usable).
+
+2. Saving cache as JSON isn't a problem since there are no performance drawbacks (think of it as a NoSQL database). All that is happening at the end is serialization-deserialization & file read-write, either it be a sqlite3, hive, JSON or something else. Now a lot of good cross-platform databases are available like [`hive`](https://pub.dev/packages/hive) or [`isar`](https://pub.dev/packages/hive) for Flutter on Desktop, which can be used for caching the music-library/metadata-tags. However, the same wasn't applicable before.
+
+3. I fear I don't have time for that-much refactor now. I will prefer switching to [BLoC](https://bloclibrary.dev/) instead, if any refactor ever happens. Why would I use a state-management solution that encourages to create global-variables ;)
+
+4. We need to write those. It's becoming a struggle with time. But I fear tests in Flutter aren't "capable" enough, the app highly depends upon C-interop & if something wrong happens or memory error takes place, Dart VM itself will die. I need tests to check actual functionality, audio output, correct audio-tagging, file explorer associations etc. NOT to measure/match position of `Widget`s on screen or compare Dart sided data-types with fake native-calls. In that case, only a human can do the job & look for possible regressions. And, since I am the only one who regularly commits changes or works on features, I don't feel that urgency to setup a pull-request test suite for public-contributions.
+
+If you disagree with any of the answers or want to correct my knowledge, please open a new issue or discussion.
 
 ## Bonus
 
