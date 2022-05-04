@@ -127,7 +127,7 @@ class IndexingState extends State<IndexingSetting> {
                                   width: isMobile
                                       ? MediaQuery.of(context).size.width
                                       : 360.0,
-                                  height: 56.0,
+                                  height: isMobile ? 56.0 : 40.0,
                                   margin: EdgeInsets.symmetric(vertical: 2.0),
                                   child: Row(
                                     mainAxisAlignment:
