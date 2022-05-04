@@ -158,6 +158,14 @@ class LanguageRegion {
     translator: 'Lucifer25x',
     github: 'https://github.com/Lucifer25x',
   );
+  static const idID = LanguageRegion(
+    code: 'id',
+    countryCode: 'ID',
+    name: 'Indonesian',
+    country: 'Indonesia',
+    translator: 'Takeshi',
+    github: 'https://github.com/KesiTakeshi',
+  );
 
   static const values = <LanguageRegion>[
     enUs,
@@ -176,6 +184,7 @@ class LanguageRegion {
     jaJP,
     trTR,
     azAZ,
+    idID,
   ];
 
   int get index => values.indexOf(this);

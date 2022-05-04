@@ -196,6 +196,12 @@ const kTranslators = [
     'Feelogil',
     'Update Russian translation.'
   ],
+  [
+    'https://github.com/KesiTakeshi',
+    'https://avatars.githubusercontent.com/u/105037185?s=80&v=4',
+    'Takeshi',
+    'Add Indonesian translation.'
+  ],
 ];
 
 class AboutPage extends StatefulWidget {
@@ -283,7 +289,7 @@ class AboutPageState extends State<AboutPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: 16.0,
+                                height: 4.0,
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
@@ -356,9 +362,6 @@ class AboutPageState extends State<AboutPage> {
                         SizedBox(
                           height: 8.0,
                         ),
-                        SizedBox(
-                          height: 12.0,
-                        ),
                         Padding(
                           padding: EdgeInsets.only(left: 24.0),
                           child: Text(
@@ -407,7 +410,6 @@ class AboutPageState extends State<AboutPage> {
                                   ),
                                   trailing: Icon(
                                     Icons.link,
-                                    size: 22.0,
                                   ),
                                 ),
                               ),
@@ -464,7 +466,6 @@ class AboutPageState extends State<AboutPage> {
                                   ),
                                   trailing: Icon(
                                     Icons.link,
-                                    size: 22.0,
                                   ),
                                 ),
                               ),
@@ -521,7 +522,6 @@ class AboutPageState extends State<AboutPage> {
                                   ),
                                   trailing: Icon(
                                     Icons.link,
-                                    size: 22.0,
                                   ),
                                 ),
                               ),
@@ -578,7 +578,6 @@ class AboutPageState extends State<AboutPage> {
                                   ),
                                   trailing: Icon(
                                     Icons.link,
-                                    size: 22.0,
                                   ),
                                 ),
                               ),
