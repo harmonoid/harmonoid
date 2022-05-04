@@ -33,7 +33,7 @@ https://user-images.githubusercontent.com/28951144/165089217-451646fe-7cfa-4ba8-
 - [Discord](https://discord.gg/2Rc3edFWd8)
 - [Patreon](https://www.patreon.com/harmonoid)
 - [Controversies](#controversies)
- 
+
 ## Download
 
 ### <img src='https://user-images.githubusercontent.com/28951144/159582997-2ccd85e1-5f1c-494f-938b-d9a2bd6ed0ae.png' height='24'></img>&nbsp; Windows
@@ -393,6 +393,12 @@ An incomplete list of people who are working (or worked) on the project in past:
       <li>Update Russian translation.</li>
     </ul>
   </li>
+  <li>
+    <img src='https://avatars.githubusercontent.com/u/105037185?s=80&v=4' height='28' width='28'></img>&nbsp;&nbsp;<strong><a href='https://github.com/KesiTakeshi'>Takeshi</a></strong>
+    <ul>
+      <li>Add Indonesian translation.</li>
+    </ul>
+  </li>
 </ul>
 
 ## Compiling
@@ -459,21 +465,23 @@ The source-code in this repository and official releases/binaries are distribute
 
 - [YouTube](https://www.youtube.com/) & [YouTube Music](https://music.youtube.com/) is owned by [Google LLC](https://about.google/). Playback of videos & music is governed by [YouTube Terms of Service](https://www.youtube.com/t/terms). The application does not store any music/video streams locally, neither saves files on the disk. The content is shown in a manner similar to how a normal web-browser functions. This is not a "core" functionality of the application and just something application supports for the sake of completion.
 
-## Controversies 
+## Controversies
 
 A lot of things were (are still) inexistent for Flutter Desktop or had to be made on-my-own for this project specifically. Thus, few of the things are written with a _compromise_.
 
 **Few of the common arguments can be:**
 
-1. You are using singletons in the project. 
+1. You are using singletons in the project.
 2. Stop saving cache in JSON.
 3. Don't use Provider, use Riverpod.
 4. No tests?
 
 <!-- --->
+
 **Answers:**
 
 1. Singletons might be _"bad"_, but here the application internally requires reference to these singleton objects/`ChangeNotifier`s outside `Widget` tree quite often (without `BuildContext`) (possibly using [`get_it`](https://pub.dev/packages/get_it) like dependency-injection at some point will be good idea). e.g. few situtations like:
+
 - Triggering seekbar re-draw whenever position-update is sent from native code.
 - A file is opened from file explorer & app should open the clicked file within same instance.
 - Showing media-buffering state.
