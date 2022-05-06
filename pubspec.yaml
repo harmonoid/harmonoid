@@ -24,7 +24,10 @@ dependencies:
     path: external/override_window_destroy
   ytm_client:
     path: external/ytm_client.dart
-  windows_taskbar: ^1.1.0
+  windows_taskbar:
+    git:
+      url: https://github.com/alexmercerind/windows_taskbar.git
+      ref: master
   dart_discord_rpc: ^0.0.2
   flutter_media_metadata:
     git:
