@@ -192,16 +192,16 @@ class Playback extends ChangeNotifier {
 
   Future<void> open(List<Track> tracks, {int index = 0}) async {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      await player.open(tracks
-          .map((e) => Media(
-                Plugins.redirect(e.uri).toString(),
-                extras: e.toJson(),
-              ))
-          .toList());
-      await player.jump(index);
-      await player.play();
+      await player.open(
+        tracks
+            .map((e) => Media(
+                  Plugins.redirect(e.uri).toString(),
+                  extras: e.toJson(),
+                ))
+            .toList(),
+        start: index,
+      );
       isShuffling = false;
-      notifyListeners();
     }
     if (Platform.isAndroid || Platform.isIOS) {
       this.tracks = tracks;

@@ -216,6 +216,7 @@ class IndexingState extends State<IndexingSetting> {
                                               ..remove(directory),
                                           );
                                         },
+                                        minWidth: 0.0,
                                         child: Text(
                                           Language.instance.REMOVE
                                               .toUpperCase(),
@@ -231,6 +232,7 @@ class IndexingState extends State<IndexingSetting> {
                               )
                               .toList() +
                           [
+                            if (isDesktop) SizedBox(height: 8.0),
                             if (controller.progress != controller.total)
                               Container(
                                 height: 56.0,
