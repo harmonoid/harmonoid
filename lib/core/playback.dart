@@ -577,11 +577,19 @@ class Playback extends ChangeNotifier {
           }
         }();
         if (Platform.isWindows) {
-          if (appWindow.isVisible && Configuration.instance.taskbarIndicator)
+          if (appWindow.isVisible && Configuration.instance.taskbarIndicator) {
             WindowsTaskbar.setProgressMode(isBuffering
                 ? TaskbarProgressMode.indeterminate
                 : TaskbarProgressMode.normal);
-          if (appWindow.isVisible)
+          }
+          if (appWindow.isVisible) {
+            WindowsTaskbar.setWindowTitle(
+              [
+                track.trackName,
+                track.trackArtistNames.take(2).join(', '),
+                'Harmonoid',
+              ].join(' • '),
+            );
             WindowsTaskbar.setThumbnailToolbar([
               ThumbnailToolbarButton(
                 ThumbnailToolbarAssetIcon('assets/icons/previous.ico'),
@@ -605,20 +613,26 @@ class Playback extends ChangeNotifier {
                     : 0,
               ),
             ]);
-          smtc.set_status(isPlaying ? SMTCStatus.playing : SMTCStatus.paused);
-          smtc.set_music_data(
-            album_title: track.albumName,
-            album_artist: track.albumArtistName,
-            artist: track.trackArtistNames.take(2).join(', '),
-            title: track.trackName,
-            track_number: track.trackNumber,
-          );
-          if (Plugins.isWebMedia(track.uri)) {
-            final artwork = getAlbumArt(track, small: true);
-            smtc.set_artwork((artwork as ExtendedNetworkImageProvider).url);
-          } else {
-            final artwork = getAlbumArt(track);
-            smtc.set_artwork((artwork as ExtendedFileImageProvider).file);
+          }
+          try {
+            smtc.set_status(isPlaying ? SMTCStatus.playing : SMTCStatus.paused);
+            smtc.set_music_data(
+              album_title: track.albumName,
+              album_artist: track.albumArtistName,
+              artist: track.trackArtistNames.take(2).join(', '),
+              title: track.trackName,
+              track_number: track.trackNumber,
+            );
+            if (Plugins.isWebMedia(track.uri)) {
+              final artwork = getAlbumArt(track, small: true);
+              smtc.set_artwork((artwork as ExtendedNetworkImageProvider).url);
+            } else {
+              final artwork = getAlbumArt(track);
+              smtc.set_artwork((artwork as ExtendedFileImageProvider).file);
+            }
+          } catch (exception, stacktrace) {
+            print(exception);
+            print(stacktrace);
           }
         }
         if (Platform.isLinux) {
