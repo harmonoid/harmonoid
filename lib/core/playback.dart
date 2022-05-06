@@ -420,7 +420,8 @@ class Playback extends ChangeNotifier {
     // libmpv.dart specific.
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       player.streams.index.listen((event) {
-        index = event.clamp(0, (tracks.length - 1).clamp(0, 1 << 32));
+        if (event < 0 || event >= tracks.length) return;
+        index = event;
         notifyListeners();
         _update();
       });
@@ -466,6 +467,7 @@ class Playback extends ChangeNotifier {
       try {
         // System Media Transport Controls. Windows specific.
         if (Platform.isWindows) {
+          WindowsTaskbar.resetWindowTitle();
           smtc.create();
           smtc.events.listen((value) {
             switch (value) {
@@ -498,7 +500,8 @@ class Playback extends ChangeNotifier {
     if (Platform.isAndroid || Platform.isIOS) {
       assetsAudioPlayer.current.listen((event) {
         if (event != null) {
-          index = event.index.clamp(0, (tracks.length - 1).clamp(0, 1 << 32));
+          if (event.index < 0 || event.index >= tracks.length) return;
+          index = event.index;
           duration = event.audio.duration;
           tracks = event.playlist.audios
               .map((e) => Track.fromJson(e.metas.extra))
@@ -631,8 +634,8 @@ class Playback extends ChangeNotifier {
               smtc.set_artwork((artwork as ExtendedFileImageProvider).file);
             }
           } catch (exception, stacktrace) {
-            print(exception);
-            print(stacktrace);
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
           }
         }
         if (Platform.isLinux) {
