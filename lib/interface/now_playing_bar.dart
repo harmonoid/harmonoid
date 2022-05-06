@@ -35,6 +35,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
   Iterable<Color>? palette;
   List<Widget> fills = [];
   Track? track;
+  bool isShuffling = Playback.instance.isShuffling;
   bool showAlbumArtButton = false;
 
   @override
@@ -58,46 +59,45 @@ class NowPlayingBarState extends State<NowPlayingBar>
       final track = Playback.instance.tracks[Playback.instance.index];
       if (this.track != track) {
         this.track = track;
-        PaletteGenerator.fromImageProvider(getAlbumArt(track, small: true))
-            .then(
-          (value) => setState(
-            () {
-              palette = value.colors;
-              fills.add(
-                TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0.0, end: 40.0),
-                  duration: Duration(milliseconds: 800),
-                  onEnd: () {
-                    if (fills.length > 2) {
-                      fills.removeAt(0);
-                    }
-                  },
+        // Shuffling seems to scramble `palette_generator` stuff, so avoiding it explicitly.
+        if (isShuffling == Playback.instance.isShuffling) {
+          final result = await PaletteGenerator.fromImageProvider(
+              getAlbumArt(track, small: true));
+          palette = result.colors;
+          fills.add(
+            TweenAnimationBuilder(
+              tween: Tween<double>(begin: 0.0, end: 40.0),
+              duration: Duration(milliseconds: 800),
+              onEnd: () {
+                if (fills.length > 2) {
+                  fills.removeAt(0);
+                }
+              },
+              child: Container(
+                height: kDesktopNowPlayingBarHeight,
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.center,
+                child: ClipRect(
                   child: Container(
                     height: kDesktopNowPlayingBarHeight,
-                    width: MediaQuery.of(context).size.width,
-                    alignment: Alignment.center,
-                    child: ClipRect(
-                      child: Container(
-                        height: kDesktopNowPlayingBarHeight,
-                        width: kDesktopNowPlayingBarHeight,
-                        decoration: BoxDecoration(
-                          color: (palette ?? [Theme.of(context).cardColor])
-                              .first
-                              .withOpacity(1.0),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
+                    width: kDesktopNowPlayingBarHeight,
+                    decoration: BoxDecoration(
+                      color: palette == null
+                          ? Theme.of(context).cardColor
+                          : palette!.first.withOpacity(1.0),
+                      shape: BoxShape.circle,
                     ),
                   ),
-                  builder: (context, value, child) => Transform.scale(
-                    scale: value as double,
-                    child: child,
-                  ),
                 ),
-              );
-            },
-          ),
-        );
+              ),
+              builder: (context, value, child) => Transform.scale(
+                scale: value as double,
+                child: child,
+              ),
+            ),
+          );
+        }
+        isShuffling = Playback.instance.isShuffling;
       }
     };
     Playback.instance.addListener(listener);

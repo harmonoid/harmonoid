@@ -45,7 +45,6 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
       bucket: PageStorageBucket(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.transparent,
         body: isMobile
             ? WebRecommendations(
                 key: PageStorageKey(0),
