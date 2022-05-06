@@ -273,19 +273,6 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
     ),
     PopupMenuItem<int>(
       padding: EdgeInsets.zero,
-      value: 2,
-      child: ListTile(
-        leading: Icon(Platform.isWindows
-            ? FluentIcons.list_16_regular
-            : Icons.queue_music),
-        title: Text(
-          Language.instance.ADD_TO_PLAYLIST,
-          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
-        ),
-      ),
-    ),
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
       value: 3,
       child: ListTile(
         leading: Icon(Platform.isWindows
@@ -293,6 +280,19 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
             : Icons.music_note),
         title: Text(
           Language.instance.ADD_TO_NOW_PLAYING,
+          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+        ),
+      ),
+    ),
+    PopupMenuItem<int>(
+      padding: EdgeInsets.zero,
+      value: 2,
+      child: ListTile(
+        leading: Icon(Platform.isWindows
+            ? FluentIcons.list_16_regular
+            : Icons.queue_music),
+        title: Text(
+          Language.instance.ADD_TO_PLAYLIST,
           style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
         ),
       ),
