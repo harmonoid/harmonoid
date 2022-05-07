@@ -8,14 +8,15 @@
 
 import 'dart:io';
 import 'dart:math';
-import 'package:flutter/material.dart' hide Intent;
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
-import 'package:libmpv/libmpv.dart' hide Playlist;
+import 'package:libmpv/libmpv.dart';
 import 'package:ytm_client/ytm_client.dart' hide Media, Track, Playlist;
+import 'package:assets_audio_player/assets_audio_player.dart'
+    as assets_audio_player;
 import 'package:mpris_service/mpris_service.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -153,7 +154,8 @@ class Playback extends ChangeNotifier {
       player.setPlaylistMode(PlaylistMode.values[value.index]);
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      assetsAudioPlayer.setLoopMode(LoopMode.values[value.index]);
+      assetsAudioPlayer
+          .setLoopMode(assets_audio_player.LoopMode.values[value.index]);
     }
     playlistLoopMode = value;
     notifyListeners();
@@ -193,20 +195,22 @@ class Playback extends ChangeNotifier {
   Future<void> open(List<Track> tracks, {int index = 0}) async {
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
       await player.open(
-        tracks
-            .map((e) => Media(
-                  Plugins.redirect(e.uri).toString(),
-                  extras: e.toJson(),
-                ))
-            .toList(),
-        start: index,
+        Playlist(
+          tracks
+              .map((e) => Media(
+                    Plugins.redirect(e.uri).toString(),
+                    extras: e.toJson(),
+                  ))
+              .toList(),
+          index: index,
+        ),
       );
       isShuffling = false;
     }
     if (Platform.isAndroid || Platform.isIOS) {
       this.tracks = tracks;
       await assetsAudioPlayer.open(
-        Playlist(
+        assets_audio_player.Playlist(
             startIndex: index,
             audios: tracks.map((e) {
               Uri? image;
@@ -219,38 +223,38 @@ class Playback extends ChangeNotifier {
                 image = (artwork as ExtendedFileImageProvider).file.uri;
               }
               return Plugins.isWebMedia(e.uri)
-                  ? Audio.network(
+                  ? assets_audio_player.Audio.network(
                       Plugins.redirect(e.uri).toString(),
-                      metas: Metas(
+                      metas: assets_audio_player.Metas(
                         id: e.uri.toString(),
                         title: e.trackName,
                         artist: e.trackArtistNames.take(2).join(', '),
                         album: e.albumName,
-                        image: MetasImage(
+                        image: assets_audio_player.MetasImage(
                           path: image.toString(),
-                          type: ImageType.network,
+                          type: assets_audio_player.ImageType.network,
                         ),
                         extra: e.toJson(),
                       ),
                     )
-                  : Audio.file(
+                  : assets_audio_player.Audio.file(
                       e.uri.toFilePath(),
-                      metas: Metas(
+                      metas: assets_audio_player.Metas(
                         id: e.uri.toString(),
                         title: e.trackName,
                         artist: e.trackArtistNames.take(2).join(', '),
                         album: e.albumName,
-                        image: MetasImage(
+                        image: assets_audio_player.MetasImage(
                           path: image.toString(),
-                          type: ImageType.file,
+                          type: assets_audio_player.ImageType.file,
                         ),
                         extra: e.toJson(),
                       ),
                     );
             }).toList()),
         showNotification: true,
-        loopMode: LoopMode.values[playlistLoopMode.index],
-        notificationSettings: NotificationSettings(
+        loopMode: assets_audio_player.LoopMode.values[playlistLoopMode.index],
+        notificationSettings: assets_audio_player.NotificationSettings(
           playPauseEnabled: true,
           nextEnabled: true,
           prevEnabled: true,
@@ -302,30 +306,30 @@ class Playback extends ChangeNotifier {
           image = (artwork as ExtendedFileImageProvider).file.uri;
         }
         final audio = Plugins.isWebMedia(e.uri)
-            ? Audio.network(
+            ? assets_audio_player.Audio.network(
                 Plugins.redirect(e.uri).toString(),
-                metas: Metas(
+                metas: assets_audio_player.Metas(
                   id: e.uri.toString(),
                   title: e.trackName,
                   artist: e.trackArtistNames.take(2).join(', '),
                   album: e.albumName,
-                  image: MetasImage(
+                  image: assets_audio_player.MetasImage(
                     path: image.toString(),
-                    type: ImageType.network,
+                    type: assets_audio_player.ImageType.network,
                   ),
                   extra: e.toJson(),
                 ),
               )
-            : Audio.file(
+            : assets_audio_player.Audio.file(
                 e.uri.toFilePath(),
-                metas: Metas(
+                metas: assets_audio_player.Metas(
                   id: e.uri.toString(),
                   title: e.trackName,
                   artist: e.trackArtistNames.take(2).join(', '),
                   album: e.albumName,
-                  image: MetasImage(
+                  image: assets_audio_player.MetasImage(
                     path: image.toString(),
-                    type: ImageType.file,
+                    type: assets_audio_player.ImageType.file,
                   ),
                   extra: e.toJson(),
                 ),
@@ -349,12 +353,15 @@ class Playback extends ChangeNotifier {
     index = AppState.instance.index;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       await player.open(
-        tracks
-            .map((e) => Media(
-                  Plugins.redirect(e.uri).toString(),
-                  extras: e.toJson(),
-                ))
-            .toList(),
+        Playlist(
+          tracks
+              .map((e) => Media(
+                    Plugins.redirect(e.uri).toString(),
+                    extras: e.toJson(),
+                  ))
+              .toList(),
+          index: index,
+        ),
         play: false,
       );
       // A bug that results in [isPlaying] becoming `true` after attempting
@@ -364,7 +371,7 @@ class Playback extends ChangeNotifier {
     }
     if (Platform.isAndroid || Platform.isIOS) {
       assetsAudioPlayer.open(
-        Playlist(
+        assets_audio_player.Playlist(
             startIndex: index,
             audios: tracks.map((e) {
               Uri? image;
@@ -377,34 +384,34 @@ class Playback extends ChangeNotifier {
                 image = (artwork as ExtendedFileImageProvider).file.uri;
               }
               return Plugins.isWebMedia(e.uri)
-                  ? Audio.network(e.uri.toString(),
-                      metas: Metas(
+                  ? assets_audio_player.Audio.network(e.uri.toString(),
+                      metas: assets_audio_player.Metas(
                         id: e.uri.toString(),
                         title: e.trackName,
                         artist: e.trackArtistNames.take(2).join(', '),
                         album: e.albumName,
-                        image: MetasImage(
+                        image: assets_audio_player.MetasImage(
                           path: image.toString(),
-                          type: ImageType.network,
+                          type: assets_audio_player.ImageType.network,
                         ),
                         extra: e.toJson(),
                       ))
-                  : Audio.file(e.uri.toFilePath(),
-                      metas: Metas(
+                  : assets_audio_player.Audio.file(e.uri.toFilePath(),
+                      metas: assets_audio_player.Metas(
                         id: e.uri.toString(),
                         title: e.trackName,
                         artist: e.trackArtistNames.take(2).join(', '),
                         album: e.albumName,
-                        image: MetasImage(
+                        image: assets_audio_player.MetasImage(
                           path: image.toString(),
-                          type: ImageType.file,
+                          type: assets_audio_player.ImageType.file,
                         ),
                         extra: e.toJson(),
                       ));
             }).toList()),
         showNotification: true,
-        loopMode: LoopMode.values[playlistLoopMode.index],
-        notificationSettings: NotificationSettings(
+        loopMode: assets_audio_player.LoopMode.values[playlistLoopMode.index],
+        notificationSettings: assets_audio_player.NotificationSettings(
           playPauseEnabled: true,
           nextEnabled: true,
           prevEnabled: true,
@@ -419,15 +426,19 @@ class Playback extends ChangeNotifier {
   Playback() {
     // libmpv.dart specific.
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      player.streams.index.listen((event) {
-        if (event < 0 || event >= tracks.length) return;
-        index = event;
-        notifyListeners();
-        _update();
-      });
-      player.streams.playlist.listen((event) {
-        tracks.clear();
-        tracks = event.map((media) => Track.fromJson(media.extras)).toList();
+      player.streams.playlist.listen((event) async {
+        if (event.index < 0 || event.index > event.medias.length - 1) {
+          return;
+        }
+        index = event.index;
+        tracks = await compute<List, List<Track>>(
+          (message) {
+            return message
+                .map((media) => Track.fromJson(media.extras))
+                .toList();
+          },
+          event.medias,
+        );
         notifyListeners();
         _update();
       });
@@ -692,8 +703,9 @@ class Playback extends ChangeNotifier {
       .save(tracks, index, rate, isShuffling, playlistLoopMode, volume);
 
   final Player player = Player(video: false, osc: false, title: kTitle);
-  final AssetsAudioPlayer assetsAudioPlayer =
-      AssetsAudioPlayer.withId(Random().nextInt(1 << 32).toString());
+  final assets_audio_player.AssetsAudioPlayer assetsAudioPlayer =
+      assets_audio_player.AssetsAudioPlayer.withId(
+          Random().nextInt(1 << 32).toString());
   final FlutterLocalNotificationsPlugin _notification =
       FlutterLocalNotificationsPlugin();
   DiscordRPC? discord;
