@@ -72,7 +72,10 @@ extension FileExtension on File {
         ? r'\\?\'
         : '';
     final file = File(join(prefix + parent.path, const Uuid().v4()));
-    await file.writeAsString(content);
+    if (!await file.exists_()) {
+      file.create(recursive: true);
+    }
+    await file.writeAsString(content, flush: true);
     await file.rename_(prefix + path);
     return this;
   }
