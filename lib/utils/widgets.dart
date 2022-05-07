@@ -435,7 +435,9 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
               child: TweenAnimationBuilder(
                 child: Icon(
                   Icons.refresh,
-                  color: Colors.white,
+                  color: widget.color?.isDark ?? true
+                      ? Colors.white
+                      : Colors.black87,
                 ),
                 tween: tween,
                 duration: Duration(milliseconds: 800),
@@ -921,6 +923,8 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
           ),
           child: BottomNavigationBar(
             currentIndex: _index,
+            selectedItemColor: color?.isDark ?? true ? null : Colors.black87,
+            unselectedItemColor: color?.isDark ?? true ? null : Colors.black45,
             type: BottomNavigationBarType.shifting,
             onTap: (index) {
               if (index != _index) {
@@ -1442,7 +1446,7 @@ class CorrectedListTile extends StatelessWidget {
       child: Container(
         height: height ?? 88.0,
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        padding: EdgeInsets.only(left: 16.0),
         child: Row(
           crossAxisAlignment: subtitle == null
               ? CrossAxisAlignment.center
