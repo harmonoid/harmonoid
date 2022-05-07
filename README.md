@@ -475,6 +475,7 @@ A lot of things were (are still) inexistent for Flutter Desktop or had to be mad
 2. Stop saving cache in JSON.
 3. Don't use Provider, use Riverpod.
 4. No tests?
+5. Platform specific design
 
 <!-- --->
 
@@ -495,6 +496,8 @@ A lot of things were (are still) inexistent for Flutter Desktop or had to be mad
 3. I fear I don't have time for that-much refactor now. I will prefer switching to [BLoC](https://bloclibrary.dev/) instead, if any refactor ever happens. Why would I use a state-management solution that encourages to create global-variables ;)
 
 4. We need to write those. It's becoming a struggle with time. But I fear tests in Flutter aren't "capable" enough, the app highly depends upon C-interop & if something wrong happens or memory error takes place, Dart VM itself will die. I need tests to check actual functionality, audio output, correct audio-tagging, file explorer associations etc. NOT to measure/match position of `Widget`s on screen or compare Dart sided data-types with fake native-calls. In that case, only a human can do the job & look for possible regressions. And, since I am the only one who regularly commits changes or works on features, I don't feel that urgency to setup a pull-request test suite for public-contributions.
+
+5. No. Never. It's not _"smart"_ to run a full-blown Skia renderer (from Flutter) & make it show a bland "native looking" UI design. One of the biggest advantage Flutter provides is that it's pixel-by-pixel painted, which means it is highly customisable in terms of what one can render visually. And I don't wanna put that advantage to no use, by following same boring design as other "native looking" apps (which will actually perform better in terms of graphical performance, for obvious reasons). I really like Material Design & current design is highly inspired by [this video](https://www.youtube.com/watch?v=Q8TXgCzxEnw) & I've made efforts to keep it CONSISTENT, FLUID & ADAPTIVE across all the platforms. I will add support for [Material You](https://material.io/blog/announcing-material-you) at some point, but will be optional to users inside the Settings.
 
 If you disagree with any of the answers or want to correct my knowledge, please open a new issue or discussion.
 
