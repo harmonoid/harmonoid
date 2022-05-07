@@ -29,10 +29,13 @@ extension DirectoryExtension on Directory {
       followLinks: false,
     )
         .listen(
-      (event) {
+      (event) async {
         // Explicitly restricting to [kSupportedFileTypes] for avoiding long iterations in later operations.
         if (event is File && kSupportedFileTypes.contains(event.extension)) {
-          files.add(File(event.path.substring(prefix.isNotEmpty ? 4 : 0)));
+          // 1 MB or greater in size.
+          if (await event.length() > 1024 * 1024) {
+            files.add(File(event.path.substring(prefix.isNotEmpty ? 4 : 0)));
+          }
         }
       },
       onError: (error) {
