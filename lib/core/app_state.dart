@@ -11,6 +11,7 @@ import 'dart:convert' as convert;
 import 'package:harmonoid/core/playback.dart'
     show DefaultPlaybackValues, PlaylistLoopMode;
 import 'package:harmonoid/models/media.dart';
+import 'package:harmonoid/utils/file_system.dart';
 import 'package:path/path.dart' as path;
 
 import 'configuration.dart';
@@ -42,7 +43,7 @@ class AppState extends AppStateKeys {
     );
     if (!await instance.file.exists()) {
       await instance.file.create(recursive: true);
-      await instance.file.writeAsString(
+      await instance.file.write_(
         convert.JsonEncoder.withIndent('  ').convert(defaultAppState),
       );
     }
@@ -59,7 +60,7 @@ class AppState extends AppStateKeys {
     this.playlistLoopMode = playlistLoopMode;
     this.volume = volume;
 
-    await file.writeAsString(convert.JsonEncoder.withIndent('  ').convert({
+    await file.write_(convert.JsonEncoder.withIndent('  ').convert({
       'playlist': playlist,
       'index': index,
       'rate': rate,
@@ -99,7 +100,7 @@ class AppState extends AppStateKeys {
       if (!await file.exists()) {
         await file.create(recursive: true);
       }
-      await file.writeAsString(
+      await file.write_(
         convert.JsonEncoder.withIndent('  ').convert(defaultAppState),
       );
       read(retry: false);

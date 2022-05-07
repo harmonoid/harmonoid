@@ -61,7 +61,7 @@ class Configuration extends ConfigurationKeys {
     );
     if (!await instance.file.exists_()) {
       await instance.file.create(recursive: true);
-      await instance.file.writeAsString(
+      await instance.file.write_(
         convert.JsonEncoder.withIndent('  ').convert(defaultConfiguration),
       );
     }
@@ -146,7 +146,7 @@ class Configuration extends ConfigurationKeys {
     if (proxyURL != null) {
       this.proxyURL = proxyURL;
     }
-    await file.writeAsString(
+    await file.write_(
       const convert.JsonEncoder.withIndent('  ').convert(
         {
           'collectionDirectories': this
@@ -218,7 +218,7 @@ class Configuration extends ConfigurationKeys {
       if (!await file.exists_()) {
         await file.create(recursive: true);
       }
-      await file.writeAsString(
+      await file.write_(
         const convert.JsonEncoder.withIndent('  ')
             .convert(defaultConfiguration),
       );

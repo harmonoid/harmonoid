@@ -399,8 +399,7 @@ class Collection extends ChangeNotifier {
   Future<void> saveToCache({bool notifyListeners: true}) async {
     tracks.sort((first, second) => second.timeAdded.millisecondsSinceEpoch
         .compareTo(first.timeAdded.millisecondsSinceEpoch));
-    await File(path.join(cacheDirectory.path, kCollectionCacheFileName))
-        .writeAsString(
+    await File(path.join(cacheDirectory.path, kCollectionCacheFileName)).write_(
       encoder.convert(
         {
           'tracks': tracks.map((track) => track.toJson()).toList(),
@@ -739,7 +738,7 @@ class Collection extends ChangeNotifier {
         cacheDirectory.path,
         kPlaylistsCacheFileName,
       ),
-    ).writeAsString(
+    ).write_(
       encoder.convert(
         {
           'playlists': playlists
