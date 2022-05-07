@@ -46,7 +46,7 @@ Supports Windows 7 or later.
 
 On Windows, [setup](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-windows-setup.exe) is recommended as it automatically links with files & file explorer context menus.
 
-### <img src='https://user-images.githubusercontent.com/28951144/159582965-706de4a3-6f9f-4da6-a944-36496b78d0df.png' height='24'></img>&nbsp; Linux
+### <img src='https://user-images.githubusercontent.com/28951144/159582965-706de4a3-6f9f-4da6-a944-36496b78d0df.png' height='24'></img>&nbsp; Linux [[beta](https://docs.flutter.dev/desktop)]
 
 Any modern Linux distribution.
 
