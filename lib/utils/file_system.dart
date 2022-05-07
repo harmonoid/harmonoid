@@ -7,6 +7,8 @@
 ///
 import 'dart:io';
 import 'dart:async';
+import 'package:path/path.dart';
+import 'package:uuid/uuid.dart';
 import 'package:flutter/widgets.dart';
 import 'package:harmonoid/core/collection.dart';
 
@@ -19,8 +21,11 @@ extension DirectoryExtension on Directory {
   /// * Returns only [List] of [File]s.
   ///
   Future<List<File>> list_() async {
-    final prefix =
-        Platform.isWindows && !path.startsWith('\\\\') ? r'\\?\' : '';
+    final prefix = Platform.isWindows &&
+            !path.startsWith('\\\\') &&
+            !path.startsWith(r'\\?\')
+        ? r'\\?\'
+        : '';
     final completer = Completer();
     final files = <File>[];
     Directory(prefix + path)
@@ -30,6 +35,7 @@ extension DirectoryExtension on Directory {
     )
         .listen(
       (event) async {
+        // Not a good way, but whatever for performance.
         // Explicitly restricting to [kSupportedFileTypes] for avoiding long iterations in later operations.
         if (event is File && kSupportedFileTypes.contains(event.extension)) {
           // 1 MB or greater in size.
@@ -49,12 +55,48 @@ extension DirectoryExtension on Directory {
   }
 }
 
+extension FileExtension on File {
+  /// Safely writes [String] [content] to a [File].
+  ///
+  /// Does not modify the contents of the original file, but
+  /// creates a new randomly named file & copies it to the
+  /// original [File]'s path for ensured safety & no possible
+  /// corruption.
+  ///
+  /// Thanks to @raitonoberu for the idea.
+  ///
+  Future<File> write_(String content) async {
+    final prefix = Platform.isWindows &&
+            !path.startsWith('\\\\') &&
+            !path.startsWith(r'\\?\')
+        ? r'\\?\'
+        : '';
+    final file = File(join(prefix + parent.path, const Uuid().v4()));
+    await file.writeAsString(content);
+    await file.rename_(prefix + path);
+    return this;
+  }
+
+  /// Safely [rename]s a [File].
+  FutureOr<File> rename_(String newPath) {
+    final prefix = Platform.isWindows &&
+            !path.startsWith('\\\\') &&
+            !path.startsWith(r'\\?\')
+        ? r'\\?\'
+        : '';
+    return File(prefix + path).rename(newPath);
+  }
+}
+
 extension FileSystemEntityExtension on FileSystemEntity {
   /// Safely deletes a [FileSystemEntity].
   FutureOr<void> delete_() async {
     if (await exists_()) {
-      final prefix =
-          Platform.isWindows && !path.startsWith('\\\\') ? r'\\?\' : '';
+      final prefix = Platform.isWindows &&
+              !path.startsWith('\\\\') &&
+              !path.startsWith(r'\\?\')
+          ? r'\\?\'
+          : '';
       if (this is File) {
         await File(prefix + path).delete();
       } else if (this is Directory) {
@@ -65,8 +107,11 @@ extension FileSystemEntityExtension on FileSystemEntity {
 
   /// Safely checks whether a [FileSystemEntity] exists or not.
   FutureOr<bool> exists_() {
-    final prefix =
-        Platform.isWindows && !path.startsWith('\\\\') ? r'\\?\' : '';
+    final prefix = Platform.isWindows &&
+            !path.startsWith('\\\\') &&
+            !path.startsWith(r'\\?\')
+        ? r'\\?\'
+        : '';
     if (this is File) {
       return File(prefix + path).exists();
     } else if (this is Directory) {
@@ -78,8 +123,11 @@ extension FileSystemEntityExtension on FileSystemEntity {
 
   /// Safely checks whether a [FileSystemEntity] exists or not.
   bool existsSync_() {
-    final prefix =
-        Platform.isWindows && !path.startsWith('\\\\') ? r'\\?\' : '';
+    final prefix = Platform.isWindows &&
+            !path.startsWith('\\\\') &&
+            !path.startsWith(r'\\?\')
+        ? r'\\?\'
+        : '';
     if (this is File) {
       return File(prefix + path).existsSync();
     } else if (this is Directory) {
