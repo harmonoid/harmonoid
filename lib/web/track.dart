@@ -6,7 +6,7 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'package:flutter/material.dart';
-import 'package:palette_generator/palette_generator.dart';
+// import 'package:palette_generator/palette_generator.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 
@@ -197,7 +197,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                       icon: Icon(
                         Icons.more_vert,
                         size: 16.0,
-                        color: isDark ? Colors.white54 : Colors.black54,
+                        // color: isDark ? Colors.white54 : Colors.black54,
                       ),
                     ),
                   ),
