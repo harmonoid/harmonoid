@@ -89,8 +89,8 @@ class Track extends Media {
         albumArtistName: [null, ''].contains(json['album_artist'])
             ? kUnknownArtist
             : json['album_artist'],
-        trackArtistNames: json['artist']?.split('/')?.cast<String>() ??
-            <String>[kUnknownArtist],
+        trackArtistNames:
+            Tagger.splitArtists(json['artist']) ?? <String>[kUnknownArtist],
         year:
             '${json['year'] ?? json['date']?.split('-')?.first ?? kUnknownYear}',
         timeAdded: () {

@@ -7,6 +7,7 @@
 ///
 
 import 'dart:io';
+import 'package:libmpv/libmpv.dart';
 import 'package:path/path.dart' as path;
 
 import 'package:harmonoid/utils/file_system.dart';
