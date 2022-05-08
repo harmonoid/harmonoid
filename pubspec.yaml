@@ -81,7 +81,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window
-      ref: 5e6ddd4b58bb357b23541181b4188ce5892ba7a3
+      ref: 492f0f4e8f36c486eb5ccc82041250c2773d22c8
   hotkey_manager:
     git:
       url: https://github.com/alexmercerind/hotkey_manager.git
@@ -97,12 +97,12 @@ dependency_overrides:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_windows
-      ref: 5e6ddd4b58bb357b23541181b4188ce5892ba7a3
+      ref: 492f0f4e8f36c486eb5ccc82041250c2773d22c8
   bitsdojo_window_linux:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_linux
-      ref: 5e6ddd4b58bb357b23541181b4188ce5892ba7a3
+      ref: 492f0f4e8f36c486eb5ccc82041250c2773d22c8
   platform: ^3.1.0
 
 dev_dependencies:
