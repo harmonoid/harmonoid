@@ -346,8 +346,19 @@ class Playback extends ChangeNotifier {
   Future<void> loadAppState({bool open = true}) async {
     isShuffling = AppState.instance.shuffle;
     playlistLoopMode = AppState.instance.playlistLoopMode;
-    rate = player.rate = AppState.instance.rate;
-    volume = player.volume = AppState.instance.volume;
+    rate = AppState.instance.rate;
+    volume = AppState.instance.volume;
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      player.rate = rate;
+      player.volume = volume;
+      player.setPlaylistMode(PlaylistMode.values[playlistLoopMode.index]);
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      assetsAudioPlayer.setPlaySpeed(rate);
+      assetsAudioPlayer.setVolume(volume / 100.0);
+      assetsAudioPlayer.setLoopMode(
+          assets_audio_player.LoopMode.values[playlistLoopMode.index]);
+    }
     if (!open) return;
     tracks = AppState.instance.playlist;
     index = AppState.instance.index;
@@ -364,10 +375,7 @@ class Playback extends ChangeNotifier {
         ),
         play: false,
       );
-      // A bug that results in [isPlaying] becoming `true` after attempting
-      // to change the volume. Calling [pause] after a delay to ensure that
-      // play button isn't in incorrect state at the startup of the application.
-      await Future.delayed(const Duration(milliseconds: 500), pause);
+      isPlaying = false;
     }
     if (Platform.isAndroid || Platform.isIOS) {
       assetsAudioPlayer.open(
