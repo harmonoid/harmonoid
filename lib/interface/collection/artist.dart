@@ -163,7 +163,6 @@ class ArtistTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Iterable<Color>? palette;
-
     return Consumer<Collection>(
       builder: (context, collection, _) => isDesktop
           ? Container(
@@ -246,48 +245,41 @@ class ArtistTile extends StatelessWidget {
             )
           : Material(
               color: Colors.transparent,
-              child: InkWell(
-                onTap: () async {
-                  if (palette == null) {
-                    final result = await PaletteGenerator.fromImageProvider(
-                        getAlbumArt(artist, small: true));
-                    palette = result.colors;
-                  }
-                  await precacheImage(getAlbumArt(artist), context);
-                  Navigator.of(context).push(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          FadeThroughTransition(
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        child: ArtistScreen(
-                          artist: artist,
-                          palette: palette,
-                        ),
+              child: OpenContainer(
+                closedColor: Colors.transparent,
+                closedElevation: 0.0,
+                openColor: Colors.transparent,
+                openElevation: 0.0,
+                openBuilder: (context, close) => ArtistScreen(
+                  artist: artist,
+                  palette: palette,
+                ),
+                closedBuilder: (context, open) => InkWell(
+                  onTap: () async {
+                    if (palette == null) {
+                      final result = await PaletteGenerator.fromImageProvider(
+                          getAlbumArt(artist, small: true));
+                      palette = result.colors;
+                    }
+                    await precacheImage(getAlbumArt(artist), context);
+                    open();
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Divider(
+                        height: 1.0,
+                        indent: 80.0,
                       ),
-                      transitionDuration: Duration(milliseconds: 300),
-                      reverseTransitionDuration: Duration(milliseconds: 300),
-                    ),
-                  );
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Divider(
-                      height: 1.0,
-                      indent: 80.0,
-                    ),
-                    Container(
-                      height: 64.0,
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 12.0),
-                          Hero(
-                            tag: 'artist_art_${artist.artistName}',
-                            child: Card(
+                      Container(
+                        height: 64.0,
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(width: 12.0),
+                            Card(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(28.0),
                               ),
@@ -304,41 +296,43 @@ class ArtistTile extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 12.0),
-                          Expanded(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  artist.artistName.overflow,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  style: Theme.of(context).textTheme.headline2,
-                                ),
-                                const SizedBox(
-                                  height: 2.0,
-                                ),
-                                Text(
-                                  Language.instance.M_TRACKS_AND_N_ALBUMS
-                                      .replaceAll(
-                                          'M', '${artist.tracks.length}')
-                                      .replaceAll(
-                                          'N', '${artist.albums.length}'),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  style: Theme.of(context).textTheme.headline3,
-                                ),
-                              ],
+                            const SizedBox(width: 12.0),
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    artist.artistName.overflow,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style:
+                                        Theme.of(context).textTheme.headline2,
+                                  ),
+                                  const SizedBox(
+                                    height: 2.0,
+                                  ),
+                                  Text(
+                                    Language.instance.M_TRACKS_AND_N_ALBUMS
+                                        .replaceAll(
+                                            'M', '${artist.tracks.length}')
+                                        .replaceAll(
+                                            'N', '${artist.albums.length}'),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 12.0),
-                        ],
+                            const SizedBox(width: 12.0),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
