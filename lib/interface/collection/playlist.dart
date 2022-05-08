@@ -551,7 +551,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                 Iterable<Color>? palette;
                 if (isMobile && widget.playlist.tracks.isNotEmpty) {
                   final result = await PaletteGenerator.fromImageProvider(
-                      getAlbumArt(widget.playlist.tracks.last, small: true));
+                      getAlbumArt(widget.playlist.tracks.first, small: true));
                   palette = result.colors;
                 }
                 Navigator.of(context).push(
@@ -1297,17 +1297,14 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                 height: MediaQuery.of(context).size.width,
                                 width: MediaQuery.of(context).size.width,
                                 child: LayoutBuilder(
-                                  builder: (context, constraints) => Hero(
-                                    tag: 'playlist_art_${widget.playlist.name}',
-                                    child: Padding(
-                                      padding: EdgeInsets.all(48.0),
-                                      child: PlaylistThumbnail(
-                                        tracks: widget.playlist.tracks,
-                                        width: min(constraints.maxHeight,
-                                                constraints.maxWidth) -
-                                            96.0,
-                                        mini: false,
-                                      ),
+                                  builder: (context, constraints) => Padding(
+                                    padding: EdgeInsets.all(48.0),
+                                    child: PlaylistThumbnail(
+                                      tracks: widget.playlist.tracks,
+                                      width: min(constraints.maxHeight,
+                                              constraints.maxWidth) -
+                                          96.0,
+                                      mini: false,
                                     ),
                                   ),
                                 ),
@@ -1489,6 +1486,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                               if (Configuration.instance.seamlessPlayback)
                                 ...[...Collection.instance.tracks]..shuffle()
                             ],
+                            index: i,
                           ),
                           onLongPress: () async {
                             showDialog(
