@@ -37,7 +37,7 @@ class Track extends Media {
     };
   }
 
-  /// Compatible with [MetadataRetriever] from `package:flutter_media_metadata`.
+  /// Compatible with [MetadataRetriever] from `package:flutter_media_metadata` & [toJson].
   factory Track.fromJson(dynamic json) => Track(
         uri: Uri.parse(json['uri']),
         trackName: [null, ''].contains(json['trackName'])
@@ -50,8 +50,14 @@ class Track extends Media {
         albumArtistName: [null, ''].contains(json['albumArtistName'])
             ? kUnknownArtist
             : json['albumArtistName'],
-        trackArtistNames: json['trackArtistNames']?.cast<String>() ??
-            <String>[kUnknownArtist],
+        trackArtistNames:
+            // [toJson] stores [trackArtistNames] as [List] of [String].
+            json['trackArtistNames'] is List
+                ? json['trackArtistNames'].cast<String>()
+                // [MetadataRetriever] from `package:flutter_media_metadata` stores [trackArtistNames] as [String].
+                // Split tag into individual artists before storing.
+                : Tagger.splitArtists(json['trackArtistNames']) ??
+                    <String>[kUnknownArtist],
         year: '${json['year'] ?? kUnknownYear}',
         timeAdded: () {
           final uri = Uri.parse(json['uri']);
