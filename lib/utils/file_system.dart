@@ -71,7 +71,7 @@ extension FileExtension on File {
             !path.startsWith(r'\\?\')
         ? r'\\?\'
         : '';
-    final file = File(join(prefix + parent.path, const Uuid().v4()));
+    final file = File(join(prefix + parent.path, 'Temp', const Uuid().v4()));
     if (!await file.exists_()) {
       file.create(recursive: true);
     }
