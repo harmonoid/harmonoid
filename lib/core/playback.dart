@@ -519,12 +519,18 @@ class Playback extends ChangeNotifier {
     if (Platform.isAndroid || Platform.isIOS) {
       assetsAudioPlayer.current.listen((event) {
         if (event != null) {
-          if (event.index < 0 || event.index >= tracks.length) return;
-          index = event.index;
+          if (event.playlist.currentIndex < 0 ||
+              event.playlist.currentIndex >= tracks.length) return;
           duration = event.audio.duration;
           tracks = event.playlist.audios
               .map((e) => Track.fromJson(e.metas.extra))
               .toList();
+          if (isShuffling) {
+            index =
+                tracks.indexOf(Track.fromJson(event.audio.audio.metas.extra));
+          } else {
+            index = event.playlist.currentIndex;
+          }
           notifyListeners();
           _update();
         }
