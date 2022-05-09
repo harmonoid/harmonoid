@@ -185,7 +185,7 @@ ThemeData createTheme({
     ),
     popupMenuTheme: PopupMenuThemeData(
       elevation: 2.0,
-      color: isLight ? Colors.white : Color(0xFF242424),
+      color: isLight ? Colors.white : Color(0xFF292929),
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: Platform.isAndroid || Platform.isIOS

@@ -688,7 +688,7 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
                 Radius.circular(4.0),
               ),
             ),
-        color: Theme.of(context).dialogBackgroundColor,
+        color: Theme.of(context).popupMenuTheme.color,
       ).then<void>((T? newValue) {
         if (!mounted) return null;
         if (newValue == null) {
