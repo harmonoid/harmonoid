@@ -950,7 +950,7 @@ const List<String> kAlbumArtFileNames = [
 ];
 
 /// Unknown album art from assets to write to the disk.
-const String kUnknownAlbumArtRootBundle = 'assets/images/default_album_art.jpg';
+const String kUnknownAlbumArtRootBundle = 'assets/images/default_album_art.png';
 
 /// Name of the sub directory inside [Collection.cacheDirectory] where retrieved album arts are saved.
 const String kAlbumArtsDirectoryName = 'AlbumArts';
