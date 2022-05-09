@@ -375,7 +375,6 @@ class Playback extends ChangeNotifier {
         ),
         play: false,
       );
-      isPlaying = false;
     }
     if (Platform.isAndroid || Platform.isIOS) {
       assetsAudioPlayer.open(
@@ -508,7 +507,7 @@ class Playback extends ChangeNotifier {
           });
         }
         // Prevent dynamic library late initialization error on unsupported platforms.
-        // TODO: Address issue within dart_discord_rpc.
+        // TODO: Address issue within `dart_discord_rpc`.
         discord = DiscordRPC(applicationId: '881480706545573918');
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
@@ -614,7 +613,8 @@ class Playback extends ChangeNotifier {
             WindowsTaskbar.setWindowTitle(
               [
                 track.trackName,
-                track.trackArtistNames.take(2).join(', '),
+                if (track.trackArtistNames.isNotEmpty)
+                  track.trackArtistNames.take(2).join(', '),
                 'Harmonoid',
               ].join(' • '),
             );
