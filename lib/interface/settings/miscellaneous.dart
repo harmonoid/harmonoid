@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/utils/widgets.dart';
 
 class MiscellaneousSetting extends StatefulWidget {
@@ -87,6 +89,17 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                 )
                 .then((value) => setState(() {})),
             value: Configuration.instance.jumpToNowPlayingScreenOnPlay,
+          ),
+          CorrectedSwitchListTile(
+            title: Language.instance.BACKGROUND_ARTWORK_TITLE,
+            subtitle: Language.instance.BACKGROUND_ARTWORK_SUBTITLE,
+            onChanged: (_) => Configuration.instance
+                .save(
+                  backgroundArtwork: !Configuration.instance.backgroundArtwork,
+                )
+                .then((value) =>
+                    Provider.of<Visuals>(context, listen: false).update()),
+            value: Configuration.instance.backgroundArtwork,
           ),
         ],
       ),

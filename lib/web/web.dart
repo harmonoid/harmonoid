@@ -51,7 +51,8 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
               )
             : Stack(
                 children: [
-                  if (Configuration.instance.webRecent.isNotEmpty)
+                  if (Configuration.instance.webRecent.isNotEmpty &&
+                      Configuration.instance.backgroundArtwork)
                     Positioned.fill(
                       child: Opacity(
                         opacity: 0.2,
@@ -772,21 +773,22 @@ class FloatingSearchBarWebSearchScreen extends StatelessWidget {
                     return NowPlayingBarScrollHideNotifier(
                       child: Stack(
                         children: [
-                          Positioned.fill(
-                            child: Opacity(
-                              opacity: 0.2,
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Image.memory(
-                                  visualAssets.collection,
-                                  height: 512.0,
-                                  width: 512.0,
-                                  filterQuality: FilterQuality.high,
-                                  fit: BoxFit.contain,
+                          if (Configuration.instance.backgroundArtwork)
+                            Positioned.fill(
+                              child: Opacity(
+                                opacity: 0.2,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Image.memory(
+                                    visualAssets.collection,
+                                    height: 512.0,
+                                    width: 512.0,
+                                    filterQuality: FilterQuality.high,
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
                           CustomListView(
                             shrinkWrap: true,
                             children: [

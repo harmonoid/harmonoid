@@ -9,6 +9,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -103,7 +104,8 @@ class CollectionScreenState extends State<CollectionScreen>
                     builder: (context, refresh, __) => Stack(
                       alignment: Alignment.bottomLeft,
                       children: <Widget>[
-                        if (Collection.instance.tracks.isNotEmpty)
+                        if (Collection.instance.tracks.isNotEmpty &&
+                            Configuration.instance.backgroundArtwork)
                           Positioned.fill(
                             child: Opacity(
                               opacity: 0.2,
@@ -535,7 +537,8 @@ class CollectionScreenState extends State<CollectionScreen>
                       body: FloatingSearchBarScrollNotifier(
                         child: Stack(
                           children: [
-                            if (Collection.instance.tracks.isNotEmpty)
+                            if (Collection.instance.tracks.isNotEmpty &&
+                                Configuration.instance.backgroundArtwork)
                               Positioned.fill(
                                 child: Opacity(
                                   opacity: 0.2,

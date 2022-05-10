@@ -8,9 +8,6 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/interface/settings/about.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:path/path.dart' as path;
 import 'package:animations/animations.dart';
@@ -24,6 +21,10 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/interface/collection/album.dart';
+import 'package:harmonoid/interface/edit_details_screen.dart';
+import 'package:harmonoid/interface/settings/about.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/file_system.dart';
@@ -299,24 +300,36 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
     ),
     PopupMenuItem<int>(
       padding: EdgeInsets.zero,
-      value: 4,
-      child: ListTile(
-        leading: Icon(
-            Platform.isWindows ? FluentIcons.album_24_regular : Icons.album),
-        title: Text(
-          Language.instance.SHOW_ALBUM,
-          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
-        ),
-      ),
-    ),
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
       value: 5,
       child: ListTile(
         leading: Icon(
             Platform.isWindows ? FluentIcons.folder_24_regular : Icons.folder),
         title: Text(
           Language.instance.SHOW_IN_FILE_MANAGER,
+          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+        ),
+      ),
+    ),
+    // PopupMenuItem<int>(
+    //   padding: EdgeInsets.zero,
+    //   value: 6,
+    //   child: ListTile(
+    //     leading:
+    //         Icon(Platform.isWindows ? FluentIcons.edit_24_regular : Icons.edit),
+    //     title: Text(
+    //       Language.instance.EDIT_DETAILS,
+    //       style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+    //     ),
+    //   ),
+    // ),
+    PopupMenuItem<int>(
+      padding: EdgeInsets.zero,
+      value: 4,
+      child: ListTile(
+        leading: Icon(
+            Platform.isWindows ? FluentIcons.album_24_regular : Icons.album),
+        title: Text(
+          Language.instance.SHOW_ALBUM,
           style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
         ),
       ),
@@ -422,6 +435,18 @@ Future<void> trackPopupMenuHandle(
       case 5:
         File(track.uri.toFilePath()).showInFileExplorer_();
         break;
+      // case 6:
+      //   Navigator.of(context).push(
+      //     PageRouteBuilder(
+      //       pageBuilder: (context, animation, secondaryAnimation) =>
+      //           FadeThroughTransition(
+      //         animation: animation,
+      //         secondaryAnimation: secondaryAnimation,
+      //         child: EditDetailsScreen(),
+      //       ),
+      //     ),
+      //   );
+      //   break;
     }
   }
 }
