@@ -1,5 +1,5 @@
 Name:       harmonoid
-Version:    0.2.3
+Version:    0.2.4
 Release:    1
 Summary:    Elegant music app to play & manage music library.
 License:    EULA
