@@ -94,6 +94,7 @@ class Configuration extends ConfigurationKeys {
     bool? automaticMusicLookup,
     bool? dynamicNowPlayingBarColoring,
     String? proxyURL,
+    bool? backgroundArtwork,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -146,6 +147,9 @@ class Configuration extends ConfigurationKeys {
     if (proxyURL != null) {
       this.proxyURL = proxyURL;
     }
+    if (backgroundArtwork != null) {
+      this.backgroundArtwork = backgroundArtwork;
+    }
     await file.write_(
       const convert.JsonEncoder.withIndent('  ').convert(
         {
@@ -170,6 +174,7 @@ class Configuration extends ConfigurationKeys {
           'automaticMusicLookup': this.automaticMusicLookup,
           'dynamicNowPlayingBarColoring': this.dynamicNowPlayingBarColoring,
           'proxyURL': this.proxyURL,
+          'backgroundArtwork': this.backgroundArtwork,
         },
       ),
     );
@@ -212,7 +217,8 @@ class Configuration extends ConfigurationKeys {
       jumpToNowPlayingScreenOnPlay = current['jumpToNowPlayingScreenOnPlay'];
       automaticMusicLookup = current['automaticMusicLookup'];
       dynamicNowPlayingBarColoring = current['dynamicNowPlayingBarColoring'];
-      proxyURL = current["proxyURL"];
+      proxyURL = current['proxyURL'];
+      backgroundArtwork = current['backgroundArtwork'];
     } catch (exception) {
       if (!retry) throw exception;
       if (!await file.exists_()) {
@@ -246,6 +252,7 @@ abstract class ConfigurationKeys {
   late bool automaticMusicLookup;
   late bool dynamicNowPlayingBarColoring;
   late String? proxyURL;
+  late bool backgroundArtwork;
 }
 
 final Map<String, dynamic> defaultConfiguration = {
@@ -273,4 +280,5 @@ final Map<String, dynamic> defaultConfiguration = {
   'automaticMusicLookup': false,
   'dynamicNowPlayingBarColoring': isMobile ? false : true,
   'proxyURL': null,
+  'backgroundArtwork': true,
 };
