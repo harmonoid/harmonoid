@@ -8,13 +8,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/interface/settings/desktop_header.dart';
 
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
 import 'package:harmonoid/interface/settings/language.dart';
+import 'package:harmonoid/interface/settings/desktop_header.dart';
+import 'package:harmonoid/interface/settings/stats.dart';
 import 'package:harmonoid/interface/settings/miscellaneous.dart';
 import 'package:harmonoid/interface/settings/experimental.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
@@ -39,6 +40,7 @@ class Settings extends StatelessWidget {
                       const Header(),
                       const SizedBox(height: 4.0),
                       IndexingSetting(),
+                      StatsSetting(),
                       ThemeSetting(),
                       MiscellaneousSetting(),
                       ExperimentalSetting(),
