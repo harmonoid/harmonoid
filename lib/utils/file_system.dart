@@ -73,7 +73,7 @@ extension FileExtension on File {
         : '';
     final file = File(join(prefix + parent.path, 'Temp', const Uuid().v4()));
     if (!await file.exists_()) {
-      file.create(recursive: true);
+      await file.create(recursive: true);
     }
     await file.writeAsString(content, flush: true);
     await file.rename_(prefix + path);
