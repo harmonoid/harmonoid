@@ -46,7 +46,8 @@ ArgumentVectorHandlerPlugin::ArgumentVectorHandlerPlugin(
     flutter::PluginRegistrarWindows* registrar)
     : registrar_(registrar) {
   channel_ = std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-      registrar_->messenger(), "com.alexmercerind/harmonoid",
+      registrar_->messenger(),
+      "com.alexmercerind.harmonoid/argument_vector_handler",
       &flutter::StandardMethodCodec::GetInstance());
   channel_->SetMethodCallHandler([this](const auto& call, auto result) {
     HandleMethodCall(call, std::move(result));

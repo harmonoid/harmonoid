@@ -1,12 +1,21 @@
+/// This file is a part of Harmonoid (https://github.com/harmonoid/harmonoid).
+///
+/// Copyright © 2020-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// All rights reserved.
+///
+/// Use of this source code is governed by the End-User License Agreement for
+/// Harmonoid that can be found in the EULA.txt file.
+///
 #include "my_application.h"
 
-#include <flutter_linux/flutter_linux.h>
-
+#include <iostream>
 #include <locale>
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
 #endif
+#include <flutter_linux/flutter_linux.h>
 
+#include "argument_vector_handler.h"
 #include "flutter/generated_plugin_registrant.h"
 
 struct _MyApplication {
@@ -16,8 +25,7 @@ struct _MyApplication {
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 
-// Implements GApplication::activate.
-static void my_application_activate(GApplication* application) {
+static void my_application_window_new(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
   GtkWindow* window =
       GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
@@ -60,37 +68,54 @@ static void my_application_activate(GApplication* application) {
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(
       project, self->dart_entrypoint_arguments);
-
   FlView* view = fl_view_new(project);
   gtk_widget_show(GTK_WIDGET(view));
   gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
-
-  fl_register_plugins(FL_PLUGIN_REGISTRY(view));
-
+  auto registry = FL_PLUGIN_REGISTRY(view);
+  fl_register_plugins(registry);
+  g_autoptr(FlPluginRegistrar) argument_vector_handler_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(
+          registry, "ArgumentVectorHandlerPlugin");
+  argument_vector_handler_plugin_register_with_registrar(
+      argument_vector_handler_registrar);
   gtk_widget_grab_focus(GTK_WIDGET(view));
-  // Required by one of Harmonoid's dependencies invoked through |dart:ffi|.
   std::setlocale(LC_NUMERIC, "C");
 }
 
-// Implements GApplication::local_command_line.
-static gboolean my_application_local_command_line(GApplication* application,
-                                                  gchar*** arguments,
-                                                  int* exit_status) {
+static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
-  // Strip out the first argument as it is the binary name.
-  self->dart_entrypoint_arguments = g_strdupv(*arguments + 1);
-
-  g_autoptr(GError) error = nullptr;
-  if (!g_application_register(application, nullptr, &error)) {
-    g_warning("Failed to register: %s", error->message);
-    *exit_status = 1;
-    return TRUE;
+  GList* list;
+  list = gtk_application_get_windows(GTK_APPLICATION(self));
+  if (list) {
+    gtk_window_present(GTK_WINDOW(list->data));
+  } else {
+    my_application_window_new(application);
   }
+}
 
-  g_application_activate(application);
-  *exit_status = 0;
-
-  return TRUE;
+static void my_application_open(GApplication* application, GFile** files,
+                                gint n_files, const gchar* hint) {
+  MyApplication* self = MY_APPLICATION(application);
+  GList* list;
+  if (self->dart_entrypoint_arguments) {
+    g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
+  }
+  self->dart_entrypoint_arguments = g_new(gchar*, n_files + 1);
+  for (int32_t i = 0; i < n_files; i++) {
+    self->dart_entrypoint_arguments[i] = g_strdup(g_file_get_path(files[i]));
+  }
+  self->dart_entrypoint_arguments[n_files] = nullptr;
+  list = gtk_application_get_windows(GTK_APPLICATION(self));
+  if (list) {
+    gtk_window_present(GTK_WINDOW(list->data));
+    std::cout << g_argument_vector_handler_plugin << std::endl;
+    fl_method_channel_invoke_method(
+        g_argument_vector_handler_plugin->channel, "",
+        fl_value_new_string(self->dart_entrypoint_arguments[0]), nullptr,
+        nullptr, nullptr);
+  } else {
+    my_application_window_new(application);
+  }
 }
 
 // Implements GObject::dispose.
@@ -102,8 +127,7 @@ static void my_application_dispose(GObject* object) {
 
 static void my_application_class_init(MyApplicationClass* klass) {
   G_APPLICATION_CLASS(klass)->activate = my_application_activate;
-  G_APPLICATION_CLASS(klass)->local_command_line =
-      my_application_local_command_line;
+  G_APPLICATION_CLASS(klass)->open = my_application_open;
   G_OBJECT_CLASS(klass)->dispose = my_application_dispose;
 }
 
@@ -112,5 +136,5 @@ static void my_application_init(MyApplication* self) {}
 MyApplication* my_application_new() {
   return MY_APPLICATION(g_object_new(my_application_get_type(),
                                      "application-id", APPLICATION_ID, "flags",
-                                     G_APPLICATION_NON_UNIQUE, nullptr));
+                                     G_APPLICATION_HANDLES_OPEN, nullptr));
 }
