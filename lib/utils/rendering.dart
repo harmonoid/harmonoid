@@ -298,18 +298,21 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
         ),
       ),
     ),
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
-      value: 5,
-      child: ListTile(
-        leading: Icon(
-            Platform.isWindows ? FluentIcons.folder_24_regular : Icons.folder),
-        title: Text(
-          Language.instance.SHOW_IN_FILE_MANAGER,
-          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+    // TODO: Add Android support.
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+      PopupMenuItem<int>(
+        padding: EdgeInsets.zero,
+        value: 5,
+        child: ListTile(
+          leading: Icon(Platform.isWindows
+              ? FluentIcons.folder_24_regular
+              : Icons.folder),
+          title: Text(
+            Language.instance.SHOW_IN_FILE_MANAGER,
+            style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+          ),
         ),
       ),
-    ),
     // PopupMenuItem<int>(
     //   padding: EdgeInsets.zero,
     //   value: 6,
