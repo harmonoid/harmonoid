@@ -172,6 +172,7 @@ class Strings {
   late String SETTING_THEME_TITLE;
   late String SHARE;
   late String SHOW_ALBUM;
+  late String SHOW_IN_FILE_MANAGER;
   late String SHOW_NOW_PLAYING_AFTER_PLAYING;
   late String SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE;
   late String SHOW_TRACK_PROGRESS_ON_TASKBAR;
