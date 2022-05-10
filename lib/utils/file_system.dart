@@ -147,9 +147,7 @@ extension FileSystemEntityExtension on FileSystemEntity {
           : Platform.isLinux
               ? 'xdg-open'
               : 'open',
-      [
-        Platform.isWindows ? '/select,"${path}"' : parent.path,
-      ],
+      Platform.isWindows ? ['/select,', '${path}'] : [parent.path],
       runInShell: true,
       includeParentEnvironment: true,
       mode: ProcessStartMode.detached,
