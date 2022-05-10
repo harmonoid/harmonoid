@@ -15,10 +15,13 @@ import 'package:harmonoid/core/collection.dart';
 /// ---------------------
 ///
 /// Overrides the `delete-event` signal of Flutter's GTK window on Linux.
-/// A constantly running instance of `libmpv` caused `Segmentation Fault` upon close.
+/// A constantly running instance of `libmpv` causes `Segmentation Fault`
+/// upon attempting to close the window.
 ///
-/// Calling [OverrideWindowDestroy.initialize] ensures that [Playback.instance.player]
-/// is disposed & then window is destroyed.
+/// Calling [OverrideWindowDestroy.initialize] ensures that all instances of
+/// `libmpv` are properly disposed & then the same is notified to native side
+/// of the source code, which then launches another thread to send `destroy`
+/// signal to the window.
 ///
 abstract class OverrideWindowDestroy {
   static void initialize() async {

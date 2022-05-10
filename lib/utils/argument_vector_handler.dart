@@ -10,21 +10,20 @@ import 'package:flutter/services.dart';
 
 import 'package:harmonoid/core/intent.dart';
 
-const _kMethodChannelName = 'com.alexmercerind/harmonoid';
+const _kMethodChannelName =
+    'com.alexmercerind.harmonoid/argument_vector_handler';
 
 /// ArgumentVectorHandler
 /// ---------------------
+/// Responsible for maintaining single instance of Harmonoid on Windows
+/// and Linux & handling opening of files from File Explorer.
 ///
-/// It receives the `args` if an instance of Harmonoid was already opened.
-/// Works only on Windows.
-///
-/// Currently only first argument of the `wchar_t**` is sent through the
-/// channel & is the only exclusive message that will be sent, thus directly
-/// fed into [Intent.playUri].
+/// Currently only first argument of the `argv` is sent through the
+/// [_kMethodChannelName] & passed to [Intent.playUri].
 ///
 abstract class ArgumentVectorHandler {
   static void initialize() {
-    MethodChannel(_kMethodChannelName).setMethodCallHandler((call) async {
+    const MethodChannel(_kMethodChannelName).setMethodCallHandler((call) async {
       Intent.instance.playUri(Uri.file(call.arguments));
     });
   }
