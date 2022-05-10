@@ -16,6 +16,8 @@ class Strings {
   late String AUTO_REFRESH_SETTING;
   late String AUTO_REFRESH_SETTING_TITLE;
   late String A_TO_Z;
+  late String BACKGROUND_ARTWORK_SUBTITLE;
+  late String BACKGROUND_ARTWORK_TITLE;
   late String BUFFERING;
   late String CANCEL;
   late String CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC;
@@ -56,6 +58,7 @@ class Strings {
   late String DISCOVERING_FILES;
   late String DONATE;
   late String DOWNLOAD_UPDATE;
+  late String EDIT_DETAILS;
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;
   late String EXIT_NOW_PLAYING;
@@ -182,6 +185,8 @@ class Strings {
   late String SORT_BY;
   late String SPEED;
   late String STARTING_PLAYBACK;
+  late String STATS_SUBTITLE;
+  late String STATS_TITLE;
   late String SWITCH_THEME;
   late String THEME_MODE_DARK;
   late String THEME_MODE_LIGHT;

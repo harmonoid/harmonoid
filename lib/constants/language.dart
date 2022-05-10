@@ -222,6 +222,8 @@ class Language extends Strings with ChangeNotifier {
     this.AUTO_REFRESH_SETTING = asset['AUTO_REFRESH_SETTING']!;
     this.AUTO_REFRESH_SETTING_TITLE = asset['AUTO_REFRESH_SETTING_TITLE']!;
     this.A_TO_Z = asset['A_TO_Z']!;
+    this.BACKGROUND_ARTWORK_SUBTITLE = asset['BACKGROUND_ARTWORK_SUBTITLE']!;
+    this.BACKGROUND_ARTWORK_TITLE = asset['BACKGROUND_ARTWORK_TITLE']!;
     this.BUFFERING = asset['BUFFERING']!;
     this.CANCEL = asset['CANCEL']!;
     this.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC = asset['CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC']!;
@@ -262,6 +264,7 @@ class Language extends Strings with ChangeNotifier {
     this.DISCOVERING_FILES = asset['DISCOVERING_FILES']!;
     this.DONATE = asset['DONATE']!;
     this.DOWNLOAD_UPDATE = asset['DOWNLOAD_UPDATE']!;
+    this.EDIT_DETAILS = asset['EDIT_DETAILS']!;
     this.ENABLE_125_SCALING = asset['ENABLE_125_SCALING']!;
     this.ENABLE_ACRYLIC_BLUR = asset['ENABLE_ACRYLIC_BLUR']!;
     this.EXIT_NOW_PLAYING = asset['EXIT_NOW_PLAYING']!;
@@ -388,6 +391,8 @@ class Language extends Strings with ChangeNotifier {
     this.SORT_BY = asset['SORT_BY']!;
     this.SPEED = asset['SPEED']!;
     this.STARTING_PLAYBACK = asset['STARTING_PLAYBACK']!;
+    this.STATS_SUBTITLE = asset['STATS_SUBTITLE']!;
+    this.STATS_TITLE = asset['STATS_TITLE']!;
     this.SWITCH_THEME = asset['SWITCH_THEME']!;
     this.THEME_MODE_DARK = asset['THEME_MODE_DARK']!;
     this.THEME_MODE_LIGHT = asset['THEME_MODE_LIGHT']!;
