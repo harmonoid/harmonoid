@@ -522,7 +522,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                     BorderRadius.circular(20.0),
                                                 border: playback.isShuffling
                                                     ? Border.all(
-                                                        width: 1.0,
+                                                        width: 1.6,
                                                         color: (palette ??
                                                                     [
                                                                       Theme.of(
@@ -662,7 +662,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                             PlaylistLoopMode
                                                                 .none
                                                         ? Border.all(
-                                                            width: 1.0,
+                                                            width: 1.6,
                                                             color: (palette ??
                                                                         [
                                                                           Theme.of(context)

@@ -227,9 +227,15 @@ ThemeData createTheme({
     ),
     tooltipTheme: TooltipThemeData(
       textStyle: TextStyle(
-        fontSize: 14.0,
+        fontSize: 12.0,
         color: isLight ? Colors.white : Colors.black,
       ),
+      decoration: Platform.isWindows || Platform.isLinux || Platform.isMacOS
+          ? BoxDecoration(
+              color: isLight ? Colors.black : Colors.white,
+              borderRadius: BorderRadius.circular(4.0),
+            )
+          : null,
       verticalOffset: Platform.isWindows || Platform.isLinux || Platform.isMacOS
           ? 36.0
           : null,
