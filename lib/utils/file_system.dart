@@ -139,4 +139,20 @@ extension FileSystemEntityExtension on FileSystemEntity {
       return false;
     }
   }
+
+  void showInFileExplorer_() async {
+    await Process.start(
+      Platform.isWindows
+          ? 'explorer.exe'
+          : Platform.isLinux
+              ? 'xdg-open'
+              : 'open',
+      [
+        Platform.isWindows ? '/select,"${path}"' : parent.path,
+      ],
+      runInShell: true,
+      includeParentEnvironment: true,
+      mode: ProcessStartMode.detached,
+    );
+  }
 }

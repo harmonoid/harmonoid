@@ -309,6 +309,18 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
         ),
       ),
     ),
+    PopupMenuItem<int>(
+      padding: EdgeInsets.zero,
+      value: 5,
+      child: ListTile(
+        leading: Icon(
+            Platform.isWindows ? FluentIcons.folder_24_regular : Icons.folder),
+        title: Text(
+          Language.instance.SHOW_IN_FILE_MANAGER,
+          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+        ),
+      ),
+    ),
     if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
       PopupMenuItem<int>(
         padding: EdgeInsets.zero,
@@ -407,6 +419,9 @@ Future<void> trackPopupMenuHandle(
           );
           break;
         }
+      case 5:
+        File(track.uri.toFilePath()).showInFileExplorer_();
+        break;
     }
   }
 }
