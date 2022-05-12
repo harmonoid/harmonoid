@@ -71,6 +71,7 @@ class Collection extends ChangeNotifier {
   List<String> files = <String>[];
   SplayTreeMap<AlbumArtist, List<Album>> albumArtists =
       SplayTreeMap<AlbumArtist, List<Album>>();
+  bool _refreshing = false;
 
   /// Adds new directories that will be used for indexing of the music.
   ///
@@ -125,7 +126,7 @@ class Collection extends ChangeNotifier {
         onProgress?.call(index + 1, directory.length, true);
       } catch (exception) {}
     }
-    _arrangeArtists();
+    await _arrangeArtists();
     await sort();
     await saveToCache();
     try {
@@ -164,7 +165,8 @@ class Collection extends ChangeNotifier {
     try {
       onProgress?.call(tracks.length, tracks.length, true);
       tracks = current;
-      await saveToCache(notifyListeners: false);
+      await saveToCache();
+      await sort();
       await refresh();
     } catch (_) {}
     notifyListeners();
@@ -246,14 +248,14 @@ class Collection extends ChangeNotifier {
             track,
           );
         }
-        _arrangeArtists();
+        await _arrangeArtists();
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
       }
     }
-    // Calls [sort] internally.
-    await saveToCache(notifyListeners: notifyListeners);
+    await saveToCache();
+    await sort(notifyListeners: notifyListeners);
     if (notifyListeners) {
       this.notifyListeners();
     }
@@ -396,17 +398,35 @@ class Collection extends ChangeNotifier {
 
   /// Saves the currently visible music collection to the cache.
   ///
-  Future<void> saveToCache({bool notifyListeners: true}) async {
-    tracks.sort((first, second) => second.timeAdded.millisecondsSinceEpoch
-        .compareTo(first.timeAdded.millisecondsSinceEpoch));
-    await File(path.join(cacheDirectory.path, kCollectionCacheFileName)).write_(
-      encoder.convert(
-        {
-          'tracks': tracks.map((track) => track.toJson()).toList(),
-        },
-      ),
+  Future<void> saveToCache() async {
+    await Future.wait(
+      [
+        File(path.join(cacheDirectory.path, kCollectionTrackCacheFileName))
+            .write_(
+          encoder.convert(
+            {
+              'tracks': tracks.map((e) => e.toJson()).toList(),
+            },
+          ),
+        ),
+        File(path.join(cacheDirectory.path, kCollectionAlbumCacheFileName))
+            .write_(
+          encoder.convert(
+            {
+              'albums': albums.map((e) => e.toJson()).toList(),
+            },
+          ),
+        ),
+        File(path.join(cacheDirectory.path, kCollectionArtistCacheFileName))
+            .write_(
+          encoder.convert(
+            {
+              'artists': artists.map((e) => e.toJson()).toList(),
+            },
+          ),
+        ),
+      ],
     );
-    sort(notifyListeners: notifyListeners);
   }
 
   /// Refreshes the music collection.
@@ -426,6 +446,8 @@ class Collection extends ChangeNotifier {
     void Function(int? completed, int total, bool isCompleted)? onProgress,
     bool update = true,
   }) async {
+    if (_refreshing) return;
+    _refreshing = true;
     // For safety.
     if (!await cacheDirectory.exists_())
       await cacheDirectory.create(recursive: true);
@@ -438,7 +460,8 @@ class Collection extends ChangeNotifier {
     artists = <Artist>[];
     files = <String>[];
     // Indexing from scratch if no cache exists.
-    if (!await File(path.join(cacheDirectory.path, kCollectionCacheFileName))
+    if (!await File(
+            path.join(cacheDirectory.path, kCollectionTrackCacheFileName))
         .exists_()) {
       index(onProgress: onProgress);
     }
@@ -446,15 +469,38 @@ class Collection extends ChangeNotifier {
     else {
       try {
         // Index tracks already in the cache.
-        final collection = convert.jsonDecode(
-            await File(path.join(cacheDirectory.path, kCollectionCacheFileName))
-                .readAsString());
-        for (final map in collection['tracks']) {
-          final track = Track.fromJson(map);
-          await _arrange(track);
-        }
-        await sort();
-        // Populate [albumArtists] regardless of auto-refresh being enabled or not.
+        await Future.wait(
+          [
+            (() async => tracks = convert
+                .jsonDecode(await File(path.join(
+                        cacheDirectory.path, kCollectionTrackCacheFileName))
+                    .readAsString())['tracks']
+                .map((e) => Track.fromJson(e))
+                .toList()
+                .cast<Track>())(),
+            (() async => albums = convert
+                .jsonDecode(await File(path.join(
+                        cacheDirectory.path, kCollectionAlbumCacheFileName))
+                    .readAsString())['albums']
+                .map((e) {
+                  final album = Album.fromJson(e);
+                  if (!albumArtists
+                      .containsKey(AlbumArtist(album.albumArtistName))) {
+                    albumArtists[AlbumArtist(album.albumArtistName)] = [];
+                  }
+                  return album;
+                })
+                .toList()
+                .cast<Album>())(),
+            (() async => artists = convert
+                .jsonDecode(await File(path.join(
+                        cacheDirectory.path, kCollectionArtistCacheFileName))
+                    .readAsString())['artists']
+                .map((e) => Artist.fromJson(e))
+                .toList()
+                .cast<Artist>())(),
+          ],
+        );
         await _arrangeArtists();
         // Check for newly added & deleted [Track]s in asynchronous suspension & update the [Collection] accordingly.
         if (update) {
@@ -535,6 +581,8 @@ class Collection extends ChangeNotifier {
     }
     await playlistsGetFromCache();
     notifyListeners();
+    print('🌈🌈🌈');
+    _refreshing = false;
   }
 
   /// Sorts the music collection contents based upon passed [type].
@@ -577,6 +625,7 @@ class Collection extends ChangeNotifier {
     if (notifyListeners) {
       this.notifyListeners();
     }
+    await saveToCache();
   }
 
   /// Orders the music collection contents based upon passed [type].
@@ -648,7 +697,7 @@ class Collection extends ChangeNotifier {
         onProgress?.call(index + 1, directory.length, true);
       } catch (exception) {}
     }
-    _arrangeArtists();
+    await _arrangeArtists();
     await sort();
     await saveToCache();
     try {
@@ -956,7 +1005,13 @@ const String kUnknownAlbumArtRootBundle = 'assets/images/default_album_art.png';
 const String kAlbumArtsDirectoryName = 'AlbumArts';
 
 /// Cache file to store collection.
+@Deprecated(
+    'Now [kCollectionTrackCacheFileName], [kCollectionAlbumCacheFileName] & [kCollectionArtistCacheFileName] is used.')
 const String kCollectionCacheFileName = 'Collection.JSON';
+
+const String kCollectionTrackCacheFileName = 'Tracks.JSON';
+const String kCollectionAlbumCacheFileName = 'Albums.JSON';
+const String kCollectionArtistCacheFileName = 'Artists.JSON';
 
 /// Cache file to store playlists.
 const String kPlaylistsCacheFileName = 'Playlists.JSON';
