@@ -46,7 +46,7 @@ extension DirectoryExtension on Directory {
       },
       onError: (error) {
         // For debugging. In case any future error is reported.
-        debugPrint('Directory.list_: ${error}');
+        debugPrint(error.toString());
       },
       onDone: completer.complete,
     );
@@ -65,29 +65,38 @@ extension FileExtension on File {
   ///
   /// Thanks to @raitonoberu for the idea.
   ///
-  Future<File> write_(String content) async {
-    final prefix = Platform.isWindows &&
-            !path.startsWith('\\\\') &&
-            !path.startsWith(r'\\?\')
-        ? r'\\?\'
-        : '';
-    final file = File(join(prefix + parent.path, 'Temp', const Uuid().v4()));
-    if (!await file.exists_()) {
-      await file.create(recursive: true);
+  Future<void> write_(String content) async {
+    try {
+      final prefix = Platform.isWindows &&
+              !path.startsWith('\\\\') &&
+              !path.startsWith(r'\\?\')
+          ? r'\\?\'
+          : '';
+      final file = File(join(prefix + parent.path, 'Temp', const Uuid().v4()));
+      if (!await file.exists_()) {
+        await file.create(recursive: true);
+      }
+      await file.writeAsString(content, flush: true);
+      await file.rename_(prefix + path);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
     }
-    await file.writeAsString(content, flush: true);
-    await file.rename_(prefix + path);
-    return this;
   }
 
   /// Safely [rename]s a [File].
-  FutureOr<File> rename_(String newPath) {
-    final prefix = Platform.isWindows &&
-            !path.startsWith('\\\\') &&
-            !path.startsWith(r'\\?\')
-        ? r'\\?\'
-        : '';
-    return File(prefix + path).rename(newPath);
+  Future<void> rename_(String newPath) async {
+    try {
+      final prefix = Platform.isWindows &&
+              !path.startsWith('\\\\') &&
+              !path.startsWith(r'\\?\')
+          ? r'\\?\'
+          : '';
+      await File(prefix + path).rename(newPath);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 }
 

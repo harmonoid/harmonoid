@@ -10,8 +10,8 @@ part of 'media.dart';
 
 class Artist extends Media {
   final String artistName;
-  final tracks = <Track>[];
-  final albums = <Album>[];
+  final HashSet<Track> tracks = HashSet<Track>();
+  final HashSet<Album> albums = HashSet<Album>();
 
   @override
   Map<String, dynamic> toJson() => {
@@ -24,15 +24,9 @@ class Artist extends Media {
         artistName: json['artistName'] ?? kUnknownArtist,
       )
         ..tracks.addAll(
-          json['tracks'] != null
-              ? (json['tracks'] as List).map((e) => Track.fromJson(e))
-              : [],
-        )
+            json['tracks']?.map((e) => Track.fromJson(e))?.cast<Track>() ?? [])
         ..albums.addAll(
-          json['tracks'] != null
-              ? (json['tracks'] as List).map((e) => Album.fromJson(e))
-              : [],
-        );
+            json['albums']?.map((e) => Album.fromJson(e))?.cast<Album>() ?? []);
 
   Artist({
     required this.artistName,

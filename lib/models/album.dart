@@ -12,7 +12,7 @@ class Album extends Media {
   String albumName;
   String year;
   String albumArtistName;
-  final tracks = <Track>[];
+  final HashSet<Track> tracks = HashSet<Track>();
 
   @override
   Map<String, dynamic> toJson() => {
@@ -27,10 +27,7 @@ class Album extends Media {
         year: json['year'] ?? kUnknownYear,
         albumArtistName: json['albumArtistName'] ?? kUnknownArtist,
       )..tracks.addAll(
-          json['tracks'] != null
-              ? (json['tracks'] as List).map((e) => Track.fromJson(e))
-              : [],
-        );
+          json['tracks']?.map((e) => Track.fromJson(e))?.cast<Track>() ?? []);
 
   Album({
     required this.albumName,
