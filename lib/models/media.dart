@@ -7,6 +7,7 @@
 ///
 
 import 'dart:io';
+import 'dart:collection';
 import 'package:libmpv/libmpv.dart';
 import 'package:path/path.dart' as path;
 
@@ -26,9 +27,7 @@ abstract class Media {
   Map<String, dynamic> toJson();
 
   @override
-  bool operator ==(Object media) {
-    throw UnimplementedError();
-  }
+  bool operator ==(Object media) => throw UnimplementedError();
 
   @override
   int get hashCode => throw UnimplementedError();
