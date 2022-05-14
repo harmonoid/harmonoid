@@ -81,7 +81,7 @@ class Collection extends ChangeNotifier {
   }) async {
     final directory = <File>[];
     this.collectionDirectories.addAll(directories);
-    onProgress?.call(null, directory.length, true);
+    onProgress?.call(null, directory.length, false);
     // Basically [Collection.index] the newly added directories, a lot more efficient.
     for (final collectionDirectory in directories) {
       directory.addAll(await (collectionDirectory.list_()));
@@ -104,9 +104,7 @@ class Collection extends ChangeNotifier {
             debugPrint(stacktrace.toString());
           }
           final track = Track.fromTagger(metadata);
-          await _arrange(
-            track,
-          );
+          await _arrange(track);
         } else {
           final _metadata = await MetadataRetriever.fromUri(
             object.uri,
@@ -114,20 +112,18 @@ class Collection extends ChangeNotifier {
           );
           metadata.addAll(_metadata.toJson().cast());
           final track = Track.fromJson(metadata);
-          await _arrange(
-            track,
-          );
+          await _arrange(track);
         }
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
       }
       try {
-        onProgress?.call(index + 1, directory.length, true);
+        onProgress?.call(index + 1, directory.length, false);
       } catch (exception) {}
     }
-    await _arrangeArtists();
-    await sort();
+    await _arrangeArtists(notifyListeners: false);
+    await sort(notifyListeners: false);
     await saveToCache();
     try {
       onProgress?.call(directory.length, directory.length, true);
@@ -168,8 +164,8 @@ class Collection extends ChangeNotifier {
       onProgress?.call(_tracks.length, _tracks.length, true);
       _tracks = current;
       await saveToCache();
-      await sort();
-      await refresh();
+      await sort(notifyListeners: false);
+      await refresh(onProgress: onProgress);
     } catch (_) {}
     notifyListeners();
   }
@@ -260,7 +256,11 @@ class Collection extends ChangeNotifier {
   ///
   /// Automatically updates other structures & models. Also deletes the respective files.
   ///
-  Future<void> delete(Media object, {bool delete: true}) async {
+  Future<void> delete(
+    Media object, {
+    bool delete: true,
+    bool notifyListeners: true,
+  }) async {
     if (object is Track) {
       _tracks.remove(object);
       for (final album in _albums) {
@@ -355,8 +355,10 @@ class Collection extends ChangeNotifier {
         }
       }
     }
-    await Future.wait([sort(), saveToCache()]);
-    notifyListeners();
+    await Future.wait([sort(notifyListeners: false), saveToCache()]);
+    if (notifyListeners) {
+      this.notifyListeners();
+    }
   }
 
   /// Saves the currently visible music collection to the cache.
@@ -456,18 +458,22 @@ class Collection extends ChangeNotifier {
                 .map((e) => Artist.fromJson(e))))(),
           ],
         );
-        await sort();
-        await _arrangeArtists();
-        await playlistsGetFromCache();
+        await sort(notifyListeners: false);
+        await _arrangeArtists(notifyListeners: false);
+        await playlistsGetFromCache(notifyListeners: false);
         notifyListeners();
-        // Check for newly added & deleted [Track]s in asynchronous suspension & update the [Collection] accordingly.
+        // Check for newly added & deleted [Track]s & update the [Collection] accordingly.
         if (update) {
           // Remove deleted tracks.
           final tracks = [..._tracks];
           final files = [..._tracks.map((e) => e.uri.toFilePath())];
           for (int i = 0; i < files.length; i++) {
             if (!await File(files[i]).exists_()) {
-              await delete(tracks[i]);
+              await delete(
+                tracks[i],
+                delete: false,
+                notifyListeners: false,
+              );
             }
           }
           // Add newly added tracks.
@@ -608,7 +614,7 @@ class Collection extends ChangeNotifier {
     _artists = HashSet<Artist>();
     playlists = <Playlist>[];
     final directory = <File>[];
-    onProgress?.call(null, directory.length, true);
+    onProgress?.call(null, directory.length, false);
     for (final collectionDirectory in collectionDirectories)
       directory.addAll(await (collectionDirectory.list_()));
     for (int index = 0; index < directory.length; index++) {
@@ -647,18 +653,17 @@ class Collection extends ChangeNotifier {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
       }
-
       try {
-        onProgress?.call(index + 1, directory.length, true);
+        onProgress?.call(index + 1, directory.length, false);
       } catch (exception) {}
     }
-    await _arrangeArtists();
-    await sort();
-    await saveToCache();
     try {
       onProgress?.call(directory.length, directory.length, true);
     } catch (exception) {}
-    await playlistsGetFromCache();
+    await _arrangeArtists(notifyListeners: false);
+    await sort(notifyListeners: false);
+    await saveToCache();
+    await playlistsGetFromCache(notifyListeners: false);
     notifyListeners();
   }
 
@@ -757,7 +762,7 @@ class Collection extends ChangeNotifier {
 
   /// Gets all the playlists present in the cache.
   ///
-  Future<void> playlistsGetFromCache() async {
+  Future<void> playlistsGetFromCache({bool notifyListeners: true}) async {
     playlists = <Playlist>[];
     final file = File(path.join(cacheDirectory.path, kPlaylistsCacheFileName));
     // Keep playlist named "Liked Songs" & "History" persistently.
@@ -811,7 +816,9 @@ class Collection extends ChangeNotifier {
         debugPrint(stacktrace.toString());
       }
     }
-    notifyListeners();
+    if (notifyListeners) {
+      this.notifyListeners();
+    }
   }
 
   /// Indexes a track into album & artist models.
@@ -863,7 +870,7 @@ class Collection extends ChangeNotifier {
 
   /// Populates all the [albumArtists] & discovered artists' albums after running the [_arrange] loop.
   ///
-  Future<void> _arrangeArtists() async {
+  Future<void> _arrangeArtists({bool notifyListeners: true}) async {
     for (final album in _albums) {
       final all = <String>[];
       album.tracks.forEach((Track track) {
@@ -882,20 +889,21 @@ class Collection extends ChangeNotifier {
         albumArtists[AlbumArtist(album.albumArtistName)]!.add(album);
       }
     }
-    notifyListeners();
+    if (notifyListeners) {
+      this.notifyListeners();
+    }
   }
 
   /// Redraws the collection.
   ///
   Future<void> redraw() async {
-    await sort();
+    await sort(notifyListeners: false);
     // Explicitly populate so that [Artist] sort in [Album] tab doesn't present empty screen at the time of indexing.
     for (Album album in _albums) {
       if (!albumArtists[AlbumArtist(album.albumArtistName)]!.contains(album)) {
         albumArtists[AlbumArtist(album.albumArtistName)]!.add(album);
       }
     }
-    notifyListeners();
   }
 
   @override

@@ -37,22 +37,21 @@ class CollectionRefresh extends ChangeNotifier {
   void set(int? progress, int total) {
     this.progress = progress;
     this.total = total;
-    if (this._timer == null) {
-      this.notifyListeners();
+    if (_timer == null) {
+      notifyListeners();
       Collection.instance.redraw();
-      this._timer = Timer.periodic(
+      _timer = Timer.periodic(
         kCollectionRedrawRefractoryPeriod,
         (_) {
-          this.notifyListeners();
+          notifyListeners();
           Collection.instance.redraw();
         },
       );
     }
-    if (this.progress == this.total) {
-      this.notifyListeners();
-      Collection.instance.redraw();
-      this._timer?.cancel();
-      this._timer = null;
+    if (progress == total) {
+      notifyListeners();
+      _timer?.cancel();
+      _timer = null;
     }
   }
 
