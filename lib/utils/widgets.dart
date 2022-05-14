@@ -1156,7 +1156,7 @@ class _HorizontalListState extends State<HorizontalList> {
 
   @override
   void didChangeDependencies() {
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (isDesktop) {
         setState(() {});
       }

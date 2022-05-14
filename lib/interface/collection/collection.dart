@@ -79,7 +79,7 @@ class CollectionScreenState extends State<CollectionScreen>
         MobileNowPlayingController.instance.show();
       });
     }
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Intent.instance.play();
     });
   }
@@ -190,23 +190,25 @@ class CollectionScreenState extends State<CollectionScreen>
                                             SizedBox(
                                               width: 16.0,
                                             ),
-                                            Text(
-                                              refresh.progress == null
-                                                  ? Language.instance
-                                                      .DISCOVERING_FILES
-                                                  : Language.instance
-                                                      .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
-                                                      .replaceAll(
-                                                          'NUMBER_STRING',
-                                                          '${refresh.progress}')
-                                                      .replaceAll(
-                                                          'TOTAL_STRING',
-                                                          '${refresh.total}'),
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
+                                            Expanded(
+                                              child: Text(
+                                                refresh.progress == null
+                                                    ? Language.instance
+                                                        .DISCOVERING_FILES
+                                                    : Language.instance
+                                                        .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
+                                                        .replaceAll(
+                                                            'NUMBER_STRING',
+                                                            '${refresh.progress}')
+                                                        .replaceAll(
+                                                            'TOTAL_STRING',
+                                                            '${refresh.total}'),
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline4,
+                                              ),
                                             ),
                                             SizedBox(
                                               width: 16.0,

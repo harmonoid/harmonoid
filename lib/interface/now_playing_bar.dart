@@ -775,7 +775,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                               Expanded(
                                 child: Consumer<DesktopNowPlayingController>(
                                   builder: (context,
-                                          DesktopNowPlayingController, _) =>
+                                          desktopNowPlayingController, _) =>
                                       Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     mainAxisSize: MainAxisSize.min,
@@ -783,7 +783,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                       IconButton(
                                         onPressed: playback.tracks.isEmpty
                                             ? null
-                                            : DesktopNowPlayingController
+                                            : desktopNowPlayingController
                                                 .toggle,
                                         iconSize: 24.0,
                                         color: (palette ??
@@ -798,13 +798,13 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         splashRadius: 18.0,
                                         tooltip: playback.tracks.isEmpty
                                             ? ''
-                                            : DesktopNowPlayingController
+                                            : desktopNowPlayingController
                                                     .isHidden
                                                 ? Language.instance.NOW_PLAYING
                                                 : Language
                                                     .instance.EXIT_NOW_PLAYING,
                                         icon: Icon(
-                                          DesktopNowPlayingController.isHidden
+                                          desktopNowPlayingController.isHidden
                                               ? Icons.expand_less
                                               : Icons.expand_more,
                                         ),
