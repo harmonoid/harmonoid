@@ -137,7 +137,7 @@ ThemeData createTheme({
       selectionColor: color.withOpacity(0.2),
     ),
     scrollbarTheme: ScrollbarThemeData(
-      isAlwaysShown: true,
+      thumbVisibility: MaterialStateProperty.all(true),
       thickness: MaterialStateProperty.all(8.0),
       trackBorderColor:
           MaterialStateProperty.all(isLight ? Colors.black12 : Colors.white24),

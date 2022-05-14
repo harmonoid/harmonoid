@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,15 +20,7 @@ class Harmonoid extends StatelessWidget {
           theme: visuals.theme,
           darkTheme: visuals.darkTheme,
           themeMode: visuals.themeMode,
-          home: Platform.isAndroid
-              ? ScrollConfiguration(
-                  behavior: const ScrollBehavior(
-                    androidOverscrollIndicator:
-                        AndroidOverscrollIndicator.stretch,
-                  ),
-                  child: Home(),
-                )
-              : Home(),
+          home: Home(),
         ),
       ),
     );

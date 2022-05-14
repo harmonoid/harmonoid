@@ -65,7 +65,7 @@ class HomeState extends State<Home>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     observer = _NavigatorObserver(() {
       // If some route is pushed after [floatingSearchBarController.isOpen],
       // then we shouldn't close the [FloatingSearchBar], but rather just
@@ -79,7 +79,7 @@ class HomeState extends State<Home>
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     tabControllerNotifier.removeListener(onTabChange);
     super.dispose();
   }
