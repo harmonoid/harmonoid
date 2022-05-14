@@ -607,11 +607,13 @@ class AlbumScreenState extends State<AlbumScreen>
   bool detailsLoaded = false;
   ScrollController controller = ScrollController(initialScrollOffset: 136.0);
   ScrollPhysics? physics = NeverScrollableScrollPhysics();
+  late List<Track> tracks;
 
   @override
   void initState() {
+    tracks = widget.album.tracks.toList();
     super.initState();
-    widget.album.tracks.sort(
+    tracks.sort(
         (first, second) => first.trackNumber.compareTo(second.trackNumber));
     if (isDesktop) {
       Timer(
@@ -835,7 +837,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                               ),
                                               SizedBox(height: 8.0),
                                               Text(
-                                                '${Language.instance.ARTIST}: ${widget.album.albumArtistName}\n${Language.instance.YEAR}: ${widget.album.year}\n${Language.instance.TRACK}: ${widget.album.tracks.length}',
+                                                '${Language.instance.ARTIST}: ${widget.album.albumArtistName}\n${Language.instance.YEAR}: ${widget.album.year}\n${Language.instance.TRACK}: ${tracks.length}',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline3,
@@ -854,7 +856,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 heroTag: 'play_now',
                                                 onPressed: () {
                                                   Playback.instance.open([
-                                                    ...widget.album.tracks,
+                                                    ...tracks,
                                                     if (Configuration.instance
                                                         .seamlessPlayback)
                                                       ...[
@@ -877,7 +879,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 heroTag: 'add_to_now_playing',
                                                 onPressed: () {
                                                   Playback.instance.add(
-                                                    widget.album.tracks,
+                                                    tracks,
                                                   );
                                                 },
                                                 mini: true,
@@ -952,7 +954,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                               ),
                                               Divider(height: 1.0),
                                             ] +
-                                            (widget.album.tracks
+                                            (tracks
                                                 .asMap()
                                                 .entries
                                                 .map(
@@ -1064,7 +1066,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                           Playback
                                                                               .instance
                                                                               .open(
-                                                                            widget.album.tracks,
+                                                                            tracks,
                                                                             index:
                                                                                 track.key,
                                                                           );
@@ -1436,7 +1438,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       child: Icon(Icons.play_arrow),
                                       onPressed: () {
                                         Playback.instance.open([
-                                          ...widget.album.tracks,
+                                          ...tracks,
                                           if (Configuration
                                               .instance.seamlessPlayback)
                                             ...[...Collection.instance.tracks]
@@ -1476,7 +1478,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       child: Icon(Icons.shuffle),
                                       onPressed: () {
                                         Playback.instance.open(
-                                          [...widget.album.tracks]..shuffle(),
+                                          [...tracks]..shuffle(),
                                         );
                                       },
                                     ),
@@ -1499,7 +1501,7 @@ class AlbumScreenState extends State<AlbumScreen>
                             child: InkWell(
                               onTap: () => Playback.instance.open(
                                 [
-                                  ...widget.album.tracks,
+                                  ...tracks,
                                   if (Configuration.instance.seamlessPlayback)
                                     ...[...Collection.instance.tracks]
                                       ..shuffle(),
@@ -1526,10 +1528,10 @@ class AlbumScreenState extends State<AlbumScreen>
                                 );
                                 await trackPopupMenuHandle(
                                   context,
-                                  widget.album.tracks[i],
+                                  tracks[i],
                                   result,
                                   recursivelyPopNavigatorOnDeleteIf: () =>
-                                      widget.album.tracks.isEmpty,
+                                      tracks.isEmpty,
                                 );
                               },
                               child: Column(
@@ -1550,7 +1552,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                           width: 56.0,
                                           alignment: Alignment.center,
                                           child: Text(
-                                            '${widget.album.tracks[i].trackNumber}',
+                                            '${tracks[i].trackNumber}',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline3
@@ -1567,8 +1569,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                widget.album.tracks[i].trackName
-                                                    .overflow,
+                                                tracks[i].trackName.overflow,
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 1,
                                                 style: Theme.of(context)
@@ -1579,12 +1580,11 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 height: 2.0,
                                               ),
                                               Text(
-                                                (widget.album.tracks[i]
-                                                                .duration ??
+                                                (tracks[i].duration ??
                                                             Duration.zero)
                                                         .label +
                                                     ' • ' +
-                                                    widget.album.tracks[i]
+                                                    tracks[i]
                                                         .trackArtistNames
                                                         .take(2)
                                                         .join(', '),
@@ -1630,7 +1630,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                               );
                                               await trackPopupMenuHandle(
                                                 context,
-                                                widget.album.tracks[i],
+                                                tracks[i],
                                                 result,
                                                 recursivelyPopNavigatorOnDeleteIf:
                                                     () => widget
@@ -1655,7 +1655,7 @@ class AlbumScreenState extends State<AlbumScreen>
                               ),
                             ),
                           ),
-                          childCount: widget.album.tracks.length,
+                          childCount: tracks.length,
                         ),
                       ),
                       SliverPadding(

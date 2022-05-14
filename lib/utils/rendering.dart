@@ -260,18 +260,19 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
         ),
       ),
     ),
-    PopupMenuItem<int>(
-      padding: EdgeInsets.zero,
-      value: 1,
-      child: ListTile(
-        leading: Icon(
-            Platform.isWindows ? FluentIcons.share_16_regular : Icons.share),
-        title: Text(
-          Language.instance.SHARE,
-          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+    if (Platform.isAndroid || Platform.isIOS)
+      PopupMenuItem<int>(
+        padding: EdgeInsets.zero,
+        value: 1,
+        child: ListTile(
+          leading: Icon(
+              Platform.isWindows ? FluentIcons.share_16_regular : Icons.share),
+          title: Text(
+            Language.instance.SHARE,
+            style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+          ),
         ),
       ),
-    ),
     PopupMenuItem<int>(
       padding: EdgeInsets.zero,
       value: 3,

@@ -427,6 +427,7 @@ class ArtistScreenState extends State<ArtistScreen>
 
   @override
   Widget build(BuildContext context) {
+    final tracks = widget.artist.tracks.toList();
     return Consumer<Collection>(
       builder: (context, collection, _) => isDesktop
           ? Scaffold(
@@ -564,7 +565,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                 ),
                                                 SizedBox(height: 8.0),
                                                 Text(
-                                                  '${Language.instance.TRACK}: ${widget.artist.tracks.length}\n${Language.instance.ALBUM}: ${widget.artist.albums.length}',
+                                                  '${Language.instance.TRACK}: ${tracks.length}\n${Language.instance.ALBUM}: ${widget.artist.albums.length}',
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .headline3,
@@ -585,7 +586,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                   onPressed: () {
                                                     Playback.instance.open(
                                                       [
-                                                        ...widget.artist.tracks,
+                                                        ...tracks,
                                                         if (Configuration
                                                             .instance
                                                             .seamlessPlayback)
@@ -610,7 +611,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                   heroTag: 'add_to_now_playing',
                                                   onPressed: () {
                                                     Playback.instance.add(
-                                                      widget.artist.tracks,
+                                                      tracks.toList(),
                                                     );
                                                   },
                                                   mini: true,
@@ -694,7 +695,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                                 ),
                                                 Divider(height: 1.0),
                                               ] +
-                                              widget.artist.tracks
+                                              tracks
+                                                  .toList()
                                                   .asMap()
                                                   .entries
                                                   .map(
@@ -807,7 +809,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                               () {
                                                                             Playback.instance.open(
                                                                               [
-                                                                                ...widget.artist.tracks,
+                                                                                ...tracks,
                                                                                 if (Configuration.instance.seamlessPlayback)
                                                                                   ...[
                                                                                     ...Collection.instance.tracks
@@ -1087,8 +1089,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                               Text(
                                                 Language.instance
                                                     .M_TRACKS_AND_N_ALBUMS
-                                                    .replaceAll('M',
-                                                        '${widget.artist.tracks.length}')
+                                                    .replaceAll(
+                                                        'M', '${tracks.length}')
                                                     .replaceAll('N',
                                                         '${widget.artist.albums.length}'),
                                                 overflow: TextOverflow.ellipsis,
@@ -1145,7 +1147,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                         child: Icon(Icons.play_arrow),
                                         onPressed: () {
                                           Playback.instance.open([
-                                            ...widget.artist.tracks,
+                                            ...tracks,
                                             if (Configuration
                                                 .instance.seamlessPlayback)
                                               ...[...Collection.instance.tracks]
@@ -1187,8 +1189,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                         child: Icon(Icons.shuffle),
                                         onPressed: () {
                                           Playback.instance.open(
-                                            [...widget.artist.tracks]
-                                              ..shuffle(),
+                                            [...tracks]..shuffle(),
                                             index: 0,
                                           );
                                         },
@@ -1212,7 +1213,7 @@ class ArtistScreenState extends State<ArtistScreen>
                               child: InkWell(
                                 onTap: () => Playback.instance.open(
                                   [
-                                    ...widget.artist.tracks,
+                                    ...tracks,
                                     if (Configuration.instance.seamlessPlayback)
                                       ...[...Collection.instance.tracks]
                                         ..shuffle(),
@@ -1240,10 +1241,10 @@ class ArtistScreenState extends State<ArtistScreen>
                                   );
                                   await trackPopupMenuHandle(
                                     context,
-                                    widget.artist.tracks[i],
+                                    tracks[i],
                                     result,
                                     recursivelyPopNavigatorOnDeleteIf: () =>
-                                        widget.artist.tracks.isEmpty,
+                                        tracks.isEmpty,
                                   );
                                 },
                                 child: Column(
@@ -1264,7 +1265,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                             width: 56.0,
                                             alignment: Alignment.center,
                                             child: Text(
-                                              '${widget.artist.tracks[i].trackNumber}',
+                                              '${tracks[i].trackNumber}',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline3
@@ -1281,8 +1282,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  widget.artist.tracks[i]
-                                                      .trackName.overflow,
+                                                  tracks[i].trackName.overflow,
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   maxLines: 1,
@@ -1294,13 +1294,11 @@ class ArtistScreenState extends State<ArtistScreen>
                                                   height: 2.0,
                                                 ),
                                                 Text(
-                                                  (widget.artist.tracks[i]
-                                                                  .duration ??
+                                                  (tracks[i].duration ??
                                                               Duration.zero)
                                                           .label +
                                                       ' • ' +
-                                                      widget.artist.tracks[i]
-                                                          .albumName,
+                                                      tracks[i].albumName,
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   maxLines: 1,
@@ -1345,11 +1343,10 @@ class ArtistScreenState extends State<ArtistScreen>
                                                 );
                                                 await trackPopupMenuHandle(
                                                   context,
-                                                  widget.artist.tracks[i],
+                                                  tracks[i],
                                                   result,
                                                   recursivelyPopNavigatorOnDeleteIf:
-                                                      () => widget.artist.tracks
-                                                          .isEmpty,
+                                                      () => tracks.isEmpty,
                                                 );
                                               },
                                               icon: Icon(
@@ -1370,7 +1367,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                 ),
                               ),
                             ),
-                            childCount: widget.artist.tracks.length,
+                            childCount: tracks.length,
                           ),
                         ),
                         SliverPadding(
