@@ -66,7 +66,7 @@ dependencies:
   implicitly_animated_reorderable_list: ^0.4.0-dev+4
   collection: any
   substring_highlight: ^1.0.33
-  extended_image: ^6.0.1
+  extended_image: ^6.0.2
 
   # Third-party forked plugins & packages to meet requirements.
 
@@ -77,11 +77,12 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/desktop.git
       path: desktop
+      ref: 4700f5cee3e220e1cb61bcb67bd88b021dc7be00
   bitsdojo_window:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window
-      ref: b5e9648081f73c05df612cd5b958d8e6cab77898
+      ref: master
   hotkey_manager:
     git:
       url: https://github.com/alexmercerind/hotkey_manager.git
@@ -97,15 +98,21 @@ dependency_overrides:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_windows
-      ref: b5e9648081f73c05df612cd5b958d8e6cab77898
+      ref: master
   bitsdojo_window_linux:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_linux
-      ref: b5e9648081f73c05df612cd5b958d8e6cab77898
+      ref: master
+  bitsdojo_window_macos:
+    git:
+      url: https://github.com/alexmercerind/bitsdojo_window.git
+      path: bitsdojo_window_macos
+      ref: master
   platform: ^3.1.0
 
 dev_dependencies:
+  lints: ^2.0.0
   msix:
     git:
       url: https://github.com/alexmercerind/msix.git
