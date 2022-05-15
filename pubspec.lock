@@ -26,9 +26,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "4ead5eb3ac7b7059507c72418df22251fedd92fe"
-      url: "https://github.com/florent37/Flutter-AssetsAudioPlayer.git"
+      ref: "flutter-3.0-fixes"
+      resolved-ref: "3a280e2804d7249c28e3947ecdbc1976aa5e8113"
+      url: "https://github.com/offline-first/Flutter-AssetsAudioPlayer.git"
     source: git
     version: "3.0.4+1"
   assets_audio_player_web:

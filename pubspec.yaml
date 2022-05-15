@@ -46,7 +46,8 @@ dependencies:
   flutter_local_notifications: ^5.0.0
   assets_audio_player:
     git:
-      url: https://github.com/florent37/Flutter-AssetsAudioPlayer.git
+      url: https://github.com/offline-first/Flutter-AssetsAudioPlayer.git
+      ref: flutter-3.0-fixes
   file_picker: ^3.0.0
   file_selector: ^0.8.2
   file_selector_linux:
