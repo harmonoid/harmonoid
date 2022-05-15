@@ -19,9 +19,10 @@ import 'package:provider/provider.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/interface/collection/album.dart';
+import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -774,9 +775,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                               Playback.instance
                                                                   .open(
                                                                 [
-                                                                  ...widget
-                                                                      .artist
-                                                                      .tracks,
+                                                                  ...tracks,
                                                                   if (Configuration
                                                                       .instance
                                                                       .seamlessPlayback)
@@ -857,29 +856,43 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                   flex: 3,
                                                                 ),
                                                                 Expanded(
-                                                                  child:
-                                                                      Container(
-                                                                    height:
-                                                                        48.0,
-                                                                    padding: EdgeInsets.only(
-                                                                        right:
-                                                                            8.0),
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .centerLeft,
-                                                                    child: Text(
-                                                                      track
-                                                                          .value
-                                                                          .albumName,
-                                                                      style: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .headline4,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                    ),
-                                                                  ),
+                                                                  child: Container(
+                                                                      height: 48.0,
+                                                                      padding: EdgeInsets.only(right: 8.0),
+                                                                      alignment: Alignment.centerLeft,
+                                                                      child: HyperLink(
+                                                                        style: Theme.of(context)
+                                                                            .textTheme
+                                                                            .headline4,
+                                                                        text:
+                                                                            TextSpan(
+                                                                          children: [
+                                                                            TextSpan(
+                                                                              text: track.value.albumName,
+                                                                              recognizer: TapGestureRecognizer()
+                                                                                ..onTap = () {
+                                                                                  Navigator.of(context).push(
+                                                                                    PageRouteBuilder(
+                                                                                      pageBuilder: ((context, animation, secondaryAnimation) => FadeThroughTransition(
+                                                                                            animation: animation,
+                                                                                            secondaryAnimation: secondaryAnimation,
+                                                                                            child: AlbumScreen(
+                                                                                              album: Collection.instance.albumsSet.lookup(
+                                                                                                Album(
+                                                                                                  albumName: track.value.albumName,
+                                                                                                  year: track.value.year,
+                                                                                                  albumArtistName: track.value.albumArtistName,
+                                                                                                ),
+                                                                                              )!,
+                                                                                            ),
+                                                                                          )),
+                                                                                    ),
+                                                                                  );
+                                                                                },
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      )),
                                                                   flex: 2,
                                                                 ),
                                                                 Container(

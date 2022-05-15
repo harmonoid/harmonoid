@@ -22,6 +22,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/interface/collection/artist.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -612,9 +613,9 @@ class AlbumScreenState extends State<AlbumScreen>
   @override
   void initState() {
     tracks = widget.album.tracks.toList();
-    super.initState();
     tracks.sort(
         (first, second) => first.trackNumber.compareTo(second.trackNumber));
+    super.initState();
     if (isDesktop) {
       Timer(
         Duration(milliseconds: 300),
@@ -981,7 +982,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       onPointerUp: (e) async {
                                                         if (!reactToSecondaryPress)
                                                           return;
-                                                        var result =
+                                                        final result =
                                                             await showMenu(
                                                           elevation: 4.0,
                                                           context: context,
@@ -1031,8 +1032,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                             Playback.instance
                                                                 .open(
                                                               [
-                                                                ...widget.album
-                                                                    .tracks,
+                                                                ...tracks,
                                                                 if (Configuration
                                                                     .instance
                                                                     .seamlessPlayback)
@@ -1118,19 +1118,54 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                   alignment:
                                                                       Alignment
                                                                           .centerLeft,
-                                                                  child: Text(
+                                                                  child: () {
+                                                                    final elements =
+                                                                        <TextSpan>[];
                                                                     track.value
                                                                         .trackArtistNames
-                                                                        .join(
-                                                                            ', '),
-                                                                    style: Theme.of(
-                                                                            context)
-                                                                        .textTheme
-                                                                        .headline4,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                  ),
+                                                                        .map(
+                                                                      (e) =>
+                                                                          TextSpan(
+                                                                        text: e,
+                                                                        recognizer:
+                                                                            TapGestureRecognizer()
+                                                                              ..onTap = () {
+                                                                                Navigator.of(context).push(
+                                                                                  PageRouteBuilder(
+                                                                                    pageBuilder: ((context, animation, secondaryAnimation) => FadeThroughTransition(
+                                                                                          animation: animation,
+                                                                                          secondaryAnimation: secondaryAnimation,
+                                                                                          child: ArtistScreen(
+                                                                                            artist: Collection.instance.artistsSet.lookup(Artist(artistName: e))!,
+                                                                                          ),
+                                                                                        )),
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                      ),
+                                                                    )
+                                                                        .forEach(
+                                                                            (element) {
+                                                                      elements.add(
+                                                                          element);
+                                                                      elements.add(
+                                                                          TextSpan(
+                                                                              text: ', '));
+                                                                    });
+                                                                    elements
+                                                                        .removeLast();
+                                                                    return HyperLink(
+                                                                      style: Theme.of(
+                                                                              context)
+                                                                          .textTheme
+                                                                          .headline4,
+                                                                      text:
+                                                                          TextSpan(
+                                                                        children:
+                                                                            elements,
+                                                                      ),
+                                                                    );
+                                                                  }(),
                                                                 ),
                                                               ),
                                                               Container(

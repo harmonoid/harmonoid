@@ -8,8 +8,14 @@
 
 import 'dart:math';
 import 'dart:core';
+import 'package:animations/animations.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/interface/collection/artist.dart';
+import 'package:harmonoid/interface/home.dart';
+import 'package:libmpv/libmpv.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 
@@ -317,18 +323,71 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
-                                              Text(
-                                                playback
-                                                    .tracks[playback.index
-                                                        .clamp(
-                                                            0,
-                                                            playback.tracks
-                                                                    .length -
-                                                                1)]
-                                                    .trackArtistNames
-                                                    .take(2)
-                                                    .join(', ')
-                                                    .overflow,
+                                              HyperLink(
+                                                text: TextSpan(
+                                                  children: playback
+                                                      .tracks[playback.index
+                                                          .clamp(
+                                                              0,
+                                                              playback.tracks
+                                                                      .length -
+                                                                  1)]
+                                                      .trackArtistNames
+                                                      .take(2)
+                                                      .map(
+                                                        (e) => TextSpan(
+                                                          text: e,
+                                                          recognizer: !Plugins.isWebMedia(playback
+                                                                  .tracks[playback
+                                                                      .index
+                                                                      .clamp(
+                                                                          0,
+                                                                          playback.tracks.length -
+                                                                              1)]
+                                                                  .uri)
+                                                              ? (TapGestureRecognizer()
+                                                                ..onTap = () {
+                                                                  navigatorKey
+                                                                      .currentState
+                                                                      ?.push(
+                                                                    PageRouteBuilder(
+                                                                      pageBuilder: ((context,
+                                                                              animation,
+                                                                              secondaryAnimation) =>
+                                                                          FadeThroughTransition(
+                                                                            animation:
+                                                                                animation,
+                                                                            secondaryAnimation:
+                                                                                secondaryAnimation,
+                                                                            child:
+                                                                                ArtistScreen(
+                                                                              artist: Collection.instance.artistsSet.lookup(Artist(artistName: e))!,
+                                                                            ),
+                                                                          )),
+                                                                    ),
+                                                                  );
+                                                                })
+                                                              : null,
+                                                        ),
+                                                      )
+                                                      .toList()
+                                                    ..insert(
+                                                      1,
+                                                      TextSpan(
+                                                          text: playback
+                                                                      .tracks[playback
+                                                                          .index
+                                                                          .clamp(
+                                                                              0,
+                                                                              playback.tracks.length - 1)]
+                                                                      .trackArtistNames
+                                                                      .take(2)
+                                                                      .length ==
+                                                                  2
+                                                              ? ', '
+                                                              : ''),
+                                                    ),
+                                                ),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline3
@@ -344,8 +403,6 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                               ? Colors.white
                                                               : Colors.black,
                                                     ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ],
                                           ),

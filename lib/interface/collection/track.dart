@@ -6,15 +6,20 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'package:desktop/desktop.dart' as desktop;
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:desktop/desktop.dart' as desktop;
+import 'package:animations/animations.dart';
+import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/interface/home.dart';
+import 'package:harmonoid/interface/collection/album.dart';
+import 'package:harmonoid/interface/collection/artist.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -114,17 +119,103 @@ class TrackTab extends StatelessWidget {
                       alignment: property == 0
                           ? Alignment.center
                           : Alignment.centerLeft,
-                      child: Text(
-                        [
-                          '${collection.tracks[index].trackNumber}',
-                          collection.tracks[index].trackName,
-                          collection.tracks[index].trackArtistNames.join(', '),
-                          collection.tracks[index].albumName,
-                          collection.tracks[index].year.toString(),
-                        ][property],
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.headline4,
-                      ),
+                      child: () {
+                        if ([0, 1, 4].contains(property)) {
+                          return Text(
+                            [
+                              '${collection.tracks[index].trackNumber}',
+                              collection.tracks[index].trackName,
+                              collection.tracks[index].trackArtistNames
+                                  .join(', '),
+                              collection.tracks[index].albumName,
+                              collection.tracks[index].year.toString(),
+                            ][property],
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.headline4,
+                          );
+                        } else if (property == 2) {
+                          final elements = <TextSpan>[];
+                          collection.tracks[index].trackArtistNames
+                              .map(
+                            (e) => TextSpan(
+                              text: e,
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  navigatorKey.currentState?.push(
+                                    PageRouteBuilder(
+                                      pageBuilder: ((context, animation,
+                                              secondaryAnimation) =>
+                                          FadeThroughTransition(
+                                            animation: animation,
+                                            secondaryAnimation:
+                                                secondaryAnimation,
+                                            child: ArtistScreen(
+                                              artist: Collection
+                                                  .instance.artistsSet
+                                                  .lookup(
+                                                      Artist(artistName: e))!,
+                                            ),
+                                          )),
+                                    ),
+                                  );
+                                },
+                            ),
+                          )
+                              .forEach((element) {
+                            elements.add(element);
+                            elements.add(TextSpan(text: ', '));
+                          });
+                          elements.removeLast();
+                          return HyperLink(
+                            style: Theme.of(context).textTheme.headline4,
+                            text: TextSpan(
+                              children: elements,
+                            ),
+                          );
+                        } else if (property == 3) {
+                          return HyperLink(
+                            style: Theme.of(context).textTheme.headline4,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: collection.tracks[index].albumName,
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      navigatorKey.currentState?.push(
+                                        PageRouteBuilder(
+                                          pageBuilder: ((context, animation,
+                                                  secondaryAnimation) =>
+                                              FadeThroughTransition(
+                                                animation: animation,
+                                                secondaryAnimation:
+                                                    secondaryAnimation,
+                                                child: AlbumScreen(
+                                                  album: Collection
+                                                      .instance.albumsSet
+                                                      .lookup(
+                                                    Album(
+                                                      albumName: collection
+                                                          .tracks[index]
+                                                          .albumName,
+                                                      year: collection
+                                                          .tracks[index].year,
+                                                      albumArtistName:
+                                                          collection
+                                                              .tracks[index]
+                                                              .albumArtistName,
+                                                    ),
+                                                  )!,
+                                                ),
+                                              )),
+                                        ),
+                                      );
+                                    },
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      }(),
                     ),
                   ),
                 )
@@ -340,11 +431,52 @@ class TrackTileState extends State<TrackTile> {
                             height: 48.0,
                             padding: EdgeInsets.only(right: 16.0),
                             alignment: Alignment.centerLeft,
-                            child: Text(
-                              widget.track.trackArtistNames.take(2).join(', '),
-                              style: Theme.of(context).textTheme.headline4,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            child: () {
+                              final elements = <TextSpan>[];
+                              widget.track.trackArtistNames
+                                  .map(
+                                (e) => TextSpan(
+                                  text: e,
+                                  recognizer:
+                                      !Plugins.isWebMedia(widget.track.uri)
+                                          ? (TapGestureRecognizer()
+                                            ..onTap = () {
+                                              navigatorKey.currentState?.push(
+                                                PageRouteBuilder(
+                                                  pageBuilder: ((context,
+                                                          animation,
+                                                          secondaryAnimation) =>
+                                                      FadeThroughTransition(
+                                                        animation: animation,
+                                                        secondaryAnimation:
+                                                            secondaryAnimation,
+                                                        child: ArtistScreen(
+                                                          artist: Collection
+                                                              .instance
+                                                              .artistsSet
+                                                              .lookup(Artist(
+                                                                  artistName:
+                                                                      e))!,
+                                                        ),
+                                                      )),
+                                                ),
+                                              );
+                                            })
+                                          : null,
+                                ),
+                              )
+                                  .forEach((element) {
+                                elements.add(element);
+                                elements.add(TextSpan(text: ', '));
+                              });
+                              elements.removeLast();
+                              return HyperLink(
+                                style: Theme.of(context).textTheme.headline4,
+                                text: TextSpan(
+                                  children: elements,
+                                ),
+                              );
+                            }(),
                           ),
                         ),
                         if (!widget.disableContextMenu)
