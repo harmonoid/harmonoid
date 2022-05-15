@@ -80,7 +80,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/desktop.git
       path: desktop
-      ref: 4700f5cee3e220e1cb61bcb67bd88b021dc7be00
+      ref: 7c38a2993a4ca299926cbfeff6cb428d19aeb786
   bitsdojo_window:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git

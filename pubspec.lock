@@ -157,8 +157,8 @@ packages:
     dependency: "direct main"
     description:
       path: desktop
-      ref: "4700f5cee3e220e1cb61bcb67bd88b021dc7be00"
-      resolved-ref: "4700f5cee3e220e1cb61bcb67bd88b021dc7be00"
+      ref: "7c38a2993a4ca299926cbfeff6cb428d19aeb786"
+      resolved-ref: "7c38a2993a4ca299926cbfeff6cb428d19aeb786"
       url: "https://github.com/alexmercerind/desktop.git"
     source: git
     version: "3.0.1"
