@@ -31,6 +31,7 @@ import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/web.dart';
+import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
 class CustomListView extends StatelessWidget {
   late final ScrollController controller;
@@ -876,6 +877,10 @@ class DesktopTitleBar extends StatelessWidget {
                       );
                     } else {
                       await Playback.instance.saveAppState();
+                      if (Platform.isWindows) {
+                        smtc.clear();
+                        smtc.dispose();
+                      }
                       appWindow.close();
                     }
                   },
