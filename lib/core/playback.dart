@@ -485,26 +485,31 @@ class Playback extends ChangeNotifier {
       try {
         // System Media Transport Controls. Windows specific.
         if (Platform.isWindows) {
-          WindowsTaskbar.resetWindowTitle();
-          smtc.create();
-          smtc.events.listen((value) {
-            switch (value) {
-              case SMTCEvent.play:
-                play();
-                break;
-              case SMTCEvent.pause:
-                pause();
-                break;
-              case SMTCEvent.next:
-                next();
-                break;
-              case SMTCEvent.previous:
-                previous();
-                break;
-              default:
-                break;
-            }
-          });
+          try {
+            WindowsTaskbar.resetWindowTitle();
+            smtc.create();
+            smtc.events.listen((value) {
+              switch (value) {
+                case SMTCEvent.play:
+                  play();
+                  break;
+                case SMTCEvent.pause:
+                  pause();
+                  break;
+                case SMTCEvent.next:
+                  next();
+                  break;
+                case SMTCEvent.previous:
+                  previous();
+                  break;
+                default:
+                  break;
+              }
+            });
+          } catch (exception, stackTrace) {
+            debugPrint(exception.toString());
+            debugPrint(stackTrace.toString());
+          }
         }
         // Prevent dynamic library late initialization error on unsupported platforms.
         // TODO: Address issue within `dart_discord_rpc`.
@@ -586,7 +591,7 @@ class Playback extends ChangeNotifier {
     ytm_request_authority = Configuration.instance.proxyURL;
   }
 
-  void _update() {
+  void _update() async {
     try {
       final track = tracks[index];
       try {
@@ -683,21 +688,60 @@ class Playback extends ChangeNotifier {
           }).toList();
         }
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-          if (!isCompleted) {
-            discord?.start(autoRegister: true);
-            discord?.updatePresence(
-              DiscordPresence(
-                state: '${track.albumArtistName}',
-                details: '${track.trackName}',
-                largeImageKey: 'icon',
-                largeImageText: Language.instance.LISTENING_TO_MUSIC,
-                smallImageText: kTitle,
-              ),
-            );
+          if (track != _discordLastTrack ||
+              isPlaying != _discordLastIsPlaying) {
+            if (!isCompleted) {
+              discord?.start(autoRegister: true);
+              discord?.updatePresence(
+                DiscordPresence(
+                  state: '${track.albumArtistName}',
+                  details: '${track.trackName}',
+                  largeImageKey: Plugins.isWebMedia(track.uri)
+                      // web music.
+                      ? '${Plugins.artwork(track.uri, small: true)}'
+                      // local music.
+                      : await (() async {
+                          try {
+                            final result = await YTMClient.search(
+                              [
+                                track.trackName,
+                                track.trackArtistNames.take(1).join(' '),
+                              ].join(' '),
+                              filter: SearchFilter.track,
+                            );
+                            return (result.values.first.first as dynamic)
+                                .thumbnails
+                                .values
+                                .first;
+                          } catch (_) {
+                            return 'icon';
+                          }
+                        }()),
+                  largeImageText: Plugins.isWebMedia(track.uri)
+                      ? null
+                      : '${track.albumName}',
+                  smallImageKey: isPlaying ? 'play' : 'pause',
+                  smallImageText: isPlaying ? 'Playing' : 'Paused',
+                  button1Label:
+                      Plugins.isWebMedia(track.uri) ? 'Listen' : 'Find',
+                  button1Url: Plugins.isWebMedia(track.uri)
+                      ? track.uri.toString()
+                      : 'https://www.google.com/search?q=${Uri.encodeComponent([
+                          track.trackName,
+                          track.trackArtistNames.take(1).join(' '),
+                        ].join(' '))}',
+                ),
+              );
+            }
+            if (isCompleted) {
+              discord?.clearPresence();
+            }
           }
-          if (isCompleted) {
-            discord?.clearPresence();
-          }
+          // TODO: improvise libmpv event callbacks.
+          Future.delayed(const Duration(milliseconds: 500), () {
+            _discordLastTrack = track;
+            _discordLastIsPlaying = isPlaying;
+          });
         }
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
@@ -723,6 +767,8 @@ class Playback extends ChangeNotifier {
   final FlutterLocalNotificationsPlugin _notification =
       FlutterLocalNotificationsPlugin();
   DiscordRPC? discord;
+  Track? _discordLastTrack;
+  bool? _discordLastIsPlaying;
 
   @override
   // ignore: must_call_super
