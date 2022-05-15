@@ -62,6 +62,9 @@ class Collection extends ChangeNotifier {
   List<Track> tracks = [];
   List<Artist> artists = [];
   List<Playlist> playlists = <Playlist>[];
+  HashSet<Album> get albumsSet => _albums;
+  HashSet<Track> get tracksSet => _tracks;
+  HashSet<Artist> get artistsSet => _artists;
 
   late List<Directory> collectionDirectories;
   late Directory cacheDirectory;
