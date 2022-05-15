@@ -28,7 +28,10 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/windows_taskbar.git
       ref: master
-  dart_discord_rpc: ^0.0.2
+  dart_discord_rpc:
+    git:
+      url: https://github.com/alexmercerind/dart_discord_rpc.git
+      ref: harmonoid
   flutter_media_metadata:
     git:
       url: https://github.com/alexmercerind/flutter_media_metadata.git

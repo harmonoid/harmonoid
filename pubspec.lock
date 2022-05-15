@@ -140,17 +140,12 @@ packages:
   dart_discord_rpc:
     dependency: "direct main"
     description:
-      name: dart_discord_rpc
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.2"
-  dart_discord_rpc_ffi:
-    dependency: transitive
-    description:
-      name: dart_discord_rpc_ffi
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.2"
+      path: "."
+      ref: harmonoid
+      resolved-ref: "799fc11be7a75c9ab30f5b0f7ce8ca7f7e580282"
+      url: "https://github.com/alexmercerind/dart_discord_rpc.git"
+    source: git
+    version: "0.0.1"
   dbus:
     dependency: transitive
     description:
