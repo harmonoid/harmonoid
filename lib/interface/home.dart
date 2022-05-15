@@ -27,6 +27,8 @@ import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class _NavigatorObserver extends NavigatorObserver {
   final VoidCallback onPushRoute;
 
@@ -45,7 +47,6 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   final ValueNotifier<TabRoute> tabControllerNotifier = ValueNotifier<TabRoute>(
     TabRoute(isMobile ? 2 : 0, TabRouteSender.systemNavigationBackButton),
   );
@@ -237,7 +238,7 @@ class HomeState extends State<Home>
                           controller:
                               MaterialApp.createMaterialHeroController(),
                           child: Navigator(
-                            key: this.navigatorKey,
+                            key: navigatorKey,
                             initialRoute: '/collection_screen',
                             onGenerateRoute: (RouteSettings routeSettings) {
                               Route<dynamic>? route;
@@ -288,7 +289,7 @@ class HomeState extends State<Home>
                       HeroControllerScope(
                         controller: MaterialApp.createMaterialHeroController(),
                         child: Navigator(
-                          key: this.navigatorKey,
+                          key: navigatorKey,
                           initialRoute: '/collection_screen',
                           observers: [observer],
                           onGenerateRoute: (RouteSettings routeSettings) {
