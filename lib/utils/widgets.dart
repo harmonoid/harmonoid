@@ -469,6 +469,61 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
   }
 }
 
+class HyperLink extends StatefulWidget {
+  final TextSpan text;
+  final TextStyle? style;
+  HyperLink({
+    Key? key,
+    required this.text,
+    required this.style,
+  }) : super(key: key);
+
+  @override
+  State<HyperLink> createState() => _HyperLinkState();
+}
+
+class _HyperLinkState extends State<HyperLink> {
+  String hover = '\0';
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      text: TextSpan(
+        style: widget.style,
+        children: widget.text.children!
+            .map(
+              (e) => TextSpan(
+                text: (e as TextSpan).text?.overflow,
+                style: e.recognizer != null
+                    ? widget.style?.copyWith(
+                        decoration:
+                            hover == e.text! ? TextDecoration.underline : null,
+                      )
+                    : null,
+                recognizer: e.recognizer,
+                onEnter: (_) {
+                  if (mounted) {
+                    setState(() {
+                      hover = e.text!;
+                    });
+                  }
+                },
+                onExit: (_) {
+                  if (mounted) {
+                    setState(() {
+                      hover = '\0';
+                    });
+                  }
+                },
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+}
+
 class ExceptionWidget extends StatelessWidget {
   final String? title;
   final String? subtitle;
