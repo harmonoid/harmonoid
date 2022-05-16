@@ -8,6 +8,7 @@
 
 import 'dart:io';
 import 'dart:math';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
@@ -701,6 +702,7 @@ class Playback extends ChangeNotifier {
                 // local music.
                 : await (() async {
                     try {
+                      // No OOP boilerplate for this small cute piece of code.
                       final result = await YTMClient.search(
                         [
                           track.trackName,
@@ -715,8 +717,34 @@ class Playback extends ChangeNotifier {
                           .thumbnails
                           .values
                           .first;
-                    } catch (_) {
-                      return 'icon';
+                    } catch (exception, stacktrace) {
+                      debugPrint(exception.toString());
+                      debugPrint(stacktrace.toString());
+                      try {
+                        // No OOP boilerplate for this small cute piece of code.
+                        final response = await get(
+                          Uri.https(
+                            'itunes.apple.com',
+                            '/search',
+                            {
+                              'term': track.albumArtistName.isNotEmpty &&
+                                      track.albumArtistName != kUnknownArtist
+                                  ? track.albumArtistName
+                                  : track.trackArtistNames.take(1).join(''),
+                              'limit': '1',
+                              'country': 'us',
+                              'entity': 'song',
+                              'media': 'music',
+                            },
+                          ),
+                        );
+                        return jsonDecode(response.body)['results'][0]
+                            ['artworkUrl100'];
+                      } catch (exception, stacktrace) {
+                        debugPrint(exception.toString());
+                        debugPrint(stacktrace.toString());
+                        return null;
+                      }
                     }
                   }());
             _discordLastTrack = track;
