@@ -54,7 +54,7 @@ class TrackTab extends StatelessWidget {
                       );
                     },
                     onSecondaryPress: (index, position) async {
-                      var result = await showMenu(
+                      final result = await showMenu(
                         elevation: 4.0,
                         context: context,
                         position: RelativeRect.fromRect(
@@ -69,7 +69,6 @@ class TrackTab extends StatelessWidget {
                         ),
                         items: trackPopupMenuItems(context),
                       );
-
                       await trackPopupMenuHandle(
                         context,
                         collection.tracks[index],
@@ -121,17 +120,49 @@ class TrackTab extends StatelessWidget {
                           : Alignment.centerLeft,
                       child: () {
                         if ([0, 1, 4].contains(property)) {
-                          return Text(
-                            [
-                              '${collection.tracks[index].trackNumber}',
-                              collection.tracks[index].trackName,
-                              collection.tracks[index].trackArtistNames
-                                  .join(', '),
-                              collection.tracks[index].albumName,
-                              collection.tracks[index].year.toString(),
-                            ][property],
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.headline4,
+                          return ContextMenuArea(
+                            onPressed: (e) async {
+                              final result = await showMenu(
+                                elevation: 4.0,
+                                context: context,
+                                position: RelativeRect.fromRect(
+                                  Offset(e.position.dx, e.position.dy) &
+                                      Size(228.0, 320.0),
+                                  Rect.fromLTWH(
+                                    0,
+                                    0,
+                                    MediaQuery.of(context).size.width,
+                                    MediaQuery.of(context).size.height,
+                                  ),
+                                ),
+                                items: trackPopupMenuItems(context),
+                              );
+                              await trackPopupMenuHandle(
+                                context,
+                                collection.tracks[index],
+                                result,
+                              );
+                            },
+                            child: GestureDetector(
+                              onTap: () {
+                                Playback.instance.open(
+                                  collection.tracks,
+                                  index: index,
+                                );
+                              },
+                              child: Text(
+                                [
+                                  '${collection.tracks[index].trackNumber}',
+                                  collection.tracks[index].trackName,
+                                  collection.tracks[index].trackArtistNames
+                                      .join(', '),
+                                  collection.tracks[index].albumName,
+                                  collection.tracks[index].year.toString(),
+                                ][property],
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.headline4,
+                              ),
+                            ),
                           );
                         } else if (property == 2) {
                           final elements = <TextSpan>[];
