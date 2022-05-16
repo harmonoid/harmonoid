@@ -185,7 +185,12 @@ class Playback extends ChangeNotifier {
 
   void seek(Duration position) {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      player.seek(position);
+      player.seek(position).then((value) {
+        Future.delayed(const Duration(milliseconds: 100), () {
+          // [endTimeStamp] update needs to be sent.
+          _updateDiscordRPC();
+        });
+      });
     }
     if (Platform.isAndroid || Platform.isIOS) {
       assetsAudioPlayer.seek(position);
@@ -688,60 +693,35 @@ class Playback extends ChangeNotifier {
           }).toList();
         }
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-          if (track != _discordLastTrack ||
-              isPlaying != _discordLastIsPlaying) {
-            if (!isCompleted) {
-              discord?.start(autoRegister: true);
-              discord?.updatePresence(
-                DiscordPresence(
-                  state: '${track.albumArtistName}',
-                  details: '${track.trackName}',
-                  largeImageKey: Plugins.isWebMedia(track.uri)
-                      // web music.
-                      ? '${Plugins.artwork(track.uri, small: true)}'
-                      // local music.
-                      : await (() async {
-                          try {
-                            final result = await YTMClient.search(
-                              [
-                                track.trackName,
-                                track.trackArtistNames.take(1).join(' '),
-                              ].join(' '),
-                              filter: SearchFilter.track,
-                            );
-                            return (result.values.first.first as dynamic)
-                                .thumbnails
-                                .values
-                                .first;
-                          } catch (_) {
-                            return 'icon';
-                          }
-                        }()),
-                  largeImageText: Plugins.isWebMedia(track.uri)
-                      ? null
-                      : '${track.albumName}',
-                  smallImageKey: isPlaying ? 'play' : 'pause',
-                  smallImageText: isPlaying ? 'Playing' : 'Paused',
-                  button1Label:
-                      Plugins.isWebMedia(track.uri) ? 'Listen' : 'Find',
-                  button1Url: Plugins.isWebMedia(track.uri)
-                      ? track.uri.toString()
-                      : 'https://www.google.com/search?q=${Uri.encodeComponent([
+          // Fetch [largeImageKey] if the current [track] was changed.
+          if (track != _discordLastTrack) {
+            _discordLastLargeImageKey = Plugins.isWebMedia(track.uri)
+                // web music.
+                ? Plugins.artwork(track.uri, small: true)
+                // local music.
+                : await (() async {
+                    try {
+                      final result = await YTMClient.search(
+                        [
                           track.trackName,
-                          track.trackArtistNames.take(1).join(' '),
-                        ].join(' '))}',
-                ),
-              );
-            }
-            if (isCompleted) {
-              discord?.clearPresence();
-            }
-          }
-          // TODO: improvise libmpv event callbacks.
-          Future.delayed(const Duration(milliseconds: 500), () {
+                          (track.albumArtistName.isNotEmpty &&
+                                  track.albumArtistName != kUnknownArtist
+                              ? track.albumArtistName
+                              : track.trackArtistNames.take(1).join('')),
+                        ].join(' '),
+                        filter: SearchFilter.track,
+                      );
+                      return (result.values.first.first as dynamic)
+                          .thumbnails
+                          .values
+                          .first;
+                    } catch (_) {
+                      return 'icon';
+                    }
+                  }());
             _discordLastTrack = track;
-            _discordLastIsPlaying = isPlaying;
-          });
+          }
+          _updateDiscordRPC();
         }
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
@@ -750,15 +730,59 @@ class Playback extends ChangeNotifier {
       Lyrics.instance.update(track.trackName +
           ' ' +
           (track.albumArtistName.isNotEmpty &&
-                  track.albumArtistName == kUnknownArtist
+                  track.albumArtistName != kUnknownArtist
               ? track.albumArtistName
               : track.trackArtistNames.take(1).join('')));
     } catch (_) {}
   }
 
+  /// Update Discord RPC state.
+  void _updateDiscordRPC() {
+    try {
+      final track = tracks[index];
+      if (!isCompleted) {
+        discord?.start(autoRegister: true);
+        discord?.updatePresence(
+          DiscordPresence(
+            state: '${track.albumArtistName}',
+            details: '${track.trackName}',
+            largeImageKey: _discordLastLargeImageKey,
+            largeImageText:
+                Plugins.isWebMedia(track.uri) ? null : '${track.albumName}',
+            smallImageKey: isPlaying ? 'play' : 'pause',
+            smallImageText: isPlaying ? 'Playing' : 'Paused',
+            button1Label: Plugins.isWebMedia(track.uri) ? 'Listen' : 'Find',
+            button1Url: Plugins.isWebMedia(track.uri)
+                ? track.uri.toString()
+                : 'https://www.google.com/search?q=${Uri.encodeComponent([
+                    track.trackName,
+                    (track.albumArtistName.isNotEmpty &&
+                            track.albumArtistName != kUnknownArtist
+                        ? track.albumArtistName
+                        : track.trackArtistNames.take(1).join('')),
+                  ].join(' '))}',
+            endTimeStamp: isPlaying
+                ? DateTime.now().millisecondsSinceEpoch +
+                    duration.inMilliseconds -
+                    position.inMilliseconds
+                : null,
+          ),
+        );
+      }
+      if (isCompleted) {
+        discord?.clearPresence();
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+  }
+
   /// Save the current playback state.
-  Future<void> saveAppState() => AppState.instance
-      .save(tracks, index, rate, isShuffling, playlistLoopMode, volume);
+  Future<void> saveAppState() {
+    return AppState.instance
+        .save(tracks, index, rate, isShuffling, playlistLoopMode, volume);
+  }
 
   final Player player = Player(video: false, osc: false, title: kTitle);
   final assets_audio_player.AssetsAudioPlayer assetsAudioPlayer =
@@ -767,8 +791,8 @@ class Playback extends ChangeNotifier {
   final FlutterLocalNotificationsPlugin _notification =
       FlutterLocalNotificationsPlugin();
   DiscordRPC? discord;
+  String? _discordLastLargeImageKey;
   Track? _discordLastTrack;
-  bool? _discordLastIsPlaying;
 
   @override
   // ignore: must_call_super
