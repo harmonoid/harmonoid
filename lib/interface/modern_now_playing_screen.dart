@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'dart:math';
 import 'dart:async';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_lyric/lyrics_reader.dart';
+import 'package:flutter_lyric/lyrics_reader_model.dart';
 import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -15,6 +15,7 @@ import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
+import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class ModernNowPlayingScreen extends StatefulWidget {
@@ -68,16 +69,13 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                   .clamp(0, Playback.instance.tracks.length)) {
             currentPage = Playback.instance.index
                 .clamp(0, Playback.instance.tracks.length);
-            await Future.wait([
-              precacheImage(
-                  getAlbumArt(Playback.instance.tracks[(currentPage - 1)
-                      .clamp(0, Playback.instance.tracks.length)]),
-                  context),
-              precacheImage(
-                  getAlbumArt(Playback.instance.tracks[(currentPage + 1)
-                      .clamp(0, Playback.instance.tracks.length)]),
-                  context),
-            ]);
+            await precacheImage(
+              getAlbumArt(
+                  Playback.instance.tracks[
+                      (currentPage).clamp(0, Playback.instance.tracks.length)],
+                  small: true),
+              context,
+            );
             pageController.animateToPage(
               Playback.instance.index.clamp(0, Playback.instance.tracks.length),
               duration: Duration(milliseconds: 400),
@@ -115,7 +113,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
             ),
             height: 56.0,
           ),
-          images: Directory('~')
+          images: Directory('C:\\Users\\Hitesh\\Downloads\\screenshots\\GIF')
               .listSync()
               .reversed
               .map((e) => FileImage(e as File))
@@ -133,149 +131,311 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
           },
           hide: DesktopNowPlayingController.instance.hide,
           duration: const Duration(milliseconds: 300),
-          content: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 196.0,
-            child: PageView(
-              physics: NeverScrollableScrollPhysics(),
-              controller: pageController,
-              onPageChanged: (page) {
-                currentPage = page;
-              },
-              children: Playback.instance.tracks
-                  .map(
-                    (e) => Consumer<Playback>(
-                      builder: (context, playback, _) => Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Card(
-                              margin: EdgeInsets.only(
-                                left: 24.0,
-                                bottom: 24.0,
-                              ),
-                              color: Colors.white,
-                              clipBehavior: Clip.antiAlias,
-                              elevation: 8.0,
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: ExtendedImage(
-                                  image: getAlbumArt(e),
-                                  height: 156.0,
-                                  width: 156.0,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+          content: Column(
+            children: [
+              Consumer<Lyrics>(
+                builder: (context, lyrics, _) => () {
+                  if (Lyrics.instance.current.isNotEmpty)
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 32.0,
+                          right: 32.0,
+                          top: 48.0,
+                        ),
+                        child: Consumer<Playback>(
+                          builder: (context, playback, _) => ShaderMask(
+                            shaderCallback: (Rect rect) {
+                              return LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black,
+                                  Colors.transparent,
+                                  Colors.transparent,
+                                  Colors.black,
+                                ],
+                                stops: [
+                                  0.0,
+                                  0.2,
+                                  0.8,
+                                  1.0
+                                ], // 10% purple, 80% transparent, 10% purple
+                              ).createShader(rect);
+                            },
+                            blendMode: BlendMode.dstOut,
+                            child: LyricsReader(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12.0),
+                              model: LyricsReaderModel()
+                                ..lyrics = Lyrics.instance.current
+                                    .map(
+                                      (e) => LyricsLineModel()
+                                        ..mainText = e.words
+                                        ..startTime = e.time
+                                        ..endTime = Lyrics
+                                            .instance
+                                            .current[(Lyrics.instance.current
+                                                        .indexOf(Lyrics
+                                                            .instance.current
+                                                            .firstWhere(
+                                                                (element) =>
+                                                                    element
+                                                                        .time ==
+                                                                    e.time)) +
+                                                    1)
+                                                .clamp(
+                                                    0,
+                                                    Lyrics.instance.current
+                                                            .length -
+                                                        1)]
+                                            .time,
+                                    )
+                                    .toList(),
+                              position: playback.position.inMilliseconds,
+                              lyricUi: LyricsStyle()
+                                ..defaultSize = 28.0
+                                ..otherMainSize = 16.0
+                                ..highlight = false,
+                              playing: true,
+                              size: Size(double.infinity,
+                                  MediaQuery.of(context).size.height / 2),
+                              emptyBuilder: () =>
+                                  const Center(child: Text("No lyrics")),
+                              selectLineBuilder: (progress, confirm) {
+                                return Row(
+                                  children: [
+                                    IconButton(
+                                        onPressed: () {
+                                          confirm.call();
+                                          // setState(() {
+                                          //   audioPlayer?.seek(Duration(milliseconds: progress));
+                                          // });
+                                        },
+                                        icon: Icon(Icons.play_arrow,
+                                            color: Colors
+                                                .deepPurpleAccent.shade200)),
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors
+                                                .deepPurpleAccent.shade200),
+                                        height: 1,
+                                        width: double.infinity,
+                                      ),
+                                    ),
+                                    Text(
+                                      progress.toString(),
+                                      style: TextStyle(
+                                          color:
+                                              Colors.deepPurpleAccent.shade200),
+                                    )
+                                  ],
+                                );
+                              },
                             ),
-                            SizedBox(width: 24.0),
-                            Expanded(
-                              child: Container(
-                                padding: EdgeInsets.only(bottom: 24.0),
-                                child: () {
-                                  if (playback.isBuffering) {
-                                    return Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        SizedBox(
-                                          width: 8.0,
-                                        ),
-                                        Container(
-                                          height: 28.0,
-                                          width: 28.0,
-                                          child: CircularProgressIndicator(
-                                            valueColor: AlwaysStoppedAnimation(
-                                              Theme.of(context).primaryColor,
-                                            ),
-                                            strokeWidth: 4.8,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 24.0,
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            Language.instance.BUFFERING,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline1
-                                                ?.copyWith(
-                                                  color: Colors.white,
-                                                  fontSize: 20.0,
-                                                ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  } else if (playback.tracks.isEmpty ||
-                                      playback.tracks.length <=
-                                              playback.index &&
-                                          0 > playback.index) {
-                                    return Container();
-                                  } else {
-                                    return Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          e.trackName.overflow,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline1
-                                              ?.copyWith(
-                                                  fontSize: 28.0,
-                                                  color: Colors.white),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Text(
-                                          [
-                                            e.trackArtistNames
-                                                .take(2)
-                                                .join(', ')
-                                                .overflow,
-                                            if (e.albumName != kUnknownAlbum)
-                                              e.albumName
-                                          ].join(' • '),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline3
-                                              ?.copyWith(
-                                                  fontSize: 16.0,
-                                                  color: Colors.white70),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        if (![kUnknownYear, '']
-                                            .contains(e.year))
-                                          Text(
-                                            e.year,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline3
-                                                ?.copyWith(
-                                                    fontSize: 16.0,
-                                                    color: Colors.white70),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                      ],
-                                    );
-                                  }
-                                }(),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                  .toList(),
-            ),
+                    );
+                  else
+                    return Spacer();
+                }(),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 196.0,
+                child: PageView(
+                  physics: NeverScrollableScrollPhysics(),
+                  controller: pageController,
+                  onPageChanged: (page) {
+                    currentPage = page;
+                  },
+                  children: Playback.instance.tracks
+                      .map(
+                        (e) => Consumer<Playback>(
+                          builder: (context, playback, _) => Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Card(
+                                  margin: EdgeInsets.only(
+                                    left: 24.0,
+                                    bottom: 24.0,
+                                  ),
+                                  color: Colors.white,
+                                  clipBehavior: Clip.antiAlias,
+                                  elevation: 8.0,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: ExtendedImage(
+                                      image: getAlbumArt(e, small: true),
+                                      height: 156.0,
+                                      width: 156.0,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 24.0),
+                                Expanded(
+                                  child: Container(
+                                    padding: EdgeInsets.only(bottom: 24.0),
+                                    child: () {
+                                      if (playback.isBuffering) {
+                                        return Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SizedBox(
+                                              width: 8.0,
+                                            ),
+                                            Container(
+                                              height: 28.0,
+                                              width: 28.0,
+                                              child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                  Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                                strokeWidth: 4.8,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 24.0,
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                Language.instance.BUFFERING,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline1
+                                                    ?.copyWith(
+                                                      color: Colors.white,
+                                                      fontSize: 20.0,
+                                                    ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      } else if (playback.tracks.isEmpty ||
+                                          playback.tracks.length <=
+                                                  playback.index &&
+                                              0 > playback.index) {
+                                        return Container();
+                                      } else {
+                                        return Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              e.trackName.overflow,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline1
+                                                  ?.copyWith(
+                                                fontSize: 28.0,
+                                                color: Colors.white,
+                                                shadows: <Shadow>[
+                                                  Shadow(
+                                                    offset: Offset(-2.0, 2.0),
+                                                    blurRadius: 3.0,
+                                                    color: Color.fromARGB(
+                                                        96, 0, 0, 0),
+                                                  ),
+                                                  Shadow(
+                                                    offset: Offset(2.0, 2.0),
+                                                    blurRadius: 8.0,
+                                                    color: Color.fromARGB(
+                                                        128, 0, 0, 0),
+                                                  ),
+                                                ],
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text(
+                                              [
+                                                e.trackArtistNames
+                                                    .take(2)
+                                                    .join(', ')
+                                                    .overflow,
+                                                if (e.albumName !=
+                                                    kUnknownAlbum)
+                                                  e.albumName
+                                              ].join(' • '),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline3
+                                                  ?.copyWith(
+                                                fontSize: 16.0,
+                                                color: Colors.white70,
+                                                shadows: <Shadow>[
+                                                  Shadow(
+                                                    offset: Offset(-2.0, 2.0),
+                                                    blurRadius: 3.0,
+                                                    color: Color.fromARGB(
+                                                        96, 0, 0, 0),
+                                                  ),
+                                                  Shadow(
+                                                    offset: Offset(2.0, 2.0),
+                                                    blurRadius: 8.0,
+                                                    color: Color.fromARGB(
+                                                        128, 0, 0, 0),
+                                                  ),
+                                                ],
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            if (![kUnknownYear, '']
+                                                .contains(e.year))
+                                              Text(
+                                                e.year,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline3
+                                                    ?.copyWith(
+                                                  fontSize: 16.0,
+                                                  color: Colors.white70,
+                                                  shadows: <Shadow>[
+                                                    Shadow(
+                                                      offset: Offset(-2.0, 2.0),
+                                                      blurRadius: 3.0,
+                                                      color: Color.fromARGB(
+                                                          96, 0, 0, 0),
+                                                    ),
+                                                    Shadow(
+                                                      offset: Offset(2.0, 2.0),
+                                                      blurRadius: 8.0,
+                                                      color: Color.fromARGB(
+                                                          128, 0, 0, 0),
+                                                    ),
+                                                  ],
+                                                ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                          ],
+                                        );
+                                      }
+                                    }(),
+                                  ),
+                                ),
+                                const SizedBox(width: 16.0),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ],
           ),
           bottom: Consumer<Playback>(
             builder: (context, playback, _) => Material(
@@ -368,6 +528,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               Icons.skip_previous,
                             ),
                             color: Colors.white,
+                            tooltip: Language.instance.PREVIOUS,
                           ),
                           IconButton(
                             splashRadius: 20.0,
@@ -377,6 +538,9 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               progress: playOrPause,
                             ),
                             color: Colors.white,
+                            tooltip: playback.isPlaying
+                                ? Language.instance.PAUSE
+                                : Language.instance.PLAY,
                           ),
                           IconButton(
                             splashRadius: 20.0,
@@ -385,6 +549,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               Icons.skip_next,
                             ),
                             color: Colors.white,
+                            tooltip: Language.instance.NEXT,
                           ),
                           Stack(
                             alignment: Alignment.center,
@@ -416,6 +581,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 icon: Icon(
                                   Icons.shuffle,
                                 ),
+                                tooltip: Language.instance.SHUFFLE,
                               ),
                             ],
                           ),
@@ -465,6 +631,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                       ? Icons.repeat_one
                                       : Icons.repeat,
                                 ),
+                                tooltip: Language.instance.REPEAT,
                               ),
                             ],
                           ),
@@ -481,6 +648,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               Icons.add,
                             ),
                             color: Colors.white,
+                            tooltip: Language.instance.ADD_TO_PLAYLIST,
                           ),
                           IconButton(
                             splashRadius: 20.0,
@@ -489,6 +657,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               Icons.text_format,
                             ),
                             color: Colors.white,
+                            tooltip: Language.instance.SHOW_LYRICS,
                           ),
                           if (Plugins.isWebMedia(
                               playback.tracks[playback.index].uri))
@@ -503,6 +672,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 Icons.open_in_new,
                               ),
                               color: Colors.white,
+                              tooltip: Language.instance.OPEN_IN_BROWSER,
                             ),
                           if (Plugins.isWebMedia(
                               playback.tracks[playback.index].uri))
@@ -518,7 +688,80 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 Icons.link,
                               ),
                               color: Colors.white,
+                              tooltip: Language.instance.COPY_LINK,
                             ),
+                          IconButton(
+                            onPressed: playback.toggleMute,
+                            iconSize: 20.0,
+                            color: Colors.white,
+                            splashRadius: 18.0,
+                            tooltip: playback.isMuted
+                                ? Language.instance.UNMUTE
+                                : Language.instance.MUTE,
+                            icon: Icon(
+                              playback.volume == 0.0
+                                  ? Icons.volume_off
+                                  : Icons.volume_up,
+                            ),
+                          ),
+                          const SizedBox(width: 4.0),
+                          Container(
+                            width: 84.0,
+                            child: ScrollableSlider(
+                              min: 0,
+                              max: 100.0,
+                              value: playback.volume,
+                              onScrolledUp: () {
+                                playback.setVolume(
+                                  (playback.volume + 5.0).clamp(0.0, 100.0),
+                                );
+                              },
+                              onScrolledDown: () {
+                                playback.setVolume(
+                                  (playback.volume - 5.0).clamp(0.0, 100.0),
+                                );
+                              },
+                              onChanged: (value) {
+                                playback.setVolume(value);
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 4.0),
+                          IconButton(
+                            onPressed: () {
+                              playback.setRate(1.0);
+                            },
+                            iconSize: 20.0,
+                            color: Colors.white,
+                            splashRadius: 18.0,
+                            tooltip: Language.instance.RESET_SPEED,
+                            icon: Icon(
+                              Icons.speed,
+                            ),
+                          ),
+                          const SizedBox(width: 4.0),
+                          Container(
+                            width: 84.0,
+                            alignment: Alignment.center,
+                            child: ScrollableSlider(
+                              min: 0.0,
+                              max: 2.0,
+                              value: playback.rate,
+                              onScrolledUp: () {
+                                playback.setRate(
+                                  (playback.rate + 0.05).clamp(0.0, 2.0),
+                                );
+                              },
+                              onScrolledDown: () {
+                                playback.setRate(
+                                  (playback.rate - 0.05).clamp(0.0, 2.0),
+                                );
+                              },
+                              onChanged: (value) {
+                                playback.setRate(value);
+                              },
+                            ),
+                          ),
                           Spacer(),
                         ],
                       ),
@@ -593,8 +836,6 @@ class CarouselState extends State<Carousel> {
   int _current = 0;
   bool _isFullscreen = false;
   Timer _timer = Timer(const Duration(milliseconds: 400), () {});
-  Timer? _mouseValueTimer;
-  double _mouseValueOpacity = 0.0;
 
   @override
   void initState() {
@@ -767,98 +1008,30 @@ class CarouselState extends State<Carousel> {
                   bottom: 84.0,
                   left: 0.0,
                   right: 0.0,
+                  top: 0.0,
                   child: widget.content,
                 ),
-                TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 1.0, end: _mouseValueOpacity),
-                  duration: const Duration(milliseconds: 100),
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: widget.width ?? MediaQuery.of(context).size.width,
-                    height: widget.height ?? MediaQuery.of(context).size.height,
-                    child: Container(
-                      width: 84.0,
-                      height: 84.0,
-                      decoration: BoxDecoration(
-                        color: Colors.black12,
-                        borderRadius: BorderRadius.circular(42.0),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 4.0),
-                          Icon(
-                            widget.mouseValue == 0.0
-                                ? Icons.volume_off
-                                : widget.mouseValue > 50.0
-                                    ? Icons.volume_up
-                                    : Icons.volume_down,
-                            size: 32.0,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(height: 4.0),
-                          Text(
-                            '${widget.mouseValue.toInt()} %',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline4
-                                ?.copyWith(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  builder: (context, value, child) => Opacity(
-                    opacity: value as double,
-                    child: child,
-                  ),
-                ),
-                Listener(
-                  onPointerSignal: (event) {
-                    if (event is PointerScrollEvent) {
-                      _mouseValueOpacity = 1.0;
-                      if (event.scrollDelta.dy < 0) {
-                        widget.onMouseScrollUp();
-                      }
-                      if (event.scrollDelta.dy > 0) {
-                        widget.onMouseScrollDown();
-                      }
-                      if (_mouseValueTimer != null) {
-                        _mouseValueTimer!.cancel();
-                      }
-                      _mouseValueTimer =
-                          Timer(const Duration(milliseconds: 400), () {
-                        setState(() {
-                          _mouseValueOpacity = 0.0;
-                        });
-                        _mouseValueTimer = null;
-                      });
+                GestureDetector(
+                  onDoubleTap: toggle,
+                  onHorizontalDragUpdate: (details) {
+                    const sensitivity = 4;
+                    if (details.delta.dx > sensitivity) {
+                      next();
+                    } else if (details.delta.dx < -sensitivity) {
+                      previous();
                     }
                   },
-                  child: GestureDetector(
-                    onDoubleTap: toggle,
-                    onHorizontalDragUpdate: (details) {
-                      const sensitivity = 4;
-                      if (details.delta.dx > sensitivity) {
-                        next();
-                      } else if (details.delta.dx < -sensitivity) {
-                        previous();
-                      }
-                    },
-                    onVerticalDragUpdate: (details) {
-                      const sensitivity = 20;
-                      if (details.delta.dy > sensitivity) {
-                        toggle(hide: true);
-                        widget.hide();
-                      }
-                    },
-                    child: Container(
-                      color: Colors.transparent,
-                      width: widget.width ?? MediaQuery.of(context).size.width,
-                      height:
-                          widget.height ?? MediaQuery.of(context).size.height,
-                    ),
+                  onVerticalDragUpdate: (details) {
+                    const sensitivity = 20;
+                    if (details.delta.dy > sensitivity) {
+                      toggle(hide: true);
+                      widget.hide();
+                    }
+                  },
+                  child: Container(
+                    color: Colors.transparent,
+                    width: widget.width ?? MediaQuery.of(context).size.width,
+                    height: widget.height ?? MediaQuery.of(context).size.height,
                   ),
                 ),
                 Positioned(
@@ -911,6 +1084,9 @@ class CarouselState extends State<Carousel> {
                               : Icons.fullscreen,
                         ),
                         color: Colors.white,
+                        tooltip: _isFullscreen
+                            ? Language.instance.EXIT_FULLSCREEN
+                            : Language.instance.FULLSCREEN,
                       ),
                     ],
                   ),
@@ -940,4 +1116,105 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
     final double trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
+}
+
+class LyricsStyle extends LyricUI {
+  double defaultSize;
+  double defaultExtSize;
+  double otherMainSize;
+  double bias;
+  double lineGap;
+  double inlineGap;
+  LyricAlign lyricAlign;
+  LyricBaseLine lyricBaseLine;
+  bool highlight;
+
+  LyricsStyle(
+      {this.defaultSize = 18,
+      this.defaultExtSize = 14,
+      this.otherMainSize = 16,
+      this.bias = 0.5,
+      this.lineGap = 25,
+      this.inlineGap = 25,
+      this.lyricAlign = LyricAlign.CENTER,
+      this.lyricBaseLine = LyricBaseLine.CENTER,
+      this.highlight = true});
+
+  LyricsStyle.clone(LyricsStyle lyricsStyle)
+      : this(
+          defaultSize: lyricsStyle.defaultSize,
+          defaultExtSize: lyricsStyle.defaultExtSize,
+          otherMainSize: lyricsStyle.otherMainSize,
+          bias: lyricsStyle.bias,
+          lineGap: lyricsStyle.lineGap,
+          inlineGap: lyricsStyle.inlineGap,
+          lyricAlign: lyricsStyle.lyricAlign,
+          lyricBaseLine: lyricsStyle.lyricBaseLine,
+          highlight: lyricsStyle.highlight,
+        );
+
+  @override
+  TextStyle getPlayingExtTextStyle() =>
+      TextStyle(color: Colors.grey[300], fontSize: defaultExtSize);
+
+  @override
+  TextStyle getOtherExtTextStyle() => TextStyle(
+        color: Colors.grey[300],
+        fontSize: defaultExtSize,
+      );
+
+  @override
+  TextStyle getOtherMainTextStyle() => TextStyle(
+        color: Colors.grey[200],
+        fontSize: otherMainSize,
+        shadows: <Shadow>[
+          Shadow(
+            offset: Offset(-2.0, 2.0),
+            blurRadius: 3.0,
+            color: Color.fromARGB(255, 0, 0, 0),
+          ),
+          Shadow(
+            offset: Offset(2.0, 2.0),
+            blurRadius: 8.0,
+            color: Color.fromARGB(128, 0, 0, 0),
+          ),
+        ],
+      );
+
+  @override
+  TextStyle getPlayingMainTextStyle() => TextStyle(
+        color: Colors.white,
+        fontSize: defaultSize,
+        fontWeight: FontWeight.w600,
+        shadows: <Shadow>[
+          Shadow(
+            offset: Offset(-2.0, 2.0),
+            blurRadius: 3.0,
+            color: Color.fromARGB(255, 0, 0, 0),
+          ),
+          Shadow(
+            offset: Offset(2.0, 2.0),
+            blurRadius: 8.0,
+            color: Color.fromARGB(128, 0, 0, 0),
+          ),
+        ],
+      );
+
+  @override
+  double getInlineSpace() => inlineGap;
+
+  @override
+  double getLineSpace() => lineGap;
+
+  @override
+  double getPlayingLineBias() => bias;
+
+  @override
+  LyricAlign getLyricHorizontalAlign() => lyricAlign;
+
+  @override
+  LyricBaseLine getBiasBaseLine() => lyricBaseLine;
+
+  @override
+  bool enableHighlight() => highlight;
 }
