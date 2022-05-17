@@ -100,6 +100,7 @@ dependencies:
       url: https://github.com/alexmercerind/known_extents_list_view_builder.git
   auto_size_text: ^3.0.0
   uuid: ^3.0.6
+  window_manager: ^0.2.3
 
 dependency_overrides:
   bitsdojo_window_windows:
