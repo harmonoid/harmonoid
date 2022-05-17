@@ -101,6 +101,7 @@ dependencies:
   auto_size_text: ^3.0.0
   uuid: ^3.0.6
   window_manager: ^0.2.3
+  flutter_lyric: ^2.0.3
 
 dependency_overrides:
   bitsdojo_window_windows:
