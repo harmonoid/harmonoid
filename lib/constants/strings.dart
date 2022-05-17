@@ -69,6 +69,7 @@ class Strings {
   late String EXPERIMENTAL_SUBTITLE;
   late String FULLSCREEN;
   late String GO_TO_SETTINGS;
+  late String HIDE_LYRICS;
   late String INDEXING_ALREADY_GOING_ON_SUBTITLE;
   late String INDEXING_ALREADY_GOING_ON_TITLE;
   late String INTERNET_ERROR;
@@ -132,6 +133,7 @@ class Strings {
   late String REMOVE;
   late String REMOVE_FROM_PLAYLIST;
   late String REPEAT;
+  late String RESET_SPEED;
   late String RESULTS_FOR_QUERY;
   late String RETRIEVING_INFO;
   late String RETRIEVING_LINK;
@@ -200,6 +202,7 @@ class Strings {
   late String TRANSFERS;
   late String UNMUTE;
   late String UPDATE_AVAILABLE;
+  late String USE_MODERN_NOW_PLAYING_SCREEN;
   late String VIDEO_SINGLE;
   late String WARNING;
   late String WEB;

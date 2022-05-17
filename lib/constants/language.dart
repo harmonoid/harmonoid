@@ -275,6 +275,7 @@ class Language extends Strings with ChangeNotifier {
     this.EXPERIMENTAL_SUBTITLE = asset['EXPERIMENTAL_SUBTITLE']!;
     this.FULLSCREEN = asset['FULLSCREEN']!;
     this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
+    this.HIDE_LYRICS = asset['HIDE_LYRICS']!;
     this.INDEXING_ALREADY_GOING_ON_SUBTITLE = asset['INDEXING_ALREADY_GOING_ON_SUBTITLE']!;
     this.INDEXING_ALREADY_GOING_ON_TITLE = asset['INDEXING_ALREADY_GOING_ON_TITLE']!;
     this.INTERNET_ERROR = asset['INTERNET_ERROR']!;
@@ -338,6 +339,7 @@ class Language extends Strings with ChangeNotifier {
     this.REMOVE = asset['REMOVE']!;
     this.REMOVE_FROM_PLAYLIST = asset['REMOVE_FROM_PLAYLIST']!;
     this.REPEAT = asset['REPEAT']!;
+    this.RESET_SPEED = asset['RESET_SPEED']!;
     this.RESULTS_FOR_QUERY = asset['RESULTS_FOR_QUERY']!;
     this.RETRIEVING_INFO = asset['RETRIEVING_INFO']!;
     this.RETRIEVING_LINK = asset['RETRIEVING_LINK']!;
@@ -406,6 +408,7 @@ class Language extends Strings with ChangeNotifier {
     this.TRANSFERS = asset['TRANSFERS']!;
     this.UNMUTE = asset['UNMUTE']!;
     this.UPDATE_AVAILABLE = asset['UPDATE_AVAILABLE']!;
+    this.USE_MODERN_NOW_PLAYING_SCREEN = asset['USE_MODERN_NOW_PLAYING_SCREEN']!;
     this.VIDEO_SINGLE = asset['VIDEO_SINGLE']!;
     this.WARNING = asset['WARNING']!;
     this.WEB = asset['WEB']!;
