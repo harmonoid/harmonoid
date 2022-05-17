@@ -204,9 +204,6 @@ class HomeState extends State<Home>
           create: (context) => CollectionRefresh.instance,
         ),
         ChangeNotifierProvider(
-          create: (context) => Lyrics.instance,
-        ),
-        ChangeNotifierProvider(
           create: (context) => Language.instance,
         ),
         ChangeNotifierProvider(

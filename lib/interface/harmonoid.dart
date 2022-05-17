@@ -5,6 +5,7 @@ import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/state/visuals.dart';
+import 'package:harmonoid/state/lyrics.dart';
 
 class Harmonoid extends StatelessWidget {
   @override
@@ -16,8 +17,7 @@ class Harmonoid extends StatelessWidget {
         context: context,
       ),
       builder: (_, __) => Consumer<Visuals>(
-        builder: (_, visuals, __) => ChangeNotifierProvider(
-          create: (_) => Playback.instance,
+        builder: (_, visuals, __) => MultiProvider(
           builder: (_, __) => MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: visuals.theme,
@@ -25,6 +25,10 @@ class Harmonoid extends StatelessWidget {
             themeMode: visuals.themeMode,
             home: Home(),
           ),
+          providers: [
+            ChangeNotifierProvider(create: (_) => Playback.instance),
+            ChangeNotifierProvider(create: (_) => Lyrics.instance),
+          ],
         ),
       ),
     );
