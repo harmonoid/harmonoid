@@ -302,6 +302,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
+  harmonoid_carousel:
+    dependency: "direct main"
+    description:
+      path: "D:/Development/harmonoid_carousel"
+      relative: false
+    source: path
+    version: "0.0.1"
   harmonoid_visual_assets:
     dependency: "direct main"
     description:
@@ -798,6 +805,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.10"
+  window_manager:
+    dependency: transitive
+    description:
+      name: window_manager
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.9"
   windows_taskbar:
     dependency: "direct main"
     description:
