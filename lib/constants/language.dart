@@ -267,11 +267,13 @@ class Language extends Strings with ChangeNotifier {
     this.EDIT_DETAILS = asset['EDIT_DETAILS']!;
     this.ENABLE_125_SCALING = asset['ENABLE_125_SCALING']!;
     this.ENABLE_ACRYLIC_BLUR = asset['ENABLE_ACRYLIC_BLUR']!;
+    this.EXIT_FULLSCREEN = asset['EXIT_FULLSCREEN']!;
     this.EXIT_NOW_PLAYING = asset['EXIT_NOW_PLAYING']!;
     this.EXIT_SUBTITLE = asset['EXIT_SUBTITLE']!;
     this.EXIT_TITLE = asset['EXIT_TITLE']!;
     this.EXPERIMENTAL = asset['EXPERIMENTAL']!;
     this.EXPERIMENTAL_SUBTITLE = asset['EXPERIMENTAL_SUBTITLE']!;
+    this.FULLSCREEN = asset['FULLSCREEN']!;
     this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
     this.INDEXING_ALREADY_GOING_ON_SUBTITLE = asset['INDEXING_ALREADY_GOING_ON_SUBTITLE']!;
     this.INDEXING_ALREADY_GOING_ON_TITLE = asset['INDEXING_ALREADY_GOING_ON_TITLE']!;
@@ -382,6 +384,7 @@ class Language extends Strings with ChangeNotifier {
     this.SHARE = asset['SHARE']!;
     this.SHOW_ALBUM = asset['SHOW_ALBUM']!;
     this.SHOW_IN_FILE_MANAGER = asset['SHOW_IN_FILE_MANAGER']!;
+    this.SHOW_LYRICS = asset['SHOW_LYRICS']!;
     this.SHOW_NOW_PLAYING_AFTER_PLAYING = asset['SHOW_NOW_PLAYING_AFTER_PLAYING']!;
     this.SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE = asset['SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE']!;
     this.SHOW_TRACK_PROGRESS_ON_TASKBAR = asset['SHOW_TRACK_PROGRESS_ON_TASKBAR']!;
