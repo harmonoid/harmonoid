@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/configuration.dart';
@@ -101,6 +102,18 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                     Provider.of<Visuals>(context, listen: false).update()),
             value: Configuration.instance.backgroundArtwork,
           ),
+          if (isDesktop)
+            CorrectedSwitchListTile(
+              title: Language.instance.USE_MODERN_NOW_PLAYING_SCREEN,
+              subtitle: Language.instance.USE_MODERN_NOW_PLAYING_SCREEN,
+              onChanged: (_) => Configuration.instance
+                  .save(
+                    modernNowPlayingScreen:
+                        !Configuration.instance.modernNowPlayingScreen,
+                  )
+                  .then((value) => setState(() {})),
+              value: Configuration.instance.modernNowPlayingScreen,
+            ),
         ],
       ),
     );
