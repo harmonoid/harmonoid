@@ -483,6 +483,11 @@ class Playback extends ChangeNotifier {
         if (Platform.isLinux) {
           _Harmonoid.instance.position = event;
         }
+        // [PlaylistLoopMode.single] wrecks [endTimeStamp] in Discord RPC.
+        // This is a workaround.
+        if (event.inSeconds.compareTo(0) == 0) {
+          _updateDiscordRPC();
+        }
       });
       player.streams.duration.listen((event) {
         duration = event;
