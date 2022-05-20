@@ -5,6 +5,7 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
+import 'dart:async';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
@@ -20,28 +21,54 @@ class Lyrics extends ChangeNotifier {
   /// [Lyrics] object instance.
   static late Lyrics instance = Lyrics();
 
-  List<Lyric> current = <Lyric>[];
-  String query = '';
+  final List<Lyric> current = <Lyric>[];
 
-  void update(String name) async {
-    if (query == name) return;
-    current.clear();
-    query = name;
-    Uri uri = Uri.https(
-      'harmonoid-lyrics.vercel.app',
-      '/lyrics',
-      {
-        'name': name,
-      },
-    );
-    http.Response response = await http.get(uri);
-    if (response.statusCode == 200) {
-      current = convert
-          .jsonDecode(response.body)
-          .map((lyric) => Lyric.fromJson(lyric))
-          .toList()
-          .cast<Lyric>();
-    }
-    notifyListeners();
+  Lyrics() {
+    () async {
+      await for (final query in _controller.stream) {
+        if (_query == query) continue;
+        current.clear();
+        notifyListeners();
+        _query = query;
+        final uri = Uri.https(
+          'harmonoid-lyrics.vercel.app',
+          '/lyrics',
+          {
+            'name': _query,
+          },
+        );
+        try {
+          final response = await http.get(uri);
+          if (response.statusCode == 200) {
+            current.addAll(
+              (convert.jsonDecode(response.body) as List<dynamic>)
+                  .map((lyric) => Lyric.fromJson(lyric))
+                  .toList()
+                  .cast<Lyric>(),
+            );
+          }
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
+        notifyListeners();
+      }
+    }();
   }
+
+  void update(String query) async {
+    _controller.add(query);
+  }
+
+  @override
+  void dispose() {
+    _controller.close();
+    super.dispose();
+  }
+
+  /// [StreamController] to avoid possible race condition when index
+  /// switching in playlist takes place.
+  /// * Using `await for` to handle this scenario.
+  final StreamController<String> _controller = StreamController<String>();
+  String? _query;
 }
