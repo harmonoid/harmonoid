@@ -34,7 +34,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
   double scale = 0.0;
   double volume = Playback.instance.volume;
   bool isShuffling = Playback.instance.isShuffling;
-
+  int playlistLength = Playback.instance.tracks.length;
   late AnimationController playOrPause;
   late VoidCallback listener;
   Track? track;
@@ -61,6 +61,11 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
           volume = Playback.instance.volume;
         });
       }
+      if (Playback.instance.tracks.length != playlistLength) {
+        playlistLength = Playback.instance.tracks.length;
+        // Cause [children] in [PageView] to update.
+        setState(() {});
+      }
       final track = Playback.instance.tracks[Playback.instance.index];
       if (this.track != track) {
         this.track = track;
@@ -70,15 +75,20 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                   .clamp(0, Playback.instance.tracks.length)) {
             currentPage = Playback.instance.index
                 .clamp(0, Playback.instance.tracks.length);
-            await precacheImage(
-              getAlbumArt(
-                  Playback.instance.tracks[
-                      (currentPage).clamp(0, Playback.instance.tracks.length)],
-                  small: true),
-              context,
-            );
+            try {
+              await precacheImage(
+                getAlbumArt(
+                    Playback.instance.tracks[(currentPage)
+                        .clamp(0, Playback.instance.tracks.length)],
+                    small: true),
+                context,
+              );
+            } catch (exception, stacktrace) {
+              debugPrint(exception.toString());
+              debugPrint(stacktrace.toString());
+            }
             pageController.animateToPage(
-              Playback.instance.index.clamp(0, Playback.instance.tracks.length),
+              Playback.instance.index,
               duration: Duration(milliseconds: 400),
               curve: Curves.easeInOut,
             );
@@ -144,7 +154,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                   ),
                   child: Consumer<Lyrics>(
                     builder: (context, lyrics, _) => () {
-                      if (Lyrics.instance.current.isNotEmpty &&
+                      if (Lyrics.instance.current.length > 1 &&
                           Configuration.instance.lyricsVisible) {
                         return TweenAnimationBuilder<double>(
                           tween: Tween<double>(begin: 0.0, end: 1.0),
