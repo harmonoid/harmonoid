@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -133,114 +134,113 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
           duration: const Duration(milliseconds: 300),
           content: Column(
             children: [
-              Consumer<Lyrics>(
-                builder: (context, lyrics, _) => () {
-                  if (Lyrics.instance.current.isNotEmpty)
-                    return Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: 32.0,
-                          right: 32.0,
-                          top: 48.0,
-                        ),
-                        child: Consumer<Playback>(
-                          builder: (context, playback, _) => ShaderMask(
-                            shaderCallback: (Rect rect) {
-                              return LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.black,
-                                  Colors.transparent,
-                                  Colors.transparent,
-                                  Colors.black,
-                                ],
-                                stops: [
-                                  0.0,
-                                  0.2,
-                                  0.8,
-                                  1.0
-                                ], // 10% purple, 80% transparent, 10% purple
-                              ).createShader(rect);
-                            },
-                            blendMode: BlendMode.dstOut,
-                            child: LyricsReader(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              model: LyricsReaderModel()
-                                ..lyrics = Lyrics.instance.current
-                                    .map(
-                                      (e) => LyricsLineModel()
-                                        ..mainText = e.words
-                                        ..startTime = e.time
-                                        ..endTime = Lyrics
-                                            .instance
-                                            .current[(Lyrics.instance.current
-                                                        .indexOf(Lyrics
-                                                            .instance.current
-                                                            .firstWhere(
-                                                                (element) =>
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 32.0,
+                    right: 32.0,
+                    top: 48.0,
+                    bottom: 48.0,
+                  ),
+                  child: Consumer<Lyrics>(
+                    builder: (context, lyrics, _) => () {
+                      if (Lyrics.instance.current.isNotEmpty &&
+                          Configuration.instance.lyricsVisible) {
+                        return TweenAnimationBuilder<double>(
+                          tween: Tween<double>(begin: 0.0, end: 1.0),
+                          duration: Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                          builder: (context, opacity, _) => Opacity(
+                            opacity: opacity,
+                            child: Consumer<Playback>(
+                              builder: (context, playback, _) => ShaderMask(
+                                shaderCallback: (Rect rect) {
+                                  return LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.black,
+                                      Colors.transparent,
+                                      Colors.transparent,
+                                      Colors.black,
+                                    ],
+                                    stops: [0.0, 0.2, 0.8, 1.0],
+                                  ).createShader(rect);
+                                },
+                                blendMode: BlendMode.dstOut,
+                                child: LyricsReader(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12.0),
+                                  model: LyricsReaderModel()
+                                    ..lyrics = Lyrics.instance.current
+                                        .map(
+                                          (e) => LyricsLineModel()
+                                            ..mainText = e.words
+                                            ..startTime = e.time
+                                            ..endTime = Lyrics
+                                                .instance
+                                                .current[(Lyrics.instance.current
+                                                            .indexOf(Lyrics
+                                                                .instance
+                                                                .current
+                                                                .firstWhere((element) =>
                                                                     element
                                                                         .time ==
                                                                     e.time)) +
-                                                    1)
-                                                .clamp(
-                                                    0,
-                                                    Lyrics.instance.current
-                                                            .length -
-                                                        1)]
-                                            .time,
-                                    )
-                                    .toList(),
-                              position: playback.position.inMilliseconds,
-                              lyricUi: LyricsStyle()
-                                ..defaultSize = 28.0
-                                ..otherMainSize = 16.0
-                                ..highlight = false,
-                              playing: true,
-                              size: Size(double.infinity,
-                                  MediaQuery.of(context).size.height / 2),
-                              emptyBuilder: () =>
-                                  const Center(child: Text("No lyrics")),
-                              selectLineBuilder: (progress, confirm) {
-                                return Row(
-                                  children: [
-                                    IconButton(
-                                        onPressed: () {
-                                          confirm.call();
-                                          // setState(() {
-                                          //   audioPlayer?.seek(Duration(milliseconds: progress));
-                                          // });
-                                        },
-                                        icon: Icon(Icons.play_arrow,
-                                            color: Colors
-                                                .deepPurpleAccent.shade200)),
-                                    Expanded(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors
-                                                .deepPurpleAccent.shade200),
-                                        height: 1,
-                                        width: double.infinity,
-                                      ),
-                                    ),
-                                    Text(
-                                      progress.toString(),
-                                      style: TextStyle(
-                                          color:
-                                              Colors.deepPurpleAccent.shade200),
-                                    )
-                                  ],
-                                );
-                              },
+                                                        1)
+                                                    .clamp(
+                                                        0,
+                                                        Lyrics.instance.current
+                                                                .length -
+                                                            1)]
+                                                .time,
+                                        )
+                                        .toList(),
+                                  position: playback.position.inMilliseconds,
+                                  lyricUi: LyricsStyle()
+                                    ..defaultSize = 28.0
+                                    ..otherMainSize = 16.0
+                                    ..highlight = false,
+                                  playing: true,
+                                  // selectLineBuilder: (progress, confirm) {
+                                  //   return Row(
+                                  //     children: [
+                                  //       IconButton(
+                                  //           onPressed: () {
+                                  //             confirm.call();
+                                  //           },
+                                  //           icon: Icon(Icons.play_arrow,
+                                  //               color: Colors
+                                  //                   .deepPurpleAccent.shade200)),
+                                  //       Expanded(
+                                  //         child: Container(
+                                  //           decoration: BoxDecoration(
+                                  //               color: Colors
+                                  //                   .deepPurpleAccent.shade200),
+                                  //           height: 1,
+                                  //           width: double.infinity,
+                                  //         ),
+                                  //       ),
+                                  //       Text(
+                                  //         progress.toString(),
+                                  //         style: TextStyle(
+                                  //             color:
+                                  //                 Colors.deepPurpleAccent.shade200),
+                                  //       )
+                                  //     ],
+                                  //   );
+                                  // },
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  else
-                    return Spacer();
-                }(),
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    }(),
+                  ),
+                ),
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -650,14 +650,41 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                             color: Colors.white,
                             tooltip: Language.instance.ADD_TO_PLAYLIST,
                           ),
-                          IconButton(
-                            splashRadius: 20.0,
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.text_format,
-                            ),
-                            color: Colors.white,
-                            tooltip: Language.instance.SHOW_LYRICS,
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                height: 32.0,
+                                width: 32.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Configuration.instance.lyricsVisible
+                                      ? Border.all(
+                                          width: 1.6,
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white.withOpacity(0.87)
+                                              : Colors.black87,
+                                        )
+                                      : null,
+                                ),
+                              ),
+                              IconButton(
+                                splashRadius: 20.0,
+                                onPressed: () async {
+                                  await Configuration.instance.save(
+                                    lyricsVisible:
+                                        !Configuration.instance.lyricsVisible,
+                                  );
+                                  setState(() {});
+                                },
+                                icon: Icon(
+                                  Icons.text_format,
+                                ),
+                                color: Colors.white,
+                                tooltip: Language.instance.SHOW_LYRICS,
+                              ),
+                            ],
                           ),
                           if (Plugins.isWebMedia(
                               playback.tracks[playback.index].uri))
