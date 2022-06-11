@@ -35,37 +35,46 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
   double volume = Playback.instance.volume;
   bool isShuffling = Playback.instance.isShuffling;
   int playlistLength = Playback.instance.tracks.length;
-  late AnimationController playOrPause;
-  late VoidCallback listener;
   Track? track;
+  Timer shuffleCooldown = Timer(const Duration(milliseconds: 300), () {});
+  late AnimationController playOrPause;
 
-  @override
-  void initState() {
-    super.initState();
-    playOrPause = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-    );
-    listener = () async {
-      if (Playback.instance.isPlaying) {
-        playOrPause.forward();
-      } else {
-        playOrPause.reverse();
+  Future<void> listener() async {
+    if (Playback.instance.isPlaying) {
+      playOrPause.forward();
+    } else {
+      playOrPause.reverse();
+    }
+    if (Playback.instance.index < 0 ||
+        Playback.instance.index >= Playback.instance.tracks.length) {
+      return;
+    }
+    if (volume != Playback.instance.volume) {
+      setState(() {
+        volume = Playback.instance.volume;
+      });
+    }
+    if (Playback.instance.tracks.length != playlistLength) {
+      playlistLength = Playback.instance.tracks.length;
+      // Cause [children] in [PageView] to update.
+      setState(() {});
+    }
+    if (shuffleCooldown.isActive) {
+      try {
+        await precacheImage(
+          getAlbumArt(
+              Playback.instance.tracks[
+                  (currentPage).clamp(0, Playback.instance.tracks.length)],
+              small: true),
+          context,
+        );
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
       }
-      if (Playback.instance.index < 0 ||
-          Playback.instance.index >= Playback.instance.tracks.length) {
-        return;
-      }
-      if (volume != Playback.instance.volume) {
-        setState(() {
-          volume = Playback.instance.volume;
-        });
-      }
-      if (Playback.instance.tracks.length != playlistLength) {
-        playlistLength = Playback.instance.tracks.length;
-        // Cause [children] in [PageView] to update.
-        setState(() {});
-      }
+      pageController.jumpToPage(Playback.instance.index);
+      isShuffling = Playback.instance.isShuffling;
+    } else {
       final track = Playback.instance.tracks[Playback.instance.index];
       if (this.track != track) {
         this.track = track;
@@ -99,7 +108,16 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
           });
         }
       }
-    };
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    playOrPause = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    );
     Playback.instance.addListener(listener);
   }
 
@@ -157,7 +175,11 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                       if (Lyrics.instance.current.length > 1 &&
                           Configuration.instance.lyricsVisible) {
                         return TweenAnimationBuilder<double>(
-                          tween: Tween<double>(begin: 0.0, end: 1.0),
+                          tween: Tween<double>(
+                            begin: 0.0,
+                            end:
+                                Lyrics.instance.current.length == 0 ? 0.0 : 1.0,
+                          ),
                           duration: Duration(milliseconds: 200),
                           curve: Curves.easeInOut,
                           builder: (context, opacity, _) => Opacity(
@@ -208,38 +230,10 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                         .toList(),
                                   position: playback.position.inMilliseconds,
                                   lyricUi: LyricsStyle()
-                                    ..defaultSize = 28.0
+                                    ..defaultSize = 24.0
                                     ..otherMainSize = 16.0
                                     ..highlight = false,
                                   playing: true,
-                                  // selectLineBuilder: (progress, confirm) {
-                                  //   return Row(
-                                  //     children: [
-                                  //       IconButton(
-                                  //           onPressed: () {
-                                  //             confirm.call();
-                                  //           },
-                                  //           icon: Icon(Icons.play_arrow,
-                                  //               color: Colors
-                                  //                   .deepPurpleAccent.shade200)),
-                                  //       Expanded(
-                                  //         child: Container(
-                                  //           decoration: BoxDecoration(
-                                  //               color: Colors
-                                  //                   .deepPurpleAccent.shade200),
-                                  //           height: 1,
-                                  //           width: double.infinity,
-                                  //         ),
-                                  //       ),
-                                  //       Text(
-                                  //         progress.toString(),
-                                  //         style: TextStyle(
-                                  //             color:
-                                  //                 Colors.deepPurpleAccent.shade200),
-                                  //       )
-                                  //     ],
-                                  //   );
-                                  // },
                                 ),
                               ),
                             ),
@@ -258,12 +252,15 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                 child: PageView(
                   physics: NeverScrollableScrollPhysics(),
                   controller: pageController,
-                  onPageChanged: (page) {
-                    currentPage = page;
-                  },
-                  children: Playback.instance.tracks
+                  // onPageChanged: (page) {
+                  //   currentPage = page;
+                  // },
+                  children: List.generate(
+                    Playback.instance.tracks.length,
+                    (i) => i,
+                  )
                       .map(
-                        (e) => Consumer<Playback>(
+                        (i) => Consumer<Playback>(
                           builder: (context, playback, _) => Container(
                             width: MediaQuery.of(context).size.width,
                             child: Row(
@@ -280,7 +277,8 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                   child: Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: ExtendedImage(
-                                      image: getAlbumArt(e, small: true),
+                                      image: getAlbumArt(playback.tracks[i],
+                                          small: true),
                                       height: 156.0,
                                       width: 156.0,
                                       fit: BoxFit.cover,
@@ -343,7 +341,8 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              e.trackName.overflow,
+                                              playback
+                                                  .tracks[i].trackName.overflow,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline1
@@ -370,13 +369,15 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                             ),
                                             Text(
                                               [
-                                                e.trackArtistNames
+                                                playback
+                                                    .tracks[i].trackArtistNames
                                                     .take(2)
                                                     .join(', ')
                                                     .overflow,
-                                                if (e.albumName !=
+                                                if (playback
+                                                        .tracks[i].albumName !=
                                                     kUnknownAlbum)
-                                                  e.albumName
+                                                  playback.tracks[i].albumName
                                               ].join(' • '),
                                               style: Theme.of(context)
                                                   .textTheme
@@ -402,10 +403,12 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            if (![kUnknownYear, '']
-                                                .contains(e.year))
+                                            if (![
+                                              kUnknownYear,
+                                              ''
+                                            ].contains(playback.tracks[i].year))
                                               Text(
-                                                e.year,
+                                                playback.tracks[i].year,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline3
@@ -581,7 +584,11 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 ),
                               ),
                               IconButton(
-                                onPressed: playback.toggleShuffle,
+                                onPressed: () {
+                                  shuffleCooldown = Timer(
+                                      const Duration(milliseconds: 300), () {});
+                                  playback.toggleShuffle();
+                                },
                                 iconSize: 20.0,
                                 color: Theme.of(context).brightness ==
                                         Brightness.dark
@@ -1216,6 +1223,7 @@ class LyricsStyle extends LyricUI {
             color: Color.fromARGB(128, 0, 0, 0),
           ),
         ],
+        overflow: TextOverflow.ellipsis,
       );
 
   @override
@@ -1235,6 +1243,7 @@ class LyricsStyle extends LyricUI {
             color: Color.fromARGB(128, 0, 0, 0),
           ),
         ],
+        overflow: TextOverflow.ellipsis,
       );
 
   @override

@@ -21,18 +21,20 @@ class Lyrics extends ChangeNotifier {
   /// [Lyrics] object instance.
   static late Lyrics instance = Lyrics();
 
-  final List<Lyric> current = <Lyric>[];
+  List<Lyric> current = <Lyric>[];
 
   Lyrics() {
+    // Run as asynchronous suspension.
     () async {
+      // `await for` to avoid race conditions.
       await for (final query in _controller.stream) {
         if (_query == query) continue;
-        current.clear();
+        current = <Lyric>[];
         notifyListeners();
         _query = query;
         final uri = Uri.https(
           'harmonoid-lyrics.vercel.app',
-          '/lyrics',
+          '/api/lyrics',
           {
             'name': _query,
           },
