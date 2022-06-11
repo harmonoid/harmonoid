@@ -21,7 +21,6 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/interface/collection/album.dart';
-import 'package:harmonoid/interface/edit_details_screen.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';

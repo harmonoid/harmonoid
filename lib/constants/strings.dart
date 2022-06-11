@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class Strings {
   late String ABOUT_SUBTITLE;
   late String ABOUT_TITLE;

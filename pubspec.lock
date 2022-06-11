@@ -26,18 +26,18 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "flutter-3.0-fixes"
-      resolved-ref: "3a280e2804d7249c28e3947ecdbc1976aa5e8113"
-      url: "https://github.com/offline-first/Flutter-AssetsAudioPlayer.git"
+      ref: HEAD
+      resolved-ref: "97ef1d8f889cea6aef8d0393a73736caa5347548"
+      url: "https://github.com/florent37/Flutter-AssetsAudioPlayer.git"
     source: git
-    version: "3.0.4+1"
+    version: "3.0.4+3"
   assets_audio_player_web:
     dependency: transitive
     description:
       name: assets_audio_player_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.4+1"
+    version: "3.0.4+3"
   async:
     dependency: transitive
     description:
