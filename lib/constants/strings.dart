@@ -20,6 +20,7 @@ class Strings {
   late String A_TO_Z;
   late String BACKGROUND_ARTWORK_SUBTITLE;
   late String BACKGROUND_ARTWORK_TITLE;
+  late String BETA;
   late String BUFFERING;
   late String CANCEL;
   late String CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC;
@@ -48,6 +49,7 @@ class Strings {
   late String COLLECTION_TRACK_DELETE_DIALOG_HEADER;
   late String COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY;
   late String COMING_UP;
+  late String CONTROL_PANEL;
   late String COPY_LINK;
   late String CREATE;
   late String CREATE_NEW_PLAYLIST;
@@ -135,6 +137,7 @@ class Strings {
   late String REMOVE;
   late String REMOVE_FROM_PLAYLIST;
   late String REPEAT;
+  late String RESET_PITCH;
   late String RESET_SPEED;
   late String RESULTS_FOR_QUERY;
   late String RETRIEVING_INFO;
