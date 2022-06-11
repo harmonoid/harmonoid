@@ -31,7 +31,9 @@ if __name__ == "__main__":
             "lib/constants/strings.dart", "w", encoding="utf_8", errors="ignore"
         ) as file:
             file.write(
-                """class Strings {
+                """// ignore_for_file: non_constant_identifier_names
+
+class Strings {
 """
             )
             for key in keys:
