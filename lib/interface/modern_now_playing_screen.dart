@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:extended_image/extended_image.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
@@ -804,6 +805,41 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               onChanged: (value) {
                                 playback.setRate(value);
                               },
+                            ),
+                          ),
+                          const SizedBox(width: 4.0),
+                          IconButton(
+                            onPressed: () => playback.setPitch(1.0),
+                            iconSize: 20.0,
+                            color: Colors.white,
+                            splashRadius: 18.0,
+                            tooltip: Language.instance.RESET_PITCH,
+                            icon: Icon(FluentIcons.pulse_20_filled),
+                          ),
+                          const SizedBox(width: 4.0),
+                          Container(
+                            width: 84.0,
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: 84.0,
+                              child: ScrollableSlider(
+                                min: 0.5,
+                                max: 1.5,
+                                value: playback.pitch,
+                                onScrolledUp: () {
+                                  playback.setPitch(
+                                    (playback.pitch + 0.05).clamp(0.5, 1.5),
+                                  );
+                                },
+                                onScrolledDown: () {
+                                  playback.setPitch(
+                                    (playback.pitch - 0.05).clamp(0.5, 1.5),
+                                  );
+                                },
+                                onChanged: (value) {
+                                  playback.setPitch(value);
+                                },
+                              ),
                             ),
                           ),
                           Spacer(),

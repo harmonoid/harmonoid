@@ -56,6 +56,7 @@ class Playback extends ChangeNotifier {
   List<Track> tracks = DefaultPlaybackValues.tracks;
   double volume = DefaultPlaybackValues.volume;
   double rate = DefaultPlaybackValues.rate;
+  double pitch = DefaultPlaybackValues.pitch;
   PlaylistLoopMode playlistLoopMode = DefaultPlaybackValues.playlistLoopMode;
   Duration position = Duration.zero;
   Duration duration = Duration.zero;
@@ -147,6 +148,17 @@ class Playback extends ChangeNotifier {
     if (Platform.isLinux) {
       _Harmonoid.instance.volume = value;
     }
+    notifyListeners();
+  }
+
+  void setPitch(double value) {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      player.pitch = value;
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      assetsAudioPlayer.setPitch(value);
+    }
+    pitch = value;
     notifyListeners();
   }
 
@@ -354,14 +366,17 @@ class Playback extends ChangeNotifier {
     playlistLoopMode = AppState.instance.playlistLoopMode;
     rate = AppState.instance.rate;
     volume = AppState.instance.volume;
+    pitch = AppState.instance.pitch;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       player.rate = rate;
       player.volume = volume;
+      player.pitch = pitch;
       player.setPlaylistMode(PlaylistMode.values[playlistLoopMode.index]);
     }
     if (Platform.isAndroid || Platform.isIOS) {
       assetsAudioPlayer.setPlaySpeed(rate);
       assetsAudioPlayer.setVolume(volume / 100.0);
+      assetsAudioPlayer.setPitch(pitch);
       assetsAudioPlayer.setLoopMode(
           assets_audio_player.LoopMode.values[playlistLoopMode.index]);
     }
@@ -813,8 +828,15 @@ class Playback extends ChangeNotifier {
 
   /// Save the current playback state.
   Future<void> saveAppState() {
-    return AppState.instance
-        .save(tracks, index, rate, isShuffling, playlistLoopMode, volume);
+    return AppState.instance.save(
+      tracks,
+      index,
+      rate,
+      isShuffling,
+      playlistLoopMode,
+      volume,
+      pitch,
+    );
   }
 
   final Player player = Player(video: false, osc: false, title: kTitle);
@@ -849,6 +871,7 @@ abstract class DefaultPlaybackValues {
   static List<Track> tracks = [];
   static double volume = 50.0;
   static double rate = 1.0;
+  static double pitch = 1.0;
   static PlaylistLoopMode playlistLoopMode = PlaylistLoopMode.none;
   static bool isShuffling = false;
 }

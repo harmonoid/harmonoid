@@ -51,14 +51,22 @@ class AppState extends AppStateKeys {
   }
 
   /// Updates and save the app state in the [file].
-  Future<void> save(List<Track> playlist, int index, double rate, bool shuffle,
-      PlaylistLoopMode playlistLoopMode, double volume) async {
+  Future<void> save(
+    List<Track> playlist,
+    int index,
+    double rate,
+    bool shuffle,
+    PlaylistLoopMode playlistLoopMode,
+    double volume,
+    double pitch,
+  ) async {
     this.playlist = playlist;
     this.index = index;
     this.rate = rate;
     this.shuffle = shuffle;
     this.playlistLoopMode = playlistLoopMode;
     this.volume = volume;
+    this.pitch = pitch;
 
     await file.write_(convert.JsonEncoder.withIndent('  ').convert({
       'playlist': playlist,
@@ -67,6 +75,7 @@ class AppState extends AppStateKeys {
       'shuffle': shuffle,
       'playlistLoopMode': PlaylistLoopMode.values.indexOf(playlistLoopMode),
       'volume': volume,
+      'pitch': pitch,
     }));
   }
 
@@ -95,6 +104,7 @@ class AppState extends AppStateKeys {
       shuffle = current['shuffle'];
       playlistLoopMode = PlaylistLoopMode.values[current['playlistLoopMode']];
       volume = current['volume'];
+      pitch = current['pitch'];
     } catch (exception) {
       if (!retry) throw exception;
       if (!await file.exists()) {
@@ -115,6 +125,7 @@ abstract class AppStateKeys {
   late bool shuffle;
   late PlaylistLoopMode playlistLoopMode;
   late double volume;
+  late double pitch;
 }
 
 final Map<String, dynamic> defaultAppState = {
@@ -125,4 +136,5 @@ final Map<String, dynamic> defaultAppState = {
   'playlistLoopMode':
       PlaylistLoopMode.values.indexOf(DefaultPlaybackValues.playlistLoopMode),
   'volume': DefaultPlaybackValues.volume,
+  'pitch': DefaultPlaybackValues.pitch,
 };

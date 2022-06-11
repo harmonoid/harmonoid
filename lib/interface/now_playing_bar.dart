@@ -10,6 +10,7 @@ import 'dart:math';
 import 'dart:core';
 import 'package:animations/animations.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:harmonoid/core/collection.dart';
@@ -789,7 +790,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           ],
                                         ),
                                         IconButton(
-                                          onPressed: playback.toggleMute,
+                                          onPressed: () =>
+                                              playback.setPitch(1.0),
                                           iconSize: 20.0,
                                           color: (palette ??
                                                       [
@@ -801,14 +803,10 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               ? Colors.white.withOpacity(0.87)
                                               : Colors.black87,
                                           splashRadius: 18.0,
-                                          tooltip: playback.isMuted
-                                              ? Language.instance.UNMUTE
-                                              : Language.instance.MUTE,
-                                          icon: Icon(
-                                            playback.volume == 0.0
-                                                ? Icons.volume_off
-                                                : Icons.volume_up,
-                                          ),
+                                          tooltip:
+                                              Language.instance.RESET_PITCH,
+                                          icon:
+                                              Icon(FluentIcons.pulse_20_filled),
                                         ),
                                         SizedBox(
                                           width: 12.0,
@@ -816,25 +814,25 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         Container(
                                           width: 84.0,
                                           child: ScrollableSlider(
-                                            min: 0,
-                                            max: 100.0,
-                                            value: playback.volume,
+                                            min: 0.5,
+                                            max: 1.5,
+                                            value: playback.pitch,
                                             color: palette?.last,
                                             secondaryColor: palette?.first,
                                             onScrolledUp: () {
-                                              playback.setVolume(
-                                                (playback.volume + 5.0)
-                                                    .clamp(0.0, 100.0),
+                                              playback.setPitch(
+                                                (playback.pitch + 0.05)
+                                                    .clamp(0.5, 1.5),
                                               );
                                             },
                                             onScrolledDown: () {
-                                              playback.setVolume(
-                                                (playback.volume - 5.0)
-                                                    .clamp(0.0, 100.0),
+                                              playback.setPitch(
+                                                (playback.pitch - 0.05)
+                                                    .clamp(0.5, 1.5),
                                               );
                                             },
                                             onChanged: (value) {
-                                              playback.setVolume(value);
+                                              playback.setPitch(value);
                                             },
                                           ),
                                         ),
@@ -852,11 +850,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       IconButton(
-                                        onPressed: playback.tracks.isEmpty
-                                            ? null
-                                            : desktopNowPlayingController
-                                                .toggle,
-                                        iconSize: 24.0,
+                                        onPressed: playback.toggleMute,
+                                        iconSize: 20.0,
                                         color: (palette ??
                                                     [
                                                       Theme.of(context)
@@ -864,24 +859,48 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                     ])
                                                 .first
                                                 .isDark
-                                            ? Colors.white
-                                            : Color(0xFF212121),
+                                            ? Colors.white.withOpacity(0.87)
+                                            : Colors.black87,
                                         splashRadius: 18.0,
-                                        tooltip: playback.tracks.isEmpty
-                                            ? ''
-                                            : desktopNowPlayingController
-                                                    .isHidden
-                                                ? Language.instance.NOW_PLAYING
-                                                : Language
-                                                    .instance.EXIT_NOW_PLAYING,
+                                        tooltip: playback.isMuted
+                                            ? Language.instance.UNMUTE
+                                            : Language.instance.MUTE,
                                         icon: Icon(
-                                          desktopNowPlayingController.isHidden
-                                              ? Icons.expand_less
-                                              : Icons.expand_more,
+                                          playback.volume == 0.0
+                                              ? Icons.volume_off
+                                              : Icons.volume_up,
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 12.0,
+                                        width: 4.0,
+                                      ),
+                                      Container(
+                                        width: 84.0,
+                                        child: ScrollableSlider(
+                                          min: 0,
+                                          max: 100.0,
+                                          value: playback.volume,
+                                          color: palette?.last,
+                                          secondaryColor: palette?.first,
+                                          onScrolledUp: () {
+                                            playback.setVolume(
+                                              (playback.volume + 5.0)
+                                                  .clamp(0.0, 100.0),
+                                            );
+                                          },
+                                          onScrolledDown: () {
+                                            playback.setVolume(
+                                              (playback.volume - 5.0)
+                                                  .clamp(0.0, 100.0),
+                                            );
+                                          },
+                                          onChanged: (value) {
+                                            playback.setVolume(value);
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 24.0,
                                       ),
                                     ],
                                   ),

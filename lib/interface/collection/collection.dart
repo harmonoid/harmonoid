@@ -10,6 +10,7 @@ import 'dart:math';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -61,6 +62,12 @@ class CollectionScreenState extends State<CollectionScreen>
   @override
   bool get wantKeepAlive => true;
 
+  final HotKey searchBarHotkey = HotKey(
+    KeyCode.keyF,
+    modifiers: [KeyModifier.control],
+    scope: HotKeyScope.inapp,
+  );
+
   @override
   void initState() {
     super.initState();
@@ -82,6 +89,18 @@ class CollectionScreenState extends State<CollectionScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Intent.instance.play();
     });
+    HotKeyManager.instance.register(
+      searchBarHotkey,
+      keyDownHandler: (_) {
+        node.requestFocus();
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    HotKeyManager.instance.unregister(searchBarHotkey);
+    super.dispose();
   }
 
   @override
