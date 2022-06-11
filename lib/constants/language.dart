@@ -267,12 +267,15 @@ class Language extends Strings with ChangeNotifier {
     this.EDIT_DETAILS = asset['EDIT_DETAILS']!;
     this.ENABLE_125_SCALING = asset['ENABLE_125_SCALING']!;
     this.ENABLE_ACRYLIC_BLUR = asset['ENABLE_ACRYLIC_BLUR']!;
+    this.EXIT_FULLSCREEN = asset['EXIT_FULLSCREEN']!;
     this.EXIT_NOW_PLAYING = asset['EXIT_NOW_PLAYING']!;
     this.EXIT_SUBTITLE = asset['EXIT_SUBTITLE']!;
     this.EXIT_TITLE = asset['EXIT_TITLE']!;
     this.EXPERIMENTAL = asset['EXPERIMENTAL']!;
     this.EXPERIMENTAL_SUBTITLE = asset['EXPERIMENTAL_SUBTITLE']!;
+    this.FULLSCREEN = asset['FULLSCREEN']!;
     this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
+    this.HIDE_LYRICS = asset['HIDE_LYRICS']!;
     this.INDEXING_ALREADY_GOING_ON_SUBTITLE = asset['INDEXING_ALREADY_GOING_ON_SUBTITLE']!;
     this.INDEXING_ALREADY_GOING_ON_TITLE = asset['INDEXING_ALREADY_GOING_ON_TITLE']!;
     this.INTERNET_ERROR = asset['INTERNET_ERROR']!;
@@ -336,6 +339,7 @@ class Language extends Strings with ChangeNotifier {
     this.REMOVE = asset['REMOVE']!;
     this.REMOVE_FROM_PLAYLIST = asset['REMOVE_FROM_PLAYLIST']!;
     this.REPEAT = asset['REPEAT']!;
+    this.RESET_SPEED = asset['RESET_SPEED']!;
     this.RESULTS_FOR_QUERY = asset['RESULTS_FOR_QUERY']!;
     this.RETRIEVING_INFO = asset['RETRIEVING_INFO']!;
     this.RETRIEVING_LINK = asset['RETRIEVING_LINK']!;
@@ -382,6 +386,7 @@ class Language extends Strings with ChangeNotifier {
     this.SHARE = asset['SHARE']!;
     this.SHOW_ALBUM = asset['SHOW_ALBUM']!;
     this.SHOW_IN_FILE_MANAGER = asset['SHOW_IN_FILE_MANAGER']!;
+    this.SHOW_LYRICS = asset['SHOW_LYRICS']!;
     this.SHOW_NOW_PLAYING_AFTER_PLAYING = asset['SHOW_NOW_PLAYING_AFTER_PLAYING']!;
     this.SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE = asset['SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE']!;
     this.SHOW_TRACK_PROGRESS_ON_TASKBAR = asset['SHOW_TRACK_PROGRESS_ON_TASKBAR']!;
@@ -403,6 +408,7 @@ class Language extends Strings with ChangeNotifier {
     this.TRANSFERS = asset['TRANSFERS']!;
     this.UNMUTE = asset['UNMUTE']!;
     this.UPDATE_AVAILABLE = asset['UPDATE_AVAILABLE']!;
+    this.USE_MODERN_NOW_PLAYING_SCREEN = asset['USE_MODERN_NOW_PLAYING_SCREEN']!;
     this.VIDEO_SINGLE = asset['VIDEO_SINGLE']!;
     this.WARNING = asset['WARNING']!;
     this.WEB = asset['WEB']!;

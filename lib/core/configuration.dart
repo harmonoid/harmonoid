@@ -95,6 +95,9 @@ class Configuration extends ConfigurationKeys {
     bool? dynamicNowPlayingBarColoring,
     String? proxyURL,
     bool? backgroundArtwork,
+    bool? modernNowPlayingScreen,
+    int? modernNowPlayingScreenCarouselIndex,
+    bool? lyricsVisible,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -150,6 +153,16 @@ class Configuration extends ConfigurationKeys {
     if (backgroundArtwork != null) {
       this.backgroundArtwork = backgroundArtwork;
     }
+    if (modernNowPlayingScreen != null) {
+      this.modernNowPlayingScreen = modernNowPlayingScreen;
+    }
+    if (modernNowPlayingScreenCarouselIndex != null) {
+      this.modernNowPlayingScreenCarouselIndex =
+          modernNowPlayingScreenCarouselIndex;
+    }
+    if (lyricsVisible != null) {
+      this.lyricsVisible = lyricsVisible;
+    }
     await file.write_(
       const convert.JsonEncoder.withIndent('  ').convert(
         {
@@ -175,6 +188,10 @@ class Configuration extends ConfigurationKeys {
           'dynamicNowPlayingBarColoring': this.dynamicNowPlayingBarColoring,
           'proxyURL': this.proxyURL,
           'backgroundArtwork': this.backgroundArtwork,
+          'modernNowPlayingScreen': this.modernNowPlayingScreen,
+          'modernNowPlayingScreenCarouselIndex':
+              this.modernNowPlayingScreenCarouselIndex,
+          'lyricsVisible': this.lyricsVisible,
         },
       ),
     );
@@ -219,6 +236,10 @@ class Configuration extends ConfigurationKeys {
       dynamicNowPlayingBarColoring = current['dynamicNowPlayingBarColoring'];
       proxyURL = current['proxyURL'];
       backgroundArtwork = current['backgroundArtwork'];
+      modernNowPlayingScreen = current['modernNowPlayingScreen'];
+      modernNowPlayingScreenCarouselIndex =
+          current['modernNowPlayingScreenCarouselIndex'];
+      lyricsVisible = current['lyricsVisible'];
     } catch (exception) {
       if (!retry) throw exception;
       if (!await file.exists_()) {
@@ -253,6 +274,9 @@ abstract class ConfigurationKeys {
   late bool dynamicNowPlayingBarColoring;
   late String? proxyURL;
   late bool backgroundArtwork;
+  late bool modernNowPlayingScreen;
+  late int modernNowPlayingScreenCarouselIndex;
+  late bool lyricsVisible;
 }
 
 final Map<String, dynamic> defaultConfiguration = {
@@ -276,9 +300,12 @@ final Map<String, dynamic> defaultConfiguration = {
   'webRecent': [],
   'taskbarIndicator': false,
   'seamlessPlayback': false,
-  'jumpToNowPlayingScreenOnPlay': isMobile ? false : true,
+  'jumpToNowPlayingScreenOnPlay': isDesktop,
   'automaticMusicLookup': false,
-  'dynamicNowPlayingBarColoring': isMobile ? false : true,
+  'dynamicNowPlayingBarColoring': isDesktop,
   'proxyURL': null,
   'backgroundArtwork': true,
+  'modernNowPlayingScreen': isDesktop,
+  'modernNowPlayingScreenCarouselIndex': 0,
+  'lyricsVisible': true,
 };

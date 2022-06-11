@@ -431,6 +431,7 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
       builder: (context, refresh, _) => refresh.progress == refresh.total
           ? FloatingActionButton(
               elevation: 8.0,
+              heroTag: 'collection_refresh_button',
               backgroundColor:
                   widget.color ?? Theme.of(context).colorScheme.secondary,
               child: TweenAnimationBuilder(

@@ -9,6 +9,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
@@ -16,12 +17,11 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
-import 'package:harmonoid/interface/now_playing.dart';
-import 'package:harmonoid/interface/now_playing_bar.dart';
 import 'package:harmonoid/interface/collection/collection.dart';
+import 'package:harmonoid/interface/now_playing_bar.dart';
+import 'package:harmonoid/interface/now_playing_screen.dart';
+import 'package:harmonoid/interface/modern_now_playing_screen.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -203,21 +203,36 @@ class HomeState extends State<Home>
           create: (context) => CollectionRefresh.instance,
         ),
         ChangeNotifierProvider(
-          create: (context) => Playback.instance,
-        ),
-        ChangeNotifierProvider(
-          create: (context) => Lyrics.instance,
-        ),
-        ChangeNotifierProvider(
           create: (context) => Language.instance,
         ),
         ChangeNotifierProvider(
           create: (context) => DesktopNowPlayingController(
             launch: () {
-              navigatorKey.currentState?.pushNamed('/now_playing');
+              if (Configuration.instance.modernNowPlayingScreen) {
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    transitionDuration: Duration(milliseconds: 600),
+                    reverseTransitionDuration: Duration(milliseconds: 300),
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        SharedAxisTransition(
+                      transitionType: SharedAxisTransitionType.vertical,
+                      fillColor: Colors.transparent,
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: ModernNowPlayingScreen(),
+                    ),
+                  ),
+                );
+              } else {
+                navigatorKey.currentState?.pushNamed('/now_playing');
+              }
             },
             exit: () {
-              navigatorKey.currentState?.maybePop();
+              if (Configuration.instance.modernNowPlayingScreen) {
+                Navigator.of(context).maybePop();
+              } else {
+                navigatorKey.currentState!.maybePop();
+              }
             },
           ),
         ),

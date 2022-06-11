@@ -274,6 +274,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+  flutter_lyric:
+    dependency: "direct main"
+    description:
+      name: flutter_lyric
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.3"
   flutter_media_metadata:
     dependency: "direct main"
     description:
@@ -481,10 +488,12 @@ packages:
   palette_generator:
     dependency: "direct main"
     description:
-      name: palette_generator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.2"
+      path: "packages/palette_generator"
+      ref: main
+      resolved-ref: bdadf3b0b88e18d87f03c04347ed49c81d8d0a7a
+      url: "https://github.com/alexmercerind/flutter_packages"
+    source: git
+    version: "0.3.3"
   path:
     dependency: "direct main"
     description:
@@ -798,6 +807,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.10"
+  window_manager:
+    dependency: "direct main"
+    description:
+      name: window_manager
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.3"
   windows_taskbar:
     dependency: "direct main"
     description:

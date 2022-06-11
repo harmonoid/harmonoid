@@ -184,9 +184,22 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         Expanded(
                                           child: Text(
                                             Language.instance.BUFFERING,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline2,
+                                            style:
+                                                Theme.of(context)
+                                                    .textTheme
+                                                    .headline2
+                                                    ?.copyWith(
+                                                      color:
+                                                          (palette ??
+                                                                      [
+                                                                        Theme.of(context)
+                                                                            .cardColor
+                                                                      ])
+                                                                  .first
+                                                                  .isDark
+                                                              ? Colors.white
+                                                              : Colors.black,
+                                                    ),
                                           ),
                                         ),
                                       ],
@@ -563,7 +576,8 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               ? Colors.white.withOpacity(0.87)
                                               : Colors.black87,
                                           splashRadius: 18.0,
-                                          tooltip: Language.instance.SPEED,
+                                          tooltip:
+                                              Language.instance.RESET_SPEED,
                                           icon: Icon(
                                             Icons.speed,
                                           ),
