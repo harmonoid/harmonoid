@@ -7,19 +7,21 @@
 - [Download](#download) [Windows, Linux, Android]
 - [Discord](https://discord.gg/2Rc3edFWd8)
 
-[work-in-progress] [[report-bugs-or-request-features](https://github.com/harmonoid/harmonoid/issues)] [[github-sponsors](https://github.com/sponsors/alexmercerind)] [[patreon](https://www.patreon.com/harmonoid)] [[primary-guide](#guide)] [[youtube-music-guide](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support)]
+[work-in-progress] [[report-bugs-or-request-features](https://github.com/harmonoid/harmonoid/issues)] [[github-sponsors](https://github.com/sponsors/alexmercerind)] [[patreon](https://www.patreon.com/harmonoid)] [[primary-guide](#guide)] [[youtube-music-guide](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support)] [screenshots-show-features-from-next-release]
 
-![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/album-artist.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_W8Oi1qPZ0O.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_mxLNZs9AjC.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/dark-mode.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/album-view.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/main.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/now-playing.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_rsORXSeEDM.webp?raw=true)
 
 ## Motion
 
 Enjoy that 🧈 buttery experience.
 
 https://user-images.githubusercontent.com/28951144/165089217-451646fe-7cfa-4ba8-8394-ee8a89d91a5a.mp4
+
+https://user-images.githubusercontent.com/28951144/173223285-eaafff0b-a75e-4cf9-b861-fcdaf05de333.mp4
 
 ## Links
 
