@@ -64,7 +64,7 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/flutter_packages
       path: packages/palette_generator
-      ref: main
+      ref: bdadf3b0b88e18d87f03c04347ed49c81d8d0a7a
   draggable_scrollbar: ^0.1.0
   infinite_scroll_pagination: ^3.1.0
   readmore: ^2.1.0
