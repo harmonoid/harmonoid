@@ -9,6 +9,7 @@ class Strings {
   late String ADD_TO_PLAYLIST;
   late String ALBUM;
   late String ALBUMS_FROM_ARTIST;
+  late String ALBUM_ARTIST;
   late String ALBUM_SINGLE;
   late String ARTIST;
   late String ARTIST_SINGLE;
@@ -72,6 +73,7 @@ class Strings {
   late String EXPERIMENTAL;
   late String EXPERIMENTAL_SUBTITLE;
   late String FULLSCREEN;
+  late String GENRE;
   late String GO_TO_SETTINGS;
   late String HIDE_LYRICS;
   late String INDEXING_ALREADY_GOING_ON_SUBTITLE;
@@ -139,9 +141,11 @@ class Strings {
   late String REPEAT;
   late String RESET_PITCH;
   late String RESET_SPEED;
+  late String RESTORE;
   late String RESULTS_FOR_QUERY;
   late String RETRIEVING_INFO;
   late String RETRIEVING_LINK;
+  late String SAVE;
   late String SAVE_AS_PLAYLIST;
   late String SAVE_TO_DOWNLOADS;
   late String SEARCH;
@@ -203,11 +207,13 @@ class Strings {
   late String THEME_MODE_SYSTEM;
   late String TRACK;
   late String TRACKS_FROM_ARTIST;
+  late String TRACK_NUMBER;
   late String TRACK_SINGLE;
   late String TRANSFERS;
   late String UNMUTE;
   late String UPDATE_AVAILABLE;
   late String USE_MODERN_NOW_PLAYING_SCREEN;
+  late String USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS;
   late String VIDEO_SINGLE;
   late String WARNING;
   late String WEB;

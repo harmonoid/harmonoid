@@ -213,6 +213,7 @@ class Language extends Strings with ChangeNotifier {
     this.ADD_TO_PLAYLIST = asset['ADD_TO_PLAYLIST']!;
     this.ALBUM = asset['ALBUM']!;
     this.ALBUMS_FROM_ARTIST = asset['ALBUMS_FROM_ARTIST']!;
+    this.ALBUM_ARTIST = asset['ALBUM_ARTIST']!;
     this.ALBUM_SINGLE = asset['ALBUM_SINGLE']!;
     this.ARTIST = asset['ARTIST']!;
     this.ARTIST_SINGLE = asset['ARTIST_SINGLE']!;
@@ -276,6 +277,7 @@ class Language extends Strings with ChangeNotifier {
     this.EXPERIMENTAL = asset['EXPERIMENTAL']!;
     this.EXPERIMENTAL_SUBTITLE = asset['EXPERIMENTAL_SUBTITLE']!;
     this.FULLSCREEN = asset['FULLSCREEN']!;
+    this.GENRE = asset['GENRE']!;
     this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
     this.HIDE_LYRICS = asset['HIDE_LYRICS']!;
     this.INDEXING_ALREADY_GOING_ON_SUBTITLE = asset['INDEXING_ALREADY_GOING_ON_SUBTITLE']!;
@@ -343,9 +345,11 @@ class Language extends Strings with ChangeNotifier {
     this.REPEAT = asset['REPEAT']!;
     this.RESET_PITCH = asset['RESET_PITCH']!;
     this.RESET_SPEED = asset['RESET_SPEED']!;
+    this.RESTORE = asset['RESTORE']!;
     this.RESULTS_FOR_QUERY = asset['RESULTS_FOR_QUERY']!;
     this.RETRIEVING_INFO = asset['RETRIEVING_INFO']!;
     this.RETRIEVING_LINK = asset['RETRIEVING_LINK']!;
+    this.SAVE = asset['SAVE']!;
     this.SAVE_AS_PLAYLIST = asset['SAVE_AS_PLAYLIST']!;
     this.SAVE_TO_DOWNLOADS = asset['SAVE_TO_DOWNLOADS']!;
     this.SEARCH = asset['SEARCH']!;
@@ -407,11 +411,13 @@ class Language extends Strings with ChangeNotifier {
     this.THEME_MODE_SYSTEM = asset['THEME_MODE_SYSTEM']!;
     this.TRACK = asset['TRACK']!;
     this.TRACKS_FROM_ARTIST = asset['TRACKS_FROM_ARTIST']!;
+    this.TRACK_NUMBER = asset['TRACK_NUMBER']!;
     this.TRACK_SINGLE = asset['TRACK_SINGLE']!;
     this.TRANSFERS = asset['TRANSFERS']!;
     this.UNMUTE = asset['UNMUTE']!;
     this.UPDATE_AVAILABLE = asset['UPDATE_AVAILABLE']!;
     this.USE_MODERN_NOW_PLAYING_SCREEN = asset['USE_MODERN_NOW_PLAYING_SCREEN']!;
+    this.USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS = asset['USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS']!;
     this.VIDEO_SINGLE = asset['VIDEO_SINGLE']!;
     this.WARNING = asset['WARNING']!;
     this.WEB = asset['WEB']!;
