@@ -586,8 +586,11 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         //     Icons.speed,
                                         //   ),
                                         // ),
-                                        if (Plugins.isWebMedia(playback
-                                            .tracks[playback.index].uri))
+                                        if (playback.tracks.isNotEmpty &&
+                                            Plugins.isWebMedia(playback
+                                                .tracks[playback.index.clamp(0,
+                                                    playback.tracks.length - 1)]
+                                                .uri))
                                           IconButton(
                                             splashRadius: 20.0,
                                             iconSize: 20.0,
@@ -819,14 +822,21 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             ),
                                           ],
                                         ),
-                                        if (Plugins.isWebMedia(playback
-                                            .tracks[playback.index].uri))
+                                        if (playback.tracks.isNotEmpty &&
+                                            Plugins.isWebMedia(playback
+                                                .tracks[playback.index.clamp(0,
+                                                    playback.tracks.length - 1)]
+                                                .uri))
                                           IconButton(
                                             splashRadius: 20.0,
                                             iconSize: 18.0,
                                             onPressed: () {
                                               launch(playback
-                                                  .tracks[playback.index].uri
+                                                  .tracks[playback.index.clamp(
+                                                      0,
+                                                      playback.tracks.length -
+                                                          1)]
+                                                  .uri
                                                   .toString());
                                             },
                                             icon: Icon(

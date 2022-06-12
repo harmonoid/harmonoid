@@ -21,6 +21,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/models/media.dart';
+import 'package:harmonoid/interface/edit_details_screen.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
@@ -319,18 +320,18 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
           ),
         ),
       ),
-    // PopupMenuItem<int>(
-    //   padding: EdgeInsets.zero,
-    //   value: 6,
-    //   child: ListTile(
-    //     leading:
-    //         Icon(Platform.isWindows ? FluentIcons.edit_24_regular : Icons.edit),
-    //     title: Text(
-    //       Language.instance.EDIT_DETAILS,
-    //       style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
-    //     ),
-    //   ),
-    // ),
+    PopupMenuItem<int>(
+      padding: EdgeInsets.zero,
+      value: 6,
+      child: ListTile(
+        leading:
+            Icon(Platform.isWindows ? FluentIcons.edit_24_regular : Icons.edit),
+        title: Text(
+          Language.instance.EDIT_DETAILS,
+          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+        ),
+      ),
+    ),
     PopupMenuItem<int>(
       padding: EdgeInsets.zero,
       value: 4,
@@ -382,8 +383,9 @@ Future<void> trackPopupMenuHandle(
                   Navigator.of(subContext).pop();
                   if (recursivelyPopNavigatorOnDeleteIf != null) {
                     if (recursivelyPopNavigatorOnDeleteIf()) {
-                      while (Navigator.of(context).canPop())
+                      while (Navigator.of(context).canPop()) {
                         Navigator.of(context).pop();
+                      }
                     }
                   }
                 },
@@ -444,18 +446,18 @@ Future<void> trackPopupMenuHandle(
       case 5:
         File(track.uri.toFilePath()).showInFileExplorer_();
         break;
-      // case 6:
-      //   Navigator.of(context).push(
-      //     PageRouteBuilder(
-      //       pageBuilder: (context, animation, secondaryAnimation) =>
-      //           FadeThroughTransition(
-      //         animation: animation,
-      //         secondaryAnimation: secondaryAnimation,
-      //         child: EditDetailsScreen(),
-      //       ),
-      //     ),
-      //   );
-      //   break;
+      case 6:
+        Navigator.of(context).push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                FadeThroughTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              child: EditDetailsScreen(track: track),
+            ),
+          ),
+        );
+        break;
     }
   }
 }

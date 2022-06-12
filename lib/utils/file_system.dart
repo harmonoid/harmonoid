@@ -92,7 +92,32 @@ extension FileExtension on File {
               !path.startsWith(r'\\?\')
           ? r'\\?\'
           : '';
-      await File(prefix + path).rename(newPath);
+      final newPrefix = Platform.isWindows &&
+              !newPath.startsWith('\\\\') &&
+              !newPath.startsWith(r'\\?\')
+          ? r'\\?\'
+          : '';
+      await File(prefix + path).rename(newPrefix + newPath);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+  }
+
+  /// Safely [copy] a [File].
+  Future<void> copy_(String newPath) async {
+    try {
+      final prefix = Platform.isWindows &&
+              !path.startsWith('\\\\') &&
+              !path.startsWith(r'\\?\')
+          ? r'\\?\'
+          : '';
+      final newPrefix = Platform.isWindows &&
+              !newPath.startsWith('\\\\') &&
+              !newPath.startsWith(r'\\?\')
+          ? r'\\?\'
+          : '';
+      await File(prefix + path).copy(newPrefix + newPath);
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
