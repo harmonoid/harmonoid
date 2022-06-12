@@ -6,14 +6,15 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'dart:math';
 import 'dart:core';
 import 'package:animations/animations.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:libmpv/libmpv.dart';
@@ -44,6 +45,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
   Track? track;
   bool isShuffling = Playback.instance.isShuffling;
   bool showAlbumArtButton = false;
+  bool controlPanelVisible = false;
 
   @override
   void initState() {
@@ -462,7 +464,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         getPlaybackPosition(playback) <=
                                                 getPlaybackDuration(playback)
                                             ? Container(
-                                                width: 480.0,
+                                                width: 360.0,
                                                 child: ScrollableSlider(
                                                   min: 0.0,
                                                   max: getPlaybackDuration(
@@ -531,58 +533,58 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         EdgeInsets.only(top: 8.0, bottom: 26.0),
                                     child: Row(
                                       children: [
-                                        Transform.rotate(
-                                          angle: pi,
-                                          child: Container(
-                                            width: 84.0,
-                                            child: ScrollableSlider(
-                                              min: 0.0,
-                                              max: 2.0,
-                                              value: playback.rate,
-                                              color: palette?.last,
-                                              secondaryColor: palette?.first,
-                                              onScrolledUp: () {
-                                                playback.setRate(
-                                                  (playback.rate + 0.05)
-                                                      .clamp(0.0, 2.0),
-                                                );
-                                              },
-                                              onScrolledDown: () {
-                                                playback.setRate(
-                                                  (playback.rate - 0.05)
-                                                      .clamp(0.0, 2.0),
-                                                );
-                                              },
-                                              onChanged: (value) {
-                                                playback.setRate(value);
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 12.0,
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            playback.setRate(1.0);
-                                          },
-                                          iconSize: 20.0,
-                                          color: (palette ??
-                                                      [
-                                                        Theme.of(context)
-                                                            .cardColor
-                                                      ])
-                                                  .first
-                                                  .isDark
-                                              ? Colors.white.withOpacity(0.87)
-                                              : Colors.black87,
-                                          splashRadius: 18.0,
-                                          tooltip:
-                                              Language.instance.RESET_SPEED,
-                                          icon: Icon(
-                                            Icons.speed,
-                                          ),
-                                        ),
+                                        // Transform.rotate(
+                                        //   angle: pi,
+                                        //   child: Container(
+                                        //     width: 84.0,
+                                        //     child: ScrollableSlider(
+                                        //       min: 0.0,
+                                        //       max: 2.0,
+                                        //       value: playback.rate,
+                                        //       color: palette?.last,
+                                        //       secondaryColor: palette?.first,
+                                        //       onScrolledUp: () {
+                                        //         playback.setRate(
+                                        //           (playback.rate + 0.05)
+                                        //               .clamp(0.0, 2.0),
+                                        //         );
+                                        //       },
+                                        //       onScrolledDown: () {
+                                        //         playback.setRate(
+                                        //           (playback.rate - 0.05)
+                                        //               .clamp(0.0, 2.0),
+                                        //         );
+                                        //       },
+                                        //       onChanged: (value) {
+                                        //         playback.setRate(value);
+                                        //       },
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        // SizedBox(
+                                        //   width: 12.0,
+                                        // ),
+                                        // IconButton(
+                                        //   onPressed: () {
+                                        //     playback.setRate(1.0);
+                                        //   },
+                                        //   iconSize: 20.0,
+                                        //   color: (palette ??
+                                        //               [
+                                        //                 Theme.of(context)
+                                        //                     .cardColor
+                                        //               ])
+                                        //           .first
+                                        //           .isDark
+                                        //       ? Colors.white.withOpacity(0.87)
+                                        //       : Colors.black87,
+                                        //   splashRadius: 18.0,
+                                        //   tooltip:
+                                        //       Language.instance.RESET_SPEED,
+                                        //   icon: Icon(
+                                        //     Icons.speed,
+                                        //   ),
+                                        // ),
                                         Stack(
                                           alignment: Alignment.center,
                                           children: [
@@ -789,53 +791,53 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             ),
                                           ],
                                         ),
-                                        IconButton(
-                                          onPressed: () =>
-                                              playback.setPitch(1.0),
-                                          iconSize: 20.0,
-                                          color: (palette ??
-                                                      [
-                                                        Theme.of(context)
-                                                            .cardColor
-                                                      ])
-                                                  .first
-                                                  .isDark
-                                              ? Colors.white.withOpacity(0.87)
-                                              : Colors.black87,
-                                          splashRadius: 18.0,
-                                          tooltip:
-                                              Language.instance.RESET_PITCH,
-                                          icon:
-                                              Icon(FluentIcons.pulse_20_filled),
-                                        ),
-                                        SizedBox(
-                                          width: 12.0,
-                                        ),
-                                        Container(
-                                          width: 84.0,
-                                          child: ScrollableSlider(
-                                            min: 0.5,
-                                            max: 1.5,
-                                            value: playback.pitch,
-                                            color: palette?.last,
-                                            secondaryColor: palette?.first,
-                                            onScrolledUp: () {
-                                              playback.setPitch(
-                                                (playback.pitch + 0.05)
-                                                    .clamp(0.5, 1.5),
-                                              );
-                                            },
-                                            onScrolledDown: () {
-                                              playback.setPitch(
-                                                (playback.pitch - 0.05)
-                                                    .clamp(0.5, 1.5),
-                                              );
-                                            },
-                                            onChanged: (value) {
-                                              playback.setPitch(value);
-                                            },
-                                          ),
-                                        ),
+                                        // IconButton(
+                                        //   onPressed: () =>
+                                        //       playback.setPitch(1.0),
+                                        //   iconSize: 20.0,
+                                        //   color: (palette ??
+                                        //               [
+                                        //                 Theme.of(context)
+                                        //                     .cardColor
+                                        //               ])
+                                        //           .first
+                                        //           .isDark
+                                        //       ? Colors.white.withOpacity(0.87)
+                                        //       : Colors.black87,
+                                        //   splashRadius: 18.0,
+                                        //   tooltip:
+                                        //       Language.instance.RESET_PITCH,
+                                        //   icon:
+                                        //       Icon(FluentIcons.pulse_20_filled),
+                                        // ),
+                                        // SizedBox(
+                                        //   width: 12.0,
+                                        // ),
+                                        // Container(
+                                        //   width: 84.0,
+                                        //   child: ScrollableSlider(
+                                        //     min: 0.5,
+                                        //     max: 1.5,
+                                        //     value: playback.pitch,
+                                        //     color: palette?.last,
+                                        //     secondaryColor: palette?.first,
+                                        //     onScrolledUp: () {
+                                        //       playback.setPitch(
+                                        //         (playback.pitch + 0.05)
+                                        //             .clamp(0.5, 1.5),
+                                        //       );
+                                        //     },
+                                        //     onScrolledDown: () {
+                                        //       playback.setPitch(
+                                        //         (playback.pitch - 0.05)
+                                        //             .clamp(0.5, 1.5),
+                                        //       );
+                                        //     },
+                                        //     onChanged: (value) {
+                                        //       playback.setPitch(value);
+                                        //     },
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
                                   ),
@@ -900,7 +902,57 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 24.0,
+                                        width: 16.0,
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          {
+                                            if (!controlPanelVisible) {
+                                              controlPanelVisible = true;
+                                              navigatorKey.currentState?.push(
+                                                RawDialogRoute(
+                                                  transitionDuration:
+                                                      Duration.zero,
+                                                  barrierDismissible: true,
+                                                  barrierLabel:
+                                                      MaterialLocalizations.of(
+                                                              context)
+                                                          .modalBarrierDismissLabel,
+                                                  barrierColor:
+                                                      Colors.transparent,
+                                                  pageBuilder:
+                                                      (context, __, ___) =>
+                                                          ControlPanel(
+                                                    onPop: () =>
+                                                        controlPanelVisible =
+                                                            false,
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              controlPanelVisible = false;
+                                              navigatorKey.currentState
+                                                  ?.maybePop();
+                                            }
+                                          }
+                                        },
+                                        iconSize: 20.0,
+                                        color: (palette ??
+                                                    [
+                                                      Theme.of(context)
+                                                          .cardColor
+                                                    ])
+                                                .first
+                                                .isDark
+                                            ? Colors.white.withOpacity(0.87)
+                                            : Colors.black87,
+                                        splashRadius: 18.0,
+                                        tooltip:
+                                            Language.instance.CONTROL_PANEL,
+                                        icon: Icon(Icons.more_horiz),
+                                      ),
+                                      SizedBox(
+                                        width: 16.0,
                                       ),
                                     ],
                                   ),
@@ -917,6 +969,327 @@ class NowPlayingBarState extends State<NowPlayingBar>
             ),
           )
         : Container();
+  }
+}
+
+class ControlPanel extends StatefulWidget {
+  final double? x;
+
+  final void Function() onPop;
+  ControlPanel({
+    Key? key,
+    this.x,
+    required this.onPop,
+  }) : super(key: key);
+
+  @override
+  State<ControlPanel> createState() => _ControlPanelState();
+}
+
+class _ControlPanelState extends State<ControlPanel> {
+  double end = 0.0;
+  bool focused = false;
+  List<TextEditingController> controllers = [
+    TextEditingController(
+      text: Playback.instance.rate.toStringAsFixed(2),
+    ),
+    TextEditingController(
+      text: Playback.instance.pitch.toStringAsFixed(2),
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    Playback.instance.addListener(listener);
+  }
+
+  @override
+  void dispose() {
+    Playback.instance.removeListener(listener);
+    controllers.forEach((controller) => controller.dispose());
+
+    super.dispose();
+  }
+
+  void listener() {
+    if (!focused) {
+      if (Playback.instance.rate.toStringAsFixed(2) != controllers[0].text) {
+        controllers[0].text = Playback.instance.rate.toStringAsFixed(2);
+      }
+      if (Playback.instance.pitch.toStringAsFixed(2) != controllers[1].text) {
+        controllers[1].text = Playback.instance.pitch.toStringAsFixed(2);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      scopesRoute: true,
+      explicitChildNodes: true,
+      child: WillPopScope(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).maybePop();
+                },
+                child: Container(
+                  color: Colors.transparent,
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.bottomRight,
+              child: TweenAnimationBuilder(
+                tween: Tween<double>(
+                  begin: 156.0,
+                  end: end,
+                ),
+                curve: Curves.easeInOut,
+                duration: Duration(milliseconds: 160),
+                child: Consumer<Playback>(
+                  builder: (context, playback, _) => Column(
+                    children: [
+                      const SizedBox(height: 16.0),
+                      Row(
+                        children: [
+                          const SizedBox(width: 20.0),
+                          Text(
+                            Language.instance.CONTROL_PANEL,
+                            style: Theme.of(context).textTheme.headline1,
+                          ),
+                          Transform.translate(
+                            offset: Offset(2.0, -6.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context).dividerColor,
+                                  width: 1.0,
+                                ),
+                              ),
+                              padding: EdgeInsets.all(1.0),
+                              child: Text(
+                                Language.instance.BETA.toUpperCase(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    ?.copyWith(
+                                      fontSize: 10.0,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                        ],
+                      ),
+                      const SizedBox(height: 12.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(width: 8.0),
+                          IconButton(
+                            padding: EdgeInsets.all(8.0),
+                            onPressed: () {
+                              playback.setRate(1.0);
+                            },
+                            iconSize: 20.0,
+                            splashRadius: 18.0,
+                            tooltip: Language.instance.RESET_SPEED,
+                            icon: Icon(
+                              Icons.speed,
+                            ),
+                          ),
+                          const SizedBox(width: 8.0),
+                          Expanded(
+                            child: ScrollableSlider(
+                              min: 0.0,
+                              max: 2.0,
+                              value: playback.rate.clamp(0.5, 2.0),
+                              onScrolledUp: () {
+                                playback.setRate(
+                                  (playback.rate + 0.05).clamp(0.0, 2.0),
+                                );
+                              },
+                              onScrolledDown: () {
+                                playback.setRate(
+                                  (playback.rate - 0.05).clamp(0.0, 2.0),
+                                );
+                              },
+                              onChanged: (value) {
+                                playback.setRate(value);
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                          Container(
+                            width: 42.0,
+                            height: 32.0,
+                            padding: EdgeInsets.only(bottom: 4.0),
+                            child: Focus(
+                              onFocusChange: (hasFocus) {
+                                focused = hasFocus;
+                                if (hasFocus) {
+                                  HotKeys.instance.disableSpaceHotKey();
+                                } else {
+                                  HotKeys.instance.enableSpaceHotKey();
+                                }
+                              },
+                              child: TextField(
+                                controller: controllers[0],
+                                scrollPhysics: NeverScrollableScrollPhysics(),
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]|.')),
+                                ],
+                                onChanged: (value) {
+                                  playback.setRate(
+                                    double.tryParse(value) ?? playback.rate,
+                                  );
+                                },
+                                textAlign: TextAlign.center,
+                                textAlignVertical: TextAlignVertical.center,
+                                style: Theme.of(context).textTheme.headline4,
+                                decoration: inputDecoration(
+                                  context,
+                                  '',
+                                ).copyWith(
+                                  contentPadding: EdgeInsets.only(
+                                    left: 4.0,
+                                    right: 4.0,
+                                    bottom: 14.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                        ],
+                      ),
+                      const SizedBox(height: 8.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(width: 8.0),
+                          IconButton(
+                            padding: EdgeInsets.all(8.0),
+                            onPressed: () => playback.setPitch(1.0),
+                            iconSize: 20.0,
+                            splashRadius: 18.0,
+                            tooltip: Language.instance.RESET_PITCH,
+                            icon: Icon(FluentIcons.pulse_20_filled),
+                          ),
+                          const SizedBox(width: 8.0),
+                          Expanded(
+                            child: ScrollableSlider(
+                              min: 0.5,
+                              max: 1.5,
+                              value: playback.pitch.clamp(0.5, 1.5),
+                              onScrolledUp: () {
+                                playback.setPitch(
+                                  (playback.pitch + 0.05).clamp(0.5, 1.5),
+                                );
+                              },
+                              onScrolledDown: () {
+                                playback.setPitch(
+                                  (playback.pitch - 0.05).clamp(0.5, 1.5),
+                                );
+                              },
+                              onChanged: (value) {
+                                playback.setPitch(value);
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                          Container(
+                            width: 42.0,
+                            height: 32.0,
+                            padding: EdgeInsets.only(bottom: 4.0),
+                            child: Focus(
+                              onFocusChange: (hasFocus) {
+                                focused = hasFocus;
+                                if (hasFocus) {
+                                  HotKeys.instance.disableSpaceHotKey();
+                                } else {
+                                  HotKeys.instance.enableSpaceHotKey();
+                                }
+                              },
+                              child: TextField(
+                                controller: controllers[1],
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]|.')),
+                                ],
+                                onChanged: (value) {
+                                  playback.setPitch(
+                                    double.tryParse(value) ?? playback.pitch,
+                                  );
+                                },
+                                scrollPhysics: NeverScrollableScrollPhysics(),
+                                textAlign: TextAlign.center,
+                                textAlignVertical: TextAlignVertical.center,
+                                style: Theme.of(context).textTheme.headline4,
+                                decoration: inputDecoration(
+                                  context,
+                                  '',
+                                ).copyWith(
+                                  contentPadding: EdgeInsets.only(
+                                    left: 4.0,
+                                    right: 4.0,
+                                    bottom: 14.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                        ],
+                      ),
+                      const SizedBox(height: 8.0),
+                    ],
+                  ),
+                ),
+                builder: (context, value, child) => Transform.translate(
+                  offset: Offset(0, value as double),
+                  child: Card(
+                    color: Theme.of(context).cardColor,
+                    elevation: 8.0,
+                    margin: widget.x == null
+                        ? EdgeInsets.all(16.0)
+                        : EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width -
+                                (widget.x ?? 0.0) -
+                                64.0 -
+                                240.0,
+                            bottom: 16.0,
+                          ),
+                    child: Container(
+                      width: 240.0,
+                      height: 156.0,
+                      child: child,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        onWillPop: () async {
+          widget.onPop();
+          setState(() {
+            end = 156.0;
+          });
+          await Future.delayed(const Duration(milliseconds: 100));
+          return Future.value(true);
+        },
+      ),
+    );
   }
 }
 
