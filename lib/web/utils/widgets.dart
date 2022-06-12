@@ -9,6 +9,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/services.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 import 'package:ytm_client/ytm_client.dart';
 
@@ -35,6 +36,15 @@ class _WebSearchBarState extends State<WebSearchBar> {
   List<String> _suggestions = <String>[];
   int _highlightedSuggestionIndex = -1;
   late TextEditingController _searchBarController;
+  HotKey? _hotKey;
+
+  @override
+  void dispose() {
+    if (_hotKey != null) {
+      HotKeyManager.instance.unregister(_hotKey!);
+    }
+    super.dispose();
+  }
 
   Future<void> searchOrPlay(String value) async {
     if (value.isEmpty) return;
@@ -126,6 +136,15 @@ class _WebSearchBarState extends State<WebSearchBar> {
         ),
       ),
       fieldViewBuilder: (context, controller, node, callback) {
+        if (_hotKey == null) {
+          _hotKey = searchBarHotkey;
+          HotKeyManager.instance.register(
+            _hotKey!,
+            keyDownHandler: (_) {
+              node.requestFocus();
+            },
+          );
+        }
         _searchBarController = controller;
         return Focus(
           onFocusChange: (hasFocus) {

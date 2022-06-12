@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
 import 'package:flutter_lyric/lyrics_reader_model.dart';
+import 'package:harmonoid/interface/now_playing_bar.dart';
 import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -37,7 +38,9 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
   int playlistLength = Playback.instance.tracks.length;
   Track? track;
   Timer shuffleCooldown = Timer(const Duration(milliseconds: 300), () {});
+  final GlobalKey controlPanelKey = GlobalKey();
   late AnimationController playOrPause;
+  bool controlPanelVisible = false;
 
   Future<void> listener() async {
     if (Playback.instance.isPlaying) {
@@ -770,41 +773,45 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                               },
                             ),
                           ),
-                          const SizedBox(width: 4.0),
+                          const SizedBox(width: 8.0),
                           IconButton(
+                            key: controlPanelKey,
                             onPressed: () {
-                              playback.setRate(1.0);
+                              {
+                                RenderBox box = controlPanelKey.currentContext!
+                                    .findRenderObject() as RenderBox;
+                                Offset position =
+                                    box.localToGlobal(Offset.zero);
+                                double x = position.dx;
+                                if (!controlPanelVisible) {
+                                  controlPanelVisible = true;
+                                  Navigator.of(context).push(
+                                    RawDialogRoute(
+                                      transitionDuration: Duration.zero,
+                                      barrierDismissible: true,
+                                      barrierLabel:
+                                          MaterialLocalizations.of(context)
+                                              .modalBarrierDismissLabel,
+                                      barrierColor: Colors.transparent,
+                                      pageBuilder: (context, __, ___) =>
+                                          ControlPanel(
+                                        onPop: () =>
+                                            controlPanelVisible = false,
+                                        x: x,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  controlPanelVisible = false;
+                                  Navigator.of(context).maybePop();
+                                }
+                              }
                             },
                             iconSize: 20.0,
                             color: Colors.white,
                             splashRadius: 18.0,
-                            tooltip: Language.instance.RESET_SPEED,
-                            icon: Icon(
-                              Icons.speed,
-                            ),
-                          ),
-                          const SizedBox(width: 4.0),
-                          Container(
-                            width: 84.0,
-                            alignment: Alignment.center,
-                            child: ScrollableSlider(
-                              min: 0.0,
-                              max: 2.0,
-                              value: playback.rate,
-                              onScrolledUp: () {
-                                playback.setRate(
-                                  (playback.rate + 0.05).clamp(0.0, 2.0),
-                                );
-                              },
-                              onScrolledDown: () {
-                                playback.setRate(
-                                  (playback.rate - 0.05).clamp(0.0, 2.0),
-                                );
-                              },
-                              onChanged: (value) {
-                                playback.setRate(value);
-                              },
-                            ),
+                            tooltip: Language.instance.CONTROL_PANEL,
+                            icon: Icon(Icons.more_horiz),
                           ),
                           Spacer(),
                         ],

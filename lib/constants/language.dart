@@ -224,6 +224,7 @@ class Language extends Strings with ChangeNotifier {
     this.A_TO_Z = asset['A_TO_Z']!;
     this.BACKGROUND_ARTWORK_SUBTITLE = asset['BACKGROUND_ARTWORK_SUBTITLE']!;
     this.BACKGROUND_ARTWORK_TITLE = asset['BACKGROUND_ARTWORK_TITLE']!;
+    this.BETA = asset['BETA']!;
     this.BUFFERING = asset['BUFFERING']!;
     this.CANCEL = asset['CANCEL']!;
     this.CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC = asset['CHANGE_NOW_PLAYING_BAR_COLOR_BASED_ON_MUSIC']!;
@@ -252,6 +253,7 @@ class Language extends Strings with ChangeNotifier {
     this.COLLECTION_TRACK_DELETE_DIALOG_HEADER = asset['COLLECTION_TRACK_DELETE_DIALOG_HEADER']!;
     this.COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY = asset['COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY']!;
     this.COMING_UP = asset['COMING_UP']!;
+    this.CONTROL_PANEL = asset['CONTROL_PANEL']!;
     this.COPY_LINK = asset['COPY_LINK']!;
     this.CREATE = asset['CREATE']!;
     this.CREATE_NEW_PLAYLIST = asset['CREATE_NEW_PLAYLIST']!;
@@ -339,6 +341,7 @@ class Language extends Strings with ChangeNotifier {
     this.REMOVE = asset['REMOVE']!;
     this.REMOVE_FROM_PLAYLIST = asset['REMOVE_FROM_PLAYLIST']!;
     this.REPEAT = asset['REPEAT']!;
+    this.RESET_PITCH = asset['RESET_PITCH']!;
     this.RESET_SPEED = asset['RESET_SPEED']!;
     this.RESULTS_FOR_QUERY = asset['RESULTS_FOR_QUERY']!;
     this.RETRIEVING_INFO = asset['RETRIEVING_INFO']!;
