@@ -29,6 +29,7 @@ import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/dimensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NowPlayingBar extends StatefulWidget {
   const NowPlayingBar({Key? key}) : super(key: key);
@@ -585,6 +586,33 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         //     Icons.speed,
                                         //   ),
                                         // ),
+                                        if (Plugins.isWebMedia(playback
+                                            .tracks[playback.index].uri))
+                                          IconButton(
+                                            splashRadius: 20.0,
+                                            iconSize: 20.0,
+                                            onPressed: () {
+                                              Clipboard.setData(ClipboardData(
+                                                  text: playback
+                                                      .tracks[playback.index]
+                                                      .uri
+                                                      .toString()));
+                                            },
+                                            icon: Icon(
+                                              Icons.link,
+                                            ),
+                                            color: (palette ??
+                                                        [
+                                                          Theme.of(context)
+                                                              .cardColor
+                                                        ])
+                                                    .first
+                                                    .isDark
+                                                ? Colors.white.withOpacity(0.87)
+                                                : Colors.black87,
+                                            tooltip:
+                                                Language.instance.COPY_LINK,
+                                          ),
                                         Stack(
                                           alignment: Alignment.center,
                                           children: [
@@ -791,6 +819,31 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             ),
                                           ],
                                         ),
+                                        if (Plugins.isWebMedia(playback
+                                            .tracks[playback.index].uri))
+                                          IconButton(
+                                            splashRadius: 20.0,
+                                            iconSize: 18.0,
+                                            onPressed: () {
+                                              launch(playback
+                                                  .tracks[playback.index].uri
+                                                  .toString());
+                                            },
+                                            icon: Icon(
+                                              Icons.open_in_new,
+                                            ),
+                                            color: (palette ??
+                                                        [
+                                                          Theme.of(context)
+                                                              .cardColor
+                                                        ])
+                                                    .first
+                                                    .isDark
+                                                ? Colors.white.withOpacity(0.87)
+                                                : Colors.black87,
+                                            tooltip: Language
+                                                .instance.OPEN_IN_BROWSER,
+                                          ),
                                         // IconButton(
                                         //   onPressed: () =>
                                         //       playback.setPitch(1.0),
