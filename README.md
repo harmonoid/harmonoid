@@ -12,10 +12,12 @@
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_W8Oi1qPZ0O.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_mxLNZs9AjC.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/dark-mode.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/main.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/album-view.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_rsORXSeEDM.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_yFdqibq6DF.webp?raw=true)
 
-## Motion
+
+## Videos
 
 Enjoy that 🧈 buttery experience.
 
@@ -88,14 +90,15 @@ Similar instructions can be followed on your favorite distro.
 - Does not use [electron.js](https://www.electronjs.org/).
 - D-Bus MPRIS controls for Linux.
 - Gapless playback.
+- Time-synced lyrics.
+- Pitch shift & speed adjustment.
+- Details editor.
+- Re-ordering "Now Playing" list.
 
 ### Upcoming features
 
 - Music visualizations.
-- Time-synced lyrics.
 - Equalizer.
-- Details editor.
-- Re-ordering "Now Playing" list.
 - Mini-window mode.
 - Minimization to system tray.
 - Last.fm scrobbling.
@@ -507,6 +510,7 @@ If you disagree with any of the answers or want to correct my knowledge, please 
 
 Well you've scrolled this down... How about seeing more ✨ _colorful_ ✨ stuff.
 
+<img src='https://user-images.githubusercontent.com/28951144/173228896-9a14aa06-7d65-43f2-977e-824b65eb14de.png'></img>
 <img src='https://github.com/harmonoid/harmonoid/blob/assets/linux_full/4.jpeg?raw=true'></img>
 <img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/2.png?raw=true'></img>
 <img src='https://github.com/harmonoid/harmonoid/blob/assets/windows_full/3.png?raw=true'></img>
