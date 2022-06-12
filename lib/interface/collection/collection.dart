@@ -62,12 +62,6 @@ class CollectionScreenState extends State<CollectionScreen>
   @override
   bool get wantKeepAlive => true;
 
-  final HotKey searchBarHotkey = HotKey(
-    KeyCode.keyF,
-    modifiers: [KeyModifier.control],
-    scope: HotKeyScope.inapp,
-  );
-
   @override
   void initState() {
     super.initState();

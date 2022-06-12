@@ -137,11 +137,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
       ),
       fieldViewBuilder: (context, controller, node, callback) {
         if (_hotKey == null) {
-          _hotKey = HotKey(
-            KeyCode.keyF,
-            modifiers: [KeyModifier.control],
-            scope: HotKeyScope.inapp,
-          );
+          _hotKey = searchBarHotkey;
           HotKeyManager.instance.register(
             _hotKey!,
             keyDownHandler: (_) {

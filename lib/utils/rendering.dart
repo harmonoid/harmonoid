@@ -8,6 +8,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:path/path.dart' as path;
 import 'package:animations/animations.dart';
@@ -36,6 +37,11 @@ final isMobile = Platform.isAndroid || Platform.isIOS;
 final desktopTitleBarHeight = Platform.isWindows ? 32.0 : 0.0;
 final tileMargin = isDesktop ? kDesktopTileMargin : kMobileTileMargin;
 final visualAssets = VisualAssets();
+final HotKey searchBarHotkey = HotKey(
+  KeyCode.keyF,
+  modifiers: [KeyModifier.control],
+  scope: HotKeyScope.inapp,
+);
 
 List<Widget> tileGridListWidgets({
   required double tileHeight,
@@ -650,18 +656,18 @@ InputDecoration inputDecoration(
   Color? fillColor,
 }) {
   return InputDecoration(
-    suffixIcon: Material(
-      color: Colors.transparent,
-      child: trailingIcon == null
-          ? null
-          : IconButton(
+    suffixIcon: trailingIcon == null
+        ? null
+        : Material(
+            color: Colors.transparent,
+            child: IconButton(
               splashRadius: 14.0,
               highlightColor: Colors.transparent,
               onPressed: trailingIconOnPressed,
               icon: trailingIcon,
               iconSize: 24.0,
             ),
-    ),
+          ),
     contentPadding: isDesktop
         ? EdgeInsets.only(
             left: 10.0, bottom: trailingIcon == null ? 10.0 : 10.0)
