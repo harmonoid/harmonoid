@@ -13,6 +13,7 @@ import 'package:ytm_client/ytm_client.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -56,6 +57,19 @@ List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
           ),
         ),
       ),
+      PopupMenuItem<int>(
+        padding: EdgeInsets.zero,
+        value: 3,
+        child: ListTile(
+          leading: Icon(Platform.isWindows
+              ? FluentIcons.music_note_2_16_regular
+              : Icons.music_note),
+          title: Text(
+            Language.instance.ADD_TO_NOW_PLAYING,
+            style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+          ),
+        ),
+      ),
       if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
         PopupMenuItem<int>(
           padding: EdgeInsets.zero,
@@ -92,6 +106,15 @@ Future<void> webTrackPopupMenuHandle(
     case 2:
       {
         Clipboard.setData(ClipboardData(text: item.uri.toString()));
+        break;
+      }
+    case 3:
+      {
+        if (item is Track) {
+          Playback.instance.add([media.Track.fromWebTrack(item.toJson())]);
+        } else if (item is Video) {
+          Playback.instance.add([media.Track.fromWebVideo(item.toJson())]);
+        }
         break;
       }
   }
