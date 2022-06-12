@@ -824,6 +824,14 @@ class Collection extends ChangeNotifier {
     }
   }
 
+  /// Adds a given [track] to the collection & updates the cache.
+  Future<void> arrange(Track track) async {
+    await _arrange(track);
+    await _arrangeArtists(notifyListeners: false);
+    await saveToCache();
+    await refresh();
+  }
+
   /// Indexes a track into album & artist models.
   ///
   Future<void> _arrange(Track track) async {
