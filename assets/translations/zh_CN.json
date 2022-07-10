@@ -1,6 +1,7 @@
 {
   "ABOUT_SUBTITLE": "应用及开发者信息",
   "ABOUT_TITLE": "关于",
+  "ADD": "Add",
   "ADD_NEW_FOLDER": "添加新目录",
   "ADD_NEW_FOLDER_SUBTITLE": "添加一个新文件夹到您的音乐库中。",
   "ADD_TO_NOW_PLAYING": "添加到正在播放列表",
@@ -213,6 +214,7 @@
   "USE_MODERN_NOW_PLAYING_SCREEN": "Use modern \"Now Playing Screen\" with dynamic backgrounds & time-synced lyrics",
   "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use; // / \\\\ or \\ to separate multiple artists.",
   "VIDEO_SINGLE": "视频",
+  "VISUALS": "Add or remove visuals visible during music playback",
   "WARNING": "警告",
   "WEB": "YT 音乐",
   "WEB_INTERNET_ERROR": "当前离线中，播放一些本地音乐吧。",

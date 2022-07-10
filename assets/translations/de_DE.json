@@ -1,6 +1,7 @@
 {
   "ABOUT_SUBTITLE": "Informationen über die App und deren Entwickler",
   "ABOUT_TITLE": "Über",
+  "ADD": "Add",
   "ADD_NEW_FOLDER": "NEUEN ORDNER",
   "ADD_NEW_FOLDER_SUBTITLE": "Fügen Sie einen neuen Ordner zu Ihrer Musikbibliothek hinzu.",
   "ADD_TO_NOW_PLAYING": "zu \"Läuft Gerade\" hinzufügen",
@@ -213,6 +214,7 @@
   "USE_MODERN_NOW_PLAYING_SCREEN": "Use modern \"Now Playing Screen\" with dynamic backgrounds & time-synced lyrics",
   "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use; // / \\\\ or \\ to separate multiple artists.",
   "VIDEO_SINGLE": "Video",
+  "VISUALS": "Add or remove visuals visible during music playback",
   "WARNING": "Warnung",
   "WEB": "YT Music",
   "WEB_INTERNET_ERROR": "Wir spielen Ihre lokale Musik, bis Sie wieder online sind..",

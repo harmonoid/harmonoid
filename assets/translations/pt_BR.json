@@ -1,6 +1,7 @@
 {
   "ABOUT_SUBTITLE": "Saiba mais sobre nós",
   "ABOUT_TITLE": "Sobre",
+  "ADD": "Add",
   "ADD_NEW_FOLDER": "Adicionar nova pasta",
   "ADD_NEW_FOLDER_SUBTITLE": "Adicione uma nova pasta à sua biblioteca de música.",
   "ADD_TO_NOW_PLAYING": "Adicionar para tocar agora",
@@ -213,6 +214,7 @@
   "USE_MODERN_NOW_PLAYING_SCREEN": "Use a moderna \"Tela Reproduzindo\" com planos de fundo dinâmicos e letras sincronizadas no tempo",
   "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use; // / \\\\ or \\ to separate multiple artists.",
   "VIDEO_SINGLE": "Video",
+  "VISUALS": "Add or remove visuals visible during music playback",
   "WARNING": "Aviso",
   "WEB": "YT Music",
   "WEB_INTERNET_ERROR": "Vamos tocar sua música local, enquanto você fica online novamente..",

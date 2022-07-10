@@ -1,6 +1,7 @@
 {
   "ABOUT_SUBTITLE": "Informasi tentang aplikasi & pengembangnya",
   "ABOUT_TITLE": "Tentang",
+  "ADD": "Add",
   "ADD_NEW_FOLDER": "Tambah folder baru",
   "ADD_NEW_FOLDER_SUBTITLE": "Tambah folder baru ke perpustakaan musik anda.",
   "ADD_TO_NOW_PLAYING": "Tambahkan ke mainkan sekarang",
@@ -213,6 +214,7 @@
   "USE_MODERN_NOW_PLAYING_SCREEN": "Use modern \"Now Playing Screen\" with dynamic backgrounds & time-synced lyrics",
   "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use; // / \\\\ or \\ to separate multiple artists.",
   "VIDEO_SINGLE": "Video",
+  "VISUALS": "Add or remove visuals visible during music playback",
   "WARNING": "Peringatan",
   "WEB": "YT Musik",
   "WEB_INTERNET_ERROR": "Mainkan musik lokal anda sambil menghubungkan kembali ke internet.",

@@ -3,6 +3,7 @@
 class Strings {
   late String ABOUT_SUBTITLE;
   late String ABOUT_TITLE;
+  late String ADD;
   late String ADD_NEW_FOLDER;
   late String ADD_NEW_FOLDER_SUBTITLE;
   late String ADD_TO_NOW_PLAYING;
@@ -215,6 +216,7 @@ class Strings {
   late String USE_MODERN_NOW_PLAYING_SCREEN;
   late String USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS;
   late String VIDEO_SINGLE;
+  late String VISUALS;
   late String WARNING;
   late String WEB;
   late String WEB_INTERNET_ERROR;

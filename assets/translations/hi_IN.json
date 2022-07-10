@@ -1,6 +1,7 @@
 {
   "ABOUT_SUBTITLE": "प्रोजेक्ट और इसके डेवलपर्स के बारे में जानकारी",
   "ABOUT_TITLE": "प्रोजेक्ट के बारे में",
+  "ADD": "Add",
   "ADD_NEW_FOLDER": "नया फ़ोल्डर बनाये",
   "ADD_NEW_FOLDER_SUBTITLE": "Add a new folder to your music library.",
   "ADD_TO_NOW_PLAYING": "अभी चल रहे गानों में जोड़ें",
@@ -213,6 +214,7 @@
   "USE_MODERN_NOW_PLAYING_SCREEN": "Use modern \"Now Playing Screen\" with dynamic backgrounds & time-synced lyrics",
   "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use; // / \\\\ or \\ to separate multiple artists.",
   "VIDEO_SINGLE": "Video",
+  "VISUALS": "Add or remove visuals visible during music playback",
   "WARNING": "चेतावनी",
   "WEB": "YT Music",
   "WEB_INTERNET_ERROR": "जब तक आप वापस ऑनलाइन हो जाते हैं, तब तक हम आपका स्थानीय संगीत बजाते हैं।",

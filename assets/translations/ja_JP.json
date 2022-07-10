@@ -1,6 +1,7 @@
 {
   "ABOUT_SUBTITLE": "このアプリと開発者についての情報",
   "ABOUT_TITLE": "このアプリについて",
+  "ADD": "Add",
   "ADD_NEW_FOLDER": "新しいフォルダを追加",
   "ADD_NEW_FOLDER_SUBTITLE": "音楽ライブラリに新しいフォルダを追加する。",
   "ADD_TO_NOW_PLAYING": "再生中に追加",
@@ -213,6 +214,7 @@
   "USE_MODERN_NOW_PLAYING_SCREEN": "Use modern \"Now Playing Screen\" with dynamic backgrounds & time-synced lyrics",
   "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use; // / \\\\ or \\ to separate multiple artists.",
   "VIDEO_SINGLE": "ビデオ",
+  "VISUALS": "Add or remove visuals visible during music playback",
   "WARNING": "注意",
   "WEB": "YT Music",
   "WEB_INTERNET_ERROR": "オンラインに復帰するまで端末の音楽を再生しましょう。",

@@ -1,6 +1,7 @@
 {
   "ABOUT_SUBTITLE": "Information about the app & its developers",
   "ABOUT_TITLE": "About",
+  "ADD": "Add",
   "ADD_NEW_FOLDER": "Add new folder",
   "ADD_NEW_FOLDER_SUBTITLE": "Add a new folder to your music library.",
   "ADD_TO_NOW_PLAYING": "Add to now playing",
@@ -213,6 +214,7 @@
   "USE_MODERN_NOW_PLAYING_SCREEN": "Use modern \"Now Playing Screen\" with dynamic backgrounds & time-synced lyrics",
   "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use; // / \\\\ or \\ to separate multiple artists.",
   "VIDEO_SINGLE": "Video",
+  "VISUALS": "Add or remove visuals visible during music playback",
   "WARNING": "Warning",
   "WEB": "YT Music",
   "WEB_INTERNET_ERROR": "Let's play your local music, while you get back online.",

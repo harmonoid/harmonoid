@@ -1,6 +1,7 @@
 {
   "ABOUT_SUBTITLE": "Fampahalalana momba ilay fampiharana sy ny ireo mpamorona azy",
   "ABOUT_TITLE": "Mahakasika",
+  "ADD": "Add",
   "ADD_NEW_FOLDER": "MANAMPY RAKITRA VAOVAO",
   "ADD_NEW_FOLDER_SUBTITLE": "Add a new folder to your music library.",
   "ADD_TO_NOW_PLAYING": "Ampio amin'ny filaharan-kira",
@@ -213,6 +214,7 @@
   "USE_MODERN_NOW_PLAYING_SCREEN": "Use modern \"Now Playing Screen\" with dynamic backgrounds & time-synced lyrics",
   "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use; // / \\\\ or \\ to separate multiple artists.",
   "VIDEO_SINGLE": "Video",
+  "VISUALS": "Add or remove visuals visible during music playback",
   "WARNING": "Tandremo",
   "WEB": "YT Music",
   "WEB_INTERNET_ERROR": "Mihaino ny mozika eo an-toerana mandritra ny fiandrasana Internet .",

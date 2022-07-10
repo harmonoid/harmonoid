@@ -207,6 +207,7 @@ class Language extends Strings with ChangeNotifier {
     var asset = jsonDecode(string);
     this.ABOUT_SUBTITLE = asset['ABOUT_SUBTITLE']!;
     this.ABOUT_TITLE = asset['ABOUT_TITLE']!;
+    this.ADD = asset['ADD']!;
     this.ADD_NEW_FOLDER = asset['ADD_NEW_FOLDER']!;
     this.ADD_NEW_FOLDER_SUBTITLE = asset['ADD_NEW_FOLDER_SUBTITLE']!;
     this.ADD_TO_NOW_PLAYING = asset['ADD_TO_NOW_PLAYING']!;
@@ -419,6 +420,7 @@ class Language extends Strings with ChangeNotifier {
     this.USE_MODERN_NOW_PLAYING_SCREEN = asset['USE_MODERN_NOW_PLAYING_SCREEN']!;
     this.USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS = asset['USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS']!;
     this.VIDEO_SINGLE = asset['VIDEO_SINGLE']!;
+    this.VISUALS = asset['VISUALS']!;
     this.WARNING = asset['WARNING']!;
     this.WEB = asset['WEB']!;
     this.WEB_INTERNET_ERROR = asset['WEB_INTERNET_ERROR']!;
