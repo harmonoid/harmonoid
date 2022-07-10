@@ -41,6 +41,7 @@ class Lyrics extends ChangeNotifier {
         );
         try {
           final response = await http.get(uri);
+          current.add(Lyric(time: -1, words: ''));
           if (response.statusCode == 200) {
             current.addAll(
               (convert.jsonDecode(response.body) as List<dynamic>)
