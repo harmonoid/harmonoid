@@ -21,6 +21,7 @@ import 'package:harmonoid/interface/settings/experimental.dart';
 import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid/interface/settings/proxy.dart';
+import 'package:harmonoid/interface/settings/now_playing_visuals.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -44,6 +45,7 @@ class Settings extends StatelessWidget {
                       ThemeSetting(),
                       MiscellaneousSetting(),
                       ExperimentalSetting(),
+                      NowPlayingVisualsSetting(),
                       ProxySetting(),
                       LanguageSetting(),
                       VersionSetting(),
