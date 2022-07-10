@@ -14,7 +14,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/web/web.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:palette_generator/palette_generator.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';

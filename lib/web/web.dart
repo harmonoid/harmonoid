@@ -5,6 +5,7 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
+import 'dart:collection';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/rendering.dart';
@@ -213,6 +214,7 @@ class _WebRecommendationsState extends State<WebRecommendations>
       PagingController<int, Track>(firstPageKey: 0);
   late ScrollController _scrollController = ScrollController();
   final int _velocity = 40;
+  final HashMap<String, Color> colorKeys = HashMap<String, Color>();
 
   @override
   void initState() {
@@ -323,6 +325,7 @@ class _WebRecommendationsState extends State<WebRecommendations>
                                 height: height,
                                 width: width,
                                 track: item,
+                                colorKeys: colorKeys,
                               )
                             : WebVideoLargeTile(
                                 height: height,

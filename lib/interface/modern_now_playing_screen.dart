@@ -1,21 +1,23 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_lyric/lyrics_reader.dart';
-import 'package:flutter_lyric/lyrics_reader_model.dart';
-import 'package:harmonoid/interface/now_playing_bar.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:flutter_lyric/lyrics_reader.dart';
+import 'package:flutter_lyric/lyrics_reader_model.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/interface/now_playing_bar.dart';
+import 'package:harmonoid/state/now_playing_visuals.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -41,6 +43,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
   final GlobalKey controlPanelKey = GlobalKey();
   late AnimationController playOrPause;
   bool controlPanelVisible = false;
+  Iterable<Color>? palette;
 
   Future<void> listener() async {
     if (Playback.instance.isPlaying) {
@@ -81,6 +84,16 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
       final track = Playback.instance.tracks[Playback.instance.index];
       if (this.track != track) {
         this.track = track;
+        try {
+          final result = await PaletteGenerator.fromImageProvider(
+              getAlbumArt(track, small: true));
+          setState(() {
+            palette = result.colors;
+          });
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
         if (isShuffling == Playback.instance.isShuffling) {
           if (currentPage !=
               Playback.instance.index
@@ -145,11 +158,15 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
             ),
             height: 56.0,
           ),
-          images: Directory('C:\\Users\\Hitesh\\Downloads\\screenshots\\GIF')
-              .listSync()
-              .reversed
-              .map((e) => FileImage(e as File))
-              .toList(),
+          palette: palette,
+          images: NowPlayingVisuals.instance.preloaded
+                  .map((e) => AssetImage(e))
+                  .toList()
+                  .cast<ImageProvider>() +
+              NowPlayingVisuals.instance.user
+                  .map((e) => FileImage(File(e)))
+                  .toList()
+                  .cast<ImageProvider>(),
           mouseValue: Playback.instance.volume,
           onMouseScrollUp: () {
             Playback.instance.setVolume(
@@ -175,13 +192,14 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                   ),
                   child: Consumer<Lyrics>(
                     builder: (context, lyrics, _) => () {
-                      if (Lyrics.instance.current.length > 1 &&
-                          Configuration.instance.lyricsVisible) {
+                      if (Lyrics.instance.current.length > 2) {
                         return TweenAnimationBuilder<double>(
                           tween: Tween<double>(
                             begin: 0.0,
-                            end:
-                                Lyrics.instance.current.length == 0 ? 0.0 : 1.0,
+                            end: (Lyrics.instance.current.length > 2 &&
+                                    Configuration.instance.lyricsVisible)
+                                ? 1.0
+                                : 0.0,
                           ),
                           duration: Duration(milliseconds: 200),
                           curve: Curves.easeInOut,
@@ -485,6 +503,9 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                   width: MediaQuery.of(context).size.width -
                                       2 * (56.0 + 16.0),
                                   child: ScrollableSlider(
+                                    color: palette?.last,
+                                    secondaryColor: palette?.first,
+                                    inferSliderInactiveTrackColor: false,
                                     min: 0.0,
                                     value: getPlaybackPosition(playback),
                                     max: getPlaybackDuration(playback),
@@ -755,6 +776,9 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                           Container(
                             width: 84.0,
                             child: ScrollableSlider(
+                              color: palette?.last,
+                              secondaryColor: palette?.first,
+                              inferSliderInactiveTrackColor: false,
                               min: 0,
                               max: 100.0,
                               value: playback.volume,
@@ -862,6 +886,7 @@ class Carousel extends StatefulWidget {
   final Widget bottom;
   final List<ImageProvider> images;
   final Duration duration;
+  final Iterable<Color>? palette;
   const Carousel({
     Key? key,
     this.width,
@@ -875,6 +900,7 @@ class Carousel extends StatefulWidget {
     required this.bottom,
     required this.images,
     required this.duration,
+    required this.palette,
   }) : super(key: key);
 
   @override
@@ -884,9 +910,15 @@ class Carousel extends StatefulWidget {
 class CarouselState extends State<Carousel> {
   late List<Widget> widgets = [];
 
-  int _current = 0;
+  int _current =
+      Configuration.instance.modernNowPlayingScreenCarouselIndex.clamp(
+    -1,
+    NowPlayingVisuals.instance.user.length +
+        NowPlayingVisuals.instance.preloaded.length,
+  );
   bool _isFullscreen = false;
   Timer _timer = Timer(const Duration(milliseconds: 400), () {});
+  Color? get color => _current == -1 ? widget.palette?.first : null;
 
   @override
   void initState() {
@@ -908,7 +940,10 @@ class CarouselState extends State<Carousel> {
     if (_timer.isActive) return;
     _timer = Timer(const Duration(milliseconds: 400), () {});
     setState(() {
-      _current = _current + 1 == widget.images.length ? 0 : _current + 1;
+      _current = _current + 1 == widget.images.length ? -1 : _current + 1;
+      Configuration.instance.save(
+        modernNowPlayingScreenCarouselIndex: _current,
+      );
       final current = _current;
       widgets.add(
         TweenAnimationBuilder(
@@ -928,14 +963,19 @@ class CarouselState extends State<Carousel> {
             offset: value as Offset,
             child: Material(
               elevation: 20.0,
-              child: ExtendedImage(
-                image: widget.images[current],
-                isAntiAlias: false,
-                width: widget.width ?? MediaQuery.of(context).size.width,
-                height: widget.height ?? MediaQuery.of(context).size.height,
-                fit: BoxFit.cover,
-                filterQuality: FilterQuality.none,
-              ),
+              color: current == -1 ? widget.palette?.first : null,
+              child: current == -1
+                  ? ProminentColorWidget()
+                  : ExtendedImage(
+                      image:
+                          widget.images[current.clamp(0, widget.images.length)],
+                      isAntiAlias: false,
+                      width: widget.width ?? MediaQuery.of(context).size.width,
+                      height:
+                          widget.height ?? MediaQuery.of(context).size.height,
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.none,
+                    ),
             ),
           ),
         ),
@@ -947,7 +987,10 @@ class CarouselState extends State<Carousel> {
     if (_timer.isActive) return;
     _timer = Timer(const Duration(milliseconds: 400), () {});
     setState(() {
-      _current = _current - 1 == -1 ? widget.images.length - 1 : _current - 1;
+      _current = _current - 1 == -2 ? widget.images.length - 1 : _current - 1;
+      Configuration.instance.save(
+        modernNowPlayingScreenCarouselIndex: _current,
+      );
       final current = _current;
       widgets.add(
         TweenAnimationBuilder(
@@ -966,14 +1009,18 @@ class CarouselState extends State<Carousel> {
             offset: value as Offset,
             child: Material(
               elevation: 20.0,
-              child: ExtendedImage(
-                image: widget.images[current],
-                isAntiAlias: false,
-                width: widget.width ?? MediaQuery.of(context).size.width,
-                height: widget.height ?? MediaQuery.of(context).size.height,
-                fit: BoxFit.cover,
-                filterQuality: FilterQuality.none,
-              ),
+              child: current == -1
+                  ? ProminentColorWidget()
+                  : ExtendedImage(
+                      image:
+                          widget.images[current.clamp(0, widget.images.length)],
+                      isAntiAlias: false,
+                      width: widget.width ?? MediaQuery.of(context).size.width,
+                      height:
+                          widget.height ?? MediaQuery.of(context).size.height,
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.none,
+                    ),
             ),
           ),
         ),
@@ -993,15 +1040,16 @@ class CarouselState extends State<Carousel> {
           duration: const Duration(milliseconds: 400),
           curve: Curves.easeInOut,
           builder: (context, value, child) => Material(
-            elevation: 20.0,
-            child: ExtendedImage(
-              image: widget.images[_current],
-              isAntiAlias: false,
-              width: widget.width ?? MediaQuery.of(context).size.width,
-              height: widget.height ?? MediaQuery.of(context).size.height,
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.none,
-            ),
+            child: _current == -1
+                ? ProminentColorWidget()
+                : ExtendedImage(
+                    image: widget.images[_current],
+                    isAntiAlias: false,
+                    width: widget.width ?? MediaQuery.of(context).size.width,
+                    height: widget.height ?? MediaQuery.of(context).size.height,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none,
+                  ),
           ),
         ),
       );
@@ -1151,6 +1199,64 @@ class CarouselState extends State<Carousel> {
   }
 }
 
+class ProminentColorWidget extends StatefulWidget {
+  ProminentColorWidget({Key? key}) : super(key: key);
+
+  @override
+  State<ProminentColorWidget> createState() => _ProminentColorWidgetState();
+}
+
+class _ProminentColorWidgetState extends State<ProminentColorWidget> {
+  Color? color;
+  Track? track;
+
+  @override
+  void initState() {
+    super.initState();
+    Playback.instance.addListener(listener);
+    listener();
+  }
+
+  @override
+  void dispose() {
+    Playback.instance.removeListener(listener);
+    super.dispose();
+  }
+
+  Future<void> listener() async {
+    final track = Playback.instance.tracks[Playback.instance.index];
+    if (this.track != track) {
+      this.track = track;
+      try {
+        final result = await PaletteGenerator.fromImageProvider(
+            getAlbumArt(track, small: true));
+        setState(() {
+          color = result.colors.first;
+        });
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<Color?>(
+      tween: ColorTween(
+        begin: Colors.transparent,
+        end: color ?? Colors.transparent,
+      ),
+      duration: Duration(milliseconds: 400),
+      builder: (context, color, _) => Container(
+        color: color,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+      ),
+    );
+  }
+}
+
 class CustomTrackShape extends RoundedRectSliderTrackShape {
   @override
   Rect getPreferredRect({
@@ -1180,16 +1286,17 @@ class LyricsStyle extends LyricUI {
   LyricBaseLine lyricBaseLine;
   bool highlight;
 
-  LyricsStyle(
-      {this.defaultSize = 18,
-      this.defaultExtSize = 14,
-      this.otherMainSize = 16,
-      this.bias = 0.5,
-      this.lineGap = 25,
-      this.inlineGap = 25,
-      this.lyricAlign = LyricAlign.CENTER,
-      this.lyricBaseLine = LyricBaseLine.CENTER,
-      this.highlight = true});
+  LyricsStyle({
+    this.defaultSize = 20,
+    this.defaultExtSize = 14,
+    this.otherMainSize = 20,
+    this.bias = 0.5,
+    this.lineGap = 25,
+    this.inlineGap = 25,
+    this.lyricAlign = LyricAlign.CENTER,
+    this.lyricBaseLine = LyricBaseLine.CENTER,
+    this.highlight = true,
+  });
 
   LyricsStyle.clone(LyricsStyle lyricsStyle)
       : this(
@@ -1222,12 +1329,12 @@ class LyricsStyle extends LyricUI {
           Shadow(
             offset: Offset(-2.0, 2.0),
             blurRadius: 3.0,
-            color: Color.fromARGB(255, 0, 0, 0),
+            color: Color.fromARGB(128, 0, 0, 0),
           ),
           Shadow(
             offset: Offset(2.0, 2.0),
             blurRadius: 8.0,
-            color: Color.fromARGB(128, 0, 0, 0),
+            color: Color.fromARGB(164, 0, 0, 0),
           ),
         ],
         overflow: TextOverflow.ellipsis,
@@ -1242,12 +1349,12 @@ class LyricsStyle extends LyricUI {
           Shadow(
             offset: Offset(-2.0, 2.0),
             blurRadius: 3.0,
-            color: Color.fromARGB(255, 0, 0, 0),
+            color: Color.fromARGB(128, 0, 0, 0),
           ),
           Shadow(
             offset: Offset(2.0, 2.0),
             blurRadius: 8.0,
-            color: Color.fromARGB(128, 0, 0, 0),
+            color: Color.fromARGB(164, 0, 0, 0),
           ),
         ],
         overflow: TextOverflow.ellipsis,

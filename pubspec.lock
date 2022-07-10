@@ -101,7 +101,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   charcode:
     dependency: transitive
     description:
@@ -417,7 +417,7 @@ packages:
       name: material_color_utilities
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.4"
+    version: "0.1.5"
   material_floating_search_bar:
     dependency: "direct main"
     description:
@@ -431,7 +431,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.8.0"
   mime:
     dependency: transitive
     description:
@@ -485,15 +485,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  palette_generator:
-    dependency: "direct main"
-    description:
-      path: "packages/palette_generator"
-      ref: main
-      resolved-ref: bdadf3b0b88e18d87f03c04347ed49c81d8d0a7a
-      url: "https://github.com/alexmercerind/flutter_packages"
-    source: git
-    version: "0.3.3"
   path:
     dependency: "direct main"
     description:

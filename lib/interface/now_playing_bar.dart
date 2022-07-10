@@ -18,7 +18,7 @@ import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:libmpv/libmpv.dart';
-import 'package:palette_generator/palette_generator.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
@@ -29,6 +29,7 @@ import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/dimensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NowPlayingBar extends StatefulWidget {
   const NowPlayingBar({Key? key}) : super(key: key);
@@ -585,6 +586,36 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                         //     Icons.speed,
                                         //   ),
                                         // ),
+                                        if (playback.tracks.isNotEmpty &&
+                                            Plugins.isWebMedia(playback
+                                                .tracks[playback.index.clamp(0,
+                                                    playback.tracks.length - 1)]
+                                                .uri))
+                                          IconButton(
+                                            splashRadius: 20.0,
+                                            iconSize: 20.0,
+                                            onPressed: () {
+                                              Clipboard.setData(ClipboardData(
+                                                  text: playback
+                                                      .tracks[playback.index]
+                                                      .uri
+                                                      .toString()));
+                                            },
+                                            icon: Icon(
+                                              Icons.link,
+                                            ),
+                                            color: (palette ??
+                                                        [
+                                                          Theme.of(context)
+                                                              .cardColor
+                                                        ])
+                                                    .first
+                                                    .isDark
+                                                ? Colors.white.withOpacity(0.87)
+                                                : Colors.black87,
+                                            tooltip:
+                                                Language.instance.COPY_LINK,
+                                          ),
                                         Stack(
                                           alignment: Alignment.center,
                                           children: [
@@ -791,6 +822,38 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             ),
                                           ],
                                         ),
+                                        if (playback.tracks.isNotEmpty &&
+                                            Plugins.isWebMedia(playback
+                                                .tracks[playback.index.clamp(0,
+                                                    playback.tracks.length - 1)]
+                                                .uri))
+                                          IconButton(
+                                            splashRadius: 20.0,
+                                            iconSize: 18.0,
+                                            onPressed: () {
+                                              launch(playback
+                                                  .tracks[playback.index.clamp(
+                                                      0,
+                                                      playback.tracks.length -
+                                                          1)]
+                                                  .uri
+                                                  .toString());
+                                            },
+                                            icon: Icon(
+                                              Icons.open_in_new,
+                                            ),
+                                            color: (palette ??
+                                                        [
+                                                          Theme.of(context)
+                                                              .cardColor
+                                                        ])
+                                                    .first
+                                                    .isDark
+                                                ? Colors.white.withOpacity(0.87)
+                                                : Colors.black87,
+                                            tooltip: Language
+                                                .instance.OPEN_IN_BROWSER,
+                                          ),
                                         // IconButton(
                                         //   onPressed: () =>
                                         //       playback.setPitch(1.0),

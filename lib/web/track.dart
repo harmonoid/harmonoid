@@ -5,8 +5,9 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
+import 'dart:collection';
 import 'package:flutter/material.dart';
-// import 'package:palette_generator/palette_generator.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 
@@ -20,12 +21,14 @@ class WebTrackLargeTile extends StatefulWidget {
   final double height;
   final double width;
   final Track track;
+  final HashMap<String, Color>? colorKeys;
 
   const WebTrackLargeTile({
     Key? key,
     required this.track,
     required this.height,
     required this.width,
+    this.colorKeys,
   }) : super(key: key);
 
   @override
@@ -42,18 +45,26 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
           (0.114 * (color?.blue ?? 256.0)) <
       128.0;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  // PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
-  //         widget.track.thumbnails.values.first,
-  //         cache: true))
-  //     .then((palette) {
-  //   setState(() {
-  //     color = palette.colors.first;
-  //   });
-  // });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    if (widget.colorKeys != null) {
+      if (!widget.colorKeys!.containsKey(widget.track.uri.toString())) {
+        PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
+                widget.track.thumbnails.values.first,
+                cache: true))
+            .then((palette) {
+          setState(() {
+            widget.colorKeys![widget.track.uri.toString()] =
+                palette.colors.first;
+            color = palette.colors.first;
+          });
+        });
+      } else {
+        color = widget.colorKeys![widget.track.uri.toString()];
+      }
+    }
+  }
 
   Widget build(BuildContext context) {
     return Card(
@@ -110,10 +121,10 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         const SizedBox(height: 16.0),
                         Text(
                           widget.track.trackName.replaceFirst('(', '\n('),
-                          style: Theme.of(context).textTheme.headline2,
-                          // ?.copyWith(
-                          //       color: isDark ? Colors.white : Colors.black,
-                          //     ),
+                          style:
+                              Theme.of(context).textTheme.headline2?.copyWith(
+                                    color: isDark ? Colors.white : Colors.black,
+                                  ),
                           textAlign: TextAlign.left,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -121,11 +132,13 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         const SizedBox(height: 2.0),
                         Text(
                           '${widget.track.trackArtistNames.take(2).join(', ')}',
-                          style: Theme.of(context).textTheme.headline3,
-                          // ?.copyWith(
-                          //   fontSize: isDesktop ? 12.0 : null,
-                          //   color: isDark ? Colors.white54 : Colors.black54,
-                          // ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline3
+                              ?.copyWith(
+                                fontSize: isDesktop ? 12.0 : null,
+                                color: isDark ? Colors.white54 : Colors.black54,
+                              ),
                           maxLines: 1,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.ellipsis,
@@ -133,11 +146,13 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         const SizedBox(height: 2.0),
                         Text(
                           widget.track.duration.label,
-                          style: Theme.of(context).textTheme.headline3,
-                          // ?.copyWith(
-                          //   fontSize: isDesktop ? 12.0 : null,
-                          //   color: isDark ? Colors.white54 : Colors.black54,
-                          // ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline3
+                              ?.copyWith(
+                                fontSize: isDesktop ? 12.0 : null,
+                                color: isDark ? Colors.white54 : Colors.black54,
+                              ),
                         ),
                         const SizedBox(height: 16.0),
                       ],

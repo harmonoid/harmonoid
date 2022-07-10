@@ -60,7 +60,7 @@ class Configuration extends ConfigurationKeys {
       ),
     );
     if (!await instance.file.exists_()) {
-      await instance.file.create(recursive: true);
+      await instance.file.create_();
       await instance.file.write_(
         convert.JsonEncoder.withIndent('  ').convert(defaultConfiguration),
       );
@@ -243,7 +243,7 @@ class Configuration extends ConfigurationKeys {
     } catch (exception) {
       if (!retry) throw exception;
       if (!await file.exists_()) {
-        await file.create(recursive: true);
+        await file.create_();
       }
       await file.write_(
         const convert.JsonEncoder.withIndent('  ')

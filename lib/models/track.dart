@@ -16,6 +16,7 @@ class Track extends Media {
   String albumArtistName;
   List<String> trackArtistNames;
   String year;
+  String? genre;
 
   DateTime timeAdded;
   Duration? duration;
@@ -34,6 +35,7 @@ class Track extends Media {
       'timeAdded': timeAdded.millisecondsSinceEpoch,
       'duration': duration?.inMilliseconds,
       'bitrate': bitrate,
+      'genre': genre,
     };
   }
 
@@ -71,6 +73,7 @@ class Track extends Media {
         }(),
         duration: Duration(milliseconds: json['duration'] ?? 0),
         bitrate: json['bitrate'],
+        genre: json['genre'],
       );
 
   /// Compatible with [Tagger] from `package:libmpv`.
@@ -112,6 +115,7 @@ class Track extends Media {
         duration: Duration(
             milliseconds: int.tryParse(json['duration'] ?? '0')! ~/ 1000),
         bitrate: int.tryParse(json['bitrate'] ?? '0')! ~/ 1000,
+        genre: json['genre'],
       );
 
   factory Track.fromWebTrack(dynamic json) => Track(
@@ -125,6 +129,7 @@ class Track extends Media {
         timeAdded: DateTime.now(),
         duration: Duration(milliseconds: json['duration'] ?? 0),
         bitrate: null,
+        genre: null,
       );
 
   factory Track.fromWebVideo(dynamic json) => Track(
@@ -138,6 +143,7 @@ class Track extends Media {
         timeAdded: DateTime.now(),
         duration: Duration(milliseconds: json['duration'] ?? 0),
         bitrate: null,
+        genre: null,
       );
 
   Track({
@@ -151,23 +157,45 @@ class Track extends Media {
     required this.timeAdded,
     required this.duration,
     required this.bitrate,
+    required this.genre,
   });
+
+  Track copyWith({
+    Uri? uri,
+    String? trackName,
+    String? albumName,
+    int? trackNumber,
+    String? albumArtistName,
+    List<String>? trackArtistNames,
+    String? year,
+    DateTime? timeAdded,
+    Duration? duration,
+    int? bitrate,
+    String? genre,
+  }) {
+    return Track(
+      uri: uri ?? this.uri,
+      trackName: trackName ?? this.trackName,
+      albumName: albumName ?? this.albumName,
+      trackNumber: trackNumber ?? this.trackNumber,
+      albumArtistName: albumArtistName ?? this.albumArtistName,
+      trackArtistNames: trackArtistNames ?? this.trackArtistNames,
+      year: year ?? this.year,
+      timeAdded: timeAdded ?? this.timeAdded,
+      duration: duration ?? this.duration,
+      bitrate: bitrate ?? this.bitrate,
+      genre: genre ?? this.genre,
+    );
+  }
 
   @override
   bool operator ==(Object media) {
     if (media is Track) {
-      return media.trackName == trackName &&
-          media.trackNumber == media.trackNumber &&
-          media.albumArtistName == albumArtistName &&
-          media.uri.toString() == uri.toString();
+      return media.uri.toString() == uri.toString();
     }
     throw FormatException();
   }
 
   @override
-  int get hashCode =>
-      trackName.hashCode ^
-      trackNumber.hashCode ^
-      albumArtistName.hashCode ^
-      uri.toString().hashCode;
+  int get hashCode => uri.toString().hashCode;
 }
