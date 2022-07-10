@@ -42,7 +42,7 @@ class AppState extends AppStateKeys {
       ),
     );
     if (!await instance.file.exists()) {
-      await instance.file.create(recursive: true);
+      await instance.file.create_();
       await instance.file.write_(
         convert.JsonEncoder.withIndent('  ').convert(defaultAppState),
       );
@@ -108,7 +108,7 @@ class AppState extends AppStateKeys {
     } catch (exception) {
       if (!retry) throw exception;
       if (!await file.exists()) {
-        await file.create(recursive: true);
+        await file.create_();
       }
       await file.write_(
         convert.JsonEncoder.withIndent('  ').convert(defaultAppState),

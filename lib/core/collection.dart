@@ -47,10 +47,10 @@ class Collection extends ChangeNotifier {
     instance.unknownAlbumArt = File(path.join(cacheDirectory.path,
         kAlbumArtsDirectoryName, kUnknownAlbumArtFileName));
     for (Directory directory in collectionDirectories) {
-      if (!await directory.exists_()) await directory.create(recursive: true);
+      if (!await directory.exists_()) await directory.create_();
     }
     if (!await instance.unknownAlbumArt.exists_()) {
-      await instance.unknownAlbumArt.create(recursive: true);
+      await instance.unknownAlbumArt.create_();
       await instance.unknownAlbumArt.writeAsBytes(
           (await rootBundle.load(kUnknownAlbumArtRootBundle))
               .buffer
@@ -416,10 +416,13 @@ class Collection extends ChangeNotifier {
   }) async {
     onProgress?.call(null, 1 << 32, false);
     // For safety.
-    if (!await cacheDirectory.exists_())
-      await cacheDirectory.create(recursive: true);
+    if (!await cacheDirectory.exists_()) {
+      await cacheDirectory.create_();
+    }
     for (Directory directory in collectionDirectories) {
-      if (!await directory.exists_()) await directory.create(recursive: true);
+      if (!await directory.exists_()) {
+        await directory.create_();
+      }
     }
     // Clear existing indexed music.
     _albums = HashSet<Album>();
@@ -990,12 +993,6 @@ const String kUnknownAlbumArtFileName = 'UnknownAlbum.PNG';
 
 const int kHistoryPlaylist = -2;
 const int kLikedSongsPlaylist = -1;
-
-/// Returns extension of a particular file system entity like [File] or [Directory].
-///
-extension CollectionFileSystemEntityExtension on FileSystemEntity {
-  String get extension => this.path.split('.').last.toUpperCase();
-}
 
 extension CollectionTrackExtension on Track {
   String get albumArtFileName =>

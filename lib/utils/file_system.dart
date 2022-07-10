@@ -20,7 +20,9 @@ extension DirectoryExtension on Directory {
   /// * Does not follow links.
   /// * Returns only [List] of [File]s.
   ///
-  Future<List<File>> list_() async {
+  Future<List<File>> list_({
+    bool filterMediaFiles = true,
+  }) async {
     final prefix = Platform.isWindows &&
             !path.startsWith('\\\\') &&
             !path.startsWith(r'\\?\')
@@ -37,21 +39,43 @@ extension DirectoryExtension on Directory {
       (event) async {
         // Not a good way, but whatever for performance.
         // Explicitly restricting to [kSupportedFileTypes] for avoiding long iterations in later operations.
-        if (event is File && kSupportedFileTypes.contains(event.extension)) {
-          // 1 MB or greater in size.
-          if (await event.length() > 1024 * 1024) {
+        if (event is File) {
+          if (filterMediaFiles) {
+            if (kSupportedFileTypes.contains(event.extension)) {
+              if (await event.length() >
+                  1024 * 1024 /* 1 MB or greater in size. */) {
+                files
+                    .add(File(event.path.substring(prefix.isNotEmpty ? 4 : 0)));
+              }
+            }
+          } else {
             files.add(File(event.path.substring(prefix.isNotEmpty ? 4 : 0)));
           }
         }
       },
       onError: (error) {
-        // For debugging. In case any future error is reported.
+        // For debugging. In case any future error is reported by the users.
         debugPrint(error.toString());
       },
       onDone: completer.complete,
     );
     await completer.future;
     return files;
+  }
+
+  /// Safely [create]s a [Directory] recursively.
+  Future<void> create_() async {
+    try {
+      final prefix = Platform.isWindows &&
+              !path.startsWith('\\\\') &&
+              !path.startsWith(r'\\?\')
+          ? r'\\?\'
+          : '';
+      await Directory(prefix + path).create(recursive: true);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 }
 
@@ -123,11 +147,26 @@ extension FileExtension on File {
       debugPrint(stacktrace.toString());
     }
   }
+
+  /// Safely [create]s a [File] recursively.
+  Future<void> create_() async {
+    try {
+      final prefix = Platform.isWindows &&
+              !path.startsWith('\\\\') &&
+              !path.startsWith(r'\\?\')
+          ? r'\\?\'
+          : '';
+      await File(prefix + path).create(recursive: true);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+  }
 }
 
 extension FileSystemEntityExtension on FileSystemEntity {
   /// Safely deletes a [FileSystemEntity].
-  FutureOr<void> delete_() async {
+  Future<void> delete_() async {
     if (await exists_()) {
       final prefix = Platform.isWindows &&
               !path.startsWith('\\\\') &&
@@ -187,4 +226,6 @@ extension FileSystemEntityExtension on FileSystemEntity {
       mode: ProcessStartMode.detached,
     );
   }
+
+  String get extension => basename(path).split('.').last.toUpperCase();
 }
