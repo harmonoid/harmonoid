@@ -9,6 +9,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:math' as math;
 import 'package:animations/animations.dart';
 import 'package:flutter/foundation.dart';
@@ -1991,12 +1992,9 @@ class _StillGIFState extends State<StillGIF> {
       } else if (widget.image is FileImage) {
         data = await (widget.image as FileImage).file.readAsBytes();
       }
-      final codec =
-          await PaintingBinding.instance.instantiateImageCodecFromBuffer(
-        await ImmutableBuffer.fromUint8List(
-          data!.buffer.asUint8List(),
-        ),
-      );
+      final codec = await PaintingBinding.instance
+          // ignore: deprecated_member_use
+          .instantiateImageCodec(data!.buffer.asUint8List());
       FrameInfo frame = await codec.getNextFrame();
       setState(() {
         image = RawImage(
