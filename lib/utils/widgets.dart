@@ -1115,6 +1115,7 @@ class ScrollableSlider extends StatelessWidget {
   final VoidCallback onScrolledUp;
   final VoidCallback onScrolledDown;
   final void Function(double) onChanged;
+  final bool inferSliderInactiveTrackColor;
 
   const ScrollableSlider({
     Key? key,
@@ -1126,6 +1127,7 @@ class ScrollableSlider extends StatelessWidget {
     required this.onScrolledUp,
     required this.onScrolledDown,
     required this.onChanged,
+    this.inferSliderInactiveTrackColor: true,
   }) : super(key: key);
 
   @override
@@ -1155,11 +1157,13 @@ class ScrollableSlider extends StatelessWidget {
               (color ?? Theme.of(context).primaryColor).withOpacity(0.4),
           thumbColor: (color ?? Theme.of(context).primaryColor),
           activeTrackColor: (color ?? Theme.of(context).primaryColor),
-          inactiveTrackColor: (secondaryColor != null
-                  ? secondaryColor?.isDark
-                  : Theme.of(context).brightness == Brightness.dark)!
-              ? Colors.white.withOpacity(0.4)
-              : Colors.black.withOpacity(0.2),
+          inactiveTrackColor: inferSliderInactiveTrackColor
+              ? ((secondaryColor != null
+                      ? secondaryColor?.isDark
+                      : Theme.of(context).brightness == Brightness.dark)!
+                  ? Colors.white.withOpacity(0.4)
+                  : Colors.black.withOpacity(0.2))
+              : Colors.white.withOpacity(0.4),
         ),
         child: Slider(
           value: value,
