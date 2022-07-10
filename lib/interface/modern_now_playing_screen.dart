@@ -78,7 +78,9 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
       }
-      pageController.jumpToPage(Playback.instance.index);
+      if (pageController.hasClients) {
+        pageController.jumpToPage(Playback.instance.index);
+      }
       isShuffling = Playback.instance.isShuffling;
     } else {
       final track = Playback.instance.tracks[Playback.instance.index];
@@ -112,11 +114,13 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
               debugPrint(exception.toString());
               debugPrint(stacktrace.toString());
             }
-            pageController.animateToPage(
-              Playback.instance.index,
-              duration: Duration(milliseconds: 400),
-              curve: Curves.easeInOut,
-            );
+            if (pageController.hasClients) {
+              pageController.animateToPage(
+                Playback.instance.index,
+                duration: Duration(milliseconds: 400),
+                curve: Curves.easeInOut,
+              );
+            }
           }
         } else {
           setState(() {
@@ -135,6 +139,20 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
       duration: Duration(milliseconds: 200),
     );
     Playback.instance.addListener(listener);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!Playback.instance.isPlaying) {
+        final result = await PaletteGenerator.fromImageProvider(getAlbumArt(
+          Playback.instance.tracks[(Playback.instance.index).clamp(
+            0,
+            Playback.instance.tracks.length,
+          )],
+          small: true,
+        ));
+        setState(() {
+          palette = result.colors;
+        });
+      }
+    });
   }
 
   @override
