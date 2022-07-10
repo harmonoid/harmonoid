@@ -16,7 +16,6 @@
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_rsORXSeEDM.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_yFdqibq6DF.webp?raw=true)
 
-
 ## Videos
 
 Enjoy that 🧈 buttery experience.
@@ -77,27 +76,26 @@ Similar instructions can be followed on your favorite distro.
 
 - Powerful music library management based on metadata tags. Indexes music into group of albums & artists.
 - Capable of indexing 20 files/second (on Windows) & saves cache for future app start-ups.
-- Cross-platform (currently aiming Windows, Linux & Android).
+- Very strictly follows [Material Design](https://material.io/) guidelines for UI & animations.
 - mpv based music playback for strong format support (on Linux & Windows) using `dart:ffi`.
 - Taskbar & System Media Transport Controls for Windows.
 - Small installer (< 25 MB) & low RAM usage (< 120 MB) (tested on Windows, still see [limitations](#limitations)).
-- Lyrics for all your music.
-- Very strictly follows [Material Design](https://material.io/) guidelines for UI & animations.
+- Time synced lyrics for all your music.
 - Ability to create persistent or "Now playing" playlists.
 - Context menu integrations & file associations (exclusive to setup version).
-- Discord RPC integration.
+- Discord RPC integration with album art support & "Find"/"Listen" buttons.
 - Portable (if you wish).
-- Does not use [electron.js](https://www.electronjs.org/).
 - D-Bus MPRIS controls for Linux.
 - Gapless playback.
-- Time-synced lyrics.
 - Pitch shift & speed adjustment.
 - Details editor.
 - Re-ordering "Now Playing" list.
+- Cross-platform (currently aiming Windows, Linux & Android).
+- Does not use [electron.js](https://www.electronjs.org/).
+- Music visuals.
 
 ### Upcoming features
 
-- Music visualizations.
 - Equalizer.
 - Mini-window mode.
 - Minimization to system tray.
