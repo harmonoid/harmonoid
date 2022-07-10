@@ -7,7 +7,7 @@
 ///
 import 'dart:collection';
 import 'package:flutter/material.dart';
-import 'package:palette_generator/palette_generator.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
 

@@ -19,7 +19,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:palette_generator/palette_generator.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';

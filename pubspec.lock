@@ -485,15 +485,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  palette_generator:
-    dependency: "direct main"
-    description:
-      path: "packages/palette_generator"
-      ref: bdadf3b0b88e18d87f03c04347ed49c81d8d0a7a
-      resolved-ref: bdadf3b0b88e18d87f03c04347ed49c81d8d0a7a
-      url: "https://github.com/alexmercerind/flutter_packages"
-    source: git
-    version: "0.3.3"
   path:
     dependency: "direct main"
     description:

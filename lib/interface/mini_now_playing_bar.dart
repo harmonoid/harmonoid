@@ -14,7 +14,7 @@ import 'package:harmonoid/interface/collection/track.dart';
 import 'package:provider/provider.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:palette_generator/palette_generator.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/playback.dart';

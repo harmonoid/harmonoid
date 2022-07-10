@@ -18,7 +18,7 @@ import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:libmpv/libmpv.dart';
-import 'package:palette_generator/palette_generator.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/playback.dart';

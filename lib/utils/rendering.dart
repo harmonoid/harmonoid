@@ -15,7 +15,7 @@ import 'package:animations/animations.dart';
 import 'package:libmpv/libmpv.dart' hide Media;
 import 'package:share_plus/share_plus.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:palette_generator/palette_generator.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';

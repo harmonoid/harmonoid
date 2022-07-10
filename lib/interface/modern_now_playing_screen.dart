@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:palette_generator/palette_generator.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
