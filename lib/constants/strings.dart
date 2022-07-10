@@ -217,6 +217,7 @@ class Strings {
   late String USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS;
   late String VIDEO_SINGLE;
   late String VISUALS;
+  late String VISUALS_TITLE;
   late String WARNING;
   late String WEB;
   late String WEB_INTERNET_ERROR;

@@ -421,6 +421,7 @@ class Language extends Strings with ChangeNotifier {
     this.USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS = asset['USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS']!;
     this.VIDEO_SINGLE = asset['VIDEO_SINGLE']!;
     this.VISUALS = asset['VISUALS']!;
+    this.VISUALS_TITLE = asset['VISUALS_TITLE']!;
     this.WARNING = asset['WARNING']!;
     this.WEB = asset['WEB']!;
     this.WEB_INTERNET_ERROR = asset['WEB_INTERNET_ERROR']!;

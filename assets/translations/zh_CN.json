@@ -215,6 +215,7 @@
   "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use; // / \\\\ or \\ to separate multiple artists.",
   "VIDEO_SINGLE": "视频",
   "VISUALS": "Add or remove visuals visible during music playback",
+  "VISUALS_TITLE": "Visuals",
   "WARNING": "警告",
   "WEB": "YT 音乐",
   "WEB_INTERNET_ERROR": "当前离线中，播放一些本地音乐吧。",
