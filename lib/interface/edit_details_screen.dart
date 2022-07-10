@@ -194,8 +194,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                         '*.jpg;*.jpeg;*.png;*.webp;*.bmp',
                                                   }
                                                   ..defaultFilterIndex = 0
-                                                  ..defaultExtension = 'jpg'
-                                                  ..title = 'Select an image';
+                                                  ..defaultExtension = 'jpg';
                                             file = await picker
                                                 .getFile()!
                                                 .readAsBytes();
@@ -207,7 +206,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                   label: 'images',
                                                   extensions:
                                                       '*.jpg;*.jpeg;*.png;*.webp;*.bmp'
-                                                          .split(',')
+                                                          .split(';')
                                                           .map((e) =>
                                                               e.replaceAll(
                                                                   '*.', ''))

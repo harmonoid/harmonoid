@@ -142,6 +142,26 @@ class PlaylistTab extends StatelessWidget {
                                               context,
                                               Language.instance
                                                   .PLAYLISTS_TEXT_FIELD_HINT,
+                                              trailingIcon: Icon(
+                                                Icons.add,
+                                                size: 20.0,
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color,
+                                              ),
+                                              trailingIconOnPressed: () async {
+                                                if (_controller
+                                                    .text.isNotEmpty) {
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                  await Collection.instance
+                                                      .playlistAdd(
+                                                          _controller.text);
+                                                  _controller.clear();
+                                                  Navigator.of(context)
+                                                      .maybePop();
+                                                }
+                                              },
                                             ),
                                           ),
                                         ),

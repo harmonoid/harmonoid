@@ -7,9 +7,11 @@
 ///
 
 import 'dart:io';
-import 'dart:math' as math;
+import 'dart:ui';
 import 'dart:math';
+import 'dart:math' as math;
 import 'package:animations/animations.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart'
     hide ReorderableDragStartListener, Intent;
@@ -1785,6 +1787,18 @@ class CollectionMoreButton extends StatelessWidget {
                               decoration: inputDecoration(
                                 context,
                                 Language.instance.PLAY_URL_SUBTITLE,
+                                trailingIcon: Icon(
+                                  Icons.add,
+                                  size: 20.0,
+                                  color: Theme.of(context).iconTheme.color,
+                                ),
+                                trailingIconOnPressed: () async {
+                                  if (controller.text.isNotEmpty) {
+                                    FocusScope.of(context).unfocus();
+                                    await Intent.instance
+                                        .playUri(Uri.parse(controller.text));
+                                  }
+                                },
                               ),
                             ),
                           ),
@@ -1900,4 +1914,107 @@ class _ContextMenuAreaState extends State<ContextMenuArea> {
 
 extension on Color {
   bool get isDark => (0.299 * red) + (0.587 * green) + (0.114 * blue) < 128.0;
+}
+
+class StillGIF extends StatefulWidget {
+  final ImageProvider image;
+  final double width;
+  final double height;
+
+  StillGIF({
+    Key? key,
+    required this.image,
+    required this.width,
+    required this.height,
+  }) : super(key: key);
+
+  factory StillGIF.asset(
+    String image, {
+    Key? key,
+    required double width,
+    required double height,
+  }) =>
+      StillGIF(
+        key: key,
+        image: AssetImage(image),
+        width: width,
+        height: height,
+      );
+
+  factory StillGIF.file(
+    String image, {
+    Key? key,
+    required double width,
+    required double height,
+  }) =>
+      StillGIF(
+        key: key,
+        image: FileImage(File(image)),
+        width: width,
+        height: height,
+      );
+
+  factory StillGIF.network(
+    String image, {
+    Key? key,
+    required double width,
+    required double height,
+  }) =>
+      StillGIF(
+        key: key,
+        image: NetworkImage(image),
+        width: width,
+        height: height,
+      );
+
+  @override
+  State<StillGIF> createState() => _StillGIFState();
+}
+
+class _StillGIFState extends State<StillGIF> {
+  RawImage? image;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      Uint8List? data;
+      if (widget.image is NetworkImage) {
+        final resolved = Uri.base.resolve((widget.image as NetworkImage).url);
+        final request = await HttpClient().getUrl(resolved);
+        final HttpClientResponse response = await request.close();
+        data = await consolidateHttpClientResponseBytes(response);
+      } else if (widget.image is AssetImage) {
+        final key =
+            await (widget.image as AssetImage).obtainKey(ImageConfiguration());
+        data = (await key.bundle.load(key.name)).buffer.asUint8List();
+      } else if (widget.image is FileImage) {
+        data = await (widget.image as FileImage).file.readAsBytes();
+      }
+      final codec =
+          await PaintingBinding.instance.instantiateImageCodecFromBuffer(
+        await ImmutableBuffer.fromUint8List(
+          data!.buffer.asUint8List(),
+        ),
+      );
+      FrameInfo frame = await codec.getNextFrame();
+      setState(() {
+        image = RawImage(
+          image: frame.image,
+          height: widget.height,
+          width: widget.width,
+          fit: BoxFit.cover,
+        );
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return image ??
+        SizedBox(
+          width: widget.width,
+          height: widget.height,
+        );
+  }
 }
