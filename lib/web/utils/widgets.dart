@@ -280,20 +280,70 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
           debugPrint(exception.toString());
           debugPrint(stacktrace.toString());
         }
-        if (playlist != null) {
+        if (playlist!.name.isNotEmpty && playlist!.tracks.isNotEmpty) {
           setState(() {
             fetched = true;
           });
           final result = await Collection.instance.playlistAdd(playlist!.name);
-          for (final track in playlist!.tracks) {
-            await Collection.instance.playlistAddTrack(
-              result,
-              media.Track.fromWebTrack(track.toJson()),
-            );
-          }
+          await Collection.instance.playlistAddTracks(
+            result,
+            playlist!.tracks
+                .map(
+                  (track) => media.Track.fromWebTrack(
+                    track.toJson(),
+                  ),
+                )
+                .toList(),
+          );
           setState(() {
             saved = true;
           });
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    child: Text(
+                      Language.instance.ERROR,
+                      style: Theme.of(context).textTheme.headline1,
+                      textAlign: TextAlign.start,
+                    ),
+                    padding: EdgeInsets.only(
+                      bottom: 16.0,
+                      left: 4.0,
+                    ),
+                  ),
+                  Padding(
+                    child: Text(
+                      Language.instance.INTERNET_ERROR,
+                      style: Theme.of(context).textTheme.headline3,
+                      textAlign: TextAlign.start,
+                    ),
+                    padding: EdgeInsets.only(
+                      bottom: 16.0,
+                      left: 4.0,
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                MaterialButton(
+                  child: Text(
+                    Language.instance.OK,
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  onPressed: Navigator.of(context).maybePop,
+                ),
+              ],
+            ),
+          );
         }
       } on ArgumentError catch (exception, stacktrace) {
         debugPrint(exception.toString());

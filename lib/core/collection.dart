@@ -673,7 +673,8 @@ class Collection extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Creates a new playlist in the collection.
+  /// Creates a new [Playlist] in the collection with a given [name].
+  /// Returns it's reference after creation.
   ///
   Future<Playlist> playlistAdd(String name) async {
     final Playlist playlist;
@@ -694,7 +695,7 @@ class Collection extends ChangeNotifier {
     return playlist;
   }
 
-  /// Creates a new playlist in the collection.
+  /// Creates a new [Playlist] in the collection.
   ///
   Future<Playlist> playlistCreate(Playlist playlist) async {
     playlists.add(playlist);
@@ -716,7 +717,7 @@ class Collection extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Adds a track to a playlist.
+  /// Adds a [Track] to a [Playlist].
   ///
   Future<void> playlistAddTrack(Playlist playlist, Track track) async {
     for (int index = 0; index < playlists.length; index++) {
@@ -727,6 +728,25 @@ class Collection extends ChangeNotifier {
           playlists[index].tracks.addAll(tracks.take(100));
         } else {
           playlists[index].tracks.insert(0, track);
+        }
+        break;
+      }
+    }
+    await playlistsSaveToCache();
+    notifyListeners();
+  }
+
+  /// Adds a [List] of [Track]s passed as [tracks], to the [playlist].
+  ///
+  Future<void> playlistAddTracks(Playlist playlist, List<Track> tracks) async {
+    for (int index = 0; index < playlists.length; index++) {
+      if (playlists[index].id == playlist.id) {
+        if (playlist.id == kHistoryPlaylist) {
+          final res = [...tracks, ...playlists[index].tracks];
+          playlists[index].tracks.clear();
+          playlists[index].tracks.addAll(res.take(100));
+        } else {
+          playlists[index].tracks.insertAll(0, tracks);
         }
         break;
       }
