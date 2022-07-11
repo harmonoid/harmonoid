@@ -795,43 +795,45 @@ class Playback extends ChangeNotifier {
 
   /// Update Discord RPC state.
   void _updateDiscordRPC() {
-    try {
-      final track = tracks[index];
-      if (!isCompleted) {
-        discord?.start(autoRegister: true);
-        discord?.updatePresence(
-          DiscordPresence(
-            state: '${track.albumArtistName}',
-            details: '${track.trackName}',
-            largeImageKey: _discordLastLargeImageKey,
-            largeImageText:
-                Plugins.isWebMedia(track.uri) ? null : '${track.albumName}',
-            smallImageKey: isPlaying ? 'play' : 'pause',
-            smallImageText: isPlaying ? 'Playing' : 'Paused',
-            button1Label: Plugins.isWebMedia(track.uri) ? 'Listen' : 'Find',
-            button1Url: Plugins.isWebMedia(track.uri)
-                ? track.uri.toString()
-                : 'https://www.google.com/search?q=${Uri.encodeComponent([
-                    track.trackName,
-                    (track.albumArtistName.isNotEmpty &&
-                            track.albumArtistName != kUnknownArtist
-                        ? track.albumArtistName
-                        : track.trackArtistNames.take(1).join('')),
-                  ].join(' '))}',
-            endTimeStamp: isPlaying
-                ? DateTime.now().millisecondsSinceEpoch +
-                    duration.inMilliseconds -
-                    position.inMilliseconds
-                : null,
-          ),
-        );
+    if (Configuration.instance.discordRPC) {
+      try {
+        final track = tracks[index];
+        if (!isCompleted) {
+          discord?.start(autoRegister: true);
+          discord?.updatePresence(
+            DiscordPresence(
+              state: '${track.albumArtistName}',
+              details: '${track.trackName}',
+              largeImageKey: _discordLastLargeImageKey,
+              largeImageText:
+                  Plugins.isWebMedia(track.uri) ? null : '${track.albumName}',
+              smallImageKey: isPlaying ? 'play' : 'pause',
+              smallImageText: isPlaying ? 'Playing' : 'Paused',
+              button1Label: Plugins.isWebMedia(track.uri) ? 'Listen' : 'Find',
+              button1Url: Plugins.isWebMedia(track.uri)
+                  ? track.uri.toString()
+                  : 'https://www.google.com/search?q=${Uri.encodeComponent([
+                      track.trackName,
+                      (track.albumArtistName.isNotEmpty &&
+                              track.albumArtistName != kUnknownArtist
+                          ? track.albumArtistName
+                          : track.trackArtistNames.take(1).join('')),
+                    ].join(' '))}',
+              endTimeStamp: isPlaying
+                  ? DateTime.now().millisecondsSinceEpoch +
+                      duration.inMilliseconds -
+                      position.inMilliseconds
+                  : null,
+            ),
+          );
+        }
+        if (isCompleted) {
+          discord?.clearPresence();
+        }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
       }
-      if (isCompleted) {
-        discord?.clearPresence();
-      }
-    } catch (exception, stacktrace) {
-      debugPrint(exception.toString());
-      debugPrint(stacktrace.toString());
     }
   }
 
