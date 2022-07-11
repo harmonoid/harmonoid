@@ -1490,6 +1490,7 @@ class LyricsStyle extends LyricUI {
   TextStyle getOtherExtTextStyle() => TextStyle(
         color: Colors.grey[300],
         fontSize: defaultExtSize,
+        fontFamily: Platform.isLinux ? 'Inter' : null,
       );
 
   @override
@@ -1509,6 +1510,7 @@ class LyricsStyle extends LyricUI {
           ),
         ],
         overflow: TextOverflow.ellipsis,
+        fontFamily: Platform.isLinux ? 'Inter' : null,
       );
 
   @override
@@ -1529,6 +1531,7 @@ class LyricsStyle extends LyricUI {
           ),
         ],
         overflow: TextOverflow.ellipsis,
+        fontFamily: Platform.isLinux ? 'Inter' : null,
       );
 
   @override
