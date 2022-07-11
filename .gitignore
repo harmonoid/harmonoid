@@ -41,7 +41,3 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
-
-# Compiled Windows bundle
-
-*.msix
