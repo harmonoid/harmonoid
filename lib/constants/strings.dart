@@ -77,6 +77,9 @@ class Strings {
   late String GENRE;
   late String GO_TO_SETTINGS;
   late String HIDE_LYRICS;
+  late String IMPORT_PLAYLIST_FROM_WEB;
+  late String IMPORT_PLAYLIST_SUBTITLE;
+  late String IMPORT_PLAYLIST_TITLE;
   late String INDEXING_ALREADY_GOING_ON_SUBTITLE;
   late String INDEXING_ALREADY_GOING_ON_TITLE;
   late String INTERNET_ERROR;
@@ -120,6 +123,7 @@ class Strings {
   late String PLAYLISTS_TEXT_FIELD_LABEL;
   late String PLAYLIST_ADD_DIALOG_BODY;
   late String PLAYLIST_ADD_DIALOG_TITLE;
+  late String PLAYLIST_NAME;
   late String PLAYLIST_SINGLE;
   late String PLAYLIST_TRACKS_SUBHEADER;
   late String PLAY_INTERNET;
