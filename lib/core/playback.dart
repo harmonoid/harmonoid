@@ -11,7 +11,6 @@ import 'dart:math';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:libmpv/libmpv.dart';
 import 'package:ytm_client/ytm_client.dart' hide Media, Track, Playlist;
 import 'package:assets_audio_player/assets_audio_player.dart'
@@ -31,7 +30,9 @@ import 'package:harmonoid/core/app_state.dart';
 import 'package:harmonoid/models/media.dart' hide Media, Playlist;
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/lyrics.dart';
+import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/constants/language.dart';
 
 /// Playback
@@ -620,6 +621,14 @@ class Playback extends ChangeNotifier {
   void _update() async {
     try {
       final track = tracks[index];
+      NowPlayingColorPalette.instance.update(track);
+      Lyrics.instance.update([
+        track.trackName,
+        (track.albumArtistName.isNotEmpty &&
+                track.albumArtistName != kUnknownArtist)
+            ? track.albumArtistName
+            : track.trackArtistNames.take(1).join(''),
+      ].join(' '));
       try {
         // Add to History in asynchronous suspension.
         () async {
@@ -775,13 +784,10 @@ class Playback extends ChangeNotifier {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
       }
-      Lyrics.instance.update(track.trackName +
-          ' ' +
-          (track.albumArtistName.isNotEmpty &&
-                  track.albumArtistName != kUnknownArtist
-              ? track.albumArtistName
-              : track.trackArtistNames.take(1).join('')));
-    } catch (_) {}
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 
   /// Update Discord RPC state.

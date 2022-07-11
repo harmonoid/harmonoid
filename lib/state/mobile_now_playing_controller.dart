@@ -24,16 +24,16 @@ class MobileNowPlayingController {
   }
 
   void show() {
-    barKey.currentState!.show();
-    fabKey.currentState!.show();
+    barKey.currentState?.show();
+    fabKey.currentState?.show();
   }
 
   void hide() {
-    barKey.currentState!.hide();
-    fabKey.currentState!.hide();
+    barKey.currentState?.hide();
+    fabKey.currentState?.hide();
   }
 
   void maximize() {
-    barKey.currentState!.maximize();
+    barKey.currentState?.maximize();
   }
 }

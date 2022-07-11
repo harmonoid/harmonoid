@@ -6,6 +6,7 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/state/lyrics.dart';
+import 'package:harmonoid/state/now_playing_color_palette.dart';
 
 class Harmonoid extends StatelessWidget {
   @override
@@ -26,8 +27,15 @@ class Harmonoid extends StatelessWidget {
             home: Home(),
           ),
           providers: [
-            ChangeNotifierProvider(create: (_) => Playback.instance),
-            ChangeNotifierProvider(create: (_) => Lyrics.instance),
+            ChangeNotifierProvider(
+              create: (_) => Playback.instance,
+            ),
+            ChangeNotifierProvider(
+              create: (_) => Lyrics.instance,
+            ),
+            ChangeNotifierProvider(
+              create: (_) => NowPlayingColorPalette.instance,
+            ),
           ],
         ),
       ),

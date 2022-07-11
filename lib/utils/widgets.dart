@@ -881,9 +881,14 @@ class DesktopTitleBar extends StatelessWidget {
                       );
                     } else {
                       await Playback.instance.saveAppState();
-                      if (Platform.isWindows) {
-                        smtc.clear();
-                        smtc.dispose();
+                      try {
+                        if (Platform.isWindows) {
+                          smtc.clear();
+                          smtc.dispose();
+                        }
+                      } catch (exception, stacktrace) {
+                        debugPrint(exception.toString());
+                        debugPrint(stacktrace.toString());
                       }
                       appWindow.close();
                     }
