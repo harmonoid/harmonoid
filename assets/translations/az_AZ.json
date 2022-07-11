@@ -66,7 +66,11 @@
   "EDIT_DETAILS": "Edit details",
   "ENABLE_125_SCALING": "125% ölçəkləməni aktivləşdir",
   "ENABLE_ACRYLIC_BLUR": "Windows Acrylic Blur'u aktivləşdir",
+<<<<<<< HEAD
   "ERROR": "Error",
+=======
+  "ENABLE_DISCORD_RPC": "Enable Discord RPC integration",
+>>>>>>> 06ab41c4b964e6f365f707da6e4ad9ab7d819809
   "EXIT_FULLSCREEN": "Exit fullscreen",
   "EXIT_NOW_PLAYING": "Çıx, hazırda oynatılır",
   "EXIT_SUBTITLE": "Harmonoid'dən çıxmaq istədiyinə əminsənmi?",
@@ -219,7 +223,7 @@
   "UNMUTE": "SƏSSİZDƏN ÇIXAR",
   "UPDATE_AVAILABLE": "Update available: VERSION",
   "USE_MODERN_NOW_PLAYING_SCREEN": "Use modern \"Now Playing Screen\" with dynamic backgrounds & time-synced lyrics",
-  "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use; // / \\\\ or \\ to separate multiple artists.",
+  "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use ; // / \\\\ or \\ to separate multiple artists.",
   "VIDEO_SINGLE": "Video",
   "VISUALS": "Add or remove visuals visible during music playback",
   "VISUALS_TITLE": "Visuals",

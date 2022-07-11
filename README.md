@@ -2,12 +2,12 @@
 
 <h1 align="left">Harmonoid</h1>
 
-**🎵 Elegant music app to play & manage music library. YouTube Music client.**
+**🎵 Elegant music app to play & manage music library. Time-synced lyrics, playlists & visuals. YouTube Music.**
 
-- [Download](#download) [Windows, Linux, Android]
+- [Download](#download) [Windows, Linux]
 - [Discord](https://discord.gg/2Rc3edFWd8)
 
-[work-in-progress] [[report-bugs-or-request-features](https://github.com/harmonoid/harmonoid/issues)] [[github-sponsors](https://github.com/sponsors/alexmercerind)] [[patreon](https://www.patreon.com/harmonoid)] [[primary-guide](#guide)] [[youtube-music-guide](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support)] [screenshots-show-features-from-next-release]
+[work-in-progress] [[github-sponsors](https://github.com/sponsors/alexmercerind)] [[patreon](https://www.patreon.com/harmonoid)] [[primary-guide](#guide)] [[youtube-music-guide](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support)] [screenshots-show-features-from-next-release]
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_W8Oi1qPZ0O.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_MOnywQpgPB.webp?raw=true)
@@ -53,9 +53,9 @@ On Windows, [setup](https://github.com/harmonoid/harmonoid/releases/latest/downl
 
 Any modern Linux distribution.
 
-- [.deb](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.deb)
-- [.tar.gz](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.tar.gz)
-- [.rpm](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.rpm) [untested]
+- [Ubuntu / Debian (.deb)](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.deb)
+- [Raw Executable (.tar.gz)](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.tar.gz)
+- [Fedora / Red Hat Linux (.rpm)](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-linux-x86_64.rpm) [untested]
 
 On Debian or Ubuntu based distros, you need to install `mpv` & `libmpv-dev` to be able to install & run the app.
 
@@ -68,11 +68,11 @@ Similar instructions can be followed on your favorite distro.
 
 ### <img src='https://user-images.githubusercontent.com/28951144/159583302-322a01bd-c3bd-4b74-9834-99764f678485.png' height='24'></img>&nbsp; Android
 
-- [.apk](https://github.com/harmonoid/harmonoid/releases/latest/download/harmonoid-android.apk)
+Coming Soon!
 
 ## Features
 
-### Current features
+### Current Features
 
 - Powerful music library management based on metadata tags. Indexes music into group of albums & artists.
 - Capable of indexing 20 files/second (on Windows) & saves cache for future app start-ups.
@@ -94,7 +94,7 @@ Similar instructions can be followed on your favorite distro.
 - Does not use [electron.js](https://www.electronjs.org/).
 - Music visuals.
 
-### Upcoming features
+### Upcoming Features
 
 - Equalizer.
 - Mini-window mode.

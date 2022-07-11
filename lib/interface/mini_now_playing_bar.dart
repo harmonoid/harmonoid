@@ -769,12 +769,13 @@ class MiniNowPlayingBarRefreshCollectionButtonState
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Consumer<NowPlayingColorPalette>(
-            builder: (context, color, _) => TweenAnimationBuilder(
+          ValueListenableBuilder<Iterable<Color>?>(
+            valueListenable: MobileNowPlayingController.instance.palette,
+            builder: (context, value, _) => TweenAnimationBuilder(
               duration: Duration(milliseconds: 400),
               tween: ColorTween(
                 begin: Theme.of(context).primaryColor,
-                end: color.palette?.first ?? Theme.of(context).primaryColor,
+                end: value?.first ?? Theme.of(context).primaryColor,
               ),
               builder: (context, color, _) => Container(
                 child: RefreshCollectionButton(

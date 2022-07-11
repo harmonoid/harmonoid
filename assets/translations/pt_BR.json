@@ -66,7 +66,11 @@
   "EDIT_DETAILS": "Editar detalhes",
   "ENABLE_125_SCALING": "Ativar escala de 125%.",
   "ENABLE_ACRYLIC_BLUR": "Ativar desfoque acrílico do Windows.",
+<<<<<<< HEAD
   "ERROR": "Error",
+=======
+  "ENABLE_DISCORD_RPC": "Enable Discord RPC integration",
+>>>>>>> 06ab41c4b964e6f365f707da6e4ad9ab7d819809
   "EXIT_FULLSCREEN": "Sair da tela cheia",
   "EXIT_NOW_PLAYING": "Sair agora da reprodução",
   "EXIT_SUBTITLE": "Você quer nos deixar?",
@@ -219,7 +223,7 @@
   "UNMUTE": "Desativar Mudo",
   "UPDATE_AVAILABLE": "Atualização disponível: VERSION",
   "USE_MODERN_NOW_PLAYING_SCREEN": "Use a moderna \"Tela Reproduzindo\" com planos de fundo dinâmicos e letras sincronizadas no tempo",
-  "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use; // / \\\\ or \\ to separate multiple artists.",
+  "USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS": "Use ; // / \\\\ or \\ to separate multiple artists.",
   "VIDEO_SINGLE": "Video",
   "VISUALS": "Add or remove visuals visible during music playback",
   "VISUALS_TITLE": "Visuals",

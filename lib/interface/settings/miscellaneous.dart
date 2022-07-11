@@ -1,15 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
 
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class MiscellaneousSetting extends StatefulWidget {
   MiscellaneousSetting({Key? key}) : super(key: key);
@@ -35,7 +36,7 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                   dynamicNowPlayingBarColoring:
                       !Configuration.instance.dynamicNowPlayingBarColoring,
                 )
-                .then((value) => setState(() {
+                .then((_) => setState(() {
                       if (!Configuration
                           .instance.dynamicNowPlayingBarColoring) {
                         MobileNowPlayingController.instance.palette.value =
@@ -53,7 +54,7 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                     notificationLyrics:
                         !Configuration.instance.notificationLyrics,
                   )
-                  .then((value) => setState(() {})),
+                  .then((_) => setState(() {})),
               value: Configuration.instance.notificationLyrics,
             ),
           if (Platform.isWindows)
@@ -65,7 +66,7 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                   .save(
                     taskbarIndicator: !Configuration.instance.taskbarIndicator,
                   )
-                  .then((value) => setState(() {})),
+                  .then((_) => setState(() {})),
               value: Configuration.instance.taskbarIndicator,
             ),
           CorrectedSwitchListTile(
@@ -77,7 +78,7 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                 .save(
                   seamlessPlayback: !Configuration.instance.seamlessPlayback,
                 )
-                .then((value) => setState(() {})),
+                .then((_) => setState(() {})),
             value: Configuration.instance.seamlessPlayback,
           ),
           CorrectedSwitchListTile(
@@ -88,7 +89,7 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                   jumpToNowPlayingScreenOnPlay:
                       !Configuration.instance.jumpToNowPlayingScreenOnPlay,
                 )
-                .then((value) => setState(() {})),
+                .then((_) => setState(() {})),
             value: Configuration.instance.jumpToNowPlayingScreenOnPlay,
           ),
           CorrectedSwitchListTile(
@@ -98,7 +99,7 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                 .save(
                   backgroundArtwork: !Configuration.instance.backgroundArtwork,
                 )
-                .then((value) =>
+                .then((_) =>
                     Provider.of<Visuals>(context, listen: false).update()),
             value: Configuration.instance.backgroundArtwork,
           ),
@@ -113,6 +114,22 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                   )
                   .then((value) => setState(() {})),
               value: Configuration.instance.modernNowPlayingScreen,
+            ),
+          if (isDesktop)
+            CorrectedSwitchListTile(
+              title: Language.instance.ENABLE_DISCORD_RPC,
+              subtitle: Language.instance.ENABLE_DISCORD_RPC,
+              onChanged: (_) => Configuration.instance
+                  .save(
+                discordRPC: !Configuration.instance.discordRPC,
+              )
+                  .then((_) {
+                setState(() {});
+                if (!Configuration.instance.discordRPC) {
+                  Playback.instance.discord?.clearPresence();
+                }
+              }),
+              value: Configuration.instance.discordRPC,
             ),
         ],
       ),

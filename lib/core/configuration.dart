@@ -62,7 +62,7 @@ class Configuration extends ConfigurationKeys {
     if (!await instance.file.exists_()) {
       await instance.file.create_();
       await instance.file.write_(
-        convert.JsonEncoder.withIndent('  ').convert(defaultConfiguration),
+        convert.JsonEncoder.withIndent('  ').convert(_defaultConfiguration),
       );
     }
     await instance.read();
@@ -98,6 +98,7 @@ class Configuration extends ConfigurationKeys {
     bool? modernNowPlayingScreen,
     int? modernNowPlayingScreenCarouselIndex,
     bool? lyricsVisible,
+    bool? discordRPC,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -163,6 +164,9 @@ class Configuration extends ConfigurationKeys {
     if (lyricsVisible != null) {
       this.lyricsVisible = lyricsVisible;
     }
+    if (discordRPC != null) {
+      this.discordRPC = discordRPC;
+    }
     await file.write_(
       const convert.JsonEncoder.withIndent('  ').convert(
         {
@@ -192,6 +196,7 @@ class Configuration extends ConfigurationKeys {
           'modernNowPlayingScreenCarouselIndex':
               this.modernNowPlayingScreenCarouselIndex,
           'lyricsVisible': this.lyricsVisible,
+          'discordRPC': this.discordRPC,
         },
       ),
     );
@@ -206,10 +211,10 @@ class Configuration extends ConfigurationKeys {
       Map<String, dynamic> current =
           convert.jsonDecode(await file.readAsString());
       // Emblace default values for the keys that not found. Possibly due to app update.
-      defaultConfiguration.keys.forEach(
+      _defaultConfiguration.keys.forEach(
         (String key) {
           if (!current.containsKey(key)) {
-            current[key] = defaultConfiguration[key];
+            current[key] = _defaultConfiguration[key];
           }
         },
       );
@@ -240,6 +245,7 @@ class Configuration extends ConfigurationKeys {
       modernNowPlayingScreenCarouselIndex =
           current['modernNowPlayingScreenCarouselIndex'];
       lyricsVisible = current['lyricsVisible'];
+      discordRPC = current['discordRPC'];
     } catch (exception) {
       if (!retry) throw exception;
       if (!await file.exists_()) {
@@ -247,7 +253,7 @@ class Configuration extends ConfigurationKeys {
       }
       await file.write_(
         const convert.JsonEncoder.withIndent('  ')
-            .convert(defaultConfiguration),
+            .convert(_defaultConfiguration),
       );
       read(retry: false);
     }
@@ -277,9 +283,10 @@ abstract class ConfigurationKeys {
   late bool modernNowPlayingScreen;
   late int modernNowPlayingScreenCarouselIndex;
   late bool lyricsVisible;
+  late bool discordRPC;
 }
 
-final Map<String, dynamic> defaultConfiguration = {
+final Map<String, dynamic> _defaultConfiguration = {
   'collectionDirectories': <String>[
     {
       'windows': () => path.join(Platform.environment['USERPROFILE']!, 'Music'),
@@ -308,4 +315,5 @@ final Map<String, dynamic> defaultConfiguration = {
   'modernNowPlayingScreen': isDesktop,
   'modernNowPlayingScreenCarouselIndex': 0,
   'lyricsVisible': true,
+  'discordRPC': true,
 };

@@ -68,7 +68,11 @@ class Strings {
   late String EDIT_DETAILS;
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;
+<<<<<<< HEAD
   late String ERROR;
+=======
+  late String ENABLE_DISCORD_RPC;
+>>>>>>> 06ab41c4b964e6f365f707da6e4ad9ab7d819809
   late String EXIT_FULLSCREEN;
   late String EXIT_NOW_PLAYING;
   late String EXIT_SUBTITLE;
