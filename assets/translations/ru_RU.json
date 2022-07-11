@@ -65,6 +65,7 @@
   "EDIT_DETAILS": "Edit details",
   "ENABLE_125_SCALING": "Включить масштаб 125%.",
   "ENABLE_ACRYLIC_BLUR": "Включить «акриловое размытие» (Windows).",
+  "ENABLE_DISCORD_RPC": "Enable Discord RPC integration",
   "EXIT_FULLSCREEN": "Exit fullscreen",
   "EXIT_NOW_PLAYING": "Закрыть очередь",
   "EXIT_SUBTITLE": "Хотите выйти?",

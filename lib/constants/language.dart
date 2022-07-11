@@ -271,6 +271,7 @@ class Language extends Strings with ChangeNotifier {
     this.EDIT_DETAILS = asset['EDIT_DETAILS']!;
     this.ENABLE_125_SCALING = asset['ENABLE_125_SCALING']!;
     this.ENABLE_ACRYLIC_BLUR = asset['ENABLE_ACRYLIC_BLUR']!;
+    this.ENABLE_DISCORD_RPC = asset['ENABLE_DISCORD_RPC']!;
     this.EXIT_FULLSCREEN = asset['EXIT_FULLSCREEN']!;
     this.EXIT_NOW_PLAYING = asset['EXIT_NOW_PLAYING']!;
     this.EXIT_SUBTITLE = asset['EXIT_SUBTITLE']!;

@@ -67,6 +67,7 @@ class Strings {
   late String EDIT_DETAILS;
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;
+  late String ENABLE_DISCORD_RPC;
   late String EXIT_FULLSCREEN;
   late String EXIT_NOW_PLAYING;
   late String EXIT_SUBTITLE;
