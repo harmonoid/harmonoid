@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/interface/collection/track.dart';
 import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -914,6 +915,7 @@ class Carousel extends StatefulWidget {
 
 class CarouselState extends State<Carousel> {
   late List<Widget> widgets = [];
+  bool playlistVisible = false;
 
   int _current =
       Configuration.instance.modernNowPlayingScreenCarouselIndex.clamp(
@@ -1078,13 +1080,13 @@ class CarouselState extends State<Carousel> {
                   right: 0.0,
                   child: Container(
                     height:
-                        widget.height ?? MediaQuery.of(context).size.height / 3,
+                        widget.height ?? MediaQuery.of(context).size.height / 2,
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.black54,
+                          Colors.black87,
                           Colors.transparent,
                         ],
                       ),
@@ -1201,14 +1203,193 @@ class CarouselState extends State<Carousel> {
             ),
           ),
           Align(
-            alignment: Alignment.bottomCenter,
-            child: FloatingActionButton(
-              heroTag: 'playlist_button',
-              onPressed: () {},
-              child: Icon(
-                Icons.queue_music,
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: EdgeInsets.only(
+                right: 32.0,
+                bottom: 96.0 + 16.0,
               ),
-              backgroundColor: widget.palette?.last,
+              child: FloatingActionButton(
+                heroTag: 'playlist_button',
+                onPressed: () {
+                  setState(() {
+                    playlistVisible = !playlistVisible;
+                  });
+                },
+                child: Icon(Icons.queue_music),
+                mini: true,
+                backgroundColor: widget.palette?.last,
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: TweenAnimationBuilder<Color?>(
+              tween: ColorTween(
+                begin: Colors.transparent,
+                end: playlistVisible ? Colors.black38 : Colors.transparent,
+              ),
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              builder: (context, color, _) => GestureDetector(
+                onTap: () {
+                  setState(() {
+                    playlistVisible = false;
+                  });
+                },
+                child: Container(
+                  alignment: Alignment.bottomCenter,
+                  color: color == Colors.transparent ? null : color,
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: color == Colors.transparent
+                      ? null
+                      : TweenAnimationBuilder<Offset>(
+                          tween: Tween<Offset>(
+                            begin: Offset(
+                              0,
+                              MediaQuery.of(context).size.height,
+                            ),
+                            end: playlistVisible
+                                ? Offset.zero
+                                : Offset(
+                                    0,
+                                    MediaQuery.of(context).size.height,
+                                  ),
+                          ),
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          builder: (context, offset, _) => Transform.translate(
+                            offset: offset,
+                            child: Card(
+                              elevation: 20.0,
+                              clipBehavior: Clip.antiAlias,
+                              margin: EdgeInsets.all(32.0),
+                              child: Container(
+                                width:
+                                    MediaQuery.of(context).size.width * 2 / 3,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.8,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 102.0,
+                                      padding: EdgeInsets.all(16.0),
+                                      alignment: Alignment.centerLeft,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  playlistVisible = false;
+                                                });
+                                              },
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
+                                              child: Container(
+                                                height: 40.0,
+                                                width: 40.0,
+                                                child: Icon(
+                                                  Icons.arrow_back,
+                                                  size: 24.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 20.0),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  Language.instance.NOW_PLAYING,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline1
+                                                      ?.copyWith(
+                                                          fontSize: 24.0),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                SizedBox(height: 8.0),
+                                                Text(
+                                                  '${Language.instance.TRACK}: ${Playback.instance.tracks.length}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline3,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Divider(
+                                      height: 1.0,
+                                    ),
+                                    Expanded(
+                                      child: CustomListViewBuilder(
+                                        controller: ScrollController(
+                                            initialScrollOffset: 48.0 *
+                                                (Playback.instance.index - 2)
+                                                    .clamp(0,
+                                                        9223372036854775807)),
+                                        itemExtents: List.generate(
+                                          Playback.instance.tracks.length,
+                                          (index) => 48.0,
+                                        ),
+                                        itemCount:
+                                            Playback.instance.tracks.length,
+                                        itemBuilder: (context, index) =>
+                                            Material(
+                                          color:
+                                              Playback.instance.index == index
+                                                  ? Theme.of(context)
+                                                      .dividerColor
+                                                      .withOpacity(0.12)
+                                                  : Colors.transparent,
+                                          child: TrackTile(
+                                            leading:
+                                                Playback.instance.index == index
+                                                    ? Icon(
+                                                        Icons.play_arrow,
+                                                        size: 24.0,
+                                                      )
+                                                    : Text(
+                                                        '${index + 1}',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline4,
+                                                      ),
+                                            track:
+                                                Playback.instance.tracks[index],
+                                            index: 0,
+                                            onPressed: () {
+                                              Playback.instance.play();
+                                              Playback.instance.jump(index);
+                                            },
+                                            disableContextMenu: true,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                ),
+              ),
             ),
           ),
         ],
