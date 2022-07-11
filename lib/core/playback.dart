@@ -383,7 +383,7 @@ class Playback extends ChangeNotifier {
     }
     if (!open) return;
     tracks = AppState.instance.playlist;
-    index = AppState.instance.index;
+
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       await player.open(
         Playlist(
@@ -397,6 +397,8 @@ class Playback extends ChangeNotifier {
         ),
         play: false,
       );
+      // TODO (@alexmercerind):
+      // index = AppState.instance.index;
     }
     if (Platform.isAndroid || Platform.isIOS) {
       assetsAudioPlayer.open(
@@ -449,6 +451,7 @@ class Playback extends ChangeNotifier {
         ),
         autoStart: false,
       );
+      index = AppState.instance.index;
     }
   }
 
