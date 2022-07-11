@@ -7,7 +7,7 @@
 - [Download](#download) [Windows, Linux]
 - [Discord](https://discord.gg/2Rc3edFWd8)
 
-[work-in-progress] [[report-bugs-or-request-features](https://github.com/harmonoid/harmonoid/issues)] [[github-sponsors](https://github.com/sponsors/alexmercerind)] [[patreon](https://www.patreon.com/harmonoid)] [[primary-guide](#guide)] [[youtube-music-guide](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support)] [screenshots-show-features-from-next-release]
+[work-in-progress] [[github-sponsors](https://github.com/sponsors/alexmercerind)] [[patreon](https://www.patreon.com/harmonoid)] [[primary-guide](#guide)] [[youtube-music-guide](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support)] [screenshots-show-features-from-next-release]
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_W8Oi1qPZ0O.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_MOnywQpgPB.webp?raw=true)
