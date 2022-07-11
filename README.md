@@ -2,7 +2,7 @@
 
 <h1 align="left">Harmonoid</h1>
 
-**🎵 Elegant music app to play & manage music library. YouTube Music client. Time-Synced Lyrics, Playlists & Visuals.**
+**🎵 Elegant music app to play & manage music library. Time-synced lyrics, playlists & visuals. YouTube Music.**
 
 - [Download](#download) [Windows, Linux]
 - [Discord](https://discord.gg/2Rc3edFWd8)
@@ -72,7 +72,7 @@ Coming Soon!
 
 ## Features
 
-### Current features
+### Current Features
 
 - Powerful music library management based on metadata tags. Indexes music into group of albums & artists.
 - Capable of indexing 20 files/second (on Windows) & saves cache for future app start-ups.
@@ -94,7 +94,7 @@ Coming Soon!
 - Does not use [electron.js](https://www.electronjs.org/).
 - Music visuals.
 
-### Upcoming features
+### Upcoming Features
 
 - Equalizer.
 - Mini-window mode.
