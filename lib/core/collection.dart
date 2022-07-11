@@ -675,24 +675,32 @@ class Collection extends ChangeNotifier {
 
   /// Creates a new playlist in the collection.
   ///
-  Future<void> playlistAdd(String playlist) async {
+  Future<Playlist> playlistAdd(String name) async {
+    final Playlist playlist;
     if (playlists.length == 0) {
-      playlists.add(Playlist(name: playlist, id: 0));
+      playlist = Playlist(
+        name: name,
+        id: 0,
+      );
     } else {
-      playlists.add(
-        Playlist(name: playlist, id: playlists.last.id + 1),
+      playlist = Playlist(
+        name: name,
+        id: playlists.last.id + 1,
       );
     }
+    playlists.add(playlist);
     await playlistsSaveToCache();
     notifyListeners();
+    return playlist;
   }
 
   /// Creates a new playlist in the collection.
   ///
-  Future<void> playlistCreate(Playlist playlist) async {
+  Future<Playlist> playlistCreate(Playlist playlist) async {
     playlists.add(playlist);
     await playlistsSaveToCache();
     notifyListeners();
+    return playlist;
   }
 
   /// Removes a playlist from the collection.
