@@ -768,6 +768,9 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
         } catch (_) {}
       }
     } else if (media is Album) {
+      if (media.tracks.isEmpty) {
+        return ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
+      }
       if (Plugins.isWebMedia(media.tracks.first.uri)) {
         return ExtendedNetworkImageProvider(
           Plugins.artwork(
@@ -803,6 +806,9 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
         } catch (_) {}
       }
     } else if (media is Artist) {
+      if (media.tracks.isEmpty) {
+        return ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
+      }
       if (Plugins.isWebMedia(media.tracks.first.uri)) {
         return ExtendedNetworkImageProvider(
           Plugins.artwork(
