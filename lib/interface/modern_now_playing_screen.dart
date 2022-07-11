@@ -1411,7 +1411,7 @@ class _ProminentColorWidgetState extends State<ProminentColorWidget> {
     return Consumer<NowPlayingColorPalette>(
       builder: (context, color, _) => TweenAnimationBuilder<Color?>(
         tween: ColorTween(
-          begin: Colors.transparent,
+          begin: color.palette?.first,
           end: color.palette?.first ?? Colors.transparent,
         ),
         duration: Duration(milliseconds: 400),
