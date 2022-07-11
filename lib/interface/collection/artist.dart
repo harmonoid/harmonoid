@@ -428,410 +428,380 @@ class ArtistScreenState extends State<ArtistScreen>
 
   @override
   Widget build(BuildContext context) {
-    final tracks = widget.artist.tracks.toList();
     return Consumer<Collection>(
-      builder: (context, collection, _) => isDesktop
-          ? Scaffold(
-              body: Container(
-                height: MediaQuery.of(context).size.height,
-                child: Stack(
-                  children: [
-                    TweenAnimationBuilder(
-                      tween: ColorTween(
-                        begin: Theme.of(context).appBarTheme.backgroundColor,
-                        end: color == null
-                            ? Theme.of(context).appBarTheme.backgroundColor
-                            : color!,
-                      ),
-                      curve: Curves.easeOut,
-                      duration: Duration(
-                        milliseconds: 400,
-                      ),
-                      builder: (context, color, _) => DesktopAppBar(
-                        height: MediaQuery.of(context).size.height / 3,
-                        elevation: 4.0,
-                        color: color as Color? ?? Colors.transparent,
-                      ),
-                    ),
-                    Container(
-                      height: MediaQuery.of(context).size.height -
-                          kDesktopNowPlayingBarHeight,
-                      width: MediaQuery.of(context).size.width,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Card(
-                          clipBehavior: Clip.antiAlias,
-                          margin: EdgeInsets.only(top: 96.0, bottom: 4.0),
+      builder: (context, collection, _) {
+        final tracks = widget.artist.tracks.toList();
+        return isDesktop
+            ? Scaffold(
+                body: Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: Stack(
+                    children: [
+                      TweenAnimationBuilder(
+                        tween: ColorTween(
+                          begin: Theme.of(context).appBarTheme.backgroundColor,
+                          end: color == null
+                              ? Theme.of(context).appBarTheme.backgroundColor
+                              : color!,
+                        ),
+                        curve: Curves.easeOut,
+                        duration: Duration(
+                          milliseconds: 400,
+                        ),
+                        builder: (context, color, _) => DesktopAppBar(
+                          height: MediaQuery.of(context).size.height / 3,
                           elevation: 4.0,
-                          child: Container(
-                            constraints: BoxConstraints(
-                              maxWidth: 12 / 6 * 720.0,
-                              maxHeight: 720.0,
-                            ),
-                            width: MediaQuery.of(context).size.width - 136.0,
-                            height: MediaQuery.of(context).size.height - 192.0,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Expanded(
-                                  flex: 6,
-                                  child: LayoutBuilder(
-                                    builder: (context, constraints) => ClipRect(
-                                      child: Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          TweenAnimationBuilder(
-                                            tween: ColorTween(
-                                              begin: Theme.of(context)
-                                                  .appBarTheme
-                                                  .backgroundColor,
-                                              end: color == null
-                                                  ? Theme.of(context)
-                                                      .dividerColor
-                                                  : secondary!,
-                                            ),
-                                            curve: Curves.easeOut,
-                                            duration: Duration(
-                                              milliseconds: 600,
-                                            ),
-                                            builder: (context, color, _) =>
-                                                Positioned.fill(
-                                              child: Container(
-                                                color: color as Color?,
+                          color: color as Color? ?? Colors.transparent,
+                        ),
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.height -
+                            kDesktopNowPlayingBarHeight,
+                        width: MediaQuery.of(context).size.width,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            margin: EdgeInsets.only(top: 96.0, bottom: 4.0),
+                            elevation: 4.0,
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth: 12 / 6 * 720.0,
+                                maxHeight: 720.0,
+                              ),
+                              width: MediaQuery.of(context).size.width - 136.0,
+                              height:
+                                  MediaQuery.of(context).size.height - 192.0,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Expanded(
+                                    flex: 6,
+                                    child: LayoutBuilder(
+                                      builder: (context, constraints) =>
+                                          ClipRect(
+                                        child: Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            TweenAnimationBuilder(
+                                              tween: ColorTween(
+                                                begin: Theme.of(context)
+                                                    .appBarTheme
+                                                    .backgroundColor,
+                                                end: color == null
+                                                    ? Theme.of(context)
+                                                        .dividerColor
+                                                    : secondary!,
                                               ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.all(20.0),
-                                            child: Hero(
-                                              tag:
-                                                  'artist_art_${widget.artist.artistName}',
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  shape: BoxShape.circle,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      blurRadius: 8.0,
-                                                      color: Colors.black26,
-                                                      spreadRadius: 6.0,
-                                                      offset: Offset(0, 6.0),
-                                                    )
-                                                  ],
-                                                ),
-                                                padding: EdgeInsets.all(8.0),
-                                                child: CircleAvatar(
-                                                  radius: 240.0,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  backgroundImage: getAlbumArt(
-                                                      widget.artist),
+                                              curve: Curves.easeOut,
+                                              duration: Duration(
+                                                milliseconds: 600,
+                                              ),
+                                              builder: (context, color, _) =>
+                                                  Positioned.fill(
+                                                child: Container(
+                                                  color: color as Color?,
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                            Padding(
+                                              padding: EdgeInsets.all(20.0),
+                                              child: Hero(
+                                                tag:
+                                                    'artist_art_${widget.artist.artistName}',
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    shape: BoxShape.circle,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        blurRadius: 8.0,
+                                                        color: Colors.black26,
+                                                        spreadRadius: 6.0,
+                                                        offset: Offset(0, 6.0),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: CircleAvatar(
+                                                    radius: 240.0,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    backgroundImage:
+                                                        getAlbumArt(
+                                                            widget.artist),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 7,
-                                  child: CustomListView(
-                                    children: [
-                                      Stack(
-                                        alignment: Alignment.bottomRight,
-                                        children: [
-                                          Container(
-                                            height: 156.0,
-                                            padding: EdgeInsets.all(16.0),
-                                            alignment: Alignment.centerLeft,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  widget.artist.artistName,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline1
-                                                      ?.copyWith(
-                                                          fontSize: 24.0),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                                SizedBox(height: 8.0),
-                                                Text(
-                                                  '${Language.instance.TRACK}: ${tracks.length}\n${Language.instance.ALBUM}: ${widget.artist.albums.length}',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline3,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.all(12.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                FloatingActionButton(
-                                                  heroTag: 'play_now',
-                                                  onPressed: () {
-                                                    Playback.instance.open(
-                                                      [
-                                                        ...tracks,
-                                                        if (Configuration
-                                                            .instance
-                                                            .seamlessPlayback)
-                                                          ...[
-                                                            ...Collection
-                                                                .instance.tracks
-                                                          ]..shuffle(),
-                                                      ],
-                                                    );
-                                                  },
-                                                  mini: true,
-                                                  child: Icon(
-                                                    Icons.play_arrow,
-                                                  ),
-                                                  tooltip: Language
-                                                      .instance.PLAY_NOW,
-                                                ),
-                                                SizedBox(
-                                                  width: 8.0,
-                                                ),
-                                                FloatingActionButton(
-                                                  heroTag: 'add_to_now_playing',
-                                                  onPressed: () {
-                                                    Playback.instance.add(
-                                                      tracks.toList(),
-                                                    );
-                                                  },
-                                                  mini: true,
-                                                  child: Icon(
-                                                    Icons.queue_music,
-                                                  ),
-                                                  tooltip: Language.instance
-                                                      .ADD_TO_NOW_PLAYING,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Divider(
-                                        height: 1.0,
-                                      ),
-                                      LayoutBuilder(
-                                        builder: (context, constraints) =>
-                                            Column(
+                                  Expanded(
+                                    flex: 7,
+                                    child: CustomListView(
+                                      children: [
+                                        Stack(
+                                          alignment: Alignment.bottomRight,
                                           children: [
-                                                Row(
-                                                  children: [
-                                                    Container(
-                                                      width: 64.0,
-                                                      height: 56.0,
-                                                      padding: EdgeInsets.only(
-                                                          right: 8.0),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        '#',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline2,
-                                                      ),
+                                            Container(
+                                              height: 156.0,
+                                              padding: EdgeInsets.all(16.0),
+                                              alignment: Alignment.centerLeft,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    widget.artist.artistName,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline1
+                                                        ?.copyWith(
+                                                            fontSize: 24.0),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  SizedBox(height: 8.0),
+                                                  Text(
+                                                    '${Language.instance.TRACK}: ${tracks.length}\n${Language.instance.ALBUM}: ${widget.artist.albums.length}',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline3,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(12.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  FloatingActionButton(
+                                                    heroTag: 'play_now',
+                                                    onPressed: () {
+                                                      Playback.instance.open(
+                                                        [
+                                                          ...tracks,
+                                                          if (Configuration
+                                                              .instance
+                                                              .seamlessPlayback)
+                                                            ...[
+                                                              ...Collection
+                                                                  .instance
+                                                                  .tracks
+                                                            ]..shuffle(),
+                                                        ],
+                                                      );
+                                                    },
+                                                    mini: true,
+                                                    child: Icon(
+                                                      Icons.play_arrow,
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
+                                                    tooltip: Language
+                                                        .instance.PLAY_NOW,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8.0,
+                                                  ),
+                                                  FloatingActionButton(
+                                                    heroTag:
+                                                        'add_to_now_playing',
+                                                    onPressed: () {
+                                                      Playback.instance.add(
+                                                        tracks.toList(),
+                                                      );
+                                                    },
+                                                    mini: true,
+                                                    child: Icon(
+                                                      Icons.queue_music,
+                                                    ),
+                                                    tooltip: Language.instance
+                                                        .ADD_TO_NOW_PLAYING,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Divider(
+                                          height: 1.0,
+                                        ),
+                                        LayoutBuilder(
+                                          builder: (context, constraints) =>
+                                              Column(
+                                            children: [
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        width: 64.0,
                                                         height: 56.0,
                                                         padding:
                                                             EdgeInsets.only(
                                                                 right: 8.0),
-                                                        alignment: Alignment
-                                                            .centerLeft,
+                                                        alignment:
+                                                            Alignment.center,
                                                         child: Text(
-                                                          Language.instance
-                                                              .TRACK_SINGLE,
+                                                          '#',
                                                           style:
                                                               Theme.of(context)
                                                                   .textTheme
                                                                   .headline2,
                                                         ),
                                                       ),
-                                                      flex: 3,
-                                                    ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        height: 56.0,
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 8.0),
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Text(
-                                                          Language.instance
-                                                              .ALBUM_SINGLE,
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .headline2,
+                                                      Expanded(
+                                                        child: Container(
+                                                          height: 56.0,
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 8.0),
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            Language.instance
+                                                                .TRACK_SINGLE,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headline2,
+                                                          ),
                                                         ),
+                                                        flex: 3,
                                                       ),
-                                                      flex: 2,
-                                                    ),
-                                                    Container(
-                                                      width: 64.0,
-                                                      height: 56.0,
-                                                    ),
-                                                  ],
-                                                ),
-                                                Divider(height: 1.0),
-                                              ] +
-                                              tracks
-                                                  .toList()
-                                                  .asMap()
-                                                  .entries
-                                                  .map(
-                                                    (track) => MouseRegion(
-                                                      onEnter: (e) {
-                                                        setState(() {
-                                                          hovered = track.key;
-                                                        });
-                                                      },
-                                                      onExit: (e) {
-                                                        setState(() {
-                                                          hovered = null;
-                                                        });
-                                                      },
-                                                      child: Listener(
-                                                        onPointerDown: (e) {
-                                                          reactToSecondaryPress = e
-                                                                      .kind ==
-                                                                  PointerDeviceKind
-                                                                      .mouse &&
-                                                              e.buttons ==
-                                                                  kSecondaryMouseButton;
+                                                      Expanded(
+                                                        child: Container(
+                                                          height: 56.0,
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 8.0),
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            Language.instance
+                                                                .ALBUM_SINGLE,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headline2,
+                                                          ),
+                                                        ),
+                                                        flex: 2,
+                                                      ),
+                                                      Container(
+                                                        width: 64.0,
+                                                        height: 56.0,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Divider(height: 1.0),
+                                                ] +
+                                                tracks
+                                                    .toList()
+                                                    .asMap()
+                                                    .entries
+                                                    .map(
+                                                      (track) => MouseRegion(
+                                                        onEnter: (e) {
+                                                          setState(() {
+                                                            hovered = track.key;
+                                                          });
                                                         },
-                                                        onPointerUp: (e) async {
-                                                          if (!reactToSecondaryPress)
-                                                            return;
-                                                          var result =
-                                                              await showMenu(
-                                                            elevation: 4.0,
-                                                            context: context,
-                                                            position:
-                                                                RelativeRect
-                                                                    .fromRect(
-                                                              Offset(
-                                                                      e.position
-                                                                          .dx,
-                                                                      e.position
-                                                                          .dy) &
-                                                                  Size(228.0,
-                                                                      320.0),
-                                                              Rect.fromLTWH(
-                                                                0,
-                                                                0,
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height,
-                                                              ),
-                                                            ),
-                                                            items:
-                                                                trackPopupMenuItems(
-                                                              context,
-                                                            ),
-                                                          );
-                                                          await trackPopupMenuHandle(
-                                                            context,
-                                                            track.value,
-                                                            result,
-                                                            recursivelyPopNavigatorOnDeleteIf:
-                                                                () => widget
-                                                                    .artist
-                                                                    .tracks
-                                                                    .isEmpty,
-                                                          );
+                                                        onExit: (e) {
+                                                          setState(() {
+                                                            hovered = null;
+                                                          });
                                                         },
-                                                        child: Material(
-                                                          color: Colors
-                                                              .transparent,
-                                                          child: InkWell(
-                                                            onTap: () {
-                                                              Playback.instance
-                                                                  .open(
-                                                                [
-                                                                  ...tracks,
-                                                                  if (Configuration
-                                                                      .instance
-                                                                      .seamlessPlayback)
-                                                                    ...([
-                                                                      ...collection
-                                                                          .tracks
-                                                                    ]..shuffle())
-                                                                ],
-                                                                index:
-                                                                    track.key,
-                                                              );
-                                                            },
-                                                            child: Row(
-                                                              children: [
-                                                                Container(
-                                                                  width: 64.0,
-                                                                  height: 48.0,
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          right:
-                                                                              8.0),
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  child: hovered ==
-                                                                          track
-                                                                              .key
-                                                                      ? IconButton(
-                                                                          onPressed:
-                                                                              () {
-                                                                            Playback.instance.open(
-                                                                              [
-                                                                                ...tracks,
-                                                                                if (Configuration.instance.seamlessPlayback)
-                                                                                  ...[
-                                                                                    ...Collection.instance.tracks
-                                                                                  ]..shuffle(),
-                                                                              ],
-                                                                              index: track.key,
-                                                                            );
-                                                                          },
-                                                                          icon:
-                                                                              Icon(Icons.play_arrow),
-                                                                          splashRadius:
-                                                                              20.0,
-                                                                        )
-                                                                      : Text(
-                                                                          '${track.value.trackNumber}',
-                                                                          style: Theme.of(context)
-                                                                              .textTheme
-                                                                              .headline4,
-                                                                        ),
+                                                        child: Listener(
+                                                          onPointerDown: (e) {
+                                                            reactToSecondaryPress = e
+                                                                        .kind ==
+                                                                    PointerDeviceKind
+                                                                        .mouse &&
+                                                                e.buttons ==
+                                                                    kSecondaryMouseButton;
+                                                          },
+                                                          onPointerUp:
+                                                              (e) async {
+                                                            if (!reactToSecondaryPress)
+                                                              return;
+                                                            var result =
+                                                                await showMenu(
+                                                              elevation: 4.0,
+                                                              context: context,
+                                                              position:
+                                                                  RelativeRect
+                                                                      .fromRect(
+                                                                Offset(
+                                                                        e.position
+                                                                            .dx,
+                                                                        e.position
+                                                                            .dy) &
+                                                                    Size(228.0,
+                                                                        320.0),
+                                                                Rect.fromLTWH(
+                                                                  0,
+                                                                  0,
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height,
                                                                 ),
-                                                                Expanded(
-                                                                  child:
-                                                                      Container(
+                                                              ),
+                                                              items:
+                                                                  trackPopupMenuItems(
+                                                                context,
+                                                              ),
+                                                            );
+                                                            await trackPopupMenuHandle(
+                                                              context,
+                                                              track.value,
+                                                              result,
+                                                              recursivelyPopNavigatorOnDeleteIf:
+                                                                  () => widget
+                                                                      .artist
+                                                                      .tracks
+                                                                      .isEmpty,
+                                                            );
+                                                          },
+                                                          child: Material(
+                                                            color: Colors
+                                                                .transparent,
+                                                            child: InkWell(
+                                                              onTap: () {
+                                                                Playback
+                                                                    .instance
+                                                                    .open(
+                                                                  [
+                                                                    ...tracks,
+                                                                    if (Configuration
+                                                                        .instance
+                                                                        .seamlessPlayback)
+                                                                      ...([
+                                                                        ...collection
+                                                                            .tracks
+                                                                      ]..shuffle())
+                                                                  ],
+                                                                  index:
+                                                                      track.key,
+                                                                );
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  Container(
+                                                                    width: 64.0,
                                                                     height:
                                                                         48.0,
                                                                     padding: EdgeInsets.only(
@@ -839,454 +809,284 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                             8.0),
                                                                     alignment:
                                                                         Alignment
-                                                                            .centerLeft,
-                                                                    child: Text(
-                                                                      track
-                                                                          .value
-                                                                          .trackName,
-                                                                      style: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .headline4,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                    ),
+                                                                            .center,
+                                                                    child: hovered ==
+                                                                            track.key
+                                                                        ? IconButton(
+                                                                            onPressed:
+                                                                                () {
+                                                                              Playback.instance.open(
+                                                                                [
+                                                                                  ...tracks,
+                                                                                  if (Configuration.instance.seamlessPlayback)
+                                                                                    ...[
+                                                                                      ...Collection.instance.tracks
+                                                                                    ]..shuffle(),
+                                                                                ],
+                                                                                index: track.key,
+                                                                              );
+                                                                            },
+                                                                            icon:
+                                                                                Icon(Icons.play_arrow),
+                                                                            splashRadius:
+                                                                                20.0,
+                                                                          )
+                                                                        : Text(
+                                                                            '${track.value.trackNumber}',
+                                                                            style:
+                                                                                Theme.of(context).textTheme.headline4,
+                                                                          ),
                                                                   ),
-                                                                  flex: 3,
-                                                                ),
-                                                                Expanded(
-                                                                  child: Container(
-                                                                      height: 48.0,
-                                                                      padding: EdgeInsets.only(right: 8.0),
-                                                                      alignment: Alignment.centerLeft,
-                                                                      child: HyperLink(
+                                                                  Expanded(
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          48.0,
+                                                                      padding: EdgeInsets.only(
+                                                                          right:
+                                                                              8.0),
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .centerLeft,
+                                                                      child:
+                                                                          Text(
+                                                                        track
+                                                                            .value
+                                                                            .trackName,
                                                                         style: Theme.of(context)
                                                                             .textTheme
                                                                             .headline4,
-                                                                        text:
-                                                                            TextSpan(
-                                                                          children: [
-                                                                            TextSpan(
-                                                                              text: track.value.albumName,
-                                                                              recognizer: TapGestureRecognizer()
-                                                                                ..onTap = () {
-                                                                                  Navigator.of(context).push(
-                                                                                    PageRouteBuilder(
-                                                                                      pageBuilder: ((context, animation, secondaryAnimation) => FadeThroughTransition(
-                                                                                            animation: animation,
-                                                                                            secondaryAnimation: secondaryAnimation,
-                                                                                            child: AlbumScreen(
-                                                                                              album: Collection.instance.albumsSet.lookup(
-                                                                                                Album(
-                                                                                                  albumName: track.value.albumName,
-                                                                                                  year: track.value.year,
-                                                                                                  albumArtistName: track.value.albumArtistName,
-                                                                                                ),
-                                                                                              )!,
-                                                                                            ),
-                                                                                          )),
-                                                                                    ),
-                                                                                  );
-                                                                                },
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      )),
-                                                                  flex: 2,
-                                                                ),
-                                                                Container(
-                                                                  width: 64.0,
-                                                                  height: 56.0,
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  child:
-                                                                      ContextMenuButton<
-                                                                          int>(
-                                                                    onSelected:
-                                                                        (result) {
-                                                                      trackPopupMenuHandle(
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                      ),
+                                                                    ),
+                                                                    flex: 3,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Container(
+                                                                        height: 48.0,
+                                                                        padding: EdgeInsets.only(right: 8.0),
+                                                                        alignment: Alignment.centerLeft,
+                                                                        child: HyperLink(
+                                                                          style: Theme.of(context)
+                                                                              .textTheme
+                                                                              .headline4,
+                                                                          text:
+                                                                              TextSpan(
+                                                                            children: [
+                                                                              TextSpan(
+                                                                                text: track.value.albumName,
+                                                                                recognizer: TapGestureRecognizer()
+                                                                                  ..onTap = () {
+                                                                                    Navigator.of(context).push(
+                                                                                      PageRouteBuilder(
+                                                                                        pageBuilder: ((context, animation, secondaryAnimation) => FadeThroughTransition(
+                                                                                              animation: animation,
+                                                                                              secondaryAnimation: secondaryAnimation,
+                                                                                              child: AlbumScreen(
+                                                                                                album: Collection.instance.albumsSet.lookup(
+                                                                                                  Album(
+                                                                                                    albumName: track.value.albumName,
+                                                                                                    year: track.value.year,
+                                                                                                    albumArtistName: track.value.albumArtistName,
+                                                                                                  ),
+                                                                                                )!,
+                                                                                              ),
+                                                                                            )),
+                                                                                      ),
+                                                                                    );
+                                                                                  },
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        )),
+                                                                    flex: 2,
+                                                                  ),
+                                                                  Container(
+                                                                    width: 64.0,
+                                                                    height:
+                                                                        56.0,
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    child:
+                                                                        ContextMenuButton<
+                                                                            int>(
+                                                                      onSelected:
+                                                                          (result) {
+                                                                        trackPopupMenuHandle(
+                                                                          context,
+                                                                          track
+                                                                              .value,
+                                                                          result,
+                                                                          recursivelyPopNavigatorOnDeleteIf: () => widget
+                                                                              .artist
+                                                                              .tracks
+                                                                              .isEmpty,
+                                                                        );
+                                                                      },
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .iconTheme
+                                                                          .color,
+                                                                      itemBuilder:
+                                                                          (_) =>
+                                                                              trackPopupMenuItems(
                                                                         context,
-                                                                        track
-                                                                            .value,
-                                                                        result,
-                                                                        recursivelyPopNavigatorOnDeleteIf: () => widget
-                                                                            .artist
-                                                                            .tracks
-                                                                            .isEmpty,
-                                                                      );
-                                                                    },
-                                                                    color: Theme.of(
-                                                                            context)
-                                                                        .iconTheme
-                                                                        .color,
-                                                                    itemBuilder:
-                                                                        (_) =>
-                                                                            trackPopupMenuItems(
-                                                                      context,
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ],
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  )
-                                                  .toList(),
+                                                    )
+                                                    .toList(),
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            )
-          : Scaffold(
-              body: Stack(
-                children: [
-                  NowPlayingBarScrollHideNotifier(
-                    child: CustomScrollView(
-                      physics: physics,
-                      controller: controller,
-                      slivers: [
-                        SliverAppBar(
-                          systemOverlayStyle: SystemUiOverlayStyle(
-                            statusBarColor: Colors.transparent,
-                            statusBarIconBrightness:
-                                (color?.computeLuminance() ?? 0.0) < 0.5
-                                    ? Brightness.light
-                                    : Brightness.dark,
-                          ),
-                          expandedHeight: MediaQuery.of(context).size.width +
-                              96.0 -
-                              MediaQuery.of(context).padding.top,
-                          pinned: true,
-                          leading: IconButton(
-                            onPressed: Navigator.of(context).maybePop,
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: [Color(0xFF212121), Colors.white][
-                                  (color?.computeLuminance() ?? 0.0) > 0.5
-                                      ? 0
-                                      : 1],
+              )
+            : Scaffold(
+                body: Stack(
+                  children: [
+                    NowPlayingBarScrollHideNotifier(
+                      child: CustomScrollView(
+                        physics: physics,
+                        controller: controller,
+                        slivers: [
+                          SliverAppBar(
+                            systemOverlayStyle: SystemUiOverlayStyle(
+                              statusBarColor: Colors.transparent,
+                              statusBarIconBrightness:
+                                  (color?.computeLuminance() ?? 0.0) < 0.5
+                                      ? Brightness.light
+                                      : Brightness.dark,
                             ),
-                            iconSize: 24.0,
-                            splashRadius: 20.0,
-                          ),
-                          forceElevated: true,
-                          title: TweenAnimationBuilder<double>(
-                            tween: Tween<double>(
-                              begin: 1.0,
-                              end: detailsVisible ? 0.0 : 1.0,
+                            expandedHeight: MediaQuery.of(context).size.width +
+                                96.0 -
+                                MediaQuery.of(context).padding.top,
+                            pinned: true,
+                            leading: IconButton(
+                              onPressed: Navigator.of(context).maybePop,
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: [Color(0xFF212121), Colors.white][
+                                    (color?.computeLuminance() ?? 0.0) > 0.5
+                                        ? 0
+                                        : 1],
+                              ),
+                              iconSize: 24.0,
+                              splashRadius: 20.0,
                             ),
-                            duration: Duration(milliseconds: 200),
-                            builder: (context, value, _) => Opacity(
-                              opacity: value,
-                              child: Text(
-                                widget.artist.artistName.overflow,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    ?.copyWith(
-                                        color: [
-                                      Color(0xFF212121),
-                                      Colors.white
-                                    ][(color?.computeLuminance() ?? 0.0) > 0.5
-                                            ? 0
-                                            : 1]),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                            forceElevated: true,
+                            title: TweenAnimationBuilder<double>(
+                              tween: Tween<double>(
+                                begin: 1.0,
+                                end: detailsVisible ? 0.0 : 1.0,
+                              ),
+                              duration: Duration(milliseconds: 200),
+                              builder: (context, value, _) => Opacity(
+                                opacity: value,
+                                child: Text(
+                                  widget.artist.artistName.overflow,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline1
+                                      ?.copyWith(
+                                          color: [
+                                        Color(0xFF212121),
+                                        Colors.white
+                                      ][(color?.computeLuminance() ?? 0.0) > 0.5
+                                              ? 0
+                                              : 1]),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
-                          ),
-                          backgroundColor: color,
-                          flexibleSpace: Stack(
-                            children: [
-                              FlexibleSpaceBar(
-                                background: Column(
-                                  children: [
-                                    Container(
-                                      height: MediaQuery.of(context).size.width,
-                                      width: MediaQuery.of(context).size.width,
-                                      child: LayoutBuilder(
-                                        builder: (context, constraints) => Hero(
-                                          tag:
-                                              'artist_art_${widget.artist.artistName}',
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(min(
-                                                          constraints.maxHeight,
-                                                          constraints
-                                                              .maxWidth) -
-                                                      28.0),
-                                            ),
-                                            elevation: 4.0,
-                                            margin: EdgeInsets.all(
-                                              56.0,
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsets.all(4.0),
-                                              child: ClipOval(
-                                                child: ExtendedImage(
-                                                  image: getAlbumArt(
-                                                      widget.artist),
-                                                  height: min(
-                                                          constraints.maxHeight,
-                                                          constraints
-                                                              .maxWidth) -
-                                                      64.0,
-                                                  width: min(
-                                                          constraints.maxHeight,
-                                                          constraints
-                                                              .maxWidth) -
-                                                      64.0,
+                            backgroundColor: color,
+                            flexibleSpace: Stack(
+                              children: [
+                                FlexibleSpaceBar(
+                                  background: Column(
+                                    children: [
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.width,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: LayoutBuilder(
+                                          builder: (context, constraints) =>
+                                              Hero(
+                                            tag:
+                                                'artist_art_${widget.artist.artistName}',
+                                            child: Card(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(min(
+                                                            constraints
+                                                                .maxHeight,
+                                                            constraints
+                                                                .maxWidth) -
+                                                        28.0),
+                                              ),
+                                              elevation: 4.0,
+                                              margin: EdgeInsets.all(
+                                                56.0,
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(4.0),
+                                                child: ClipOval(
+                                                  child: ExtendedImage(
+                                                    image: getAlbumArt(
+                                                        widget.artist),
+                                                    height: min(
+                                                            constraints
+                                                                .maxHeight,
+                                                            constraints
+                                                                .maxWidth) -
+                                                        64.0,
+                                                    width: min(
+                                                            constraints
+                                                                .maxHeight,
+                                                            constraints
+                                                                .maxWidth) -
+                                                        64.0,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    TweenAnimationBuilder<double>(
-                                      tween: Tween<double>(
-                                        begin: 1.0,
-                                        end: detailsVisible ? 1.0 : 0.0,
-                                      ),
-                                      duration: Duration(milliseconds: 200),
-                                      builder: (context, value, _) => Opacity(
-                                        opacity: value,
-                                        child: Container(
-                                          color: color,
-                                          height: 96.0,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          padding: EdgeInsets.all(16.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                widget
-                                                    .artist.artistName.overflow,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline1
-                                                    ?.copyWith(
-                                                      color: [
-                                                        Colors.white,
-                                                        Color(0xFF212121)
-                                                      ][(color?.computeLuminance() ??
-                                                                  0.0) >
-                                                              0.5
-                                                          ? 1
-                                                          : 0],
-                                                      fontSize: 24.0,
-                                                    ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              Text(
-                                                Language.instance
-                                                    .M_TRACKS_AND_N_ALBUMS
-                                                    .replaceAll(
-                                                        'M', '${tracks.length}')
-                                                    .replaceAll('N',
-                                                        '${widget.artist.albums.length}'),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline3
-                                                    ?.copyWith(
-                                                      color: [
-                                                        Colors.white70,
-                                                        Colors.black54
-                                                      ][(color?.computeLuminance() ??
-                                                                  0.0) >
-                                                              0.5
-                                                          ? 1
-                                                          : 0],
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
+                                      TweenAnimationBuilder<double>(
+                                        tween: Tween<double>(
+                                          begin: 1.0,
+                                          end: detailsVisible ? 1.0 : 0.0,
                                         ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Positioned(
-                                top: MediaQuery.of(context).size.width +
-                                    MediaQuery.of(context).padding.top -
-                                    64.0,
-                                right: 16.0 + 64.0,
-                                child: TweenAnimationBuilder(
-                                  curve: Curves.easeOut,
-                                  tween: Tween<double>(
-                                      begin: 0.0,
-                                      end: detailsVisible ? 1.0 : 0.0),
-                                  duration: Duration(milliseconds: 200),
-                                  builder: (context, value, _) =>
-                                      Transform.scale(
-                                    scale: value as double,
-                                    child: Transform.rotate(
-                                      angle: value * pi + pi,
-                                      child: FloatingActionButton(
-                                        heroTag: 'play_now',
-                                        backgroundColor: secondary,
-                                        foregroundColor: [
-                                          Colors.white,
-                                          Color(0xFF212121)
-                                        ][(secondary?.computeLuminance() ??
-                                                    0.0) >
-                                                0.5
-                                            ? 1
-                                            : 0],
-                                        child: Icon(Icons.play_arrow),
-                                        onPressed: () {
-                                          Playback.instance.open([
-                                            ...tracks,
-                                            if (Configuration
-                                                .instance.seamlessPlayback)
-                                              ...[...Collection.instance.tracks]
-                                                ..shuffle(),
-                                          ]);
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: MediaQuery.of(context).size.width +
-                                    MediaQuery.of(context).padding.top -
-                                    64.0,
-                                right: 16.0,
-                                child: TweenAnimationBuilder(
-                                  curve: Curves.easeOut,
-                                  tween: Tween<double>(
-                                      begin: 0.0,
-                                      end: detailsVisible ? 1.0 : 0.0),
-                                  duration: Duration(milliseconds: 200),
-                                  builder: (context, value, _) =>
-                                      Transform.scale(
-                                    scale: value as double,
-                                    child: Transform.rotate(
-                                      angle: value * pi + pi,
-                                      child: FloatingActionButton(
-                                        heroTag: 'shuffle',
-                                        backgroundColor: secondary,
-                                        foregroundColor: [
-                                          Colors.white,
-                                          Color(0xFF212121)
-                                        ][(secondary?.computeLuminance() ??
-                                                    0.0) >
-                                                0.5
-                                            ? 1
-                                            : 0],
-                                        child: Icon(Icons.shuffle),
-                                        onPressed: () {
-                                          Playback.instance.open(
-                                            [...tracks]..shuffle(),
-                                            index: 0,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SliverPadding(
-                          padding: EdgeInsets.only(
-                            top: 12.0,
-                          ),
-                        ),
-                        SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, i) => Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () => Playback.instance.open(
-                                  [
-                                    ...tracks,
-                                    if (Configuration.instance.seamlessPlayback)
-                                      ...[...Collection.instance.tracks]
-                                        ..shuffle(),
-                                  ],
-                                  index: i,
-                                ),
-                                onLongPress: () async {
-                                  var result;
-                                  await showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => Container(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: trackPopupMenuItems(context)
-                                            .map(
-                                              (item) => PopupMenuItem(
-                                                child: item.child,
-                                                onTap: () =>
-                                                    result = item.value,
-                                              ),
-                                            )
-                                            .toList(),
-                                      ),
-                                    ),
-                                  );
-                                  await trackPopupMenuHandle(
-                                    context,
-                                    tracks[i],
-                                    result,
-                                    recursivelyPopNavigatorOnDeleteIf: () =>
-                                        tracks.isEmpty,
-                                  );
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: 64.0,
-                                      alignment: Alignment.center,
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 4.0),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const SizedBox(width: 12.0),
-                                          Container(
-                                            height: 56.0,
-                                            width: 56.0,
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              '${tracks[i].trackNumber}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline3
-                                                  ?.copyWith(fontSize: 18.0),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 12.0),
-                                          Expanded(
+                                        duration: Duration(milliseconds: 200),
+                                        builder: (context, value, _) => Opacity(
+                                          opacity: value,
+                                          child: Container(
+                                            color: color,
+                                            height: 96.0,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            padding: EdgeInsets.all(16.0),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
                                               mainAxisAlignment:
@@ -1295,108 +1095,330 @@ class ArtistScreenState extends State<ArtistScreen>
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  tracks[i].trackName.overflow,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 1,
+                                                  widget.artist.artistName
+                                                      .overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline2,
-                                                ),
-                                                const SizedBox(
-                                                  height: 2.0,
+                                                      .headline1
+                                                      ?.copyWith(
+                                                        color: [
+                                                          Colors.white,
+                                                          Color(0xFF212121)
+                                                        ][(color?.computeLuminance() ??
+                                                                    0.0) >
+                                                                0.5
+                                                            ? 1
+                                                            : 0],
+                                                        fontSize: 24.0,
+                                                      ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                                 Text(
-                                                  (tracks[i].duration ??
-                                                              Duration.zero)
-                                                          .label +
-                                                      ' • ' +
-                                                      tracks[i].albumName,
+                                                  Language.instance
+                                                      .M_TRACKS_AND_N_ALBUMS
+                                                      .replaceAll('M',
+                                                          '${tracks.length}')
+                                                      .replaceAll('N',
+                                                          '${widget.artist.albums.length}'),
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   maxLines: 1,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline3,
+                                                      .headline3
+                                                      ?.copyWith(
+                                                        color: [
+                                                          Colors.white70,
+                                                          Colors.black54
+                                                        ][(color?.computeLuminance() ??
+                                                                    0.0) >
+                                                                0.5
+                                                            ? 1
+                                                            : 0],
+                                                      ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          const SizedBox(width: 12.0),
-                                          Container(
-                                            width: 64.0,
-                                            height: 64.0,
-                                            alignment: Alignment.center,
-                                            child: IconButton(
-                                              onPressed: () async {
-                                                var result;
-                                                await showModalBottomSheet(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      Container(
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children:
-                                                          trackPopupMenuItems(
-                                                                  context)
-                                                              .map(
-                                                                (item) =>
-                                                                    PopupMenuItem(
-                                                                  child: item
-                                                                      .child,
-                                                                  onTap: () =>
-                                                                      result = item
-                                                                          .value,
-                                                                ),
-                                                              )
-                                                              .toList(),
-                                                    ),
-                                                  ),
-                                                );
-                                                await trackPopupMenuHandle(
-                                                  context,
-                                                  tracks[i],
-                                                  result,
-                                                  recursivelyPopNavigatorOnDeleteIf:
-                                                      () => tracks.isEmpty,
-                                                );
-                                              },
-                                              icon: Icon(
-                                                Icons.more_vert,
-                                              ),
-                                              iconSize: 24.0,
-                                              splashRadius: 20.0,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  top: MediaQuery.of(context).size.width +
+                                      MediaQuery.of(context).padding.top -
+                                      64.0,
+                                  right: 16.0 + 64.0,
+                                  child: TweenAnimationBuilder(
+                                    curve: Curves.easeOut,
+                                    tween: Tween<double>(
+                                        begin: 0.0,
+                                        end: detailsVisible ? 1.0 : 0.0),
+                                    duration: Duration(milliseconds: 200),
+                                    builder: (context, value, _) =>
+                                        Transform.scale(
+                                      scale: value as double,
+                                      child: Transform.rotate(
+                                        angle: value * pi + pi,
+                                        child: FloatingActionButton(
+                                          heroTag: 'play_now',
+                                          backgroundColor: secondary,
+                                          foregroundColor: [
+                                            Colors.white,
+                                            Color(0xFF212121)
+                                          ][(secondary?.computeLuminance() ??
+                                                      0.0) >
+                                                  0.5
+                                              ? 1
+                                              : 0],
+                                          child: Icon(Icons.play_arrow),
+                                          onPressed: () {
+                                            Playback.instance.open([
+                                              ...tracks,
+                                              if (Configuration
+                                                  .instance.seamlessPlayback)
+                                                ...[
+                                                  ...Collection.instance.tracks
+                                                ]..shuffle(),
+                                            ]);
+                                          },
+                                        ),
                                       ),
                                     ),
-                                    const Divider(
-                                      height: 1.0,
-                                      indent: 80.0,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: MediaQuery.of(context).size.width +
+                                      MediaQuery.of(context).padding.top -
+                                      64.0,
+                                  right: 16.0,
+                                  child: TweenAnimationBuilder(
+                                    curve: Curves.easeOut,
+                                    tween: Tween<double>(
+                                        begin: 0.0,
+                                        end: detailsVisible ? 1.0 : 0.0),
+                                    duration: Duration(milliseconds: 200),
+                                    builder: (context, value, _) =>
+                                        Transform.scale(
+                                      scale: value as double,
+                                      child: Transform.rotate(
+                                        angle: value * pi + pi,
+                                        child: FloatingActionButton(
+                                          heroTag: 'shuffle',
+                                          backgroundColor: secondary,
+                                          foregroundColor: [
+                                            Colors.white,
+                                            Color(0xFF212121)
+                                          ][(secondary?.computeLuminance() ??
+                                                      0.0) >
+                                                  0.5
+                                              ? 1
+                                              : 0],
+                                          child: Icon(Icons.shuffle),
+                                          onPressed: () {
+                                            Playback.instance.open(
+                                              [...tracks]..shuffle(),
+                                              index: 0,
+                                            );
+                                          },
+                                        ),
+                                      ),
                                     ),
-                                  ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SliverPadding(
+                            padding: EdgeInsets.only(
+                              top: 12.0,
+                            ),
+                          ),
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, i) => Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => Playback.instance.open(
+                                    [
+                                      ...tracks,
+                                      if (Configuration
+                                          .instance.seamlessPlayback)
+                                        ...[...Collection.instance.tracks]
+                                          ..shuffle(),
+                                    ],
+                                    index: i,
+                                  ),
+                                  onLongPress: () async {
+                                    var result;
+                                    await showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) => Container(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: trackPopupMenuItems(context)
+                                              .map(
+                                                (item) => PopupMenuItem(
+                                                  child: item.child,
+                                                  onTap: () =>
+                                                      result = item.value,
+                                                ),
+                                              )
+                                              .toList(),
+                                        ),
+                                      ),
+                                    );
+                                    await trackPopupMenuHandle(
+                                      context,
+                                      tracks[i],
+                                      result,
+                                      recursivelyPopNavigatorOnDeleteIf: () =>
+                                          tracks.isEmpty,
+                                    );
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: 64.0,
+                                        alignment: Alignment.center,
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 4.0),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const SizedBox(width: 12.0),
+                                            Container(
+                                              height: 56.0,
+                                              width: 56.0,
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                '${tracks[i].trackNumber}',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline3
+                                                    ?.copyWith(fontSize: 18.0),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12.0),
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    tracks[i]
+                                                        .trackName
+                                                        .overflow,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline2,
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 2.0,
+                                                  ),
+                                                  Text(
+                                                    (tracks[i].duration ??
+                                                                Duration.zero)
+                                                            .label +
+                                                        ' • ' +
+                                                        tracks[i].albumName,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline3,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12.0),
+                                            Container(
+                                              width: 64.0,
+                                              height: 64.0,
+                                              alignment: Alignment.center,
+                                              child: IconButton(
+                                                onPressed: () async {
+                                                  var result;
+                                                  await showModalBottomSheet(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        Container(
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children:
+                                                            trackPopupMenuItems(
+                                                                    context)
+                                                                .map(
+                                                                  (item) =>
+                                                                      PopupMenuItem(
+                                                                    child: item
+                                                                        .child,
+                                                                    onTap: () =>
+                                                                        result =
+                                                                            item.value,
+                                                                  ),
+                                                                )
+                                                                .toList(),
+                                                      ),
+                                                    ),
+                                                  );
+                                                  await trackPopupMenuHandle(
+                                                    context,
+                                                    tracks[i],
+                                                    result,
+                                                    recursivelyPopNavigatorOnDeleteIf:
+                                                        () => tracks.isEmpty,
+                                                  );
+                                                },
+                                                icon: Icon(
+                                                  Icons.more_vert,
+                                                ),
+                                                iconSize: 24.0,
+                                                splashRadius: 20.0,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const Divider(
+                                        height: 1.0,
+                                        indent: 80.0,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
+                              childCount: tracks.length,
                             ),
-                            childCount: tracks.length,
                           ),
-                        ),
-                        SliverPadding(
-                          padding: EdgeInsets.only(
-                            top: 12.0 +
-                                (detailsLoaded
-                                    ? 0.0
-                                    : MediaQuery.of(context).size.height),
+                          SliverPadding(
+                            padding: EdgeInsets.only(
+                              top: 12.0 +
+                                  (detailsLoaded
+                                      ? 0.0
+                                      : MediaQuery.of(context).size.height),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  ],
+                ),
+              );
+      },
     );
   }
 }
