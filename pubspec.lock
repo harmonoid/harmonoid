@@ -101,7 +101,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   charcode:
     dependency: transitive
     description:
@@ -157,8 +157,8 @@ packages:
     dependency: "direct main"
     description:
       path: desktop
-      ref: "7c38a2993a4ca299926cbfeff6cb428d19aeb786"
-      resolved-ref: "7c38a2993a4ca299926cbfeff6cb428d19aeb786"
+      ref: "88e9a3931c84ca821d1acad0289882f5510aafdb"
+      resolved-ref: "88e9a3931c84ca821d1acad0289882f5510aafdb"
       url: "https://github.com/alexmercerind/desktop.git"
     source: git
     version: "3.0.1"
@@ -417,7 +417,7 @@ packages:
       name: material_color_utilities
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.4"
+    version: "0.1.5"
   material_floating_search_bar:
     dependency: "direct main"
     description:
@@ -431,7 +431,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.8.0"
   mime:
     dependency: transitive
     description:

@@ -66,11 +66,8 @@
   "EDIT_DETAILS": "Einzelheiten bearbeiten",
   "ENABLE_125_SCALING": "125% Skalierung aktivieren.",
   "ENABLE_ACRYLIC_BLUR": "Windows-Acryl-Blur-Effekt aktivieren",
-<<<<<<< HEAD
   "ERROR": "Error",
-=======
   "ENABLE_DISCORD_RPC": "Enable Discord RPC integration",
->>>>>>> 06ab41c4b964e6f365f707da6e4ad9ab7d819809
   "EXIT_FULLSCREEN": "Exit fullscreen",
   "EXIT_NOW_PLAYING": "\"Läuft gerade\" beenden",
   "EXIT_SUBTITLE": "Möchten Sie Harmonoid beenden?",

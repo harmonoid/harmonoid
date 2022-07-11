@@ -66,11 +66,8 @@
   "EDIT_DETAILS": "编辑详细信息",
   "ENABLE_125_SCALING": "开启 125% 缩放。",
   "ENABLE_ACRYLIC_BLUR": "开启 Windows 歌词模糊。",
-<<<<<<< HEAD
   "ERROR": "Error",
-=======
   "ENABLE_DISCORD_RPC": "Enable Discord RPC integration",
->>>>>>> 06ab41c4b964e6f365f707da6e4ad9ab7d819809
   "EXIT_FULLSCREEN": "Exit fullscreen",
   "EXIT_NOW_PLAYING": "退出正在播放",
   "EXIT_SUBTITLE": "您确定退出 Harmonoid 吗?",
