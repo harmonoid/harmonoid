@@ -267,10 +267,12 @@ class Language extends Strings with ChangeNotifier {
     this.DISCORD = asset['DISCORD']!;
     this.DISCOVERING_FILES = asset['DISCOVERING_FILES']!;
     this.DONATE = asset['DONATE']!;
+    this.DONE = asset['DONE']!;
     this.DOWNLOAD_UPDATE = asset['DOWNLOAD_UPDATE']!;
     this.EDIT_DETAILS = asset['EDIT_DETAILS']!;
     this.ENABLE_125_SCALING = asset['ENABLE_125_SCALING']!;
     this.ENABLE_ACRYLIC_BLUR = asset['ENABLE_ACRYLIC_BLUR']!;
+    this.ERROR = asset['ERROR']!;
     this.EXIT_FULLSCREEN = asset['EXIT_FULLSCREEN']!;
     this.EXIT_NOW_PLAYING = asset['EXIT_NOW_PLAYING']!;
     this.EXIT_SUBTITLE = asset['EXIT_SUBTITLE']!;
@@ -287,6 +289,7 @@ class Language extends Strings with ChangeNotifier {
     this.INDEXING_ALREADY_GOING_ON_SUBTITLE = asset['INDEXING_ALREADY_GOING_ON_SUBTITLE']!;
     this.INDEXING_ALREADY_GOING_ON_TITLE = asset['INDEXING_ALREADY_GOING_ON_TITLE']!;
     this.INTERNET_ERROR = asset['INTERNET_ERROR']!;
+    this.INVALID_PLAYLIST_URL = asset['INVALID_PLAYLIST_URL']!;
     this.KNOW_MORE = asset['KNOW_MORE']!;
     this.LAST_COLLECTION_DIRECTORY_REMOVED = asset['LAST_COLLECTION_DIRECTORY_REMOVED']!;
     this.LESS = asset['LESS']!;

@@ -63,10 +63,12 @@ class Strings {
   late String DISCORD;
   late String DISCOVERING_FILES;
   late String DONATE;
+  late String DONE;
   late String DOWNLOAD_UPDATE;
   late String EDIT_DETAILS;
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;
+  late String ERROR;
   late String EXIT_FULLSCREEN;
   late String EXIT_NOW_PLAYING;
   late String EXIT_SUBTITLE;
@@ -83,6 +85,7 @@ class Strings {
   late String INDEXING_ALREADY_GOING_ON_SUBTITLE;
   late String INDEXING_ALREADY_GOING_ON_TITLE;
   late String INTERNET_ERROR;
+  late String INVALID_PLAYLIST_URL;
   late String KNOW_MORE;
   late String LAST_COLLECTION_DIRECTORY_REMOVED;
   late String LESS;
