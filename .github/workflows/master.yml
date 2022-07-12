@@ -70,7 +70,7 @@ jobs:
           draft: false
           prerelease: true
           body: ${{ github.sha }}
-          tag_name: ${{ steps.vars.outputs.sha_short }}
+          tag_name: nightly
           files: |
             Output/harmonoid-windows-setup.exe
             harmonoid-windows-exe.zip
@@ -141,7 +141,7 @@ jobs:
           draft: false
           prerelease: true
           body: ${{ github.sha }}
-          tag_name: ${{ steps.vars.outputs.sha_short }}
+          tag_name: nightly
           files: harmonoid-linux-*
           token: ${{ secrets.ACCESS_TOKEN_2 }}
 
