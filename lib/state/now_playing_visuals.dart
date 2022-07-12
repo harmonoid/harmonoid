@@ -42,7 +42,7 @@ class NowPlayingVisuals {
       ),
     );
     if (await instance.directory.exists_()) {
-      final directory = await instance.directory.list_(filterMediaFiles: false);
+      final directory = await instance.directory.list_(extensions: null);
       for (final entity in directory) {
         if (kSupportedImageFormats.contains(entity.extension)) {
           instance.user.add(entity.path);

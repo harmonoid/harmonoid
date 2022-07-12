@@ -9,7 +9,8 @@ import 'dart:io';
 import 'dart:async';
 import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
+
 import 'package:harmonoid/core/collection.dart';
 
 extension DirectoryExtension on Directory {
@@ -21,7 +22,10 @@ extension DirectoryExtension on Directory {
   /// * Returns only [List] of [File]s.
   ///
   Future<List<File>> list_({
-    bool filterMediaFiles = true,
+    // Not a good way, but whatever for performance.
+    // Explicitly restricting to [kSupportedFileTypes] for avoiding long iterations in later operations.
+    List<String>? extensions: kSupportedFileTypes,
+    bool Function(File)? checker,
   }) async {
     final prefix = Platform.isWindows &&
             !path.startsWith('\\\\') &&
@@ -37,11 +41,14 @@ extension DirectoryExtension on Directory {
     )
         .listen(
       (event) async {
-        // Not a good way, but whatever for performance.
-        // Explicitly restricting to [kSupportedFileTypes] for avoiding long iterations in later operations.
         if (event is File) {
-          if (filterMediaFiles) {
-            if (kSupportedFileTypes.contains(event.extension)) {
+          if (checker != null) {
+            final file = File(event.path.substring(prefix.isNotEmpty ? 4 : 0));
+            if (checker(file)) {
+              files.add(file);
+            }
+          } else if (extensions != null) {
+            if (extensions.contains(event.extension)) {
               if (await event.length() >
                   1024 * 1024 /* 1 MB or greater in size. */) {
                 files
@@ -82,30 +89,55 @@ extension DirectoryExtension on Directory {
 extension FileExtension on File {
   /// Safely writes [String] [content] to a [File].
   ///
-  /// Does not modify the contents of the original file, but
+  /// * Does not modify the contents of the original file, but
   /// creates a new randomly named file & copies it to the
   /// original [File]'s path for ensured safety & no possible
-  /// corruption.
+  /// corruption. This helps in ensuring the atomicity of the
+  /// transaction. Thanks to @raitonoberu for the idea.
   ///
-  /// Thanks to @raitonoberu for the idea.
+  /// * Uses [Completer]s to ensure to concurrent transactions
+  /// to the same file path. This helps in ensuring the
+  /// isolation & correct sequence of the transaction.
   ///
   Future<void> write_(String content) async {
+    if (_fileWriteMutex[path] != null) {
+      await _fileWriteMutex[path]!.future;
+    }
+    _fileWriteMutex[path] = Completer();
     try {
+      _fileWriteMutex[path] ??= Completer();
       final prefix = Platform.isWindows &&
               !path.startsWith('\\\\') &&
               !path.startsWith(r'\\?\')
           ? r'\\?\'
           : '';
-      final file = File(join(prefix + parent.path, 'Temp', const Uuid().v4()));
+      final file = File(
+        join(
+          prefix + parent.path,
+          'Temp',
+          '${basename(path)}.${const Uuid().v4()}',
+        ),
+      );
       if (!await file.exists_()) {
         await file.create(recursive: true);
       }
       await file.writeAsString(content, flush: true);
-      await file.rename_(prefix + path);
+      await file.copy_(prefix + path);
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
     }
+    _fileWriteMutex[path]!.complete();
+  }
+
+  Future<String?> read_() async {
+    if (_fileWriteMutex[path] != null) {
+      await _fileWriteMutex[path]!.future;
+    }
+    if (await exists_()) {
+      return await readAsString();
+    }
+    return null;
   }
 
   /// Safely [rename]s a [File].
@@ -213,7 +245,7 @@ extension FileSystemEntityExtension on FileSystemEntity {
     }
   }
 
-  void showInFileExplorer_() async {
+  void explore_() async {
     await Process.start(
       Platform.isWindows
           ? 'explorer.exe'
@@ -229,3 +261,7 @@ extension FileSystemEntityExtension on FileSystemEntity {
 
   String get extension => basename(path).split('.').last.toUpperCase();
 }
+
+/// [Map] storing various instances of [Completer] for
+/// mutual exclusion in [FileExtension.write_].
+final Map<String, Completer> _fileWriteMutex = <String, Completer>{};

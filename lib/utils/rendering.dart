@@ -444,7 +444,7 @@ Future<void> trackPopupMenuHandle(
           break;
         }
       case 5:
-        File(track.uri.toFilePath()).showInFileExplorer_();
+        File(track.uri.toFilePath()).explore_();
         break;
       case 6:
         Navigator.of(context).push(
