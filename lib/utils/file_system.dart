@@ -99,13 +99,15 @@ extension FileExtension on File {
   /// to the same file path. This helps in ensuring the
   /// isolation & correct sequence of the transaction.
   ///
-  Future<void> write_(String content) async {
-    if (_fileWriteMutex[path] != null) {
-      await _fileWriteMutex[path]!.future;
+  Future<void> write_(
+    String content, {
+    bool keepTransactionInHistory = true,
+  }) async {
+    if (_fileWriteMutexes[path] != null) {
+      await _fileWriteMutexes[path]!.future;
     }
-    _fileWriteMutex[path] = Completer();
+    _fileWriteMutexes[path] = Completer();
     try {
-      _fileWriteMutex[path] ??= Completer();
       final prefix = Platform.isWindows &&
               !path.startsWith('\\\\') &&
               !path.startsWith(r'\\?\')
@@ -122,17 +124,27 @@ extension FileExtension on File {
         await file.create(recursive: true);
       }
       await file.writeAsString(content, flush: true);
-      await file.copy_(prefix + path);
+      if (keepTransactionInHistory) {
+        // Delete the destination [File] if it exists.
+        if (await File(prefix + path).exists_()) {
+          await File(prefix + path).delete_();
+        }
+        await file.copy_(prefix + path);
+      } else {
+        await file.rename_(prefix + path);
+      }
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
       debugPrint(stacktrace.toString());
     }
-    _fileWriteMutex[path]!.complete();
+    if (!_fileWriteMutexes[path]!.isCompleted) {
+      _fileWriteMutexes[path]!.complete();
+    }
   }
 
   Future<String?> read_() async {
-    if (_fileWriteMutex[path] != null) {
-      await _fileWriteMutex[path]!.future;
+    if (_fileWriteMutexes[path] != null) {
+      await _fileWriteMutexes[path]!.future;
     }
     if (await exists_()) {
       return await readAsString();
@@ -264,4 +276,4 @@ extension FileSystemEntityExtension on FileSystemEntity {
 
 /// [Map] storing various instances of [Completer] for
 /// mutual exclusion in [FileExtension.write_].
-final Map<String, Completer> _fileWriteMutex = <String, Completer>{};
+final Map<String, Completer> _fileWriteMutexes = <String, Completer>{};
