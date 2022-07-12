@@ -7,13 +7,12 @@
 ///
 
 import 'dart:io';
-import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path;
 
+import 'package:harmonoid/utils/safe_session_storage.dart';
 import 'package:harmonoid/utils/theme.dart';
-import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -27,8 +26,8 @@ class Configuration extends ConfigurationKeys {
   /// [Configuration] object instance.
   static late Configuration instance = Configuration();
 
-  /// Configuration storage [File] to hold serialized JSON document.
-  late File file;
+  /// [SafeSessionStorage] instance for cache read/write.
+  late SafeSessionStorage storage;
 
   /// Returns equivalent directory on various platforms to save configuration file.
   /// Not working on iOS or macOS yet.
@@ -52,19 +51,14 @@ class Configuration extends ConfigurationKeys {
   /// Generates from scratch if no configuration is found.
   ///
   static Future<void> initialize() async {
-    instance.file = File(
+    instance.storage = SafeSessionStorage(
       path.join(
         await instance.configurationDirectory,
         '.Harmonoid',
         'Configuration.JSON',
       ),
+      fallback: _defaultConfiguration,
     );
-    if (!await instance.file.exists_()) {
-      await instance.file.create_();
-      await instance.file.write_(
-        convert.JsonEncoder.withIndent('  ').convert(_defaultConfiguration),
-      );
-    }
     await instance.read();
     instance.cacheDirectory = Directory(
       path.join(
@@ -167,38 +161,36 @@ class Configuration extends ConfigurationKeys {
     if (discordRPC != null) {
       this.discordRPC = discordRPC;
     }
-    await file.write_(
-      const convert.JsonEncoder.withIndent('  ').convert(
-        {
-          'collectionDirectories': this
-              .collectionDirectories
-              .map((directory) => directory.path)
-              .toList()
-              .cast<String>(),
-          'languageRegion': this.languageRegion.index,
-          'accent': kAccents.indexOf(this.accent),
-          'themeMode': this.themeMode.index,
-          'collectionSortType': this.collectionSortType.index,
-          'collectionOrderType': this.collectionOrderType.index,
-          'automaticAccent': this.automaticAccent,
-          'notificationLyrics': this.notificationLyrics,
-          'collectionSearchRecent': this.collectionSearchRecent,
-          'webSearchRecent': this.webSearchRecent,
-          'webRecent': this.webRecent,
-          'taskbarIndicator': this.taskbarIndicator,
-          'seamlessPlayback': this.seamlessPlayback,
-          'jumpToNowPlayingScreenOnPlay': this.jumpToNowPlayingScreenOnPlay,
-          'automaticMusicLookup': this.automaticMusicLookup,
-          'dynamicNowPlayingBarColoring': this.dynamicNowPlayingBarColoring,
-          'proxyURL': this.proxyURL,
-          'backgroundArtwork': this.backgroundArtwork,
-          'modernNowPlayingScreen': this.modernNowPlayingScreen,
-          'modernNowPlayingScreenCarouselIndex':
-              this.modernNowPlayingScreenCarouselIndex,
-          'lyricsVisible': this.lyricsVisible,
-          'discordRPC': this.discordRPC,
-        },
-      ),
+    await storage.write(
+      {
+        'collectionDirectories': this
+            .collectionDirectories
+            .map((directory) => directory.path)
+            .toList()
+            .cast<String>(),
+        'languageRegion': this.languageRegion.index,
+        'accent': kAccents.indexOf(this.accent),
+        'themeMode': this.themeMode.index,
+        'collectionSortType': this.collectionSortType.index,
+        'collectionOrderType': this.collectionOrderType.index,
+        'automaticAccent': this.automaticAccent,
+        'notificationLyrics': this.notificationLyrics,
+        'collectionSearchRecent': this.collectionSearchRecent,
+        'webSearchRecent': this.webSearchRecent,
+        'webRecent': this.webRecent,
+        'taskbarIndicator': this.taskbarIndicator,
+        'seamlessPlayback': this.seamlessPlayback,
+        'jumpToNowPlayingScreenOnPlay': this.jumpToNowPlayingScreenOnPlay,
+        'automaticMusicLookup': this.automaticMusicLookup,
+        'dynamicNowPlayingBarColoring': this.dynamicNowPlayingBarColoring,
+        'proxyURL': this.proxyURL,
+        'backgroundArtwork': this.backgroundArtwork,
+        'modernNowPlayingScreen': this.modernNowPlayingScreen,
+        'modernNowPlayingScreenCarouselIndex':
+            this.modernNowPlayingScreenCarouselIndex,
+        'lyricsVisible': this.lyricsVisible,
+        'discordRPC': this.discordRPC,
+      },
     );
   }
 
@@ -207,56 +199,43 @@ class Configuration extends ConfigurationKeys {
   Future<void> read({
     bool retry = true,
   }) async {
-    try {
-      Map<String, dynamic> current =
-          convert.jsonDecode(await file.readAsString());
-      // Emblace default values for the keys that not found. Possibly due to app update.
-      _defaultConfiguration.keys.forEach(
-        (String key) {
-          if (!current.containsKey(key)) {
-            current[key] = _defaultConfiguration[key];
-          }
-        },
-      );
-      // Check for actual keys from the cache.
-      collectionDirectories = current['collectionDirectories']
-          .map((directory) => Directory(directory))
-          .toList()
-          .cast<Directory>();
-      languageRegion = LanguageRegion.values[current['languageRegion']];
-      accent = kAccents[current['accent']];
-      themeMode = ThemeMode.values[current['themeMode']];
-      collectionSortType = CollectionSort.values[current['collectionSortType']];
-      collectionOrderType =
-          CollectionOrder.values[current['collectionOrderType']];
-      automaticAccent = current['automaticAccent'];
-      notificationLyrics = current['notificationLyrics'];
-      collectionSearchRecent = current['collectionSearchRecent'].cast<String>();
-      webSearchRecent = current['webSearchRecent'].cast<String>();
-      webRecent = current['webRecent'].cast<String>();
-      taskbarIndicator = current['taskbarIndicator'];
-      seamlessPlayback = current['seamlessPlayback'];
-      jumpToNowPlayingScreenOnPlay = current['jumpToNowPlayingScreenOnPlay'];
-      automaticMusicLookup = current['automaticMusicLookup'];
-      dynamicNowPlayingBarColoring = current['dynamicNowPlayingBarColoring'];
-      proxyURL = current['proxyURL'];
-      backgroundArtwork = current['backgroundArtwork'];
-      modernNowPlayingScreen = current['modernNowPlayingScreen'];
-      modernNowPlayingScreenCarouselIndex =
-          current['modernNowPlayingScreenCarouselIndex'];
-      lyricsVisible = current['lyricsVisible'];
-      discordRPC = current['discordRPC'];
-    } catch (exception) {
-      if (!retry) throw exception;
-      if (!await file.exists_()) {
-        await file.create_();
-      }
-      await file.write_(
-        const convert.JsonEncoder.withIndent('  ')
-            .convert(_defaultConfiguration),
-      );
-      read(retry: false);
-    }
+    final current = await storage.read();
+    // Emblace default values for the keys that not found. Possibly due to app update.
+    _defaultConfiguration.keys.forEach(
+      (key) {
+        if (!current.containsKey(key)) {
+          current[key] = _defaultConfiguration[key];
+        }
+      },
+    );
+    // Check for actual keys from the cache.
+    collectionDirectories = current['collectionDirectories']
+        .map((directory) => Directory(directory))
+        .toList()
+        .cast<Directory>();
+    languageRegion = LanguageRegion.values[current['languageRegion']];
+    accent = kAccents[current['accent']];
+    themeMode = ThemeMode.values[current['themeMode']];
+    collectionSortType = CollectionSort.values[current['collectionSortType']];
+    collectionOrderType =
+        CollectionOrder.values[current['collectionOrderType']];
+    automaticAccent = current['automaticAccent'];
+    notificationLyrics = current['notificationLyrics'];
+    collectionSearchRecent = current['collectionSearchRecent'].cast<String>();
+    webSearchRecent = current['webSearchRecent'].cast<String>();
+    webRecent = current['webRecent'].cast<String>();
+    taskbarIndicator = current['taskbarIndicator'];
+    seamlessPlayback = current['seamlessPlayback'];
+    jumpToNowPlayingScreenOnPlay = current['jumpToNowPlayingScreenOnPlay'];
+    automaticMusicLookup = current['automaticMusicLookup'];
+    dynamicNowPlayingBarColoring = current['dynamicNowPlayingBarColoring'];
+    proxyURL = current['proxyURL'];
+    backgroundArtwork = current['backgroundArtwork'];
+    modernNowPlayingScreen = current['modernNowPlayingScreen'];
+    modernNowPlayingScreenCarouselIndex =
+        current['modernNowPlayingScreenCarouselIndex'];
+    lyricsVisible = current['lyricsVisible'];
+    discordRPC = current['discordRPC'];
   }
 }
 

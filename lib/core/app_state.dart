@@ -6,27 +6,25 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'dart:io';
-import 'dart:convert' as convert;
-import 'package:harmonoid/core/playback.dart'
-    show DefaultPlaybackValues, PlaylistLoopMode;
-import 'package:harmonoid/models/media.dart';
-import 'package:harmonoid/utils/file_system.dart';
 import 'package:path/path.dart' as path;
 
-import 'configuration.dart';
+import 'package:harmonoid/models/media.dart';
+import 'package:harmonoid/utils/safe_session_storage.dart';
+import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/configuration.dart';
 
 /// App State
-/// -------------
+/// ---------
 ///
 /// App state persistence for [Harmonoid](https://github.com/harmonoid/harmonoid).
 /// Used to resume the state of the app after a restart.
+///
 class AppState extends AppStateKeys {
   /// [AppState] object instance.
   static late AppState instance = AppState();
 
-  /// Configuration storage [File] to hold serialized JSON document.
-  late File file;
+  /// [SafeSessionStorage] instance for cache read/write.
+  late SafeSessionStorage storage;
 
   /// Initializes the [AppState] class.
   ///
@@ -34,19 +32,14 @@ class AppState extends AppStateKeys {
   /// Generates from scratch if no state is found.
   ///
   static Future<void> initialize() async {
-    instance.file = File(
+    instance.storage = SafeSessionStorage(
       path.join(
         await Configuration.instance.configurationDirectory,
         '.Harmonoid',
         'AppState.JSON',
       ),
+      fallback: _defaultAppState,
     );
-    if (!await instance.file.exists()) {
-      await instance.file.create_();
-      await instance.file.write_(
-        convert.JsonEncoder.withIndent('  ').convert(defaultAppState),
-      );
-    }
     await instance.read();
   }
 
@@ -68,53 +61,43 @@ class AppState extends AppStateKeys {
     this.volume = volume;
     this.pitch = pitch;
 
-    await file.write_(convert.JsonEncoder.withIndent('  ').convert({
-      'playlist': playlist,
-      'index': index,
-      'rate': rate,
-      'shuffle': shuffle,
-      'playlistLoopMode': PlaylistLoopMode.values.indexOf(playlistLoopMode),
-      'volume': volume,
-      'pitch': pitch,
-    }));
+    await storage.write(
+      {
+        'playlist': playlist,
+        'index': index,
+        'rate': rate,
+        'shuffle': shuffle,
+        'playlistLoopMode': playlistLoopMode.index,
+        'volume': volume,
+        'pitch': pitch,
+      },
+    );
   }
 
   /// Reads the app state from the [file].
   Future<void> read({
     bool retry = true,
   }) async {
-    try {
-      Map<String, dynamic> current =
-          convert.jsonDecode(await file.readAsString());
-      // Emblace default values for the keys that not found. Possibly due to app update.
-      defaultAppState.keys.forEach(
-        (String key) {
-          if (!current.containsKey(key)) {
-            current[key] = defaultAppState[key];
-          }
-        },
-      );
+    final current = await storage.read();
+    // Emblace default values for the keys that not found. Possibly due to app update.
+    _defaultAppState.keys.forEach(
+      (key) {
+        if (!current.containsKey(key)) {
+          current[key] = _defaultAppState[key];
+        }
+      },
+    );
 
-      playlist = (current['playlist'] as List)
-          .map((e) => Track.fromJson(e))
-          .toList()
-          .cast<Track>();
-      index = current['index'];
-      rate = current['rate'];
-      shuffle = current['shuffle'];
-      playlistLoopMode = PlaylistLoopMode.values[current['playlistLoopMode']];
-      volume = current['volume'];
-      pitch = current['pitch'];
-    } catch (exception) {
-      if (!retry) throw exception;
-      if (!await file.exists()) {
-        await file.create_();
-      }
-      await file.write_(
-        convert.JsonEncoder.withIndent('  ').convert(defaultAppState),
-      );
-      read(retry: false);
-    }
+    playlist = (current['playlist'] as List)
+        .map((e) => Track.fromJson(e))
+        .toList()
+        .cast<Track>();
+    index = current['index'];
+    rate = current['rate'];
+    shuffle = current['shuffle'];
+    playlistLoopMode = PlaylistLoopMode.values[current['playlistLoopMode']];
+    volume = current['volume'];
+    pitch = current['pitch'];
   }
 }
 
@@ -128,13 +111,12 @@ abstract class AppStateKeys {
   late double pitch;
 }
 
-final Map<String, dynamic> defaultAppState = {
+final Map<String, dynamic> _defaultAppState = {
   'playlist': DefaultPlaybackValues.tracks,
   'index': DefaultPlaybackValues.index,
   'rate': DefaultPlaybackValues.rate,
   'shuffle': DefaultPlaybackValues.isShuffling,
-  'playlistLoopMode':
-      PlaylistLoopMode.values.indexOf(DefaultPlaybackValues.playlistLoopMode),
+  'playlistLoopMode': DefaultPlaybackValues.playlistLoopMode.index,
   'volume': DefaultPlaybackValues.volume,
   'pitch': DefaultPlaybackValues.pitch,
 };
