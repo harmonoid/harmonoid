@@ -68,7 +68,7 @@ class AlbumTab extends StatelessWidget {
           ),
         );
         return isDesktop
-            ? Collection.instance.tracks.isNotEmpty
+            ? Collection.instance.albums.isNotEmpty
                 ? CustomListViewBuilder(
                     padding: EdgeInsets.only(
                       top: tileMargin,
@@ -86,7 +86,7 @@ class AlbumTab extends StatelessWidget {
                   )
             : Consumer<Collection>(
                 builder: (context, collection, _) => collection
-                        .tracks.isNotEmpty
+                        .albums.isNotEmpty
                     ? DraggableScrollbar.semicircle(
                         heightScrollThumb: 56.0,
                         labelConstraints: BoxConstraints.tightFor(
@@ -167,7 +167,7 @@ class DesktopAlbumArtistTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<Collection>(builder: (context, collection, _) {
-      if (collection.tracks.isEmpty)
+      if (collection.albums.isEmpty)
         return Center(
           child: ExceptionWidget(
             title: Language.instance.NO_COLLECTION_TITLE,

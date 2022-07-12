@@ -38,7 +38,7 @@ class ArtistTab extends StatelessWidget {
     return Consumer<Collection>(
       builder: (context, collection, _) {
         return isDesktop
-            ? collection.tracks.isNotEmpty
+            ? collection.artists.isNotEmpty
                 ? () {
                     final data = tileGridListWidgets(
                       context: context,
