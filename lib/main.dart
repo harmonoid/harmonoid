@@ -36,6 +36,12 @@ const String kLicense = 'End-User License Agreement for Harmonoid';
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
+    HttpOverrides.global = _HttpOverrides();
+  } catch (exception, stacktrace) {
+    debugPrint(exception.toString());
+    debugPrint(stacktrace.toString());
+  }
+  try {
     if (Platform.isWindows) {
       await Configuration.initialize();
       await AppState.initialize();
@@ -110,5 +116,19 @@ Future<void> main(List<String> args) async {
         stacktrace: stacktrace,
       ),
     );
+  }
+}
+
+class _HttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (cert, host, port) => true;
+  }
+
+  @override
+  String findProxyFromEnvironment(Uri url, Map<String, String>? environment) {
+    environment ??= Platform.environment;
+    return super.findProxyFromEnvironment(url, environment);
   }
 }
