@@ -169,7 +169,7 @@ You can add both local music & music from web URLs to these playlists.
 
 ### 6. Playing songs from YouTube Music
 
-Click on the "earth icon" in top-right of the application, select "YT Music".
+Click on the "earth icon" in top-right of the application, select "YT Music". See [guide](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support) for more details about YouTube Music support.
 
 Currently, YouTube Music support works _well_ in terms of performance & features.
 Right now, you can:
@@ -182,26 +182,32 @@ Right now, you can:
 - Get suggestions.
 - Save to playlists (still streamed over the internet).
 
-### 7. Playing from File Explorer
+### 7. Importing a YouTube Music playlist.
+
+Go to the "PLAYLISTS" tab & click on "IMPORT FROM YT MUSIC". Paste your link & hit enter. Your playlist will be saved locally.
+
+Thing to note here is that the media present in the playlist will be streamed over the internet & won't be downloaded.
+
+### 8. Playing from File Explorer
 
 You can play music directly from file explorer if you installed Harmonoid using the setup installer or from Microsoft Store.
 
 You can also right click a folder to "Add to Harmonoid's Playlist".
 
-### 8. Viewing a YouTube Music song on website
+### 9. Viewing a YouTube Music song on website
 
-If you're playing a song from YouTube Music & want to hear it on website instead, you can simply go to the "Now Playing Screen" by an arrow in the bottom-right corner of the application. Hovering over the album art, you'll see an icon hinting to open the song in your web-browser. Click on it & you're on YouTube Music website.
+If you're playing a song from YouTube Music & want to hear it on website instead, you can simply click on the "Open in browser" icon in the Now Playing Bar (at the bottom of the screen) or same button from the Now Playing Screen.
 
-### 9. Playing an online media URL
+### 10. Playing an online media URL
 
 Click on the "earth icon" in top-right of the application, select "Play URL".
 
-### 10. Troubleshoot
+### 11. Troubleshoot
 
 If you encounter some problem like you're unable to start the app or see an error screen, you can try to delete the `.Harmonoid` folder in your home directory.
 WARNING: This will also delete your music indexing cache & playlists. Best decision can be to report us at our Discord.
 
-### 11. Hacking
+### 12. Hacking
 
 If you wish to really configure properties of the app which are not available in the UI yet, you may edit the `.JSON` files in `~/.Harmonoid` directory.
 
