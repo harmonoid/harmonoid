@@ -12,12 +12,12 @@ import 'package:file_selector/file_selector.dart';
 import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/core/hotkeys.dart';
 import 'package:path/path.dart';
 import 'package:libmpv/libmpv.dart';
 import 'package:extended_image/extended_image.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';

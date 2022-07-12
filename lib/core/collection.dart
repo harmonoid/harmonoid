@@ -74,8 +74,8 @@ class Collection extends ChangeNotifier {
   late Directory albumArtDirectory;
   late File unknownAlbumArt;
 
-  SplayTreeMap<AlbumArtist, List<Album>> albumArtists =
-      SplayTreeMap<AlbumArtist, List<Album>>();
+  SplayTreeMap<AlbumArtist, HashSet<Album>> albumArtists =
+      SplayTreeMap<AlbumArtist, HashSet<Album>>();
 
   /// Adds new directories that will be used for indexing of the music.
   ///
@@ -232,6 +232,19 @@ class Collection extends ChangeNotifier {
           await _arrange(
             track,
           );
+          await _arrangeArtists(notifyListeners: false);
+          final found =
+              albumArtists[AlbumArtist(track.albumArtistName)]?.lookup(
+            Album(
+              albumName: track.albumName,
+              year: track.year,
+              albumArtistName: track.albumArtistName,
+            ),
+          );
+          debugPrint(found.toString());
+          if (found != null) {
+            found.tracks.add(track);
+          }
         } else {
           final _metadata = await MetadataRetriever.fromUri(
             file.uri,
@@ -242,8 +255,20 @@ class Collection extends ChangeNotifier {
           await _arrange(
             track,
           );
+          await _arrangeArtists(notifyListeners: false);
+          final found =
+              albumArtists[AlbumArtist(track.albumArtistName)]?.lookup(
+            Album(
+              albumName: track.albumName,
+              year: track.year,
+              albumArtistName: track.albumArtistName,
+            ),
+          );
+          debugPrint(found.toString());
+          if (found != null) {
+            found.tracks.add(track);
+          }
         }
-        await _arrangeArtists();
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
@@ -268,53 +293,41 @@ class Collection extends ChangeNotifier {
     if (object is Track) {
       _tracks.remove(object);
       for (final album in _albums) {
-        bool flag = false;
         if (object.albumName == album.albumName &&
             object.albumArtistName == album.albumArtistName) {
-          for (final track in album.tracks) {
-            if (object.uri.toFilePath() == track.uri.toFilePath()) {
-              album.tracks.remove(track);
-              if (album.tracks.isEmpty) {
-                _albums.remove(album);
-                flag = true;
-              }
-              break;
-            }
+          album.tracks.remove(object);
+          if (album.tracks.isEmpty) {
+            _albums.remove(album);
           }
-          if (flag) {
-            break;
-          }
+          break;
         }
       }
       for (String artistName in object.trackArtistNames) {
-        for (Artist artist in _artists) {
-          if (artistName == artist.artistName) {
-            artist.tracks.removeWhere((element) =>
-                object.uri.toFilePath() == element.uri.toFilePath());
-            if (artist.tracks.isEmpty) {
-              _artists.remove(artist);
-              break;
-            } else {
-              for (Album album in artist.albums) {
-                if (object.albumName == album.albumName &&
-                    object.albumArtistName == album.albumArtistName) {
-                  album.tracks.removeWhere((element) => element == object);
-                  break;
-                }
-              }
-              artist.albums.removeWhere((element) => element.tracks.isEmpty);
-            }
+        try {
+          final artist = _artists.lookup(Artist(artistName: artistName))!;
+          artist.tracks.remove(object);
+          if (artist.tracks.isEmpty) {
+            _artists.remove(artist);
             break;
+          } else {
+            for (Album album in artist.albums) {
+              if (object.albumName == album.albumName &&
+                  object.albumArtistName == album.albumArtistName) {
+                album.tracks.remove(object);
+                break;
+              }
+            }
+            artist.albums.removeWhere((element) => element.tracks.isEmpty);
           }
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
         }
       }
-      for (int i = 0;
-          i < albumArtists[AlbumArtist(object.albumArtistName)]!.length;
-          i++) {
-        if (albumArtists[AlbumArtist(object.albumArtistName)]![i]
-            .tracks
-            .isEmpty) {
-          albumArtists[AlbumArtist(object.albumArtistName)]!.removeAt(i);
+      for (final album in albumArtists[AlbumArtist(object.albumArtistName)]!) {
+        album.tracks.remove(object);
+        if (album.tracks.isEmpty) {
+          albumArtists[AlbumArtist(object.albumArtistName)]!.remove(album);
           break;
         }
       }
@@ -330,21 +343,13 @@ class Collection extends ChangeNotifier {
           object.albumName != track.albumName &&
           object.albumArtistName != track.albumArtistName);
       for (final artist in _artists) {
-        List<Track> _tracks = <Track>[];
-        for (final track in artist.tracks) {
-          if (object.albumName != track.albumName &&
-              object.albumArtistName != track.albumArtistName) {
-            _tracks.add(track);
-          }
-        }
-        artist.tracks.clear();
-        artist.tracks.addAll(_tracks);
-        for (Album album in artist.albums) {
-          if (object.albumName == album.albumName &&
-              object.albumArtistName == album.albumArtistName) {
-            artist.albums.remove(album);
-            break;
-          }
+        if (artist.albums.remove(
+            object) /* If album is found, then only track would be present */) {
+          artist.tracks.removeWhere(
+            (element) =>
+                object.albumName != element.albumName &&
+                object.albumArtistName != element.albumArtistName,
+          );
         }
       }
       albumArtists[AlbumArtist(object.albumArtistName)]!.remove(object);
@@ -359,10 +364,10 @@ class Collection extends ChangeNotifier {
         }
       }
     }
-    await Future.wait([sort(notifyListeners: false), saveToCache()]);
     if (notifyListeners) {
       this.notifyListeners();
     }
+    await Future.wait([sort(notifyListeners: false), saveToCache()]);
   }
 
   /// Saves the currently visible music collection to the cache.
@@ -447,7 +452,8 @@ class Collection extends ChangeNotifier {
                   final album = Album.fromJson(e);
                   if (!albumArtists
                       .containsKey(AlbumArtist(album.albumArtistName))) {
-                    albumArtists[AlbumArtist(album.albumArtistName)] = [];
+                    albumArtists[AlbumArtist(album.albumArtistName)] =
+                        HashSet<Album>();
                   }
                   return album;
                 }).cast<Album>()))(),
@@ -668,7 +674,8 @@ class Collection extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Creates a new playlist in the collection.
+  /// Creates a new [Playlist] in the collection with a given [name].
+  /// Returns it's reference after creation.
   ///
   Future<Playlist> playlistAdd(String name) async {
     final Playlist playlist;
@@ -689,7 +696,7 @@ class Collection extends ChangeNotifier {
     return playlist;
   }
 
-  /// Creates a new playlist in the collection.
+  /// Creates a new [Playlist] in the collection.
   ///
   Future<Playlist> playlistCreate(Playlist playlist) async {
     playlists.add(playlist);
@@ -711,7 +718,7 @@ class Collection extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Adds a track to a playlist.
+  /// Adds a [Track] to a [Playlist].
   ///
   Future<void> playlistAddTrack(Playlist playlist, Track track) async {
     for (int index = 0; index < playlists.length; index++) {
@@ -722,6 +729,25 @@ class Collection extends ChangeNotifier {
           playlists[index].tracks.addAll(tracks.take(100));
         } else {
           playlists[index].tracks.insert(0, track);
+        }
+        break;
+      }
+    }
+    await playlistsSaveToCache();
+    notifyListeners();
+  }
+
+  /// Adds a [List] of [Track]s passed as [tracks], to the [playlist].
+  ///
+  Future<void> playlistAddTracks(Playlist playlist, List<Track> tracks) async {
+    for (int index = 0; index < playlists.length; index++) {
+      if (playlists[index].id == playlist.id) {
+        if (playlist.id == kHistoryPlaylist) {
+          final res = [...tracks, ...playlists[index].tracks];
+          playlists[index].tracks.clear();
+          playlists[index].tracks.addAll(res.take(100));
+        } else {
+          playlists[index].tracks.insertAll(0, tracks);
         }
         break;
       }
@@ -810,7 +836,7 @@ class Collection extends ChangeNotifier {
     // A new album artist gets discovered.
     if (!albumArtists.containsKey(AlbumArtist(track.albumArtistName))) {
       // Create new [List] and append the new [Album] to its name.
-      albumArtists[AlbumArtist(track.albumArtistName)] = [];
+      albumArtists[AlbumArtist(track.albumArtistName)] = HashSet<Album>();
     }
     for (String artistName in track.trackArtistNames) {
       if (!_artists.contains(Artist(artistName: artistName))) {

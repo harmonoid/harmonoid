@@ -1219,6 +1219,12 @@ class CarouselState extends State<Carousel> {
                 child: Icon(Icons.queue_music),
                 mini: true,
                 backgroundColor: widget.palette?.last,
+                foregroundColor:
+                    (widget.palette?.last ?? Theme.of(context).primaryColor)
+                                .computeLuminance() >
+                            0.5
+                        ? Colors.black
+                        : Colors.white,
               ),
             ),
           ),
