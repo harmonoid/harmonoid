@@ -491,7 +491,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.2"
   path_provider:
     dependency: transitive
     description:
@@ -611,6 +611,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.27.3"
+  safe_session_storage:
+    dependency: "direct main"
+    description:
+      path: "external/safe_session_storage"
+      relative: true
+    source: path
+    version: "0.0.1"
   share_plus:
     dependency: "direct main"
     description:
@@ -843,5 +850,5 @@ packages:
     source: path
     version: "0.0.1"
 sdks:
-  dart: ">=2.17.0 <3.0.0"
+  dart: ">=2.18.0-261.0.dev <3.0.0"
   flutter: ">=3.0.0"

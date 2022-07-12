@@ -24,6 +24,8 @@ dependencies:
     path: external/override_window_destroy
   ytm_client:
     path: external/ytm_client.dart
+  safe_session_storage:
+    path: external/safe_session_storage
   windows_taskbar:
     git:
       url: https://github.com/alexmercerind/windows_taskbar.git
