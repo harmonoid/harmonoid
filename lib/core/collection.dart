@@ -18,6 +18,7 @@ import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/file_system.dart';
+import 'package:harmonoid/utils/safe_session_storage.dart';
 
 /// Collection
 /// ----------
@@ -369,29 +370,20 @@ class Collection extends ChangeNotifier {
   Future<void> saveToCache() async {
     await Future.wait(
       [
-        File(path.join(cacheDirectory.path, kCollectionTrackCacheFileName))
-            .write_(
-          encoder.convert(
-            {
-              'tracks': _tracks.map((e) => e.toJson()).toList(),
-            },
-          ),
+        _trackStorage.write(
+          {
+            'tracks': _tracks.map((e) => e.toJson()).toList(),
+          },
         ),
-        File(path.join(cacheDirectory.path, kCollectionAlbumCacheFileName))
-            .write_(
-          encoder.convert(
-            {
-              'albums': _albums.map((e) => e.toJson()).toList(),
-            },
-          ),
+        _albumStorage.write(
+          {
+            'albums': _albums.map((e) => e.toJson()).toList(),
+          },
         ),
-        File(path.join(cacheDirectory.path, kCollectionArtistCacheFileName))
-            .write_(
-          encoder.convert(
-            {
-              'artists': _artists.map((e) => e.toJson()).toList(),
-            },
-          ),
+        _artistStorage.write(
+          {
+            'artists': _artists.map((e) => e.toJson()).toList(),
+          },
         ),
       ],
     );
@@ -430,40 +422,44 @@ class Collection extends ChangeNotifier {
     _artists = HashSet<Artist>();
     // Indexing from scratch if no cache exists.
     if (!await File(
-            path.join(cacheDirectory.path, kCollectionTrackCacheFileName))
-        .exists_()) {
+                path.join(cacheDirectory.path, kCollectionTrackCacheFileName))
+            .exists_() &&
+        !await File(
+                path.join(cacheDirectory.path, kCollectionAlbumCacheFileName))
+            .exists_() &&
+        !await File(
+                path.join(cacheDirectory.path, kCollectionArtistCacheFileName))
+            .exists_()) {
       index(onProgress: onProgress);
     }
     // Just check for newly added or deleted tracks if cache exists.
     else {
       try {
-        // Index tracks, albums & artists already in the cache.
+        // Restore cache.
         await Future.wait(
           [
-            (() async => _tracks = HashSet<Track>.from(convert
-                .jsonDecode(await File(path.join(
-                        cacheDirectory.path, kCollectionTrackCacheFileName))
-                    .readAsString())['tracks']
-                .map((e) => Track.fromJson(e))))(),
-            (() async => _albums = HashSet<Album>.from(convert
-                    .jsonDecode(await File(path.join(
-                            cacheDirectory.path, kCollectionAlbumCacheFileName))
-                        .readAsString())['albums']
-                    .map((e) {
+            (() async => _tracks = HashSet<Track>.from(
+                (await _trackStorage.read())['tracks']
+                    .map((e) => Track.fromJson(e))
+                    .cast<Track>()))(),
+            (() async => _albums = HashSet<Album>.from(
+                    (await _albumStorage.read())['albums'].map((e) {
                   final album = Album.fromJson(e);
                   if (!albumArtists
                       .containsKey(AlbumArtist(album.albumArtistName))) {
                     albumArtists[AlbumArtist(album.albumArtistName)] = [];
                   }
                   return album;
-                })))(),
-            (() async => _artists = HashSet<Artist>.from(convert
-                .jsonDecode(await File(path.join(
-                        cacheDirectory.path, kCollectionArtistCacheFileName))
-                    .readAsString())['artists']
-                .map((e) => Artist.fromJson(e))))(),
+                }).cast<Album>()))(),
+            (() async => _artists = HashSet<Artist>.from(
+                (await _artistStorage.read())['artists']
+                    .map((e) => Artist.fromJson(e))
+                    .cast<Artist>()))(),
           ],
         );
+        debugPrint('_tracks: ${_tracks.length}');
+        debugPrint('_albums: ${_albums.length}');
+        debugPrint('_artists: ${_artists.length}');
         await sort(notifyListeners: false);
         await _arrangeArtists(notifyListeners: false);
         await playlistsGetFromCache(notifyListeners: false);
@@ -530,6 +526,9 @@ class Collection extends ChangeNotifier {
             } catch (exception) {}
           }
         }
+        // Save to cache.
+        await sort();
+        await saveToCache();
       } catch (exception, stacktrace) {
         // Handle corrupt cache.
         debugPrint(exception.toString());
@@ -541,9 +540,6 @@ class Collection extends ChangeNotifier {
     try {
       onProgress?.call(1 << 32, 1 << 32, true);
     } catch (exception) {}
-    // Save to cache.
-    await sort();
-    await saveToCache();
   }
 
   /// Sorts the music collection contents based upon passed [type].
@@ -593,7 +589,6 @@ class Collection extends ChangeNotifier {
     if (notifyListeners) {
       this.notifyListeners();
     }
-    await saveToCache();
   }
 
   /// Orders the music collection contents based upon passed [type].
@@ -756,80 +751,21 @@ class Collection extends ChangeNotifier {
   /// Save playlists to the cache.
   ///
   Future<void> playlistsSaveToCache() async {
-    await File(
-      path.join(
-        cacheDirectory.path,
-        kPlaylistsCacheFileName,
-      ),
-    ).write_(
-      encoder.convert(
-        {
-          'playlists': playlists
-              .map(
-                (playlist) => playlist.toJson(),
-              )
-              .toList()
-        },
-      ),
+    _playlistStorage.write(
+      {
+        'playlists': playlists.map((e) => e.toJson()).toList(),
+      },
     );
   }
 
   /// Gets all the playlists present in the cache.
   ///
   Future<void> playlistsGetFromCache({bool notifyListeners: true}) async {
-    playlists = <Playlist>[];
-    final file = File(path.join(cacheDirectory.path, kPlaylistsCacheFileName));
-    // Keep playlist named "Liked Songs" & "History" persistently.
-    if (!await file.exists_()) {
-      playlists = [
-        Playlist(
-          id: kHistoryPlaylist,
-          name: 'History',
-        ),
-        Playlist(
-          id: kLikedSongsPlaylist,
-          name: 'Liked Songs',
-        ),
-      ];
-      playlistsSaveToCache();
-    } else {
-      try {
-        final json = convert.jsonDecode(await file.readAsString())['playlists'];
-        for (final element in json) {
-          playlists.add(Playlist.fromJson(element));
-        }
-        // Handle "History" playlist creation when upgrading from older versions.
-        if (!playlists.contains(Playlist(
-          id: kHistoryPlaylist,
-          name: 'History',
-        ))) {
-          playlists.insert(
-              0,
-              Playlist(
-                id: kHistoryPlaylist,
-                name: 'History',
-              ));
-          await playlistsSaveToCache();
-        }
-      } catch (exception, stacktrace) {
-        // Playlist cache likely became corrupted.
-        await file.copy(file.path + '.bak');
-        await file.delete();
-        playlists = [
-          Playlist(
-            id: kHistoryPlaylist,
-            name: 'History',
-          ),
-          Playlist(
-            id: kLikedSongsPlaylist,
-            name: 'Liked Songs',
-          ),
-        ];
-        playlistsSaveToCache();
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-      }
-    }
+    final data = await _playlistStorage.read();
+    playlists = data['playlists']!
+        .map((e) => Playlist.fromJson(e))
+        .toList()
+        .cast<Playlist>();
     if (notifyListeners) {
       this.notifyListeners();
     }
@@ -935,6 +871,36 @@ class Collection extends ChangeNotifier {
   HashSet<Album> _albums = HashSet<Album>();
   HashSet<Track> _tracks = HashSet<Track>();
   HashSet<Artist> _artists = HashSet<Artist>();
+
+  SafeSessionStorage get _albumStorage => SafeSessionStorage(
+        path.join(cacheDirectory.path, kCollectionAlbumCacheFileName),
+        fallback: {'albums': []},
+      );
+  SafeSessionStorage get _trackStorage => SafeSessionStorage(
+        path.join(cacheDirectory.path, kCollectionTrackCacheFileName),
+        fallback: {'tracks': []},
+      );
+  SafeSessionStorage get _artistStorage => SafeSessionStorage(
+        path.join(cacheDirectory.path, kCollectionArtistCacheFileName),
+        fallback: {'artists': []},
+      );
+  SafeSessionStorage get _playlistStorage => SafeSessionStorage(
+        path.join(cacheDirectory.path, kPlaylistsCacheFileName),
+        fallback: {
+          'playlists': [
+            {
+              'name': 'History',
+              'id': kHistoryPlaylist,
+              'tracks': [],
+            },
+            {
+              'name': 'Liked Songs',
+              'id': kLikedSongsPlaylist,
+              'tracks': [],
+            },
+          ],
+        },
+      );
 }
 
 /// Types of sorts available.
@@ -986,7 +952,8 @@ const String kAlbumArtsDirectoryName = 'AlbumArts';
 
 /// Cache file to store collection.
 @Deprecated(
-    'Now [kCollectionTrackCacheFileName], [kCollectionAlbumCacheFileName] & [kCollectionArtistCacheFileName] is used.')
+  'Now [kCollectionTrackCacheFileName], [kCollectionAlbumCacheFileName] & [kCollectionArtistCacheFileName] is used.',
+)
 const String kCollectionCacheFileName = 'Collection.JSON';
 
 const String kCollectionTrackCacheFileName = 'Tracks.JSON';
