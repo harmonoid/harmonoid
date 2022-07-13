@@ -11,30 +11,32 @@ import 'dart:ui';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:math' as math;
-import 'package:animations/animations.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart'
     hide ReorderableDragStartListener, Intent;
-import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/state/mobile_now_playing_controller.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:flutter/foundation.dart';
+import 'package:animations/animations.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
+import 'package:harmonoid/core/intent.dart';
+import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/core/hotkeys.dart';
-import 'package:harmonoid/core/intent.dart';
+import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/web.dart';
-import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
 class CustomListView extends StatelessWidget {
   late final ScrollController controller;
@@ -2019,5 +2021,205 @@ class _StillGIFState extends State<StillGIF> {
           width: widget.width,
           height: widget.height,
         );
+  }
+}
+
+class FoldersNotFoundDialog extends StatefulWidget {
+  FoldersNotFoundDialog({Key? key}) : super(key: key);
+
+  @override
+  State<FoldersNotFoundDialog> createState() => _FoldersNotFoundDialogState();
+}
+
+class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<Collection>(
+      builder: (context, collection, _) {
+        final missingDirectories = collection.collectionDirectories
+            .where((element) => !element.existsSync_());
+        return AlertDialog(
+          contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 4.0),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                child: Text(
+                  missingDirectories.isEmpty
+                      ? Language.instance.AWESOME
+                      : Language.instance.ERROR,
+                  style: Theme.of(context).textTheme.headline1,
+                  textAlign: TextAlign.start,
+                ),
+                padding: EdgeInsets.only(
+                  bottom: 16.0,
+                  left: 4.0,
+                ),
+              ),
+              Padding(
+                child: Text(
+                  missingDirectories.isEmpty
+                      ? Language.instance.NOW_YOU_ARE_GOOD_TO_GO_BACK
+                      : Language.instance.FOLDERS_NOT_FOUND,
+                  style: Theme.of(context).textTheme.headline3,
+                  textAlign: TextAlign.start,
+                ),
+                padding: EdgeInsets.only(
+                  bottom: 16.0,
+                  left: 4.0,
+                ),
+              ),
+              ...missingDirectories
+                  .map(
+                    (directory) => Container(
+                      height: isMobile ? 56.0 : 40.0,
+                      margin: EdgeInsets.symmetric(vertical: 2.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          directory.existsSync_()
+                              ? Container(
+                                  width: 40.0,
+                                  child: Icon(
+                                    FluentIcons.folder_32_regular,
+                                    size: 32.0,
+                                  ),
+                                )
+                              : Tooltip(
+                                  message: Language.instance.FOLDER_NOT_FOUND,
+                                  verticalOffset: 24.0,
+                                  waitDuration: Duration.zero,
+                                  child: Container(
+                                    width: 40.0,
+                                    child: Icon(
+                                      Icons.warning,
+                                      size: 24.0,
+                                    ),
+                                  ),
+                                ),
+                          Expanded(
+                            child: Text(
+                              directory.path
+                                  .replaceAll(
+                                    '/storage/emulated/0/',
+                                    '',
+                                  )
+                                  .overflow,
+                              style: isMobile
+                                  ? Theme.of(context).textTheme.subtitle1
+                                  : Theme.of(context).textTheme.headline3,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          MaterialButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () async {
+                              if (!CollectionRefresh.instance.isCompleted) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    backgroundColor:
+                                        Theme.of(context).cardColor,
+                                    title: Text(
+                                      Language.instance
+                                          .INDEXING_ALREADY_GOING_ON_TITLE,
+                                      style:
+                                          Theme.of(context).textTheme.headline1,
+                                    ),
+                                    content: Text(
+                                      Language.instance
+                                          .INDEXING_ALREADY_GOING_ON_SUBTITLE,
+                                      style:
+                                          Theme.of(context).textTheme.headline3,
+                                    ),
+                                    actions: [
+                                      MaterialButton(
+                                        textColor:
+                                            Theme.of(context).primaryColor,
+                                        onPressed: Navigator.of(context).pop,
+                                        child: Text(Language.instance.OK),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                return;
+                              }
+                              if (Configuration
+                                      .instance.collectionDirectories.length ==
+                                  1) {
+                                showDialog(
+                                  context: context,
+                                  builder: (subContext) => AlertDialog(
+                                    title: Text(
+                                      Language.instance.WARNING,
+                                      style: Theme.of(subContext)
+                                          .textTheme
+                                          .headline1,
+                                    ),
+                                    content: Text(
+                                      Language.instance
+                                          .LAST_COLLECTION_DIRECTORY_REMOVED,
+                                      style: Theme.of(subContext)
+                                          .textTheme
+                                          .headline3,
+                                    ),
+                                    actions: [
+                                      MaterialButton(
+                                        textColor:
+                                            Theme.of(context).primaryColor,
+                                        onPressed: () async {
+                                          Navigator.of(subContext).pop();
+                                        },
+                                        child: Text(Language.instance.OK),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                return;
+                              }
+                              await Collection.instance.removeDirectories(
+                                directories: [directory],
+                                onProgress: (progress, total, isCompleted) {
+                                  CollectionRefresh.instance
+                                      .set(progress, total);
+                                },
+                              );
+                              await Configuration.instance.save(
+                                collectionDirectories:
+                                    Configuration.instance.collectionDirectories
+                                      ..remove(directory),
+                              );
+                            },
+                            child: Text(
+                              Language.instance.REMOVE.toUpperCase(),
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ],
+          ),
+          actions: [
+            MaterialButton(
+              child: Text(
+                Language.instance.DONE.toUpperCase(),
+              ),
+              onPressed: missingDirectories.isEmpty
+                  ? Navigator.of(context).maybePop
+                  : null,
+              textColor: Theme.of(context).primaryColor,
+              disabledTextColor: Theme.of(context).iconTheme.color,
+            ),
+          ],
+        );
+      },
+    );
   }
 }
