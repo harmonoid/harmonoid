@@ -19,6 +19,7 @@ class Strings {
   late String AUTOMATICALLY_ADD_OTHER_SONGS_TO_NOW_PLAYING_TITLE;
   late String AUTO_REFRESH_SETTING;
   late String AUTO_REFRESH_SETTING_TITLE;
+  late String AWESOME;
   late String A_TO_Z;
   late String BACKGROUND_ARTWORK_SUBTITLE;
   late String BACKGROUND_ARTWORK_TITLE;
@@ -68,14 +69,16 @@ class Strings {
   late String EDIT_DETAILS;
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;
-  late String ERROR;
   late String ENABLE_DISCORD_RPC;
+  late String ERROR;
   late String EXIT_FULLSCREEN;
   late String EXIT_NOW_PLAYING;
   late String EXIT_SUBTITLE;
   late String EXIT_TITLE;
   late String EXPERIMENTAL;
   late String EXPERIMENTAL_SUBTITLE;
+  late String FOLDERS_NOT_FOUND;
+  late String FOLDER_NOT_FOUND;
   late String FULLSCREEN;
   late String GENRE;
   late String GO_TO_SETTINGS;
@@ -107,6 +110,7 @@ class Strings {
   late String NOW_PLAYING_NEXT_TRACK;
   late String NOW_PLAYING_NOT_PLAYING_TITLE;
   late String NOW_PLAYING_PREVIOUS_TRACK;
+  late String NOW_YOU_ARE_GOOD_TO_GO_BACK;
   late String NO_COLLECTION_SUBTITLE;
   late String NO_COLLECTION_TITLE;
   late String NO_DOWNLOAD_UPDATE;
