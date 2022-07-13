@@ -143,10 +143,10 @@ class Collection extends ChangeNotifier {
     void Function(int?, int, bool)? onProgress,
   }) async {
     onProgress?.call(null, 0, false);
-    for (final directory in directories) {
+    for (final directory in [...directories]) {
       collectionDirectories.remove(directory);
     }
-    final current = HashSet<Track>();
+    final currentTracks = HashSet<Track>();
     int i = 0;
     for (final element in _tracks) {
       final track = element;
@@ -158,16 +158,62 @@ class Collection extends ChangeNotifier {
         }
       }
       if (present) {
-        current.add(track);
+        currentTracks.add(track);
       }
       try {
         onProgress?.call(i + 1, _tracks.length, i + 1 == _tracks.length);
         i++;
       } catch (_) {}
     }
+    _tracks = currentTracks;
+    for (final element in _albums) {
+      final album = element;
+      final currentTracks = HashSet<Track>();
+      for (final track in album.tracks) {
+        bool present = false;
+        for (final directory in collectionDirectories) {
+          if (track.uri.toFilePath().startsWith(directory.path)) {
+            present = true;
+            break;
+          }
+        }
+        if (present) {
+          currentTracks.add(track);
+        }
+        try {
+          onProgress?.call(i + 1, _tracks.length, i + 1 == _tracks.length);
+          i++;
+        } catch (_) {}
+      }
+      album.tracks.clear();
+      album.tracks.addAll(currentTracks);
+    }
+    _albums.removeWhere((element) => element.tracks.isEmpty);
+    for (final element in _artists) {
+      final artist = element;
+      final currentTracks = HashSet<Track>();
+      for (final track in artist.tracks) {
+        bool present = false;
+        for (final directory in collectionDirectories) {
+          if (track.uri.toFilePath().startsWith(directory.path)) {
+            present = true;
+            break;
+          }
+        }
+        if (present) {
+          currentTracks.add(track);
+        }
+        try {
+          onProgress?.call(i + 1, _tracks.length, i + 1 == _tracks.length);
+          i++;
+        } catch (_) {}
+      }
+      artist.tracks.clear();
+      artist.tracks.addAll(currentTracks);
+    }
+    _artists.removeWhere((element) => element.tracks.isEmpty);
     try {
       onProgress?.call(_tracks.length, _tracks.length, true);
-      _tracks = current;
       await saveToCache();
       await sort(notifyListeners: false);
       await refresh(onProgress: onProgress);
