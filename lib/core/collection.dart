@@ -6,8 +6,8 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'dart:collection';
 import 'dart:io';
+import 'dart:collection';
 import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -88,7 +88,8 @@ class Collection extends ChangeNotifier {
     onProgress?.call(null, directory.length, false);
     // Basically [Collection.index] the newly added directories, a lot more efficient.
     for (final collectionDirectory in directories) {
-      directory.addAll(await (collectionDirectory.list_()));
+      directory.addAll(
+          await (collectionDirectory.list_(extensions: kSupportedFileTypes)));
     }
     for (int index = 0; index < directory.length; index++) {
       final object = directory[index];
@@ -487,7 +488,8 @@ class Collection extends ChangeNotifier {
           // Add newly added tracks.
           final directory = <File>[];
           for (Directory collectionDirectory in collectionDirectories) {
-            for (final object in await collectionDirectory.list_()) {
+            for (final object in await collectionDirectory.list_(
+                extensions: kSupportedFileTypes)) {
               directory.add(object);
             }
           }
@@ -623,7 +625,8 @@ class Collection extends ChangeNotifier {
     final directory = <File>[];
     onProgress?.call(null, directory.length, false);
     for (final collectionDirectory in collectionDirectories)
-      directory.addAll(await (collectionDirectory.list_()));
+      directory.addAll(
+          await (collectionDirectory.list_(extensions: kSupportedFileTypes)));
     for (int index = 0; index < directory.length; index++) {
       final object = directory[index];
       try {

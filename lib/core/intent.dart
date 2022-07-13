@@ -120,7 +120,8 @@ class Intent {
     } else if (directory != null) {
       await Playback.instance.loadAppState(open: false);
       bool playing = false;
-      for (final file in await directory!.list_()) {
+      for (final file
+          in await directory!.list_(extensions: kSupportedFileTypes)) {
         if (kSupportedFileTypes.contains(file.extension)) {
           final metadata = <String, dynamic>{
             'uri': file.uri.toString(),
@@ -255,7 +256,8 @@ class Intent {
     } else if (FileSystemEntity.typeSync(uri.toFilePath()) ==
         FileSystemEntityType.directory) {
       bool playing = false;
-      for (final file in await Directory(uri.toFilePath()).list_()) {
+      for (final file in await Directory(uri.toFilePath())
+          .list_(extensions: kSupportedFileTypes)) {
         if (kSupportedFileTypes.contains(file.extension)) {
           final metadata = <String, dynamic>{
             'uri': file.uri.toString(),
