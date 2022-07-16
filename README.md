@@ -4,14 +4,14 @@
 
 **🎵 Elegant music app to play & manage music library. Time-synced lyrics, playlists & visuals. YouTube Music.**
 
-- [Download](#download) [Windows, Linux]
+- [Download](#download) [Windows, Linux, ~~Android~~]
 - [Discord](https://discord.gg/2Rc3edFWd8)
 
-[work-in-progress] [[github-sponsors](https://github.com/sponsors/alexmercerind)] [[patreon](https://www.patreon.com/harmonoid)] [[primary-guide](#guide)] [[youtube-music-guide](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support)]
+[Patreon](https://www.patreon.com/harmonoid) • [Sponsor Project](https://github.com/sponsors/alexmercerind) • [Minimal App Guide](https://github.com/harmonoid/harmonoid/wiki/Minimal-Guide) • [YouTube Music Details](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support)
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_W8Oi1qPZ0O.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_MOnywQpgPB.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/dark-mode.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_BRfMT0wIX6.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_zZZ1d0yO5G.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_yFdqibq6DF.webp?raw=true)
 
@@ -27,13 +27,10 @@ https://user-images.githubusercontent.com/28951144/173223285-eaafff0b-a75e-4cf9-
 
 - [Features](#features)
 - [Limitations](#limitations)
-- [Guide](#guide)
 - [Acknowledgements](#acknowledgements)
 - [Compiling](#compiling)
 - [License](#license)
 - [Third-Party Credits](#third-party-credits)
-- [Discord](https://discord.gg/2Rc3edFWd8)
-- [Patreon](https://www.patreon.com/harmonoid)
 
 ## Download
 
@@ -96,7 +93,6 @@ Coming Soon!
 
 ### Upcoming Features
 
-- Presets like "Reverb", "Nightcore", "Lo-Fi" etc.
 - Equalizer.
 - Mini-window mode.
 - Minimization to system tray.
@@ -124,95 +120,6 @@ Few issues regarding memory usage alone can be:
 - https://github.com/flutter/flutter/issues/95092
 
 In most cases as of now (Windows & Linux), memory usage will be really low at fresh start of the application & will continue to rise (although slowly) overtime with no specific reason.
-
-## Guide
-
-### 1. Keyboard shortcuts
-
-- <kbd>Space</kbd>: Play or pause.
-- <kbd>Alt</kbd> + <kbd>N</kbd>: Next song.
-- <kbd>Alt</kbd> + <kbd>B</kbd>: Previous song.
-- <kbd>Alt</kbd> + <kbd>M</kbd>: mute or un-mute.
-- <kbd>Alt</kbd> + <kbd>V</kbd>: Volume increase.
-- <kbd>Alt</kbd> + <kbd>C</kbd>: Volume decrease.
-- <kbd>Alt</kbd> + <kbd>X</kbd>: Seek forwards.
-- <kbd>Alt</kbd> + <kbd>Z</kbd>: Seek backwards.
-
-### 2. Indexing your music
-
-To show your local music inside Harmonoid, you can go to the settings & click "ADD NEW FOLDER". This will show a new window, where you can select a folder where all your music is stored. After selecting the folder, your music collection inside the application will start building.
-
-Your music will be categorized into albums, artists etc. & you'll be able to freely browse music album-wise or artist-wise etc. while being able to sort it alphabetically or year-wise etc.
-
-As of now, you can still browse/play your music while it is being indexed.
-
-Next time when you start the app, your music collection will be retrieved from the cache.
-
-To remove a folder from your music collection, just click on "REMOVE" next to the folder you might wanna remove in the settings page.
-
-### 3. Refresh your music
-
-Just tap the circular "refresh" button in bottom-right of the application, it'll look for new files & remove the deleted ones from your library.
-
-If you wish to completely re-build your music library (from scratch), go to Settings & press "REINDEX" under "Collection" section.
-
-### 4. Managing playback queue
-
-By default, the app will attempt to play the song that you click on, while adding songs after it to the queue. To add more songs to the queue, simply right click on the new song & click "Add to now playing".
-
-You can also configure to automatically play other songs from your collection when the queue is finished.
-
-### 5. Creating a playlist
-
-To create a new playlist, you need to go the the "PLAYLISTS" tab & click "CREATE NEW PLAYLIST". This will ask you a name for your new shiny playlist. After its creation, you can click on your favorite song to add it to the required playlist. This can help you greatly organize your music collection.
-
-You can add both local music & music from web URLs to these playlists.
-
-### 6. Playing songs from YouTube Music
-
-Please see [complete guide](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support) for more details about YouTube Music support.
-
-Click on the "earth icon" in top-right of the application, select "YT Music".
-Currently, YouTube Music support works _well_ in terms of performance & features.
-
-Right now, you can:
-
-- Play songs.
-- Play songs from URL.
-- Search for songs, videos, albums, artists & playlists.
-- Browse albums, artists & playlists.
-- Get recommendations.
-- Get suggestions.
-- Save to playlists (still streamed over the internet).
-
-### 7. Importing a YouTube Music playlist.
-
-Go to the "PLAYLISTS" tab & click on "IMPORT FROM YT MUSIC". Paste your link & hit enter. Your playlist will be saved locally.
-
-Thing to note here is that the media present in the playlist will be streamed over the internet & won't be downloaded.
-
-### 8. Playing from File Explorer
-
-You can play music directly from file explorer if you installed Harmonoid using the setup installer or from Microsoft Store.
-
-You can also right click a folder to "Add to Harmonoid's Playlist".
-
-### 9. Viewing a YouTube Music song on website
-
-If you're playing a song from YouTube Music & want to hear it on website instead, you can simply click on the "Open in browser" icon in the Now Playing Bar (at the bottom of the screen) or same button from the Now Playing Screen.
-
-### 10. Playing an online media URL
-
-Click on the "earth icon" in top-right of the application, select "Play URL".
-
-### 11. Troubleshoot
-
-If you encounter some problem like you're unable to start the app or see an error screen, you can try to delete the `.Harmonoid` folder in your home directory.
-WARNING: This will also delete your music indexing cache & playlists. Best decision can be to report us at our Discord.
-
-### 12. Hacking
-
-If you wish to really configure properties of the app which are not available in the UI yet, you may edit the `.JSON` files in `~/.Harmonoid` directory.
 
 ## Acknowledgements
 
