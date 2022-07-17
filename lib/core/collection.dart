@@ -1047,12 +1047,13 @@ const int kLikedSongsPlaylist = -1;
 extension CollectionTrackExtension on Track {
   String get albumArtFileName =>
       '$trackName$albumName$albumArtistName'
-          .replaceAll(RegExp(r'[\\/:*?""<>| ]'), '') +
+          .replaceAll(RegExp(kArtworkFileNameRegex), '') +
       '.PNG';
 
   /// To support older generated cache. Only used in [getAlbumArt] now as a fallback check.
   String get legacyAlbumArtFileName =>
-      '$albumName$albumArtistName'.replaceAll(RegExp(r'[\\/:*?""<>| ]'), '') +
+      '$albumName$albumArtistName'
+          .replaceAll(RegExp(kArtworkFileNameRegex), '') +
       '.PNG';
 }
 

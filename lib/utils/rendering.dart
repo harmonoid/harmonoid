@@ -725,7 +725,7 @@ extension StringExtension on String {
       .replaceAll(Characters(''), Characters('\u{200B}'))
       .toString();
 
-  get safePath => replaceAll(RegExp(r'[\\/:*?""<>| ]'), '');
+  get safePath => replaceAll(RegExp(kArtworkFileNameRegex), '');
 }
 
 extension DateTimeExtension on DateTime {
