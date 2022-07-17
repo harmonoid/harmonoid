@@ -45,7 +45,7 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
                     setState(() {});
                   },
                   child: Text(
-                    Language.instance.RESTORE_DEFAULTS,
+                    Language.instance.RESTORE_DEFAULTS.toUpperCase(),
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                     ),
