@@ -7,13 +7,12 @@
 ///
 
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/material.dart';
-
-import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
@@ -21,6 +20,7 @@ import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class IndexingSetting extends StatefulWidget {
@@ -133,13 +133,27 @@ class IndexingState extends State<IndexingSetting> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Container(
-                                        width: 40.0,
-                                        child: Icon(
-                                          FluentIcons.folder_32_regular,
-                                          size: 32.0,
-                                        ),
-                                      ),
+                                      directory.existsSync_()
+                                          ? Container(
+                                              width: 40.0,
+                                              child: Icon(
+                                                FluentIcons.folder_32_regular,
+                                                size: 32.0,
+                                              ),
+                                            )
+                                          : Tooltip(
+                                              message: Language
+                                                  .instance.FOLDER_NOT_FOUND,
+                                              verticalOffset: 24.0,
+                                              waitDuration: Duration.zero,
+                                              child: Container(
+                                                width: 40.0,
+                                                child: Icon(
+                                                  Icons.warning,
+                                                  size: 24.0,
+                                                ),
+                                              ),
+                                            ),
                                       SizedBox(width: isDesktop ? 2.0 : 16.0),
                                       Expanded(
                                         child: Text(

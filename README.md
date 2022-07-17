@@ -380,6 +380,8 @@ The source-code in this repository and official releases/binaries are distribute
 
 - The artists who worked on these awesome-awesome pixel-arts which are bundled within the application. I just googled "pixel arts" & fetched these beautiful GIFs. If you worked on any of the images or know the person who did, please mail me at <alexmercerind@gmail.com>. I will give you proper credit whenever the image is shown inside the application. Thanks a lot!
 
+- The artists who worked on these awesome-awesome pixel-arts which are bundled within the application. I just googled "pixel arts" & fetched these beautiful GIFs. If you worked on any of the images or know the person who did, please mail me at <alexmercerind@gmail.com>. I will give you proper credit whenever the image is shown inside the application. Thanks a lot!
+
 - Harmonoid also depends upon some of the awesome packages available on pub.dev. A complete list of those can be found [here](https://github.com/harmonoid/harmonoid/blob/47d879cdf7151069bc40722235e79e7144f92f4c/pubspec.yaml#L32-L81).
 
 - [YouTube](https://www.youtube.com/) & [YouTube Music](https://music.youtube.com/) is owned by [Google LLC](https://about.google/). Playback of videos & music is governed by [YouTube Terms of Service](https://www.youtube.com/t/terms). The application does not store any music/video streams locally, neither saves files on the disk. The content is shown in a manner similar to how a normal web-browser functions. This is not a "core" functionality of the application and just something application supports for the sake of completion.

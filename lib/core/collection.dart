@@ -6,8 +6,8 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'dart:collection';
 import 'dart:io';
+import 'dart:collection';
 import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -88,7 +88,8 @@ class Collection extends ChangeNotifier {
     onProgress?.call(null, directory.length, false);
     // Basically [Collection.index] the newly added directories, a lot more efficient.
     for (final collectionDirectory in directories) {
-      directory.addAll(await (collectionDirectory.list_()));
+      directory.addAll(
+          await (collectionDirectory.list_(extensions: kSupportedFileTypes)));
     }
     for (int index = 0; index < directory.length; index++) {
       final object = directory[index];
@@ -142,10 +143,10 @@ class Collection extends ChangeNotifier {
     void Function(int?, int, bool)? onProgress,
   }) async {
     onProgress?.call(null, 0, false);
-    for (final directory in directories) {
+    for (final directory in [...directories]) {
       collectionDirectories.remove(directory);
     }
-    final current = HashSet<Track>();
+    final currentTracks = HashSet<Track>();
     int i = 0;
     for (final element in _tracks) {
       final track = element;
@@ -157,16 +158,62 @@ class Collection extends ChangeNotifier {
         }
       }
       if (present) {
-        current.add(track);
+        currentTracks.add(track);
       }
       try {
         onProgress?.call(i + 1, _tracks.length, i + 1 == _tracks.length);
         i++;
       } catch (_) {}
     }
+    _tracks = currentTracks;
+    for (final element in _albums) {
+      final album = element;
+      final currentTracks = HashSet<Track>();
+      for (final track in album.tracks) {
+        bool present = false;
+        for (final directory in collectionDirectories) {
+          if (track.uri.toFilePath().startsWith(directory.path)) {
+            present = true;
+            break;
+          }
+        }
+        if (present) {
+          currentTracks.add(track);
+        }
+        try {
+          onProgress?.call(i + 1, _tracks.length, i + 1 == _tracks.length);
+          i++;
+        } catch (_) {}
+      }
+      album.tracks.clear();
+      album.tracks.addAll(currentTracks);
+    }
+    _albums.removeWhere((element) => element.tracks.isEmpty);
+    for (final element in _artists) {
+      final artist = element;
+      final currentTracks = HashSet<Track>();
+      for (final track in artist.tracks) {
+        bool present = false;
+        for (final directory in collectionDirectories) {
+          if (track.uri.toFilePath().startsWith(directory.path)) {
+            present = true;
+            break;
+          }
+        }
+        if (present) {
+          currentTracks.add(track);
+        }
+        try {
+          onProgress?.call(i + 1, _tracks.length, i + 1 == _tracks.length);
+          i++;
+        } catch (_) {}
+      }
+      artist.tracks.clear();
+      artist.tracks.addAll(currentTracks);
+    }
+    _artists.removeWhere((element) => element.tracks.isEmpty);
     try {
       onProgress?.call(_tracks.length, _tracks.length, true);
-      _tracks = current;
       await saveToCache();
       await sort(notifyListeners: false);
       await refresh(onProgress: onProgress);
@@ -487,7 +534,8 @@ class Collection extends ChangeNotifier {
           // Add newly added tracks.
           final directory = <File>[];
           for (Directory collectionDirectory in collectionDirectories) {
-            for (final object in await collectionDirectory.list_()) {
+            for (final object in await collectionDirectory.list_(
+                extensions: kSupportedFileTypes)) {
               directory.add(object);
             }
           }
@@ -623,7 +671,8 @@ class Collection extends ChangeNotifier {
     final directory = <File>[];
     onProgress?.call(null, directory.length, false);
     for (final collectionDirectory in collectionDirectories)
-      directory.addAll(await (collectionDirectory.list_()));
+      directory.addAll(
+          await (collectionDirectory.list_(extensions: kSupportedFileTypes)));
     for (int index = 0; index < directory.length; index++) {
       final object = directory[index];
       try {

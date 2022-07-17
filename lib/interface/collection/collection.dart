@@ -9,7 +9,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
@@ -17,6 +16,7 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:ytm_client/ytm_client.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
@@ -24,6 +24,7 @@ import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
@@ -81,6 +82,17 @@ class CollectionScreenState extends State<CollectionScreen>
       });
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!Collection.instance.collectionDirectories
+          .map((e) => e.existsSync_())
+          .reduce((value, element) => value = value ? element : false))
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            useRootNavigator: false,
+            builder: (context) => FoldersNotFoundDialog(),
+          );
+        });
       Intent.instance.play();
     });
     HotKeyManager.instance.register(
