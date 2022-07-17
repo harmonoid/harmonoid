@@ -7,11 +7,11 @@
 ///
 
 import 'package:flutter/material.dart';
-import 'package:harmonoid/constants/language.dart';
 
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/interface/settings/indexing.dart';
 import 'package:harmonoid/interface/settings/language.dart';
 import 'package:harmonoid/interface/settings/desktop_header.dart';
@@ -22,6 +22,7 @@ import 'package:harmonoid/interface/settings/theme.dart';
 import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid/interface/settings/proxy.dart';
 import 'package:harmonoid/interface/settings/now_playing_visuals.dart';
+import 'package:harmonoid/interface/settings/now_playing_screen.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -44,10 +45,11 @@ class Settings extends StatelessWidget {
                       StatsSetting(),
                       ThemeSetting(),
                       MiscellaneousSetting(),
-                      ExperimentalSetting(),
-                      NowPlayingVisualsSetting(),
-                      ProxySetting(),
                       LanguageSetting(),
+                      NowPlayingVisualsSetting(),
+                      NowPlayingScreenSetting(),
+                      ProxySetting(),
+                      ExperimentalSetting(),
                       VersionSetting(),
                       const SizedBox(height: 8.0),
                     ],
