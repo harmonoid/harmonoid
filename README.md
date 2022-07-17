@@ -2,17 +2,16 @@
 
 <h1 align="left">Harmonoid</h1>
 
-**🎵 Elegant music app to play & manage music library. Time-synced lyrics, playlists & visuals. YouTube Music.**
+**🎵 Plays & manages your music library. Looks beautiful & juicy.**
 
-- [Download](#download) [Windows, Linux]
+- [Download](#download) [Windows, Linux, ~~Android~~]
 - [Discord](https://discord.gg/2Rc3edFWd8)
 
-[work-in-progress] [[github-sponsors](https://github.com/sponsors/alexmercerind)] [[patreon](https://www.patreon.com/harmonoid)] [[primary-guide](#guide)] [[youtube-music-guide](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support)] [screenshots-show-features-from-next-release]
+[Patreon](https://www.patreon.com/harmonoid) • [Sponsor Project](https://github.com/sponsors/alexmercerind) • [Minimal App Guide](https://github.com/harmonoid/harmonoid/wiki/Minimal-Guide) • [YouTube Music Details](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support) • [Features](#features)
 
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_W8Oi1qPZ0O.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_MOnywQpgPB.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/webp/collection/dark-mode.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_W8Oi1qPZ0O.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_BRfMT0wIX6.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_zZZ1d0yO5G.webp?raw=true)
 ![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_yFdqibq6DF.webp?raw=true)
 
@@ -28,14 +27,10 @@ https://user-images.githubusercontent.com/28951144/173223285-eaafff0b-a75e-4cf9-
 
 - [Features](#features)
 - [Limitations](#limitations)
-- [Guide](#guide)
 - [Acknowledgements](#acknowledgements)
 - [Compiling](#compiling)
 - [License](#license)
 - [Third-Party Credits](#third-party-credits)
-- [Discord](https://discord.gg/2Rc3edFWd8)
-- [Patreon](https://www.patreon.com/harmonoid)
-- [Controversies](#controversies)
 
 ## Download
 
@@ -79,20 +74,22 @@ Coming Soon!
 - Very strictly follows [Material Design](https://material.io/) guidelines for UI & animations.
 - mpv based music playback for strong format support (on Linux & Windows) using `dart:ffi`.
 - Taskbar & System Media Transport Controls for Windows.
-- Small installer (< 25 MB) & low RAM usage (< 120 MB) (tested on Windows, still see [limitations](#limitations)).
+- D-Bus MPRIS controls for Linux.
+- Small installer (< 35 MB) & low RAM usage (< 120 MB) (tested on Windows, still see [limitations](#limitations)).
 - Time synced lyrics for all your music.
 - Ability to create persistent or "Now playing" playlists.
 - Context menu integrations & file associations (exclusive to setup version).
 - Discord RPC integration with album art support & "Find"/"Listen" buttons.
 - Portable (if you wish).
-- D-Bus MPRIS controls for Linux.
 - Gapless playback.
-- Pitch shift & speed adjustment.
+- Pitch shifting
+- Speed adjustment.
 - Details editor.
 - Re-ordering "Now Playing" list.
 - Cross-platform (currently aiming Windows, Linux & Android).
 - Does not use [electron.js](https://www.electronjs.org/).
 - Music visuals.
+- YouTube Music client.
 
 ### Upcoming Features
 
@@ -109,11 +106,9 @@ Coming Soon!
 
 [hopefully these will be resolved over time]
 
-A lot of time has went into making this project possible using [Flutter](https://github.com/flutter/flutter) & nearly everything has been written from ground-up (from low-level C/C++ plugins to UI & business-logic in Flutter/Dart).
+This beautiful & vibrant user-interface is made possible using [Flutter](https://github.com/flutter/flutter). It is a both boon & a bane.
 
-[Flutter](https://github.com/flutter/flutter) is quite new at the time for desktop & every new (even basic) functionality in the app is a research itself.
-
-Nothing at the time is very stable & every new feature is a new discovery. Just have fun, learn & share your knowledge!
+A lot of time has went into making this project possible due to early-adoption of the framework & nearly everything has been written from ground-up (from low-level C/C++ plugins to UI & business-logic in Flutter/Dart).
 
 Few issues regarding memory usage alone can be:
 
@@ -123,93 +118,6 @@ Few issues regarding memory usage alone can be:
 - https://github.com/flutter/flutter/issues/95092
 
 In most cases as of now (Windows & Linux), memory usage will be really low at fresh start of the application & will continue to rise (although slowly) overtime with no specific reason.
-
-## Guide
-
-### 1. Keyboard shortcuts
-
-- <kbd>Space</kbd>: Play or pause.
-- <kbd>Alt</kbd> + <kbd>N</kbd>: Next song.
-- <kbd>Alt</kbd> + <kbd>B</kbd>: Previous song.
-- <kbd>Alt</kbd> + <kbd>M</kbd>: mute or un-mute.
-- <kbd>Alt</kbd> + <kbd>V</kbd>: Volume increase.
-- <kbd>Alt</kbd> + <kbd>C</kbd>: Volume decrease.
-- <kbd>Alt</kbd> + <kbd>X</kbd>: Seek forwards.
-- <kbd>Alt</kbd> + <kbd>Z</kbd>: Seek backwards.
-
-### 2. Indexing your music
-
-To show your local music inside Harmonoid, you can go to the settings & click "ADD NEW FOLDER". This will show a new window, where you can select a folder where all your music is stored. After selecting the folder, your music collection inside the application will start building.
-
-Your music will be categorized into albums, artists etc. & you'll be able to freely browse music album-wise or artist-wise etc. while being able to sort it alphabetically or year-wise etc.
-
-As of now, you can still browse/play your music while it is being indexed.
-
-Next time when you start the app, your music collection will be retrieved from the cache.
-
-To remove a folder from your music collection, just click on "REMOVE" next to the folder you might wanna remove in the settings page.
-
-### 3. Refresh your music
-
-Just tap the circular "refresh" button in bottom-right of the application, it'll look for new files & remove the deleted ones from your library.
-
-If you wish to completely re-build your music library (from scratch), go to Settings & press "REINDEX" under "Collection" section.
-
-### 4. Managing playback queue
-
-By default, the app will attempt to play the song that you click on, while adding songs after it to the queue. To add more songs to the queue, simply right click on the new song & click "Add to now playing".
-
-You can also configure to automatically play other songs from your collection when the queue is finished.
-
-### 5. Creating a playlist
-
-To create a new playlist, you need to go the the "PLAYLISTS" tab & click "CREATE NEW PLAYLIST". This will ask you a name for your new shiny playlist. After its creation, you can click on your favorite song to add it to the required playlist. This can help you greatly organize your music collection.
-
-You can add both local music & music from web URLs to these playlists.
-
-### 6. Playing songs from YouTube Music
-
-Click on the "earth icon" in top-right of the application, select "YT Music". See [guide](https://github.com/harmonoid/harmonoid/wiki/YouTube-Music-Support) for more details about YouTube Music support.
-
-Currently, YouTube Music support works _well_ in terms of performance & features.
-Right now, you can:
-
-- Play songs.
-- Play songs from URL.
-- Search for songs, videos, albums, artists & playlists.
-- Browse albums, artists & playlists.
-- Get recommendations.
-- Get suggestions.
-- Save to playlists (still streamed over the internet).
-
-### 7. Importing a YouTube Music playlist.
-
-Go to the "PLAYLISTS" tab & click on "IMPORT FROM YT MUSIC". Paste your link & hit enter. Your playlist will be saved locally.
-
-Thing to note here is that the media present in the playlist will be streamed over the internet & won't be downloaded.
-
-### 8. Playing from File Explorer
-
-You can play music directly from file explorer if you installed Harmonoid using the setup installer or from Microsoft Store.
-
-You can also right click a folder to "Add to Harmonoid's Playlist".
-
-### 9. Viewing a YouTube Music song on website
-
-If you're playing a song from YouTube Music & want to hear it on website instead, you can simply click on the "Open in browser" icon in the Now Playing Bar (at the bottom of the screen) or same button from the Now Playing Screen.
-
-### 10. Playing an online media URL
-
-Click on the "earth icon" in top-right of the application, select "Play URL".
-
-### 11. Troubleshoot
-
-If you encounter some problem like you're unable to start the app or see an error screen, you can try to delete the `.Harmonoid` folder in your home directory.
-WARNING: This will also delete your music indexing cache & playlists. Best decision can be to report us at our Discord.
-
-### 12. Hacking
-
-If you wish to really configure properties of the app which are not available in the UI yet, you may edit the `.JSON` files in `~/.Harmonoid` directory.
 
 ## Acknowledgements
 
@@ -468,47 +376,13 @@ The source-code in this repository and official releases/binaries are distribute
 
 - Harmonoid is (for the most part) written in Dart programming language using [Flutter SDK](https://github.com/flutter/flutter). Refrences to all the other external "plugins" & "packages" used at the time of building application can be found [here](./pubspec.yaml).
 
-- Harmonoid uses a modified version of [libmpv](https://github.com/mpv-player/mpv/tree/master/libmpv) for media playback capabilities on desktop. The compilation setup & other information (for Microsoft Windows) can be found [here](https://github.com/alexmercerind/harmonoid-custom-codec). The application bundles a minimal & LGPL compilant version of [mpv](https://github.com/mpv-player/mpv) shared library (for Microsoft Windows) (`mpv-2.dll`). Users are free to update/change to their own preferred libmpv by replacing the `mpv-2.dll` file present in Harmonoid's application directory.
+- Harmonoid uses a modified version of [libmpv](https://github.com/mpv-player/mpv/tree/master/libmpv) for media playback capabilities on desktop. The compilation procedure & other information (for Microsoft Windows) can be found [here](https://github.com/alexmercerind/harmonoid-custom-codec). The application bundles a minimal & LGPL-compilant version of [mpv](https://github.com/mpv-player/mpv) shared library (`mpv-2.dll`). Users are free to update or change the libmpv version by replacing the `mpv-2.dll` shared library present in Harmonoid's working directory.
+
+- The artists who worked on these awesome-awesome pixel-arts which are bundled within the application. I just googled "pixel arts" & fetched these beautiful GIFs. If you worked on any of the images or know the person who did, please mail me at <alexmercerind@gmail.com>. I will give you proper credit whenever the image is shown inside the application. Thanks a lot!
 
 - Harmonoid also depends upon some of the awesome packages available on pub.dev. A complete list of those can be found [here](https://github.com/harmonoid/harmonoid/blob/47d879cdf7151069bc40722235e79e7144f92f4c/pubspec.yaml#L32-L81).
 
 - [YouTube](https://www.youtube.com/) & [YouTube Music](https://music.youtube.com/) is owned by [Google LLC](https://about.google/). Playback of videos & music is governed by [YouTube Terms of Service](https://www.youtube.com/t/terms). The application does not store any music/video streams locally, neither saves files on the disk. The content is shown in a manner similar to how a normal web-browser functions. This is not a "core" functionality of the application and just something application supports for the sake of completion.
-
-## Controversies
-
-A lot of things were (are still) inexistent for Flutter Desktop or had to be made on-my-own for this project specifically. Thus, few of the things are written with a _compromise_.
-
-**Few of the common arguments can be:**
-
-1. You are using singletons in the project.
-2. Stop saving cache in JSON.
-3. Don't use Provider, use Riverpod.
-4. No tests?
-5. Platform specific design
-
-<!-- --->
-
-**Answers:**
-
-1. Singletons might be _"bad"_, but here the application internally requires reference to these singleton objects/`ChangeNotifier`s outside `Widget` tree quite often (without `BuildContext`) (possibly using [`get_it`](https://pub.dev/packages/get_it) like dependency-injection at some point will be good idea). e.g. few situtations like:
-
-- Triggering seekbar re-draw whenever position-update is sent from native code.
-- A file is opened from file explorer & app should open the clicked file within same instance.
-- Showing media-buffering state.
-- Indexing a `File` (retreving its tags) & showing progress update in UI.
-- System media control button(s) are clicked, the playback should be paused & UI re-draws should be triggered.
-- Some `TextField` is focused, keyboard shortcuts should be prevented.
-- Music files are being indexed, progress updates should be shown while saving metadata/tags to cache. And we can't make UI redraw for every single file that is parsed, but rather in a definite period interval (so that everything stays usable).
-
-2. Saving cache as JSON isn't a problem since there are no performance drawbacks (think of it as a NoSQL database). All that is happening at the end is serialization-deserialization & file read-write, either it be a sqlite3, hive, JSON or something else. Now a lot of good cross-platform databases are available like [`hive`](https://pub.dev/packages/hive) or [`isar`](https://pub.dev/packages/hive) for Flutter on Desktop, which can be used for caching the music-library/metadata-tags. However, the same wasn't applicable before.
-
-3. I fear I don't have time for that-much refactor now. I will prefer switching to [BLoC](https://bloclibrary.dev/) instead, if any refactor ever happens. Why would I use a state-management solution that encourages to create global-variables ;)
-
-4. We need to write those. It's becoming a struggle with time. But I fear tests in Flutter aren't "capable" enough, the app highly depends upon C-interop & if something wrong happens or memory error takes place, Dart VM itself will die. I need tests to check actual functionality, audio output, correct audio-tagging, file explorer associations etc. NOT to measure/match position of `Widget`s on screen or compare Dart sided data-types with fake native-calls. In that case, only a human can do the job & look for possible regressions. And, since I am the only one who regularly commits changes or works on features, I don't feel that urgency to setup a pull-request test suite for public-contributions.
-
-5. No. Never. It's not _"smart"_ to run a full-blown Skia renderer (from Flutter) & make it show a bland "native looking" UI design. One of the biggest advantage Flutter provides is that it's pixel-by-pixel painted, which means it is highly customisable in terms of what one can render visually. And I don't wanna put that advantage to no use, by following same boring design as other "native looking" apps (which will actually perform better in terms of graphical performance, for obvious reasons). I really like Material Design & current design is highly inspired by [this video](https://www.youtube.com/watch?v=Q8TXgCzxEnw) & I've made efforts to keep it CONSISTENT, FLUID & ADAPTIVE across all the platforms. I will add support for [Material You](https://material.io/blog/announcing-material-you) at some point, but will be optional to users inside the Settings.
-
-If you disagree with any of the answers or want to correct my knowledge, please open a new issue or discussion.
 
 ## Bonus
 
