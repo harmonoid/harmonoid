@@ -83,6 +83,7 @@ class Strings {
   late String GENRE;
   late String GO_TO_SETTINGS;
   late String HIDE_LYRICS;
+  late String HIGHLIGHTED_LYRICS_SIZE;
   late String IMPORT_PLAYLIST_FROM_WEB;
   late String IMPORT_PLAYLIST_SUBTITLE;
   late String IMPORT_PLAYLIST_TITLE;
@@ -110,6 +111,8 @@ class Strings {
   late String NOW_PLAYING_NEXT_TRACK;
   late String NOW_PLAYING_NOT_PLAYING_TITLE;
   late String NOW_PLAYING_PREVIOUS_TRACK;
+  late String NOW_PLAYING_SCREEN;
+  late String NOW_PLAYING_SCREEN_SETTING_SUBTITLE;
   late String NOW_YOU_ARE_GOOD_TO_GO_BACK;
   late String NO_COLLECTION_SUBTITLE;
   late String NO_COLLECTION_TITLE;
@@ -155,6 +158,7 @@ class Strings {
   late String RESET_PITCH;
   late String RESET_SPEED;
   late String RESTORE;
+  late String RESTORE_DEFAULTS;
   late String RESULTS_FOR_QUERY;
   late String RETRIEVING_INFO;
   late String RETRIEVING_LINK;
@@ -223,6 +227,7 @@ class Strings {
   late String TRACK_NUMBER;
   late String TRACK_SINGLE;
   late String TRANSFERS;
+  late String UNHIGHLIGHTED_LYRICS_SIZE;
   late String UNMUTE;
   late String UPDATE_AVAILABLE;
   late String USE_MODERN_NOW_PLAYING_SCREEN;

@@ -287,6 +287,7 @@ class Language extends Strings with ChangeNotifier {
     this.GENRE = asset['GENRE']!;
     this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
     this.HIDE_LYRICS = asset['HIDE_LYRICS']!;
+    this.HIGHLIGHTED_LYRICS_SIZE = asset['HIGHLIGHTED_LYRICS_SIZE']!;
     this.IMPORT_PLAYLIST_FROM_WEB = asset['IMPORT_PLAYLIST_FROM_WEB']!;
     this.IMPORT_PLAYLIST_SUBTITLE = asset['IMPORT_PLAYLIST_SUBTITLE']!;
     this.IMPORT_PLAYLIST_TITLE = asset['IMPORT_PLAYLIST_TITLE']!;
@@ -314,6 +315,8 @@ class Language extends Strings with ChangeNotifier {
     this.NOW_PLAYING_NEXT_TRACK = asset['NOW_PLAYING_NEXT_TRACK']!;
     this.NOW_PLAYING_NOT_PLAYING_TITLE = asset['NOW_PLAYING_NOT_PLAYING_TITLE']!;
     this.NOW_PLAYING_PREVIOUS_TRACK = asset['NOW_PLAYING_PREVIOUS_TRACK']!;
+    this.NOW_PLAYING_SCREEN = asset['NOW_PLAYING_SCREEN']!;
+    this.NOW_PLAYING_SCREEN_SETTING_SUBTITLE = asset['NOW_PLAYING_SCREEN_SETTING_SUBTITLE']!;
     this.NOW_YOU_ARE_GOOD_TO_GO_BACK = asset['NOW_YOU_ARE_GOOD_TO_GO_BACK']!;
     this.NO_COLLECTION_SUBTITLE = asset['NO_COLLECTION_SUBTITLE']!;
     this.NO_COLLECTION_TITLE = asset['NO_COLLECTION_TITLE']!;
@@ -359,6 +362,7 @@ class Language extends Strings with ChangeNotifier {
     this.RESET_PITCH = asset['RESET_PITCH']!;
     this.RESET_SPEED = asset['RESET_SPEED']!;
     this.RESTORE = asset['RESTORE']!;
+    this.RESTORE_DEFAULTS = asset['RESTORE_DEFAULTS']!;
     this.RESULTS_FOR_QUERY = asset['RESULTS_FOR_QUERY']!;
     this.RETRIEVING_INFO = asset['RETRIEVING_INFO']!;
     this.RETRIEVING_LINK = asset['RETRIEVING_LINK']!;
@@ -427,6 +431,7 @@ class Language extends Strings with ChangeNotifier {
     this.TRACK_NUMBER = asset['TRACK_NUMBER']!;
     this.TRACK_SINGLE = asset['TRACK_SINGLE']!;
     this.TRANSFERS = asset['TRANSFERS']!;
+    this.UNHIGHLIGHTED_LYRICS_SIZE = asset['UNHIGHLIGHTED_LYRICS_SIZE']!;
     this.UNMUTE = asset['UNMUTE']!;
     this.UPDATE_AVAILABLE = asset['UPDATE_AVAILABLE']!;
     this.USE_MODERN_NOW_PLAYING_SCREEN = asset['USE_MODERN_NOW_PLAYING_SCREEN']!;
