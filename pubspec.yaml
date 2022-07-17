@@ -71,6 +71,9 @@ dependencies:
   collection: any
   substring_highlight: ^1.0.33
   extended_image: ^6.0.2
+  auto_size_text: ^3.0.0
+  uuid: ^3.0.6
+  flutter_lyric: ^2.0.3
 
   # Third-party forked plugins & packages to meet requirements.
 
@@ -94,10 +97,10 @@ dependencies:
   known_extents_list_view_builder:
     git:
       url: https://github.com/alexmercerind/known_extents_list_view_builder.git
-  auto_size_text: ^3.0.0
-  uuid: ^3.0.6
-  window_manager: ^0.2.3
-  flutter_lyric: ^2.0.3
+  window_manager:
+    git:
+      url: https://github.com/harmonoid/window_manager.git
+      ref: main
 
 dependency_overrides:
   bitsdojo_window_windows:
