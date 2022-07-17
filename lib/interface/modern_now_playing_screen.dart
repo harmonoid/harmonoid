@@ -1230,13 +1230,49 @@ class CarouselState extends State<Carousel> {
           ),
           Positioned.fill(
             child: TweenAnimationBuilder<Color?>(
+              child: Expanded(
+                child: CustomListViewBuilder(
+                  controller: ScrollController(
+                      initialScrollOffset: 48.0 *
+                          (Playback.instance.index - 2)
+                              .clamp(0, 9223372036854775807)),
+                  itemExtents: List.generate(
+                    Playback.instance.tracks.length,
+                    (index) => 48.0,
+                  ),
+                  itemCount: Playback.instance.tracks.length,
+                  itemBuilder: (context, index) => Material(
+                    color: Playback.instance.index == index
+                        ? Theme.of(context).dividerColor.withOpacity(0.12)
+                        : Colors.transparent,
+                    child: TrackTile(
+                      leading: Playback.instance.index == index
+                          ? Icon(
+                              Icons.play_arrow,
+                              size: 24.0,
+                            )
+                          : Text(
+                              '${index + 1}',
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                      track: Playback.instance.tracks[index],
+                      index: 0,
+                      onPressed: () {
+                        Playback.instance.play();
+                        Playback.instance.jump(index);
+                      },
+                      disableContextMenu: true,
+                    ),
+                  ),
+                ),
+              ),
               tween: ColorTween(
                 begin: Colors.transparent,
                 end: playlistVisible ? Colors.black38 : Colors.transparent,
               ),
               duration: Duration(milliseconds: 300),
               curve: Curves.easeInOut,
-              builder: (context, color, _) => GestureDetector(
+              builder: (context, color, child) => GestureDetector(
                 onTap: () {
                   setState(() {
                     playlistVisible = false;
@@ -1342,52 +1378,7 @@ class CarouselState extends State<Carousel> {
                                     Divider(
                                       height: 1.0,
                                     ),
-                                    Expanded(
-                                      child: CustomListViewBuilder(
-                                        controller: ScrollController(
-                                            initialScrollOffset: 48.0 *
-                                                (Playback.instance.index - 2)
-                                                    .clamp(0,
-                                                        9223372036854775807)),
-                                        itemExtents: List.generate(
-                                          Playback.instance.tracks.length,
-                                          (index) => 48.0,
-                                        ),
-                                        itemCount:
-                                            Playback.instance.tracks.length,
-                                        itemBuilder: (context, index) =>
-                                            Material(
-                                          color:
-                                              Playback.instance.index == index
-                                                  ? Theme.of(context)
-                                                      .dividerColor
-                                                      .withOpacity(0.12)
-                                                  : Colors.transparent,
-                                          child: TrackTile(
-                                            leading:
-                                                Playback.instance.index == index
-                                                    ? Icon(
-                                                        Icons.play_arrow,
-                                                        size: 24.0,
-                                                      )
-                                                    : Text(
-                                                        '${index + 1}',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline4,
-                                                      ),
-                                            track:
-                                                Playback.instance.tracks[index],
-                                            index: 0,
-                                            onPressed: () {
-                                              Playback.instance.play();
-                                              Playback.instance.jump(index);
-                                            },
-                                            disableContextMenu: true,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    if (child != null) child,
                                   ],
                                 ),
                               ),
