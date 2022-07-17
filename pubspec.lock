@@ -101,7 +101,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   charcode:
     dependency: transitive
     description:
@@ -417,7 +417,7 @@ packages:
       name: material_color_utilities
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.4"
+    version: "0.1.5"
   material_floating_search_bar:
     dependency: "direct main"
     description:
@@ -431,7 +431,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.8.0"
   mime:
     dependency: transitive
     description:
@@ -618,6 +618,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  screen_retriever:
+    dependency: transitive
+    description:
+      name: screen_retriever
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   share_plus:
     dependency: "direct main"
     description:
@@ -815,10 +822,12 @@ packages:
   window_manager:
     dependency: "direct main"
     description:
-      name: window_manager
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.3"
+      path: "."
+      ref: main
+      resolved-ref: bd47920836a580c39431c4154a0d79e7d0232951
+      url: "https://github.com/harmonoid/window_manager.git"
+    source: git
+    version: "0.2.5"
   windows_taskbar:
     dependency: "direct main"
     description:
