@@ -614,6 +614,23 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     width: 8.0,
                                                   ),
                                                   FloatingActionButton(
+                                                    heroTag: 'shuffle',
+                                                    onPressed: () {
+                                                      Playback.instance.open([
+                                                        ...tracks,
+                                                      ]..shuffle());
+                                                    },
+                                                    mini: true,
+                                                    child: Icon(
+                                                      Icons.shuffle,
+                                                    ),
+                                                    tooltip: Language
+                                                        .instance.SHUFFLE,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8.0,
+                                                  ),
+                                                  FloatingActionButton(
                                                     heroTag:
                                                         'add_to_now_playing',
                                                     onPressed: () {
