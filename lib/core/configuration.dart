@@ -93,6 +93,8 @@ class Configuration extends ConfigurationKeys {
     int? modernNowPlayingScreenCarouselIndex,
     bool? lyricsVisible,
     bool? discordRPC,
+    double? highlightedLyricsSize,
+    double? unhighlightedLyricsSize,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -161,6 +163,12 @@ class Configuration extends ConfigurationKeys {
     if (discordRPC != null) {
       this.discordRPC = discordRPC;
     }
+    if (highlightedLyricsSize != null) {
+      this.highlightedLyricsSize = highlightedLyricsSize;
+    }
+    if (unhighlightedLyricsSize != null) {
+      this.unhighlightedLyricsSize = unhighlightedLyricsSize;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -190,6 +198,8 @@ class Configuration extends ConfigurationKeys {
             this.modernNowPlayingScreenCarouselIndex,
         'lyricsVisible': this.lyricsVisible,
         'discordRPC': this.discordRPC,
+        'highlightedLyricsSize': this.highlightedLyricsSize,
+        'unhighlightedLyricsSize': this.unhighlightedLyricsSize,
       },
     );
   }
@@ -236,6 +246,8 @@ class Configuration extends ConfigurationKeys {
         current['modernNowPlayingScreenCarouselIndex'];
     lyricsVisible = current['lyricsVisible'];
     discordRPC = current['discordRPC'];
+    highlightedLyricsSize = current['highlightedLyricsSize'];
+    unhighlightedLyricsSize = current['unhighlightedLyricsSize'];
   }
 }
 
@@ -263,6 +275,8 @@ abstract class ConfigurationKeys {
   late int modernNowPlayingScreenCarouselIndex;
   late bool lyricsVisible;
   late bool discordRPC;
+  late double highlightedLyricsSize;
+  late double unhighlightedLyricsSize;
 }
 
 final Map<String, dynamic> _defaultConfiguration = {
@@ -295,4 +309,6 @@ final Map<String, dynamic> _defaultConfiguration = {
   'modernNowPlayingScreenCarouselIndex': 0,
   'lyricsVisible': true,
   'discordRPC': true,
+  'highlightedLyricsSize': 24.0,
+  'unhighlightedLyricsSize': 16.0,
 };
