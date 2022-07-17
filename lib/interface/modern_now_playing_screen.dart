@@ -249,8 +249,10 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                           .toList(),
                                     position: playback.position.inMilliseconds,
                                     lyricUi: LyricsStyle()
-                                      ..defaultSize = 24.0
-                                      ..otherMainSize = 16.0
+                                      ..defaultSize = Configuration
+                                          .instance.highlightedLyricsSize
+                                      ..otherMainSize = Configuration
+                                          .instance.unhighlightedLyricsSize
                                       ..highlight = false,
                                     playing: true,
                                   ),
@@ -1508,6 +1510,7 @@ class LyricsStyle extends LyricUI {
         ],
         overflow: TextOverflow.ellipsis,
         fontFamily: Platform.isLinux ? 'Inter' : null,
+        height: Configuration.instance.unhighlightedLyricsSize + 20.0,
       );
 
   @override
@@ -1529,6 +1532,7 @@ class LyricsStyle extends LyricUI {
         ],
         overflow: TextOverflow.ellipsis,
         fontFamily: Platform.isLinux ? 'Inter' : null,
+        height: Configuration.instance.highlightedLyricsSize + 20.0,
       );
 
   @override

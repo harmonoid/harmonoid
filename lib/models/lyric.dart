@@ -22,6 +22,6 @@ class Lyric {
 
   static Lyric fromJson(dynamic map) => Lyric(
         time: map['time'],
-        words: map['words'],
+        words: map['words']?.replaceAll('\n', ' ')?.replaceAll('  ', ' '),
       );
 }
