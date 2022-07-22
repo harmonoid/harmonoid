@@ -44,9 +44,7 @@ class NowPlayingVisuals {
     if (await instance.directory.exists_()) {
       final directory = await instance.directory.list_();
       for (final entity in directory) {
-        if (kSupportedImageFormats.contains(entity.extension)) {
-          instance.user.add(entity.path);
-        }
+        instance.user.add(entity.path);
       }
     } else {
       await instance.directory.create_();
