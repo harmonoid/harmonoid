@@ -1223,10 +1223,9 @@ class CarouselState extends State<Carousel> {
                 backgroundColor: widget.palette?.last,
                 foregroundColor:
                     (widget.palette?.last ?? Theme.of(context).primaryColor)
-                                .computeLuminance() >
-                            0.5
-                        ? Colors.black
-                        : Colors.white,
+                            .isDark
+                        ? Colors.white
+                        : Colors.black,
               ),
             ),
           ),
@@ -1552,4 +1551,8 @@ class LyricsStyle extends LyricUI {
 
   @override
   bool enableHighlight() => highlight;
+}
+
+extension on Color {
+  bool get isDark => (0.299 * red) + (0.587 * green) + (0.114 * blue) < 128.0;
 }

@@ -421,13 +421,29 @@ class IndexingState extends State<IndexingSetting> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '${Language.instance.REFRESH}: ${Language.instance.REFRESH_INFORMATION}',
-                            style: Theme.of(context).textTheme.headline3,
+                          const SizedBox(height: 8.0),
+                          Row(
+                            children: [
+                              const SizedBox(width: 8.0),
+                              Icon(Icons.info),
+                              const SizedBox(width: 8.0),
+                              Text(
+                                '${Language.instance.REFRESH.toUpperCase()}: ${Language.instance.REFRESH_INFORMATION}',
+                                style: Theme.of(context).textTheme.headline3,
+                              ),
+                            ],
                           ),
-                          Text(
-                            '${Language.instance.REINDEX}: ${Language.instance.REINDEX_INFORMATION}',
-                            style: Theme.of(context).textTheme.headline3,
+                          const SizedBox(height: 4.0),
+                          Row(
+                            children: [
+                              const SizedBox(width: 8.0),
+                              Icon(Icons.info),
+                              const SizedBox(width: 8.0),
+                              Text(
+                                '${Language.instance.REINDEX.toUpperCase()}: ${Language.instance.REINDEX_INFORMATION}',
+                                style: Theme.of(context).textTheme.headline3,
+                              ),
+                            ],
                           ),
                         ],
                       ),

@@ -174,7 +174,7 @@ ThemeData createTheme({
         color: isLight ? Colors.white : Colors.black,
       ),
     ),
-    cardColor: isLight ? Colors.white : Color(0xFF202020),
+    cardColor: isLight ? Colors.white : Color(0xFF222222),
     backgroundColor: color.withOpacity(0.24),
     dividerColor: isLight ? Colors.black12 : Colors.white24,
     disabledColor: isLight ? Colors.black38 : Colors.white38,
