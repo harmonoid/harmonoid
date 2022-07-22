@@ -302,6 +302,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_window_close:
+    dependency: "direct main"
+    description:
+      name: flutter_window_close
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.2"
   glob:
     dependency: transitive
     description:
@@ -471,13 +478,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  override_window_destroy:
-    dependency: "direct main"
-    description:
-      path: "external/override_window_destroy"
-      relative: true
-    source: path
-    version: "0.0.1"
   package_config:
     dependency: transitive
     description:

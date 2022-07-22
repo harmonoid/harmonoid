@@ -20,8 +20,6 @@ dependencies:
     path: external/mpris_service.dart
   harmonoid_visual_assets:
     path: external/harmonoid_visual_assets
-  override_window_destroy:
-    path: external/override_window_destroy
   ytm_client:
     path: external/ytm_client.dart
   safe_session_storage:
@@ -55,6 +53,7 @@ dependencies:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/file_selector/file_selector_linux
+  flutter_window_close: ^0.2.2
 
   # Third-party UI widgets or "pure-dart" packages.
 
