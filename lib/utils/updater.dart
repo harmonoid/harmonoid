@@ -57,7 +57,7 @@ abstract class Updater {
         if (choice == CustomButton.positiveButton) {
           await launchUrl(
             // TODO: Add update URL.
-            Uri.http(''),
+            Uri.http('', '', {}),
             mode: LaunchMode.externalApplication,
           );
           if (await WindowCloseHandler.onWindowClose(
