@@ -822,7 +822,9 @@ class DesktopTitleBar extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: desktopTitleBarHeight,
             color: color ?? Theme.of(context).appBarTheme.backgroundColor,
+            alignment: Alignment.topCenter,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: MoveWindow(
@@ -859,43 +861,11 @@ class DesktopTitleBar extends StatelessWidget {
                         colors: windowButtonColors(context),
                       ),
                 CloseWindowButton(
-                  onPressed: () async {
-                    if (!CollectionRefresh.instance.isCompleted) {
-                      await showDialog(
-                        context: context,
-                        builder: (subContext) => AlertDialog(
-                          title: Text(
-                            Language.instance.WARNING,
-                            style: Theme.of(subContext).textTheme.headline1,
-                          ),
-                          content: Text(
-                            Language.instance.COLLECTION_INDEXING_LABEL,
-                            style: Theme.of(subContext).textTheme.headline3,
-                          ),
-                          actions: [
-                            MaterialButton(
-                              textColor: Theme.of(context).primaryColor,
-                              onPressed: Navigator.of(subContext).pop,
-                              child: Text(Language.instance.OK),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      await Playback.instance.saveAppState();
-                      try {
-                        if (Platform.isWindows) {
-                          smtc.clear();
-                          smtc.dispose();
-                        }
-                      } catch (exception, stacktrace) {
-                        debugPrint(exception.toString());
-                        debugPrint(stacktrace.toString());
-                      }
-                      appWindow.close();
-                    }
-                  },
-                  colors: windowButtonColors(context),
+                  colors: windowButtonColors(context)
+                    ..mouseOver = Color(0xFFC42B1C)
+                    ..mouseDown = Color(0xFFC83F31)
+                    ..iconMouseOver = Colors.white
+                    ..iconMouseDown = Colors.white,
                 ),
               ],
             ),

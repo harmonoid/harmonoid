@@ -26,7 +26,7 @@ import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/argument_vector_handler.dart';
-import 'package:harmonoid/utils/override_window_destroy.dart';
+import 'package:harmonoid/utils/window_close_handler.dart';
 
 const String kTitle = 'Harmonoid';
 const String kVersion = 'v0.2.6';
@@ -52,6 +52,7 @@ Future<void> main(List<String> args) async {
       }
       await Intent.initialize(args: args);
       await HotKeys.initialize();
+      await WindowCloseHandler.initialize();
       ArgumentVectorHandler.initialize();
       DiscordRPC.initialize();
       doWhenWindowReady(() {
@@ -68,8 +69,8 @@ Future<void> main(List<String> args) async {
       await MPV.initialize();
       await Intent.initialize(args: args);
       await HotKeys.initialize();
+      await WindowCloseHandler.initialize();
       ArgumentVectorHandler.initialize();
-      OverrideWindowDestroy.initialize();
       DiscordRPC.initialize();
     }
     if (Platform.isAndroid) {
