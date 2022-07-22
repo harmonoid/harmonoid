@@ -802,7 +802,10 @@ class Playback extends ChangeNotifier {
           discord?.start(autoRegister: true);
           discord?.updatePresence(
             DiscordPresence(
-              state: '${track.albumArtistName}',
+              state: '${[
+                null,
+                kUnknownArtist
+              ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(',') : track.albumArtistName}',
               details: '${track.trackName}',
               largeImageKey: _discordLastLargeImageKey,
               largeImageText:
