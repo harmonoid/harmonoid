@@ -56,8 +56,8 @@ packages:
     dependency: "direct main"
     description:
       path: bitsdojo_window
-      ref: master
-      resolved-ref: "1992c7f7e63815e9340c7ce75eaaf976f0e8a1b0"
+      ref: e0f7c46e94a75aea957574148459879a83fa3bbb
+      resolved-ref: e0f7c46e94a75aea957574148459879a83fa3bbb
       url: "https://github.com/alexmercerind/bitsdojo_window.git"
     source: git
     version: "0.1.1+1"
@@ -65,8 +65,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: bitsdojo_window_linux
-      ref: master
-      resolved-ref: "1992c7f7e63815e9340c7ce75eaaf976f0e8a1b0"
+      ref: e0f7c46e94a75aea957574148459879a83fa3bbb
+      resolved-ref: e0f7c46e94a75aea957574148459879a83fa3bbb
       url: "https://github.com/alexmercerind/bitsdojo_window.git"
     source: git
     version: "0.1.1"
@@ -74,8 +74,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: bitsdojo_window_macos
-      ref: master
-      resolved-ref: "1992c7f7e63815e9340c7ce75eaaf976f0e8a1b0"
+      ref: e0f7c46e94a75aea957574148459879a83fa3bbb
+      resolved-ref: e0f7c46e94a75aea957574148459879a83fa3bbb
       url: "https://github.com/alexmercerind/bitsdojo_window.git"
     source: git
     version: "0.1.0"
@@ -90,8 +90,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: bitsdojo_window_windows
-      ref: master
-      resolved-ref: "1992c7f7e63815e9340c7ce75eaaf976f0e8a1b0"
+      ref: e0f7c46e94a75aea957574148459879a83fa3bbb
+      resolved-ref: e0f7c46e94a75aea957574148459879a83fa3bbb
       url: "https://github.com/alexmercerind/bitsdojo_window.git"
     source: git
     version: "0.1.0"
