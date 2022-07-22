@@ -269,6 +269,7 @@ class Language extends Strings with ChangeNotifier {
     this.DISCOVERING_FILES = asset['DISCOVERING_FILES']!;
     this.DONATE = asset['DONATE']!;
     this.DONE = asset['DONE']!;
+    this.DOWNLOAD = asset['DOWNLOAD']!;
     this.DOWNLOAD_UPDATE = asset['DOWNLOAD_UPDATE']!;
     this.EDIT_DETAILS = asset['EDIT_DETAILS']!;
     this.ENABLE_125_SCALING = asset['ENABLE_125_SCALING']!;
@@ -356,6 +357,7 @@ class Language extends Strings with ChangeNotifier {
     this.REINDEX = asset['REINDEX']!;
     this.REINDEX_INFORMATION = asset['REINDEX_INFORMATION']!;
     this.REINDEX_SUBTITLE = asset['REINDEX_SUBTITLE']!;
+    this.REMIND_ME_NEXT_TIME = asset['REMIND_ME_NEXT_TIME']!;
     this.REMOVE = asset['REMOVE']!;
     this.REMOVE_FROM_PLAYLIST = asset['REMOVE_FROM_PLAYLIST']!;
     this.REPEAT = asset['REPEAT']!;

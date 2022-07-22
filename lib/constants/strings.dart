@@ -65,6 +65,7 @@ class Strings {
   late String DISCOVERING_FILES;
   late String DONATE;
   late String DONE;
+  late String DOWNLOAD;
   late String DOWNLOAD_UPDATE;
   late String EDIT_DETAILS;
   late String ENABLE_125_SCALING;
@@ -152,6 +153,7 @@ class Strings {
   late String REINDEX;
   late String REINDEX_INFORMATION;
   late String REINDEX_SUBTITLE;
+  late String REMIND_ME_NEXT_TIME;
   late String REMOVE;
   late String REMOVE_FROM_PLAYLIST;
   late String REPEAT;
