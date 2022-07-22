@@ -52,7 +52,10 @@ jobs:
         shell: cmd
       - name: Release
         uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_REPOSITORY: alexmercerind/harmonoid-releases
         with:
+          repository: alexmercerind/harmonoid-releases
           draft: true
           prerelease: false
           body: ""
@@ -125,7 +128,10 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_REPOSITORY: alexmercerind/harmonoid-releases
         with:
+          repository: alexmercerind/harmonoid-releases
           draft: true
           prerelease: false
           body: ""
@@ -186,7 +192,10 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_REPOSITORY: alexmercerind/harmonoid-releases
         with:
+          repository: alexmercerind/harmonoid-releases
           draft: true
           prerelease: false
           body: ""
