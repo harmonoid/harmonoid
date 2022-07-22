@@ -25,6 +25,7 @@ import 'package:harmonoid/state/now_playing_visuals.dart';
 import 'package:harmonoid/interface/harmonoid.dart';
 import 'package:harmonoid/interface/exception.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/updater.dart';
 import 'package:harmonoid/utils/argument_vector_handler.dart';
 import 'package:harmonoid/utils/window_close_handler.dart';
 
@@ -52,7 +53,7 @@ Future<void> main(List<String> args) async {
       }
       await Intent.initialize(args: args);
       await HotKeys.initialize();
-      await WindowCloseHandler.initialize();
+      WindowCloseHandler.initialize();
       ArgumentVectorHandler.initialize();
       DiscordRPC.initialize();
       doWhenWindowReady(() {
@@ -69,7 +70,7 @@ Future<void> main(List<String> args) async {
       await MPV.initialize();
       await Intent.initialize(args: args);
       await HotKeys.initialize();
-      await WindowCloseHandler.initialize();
+      WindowCloseHandler.initialize();
       ArgumentVectorHandler.initialize();
       DiscordRPC.initialize();
     }
@@ -105,6 +106,7 @@ Future<void> main(List<String> args) async {
       update: Configuration.instance.automaticMusicLookup,
     );
     await Language.initialize();
+    Updater.initialize();
     runApp(
       Harmonoid(),
     );

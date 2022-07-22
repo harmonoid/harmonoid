@@ -39,9 +39,23 @@ import 'package:harmonoid/constants/language.dart';
 /// signal to the window.
 ///
 abstract class WindowCloseHandler {
-  static Future<void> initialize() async {
-    FlutterWindowClose.setWindowShouldCloseHandler(() async {
-      if (CollectionRefresh.instance.isOngoing) {
+  static void initialize() {
+    FlutterWindowClose.setWindowShouldCloseHandler(onWindowClose);
+    // const channel = const MethodChannel('override_window_destroy');
+    // channel.setMethodCallHandler((call) async {
+    //   await tagger.dispose();
+    //   await Playback.instance.player.dispose();
+    //   await Playback.instance.saveAppState();
+    //   channel.invokeMethod('destroy_window');
+    // });
+  }
+
+  /// Method which is invoked when a window is closed.
+  static Future<bool> onWindowClose({
+    bool showInterruptAlert = true,
+  }) async {
+    if (CollectionRefresh.instance.isOngoing) {
+      if (showInterruptAlert) {
         await showDialog(
           context: navigatorKey.currentContext!,
           builder: (c) => AlertDialog(
@@ -62,32 +76,35 @@ abstract class WindowCloseHandler {
             ],
           ),
         );
-        return false;
-      } else {
+      }
+      return false;
+    } else {
+      try {
         await Future.wait([
           Collection.instance.tagger.dispose(),
           Intent.instance.tagger.dispose(),
           Playback.instance.player.dispose(),
         ]);
-        await Playback.instance.saveAppState();
-        try {
-          if (Platform.isWindows) {
-            smtc.clear();
-            smtc.dispose();
-          }
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
-        }
-        return true;
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
       }
-    });
-    // const channel = const MethodChannel('override_window_destroy');
-    // channel.setMethodCallHandler((call) async {
-    //   await tagger.dispose();
-    //   await Playback.instance.player.dispose();
-    //   await Playback.instance.saveAppState();
-    //   channel.invokeMethod('destroy_window');
-    // });
+      try {
+        await Playback.instance.saveAppState();
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      try {
+        if (Platform.isWindows) {
+          smtc.clear();
+          smtc.dispose();
+        }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      return true;
+    }
   }
 }
