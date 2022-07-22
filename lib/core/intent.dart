@@ -314,4 +314,7 @@ class Intent {
       }
     }
   }
+
+  /// `libmpv.dart` [Tagger] instance.
+  final Tagger tagger = Tagger();
 }

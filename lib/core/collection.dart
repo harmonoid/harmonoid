@@ -976,6 +976,9 @@ class Collection extends ChangeNotifier {
           ],
         },
       );
+
+  /// `libmpv.dart` [Tagger] instance.
+  final Tagger tagger = Tagger();
 }
 
 /// Types of sorts available.
@@ -1056,9 +1059,6 @@ extension CollectionTrackExtension on Track {
           .replaceAll(RegExp(kArtworkFileNameRegex), '') +
       '.PNG';
 }
-
-/// `libmpv.dart` [Tagger] instance.
-final Tagger tagger = Tagger();
 
 /// Prettified JSON serialization.
 const encoder = convert.JsonEncoder.withIndent('  ');
