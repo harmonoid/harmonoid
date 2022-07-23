@@ -584,7 +584,8 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                           },
                                                           style: OutlinedButton
                                                               .styleFrom(
-                                                            foregroundColor:
+                                                            // ignore: deprecated_member_use
+                                                            primary:
                                                                 Colors.white,
                                                             side: BorderSide(
                                                                 color: isDark(
@@ -632,7 +633,8 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                           },
                                                           style: OutlinedButton
                                                               .styleFrom(
-                                                            foregroundColor:
+                                                            // ignore: deprecated_member_use
+                                                            primary:
                                                                 Colors.white,
                                                             side: BorderSide(
                                                                 color: isDark(

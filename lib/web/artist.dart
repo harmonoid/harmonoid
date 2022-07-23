@@ -515,7 +515,8 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                             }
                                           },
                                           style: OutlinedButton.styleFrom(
-                                            foregroundColor: Colors.white,
+                                            // ignore: deprecated_member_use
+                                            primary: Colors.white,
                                             side: BorderSide(
                                                 color: Theme.of(context)
                                                             .brightness ==

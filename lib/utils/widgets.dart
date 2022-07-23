@@ -1699,6 +1699,7 @@ class CollectionMoreButton extends StatelessWidget {
     return Tooltip(
       message: Language.instance.PLAY_INTERNET,
       child: ContextMenuButton<int>(
+        padding: EdgeInsets.zero,
         offset: Offset.fromDirection(pi / 2, 64.0),
         icon: Icon(
           Icons.public,
@@ -1830,24 +1831,34 @@ class CollectionMoreButton extends StatelessWidget {
         },
         itemBuilder: (context) => [
           PopupMenuItem(
+            padding: EdgeInsets.only(right: 8.0),
             value: 0,
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.link),
-              title: Text(
-                Language.instance.PLAY_URL,
-                style: Theme.of(context).textTheme.headline4,
+            child: Container(
+              width: 160.0,
+              alignment: Alignment.center,
+              child: ListTile(
+                contentPadding: EdgeInsets.only(left: 16.0),
+                leading: Icon(Icons.link),
+                title: Text(
+                  Language.instance.PLAY_URL,
+                  style: Theme.of(context).textTheme.headline4,
+                ),
               ),
             ),
           ),
           PopupMenuItem(
+            padding: EdgeInsets.only(right: 8.0),
             value: 1,
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.play_circle),
-              title: Text(
-                Language.instance.WEB,
-                style: Theme.of(context).textTheme.headline4,
+            child: Container(
+              width: 160.0,
+              alignment: Alignment.center,
+              child: ListTile(
+                contentPadding: EdgeInsets.only(left: 16.0),
+                leading: Icon(Icons.play_circle),
+                title: Text(
+                  Language.instance.WEB,
+                  style: Theme.of(context).textTheme.headline4,
+                ),
               ),
             ),
           ),

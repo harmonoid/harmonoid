@@ -37,6 +37,7 @@ abstract class Updater {
       final String version = body['version'];
       final bool mandatory = body['mandatory'];
       final String message = body['message'];
+      final String url = body['url'];
       final List<String> platforms = body['platforms'].cast<String>();
       if (version != kVersion && platforms.contains(Platform.operatingSystem)) {
         final choice = await FlutterPlatformAlert.showCustomAlert(
@@ -57,8 +58,7 @@ abstract class Updater {
         );
         if (choice == CustomButton.positiveButton) {
           await launchUrl(
-            // TODO: Add update URL.
-            Uri.http('', '', {}),
+            Uri.parse(url),
             mode: LaunchMode.externalApplication,
           );
           if (await WindowCloseHandler.onWindowClose(

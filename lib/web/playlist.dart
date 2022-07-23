@@ -556,8 +556,8 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                       },
                                                       style: OutlinedButton
                                                           .styleFrom(
-                                                        foregroundColor:
-                                                            Colors.white,
+                                                        // ignore: deprecated_member_use
+                                                        primary: Colors.white,
                                                         side: BorderSide(
                                                             color: isDark(
                                                                     context)
@@ -598,8 +598,8 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                       },
                                                       style: OutlinedButton
                                                           .styleFrom(
-                                                        foregroundColor:
-                                                            Colors.white,
+                                                        // ignore: deprecated_member_use
+                                                        primary: Colors.white,
                                                         side: BorderSide(
                                                             color: isDark(
                                                                     context)
