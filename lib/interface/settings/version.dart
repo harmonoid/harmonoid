@@ -103,7 +103,7 @@ class VersionState extends State<VersionSetting>
                 onPressed: () =>
                     launch('https://github.com/harmonoid/harmonoid/releases'),
                 child: Text(
-                  Language.instance.DOWNLOAD_UPDATE,
+                  Language.instance.DOWNLOAD_UPDATE.toUpperCase(),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                   ),
