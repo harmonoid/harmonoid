@@ -85,7 +85,10 @@ Future<void> webTrackPopupMenuHandle(
   switch (result) {
     case 0:
       {
-        await launch(item.uri.toString());
+        await launchUrl(
+          item.uri,
+          mode: LaunchMode.externalApplication,
+        );
         break;
       }
     case 1:

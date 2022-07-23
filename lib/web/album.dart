@@ -584,7 +584,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                           },
                                                           style: OutlinedButton
                                                               .styleFrom(
-                                                            primary:
+                                                            foregroundColor:
                                                                 Colors.white,
                                                             side: BorderSide(
                                                                 color: isDark(
@@ -623,12 +623,16 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                         ),
                                                         OutlinedButton.icon(
                                                           onPressed: () {
-                                                            launch(
-                                                                'https://music.youtube.com/browse/${widget.album.id}');
+                                                            launchUrl(
+                                                              Uri.parse(
+                                                                  'https://music.youtube.com/browse/${widget.album.id}'),
+                                                              mode: LaunchMode
+                                                                  .externalApplication,
+                                                            );
                                                           },
                                                           style: OutlinedButton
                                                               .styleFrom(
-                                                            primary:
+                                                            foregroundColor:
                                                                 Colors.white,
                                                             side: BorderSide(
                                                                 color: isDark(

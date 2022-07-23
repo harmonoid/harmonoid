@@ -12,11 +12,11 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 const kContributors = [
   [
@@ -380,7 +380,7 @@ class AboutPageState extends State<AboutPage> {
                               (contributor) => Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                                 child: ListTile(
-                                  onTap: () => launch(
+                                  onTap: () => launchUrlString(
                                     contributor[0],
                                   ),
                                   leading: CircleAvatar(
@@ -436,7 +436,7 @@ class AboutPageState extends State<AboutPage> {
                               (contributor) => Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                                 child: ListTile(
-                                  onTap: () => launch(
+                                  onTap: () => launchUrlString(
                                     contributor[0],
                                   ),
                                   leading: CircleAvatar(
@@ -492,7 +492,7 @@ class AboutPageState extends State<AboutPage> {
                               (contributor) => Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                                 child: ListTile(
-                                  onTap: () => launch(
+                                  onTap: () => launchUrlString(
                                     contributor[0],
                                   ),
                                   leading: CircleAvatar(
@@ -548,7 +548,7 @@ class AboutPageState extends State<AboutPage> {
                               (contributor) => Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                                 child: ListTile(
-                                  onTap: () => launch(
+                                  onTap: () => launchUrlString(
                                     contributor[0],
                                   ),
                                   leading: CircleAvatar(
@@ -652,23 +652,23 @@ class AboutPageState extends State<AboutPage> {
                         CorrectedListTile(
                           height: 72.0,
                           iconData: Icons.code,
-                          onTap: () =>
-                              launch('https://github.com/harmonoid/harmonoid'),
+                          onTap: () => launchUrlString(
+                              'https://github.com/harmonoid/harmonoid'),
                           title: 'GitHub',
                           subtitle: 'Visit development repository',
                         ),
                         CorrectedListTile(
                           height: 72.0,
                           iconData: Icons.attach_money,
-                          onTap: () =>
-                              launch('https://alexmercerind.github.io/donate'),
+                          onTap: () => launchUrlString(
+                              'https://alexmercerind.github.io/donate'),
                           title: 'Donate',
                           subtitle: 'Support the project development',
                         ),
                         CorrectedListTile(
                           height: 72.0,
                           iconData: Icons.translate,
-                          onTap: () => launch(
+                          onTap: () => launchUrlString(
                               'https://github.com/harmonoid/harmonoid/tree/master/assets/translations'),
                           title: 'Translate',
                           subtitle: 'Provide or update existing translations',
@@ -676,7 +676,7 @@ class AboutPageState extends State<AboutPage> {
                         CorrectedListTile(
                           height: 64.0,
                           iconData: Icons.book,
-                          onTap: () => launch(
+                          onTap: () => launchUrlString(
                               'https://github.com/harmonoid/harmonoid/wiki/License'),
                           title: 'License',
                         ),

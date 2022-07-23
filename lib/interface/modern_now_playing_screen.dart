@@ -739,8 +739,10 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 splashRadius: 20.0,
                                 iconSize: 20.0,
                                 onPressed: () {
-                                  launch(playback.tracks[playback.index].uri
-                                      .toString());
+                                  launchUrl(
+                                    playback.tracks[playback.index].uri,
+                                    mode: LaunchMode.externalApplication,
+                                  );
                                 },
                                 icon: Icon(
                                   Icons.open_in_new,

@@ -9,6 +9,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'dart:math';
+// ignore: unnecessary_import
 import 'dart:typed_data';
 import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
@@ -21,12 +22,10 @@ import 'package:flutter/rendering.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 import 'package:known_extents_list_view_builder/known_extents_list_view_builder.dart';
 
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/hotkeys.dart';
-import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/file_system.dart';

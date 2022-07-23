@@ -182,9 +182,11 @@ class NowPlayingState extends State<NowPlayingScreen>
                                                       BorderRadius.circular(
                                                           28.0),
                                                   onTap: () {
-                                                    launch(tracks[index]
-                                                        .uri
-                                                        .toString());
+                                                    launchUrl(
+                                                      tracks[index].uri,
+                                                      mode: LaunchMode
+                                                          .externalApplication,
+                                                    );
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(

@@ -132,8 +132,10 @@ class HeaderState extends State<Header> with AutomaticKeepAliveClientMixin {
             children: [
               MaterialButton(
                 padding: EdgeInsets.zero,
-                onPressed: () =>
-                    launch('https://github.com/harmonoid/harmonoid'),
+                onPressed: () => launchUrl(
+                  Uri.parse('https://github.com/harmonoid/harmonoid'),
+                  mode: LaunchMode.externalApplication,
+                ),
                 child: Text(
                   Language.instance.SETTING_GITHUB.toUpperCase(),
                   style: TextStyle(
@@ -143,8 +145,10 @@ class HeaderState extends State<Header> with AutomaticKeepAliveClientMixin {
               ),
               MaterialButton(
                 padding: EdgeInsets.zero,
-                onPressed: () =>
-                    launch('https://alexmercerind.github.io/donate'),
+                onPressed: () => launchUrl(
+                  Uri.parse('https://alexmercerind.github.io/donate'),
+                  mode: LaunchMode.externalApplication,
+                ),
                 child: Text(
                   Language.instance.DONATE.toUpperCase(),
                   style: TextStyle(
@@ -170,8 +174,11 @@ class HeaderState extends State<Header> with AutomaticKeepAliveClientMixin {
               if (kVersion != latestRelease.tagName)
                 MaterialButton(
                   padding: EdgeInsets.zero,
-                  onPressed: () =>
-                      launch('https://github.com/harmonoid/harmonoid/releases'),
+                  onPressed: () => launchUrl(
+                    Uri.parse(
+                        'https://github.com/harmonoid/harmonoid/releases'),
+                    mode: LaunchMode.externalApplication,
+                  ),
                   child: Text(
                     Language.instance.DOWNLOAD_UPDATE.toUpperCase(),
                     style: TextStyle(

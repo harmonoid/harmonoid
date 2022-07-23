@@ -100,8 +100,10 @@ class VersionState extends State<VersionSetting>
           : [
               MaterialButton(
                 padding: EdgeInsets.zero,
-                onPressed: () =>
-                    launch('https://github.com/harmonoid/harmonoid/releases'),
+                onPressed: () => launchUrl(
+                  Uri.parse('https://github.com/harmonoid/harmonoid/releases'),
+                  mode: LaunchMode.externalApplication,
+                ),
                 child: Text(
                   Language.instance.DOWNLOAD_UPDATE,
                   style: TextStyle(

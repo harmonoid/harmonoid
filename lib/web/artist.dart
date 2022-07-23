@@ -503,15 +503,19 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                         OutlinedButton.icon(
                                           onPressed: () {
                                             if (isDesktop) {
-                                              launch(
-                                                  'https://music.youtube.com/browse/${widget.artist.id}');
+                                              launchUrl(
+                                                Uri.parse(
+                                                    'https://music.youtube.com/browse/${widget.artist.id}'),
+                                                mode: LaunchMode
+                                                    .externalApplication,
+                                              );
                                             } else {
                                               Share.share(
                                                   'https://music.youtube.com/browse/${widget.artist.id}');
                                             }
                                           },
                                           style: OutlinedButton.styleFrom(
-                                            primary: Colors.white,
+                                            foregroundColor: Colors.white,
                                             side: BorderSide(
                                                 color: Theme.of(context)
                                                             .brightness ==

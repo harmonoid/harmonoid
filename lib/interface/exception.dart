@@ -91,8 +91,11 @@ class _ExceptionApp extends StatelessWidget {
                 ButtonBar(
                   children: [
                     MaterialButton(
-                      onPressed: () => launch(
-                          'https://github.com/harmonoid/harmonoid/issues'),
+                      onPressed: () => launchUrl(
+                        Uri.parse(
+                            'https://github.com/harmonoid/harmonoid/issues'),
+                        mode: LaunchMode.externalApplication,
+                      ),
                       child: Text(
                         'REPORT',
                         style: TextStyle(
@@ -156,8 +159,11 @@ class _ExceptionApp extends StatelessWidget {
                 ButtonBar(
                   children: [
                     MaterialButton(
-                      onPressed: () => launch(
-                          'https://github.com/harmonoid/harmonoid/issues'),
+                      onPressed: () => launchUrl(
+                        Uri.parse(
+                            'https://github.com/harmonoid/harmonoid/issues'),
+                        mode: LaunchMode.externalApplication,
+                      ),
                       child: Text(
                         'REPORT',
                         style: TextStyle(

@@ -816,8 +816,12 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                   .transparent,
                                                               child: IconButton(
                                                                 onPressed: () {
-                                                                  launch(
-                                                                      'file:///${(getAlbumArt(widget.album) as FileImage).file.path}');
+                                                                  launchUrl(
+                                                                    Uri.parse(
+                                                                        'file:///${(getAlbumArt(widget.album) as FileImage).file.path}'),
+                                                                    mode: LaunchMode
+                                                                        .externalApplication,
+                                                                  );
                                                                 },
                                                                 icon: Icon(
                                                                   Icons.image,
