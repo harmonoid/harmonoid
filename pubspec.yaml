@@ -39,8 +39,6 @@ dependencies:
 
   # Third-party plugins.
 
-  flutter_window_close: ^0.2.2
-  flutter_platform_alert: ^0.3.0
   share_plus: ^2.1.4
   url_launcher: ^6.1.3
   permission_handler: ^6.1.1
@@ -77,6 +75,14 @@ dependencies:
 
   # Third-party forked plugins & packages to meet requirements.
 
+  flutter_window_close:
+    git:
+      url: https://github.com/alexmercerind/flutter_window_close.git
+      ref: b7aca98fbefd61f7bd77b9e05535ef808a24adec
+  flutter_platform_alert:
+    git:
+      url: https://github.com/alexmercerind/flutter_platform_alert.git
+      ref: b223598a8b063e847e2dd8d80e18b4e0f70ad458
   miniplayer:
     git:
       url: https://github.com/alexmercerind/miniplayer.git

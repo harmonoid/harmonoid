@@ -11,7 +11,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 
 import 'package:harmonoid/main.dart';
@@ -50,6 +50,7 @@ abstract class Updater {
               mandatory ? null : Language.instance.REMIND_ME_NEXT_TIME,
           neutralButtonTitle: null,
           options: FlutterPlatformAlertOption(
+            preferMessageBoxOnWindows: false,
             additionalWindowTitleOnWindows: Language.instance.DOWNLOAD_UPDATE,
             showAsLinksOnWindows: true,
           ),
@@ -62,7 +63,7 @@ abstract class Updater {
           );
           if (await WindowCloseHandler.onWindowClose(
               showInterruptAlert: false)) {
-            appWindow.close();
+            FlutterWindowClose.destroyWindow();
           }
         }
       }

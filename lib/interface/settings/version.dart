@@ -105,7 +105,7 @@ class VersionState extends State<VersionSetting>
                   mode: LaunchMode.externalApplication,
                 ),
                 child: Text(
-                  Language.instance.DOWNLOAD_UPDATE,
+                  Language.instance.DOWNLOAD_UPDATE.toUpperCase(),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                   ),
