@@ -101,7 +101,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.1"
+    version: "1.2.0"
   charcode:
     dependency: transitive
     description:
@@ -293,10 +293,12 @@ packages:
   flutter_platform_alert:
     dependency: "direct main"
     description:
-      name: flutter_platform_alert
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0"
+      path: "."
+      ref: b223598a8b063e847e2dd8d80e18b4e0f70ad458
+      resolved-ref: b223598a8b063e847e2dd8d80e18b4e0f70ad458
+      url: "https://github.com/alexmercerind/flutter_platform_alert.git"
+    source: git
+    version: "0.2.8"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -312,9 +314,11 @@ packages:
   flutter_window_close:
     dependency: "direct main"
     description:
-      name: flutter_window_close
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: b7aca98fbefd61f7bd77b9e05535ef808a24adec
+      resolved-ref: b7aca98fbefd61f7bd77b9e05535ef808a24adec
+      url: "https://github.com/alexmercerind/flutter_window_close.git"
+    source: git
     version: "0.2.2"
   glob:
     dependency: transitive
@@ -431,7 +435,7 @@ packages:
       name: material_color_utilities
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.4"
   material_floating_search_bar:
     dependency: "direct main"
     description:
@@ -445,7 +449,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0"
+    version: "1.7.0"
   mime:
     dependency: transitive
     description:
