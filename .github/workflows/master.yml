@@ -53,9 +53,9 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_REPOSITORY: alexmercerind/harmonoid-releases
+          GITHUB_REPOSITORY: alexmercerind2/_
         with:
-          repository: alexmercerind/harmonoid-releases
+          repository: alexmercerind2/_
           draft: true
           prerelease: false
           body: ""
@@ -129,9 +129,9 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_REPOSITORY: alexmercerind/harmonoid-releases
+          GITHUB_REPOSITORY: alexmercerind2/_
         with:
-          repository: alexmercerind/harmonoid-releases
+          repository: alexmercerind2/_
           draft: true
           prerelease: false
           body: ""
@@ -193,9 +193,9 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_REPOSITORY: alexmercerind/harmonoid-releases
+          GITHUB_REPOSITORY: alexmercerind2/_
         with:
-          repository: alexmercerind/harmonoid-releases
+          repository: alexmercerind2/_
           draft: true
           prerelease: false
           body: ""
