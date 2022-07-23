@@ -80,11 +80,9 @@ abstract class WindowCloseHandler {
       return false;
     } else {
       try {
-        await Future.wait([
-          Collection.instance.tagger.dispose(),
-          Intent.instance.tagger.dispose(),
-          Playback.instance.player.dispose(),
-        ]);
+        await Collection.instance.tagger.dispose();
+        await Intent.instance.tagger.dispose();
+        await Playback.instance.player.dispose();
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
