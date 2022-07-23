@@ -27,12 +27,8 @@ The SOFTWARE PRODUCT is protected by copyright laws and international copyright 
    (f) Compliance with Applicable Laws.
    You must comply with all applicable laws regarding use of the SOFTWARE PRODUCT.
    (g) Source code.
-   You may compile and modify the source code of the SOFTWARE PRODUCT for your own personal purpose or to propose a contribution to the SOFTWARE PRODUCT, for which you have two choices:
-      1. You can compile the SOFTWARE PRODUCT using private packages by donating to the project (at https://www.github.com/sponsors/alexmercerind or https://www.patreon.com/harmonoid) or requesting access as a contributor.
-         You'll be provided access to the source code of the private packages used in SOFTWARE PRODUCT at https://www.github.com/sponsors/alexmercerind or https://www.patreon.com/harmonoid.
-         See https://github.com/harmonoid/harmonoid#compiling-with-private-packages
-      2. You can compile the SOFTWARE PRODUCT with open-source libraries.
-         See https://github.com/harmonoid/harmonoid#compiling-without-private-packages
+   You may compile and modify the source code of the SOFTWARE PRODUCT for your own personal purpose or to propose a contribution to the SOFTWARE PRODUCT.
+
 3. TERMINATION
    Without prejudice to any other rights, the Licensor may terminate this EULA if you fail to comply with the terms and conditions of this EULA. In such event, you must destroy all copies of the SOFTWARE PRODUCT in your possession.
 
