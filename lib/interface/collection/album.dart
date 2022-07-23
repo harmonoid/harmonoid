@@ -411,7 +411,13 @@ class AlbumTile extends StatelessWidget {
             margin: EdgeInsets.zero,
             child: InkWell(
               onTap: () async {
-                await precacheImage(getAlbumArt(album), context);
+                Playback.instance.interceptPositionChangeRebuilds = true;
+                try {
+                  await precacheImage(getAlbumArt(album), context);
+                } catch (exception, stacktrace) {
+                  debugPrint(exception.toString());
+                  debugPrint(stacktrace.toString());
+                }
                 Navigator.of(context).push(
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
@@ -427,6 +433,9 @@ class AlbumTile extends StatelessWidget {
                     reverseTransitionDuration: Duration(milliseconds: 300),
                   ),
                 );
+                Timer(const Duration(milliseconds: 400), () {
+                  Playback.instance.interceptPositionChangeRebuilds = false;
+                });
               },
               child: Container(
                 height: height,
@@ -1196,6 +1205,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                                 e,
                                                                             recognizer: TapGestureRecognizer()
                                                                               ..onTap = () {
+                                                                                Playback.instance.interceptPositionChangeRebuilds = true;
                                                                                 Navigator.of(context).push(
                                                                                   PageRouteBuilder(
                                                                                     pageBuilder: ((context, animation, secondaryAnimation) => FadeThroughTransition(
@@ -1207,6 +1217,9 @@ class AlbumScreenState extends State<AlbumScreen>
                                                                                         )),
                                                                                   ),
                                                                                 );
+                                                                                Timer(const Duration(milliseconds: 400), () {
+                                                                                  Playback.instance.interceptPositionChangeRebuilds = false;
+                                                                                });
                                                                               },
                                                                           ),
                                                                         )

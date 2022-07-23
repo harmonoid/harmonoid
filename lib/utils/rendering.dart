@@ -7,6 +7,7 @@
 ///
 
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -428,6 +429,7 @@ Future<void> trackPopupMenuHandle(
             );
             palette = result.colors;
           }
+          Playback.instance.interceptPositionChangeRebuilds = true;
           Navigator.of(context).push(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
@@ -441,6 +443,9 @@ Future<void> trackPopupMenuHandle(
               ),
             ),
           );
+          Timer(const Duration(milliseconds: 400), () {
+            Playback.instance.interceptPositionChangeRebuilds = false;
+          });
           break;
         }
       case 5:

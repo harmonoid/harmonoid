@@ -6,6 +6,8 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
+import 'dart:async';
+
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
@@ -173,6 +175,8 @@ class TrackTab extends StatelessWidget {
                               text: e,
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
+                                  Playback.instance
+                                      .interceptPositionChangeRebuilds = true;
                                   navigatorKey.currentState?.push(
                                     PageRouteBuilder(
                                       pageBuilder: ((context, animation,
@@ -190,6 +194,11 @@ class TrackTab extends StatelessWidget {
                                           )),
                                     ),
                                   );
+                                  Timer(const Duration(milliseconds: 400), () {
+                                    Playback.instance
+                                            .interceptPositionChangeRebuilds =
+                                        false;
+                                  });
                                 },
                             ),
                           )
@@ -213,6 +222,9 @@ class TrackTab extends StatelessWidget {
                                   text: collection.tracks[index].albumName,
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
+                                      Playback.instance
+                                              .interceptPositionChangeRebuilds =
+                                          true;
                                       navigatorKey.currentState?.push(
                                         PageRouteBuilder(
                                           pageBuilder: ((context, animation,
@@ -241,6 +253,12 @@ class TrackTab extends StatelessWidget {
                                               )),
                                         ),
                                       );
+                                      Timer(const Duration(milliseconds: 400),
+                                          () {
+                                        Playback.instance
+                                                .interceptPositionChangeRebuilds =
+                                            false;
+                                      });
                                     },
                                 ),
                               ],

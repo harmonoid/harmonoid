@@ -489,6 +489,9 @@ class Playback extends ChangeNotifier {
         notifyListeners();
       });
       player.streams.position.listen((event) {
+        if (interceptPositionChangeRebuilds) {
+          return;
+        }
         position = event;
         notifyListeners();
         if (Platform.isWindows &&
@@ -871,6 +874,16 @@ class Playback extends ChangeNotifier {
 
   get isFirstTrack => index == 0;
   get isLastTrack => index == tracks.length - 1;
+
+  /// NOTE: Only applicable on desktop. WIP.
+  /// In current analysis, I have observed that rebuilds in the seekbar [Slider] present on
+  /// [NowPlayingBar] causes substantial lag in the hero animations.
+  /// This causes experience to be jittery.
+  /// By setting [interceptPositionChangeRebuilds] to `true`, whenever a [Route] is in the
+  /// middle of transition, the [NowPlayingBar] will not rebuild.
+  /// Since, the transition is only visible for 300 ~ 400ms, this should be fine. While,
+  /// the animation will be buttery smooth to the user's eyes.
+  bool interceptPositionChangeRebuilds = false;
 }
 
 enum PlaylistLoopMode {

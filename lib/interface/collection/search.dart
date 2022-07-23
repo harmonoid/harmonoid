@@ -6,6 +6,8 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,7 @@ import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
@@ -105,6 +108,8 @@ class SearchTabState extends State<SearchTab> {
                               const Spacer(),
                               ShowAllButton(
                                 onPressed: () {
+                                  Playback.instance
+                                      .interceptPositionChangeRebuilds = true;
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => Scaffold(
@@ -157,6 +162,11 @@ class SearchTabState extends State<SearchTab> {
                                       ),
                                     ),
                                   );
+                                  Timer(const Duration(milliseconds: 400), () {
+                                    Playback.instance
+                                            .interceptPositionChangeRebuilds =
+                                        false;
+                                  });
                                 },
                               ),
                               const SizedBox(
@@ -186,6 +196,8 @@ class SearchTabState extends State<SearchTab> {
                               const Spacer(),
                               ShowAllButton(
                                 onPressed: () {
+                                  Playback.instance
+                                      .interceptPositionChangeRebuilds = true;
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => Scaffold(
@@ -240,6 +252,11 @@ class SearchTabState extends State<SearchTab> {
                                       ),
                                     ),
                                   );
+                                  Timer(const Duration(milliseconds: 400), () {
+                                    Playback.instance
+                                            .interceptPositionChangeRebuilds =
+                                        false;
+                                  });
                                 },
                               ),
                               const SizedBox(

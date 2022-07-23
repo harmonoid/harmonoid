@@ -204,7 +204,15 @@ class ArtistTile extends StatelessWidget {
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () async {
-                              await precacheImage(getAlbumArt(artist), context);
+                              Playback.instance
+                                  .interceptPositionChangeRebuilds = true;
+                              try {
+                                await precacheImage(
+                                    getAlbumArt(artist), context);
+                              } catch (exception, stacktrace) {
+                                debugPrint(exception.toString());
+                                debugPrint(stacktrace.toString());
+                              }
                               Navigator.of(context).push(
                                 PageRouteBuilder(
                                   pageBuilder: (context, animation,
@@ -222,6 +230,10 @@ class ArtistTile extends StatelessWidget {
                                       Duration(milliseconds: 300),
                                 ),
                               );
+                              Timer(const Duration(milliseconds: 400), () {
+                                Playback.instance
+                                    .interceptPositionChangeRebuilds = false;
+                              });
                             },
                             child: Container(
                               height: width,
@@ -895,6 +907,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                                 text: track.value.albumName,
                                                                                 recognizer: TapGestureRecognizer()
                                                                                   ..onTap = () {
+                                                                                    Playback.instance.interceptPositionChangeRebuilds = true;
                                                                                     Navigator.of(context).push(
                                                                                       PageRouteBuilder(
                                                                                         pageBuilder: ((context, animation, secondaryAnimation) => FadeThroughTransition(
@@ -912,6 +925,9 @@ class ArtistScreenState extends State<ArtistScreen>
                                                                                             )),
                                                                                       ),
                                                                                     );
+                                                                                    Timer(const Duration(milliseconds: 400), () {
+                                                                                      Playback.instance.interceptPositionChangeRebuilds = false;
+                                                                                    });
                                                                                   },
                                                                               ),
                                                                             ],

@@ -604,11 +604,17 @@ class PlaylistTileState extends State<PlaylistTile> {
         child: InkWell(
           onTap: widget.onTap ??
               () async {
+                Playback.instance.interceptPositionChangeRebuilds = true;
                 Iterable<Color>? palette;
-                if (isMobile && widget.playlist.tracks.isNotEmpty) {
-                  final result = await PaletteGenerator.fromImageProvider(
-                      getAlbumArt(widget.playlist.tracks.first, small: true));
-                  palette = result.colors;
+                try {
+                  if (isMobile && widget.playlist.tracks.isNotEmpty) {
+                    final result = await PaletteGenerator.fromImageProvider(
+                        getAlbumArt(widget.playlist.tracks.first, small: true));
+                    palette = result.colors;
+                  }
+                } catch (exception, stacktrace) {
+                  debugPrint(exception.toString());
+                  debugPrint(stacktrace.toString());
                 }
                 Navigator.of(context).push(
                   PageRouteBuilder(
@@ -623,6 +629,9 @@ class PlaylistTileState extends State<PlaylistTile> {
                     ),
                   ),
                 );
+                Timer(const Duration(milliseconds: 400), () {
+                  Playback.instance.interceptPositionChangeRebuilds = false;
+                });
               },
           onLongPress: () {
             if (widget.playlist.id < 0) return;
