@@ -80,9 +80,11 @@ abstract class WindowCloseHandler {
       return false;
     } else {
       try {
-        await Collection.instance.tagger.dispose();
-        await Intent.instance.tagger.dispose();
-        await Playback.instance.player.dispose();
+        if (Platform.isLinux) {
+          await Collection.instance.tagger.dispose();
+          await Intent.instance.tagger.dispose();
+          await Playback.instance.player.dispose();
+        }
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
