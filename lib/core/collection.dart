@@ -9,7 +9,7 @@
 import 'dart:io';
 import 'dart:collection';
 import 'dart:convert' as convert;
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:libmpv/libmpv.dart' hide Playlist, Media;
 import 'package:libmpv/libmpv.dart' as libmpv;
@@ -490,24 +490,26 @@ class Collection extends ChangeNotifier {
         // Restore cache.
         await Future.wait(
           [
-            (() async => _tracks = HashSet<Track>.from(
-                (await _trackStorage.read())['tracks']
-                    .map((e) => Track.fromJson(e))
-                    .cast<Track>()))(),
-            (() async => _albums = HashSet<Album>.from(
-                    (await _albumStorage.read())['albums'].map((e) {
-                  final album = Album.fromJson(e);
-                  if (!albumArtists
-                      .containsKey(AlbumArtist(album.albumArtistName))) {
-                    albumArtists[AlbumArtist(album.albumArtistName)] =
-                        HashSet<Album>();
-                  }
-                  return album;
-                }).cast<Album>()))(),
-            (() async => _artists = HashSet<Artist>.from(
-                (await _artistStorage.read())['artists']
-                    .map((e) => Artist.fromJson(e))
-                    .cast<Artist>()))(),
+            () async {
+              _tracks = await compute(
+                parseTrackHashSetFromData,
+                await _trackStorage.read(),
+              );
+            }(),
+            () async {
+              final result = await compute(
+                parseAlbumHashSetFromData,
+                await _albumStorage.read(),
+              );
+              _albums = result.first;
+              albumArtists = result.last;
+            }(),
+            () async {
+              _artists = await compute(
+                parseArtistHashSetFromData,
+                await _artistStorage.read(),
+              );
+            }(),
           ],
         );
         debugPrint('_tracks: ${_tracks.length}');
@@ -979,6 +981,31 @@ class Collection extends ChangeNotifier {
 
   /// `libmpv.dart` [Tagger] instance.
   final Tagger tagger = Tagger();
+
+  static HashSet<Track> parseTrackHashSetFromData(dynamic data) =>
+      HashSet<Track>.from(
+        data['tracks'].map((e) => Track.fromJson(e)).cast<Track>(),
+      );
+
+  static List<dynamic> parseAlbumHashSetFromData(dynamic data) {
+    final splayTreeMap = SplayTreeMap<AlbumArtist, HashSet<Album>>();
+    final hashSet = HashSet<Album>.from(data['albums'].map((e) {
+      final album = Album.fromJson(e);
+      if (!splayTreeMap.containsKey(AlbumArtist(album.albumArtistName))) {
+        splayTreeMap[AlbumArtist(album.albumArtistName)] = HashSet<Album>();
+      }
+      return album;
+    }).cast<Album>());
+    return [
+      hashSet,
+      splayTreeMap,
+    ];
+  }
+
+  static HashSet<Artist> parseArtistHashSetFromData(dynamic data) =>
+      HashSet<Artist>.from(
+        data['artists'].map((e) => Artist.fromJson(e)).cast<Artist>(),
+      );
 }
 
 /// Types of sorts available.
