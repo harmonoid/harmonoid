@@ -163,16 +163,18 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                     0, Playback.instance.tracks.length - 1)]
                                 .trackName
                                 .overflow,
-                            style:
-                                Theme.of(context).textTheme.headline1?.copyWith(
-                                      color: (colors.palette ??
-                                                  [Theme.of(context).cardColor])
-                                              .first
-                                              .isDark
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontSize: 20.0,
-                                    ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline1
+                                ?.copyWith(
+                                  color: (colors.palette ??
+                                              [Theme.of(context).primaryColor])
+                                          .first
+                                          .isDark
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontSize: 20.0,
+                                ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -227,15 +229,17 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                     .albumName
                                     .overflow,
                             ].join(' • '),
-                            style:
-                                Theme.of(context).textTheme.headline3?.copyWith(
-                                      color: (colors.palette ??
-                                                  [Theme.of(context).cardColor])
-                                              .first
-                                              .isDark
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline3
+                                ?.copyWith(
+                                  color: (colors.palette ??
+                                              [Theme.of(context).primaryColor])
+                                          .first
+                                          .isDark
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -270,7 +274,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                               color: (colors.palette ??
                                                           [
                                                             Theme.of(context)
-                                                                .cardColor
+                                                                .primaryColor
                                                           ])
                                                       .first
                                                       .isDark
@@ -298,7 +302,9 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                     },
                                     iconSize: 24.0,
                                     color: (colors.palette ??
-                                                [Theme.of(context).cardColor])
+                                                [
+                                                  Theme.of(context).primaryColor
+                                                ])
                                             .first
                                             .isDark
                                         ? Colors.white.withOpacity(0.87)
@@ -322,7 +328,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                 icon: Icon(
                                   Icons.skip_previous,
                                   color: (colors.palette ??
-                                              [Theme.of(context).cardColor])
+                                              [Theme.of(context).primaryColor])
                                           .first
                                           .isDark
                                       ? Colors.white.withOpacity(0.87)
@@ -341,7 +347,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                   progress: playOrPause,
                                   icon: AnimatedIcons.play_pause,
                                   color: (colors.palette ??
-                                              [Theme.of(context).cardColor])
+                                              [Theme.of(context).primaryColor])
                                           .first
                                           .isDark
                                       ? Colors.white.withOpacity(0.87)
@@ -359,7 +365,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                 icon: Icon(
                                   Icons.skip_next,
                                   color: (colors.palette ??
-                                              [Theme.of(context).cardColor])
+                                              [Theme.of(context).primaryColor])
                                           .first
                                           .isDark
                                       ? Colors.white.withOpacity(0.87)
@@ -385,7 +391,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                               color: (colors.palette ??
                                                           [
                                                             Theme.of(context)
-                                                                .cardColor
+                                                                .primaryColor
                                                           ])
                                                       .first
                                                       .isDark
@@ -400,7 +406,9 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                     onPressed: playback.toggleShuffle,
                                     iconSize: 24.0,
                                     color: (colors.palette ??
-                                                [Theme.of(context).cardColor])
+                                                [
+                                                  Theme.of(context).primaryColor
+                                                ])
                                             .first
                                             .isDark
                                         ? Colors.white.withOpacity(0.87)
@@ -456,34 +464,40 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                       ),
                       const SizedBox(height: 4.0),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          const SizedBox(height: 32.0),
                           const SizedBox(width: 16.0),
                           Text(
                             playback.position.label,
-                            style:
-                                Theme.of(context).textTheme.headline3?.copyWith(
-                                      color: (colors.palette ??
-                                                  [Theme.of(context).cardColor])
-                                              .first
-                                              .isDark
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline3
+                                ?.copyWith(
+                                  color: (colors.palette ??
+                                              [Theme.of(context).primaryColor])
+                                          .first
+                                          .isDark
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Spacer(),
                           Text(
                             playback.duration.label,
-                            style:
-                                Theme.of(context).textTheme.headline3?.copyWith(
-                                      color: (colors.palette ??
-                                                  [Theme.of(context).cardColor])
-                                              .first
-                                              .isDark
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline3
+                                ?.copyWith(
+                                  color: (colors.palette ??
+                                              [Theme.of(context).primaryColor])
+                                          .first
+                                          .isDark
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -623,7 +637,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                               [
                                                                 Theme.of(
                                                                         context)
-                                                                    .cardColor
+                                                                    .primaryColor
                                                               ])
                                                           .first
                                                           .isDark
