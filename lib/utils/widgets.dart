@@ -998,7 +998,7 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.play_circle),
-                label: Language.instance.WEB,
+                label: Language.instance.WEB.split(' ').first,
                 backgroundColor: color ?? Theme.of(context).primaryColor,
               ),
             ],
@@ -1568,7 +1568,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
   Widget build(BuildContext context) {
     return AnimatedOpacity(
       opacity: [1, 2, 3].contains(index) ? 1.0 : 0.0,
-      duration: Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 50),
       child: CircularButton(
         icon: const Icon(Icons.sort_by_alpha),
         onPressed: () async {
@@ -1673,14 +1673,18 @@ class NowPlayingBarScrollHideNotifier extends StatelessWidget {
     if (isDesktop) {
       return child;
     } else {
-      return NotificationListener<ScrollUpdateNotification>(
+      return NotificationListener<UserScrollNotification>(
         onNotification: (notification) {
-          final scrollDelta = notification.scrollDelta ?? 0.0;
-          if (notification.metrics.axis == Axis.vertical) {
-            if (scrollDelta > 0.0) {
-              MobileNowPlayingController.instance.hide();
-            } else {
+          if (notification.metrics.axis == Axis.vertical &&
+              [
+                AxisDirection.up,
+                AxisDirection.down,
+              ].contains(notification.metrics.axisDirection)) {
+            // Do not handle [ScrollDirection.idle].
+            if (notification.direction == ScrollDirection.forward) {
               MobileNowPlayingController.instance.show();
+            } else if (notification.direction == ScrollDirection.reverse) {
+              MobileNowPlayingController.instance.hide();
             }
           }
           return false;
