@@ -111,7 +111,7 @@ class HeaderState extends State<Header> with AutomaticKeepAliveClientMixin {
                           ),
                     ),
                     Text(
-                      'Elegant music app to play & manage music library.',
+                      'Plays & manages your music library. Looks beautiful & juicy.',
                       style: TextStyle(color: Colors.white),
                     ),
                     getVersionTableRow(

@@ -1,22 +1,19 @@
 Name:       harmonoid
-Version:    0.2.6
+Version:    0.2.7
 Release:    1
-Summary:    Elegant music app to play & manage music library.
+Summary:    Plays & manages your music library. Looks beautiful & juicy.
 License:    EULA
 Requires:   mpv, mpv-libs-devel
 AutoReqProv: no
 
 %description
-Elegant music app to play & manage music library.
-Distributes music into albums & artists.
-Has playlists & lyrics.
-YouTube Music support.
+Plays & manages your music library. Looks beautiful & juicy.
 
 %prep
-# we have no source, so nothing here
+# no source
 
 %build
-# already build using ci, so nothing here
+# no source
 
 %install
 mkdir -p %{buildroot}
@@ -26,4 +23,4 @@ cp -rf linux/debian/usr/ %{buildroot}
 FILES_HERE
 
 %changelog
-# let's skip this for now
+# no changelog

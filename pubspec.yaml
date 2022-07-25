@@ -1,7 +1,7 @@
 name: harmonoid
-description: Elegant music app to play & manage music library.
+description: Plays & manages your music library. Looks beautiful & juicy.
 publish_to: "none"
-version: 0.2.6+5003
+version: 0.2.7+5003
 
 environment:
   sdk: ">=2.14.0 <3.0.0"
@@ -44,9 +44,8 @@ dependencies:
   permission_handler: ^6.1.1
   filepicker_windows: ^2.0.0
   flutter_local_notifications: ^5.0.0
-  assets_audio_player:
-    git:
-      url: https://github.com/florent37/Flutter-AssetsAudioPlayer.git
+  just_audio: ^0.9.28
+  audio_service: ^0.18.7
   file_picker: ^3.0.0
   file_selector: ^0.8.2
   file_selector_linux:
@@ -164,7 +163,7 @@ flutter:
           weight: 900
 
 msix_config:
-  msix_version: 0.2.6.0
+  msix_version: 0.2.7.0
   display_name: Harmonoid
   identity_name: com.alexmercerind.harmonoid
   file_extension: ogg, ogx, aac, m4a, mp3, wma, wav, aiff, flac, opus
