@@ -78,7 +78,6 @@ class CollectionScreenState extends State<CollectionScreen>
     if (isMobile) {
       pageController.addListener(() {
         widget.floatingSearchBarController.show();
-        MobileNowPlayingController.instance.show();
       });
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -504,7 +503,7 @@ class CollectionScreenState extends State<CollectionScreen>
                           ? null
                           : refresh.total == 0
                               ? 1.0
-                              : refresh.progress! / refresh.total,
+                              : (refresh.progress ?? 0.0) / refresh.total,
                       transitionCurve: Curves.easeInOut,
                       width: MediaQuery.of(context).size.width - 2 * tileMargin,
                       height: kMobileSearchBarHeight,
