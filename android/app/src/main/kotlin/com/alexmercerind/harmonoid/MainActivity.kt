@@ -19,6 +19,7 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.text.TextUtils
+import com.ryanheise.audioservice.AudioServiceActivity;
 
 
 object RealPathUtil {
@@ -102,11 +103,9 @@ object RealPathUtil {
 
     private fun getDataColumn(context: Context, uri: Uri?, selection: String?,
         selectionArgs: Array<String>?): String? {
-
         var cursor: Cursor? = null
         val column = "_data"
         val projection = arrayOf(column)
-
         try {
             cursor = context.contentResolver.query(uri!!, projection, selection, selectionArgs, null)
             if (cursor != null && cursor.moveToFirst()) {
@@ -137,10 +136,10 @@ object RealPathUtil {
 }
 
 
-class MainActivity : FlutterActivity() {
-    private val CHANNEL = "com.alexmercerind.harmonoid/openFile"
+class MainActivity : AudioServiceActivity() {
+    private val CHANNEL = "com.alexmercerind.harmonoid/open_file"
     var openPath: String? = null
-
+    
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
         val channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
