@@ -855,15 +855,16 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         ..notifyNativeListeners();
       return _transformEvent(e);
     }).pipe(playbackState);
-    _player.currentIndexStream.map((e) {
+    _player.currentIndexStream.listen((e) {
+      debugPrint('_HarmonoidMobilePlayer/_player.currentIndex: $e');
       if (e != null) {
         playback
           ..index = e
           ..notify();
-        // ignore: unnecessary_cast
-        return queue.value[e] as MediaItem;
+        debugPrint(queue.value[e].toString());
+        mediaItem.add(queue.value[e]);
       }
-    }).pipe(mediaItem);
+    });
     _player.volumeStream.listen(
       (e) => playback
         ..volume = e
@@ -995,6 +996,8 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     if (play) {
       await _player.play();
     }
+    // Update [mediaItem] regardless, since index change won't happen.
+    mediaItem.add(_trackToMediaItem(tracks[index]));
   }
 
   /// For the [Playback] implementation.
