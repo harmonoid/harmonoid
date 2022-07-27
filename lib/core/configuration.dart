@@ -304,7 +304,7 @@ final Map<String, dynamic> _defaultConfiguration = {
   'automaticMusicLookup': false,
   'dynamicNowPlayingBarColoring': isDesktop,
   'proxyURL': null,
-  'backgroundArtwork': true,
+  'backgroundArtwork': isDesktop,
   'modernNowPlayingScreen': isDesktop,
   'modernNowPlayingScreenCarouselIndex': 0,
   'lyricsVisible': true,

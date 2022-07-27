@@ -229,7 +229,8 @@ class Collection extends ChangeNotifier {
     int? limit,
   }) {
     if (query.isEmpty) return <Media>[];
-    final terms = query.toLowerCase().split(' ');
+    final terms = query.toLowerCase().split(' ')
+      ..removeWhere((term) => term.isEmpty);
     List<Media> result = <Media>[];
     if (mode is Album || mode == null) {
       for (final album in _albums) {
