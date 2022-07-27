@@ -189,15 +189,16 @@ class Playback extends ChangeNotifier {
   void toggleShuffle() {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       libmpv?.shuffle = !isShuffling;
+      // Handled through stream subscription on the Android.
+      isShuffling = !isShuffling;
     }
     if (Platform.isAndroid || Platform.isIOS) {
       audioService?.setShuffleMode(
         !isShuffling
-            ? AudioServiceShuffleMode.none
-            : AudioServiceShuffleMode.all,
+            ? AudioServiceShuffleMode.all
+            : AudioServiceShuffleMode.none,
       );
     }
-    isShuffling = !isShuffling;
     notifyListeners();
   }
 
@@ -288,6 +289,7 @@ class Playback extends ChangeNotifier {
       libmpv?.volume = volume;
       libmpv?.pitch = pitch;
       libmpv?.setPlaylistMode(PlaylistMode.values[playlistLoopMode.index]);
+      libmpv?.shuffle = isShuffling;
     }
     if (Platform.isAndroid || Platform.isIOS) {
       audioService?.setSpeed(rate);
@@ -295,6 +297,11 @@ class Playback extends ChangeNotifier {
       audioService?.setPitch(pitch);
       audioService?.setRepeatMode(
         AudioServiceRepeatMode.values[playlistLoopMode.index],
+      );
+      audioService?.setShuffleMode(
+        isShuffling
+            ? AudioServiceShuffleMode.all
+            : AudioServiceShuffleMode.none,
       );
     }
     if (!open) return;
@@ -1029,12 +1036,15 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   }
 
   @override
-  Future<void> setShuffleMode(shuffleMode) => _player.setShuffleModeEnabled(
-        {
-          AudioServiceShuffleMode.all: true,
-          AudioServiceShuffleMode.none: false,
-        }[shuffleMode]!,
-      );
+  Future<void> setShuffleMode(shuffleMode) {
+    debugPrint(shuffleMode.toString());
+    return _player.setShuffleModeEnabled(
+      {
+        AudioServiceShuffleMode.all: true,
+        AudioServiceShuffleMode.none: false,
+      }[shuffleMode]!,
+    );
+  }
 
   PlaybackState _transformEvent(PlaybackEvent event) {
     return PlaybackState(
