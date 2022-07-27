@@ -11,6 +11,7 @@ import 'dart:convert';
 import 'package:libmpv/libmpv.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:synchronized/synchronized.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:extended_image/extended_image.dart';
@@ -615,51 +616,7 @@ class Playback extends ChangeNotifier {
   }
 
   /// Update Discord RPC state.
-  void notifyDiscordRPC() {
-    if (Configuration.instance.discordRPC) {
-      try {
-        final track = tracks[index];
-        if (!isCompleted) {
-          discord?.start(autoRegister: true);
-          discord?.updatePresence(
-            DiscordPresence(
-              state: '${[
-                null,
-                kUnknownArtist
-              ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(',') : track.albumArtistName}',
-              details: '${track.trackName}',
-              largeImageKey: _discordPreviousLargeImageKey,
-              largeImageText:
-                  Plugins.isWebMedia(track.uri) ? null : '${track.albumName}',
-              smallImageKey: isPlaying ? 'play' : 'pause',
-              smallImageText: isPlaying ? 'Playing' : 'Paused',
-              button1Label: Plugins.isWebMedia(track.uri) ? 'Listen' : 'Find',
-              button1Url: Plugins.isWebMedia(track.uri)
-                  ? track.uri.toString()
-                  : 'https://www.google.com/search?q=${Uri.encodeComponent([
-                      track.trackName,
-                      (track.albumArtistName.isNotEmpty &&
-                              track.albumArtistName != kUnknownArtist
-                          ? track.albumArtistName
-                          : track.trackArtistNames.take(1).join('')),
-                    ].join(' '))}',
-              endTimeStamp: isPlaying
-                  ? DateTime.now().millisecondsSinceEpoch +
-                      duration.inMilliseconds -
-                      position.inMilliseconds
-                  : null,
-            ),
-          );
-        }
-        if (isCompleted) {
-          discord?.clearPresence();
-        }
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-      }
-    }
-  }
+  void notifyDiscordRPC() {}
 
   /// Exposed for [_HarmonoidMobilePlayer].
   /// Since, we're using composition with it, there's no choice less-refactor requiring approach I suppose.
@@ -680,7 +637,53 @@ class Playback extends ChangeNotifier {
 
   @override
   // ignore: must_call_super
-  void dispose() {}
+  void dispose() async {
+    return _discordLock.synchronized(() async {
+      if (Configuration.instance.discordRPC) {
+        try {
+          final track = tracks[index];
+          if (!isCompleted) {
+            discord?.start(autoRegister: true);
+            discord?.updatePresence(
+              DiscordPresence(
+                state: '${[
+                  null,
+                  kUnknownArtist
+                ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(',') : track.albumArtistName}',
+                details: '${track.trackName}',
+                largeImageKey: _discordPreviousLargeImageKey,
+                largeImageText:
+                    Plugins.isWebMedia(track.uri) ? null : '${track.albumName}',
+                smallImageKey: isPlaying ? 'play' : 'pause',
+                smallImageText: isPlaying ? 'Playing' : 'Paused',
+                button1Label: Plugins.isWebMedia(track.uri) ? 'Listen' : 'Find',
+                button1Url: Plugins.isWebMedia(track.uri)
+                    ? track.uri.toString()
+                    : 'https://www.google.com/search?q=${Uri.encodeComponent([
+                        track.trackName,
+                        (track.albumArtistName.isNotEmpty &&
+                                track.albumArtistName != kUnknownArtist
+                            ? track.albumArtistName
+                            : track.trackArtistNames.take(1).join('')),
+                      ].join(' '))}',
+                endTimeStamp: isPlaying
+                    ? DateTime.now().millisecondsSinceEpoch +
+                        duration.inMilliseconds -
+                        position.inMilliseconds
+                    : null,
+              ),
+            );
+          }
+          if (isCompleted) {
+            discord?.clearPresence();
+          }
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
+      }
+    });
+  }
 
   /// `package:libmpv` [Player] instance used on Windows, Linux & macOS.
   Player? libmpv;
@@ -697,6 +700,8 @@ class Playback extends ChangeNotifier {
 
   /// Current [Track] being used in the Discord RPC.
   Track? _discordPreviousTrack;
+
+  final Lock _discordLock = Lock();
 
   /// The volume that is restored to, before the unmute.
   /// See [toggleMute].
