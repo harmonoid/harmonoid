@@ -78,6 +78,18 @@ class HomeState extends State<Home>
     tabControllerNotifier.addListener(onTabChange);
   }
 
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   debugPrint(state.toString());
+  //   if (state == AppLifecycleState.resumed) {
+  //     // Here for Android specifically.
+  //     // On Windows & Linux, [WidgetsBinding.addPostFrameCallback] is used inside [CollectionScreen].
+  //     if (Platform.isAndroid) {
+  //       Intent.instance.play();
+  //     }
+  //   }
+  // }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);

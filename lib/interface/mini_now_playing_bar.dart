@@ -439,7 +439,10 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                       ScrollableSlider(
                         min: 0.0,
                         max: playback.duration.inMilliseconds.toDouble(),
-                        value: playback.position.inMilliseconds.toDouble(),
+                        value: playback.position.inMilliseconds
+                            .clamp(
+                                0, playback.duration.inMilliseconds.toDouble())
+                            .toDouble(),
                         color: colors.palette?.last,
                         secondaryColor: colors.palette?.first,
                         onChanged: (value) {
