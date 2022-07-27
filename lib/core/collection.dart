@@ -223,27 +223,32 @@ class Collection extends ChangeNotifier {
 
   /// Searches for a [Media] based upon a the passed [query].
   ///
-  List<Media> search(String query, {Media? mode, int? limit}) {
+  List<Media> search(
+    String query, {
+    Media? mode,
+    int? limit,
+  }) {
     if (query.isEmpty) return <Media>[];
-
+    final terms = query.toLowerCase().split(' ');
     List<Media> result = <Media>[];
     if (mode is Album || mode == null) {
-      for (Album album in _albums) {
-        if (album.albumName.toLowerCase().contains(query.toLowerCase())) {
+      for (final album in _albums) {
+        if (terms.any((term) => album.albumName.toLowerCase().contains(term))) {
           result.add(album);
         }
       }
     }
     if (mode is Track || mode == null) {
-      for (Track track in _tracks) {
-        if (track.trackName.toLowerCase().contains(query.toLowerCase())) {
+      for (final track in _tracks) {
+        if (terms.any((term) => track.trackName.toLowerCase().contains(term))) {
           result.add(track);
         }
       }
     }
     if (mode is Artist || mode == null) {
-      for (Artist artist in _artists) {
-        if (artist.artistName.toLowerCase().contains(query.toLowerCase())) {
+      for (final artist in _artists) {
+        if (terms
+            .any((term) => artist.artistName.toLowerCase().contains(term))) {
           result.add(artist);
         }
       }
@@ -355,7 +360,6 @@ class Collection extends ChangeNotifier {
           artist.tracks.remove(object);
           if (artist.tracks.isEmpty) {
             _artists.remove(artist);
-            break;
           } else {
             for (Album album in artist.albums) {
               if (object.albumName == album.albumName &&
