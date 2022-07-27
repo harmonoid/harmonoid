@@ -70,6 +70,7 @@ dependencies:
   extended_image: ^6.0.2
   auto_size_text: ^3.0.0
   uuid: ^3.0.6
+  synchronized: ^3.0.0+2
   flutter_lyric: ^2.0.3
 
   # Third-party forked plugins & packages to meet requirements.
