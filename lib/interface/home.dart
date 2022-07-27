@@ -13,6 +13,7 @@ import 'package:animations/animations.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';
 import 'package:harmonoid/interface/now_playing_screen.dart';
@@ -78,17 +79,13 @@ class HomeState extends State<Home>
     tabControllerNotifier.addListener(onTabChange);
   }
 
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   debugPrint(state.toString());
-  //   if (state == AppLifecycleState.resumed) {
-  //     // Here for Android specifically.
-  //     // On Windows & Linux, [WidgetsBinding.addPostFrameCallback] is used inside [CollectionScreen].
-  //     if (Platform.isAndroid) {
-  //       Intent.instance.play();
-  //     }
-  //   }
-  // }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    debugPrint(state.toString());
+    if (state == AppLifecycleState.paused) {
+      Playback.instance.saveAppState();
+    }
+  }
 
   @override
   void dispose() {
