@@ -137,8 +137,9 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
         curve: Curves.easeInOut,
         child: TweenAnimationBuilder<Color?>(
           tween: ColorTween(
-              begin: Theme.of(context).primaryColor,
-              end: colors.palette?.first ?? Theme.of(context).primaryColor),
+            begin: Theme.of(context).cardColor,
+            end: colors.palette?.first ?? Theme.of(context).cardColor,
+          ),
           duration: Duration(milliseconds: 400),
           child: Stack(
             children: [
@@ -163,18 +164,16 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                     0, Playback.instance.tracks.length - 1)]
                                 .trackName
                                 .overflow,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline1
-                                ?.copyWith(
-                                  color: (colors.palette ??
-                                              [Theme.of(context).primaryColor])
-                                          .first
-                                          .isDark
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontSize: 20.0,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.headline1?.copyWith(
+                                      color: (colors.palette ??
+                                                  [Theme.of(context).cardColor])
+                                              .first
+                                              .isDark
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontSize: 20.0,
+                                    ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -229,17 +228,15 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                     .albumName
                                     .overflow,
                             ].join(' • '),
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3
-                                ?.copyWith(
-                                  color: (colors.palette ??
-                                              [Theme.of(context).primaryColor])
-                                          .first
-                                          .isDark
-                                      ? Colors.white
-                                      : Colors.black,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.headline3?.copyWith(
+                                      color: (colors.palette ??
+                                                  [Theme.of(context).cardColor])
+                                              .first
+                                              .isDark
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -262,29 +259,22 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                               builder: (context, playback, _) => Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                  Container(
-                                    height: 42.0,
-                                    width: 42.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(21.0),
-                                      border: playback.playlistLoopMode !=
-                                              PlaylistLoopMode.none
-                                          ? Border.all(
-                                              width: 1.6,
-                                              color: (colors.palette ??
-                                                          [
-                                                            Theme.of(context)
-                                                                .primaryColor
-                                                          ])
-                                                      .first
-                                                      .isDark
-                                                  ? Colors.white
-                                                      .withOpacity(0.87)
-                                                  : Colors.black87,
-                                            )
-                                          : null,
+                                  if (playback.playlistLoopMode !=
+                                      PlaylistLoopMode.none)
+                                    Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      ),
+                                      color: (colors.palette ??
+                                              [Theme.of(context).primaryColor])
+                                          .last,
+                                      elevation: 4.0,
+                                      child: Container(
+                                        height: 40.0,
+                                        width: 40.0,
+                                      ),
                                     ),
-                                  ),
                                   IconButton(
                                     onPressed: () {
                                       if (playback.playlistLoopMode ==
@@ -301,12 +291,22 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                       );
                                     },
                                     iconSize: 24.0,
-                                    color: (colors.palette ??
-                                                [
-                                                  Theme.of(context).primaryColor
-                                                ])
-                                            .first
-                                            .isDark
+                                    color: (playback.playlistLoopMode !=
+                                                PlaylistLoopMode.none
+                                            ? (colors.palette ??
+                                                    [
+                                                      Theme.of(context)
+                                                          .primaryColor
+                                                    ])
+                                                .last
+                                                .isDark
+                                            : (colors.palette ??
+                                                    [
+                                                      Theme.of(context)
+                                                          .cardColor
+                                                    ])
+                                                .first
+                                                .isDark)
                                         ? Colors.white.withOpacity(0.87)
                                         : Colors.black87,
                                     splashRadius: 24.0,
@@ -328,7 +328,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                 icon: Icon(
                                   Icons.skip_previous,
                                   color: (colors.palette ??
-                                              [Theme.of(context).primaryColor])
+                                              [Theme.of(context).cardColor])
                                           .first
                                           .isDark
                                       ? Colors.white.withOpacity(0.87)
@@ -347,11 +347,11 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                   progress: playOrPause,
                                   icon: AnimatedIcons.play_pause,
                                   color: (colors.palette ??
-                                              [Theme.of(context).primaryColor])
+                                              [Theme.of(context).cardColor])
                                           .first
                                           .isDark
-                                      ? Colors.white.withOpacity(0.87)
-                                      : Colors.black87,
+                                      ? Color.lerp(Colors.white, Colors.white, 0.87)
+                                      : Color.lerp(Colors.black, Colors.white, 0.87),
                                   size: 36.0,
                                 ),
                                 splashRadius: 36.0,
@@ -365,7 +365,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                 icon: Icon(
                                   Icons.skip_next,
                                   color: (colors.palette ??
-                                              [Theme.of(context).primaryColor])
+                                              [Theme.of(context).cardColor])
                                           .first
                                           .isDark
                                       ? Colors.white.withOpacity(0.87)
@@ -380,37 +380,39 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                               builder: (context, playback, _) => Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                  Container(
-                                    height: 42.0,
-                                    width: 42.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(21.0),
-                                      border: playback.isShuffling
-                                          ? Border.all(
-                                              width: 1.6,
-                                              color: (colors.palette ??
-                                                          [
-                                                            Theme.of(context)
-                                                                .primaryColor
-                                                          ])
-                                                      .first
-                                                      .isDark
-                                                  ? Colors.white
-                                                      .withOpacity(0.87)
-                                                  : Colors.black87,
-                                            )
-                                          : null,
+                                  if (playback.isShuffling)
+                                    Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      ),
+                                      color: (colors.palette ??
+                                              [Theme.of(context).primaryColor])
+                                          .last,
+                                      elevation: 4.0,
+                                      child: Container(
+                                        height: 40.0,
+                                        width: 40.0,
+                                      ),
                                     ),
-                                  ),
                                   IconButton(
                                     onPressed: playback.toggleShuffle,
                                     iconSize: 24.0,
-                                    color: (colors.palette ??
-                                                [
-                                                  Theme.of(context).primaryColor
-                                                ])
-                                            .first
-                                            .isDark
+                                    color: (playback.isShuffling
+                                            ? (colors.palette ??
+                                                    [
+                                                      Theme.of(context)
+                                                          .primaryColor
+                                                    ])
+                                                .last
+                                                .isDark
+                                            : (colors.palette ??
+                                                    [
+                                                      Theme.of(context)
+                                                          .cardColor
+                                                    ])
+                                                .first
+                                                .isDark)
                                         ? Colors.white.withOpacity(0.87)
                                         : Colors.black87,
                                     splashRadius: 24.0,
@@ -716,7 +718,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                               child: child,
                             ),
                           if (height >= MediaQuery.of(context).size.width &&
-                              tracks.length > 1)
+                              tracks.length >= 1)
                             SubHeader(
                               Language.instance.COMING_UP,
                               style: Theme.of(context)

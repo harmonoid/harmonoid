@@ -6,7 +6,7 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
@@ -15,6 +15,7 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';
 import 'package:harmonoid/interface/now_playing_screen.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
@@ -23,6 +24,7 @@ import 'package:harmonoid/interface/collection/collection.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
+import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -80,10 +82,19 @@ class HomeState extends State<Home>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     debugPrint(state.toString());
+    // This section attempts to initialize the playback of the opened file
+    // through Android intents, if the app was already alive in the background.
+    // Otherwise, the [Intent.play] call from [CollectionScreen] is responsible.
+    if (state == AppLifecycleState.resumed) {
+      Intent.instance.play();
+    }
+    // https://stackoverflow.com/a/65101428/12825435
+    // Save the application state & remove any existing lyrics notifications present.
     if (state == AppLifecycleState.paused) {
-      Playback.instance.saveAppState();
+      await Playback.instance.saveAppState();
+      await Lyrics.instance.killAllNotifications();
     }
   }
 
