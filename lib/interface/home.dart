@@ -180,33 +180,7 @@ class HomeState extends State<Home>
         debugPrint(
             '${TabRouteSender.systemNavigationBackButton}: ${tabControllerRouteStack.last.index}');
       } else {
-        // Show application exit dialog.
-        showDialog(
-          context: context,
-          builder: (subContext) => AlertDialog(
-            backgroundColor: Theme.of(context).cardColor,
-            title: Text(
-              Language.instance.EXIT_TITLE,
-              style: Theme.of(subContext).textTheme.headline1,
-            ),
-            content: Text(
-              Language.instance.EXIT_SUBTITLE,
-              style: Theme.of(subContext).textTheme.headline3,
-            ),
-            actions: [
-              MaterialButton(
-                textColor: Theme.of(context).primaryColor,
-                onPressed: SystemNavigator.pop,
-                child: Text(Language.instance.YES),
-              ),
-              MaterialButton(
-                textColor: Theme.of(context).primaryColor,
-                onPressed: Navigator.of(subContext).pop,
-                child: Text(Language.instance.NO),
-              ),
-            ],
-          ),
-        );
+        SystemNavigator.pop();
       }
     }
     return Future.value(true);
