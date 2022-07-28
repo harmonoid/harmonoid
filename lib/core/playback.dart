@@ -855,13 +855,15 @@ class _HarmonoidMPRIS extends MPRISService {
 class _HarmonoidMobilePlayer extends BaseAudioHandler
     with SeekHandler, QueueHandler {
   _HarmonoidMobilePlayer(this.playback) {
-    _player.playbackEventStream.map((e) {
+    _player.playbackEventStream.listen((e) {
       playback
         ..isCompleted = e.processingState == ProcessingState.completed
+        // The audio playback needs to be interpreted as paused once the playback of a media is completed.
+        ..isPlaying = e.processingState != ProcessingState.completed
         ..notify()
         ..notifyNativeListeners();
-      return _transformEvent(e);
-    }).pipe(playbackState);
+      playbackState.add(_transformEvent(e));
+    });
     _player.currentIndexStream.listen((e) {
       debugPrint('_HarmonoidMobilePlayer/_player.currentIndex: $e');
       if (e != null) {
@@ -923,13 +925,23 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   AudioPlayer get player => _player;
 
   @override
-  Future<void> play() => _player.play();
+  Future<void> play() async {
+    // If [play] is called after the playback was finished.
+    // Then, player gets stuck in a fixed state, unless seeked.
+    if (_player.processingState == ProcessingState.completed) {
+      await _player.seek(Duration.zero, index: 0);
+    }
+    _player.play();
+  }
 
   @override
   Future<void> pause() => _player.pause();
 
   @override
-  Future<void> seek(position) => _player.seek(position);
+  Future<void> seek(position) async {
+    await _player.seek(position);
+    return _player.play();
+  }
 
   @override
   Future<void> stop() => _player.stop();
@@ -987,6 +999,14 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     int index = 0,
     bool play = true,
   }) async {
+    // Cause notification to be dismissed.
+    playbackState.add(playbackState.value.copyWith(
+      processingState: AudioProcessingState.idle,
+    ));
+    // Stop existing playback.
+    await _player.stop();
+    // This has been done to safely handle the issues with media notification, UI update when
+    // handling the intent from Android.
     final playlist = ConcatenatingAudioSource(
       children: tracks
           .map((e) => AudioSource.uri(Plugins.redirect(e.uri), tag: e.toJson()))
@@ -1001,7 +1021,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       initialIndex: index,
     );
     if (play) {
-      await _player.play();
+      _player.play();
     }
     // Update [mediaItem] regardless, since index change won't happen.
     mediaItem.add(_trackToMediaItem(tracks[index]));
@@ -1072,7 +1092,9 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         ProcessingState.ready: AudioProcessingState.ready,
         ProcessingState.completed: AudioProcessingState.completed,
       }[_player.processingState]!,
-      playing: _player.playing,
+      // The audio playback needs to be interpreted as paused once the playback of a media is completed.
+      playing: _player.playing &&
+          _player.processingState != ProcessingState.completed,
       updatePosition: _player.position,
       bufferedPosition: _player.bufferedPosition,
       speed: _player.speed,
