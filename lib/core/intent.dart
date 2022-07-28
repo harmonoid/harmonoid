@@ -44,31 +44,29 @@ class Intent {
   }) async {
     if (isMobile) {
       instance = Intent();
-      final lock = Lock();
       instance._channel.setMethodCallHandler((call) async {
-        await lock.synchronized(() async {
-          debugPrint(
-            'Intent/channel.setMethodCallHandler: ${call.arguments.toString()}',
-          );
-          debugPrint(
-            'Intent/_flutterSidedIntentPlayCalled: ${instance._flutterSidedIntentPlayCalled}',
-          );
-          if (!instance._flutterSidedIntentPlayCalled) {
-            return;
+        debugPrint(
+          'Intent/channel.setMethodCallHandler: ${call.arguments.toString()}',
+        );
+        debugPrint(
+          'Intent/_flutterSidedIntentPlayCalled: ${instance._flutterSidedIntentPlayCalled}',
+        );
+        if (!instance._flutterSidedIntentPlayCalled) {
+          return;
+        }
+        // non `null`.
+        if (call.arguments is String) {
+          try {
+            final uri = Uri.parse(call.arguments);
+            instance.file =
+                !uri.isScheme('FILE') ? null : File(uri.toFilePath());
+            // synchronized.
+            instance.play();
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
           }
-          // non `null`.
-          if (call.arguments is String) {
-            try {
-              final uri = Uri.parse(call.arguments);
-              instance.file =
-                  !uri.isScheme('FILE') ? null : File(uri.toFilePath());
-              instance.play();
-            } catch (exception, stacktrace) {
-              debugPrint(exception.toString());
-              debugPrint(stacktrace.toString());
-            }
-          }
-        });
+        }
       });
     } else {
       if (args.isNotEmpty) {
@@ -148,7 +146,9 @@ class Intent {
           await Playback.instance.open([track]);
           MobileNowPlayingController.instance.show();
         }
-      } else if (directory != null) {
+      }
+      // Never invoked on mobile devices.
+      else if (directory != null) {
         await Playback.instance.loadAppState(open: false);
         bool playing = false;
         for (final file
