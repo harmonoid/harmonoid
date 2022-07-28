@@ -940,17 +940,23 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   @override
   Future<void> seek(position) async {
     await _player.seek(position);
-    return _player.play();
+    _player.play();
   }
 
   @override
   Future<void> stop() => _player.stop();
 
   @override
-  Future<void> skipToNext() => _player.seekToNext();
+  Future<void> skipToNext() async {
+    await _player.seekToNext();
+    _player.play();
+  }
 
   @override
-  Future<void> skipToPrevious() => _player.seekToPrevious();
+  Future<void> skipToPrevious() async {
+    await _player.seekToPrevious();
+    _player.play();
+  }
 
   @override
   Future<void> skipToQueueItem(index) => _player.seek(
