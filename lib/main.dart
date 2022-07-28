@@ -19,6 +19,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/core/app_state.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
@@ -98,6 +99,7 @@ Future<void> main(List<String> args) async {
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
       await Intent.initialize();
+      await Lyrics.initialize();
     }
     await Collection.initialize(
       collectionDirectories: Configuration.instance.collectionDirectories,
