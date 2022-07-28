@@ -564,7 +564,7 @@ class AlbumTile extends StatelessWidget {
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 8.0,
+                          horizontal: 12.0,
                         ),
                         width: width,
                         child: Column(

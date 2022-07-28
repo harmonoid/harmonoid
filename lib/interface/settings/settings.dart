@@ -96,8 +96,8 @@ class Settings extends StatelessWidget {
 }
 
 class SettingsTile extends StatelessWidget {
-  final String? title;
-  final String? subtitle;
+  final String title;
+  final String subtitle;
   final Widget child;
   final EdgeInsets? margin;
   final List<Widget>? actions;
@@ -138,7 +138,7 @@ class SettingsTile extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    this.title!,
+                    title,
                     style: Theme.of(context)
                         .textTheme
                         .headline1
@@ -146,24 +146,37 @@ class SettingsTile extends StatelessWidget {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    this.subtitle!,
+                    subtitle,
                     style: Theme.of(context).textTheme.headline3,
                   ),
                 ],
               ),
             ),
-          if (isMobile) SubHeader(this.title!),
+          if (isMobile)
+            Container(
+              alignment: Alignment.bottomLeft,
+              height: 40.0,
+              padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 12.0),
+              child: Text(
+                title.toUpperCase(),
+                style: Theme.of(context).textTheme.overline?.copyWith(
+                      color: Theme.of(context).textTheme.headline3?.color,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
           Container(
-            margin: this.margin ?? EdgeInsets.zero,
-            child: this.child,
+            margin: margin ?? EdgeInsets.zero,
+            child: child,
           ),
-          if (this.actions != null) ...[
+          if (actions != null) ...[
             Padding(
               padding: EdgeInsets.only(left: 8.0),
               child: ButtonBar(
                 alignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.max,
-                children: this.actions!,
+                children: actions!,
               ),
             ),
           ],

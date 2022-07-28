@@ -542,6 +542,7 @@ class ExceptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconSize = isDesktop ? 196.0 : 244.0;
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: 16.0,
@@ -564,8 +565,8 @@ class ExceptionWidget extends StatelessWidget {
                 Language.instance.COLLECTION_SEARCH_LABEL:
                     visualAssets.searchPage,
               }[title]!,
-              height: 196.0,
-              width: 196.0,
+              height: iconSize,
+              width: iconSize,
               filterQuality: FilterQuality.high,
               fit: BoxFit.contain,
             ),
