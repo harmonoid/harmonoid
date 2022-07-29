@@ -161,9 +161,9 @@ class IndexingState extends State<IndexingSetting> {
                                               .replaceAll(
                                                 Configuration.instance
                                                     .cacheDirectory.path
-                                                    .split('Android/')
+                                                    .split('/Android/')
                                                     .first,
-                                                '',
+                                                'Phone',
                                               )
                                               .overflow,
                                           style: isMobile

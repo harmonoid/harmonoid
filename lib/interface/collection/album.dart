@@ -36,16 +36,22 @@ class AlbumTab extends StatelessWidget {
   }) : super(key: key);
 
   Widget build(BuildContext context) {
+    // Is dense or not ?
+    final baseWidth = (Configuration.instance.mobileDenseAlbumTabLayout
+        ? kDenseAlbumTileWidth
+        : kAlbumTileWidth);
+    final baseHeight = (Configuration.instance.mobileDenseAlbumTabLayout
+        ? kDenseAlbumTileHeight
+        : kAlbumTileHeight);
     final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin) ~/
-        (kAlbumTileWidth + tileMargin);
+        (baseWidth + tileMargin);
     final double width = isMobile
         ? (MediaQuery.of(context).size.width -
                 (elementsPerRow + 1) * tileMargin) /
             elementsPerRow
-        : kAlbumTileWidth;
-    final double height = isMobile
-        ? width * kAlbumTileHeight / kAlbumTileWidth
-        : kAlbumTileHeight;
+        : baseWidth;
+    final double height =
+        isMobile ? width * baseHeight / baseWidth : baseHeight;
 
     return Consumer<Collection>(
       builder: (context, collection, _) {
@@ -56,15 +62,13 @@ class AlbumTab extends StatelessWidget {
           tileHeight: height,
           tileWidth: width,
           elementsPerRow: elementsPerRow,
-          subHeader: null,
-          leadingSubHeader: null,
-          leadingWidget: null,
           widgetCount: Collection.instance.albums.length,
           builder: (BuildContext context, int index) => AlbumTile(
             height: height,
             width: width,
             album: Collection.instance.albums[index],
             key: ValueKey(Collection.instance.albums[index]),
+            dense: Configuration.instance.mobileDenseAlbumTabLayout,
           ),
         );
         return isDesktop
@@ -393,12 +397,14 @@ class AlbumTile extends StatelessWidget {
   final double height;
   final double width;
   final Album album;
+  final bool dense;
 
   const AlbumTile({
     Key? key,
     required this.album,
     required this.height,
     required this.width,
+    this.dense = false,
   }) : super(key: key);
 
   Widget build(BuildContext context) {
@@ -474,23 +480,25 @@ class AlbumTile extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 2),
-                              child: Text(
-                                '${album.albumArtistName} • ${album.year}',
-                                style: isDesktop
-                                    ? Theme.of(context)
-                                        .textTheme
-                                        .headline3
-                                        ?.copyWith(
-                                          fontSize: 12.0,
-                                        )
-                                    : Theme.of(context).textTheme.headline3,
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
+                            if (!Configuration
+                                .instance.mobileDenseAlbumTabLayout)
+                              Padding(
+                                padding: EdgeInsets.only(top: 2),
+                                child: Text(
+                                  '${album.albumArtistName} • ${album.year}',
+                                  style: isDesktop
+                                      ? Theme.of(context)
+                                          .textTheme
+                                          .headline3
+                                          ?.copyWith(
+                                            fontSize: 12.0,
+                                          )
+                                      : Theme.of(context).textTheme.headline3,
+                                  maxLines: 1,
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -564,7 +572,7 @@ class AlbumTile extends StatelessWidget {
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 12.0,
+                          horizontal: dense ? 8.0 : 12.0,
                         ),
                         width: width,
                         child: Column(
@@ -574,28 +582,27 @@ class AlbumTile extends StatelessWidget {
                           children: [
                             Text(
                               album.albumName.overflow,
-                              style: Theme.of(context).textTheme.headline2,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline2
+                                  ?.copyWith(
+                                    fontSize: dense ? 14.0 : null,
+                                  ),
                               textAlign: TextAlign.left,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 2),
-                              child: Text(
-                                '${album.albumArtistName} • ${album.year}',
-                                style: isDesktop
-                                    ? Theme.of(context)
-                                        .textTheme
-                                        .headline3
-                                        ?.copyWith(
-                                          fontSize: 12.0,
-                                        )
-                                    : Theme.of(context).textTheme.headline3,
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
+                            if (!dense)
+                              Padding(
+                                padding: EdgeInsets.only(top: 2),
+                                child: Text(
+                                  '${album.albumArtistName} • ${album.year}',
+                                  style: Theme.of(context).textTheme.headline3,
+                                  maxLines: 1,
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
