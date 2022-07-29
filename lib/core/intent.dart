@@ -111,12 +111,17 @@ class Intent {
           debugPrint(stacktrace.toString());
         }
         debugPrint('Intent.play/file: $file');
-        if (_file?.path == file?.path) {
+        if (_file?.path == file?.path &&
+            file?.path != null /* for allowing to reach the last else */) {
           debugPrint('Intent.play: Same file. No playback initiated.');
           return;
         }
         _file = file;
-        debugPrint('Intent.play: New file. Playback initiated.');
+        if (_file != null) {
+          debugPrint('Intent.play: New file. Playback initiated.');
+        } else {
+          debugPrint('Intent.play: No file. No playback initiated.');
+        }
       }
       if (file != null) {
         await Playback.instance.loadAppState(open: false);
@@ -198,14 +203,22 @@ class Intent {
           }
         }
       } else {
-        await Playback.instance.loadAppState();
-        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-          // NOOP for desktop platforms.
-        } else if (Platform.isAndroid || Platform.isIOS) {
-          // Show the [MiniNowPlayingBar] if a playlist was opened during last running instance of the app.
-          MobileNowPlayingController.instance.show();
+        try {
+          if (!_startupAppStateLoaded) {
+            await Playback.instance.loadAppState();
+            if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+              // NOOP for desktop platforms.
+            } else if (Platform.isAndroid || Platform.isIOS) {
+              // Show the [MiniNowPlayingBar] if a playlist was opened during last running instance of the app.
+              MobileNowPlayingController.instance.show();
+            }
+          }
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
         }
       }
+      _startupAppStateLoaded = true;
     });
   }
 
@@ -372,6 +385,11 @@ class Intent {
   /// However, future notifications of opened media files are notified through
   /// the [_channel], while the application is still running.
   bool _flutterSidedIntentPlayCalled = false;
+
+  /// Handle [Playback.instance.loadAppState].
+  /// When saving & laoding the app state, this prevents the app from loading
+  /// the state of previously loaded media more than once.
+  bool _startupAppStateLoaded = false;
 
   /// For mutual exclusion in [play] method.
   final Lock _lock = Lock();

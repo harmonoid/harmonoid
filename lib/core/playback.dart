@@ -276,7 +276,7 @@ class Playback extends ChangeNotifier {
 
   /// Load the last played playback state.
   ///
-  /// Passing [open] as `false` causes file to not be opened inside [player] or [assetsAudioPlayer].
+  /// Passing [open] as `false` causes file to not be opened inside [libmpv] or [audioService].
   ///
   Future<void> loadAppState({bool open = true}) async {
     isShuffling = AppState.instance.shuffle;
@@ -306,11 +306,6 @@ class Playback extends ChangeNotifier {
     }
     if (!open) return;
     tracks = AppState.instance.playlist;
-    audioService?.open(
-      tracks,
-      index: index,
-      play: false,
-    );
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       await libmpv?.open(
         Playlist(
@@ -331,6 +326,13 @@ class Playback extends ChangeNotifier {
       // index = AppState.instance.index;
     }
     if (Platform.isAndroid || Platform.isIOS) {
+      debugPrint('AppState.instance.index: ${AppState.instance.index}');
+      debugPrint('AppState.instance.playlist: $tracks');
+      await audioService?.open(
+        tracks,
+        index: AppState.instance.index,
+        play: false,
+      );
       index = AppState.instance.index;
     }
   }
@@ -856,10 +858,12 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     with SeekHandler, QueueHandler {
   _HarmonoidMobilePlayer(this.playback) {
     _player.playbackEventStream.listen((e) {
+      if (e.processingState == ProcessingState.completed) {
+        // The audio playback needs to be interpreted as paused once the playback of a media is completed.
+        playback.isPlaying = false;
+      }
       playback
         ..isCompleted = e.processingState == ProcessingState.completed
-        // The audio playback needs to be interpreted as paused once the playback of a media is completed.
-        ..isPlaying = e.processingState != ProcessingState.completed
         ..notify()
         ..notifyNativeListeners();
       playbackState.add(_transformEvent(e));
@@ -932,10 +936,18 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       await _player.seek(Duration.zero, index: 0);
     }
     _player.play();
+    playback
+      ..isPlaying = true
+      ..notify();
   }
 
   @override
-  Future<void> pause() => _player.pause();
+  Future<void> pause() async {
+    _player.pause();
+    playback
+      ..isPlaying = false
+      ..notify();
+  }
 
   @override
   Future<void> seek(position) async {
@@ -949,13 +961,13 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   @override
   Future<void> skipToNext() async {
     await _player.seekToNext();
-    _player.play();
+    await play();
   }
 
   @override
   Future<void> skipToPrevious() async {
     await _player.seekToPrevious();
-    _player.play();
+    await play();
   }
 
   @override
@@ -1028,9 +1040,9 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     );
     if (play) {
       _player.play();
+      // Update [mediaItem] regardless, since index change won't happen.
+      mediaItem.add(_trackToMediaItem(tracks[index]));
     }
-    // Update [mediaItem] regardless, since index change won't happen.
-    mediaItem.add(_trackToMediaItem(tracks[index]));
   }
 
   /// For the [Playback] implementation.
@@ -1092,7 +1104,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       },
       androidCompactActionIndices: const [0, 1, 2],
       processingState: const {
-        ProcessingState.idle: AudioProcessingState.idle,
+        ProcessingState.idle: AudioProcessingState.ready,
         ProcessingState.loading: AudioProcessingState.loading,
         ProcessingState.buffering: AudioProcessingState.buffering,
         ProcessingState.ready: AudioProcessingState.ready,
