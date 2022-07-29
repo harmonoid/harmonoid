@@ -202,7 +202,7 @@ class Playback extends ChangeNotifier {
     notifyListeners();
   }
 
-  void seek(Duration position) {
+  void seek(Duration position) async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       libmpv?.seek(position).then((value) {
         Future.delayed(const Duration(milliseconds: 100), () {
@@ -212,7 +212,8 @@ class Playback extends ChangeNotifier {
       });
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.seek(position);
+      await audioService?.seek(position);
+      await audioService?.play();
     }
   }
 
@@ -952,7 +953,6 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   @override
   Future<void> seek(position) async {
     await _player.seek(position);
-    _player.play();
   }
 
   @override
