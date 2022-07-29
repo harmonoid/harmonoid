@@ -57,7 +57,7 @@ class Configuration extends ConfigurationKeys {
         '.Harmonoid',
         'Configuration.JSON',
       ),
-      fallback: _defaultConfiguration,
+      fallback: await _defaultConfiguration,
     );
     await instance.read();
     instance.cacheDirectory = Directory(
@@ -210,11 +210,12 @@ class Configuration extends ConfigurationKeys {
     bool retry = true,
   }) async {
     final current = await storage.read();
+    final conf = await _defaultConfiguration;
     // Emblace default values for the keys that not found. Possibly due to app update.
-    _defaultConfiguration.keys.forEach(
+    conf.keys.forEach(
       (key) {
         if (!current.containsKey(key)) {
-          current[key] = _defaultConfiguration[key];
+          current[key] = conf[key];
         }
       },
     );
@@ -279,36 +280,45 @@ abstract class ConfigurationKeys {
   late double unhighlightedLyricsSize;
 }
 
-final Map<String, dynamic> _defaultConfiguration = {
-  'collectionDirectories': <String>[
-    {
-      'windows': () => path.join(Platform.environment['USERPROFILE']!, 'Music'),
-      'linux': () =>
-          Process.runSync('xdg-user-dir', ['MUSIC']).stdout.toString().trim(),
-      'android': () => '/storage/emulated/0/Music',
-    }[Platform.operatingSystem]!(),
-  ],
-  'languageRegion': 0,
-  'accent': 0,
-  'themeMode': isMobile ? 0 : 1,
-  'collectionSortType': isMobile ? 0 : 3,
-  'collectionOrderType': 0,
-  'automaticAccent': false,
-  'notificationLyrics': true,
-  'collectionSearchRecent': [],
-  'webSearchRecent': [],
-  'webRecent': [],
-  'taskbarIndicator': false,
-  'seamlessPlayback': false,
-  'jumpToNowPlayingScreenOnPlay': isDesktop,
-  'automaticMusicLookup': false,
-  'dynamicNowPlayingBarColoring': isDesktop,
-  'proxyURL': null,
-  'backgroundArtwork': isDesktop,
-  'modernNowPlayingScreen': isDesktop,
-  'modernNowPlayingScreenCarouselIndex': 0,
-  'lyricsVisible': true,
-  'discordRPC': true,
-  'highlightedLyricsSize': 24.0,
-  'unhighlightedLyricsSize': 16.0,
-};
+Future<Map<String, dynamic>> get _defaultConfiguration async => {
+      'collectionDirectories': <String>[
+        await {
+          'windows': () async =>
+              path.join(Platform.environment['USERPROFILE']!, 'Music'),
+          'linux': () async => (await Process.run('xdg-user-dir', ['MUSIC']))
+              .stdout
+              .toString()
+              .trim(),
+          'android': () async => (await path.getExternalStorageDirectory())!
+              .path
+              .split('/Android/')
+              .first,
+        }[Platform.operatingSystem]!(),
+      ],
+      'languageRegion': 0,
+      'accent': 0,
+      'themeMode': isMobile ? 0 : 1,
+      'collectionSortType': isMobile ? 0 : 3,
+      'collectionOrderType': 0,
+      'automaticAccent': false,
+      'notificationLyrics': true,
+      'collectionSearchRecent': [],
+      'webSearchRecent': [],
+      'webRecent': [],
+      'taskbarIndicator': false,
+      'seamlessPlayback': false,
+      'jumpToNowPlayingScreenOnPlay': isDesktop,
+      'automaticMusicLookup': false,
+      'dynamicNowPlayingBarColoring': isDesktop,
+      'proxyURL': null,
+      'backgroundArtwork': isDesktop,
+      'modernNowPlayingScreen': isDesktop,
+      'modernNowPlayingScreenCarouselIndex': 0,
+      'lyricsVisible': true,
+      'discordRPC': true,
+      'highlightedLyricsSize': 24.0,
+      'unhighlightedLyricsSize': 16.0,
+      'mobileDenseAlbumTabLayout': false,
+      'mobileDenseArtistTabLayout': true,
+      'mobileGridArtistTabLayout': true,
+    };
