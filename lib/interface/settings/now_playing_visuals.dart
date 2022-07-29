@@ -105,7 +105,10 @@ class NowPlayingVisualsSettingState extends State<NowPlayingVisualsSetting> {
                             acceptedTypeGroups: [
                               XTypeGroup(
                                 label: 'images',
-                                extensions: kSupportedImageFormats,
+                                extensions: kSupportedImageFormats +
+                                    kSupportedImageFormats
+                                        .map((e) => e.toLowerCase())
+                                        .toList(),
                               ),
                             ],
                           );
