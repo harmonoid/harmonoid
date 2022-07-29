@@ -31,6 +31,8 @@ import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final FloatingSearchBarController floatingSearchBarController =
+    FloatingSearchBarController();
 
 class _NavigatorObserver extends NavigatorObserver {
   final VoidCallback onPushRoute;
@@ -56,8 +58,6 @@ class HomeState extends State<Home>
   final List<TabRoute> tabControllerRouteStack = <TabRoute>[
     TabRoute(isMobile ? 2 : 0, TabRouteSender.systemNavigationBackButton),
   ];
-  final FloatingSearchBarController floatingSearchBarController =
-      FloatingSearchBarController();
   final MobileNowPlayingController mobileNowPlayingController =
       MobileNowPlayingController();
 
@@ -325,7 +325,8 @@ class HomeState extends State<Home>
                       ),
                     ],
                   ),
-                  bottomNavigationBar: isMobile
+                  bottomNavigationBar: (isMobile &&
+                          MediaQuery.of(context).viewInsets.bottom < 180.0)
                       ? MobileBottomNavigationBar(
                           tabControllerNotifier: tabControllerNotifier,
                         )

@@ -26,6 +26,7 @@ import 'package:harmonoid/interface/edit_details_screen.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -386,6 +387,9 @@ Future<void> trackPopupMenuHandle(
                     if (recursivelyPopNavigatorOnDeleteIf()) {
                       while (Navigator.of(context).canPop()) {
                         Navigator.of(context).pop();
+                      }
+                      if (floatingSearchBarController.isOpen) {
+                        floatingSearchBarController.close();
                       }
                     }
                   }

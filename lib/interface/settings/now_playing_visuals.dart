@@ -104,7 +104,7 @@ class NowPlayingVisualsSettingState extends State<NowPlayingVisualsSetting> {
                           final xFile = await openFile(
                             acceptedTypeGroups: [
                               XTypeGroup(
-                                label: 'images',
+                                label: 'Images',
                                 extensions: kSupportedImageFormats +
                                     kSupportedImageFormats
                                         .map((e) => e.toLowerCase())
