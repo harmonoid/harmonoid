@@ -81,6 +81,7 @@
   "FULLSCREEN": "Enter fullscreen",
   "GENRE": "Genre",
   "GO_TO_SETTINGS": "GO TO SETTINGS",
+  "HIDE": "Hide",
   "HIDE_LYRICS": "Hide lyrics",
   "HIGHLIGHTED_LYRICS_SIZE": "Highlighted Lyrics Size",
   "IMPORT_PLAYLIST_FROM_WEB": "Import from YouTube Music",
@@ -105,7 +106,7 @@
   "NO": "NO",
   "NOTHING_IN_QUEUE": "There's nothing in the queue.",
   "NOTIFICATION_LYRICS_SUBTITLE": "Show lyrics in a notification.",
-  "NOTIFICATION_LYRICS_TITLE": "Notification lyrics.",
+  "NOTIFICATION_LYRICS_TITLE": "Notification lyrics",
   "NOW_PLAYING": "Now playing",
   "NOW_PLAYING_NEXT_TRACK": "NEXT",
   "NOW_PLAYING_NOT_PLAYING_TITLE": "Nothing is being played",
@@ -240,8 +241,8 @@
   "WEB_INTERNET_ERROR": "Let's play your local music, while you get back online.",
   "WEB_NO_RESULTS": "Nothing like that could be found",
   "WEB_WELCOME": "Search for music or give a link",
-  "WEB_WELCOME_SUBTITLE": "Suggestions will appear here based on what you listen.",
-  "WEB_WELCOME_TITLE": "Let's Go",
+  "WEB_WELCOME_SUBTITLE": "Suggestions will appear here.",
+  "WEB_WELCOME_TITLE": "Let's Go!",
   "YEAR": "Year",
   "YES": "YES"
 }

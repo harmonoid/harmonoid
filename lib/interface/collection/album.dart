@@ -556,7 +556,7 @@ class AlbumTile extends StatelessWidget {
                 child: Column(
                   children: [
                     Ink.image(
-                      image: getAlbumArt(album, small: true),
+                      image: getAlbumArt(album),
                       fit: BoxFit.cover,
                       height: width,
                       width: width,
@@ -564,7 +564,7 @@ class AlbumTile extends StatelessWidget {
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 8.0,
+                          horizontal: 12.0,
                         ),
                         width: width,
                         child: Column(

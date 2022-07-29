@@ -83,6 +83,7 @@ class Strings {
   late String FULLSCREEN;
   late String GENRE;
   late String GO_TO_SETTINGS;
+  late String HIDE;
   late String HIDE_LYRICS;
   late String HIGHLIGHTED_LYRICS_SIZE;
   late String IMPORT_PLAYLIST_FROM_WEB;

@@ -106,7 +106,7 @@ class IndexingState extends State<IndexingSetting> {
                         ],
                       ),
                     ),
-                  SizedBox(height: 8.0),
+                  SizedBox(height: 12.0),
                   Container(
                     margin: EdgeInsets.only(left: 8.0),
                     child: Column(
@@ -118,7 +118,7 @@ class IndexingState extends State<IndexingSetting> {
                               style: Theme.of(context).textTheme.headline3,
                             ),
                             SizedBox(
-                              height: 4.0,
+                              height: 8.0,
                             ),
                           ] +
                           Configuration.instance.collectionDirectories
@@ -159,7 +159,10 @@ class IndexingState extends State<IndexingSetting> {
                                         child: Text(
                                           directory.path
                                               .replaceAll(
-                                                '/storage/emulated/0/',
+                                                Configuration.instance
+                                                    .cacheDirectory.path
+                                                    .split('Android/')
+                                                    .first,
                                                 '',
                                               )
                                               .overflow,

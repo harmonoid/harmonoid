@@ -11,7 +11,8 @@
 		<control>touch</control>
 	</recommends>
 	<developer_name>Hitesh Kumar Saini</developer_name>
-	<url type="homepage">https://github.com/harmonoid/harmonoid</url>
+	<!-- TODO: Update details. -->
+	<!-- <url type="homepage">https://github.com/harmonoid/harmonoid</url>
 	<url type="donation">https://github.com/harmonoid/harmonoid#support</url>
 	<url type="contact">https://discord.gg/2Rc3edFWd8</url>
 	<description>
@@ -56,9 +57,10 @@
 			<image type="source">https://github.com/harmonoid/harmonoid/blob/assets/linux_full/3.jpeg?raw=true</image>
 			<image type="source">https://github.com/harmonoid/harmonoid/blob/assets/linux_full/5.jpg?raw=true</image>
 		</screenshot>
-	</screenshots>
+	</screenshots> -->
 	<launchable type="desktop-id">harmonoid.desktop</launchable>
 	<releases>
+		<release version="0.2.7" date="2022-07-25" />
 		<release version="0.2.6" date="2022-07-17" />
 		<release version="0.2.5" date="2022-07-13" />
 		<release version="0.2.2" date="2022-03-24" />

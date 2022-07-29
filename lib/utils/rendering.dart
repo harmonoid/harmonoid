@@ -402,10 +402,22 @@ Future<void> trackPopupMenuHandle(
         );
         break;
       case 1:
-        Share.shareFiles(
-          [track.uri.toString()],
-          subject: '${track.trackName} • ${track.albumName}',
-        );
+        if (track.uri.isScheme('FILE')) {
+          Share.shareFiles(
+            [track.uri.toFilePath()],
+            subject: '${track.trackName} • ${[
+              '',
+              kUnknownArtist,
+            ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName}',
+          );
+        } else {
+          Share.share(
+            '${track.trackName} • ${[
+              '',
+              kUnknownArtist,
+            ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName} • ${track.uri.toString()}',
+          );
+        }
         break;
       case 2:
         showAddToPlaylistDialog(context, track);

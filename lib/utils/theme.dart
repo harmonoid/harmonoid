@@ -109,6 +109,9 @@ ThemeData createTheme({
     );
   }
   return ThemeData(
+    // ignore: deprecated_member_use
+    androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
+
     /// Explicitly using [ChipThemeData] on Linux since it seems to be falling back to Ubuntu's font family.
     chipTheme: Platform.isLinux
         ? ChipThemeData(
@@ -226,16 +229,16 @@ ThemeData createTheme({
       brightness: isLight ? Brightness.light : Brightness.dark,
     ),
     tooltipTheme: TooltipThemeData(
-      textStyle: TextStyle(
-        fontSize: 12.0,
-        color: isLight ? Colors.white : Colors.black,
-      ),
-      decoration: Platform.isWindows || Platform.isLinux || Platform.isMacOS
-          ? BoxDecoration(
-              color: isLight ? Colors.black : Colors.white,
-              borderRadius: BorderRadius.circular(4.0),
+      textStyle: Platform.isWindows || Platform.isLinux || Platform.isMacOS
+          ? TextStyle(
+              fontSize: 12.0,
+              color: isLight ? Colors.white : Colors.black,
             )
           : null,
+      decoration: BoxDecoration(
+        color: isLight ? Colors.black : Colors.white,
+        borderRadius: BorderRadius.circular(4.0),
+      ),
       verticalOffset: Platform.isWindows || Platform.isLinux || Platform.isMacOS
           ? 36.0
           : null,

@@ -9,6 +9,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -70,6 +71,20 @@ List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
           ),
         ),
       ),
+      if (Platform.isAndroid || Platform.isIOS)
+        PopupMenuItem<int>(
+          padding: EdgeInsets.zero,
+          value: 4,
+          child: ListTile(
+            leading: Icon(Platform.isWindows
+                ? FluentIcons.share_16_regular
+                : Icons.share),
+            title: Text(
+              Language.instance.SHARE,
+              style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+            ),
+          ),
+        ),
       if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
         PopupMenuItem<int>(
           padding: EdgeInsets.zero,
@@ -117,6 +132,22 @@ Future<void> webTrackPopupMenuHandle(
           Playback.instance.add([media.Track.fromWebTrack(item.toJson())]);
         } else if (item is Video) {
           Playback.instance.add([media.Track.fromWebVideo(item.toJson())]);
+        }
+        break;
+      }
+    case 4:
+      {
+        media.Track? result;
+        if (item is Track) {
+          result = media.Track.fromWebTrack(item.toJson());
+        } else if (item is Video) {
+          result = media.Track.fromWebVideo(item.toJson());
+        }
+        if (result != null) {
+          Share.share('${result.trackName} • ${[
+            '',
+            media.kUnknownArtist,
+          ].contains(result.albumArtistName) ? result.trackArtistNames.take(2).join(', ') : result.albumArtistName} • ${result.uri.toString()}');
         }
         break;
       }

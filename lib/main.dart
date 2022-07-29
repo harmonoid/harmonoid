@@ -16,21 +16,23 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/core/app_state.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/now_playing_visuals.dart';
-import 'package:harmonoid/interface/harmonoid.dart';
-import 'package:harmonoid/interface/exception.dart';
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/updater.dart';
 import 'package:harmonoid/utils/argument_vector_handler.dart';
 import 'package:harmonoid/utils/window_close_handler.dart';
+import 'package:harmonoid/interface/harmonoid.dart';
+import 'package:harmonoid/interface/exception.dart';
+import 'package:harmonoid/constants/language.dart';
 
 const String kTitle = 'Harmonoid';
-const String kVersion = 'v0.2.6';
+const String kVersion = 'v0.2.7';
 const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 
@@ -79,6 +81,11 @@ Future<void> main(List<String> args) async {
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
+      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.black,
+        systemNavigationBarDividerColor: Colors.black,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ));
       if (await Permission.storage.isDenied) {
         PermissionStatus storagePermissionState =
             await Permission.storage.request();
@@ -92,6 +99,7 @@ Future<void> main(List<String> args) async {
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
       await Intent.initialize();
+      await Lyrics.initialize();
     }
     await Collection.initialize(
       collectionDirectories: Configuration.instance.collectionDirectories,
@@ -105,6 +113,7 @@ Future<void> main(List<String> args) async {
       },
       update: Configuration.instance.automaticMusicLookup,
     );
+    await Playback.initialize();
     await Language.initialize();
     Updater.initialize();
     runApp(

@@ -653,7 +653,9 @@ class AboutPageState extends State<AboutPage> {
                           height: 72.0,
                           iconData: Icons.code,
                           onTap: () => launchUrlString(
-                              'https://github.com/harmonoid/harmonoid'),
+                            'https://github.com/harmonoid/harmonoid',
+                            mode: LaunchMode.externalApplication,
+                          ),
                           title: 'GitHub',
                           subtitle: 'Visit development repository',
                         ),
@@ -661,7 +663,9 @@ class AboutPageState extends State<AboutPage> {
                           height: 72.0,
                           iconData: Icons.attach_money,
                           onTap: () => launchUrlString(
-                              'https://alexmercerind.github.io/donate'),
+                            'https://alexmercerind.github.io/donate',
+                            mode: LaunchMode.externalApplication,
+                          ),
                           title: 'Donate',
                           subtitle: 'Support the project development',
                         ),
@@ -669,7 +673,9 @@ class AboutPageState extends State<AboutPage> {
                           height: 72.0,
                           iconData: Icons.translate,
                           onTap: () => launchUrlString(
-                              'https://github.com/harmonoid/harmonoid/tree/master/assets/translations'),
+                            'https://github.com/harmonoid/harmonoid/tree/master/assets/translations',
+                            mode: LaunchMode.externalApplication,
+                          ),
                           title: 'Translate',
                           subtitle: 'Provide or update existing translations',
                         ),
@@ -677,7 +683,9 @@ class AboutPageState extends State<AboutPage> {
                           height: 64.0,
                           iconData: Icons.book,
                           onTap: () => launchUrlString(
-                              'https://github.com/harmonoid/harmonoid/wiki/License'),
+                            'https://github.com/harmonoid/harmonoid/wiki/License',
+                            mode: LaunchMode.externalApplication,
+                          ),
                           title: 'License',
                         ),
                       ],

@@ -850,15 +850,18 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                               splashRadius: 20.0,
                                               iconSize: 18.0,
                                               onPressed: () {
-                                                launch(playback
-                                                    .tracks[playback.index
-                                                        .clamp(
-                                                            0,
-                                                            playback.tracks
-                                                                    .length -
-                                                                1)]
-                                                    .uri
-                                                    .toString());
+                                                launchUrl(
+                                                  playback
+                                                      .tracks[playback.index
+                                                          .clamp(
+                                                              0,
+                                                              playback.tracks
+                                                                      .length -
+                                                                  1)]
+                                                      .uri,
+                                                  mode: LaunchMode
+                                                      .externalApplication,
+                                                );
                                               },
                                               icon: Icon(
                                                 Icons.open_in_new,

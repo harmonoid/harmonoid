@@ -72,7 +72,9 @@ class PlaylistTab extends StatelessWidget {
                             height: 18.0,
                           ),
                         ],
-                        Row(
+                        Flex(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          direction: isMobile ? Axis.vertical : Axis.horizontal,
                           children: [
                             MaterialButton(
                               onPressed: () {

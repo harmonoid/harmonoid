@@ -287,6 +287,7 @@ class Language extends Strings with ChangeNotifier {
     this.FULLSCREEN = asset['FULLSCREEN']!;
     this.GENRE = asset['GENRE']!;
     this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
+    this.HIDE = asset['HIDE']!;
     this.HIDE_LYRICS = asset['HIDE_LYRICS']!;
     this.HIGHLIGHTED_LYRICS_SIZE = asset['HIGHLIGHTED_LYRICS_SIZE']!;
     this.IMPORT_PLAYLIST_FROM_WEB = asset['IMPORT_PLAYLIST_FROM_WEB']!;
