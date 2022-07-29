@@ -46,6 +46,7 @@ class CustomListView extends StatelessWidget {
   final bool? shrinkWrap;
   final EdgeInsets? padding;
   final double? itemExtent;
+  final ScrollViewKeyboardDismissBehavior? keyboardDismissBehavior;
 
   CustomListView({
     ScrollController? controller,
@@ -55,6 +56,7 @@ class CustomListView extends StatelessWidget {
     this.padding,
     this.itemExtent,
     this.cacheExtent,
+    this.keyboardDismissBehavior,
   }) {
     if (controller != null) {
       this.controller = controller;
@@ -83,7 +85,8 @@ class CustomListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       cacheExtent: cacheExtent,
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      keyboardDismissBehavior:
+          keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.onDrag,
       padding: padding ?? EdgeInsets.zero,
       controller: controller,
       scrollDirection: scrollDirection ?? Axis.vertical,

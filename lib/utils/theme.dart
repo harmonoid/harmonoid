@@ -137,6 +137,7 @@ ThemeData createTheme({
         : null,
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: color,
+      selectionHandleColor: color,
       selectionColor: color.withOpacity(0.2),
     ),
     scrollbarTheme: ScrollbarThemeData(
@@ -237,8 +238,11 @@ ThemeData createTheme({
           : null,
       decoration: BoxDecoration(
         color: isLight ? Colors.black : Colors.white,
-        borderRadius: BorderRadius.circular(4.0),
+        borderRadius: Platform.isAndroid || Platform.isIOS
+            ? BorderRadius.circular(16.0)
+            : BorderRadius.circular(4.0),
       ),
+      height: Platform.isAndroid || Platform.isIOS ? 32.0 : null,
       verticalOffset: Platform.isWindows || Platform.isLinux || Platform.isMacOS
           ? 36.0
           : null,
