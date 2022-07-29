@@ -1660,7 +1660,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       tracks[i],
                                       result,
                                       recursivelyPopNavigatorOnDeleteIf: () =>
-                                          tracks.isEmpty,
+                                          widget.album.tracks.isEmpty,
                                     );
                                   },
                                   child: Column(

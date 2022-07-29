@@ -1309,7 +1309,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                       tracks[i],
                                       result,
                                       recursivelyPopNavigatorOnDeleteIf: () =>
-                                          tracks.isEmpty,
+                                          widget.artist.tracks.isEmpty,
                                     );
                                   },
                                   child: Column(
@@ -1413,7 +1413,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     tracks[i],
                                                     result,
                                                     recursivelyPopNavigatorOnDeleteIf:
-                                                        () => tracks.isEmpty,
+                                                        () => widget.artist
+                                                            .tracks.isEmpty,
                                                   );
                                                 },
                                                 icon: Icon(
