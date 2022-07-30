@@ -295,10 +295,16 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
       Timer(
         Duration(milliseconds: 300),
         () {
-          PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
-                  widget.album.thumbnails.values.first,
-                  cache: true))
-              .then((palette) {
+          PaletteGenerator.fromImageProvider(
+            ResizeImage.resizeIfNeeded(
+              100,
+              100,
+              ExtendedNetworkImageProvider(
+                widget.album.thumbnails.values.first,
+                cache: true,
+              ),
+            ),
+          ).then((palette) {
             setState(() {
               color = palette.colors.first;
             });
@@ -318,10 +324,16 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
       });
     }
     if (isMobile) {
-      PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
-              widget.album.thumbnails.values.first,
-              cache: true))
-          .then((palette) {
+      PaletteGenerator.fromImageProvider(
+        ResizeImage.resizeIfNeeded(
+          100,
+          100,
+          ExtendedNetworkImageProvider(
+            widget.album.thumbnails.values.first,
+            cache: true,
+          ),
+        ),
+      ).then((palette) {
         setState(() {
           color = palette.colors.first;
           secondary = palette.colors.last;
@@ -828,6 +840,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                             splashRadius: 20.0,
                           ),
                           contextMenu(context, color: Colors.white),
+                          const SizedBox(width: 8.0),
                         ],
                         forceElevated: true,
                         title: TweenAnimationBuilder<double>(
@@ -897,18 +910,34 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                         onTap: () {
                                           showDialog(
                                             context: context,
-                                            builder: (context) => SimpleDialog(
+                                            builder: (context) => AlertDialog(
                                               contentPadding:
-                                                  EdgeInsets.all(20.0),
-                                              children: [
-                                                Text(
-                                                  widget.album.description
-                                                      .split('From Wikipedia')
-                                                      .first
-                                                      .trim(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline3,
+                                                  EdgeInsets.fromLTRB(
+                                                20.0,
+                                                20.0,
+                                                20.0,
+                                                0.0,
+                                              ),
+                                              content: Text(
+                                                widget.album.description
+                                                    .split('From Wikipedia')
+                                                    .first
+                                                    .trim(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline3,
+                                              ),
+                                              actions: [
+                                                MaterialButton(
+                                                  onPressed:
+                                                      Navigator.of(context).pop,
+                                                  child: Text(
+                                                    Language.instance.OK,
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                    ),
+                                                  ),
                                                 ),
                                               ],
                                             ),

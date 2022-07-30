@@ -278,11 +278,13 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
     }
     if (isMobile) {
       PaletteGenerator.fromImageProvider(ResizeImage.resizeIfNeeded(
-              100,
-              100,
-              ExtendedNetworkImageProvider(widget.artist.coverUrl,
-                  cache: true)))
-          .then((palette) {
+        100,
+        100,
+        ExtendedNetworkImageProvider(
+          widget.artist.coverUrl,
+          cache: true,
+        ),
+      )).then((palette) {
         setState(() {
           color = palette.colors.first;
           secondary = palette.colors.last;
@@ -796,6 +798,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                             splashRadius: 20.0,
                           ),
                           contextMenu(context, color: Colors.white),
+                          const SizedBox(width: 8.0),
                         ],
                         forceElevated: true,
                         title: TweenAnimationBuilder<double>(
