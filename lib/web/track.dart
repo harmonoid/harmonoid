@@ -193,30 +193,54 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                   ),
                 ),
               ),
-              if (isDesktop)
-                Positioned(
-                  bottom: 4.0,
-                  right: 4.0,
-                  child: Material(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(16.0),
-                    child: ContextMenuButton(
-                      itemBuilder: (BuildContext context) =>
-                          webTrackPopupMenuItems(
-                        context,
+              Positioned(
+                bottom: 4.0,
+                right: 4.0,
+                child: isMobile
+                    ? IconButton(
+                        splashRadius: 20.0,
+                        icon: Icon(
+                          Icons.more_vert,
+                          color: isDark ? Colors.white54 : Colors.black54,
+                        ),
+                        onPressed: () async {
+                          int? result;
+                          await showModalBottomSheet(
+                            context: context,
+                            builder: (context) => Container(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: webTrackPopupMenuItems(context)
+                                    .map(
+                                      (item) => PopupMenuItem(
+                                        child: item.child,
+                                        onTap: () => result = item.value,
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          );
+                          webTrackPopupMenuHandle(
+                              context, widget.track, result);
+                        },
+                      )
+                    : ContextMenuButton(
+                        itemBuilder: (BuildContext context) =>
+                            webTrackPopupMenuItems(
+                          context,
+                        ),
+                        onSelected: (result) async {
+                          webTrackPopupMenuHandle(
+                              context, widget.track, result as int?);
+                        },
+                        icon: Icon(
+                          Icons.more_vert,
+                          size: 16.0,
+                          color: isDark ? Colors.white54 : Colors.black54,
+                        ),
                       ),
-                      onSelected: (result) async {
-                        webTrackPopupMenuHandle(
-                            context, widget.track, result as int?);
-                      },
-                      icon: Icon(
-                        Icons.more_vert,
-                        size: 16.0,
-                        // color: isDark ? Colors.white54 : Colors.black54,
-                      ),
-                    ),
-                  ),
-                ),
+              ),
             ],
           ),
         ),
@@ -356,18 +380,48 @@ class WebTrackTile extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12.0),
-                    if (isDesktop)
-                      Container(
-                        width: 64.0,
-                        height: 64.0,
-                        child: ContextMenuButton<int>(
-                          onSelected: (result) {
-                            webTrackPopupMenuHandle(context, track, result);
-                          },
-                          itemBuilder: (context) =>
-                              webTrackPopupMenuItems(context),
-                        ),
-                      ),
+                    Container(
+                      width: 64.0,
+                      height: 64.0,
+                      child: isMobile
+                          ? IconButton(
+                              splashRadius: 20.0,
+                              icon: Icon(
+                                Icons.more_vert,
+                              ),
+                              onPressed: () async {
+                                int? result;
+                                await showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => Container(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: webTrackPopupMenuItems(context)
+                                          .map(
+                                            (item) => PopupMenuItem(
+                                              child: item.child,
+                                              onTap: () => result = item.value,
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                );
+                                webTrackPopupMenuHandle(
+                                  context,
+                                  track,
+                                  result,
+                                );
+                              },
+                            )
+                          : ContextMenuButton<int>(
+                              onSelected: (result) {
+                                webTrackPopupMenuHandle(context, track, result);
+                              },
+                              itemBuilder: (context) =>
+                                  webTrackPopupMenuItems(context),
+                            ),
+                    ),
                   ],
                 ),
               ),
