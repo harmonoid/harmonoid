@@ -8,8 +8,9 @@
 import 'dart:collection';
 import 'dart:io';
 import 'dart:math';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
 import 'package:animations/animations.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -712,162 +713,172 @@ class _FloatingSearchBarWebSearchScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: FloatingSearchBar(
-        controller: floatingSearchBarController,
-        automaticallyImplyBackButton: false,
-        hint: Language.instance.SEARCH_WELCOME,
-        transitionCurve: Curves.easeInOut,
-        width: MediaQuery.of(context).size.width - 2 * tileMargin,
-        height: kMobileSearchBarHeight,
-        margins: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top + tileMargin,
-        ),
-        onSubmitted: (query) {
-          Navigator.of(context).pushReplacement(PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  FadeThroughTransition(
-                      fillColor: Colors.transparent,
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: FloatingSearchBarWebSearchScreen(
-                        query: query,
-                        future: YTMClient.search(query),
-                      ))));
-        },
-        textInputType: TextInputType.url,
-        accentColor: Theme.of(context).primaryColor,
-        onQueryChanged: (value) => query.value = value,
-        clearQueryOnClose: false,
-        transition: CircularFloatingSearchBarTransition(),
-        leadingActions: [
-          FloatingSearchBarAction(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.search, size: 24.0),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.black12
+            : Colors.white12,
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+      ),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: FloatingSearchBar(
+          controller: floatingSearchBarController,
+          automaticallyImplyBackButton: false,
+          hint: Language.instance.SEARCH_WELCOME,
+          transitionCurve: Curves.easeInOut,
+          width: MediaQuery.of(context).size.width - 2 * tileMargin,
+          height: kMobileSearchBarHeight,
+          margins: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top + tileMargin,
+          ),
+          onSubmitted: (query) {
+            Navigator.of(context).pushReplacement(PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    FadeThroughTransition(
+                        fillColor: Colors.transparent,
+                        animation: animation,
+                        secondaryAnimation: secondaryAnimation,
+                        child: FloatingSearchBarWebSearchScreen(
+                          query: query,
+                          future: YTMClient.search(query),
+                        ))));
+          },
+          textInputType: TextInputType.url,
+          accentColor: Theme.of(context).primaryColor,
+          onQueryChanged: (value) => query.value = value,
+          clearQueryOnClose: false,
+          transition: CircularFloatingSearchBarTransition(),
+          leadingActions: [
+            FloatingSearchBarAction(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.search, size: 24.0),
+              ),
+              showIfOpened: false,
             ),
-            showIfOpened: false,
-          ),
-          FloatingSearchBarAction.back(),
-        ],
-        actions: [
-          FloatingSearchBarAction(
-            showIfOpened: false,
-            child: contextMenu(context),
-          ),
-          FloatingSearchBarAction.searchToClear(
-            showIfClosed: false,
-          ),
-        ],
-        builder: (context, transition) {
-          return FloatingSearchBarWebSearchTab(query: query);
-        },
-        body: widget.future == null
-            ? Padding(
-                padding: MediaQuery.of(context).viewInsets,
-                child: Center(
-                  child: ExceptionWidget(
-                    title: Language.instance.WEB_WELCOME_TITLE,
-                    subtitle: Language.instance.COLLECTION_SEARCH_WELCOME,
-                  ),
-                ),
-              )
-            : CustomFutureBuilder<Map<String, List<Media>>>(
-                future: widget.future,
-                loadingBuilder: (_) => Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(
-                      Theme.of(context).primaryColor,
+            FloatingSearchBarAction.back(),
+          ],
+          actions: [
+            FloatingSearchBarAction(
+              showIfOpened: false,
+              child: contextMenu(context),
+            ),
+            FloatingSearchBarAction.searchToClear(
+              showIfClosed: false,
+            ),
+          ],
+          builder: (context, transition) {
+            return FloatingSearchBarWebSearchTab(query: query);
+          },
+          body: widget.future == null
+              ? Padding(
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: Center(
+                    child: ExceptionWidget(
+                      title: Language.instance.WEB_WELCOME_TITLE,
+                      subtitle: Language.instance.COLLECTION_SEARCH_WELCOME,
                     ),
                   ),
-                ),
-                builder: (context, data) {
-                  if (data?.isNotEmpty ?? false) {
-                    final widgets = <Widget>[];
-                    data?.forEach(
-                      (key, value) {
-                        widgets.add(
-                          Row(
-                            children: [
-                              SubHeader(key),
-                              Spacer(),
-                            ],
-                          ),
-                        );
-                        value.forEach(
-                          (element) {
-                            if (element is Track) {
-                              widgets.add(WebTrackTile(track: element));
-                            } else if (element is Artist) {
-                              widgets.add(WebArtistTile(artist: element));
-                            } else if (element is Video) {
-                              widgets.add(VideoTile(video: element));
-                            } else if (element is Album) {
-                              widgets.add(WebAlbumTile(album: element));
-                            } else if (element is Playlist) {
-                              widgets.add(WebPlaylistTile(playlist: element));
-                            }
-                          },
-                        );
-                      },
-                    );
-                    return FloatingSearchBarScrollNotifier(
-                      child: NowPlayingBarScrollHideNotifier(
-                        child: Stack(
-                          children: [
-                            if (Configuration.instance.backgroundArtwork)
-                              Positioned.fill(
-                                child: Opacity(
-                                  opacity: 0.2,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Image.memory(
-                                      visualAssets.collection,
-                                      height: 512.0,
-                                      width: 512.0,
-                                      filterQuality: FilterQuality.high,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            CustomListView(
-                              padding: EdgeInsets.only(
-                                top: MediaQuery.of(context).padding.top +
-                                    kMobileSearchBarHeight +
-                                    2 * tileMargin,
-                              ),
-                              shrinkWrap: true,
+                )
+              : CustomFutureBuilder<Map<String, List<Media>>>(
+                  future: widget.future,
+                  loadingBuilder: (_) => Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(
+                        Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                  builder: (context, data) {
+                    if (data?.isNotEmpty ?? false) {
+                      final widgets = <Widget>[];
+                      data?.forEach(
+                        (key, value) {
+                          widgets.add(
+                            Row(
                               children: [
-                                Center(
-                                  child: ConstrainedBox(
-                                    constraints:
-                                        BoxConstraints(maxWidth: 840.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: widgets,
-                                    ),
-                                  ),
-                                ),
+                                SubHeader(key),
+                                Spacer(),
                               ],
                             ),
-                          ],
+                          );
+                          value.forEach(
+                            (element) {
+                              if (element is Track) {
+                                widgets.add(WebTrackTile(track: element));
+                              } else if (element is Artist) {
+                                widgets.add(WebArtistTile(artist: element));
+                              } else if (element is Video) {
+                                widgets.add(VideoTile(video: element));
+                              } else if (element is Album) {
+                                widgets.add(WebAlbumTile(album: element));
+                              } else if (element is Playlist) {
+                                widgets.add(WebPlaylistTile(playlist: element));
+                              }
+                            },
+                          );
+                        },
+                      );
+                      return FloatingSearchBarScrollNotifier(
+                        child: NowPlayingBarScrollHideNotifier(
+                          child: Stack(
+                            children: [
+                              if (Configuration.instance.backgroundArtwork)
+                                Positioned.fill(
+                                  child: Opacity(
+                                    opacity: 0.2,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: Image.memory(
+                                        visualAssets.collection,
+                                        height: 512.0,
+                                        width: 512.0,
+                                        filterQuality: FilterQuality.high,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              CustomListView(
+                                padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).padding.top +
+                                      kMobileSearchBarHeight +
+                                      2 * tileMargin,
+                                ),
+                                shrinkWrap: true,
+                                children: [
+                                  Center(
+                                    child: ConstrainedBox(
+                                      constraints:
+                                          BoxConstraints(maxWidth: 840.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: widgets,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  } else {
-                    return Center(
-                      child: ExceptionWidget(
-                        title: Language
-                            .instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
-                        subtitle: Language.instance.WEB_NO_RESULTS,
-                      ),
-                    );
-                  }
-                },
-              ),
+                      );
+                    } else {
+                      return Center(
+                        child: ExceptionWidget(
+                          title: Language
+                              .instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                          subtitle: Language.instance.WEB_NO_RESULTS,
+                        ),
+                      );
+                    }
+                  },
+                ),
+        ),
       ),
     );
   }
