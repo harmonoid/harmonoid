@@ -296,46 +296,62 @@ class _WebRecommendationsState extends State<WebRecommendations>
               alignment: Alignment.topCenter,
               width: MediaQuery.of(context).size.width,
               child: Center(
-                child: PagedGridView<int, Track>(
-                  scrollController: _scrollController,
-                  padding: EdgeInsets.only(
-                    left: isDesktop
-                        ? (MediaQuery.of(context).size.width -
-                                (elementsPerRow * kLargeTileWidth +
-                                    (elementsPerRow - 1) * tileMargin)) /
-                            2
-                        : tileMargin,
-                    right: isDesktop
-                        ? (MediaQuery.of(context).size.width -
-                                (elementsPerRow * kLargeTileWidth +
-                                    (elementsPerRow - 1) * tileMargin)) /
-                            2
-                        : tileMargin,
-                    top: isDesktop
-                        ? tileMargin
-                        : kMobileSearchBarHeight +
-                            2 * tileMargin +
-                            MediaQuery.of(context).padding.top,
+                child: RefreshIndicator(
+                  displacement: MediaQuery.of(context).padding.top +
+                      kMobileSearchBarHeight +
+                      2 * tileMargin,
+                  color: Theme.of(context).primaryColor,
+                  onRefresh: () => Future.sync(
+                    () => _pagingController.refresh(),
                   ),
-                  showNewPageProgressIndicatorAsGridChild: false,
-                  pagingController: _pagingController,
-                  builderDelegate: PagedChildBuilderDelegate<Track>(
-                    itemBuilder: (context, item, pageKey) =>
-                        item.thumbnails.containsKey(120)
-                            ? WebTrackLargeTile(
-                                height: height,
-                                width: width,
-                                track: item,
-                                colorKeys: colorKeys,
-                              )
-                            : WebVideoLargeTile(
-                                height: height,
-                                width: width,
-                                track: item,
-                              ),
-                    newPageProgressIndicatorBuilder: (_) => Container(
-                      height: 96.0,
-                      child: Center(
+                  child: PagedGridView<int, Track>(
+                    scrollController: _scrollController,
+                    padding: EdgeInsets.only(
+                      left: isDesktop
+                          ? (MediaQuery.of(context).size.width -
+                                  (elementsPerRow * kLargeTileWidth +
+                                      (elementsPerRow - 1) * tileMargin)) /
+                              2
+                          : tileMargin,
+                      right: isDesktop
+                          ? (MediaQuery.of(context).size.width -
+                                  (elementsPerRow * kLargeTileWidth +
+                                      (elementsPerRow - 1) * tileMargin)) /
+                              2
+                          : tileMargin,
+                      top: isDesktop
+                          ? tileMargin
+                          : kMobileSearchBarHeight +
+                              2 * tileMargin +
+                              MediaQuery.of(context).padding.top,
+                    ),
+                    showNewPageProgressIndicatorAsGridChild: false,
+                    pagingController: _pagingController,
+                    builderDelegate: PagedChildBuilderDelegate<Track>(
+                      itemBuilder: (context, item, pageKey) =>
+                          item.thumbnails.containsKey(120)
+                              ? WebTrackLargeTile(
+                                  height: height,
+                                  width: width,
+                                  track: item,
+                                  colorKeys: colorKeys,
+                                )
+                              : WebVideoLargeTile(
+                                  height: height,
+                                  width: width,
+                                  track: item,
+                                ),
+                      newPageProgressIndicatorBuilder: (_) => Container(
+                        height: 96.0,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                      firstPageProgressIndicatorBuilder: (_) => Center(
                         child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation(
                             Theme.of(context).primaryColor,
@@ -343,19 +359,12 @@ class _WebRecommendationsState extends State<WebRecommendations>
                         ),
                       ),
                     ),
-                    firstPageProgressIndicatorBuilder: (_) => Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(
-                          Theme.of(context).primaryColor,
-                        ),
-                      ),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: elementsPerRow,
+                      childAspectRatio: width / height,
+                      mainAxisSpacing: tileMargin,
+                      crossAxisSpacing: tileMargin,
                     ),
-                  ),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: elementsPerRow,
-                    childAspectRatio: width / height,
-                    mainAxisSpacing: tileMargin,
-                    crossAxisSpacing: tileMargin,
                   ),
                 ),
               ),
