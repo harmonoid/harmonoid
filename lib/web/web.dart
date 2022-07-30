@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -439,70 +440,66 @@ class WebSearch extends StatelessWidget {
                   margin: EdgeInsets.only(
                     top: desktopTitleBarHeight + kDesktopAppBarHeight,
                   ),
-                  child: FutureBuilder<Map<String, List<Media>>>(
+                  child: CustomFutureBuilder<Map<String, List<Media>>>(
                     future: future,
-                    builder: (context, asyncSnapshot) {
-                      if (asyncSnapshot.hasData) {
-                        if (asyncSnapshot.data!.isNotEmpty) {
-                          final widgets = <Widget>[];
-                          asyncSnapshot.data!.forEach(
-                            (key, value) {
-                              widgets.add(
-                                Row(
-                                  children: [
-                                    SubHeader(key),
-                                    Spacer(),
-                                  ],
-                                ),
-                              );
-                              value.forEach(
-                                (element) {
-                                  if (element is Track) {
-                                    widgets.add(WebTrackTile(track: element));
-                                  } else if (element is Artist) {
-                                    widgets.add(WebArtistTile(artist: element));
-                                  } else if (element is Video) {
-                                    widgets.add(VideoTile(video: element));
-                                  } else if (element is Album) {
-                                    widgets.add(WebAlbumTile(album: element));
-                                  } else if (element is Playlist) {
-                                    widgets.add(
-                                        WebPlaylistTile(playlist: element));
-                                  }
-                                },
-                              );
-                            },
-                          );
-                          return CustomListView(
-                            shrinkWrap: true,
-                            children: [
-                              Center(
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints(maxWidth: 840.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: widgets,
-                                  ),
+                    loadingBuilder: (context) => Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(
+                          Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                    builder: (context, data) {
+                      if (data?.isNotEmpty ?? false) {
+                        final widgets = <Widget>[];
+                        data?.forEach(
+                          (key, value) {
+                            widgets.add(
+                              Row(
+                                children: [
+                                  SubHeader(key),
+                                  Spacer(),
+                                ],
+                              ),
+                            );
+                            value.forEach(
+                              (element) {
+                                if (element is Track) {
+                                  widgets.add(WebTrackTile(track: element));
+                                } else if (element is Artist) {
+                                  widgets.add(WebArtistTile(artist: element));
+                                } else if (element is Video) {
+                                  widgets.add(VideoTile(video: element));
+                                } else if (element is Album) {
+                                  widgets.add(WebAlbumTile(album: element));
+                                } else if (element is Playlist) {
+                                  widgets
+                                      .add(WebPlaylistTile(playlist: element));
+                                }
+                              },
+                            );
+                          },
+                        );
+                        return CustomListView(
+                          shrinkWrap: true,
+                          children: [
+                            Center(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(maxWidth: 840.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: widgets,
                                 ),
                               ),
-                            ],
-                          );
-                        } else {
-                          return Center(
-                            child: ExceptionWidget(
-                              title: Language
-                                  .instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
-                              subtitle: Language.instance.WEB_NO_RESULTS,
                             ),
-                          );
-                        }
+                          ],
+                        );
                       } else {
                         return Center(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation(
-                              Theme.of(context).primaryColor,
-                            ),
+                          child: ExceptionWidget(
+                            title: Language
+                                .instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                            subtitle: Language.instance.WEB_NO_RESULTS,
                           ),
                         );
                       }
@@ -512,68 +509,64 @@ class WebSearch extends StatelessWidget {
               ],
             ),
           )
-        : FutureBuilder<Map<String, List<Media>>>(
+        : CustomFutureBuilder<Map<String, List<Media>>>(
             future: future,
-            builder: (context, asyncSnapshot) {
-              if (asyncSnapshot.hasData) {
-                if (asyncSnapshot.data!.isNotEmpty) {
-                  final widgets = <Widget>[];
-                  asyncSnapshot.data!.forEach(
-                    (key, value) {
-                      widgets.add(
-                        Row(
-                          children: [
-                            SubHeader(key),
-                            Spacer(),
-                          ],
-                        ),
-                      );
-                      value.forEach(
-                        (element) {
-                          if (element is Track) {
-                            widgets.add(WebTrackTile(track: element));
-                          } else if (element is Artist) {
-                            widgets.add(WebArtistTile(artist: element));
-                          } else if (element is Video) {
-                            widgets.add(VideoTile(video: element));
-                          } else if (element is Album) {
-                            widgets.add(WebAlbumTile(album: element));
-                          } else if (element is Playlist) {
-                            widgets.add(WebPlaylistTile(playlist: element));
-                          }
-                        },
-                      );
-                    },
-                  );
-                  return CustomListView(
-                    shrinkWrap: true,
-                    children: [
-                      Center(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(maxWidth: 840.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: widgets,
-                          ),
+            loadingBuilder: (context) => Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(
+                  Theme.of(context).primaryColor,
+                ),
+              ),
+            ),
+            builder: (context, data) {
+              if (data?.isNotEmpty ?? false) {
+                final widgets = <Widget>[];
+                data?.forEach(
+                  (key, value) {
+                    widgets.add(
+                      Row(
+                        children: [
+                          SubHeader(key),
+                          Spacer(),
+                        ],
+                      ),
+                    );
+                    value.forEach(
+                      (element) {
+                        if (element is Track) {
+                          widgets.add(WebTrackTile(track: element));
+                        } else if (element is Artist) {
+                          widgets.add(WebArtistTile(artist: element));
+                        } else if (element is Video) {
+                          widgets.add(VideoTile(video: element));
+                        } else if (element is Album) {
+                          widgets.add(WebAlbumTile(album: element));
+                        } else if (element is Playlist) {
+                          widgets.add(WebPlaylistTile(playlist: element));
+                        }
+                      },
+                    );
+                  },
+                );
+                return CustomListView(
+                  shrinkWrap: true,
+                  children: [
+                    Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 840.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: widgets,
                         ),
                       ),
-                    ],
-                  );
-                } else {
-                  return Center(
-                    child: ExceptionWidget(
-                      title:
-                          Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
-                      subtitle: Language.instance.WEB_NO_RESULTS,
                     ),
-                  );
-                }
+                  ],
+                );
               } else {
                 return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(
-                      Theme.of(context).primaryColor,
-                    ),
+                  child: ExceptionWidget(
+                    title: Language.instance.COLLECTION_SEARCH_NO_RESULTS_TITLE,
+                    subtitle: Language.instance.WEB_NO_RESULTS,
                   ),
                 );
               }
@@ -677,8 +670,7 @@ class _FloatingSearchBarWebSearchTabState
   }
 }
 
-// ignore: must_be_immutable
-class FloatingSearchBarWebSearchScreen extends StatelessWidget {
+class FloatingSearchBarWebSearchScreen extends StatefulWidget {
   final String? query;
   final Future<Map<String, List<Media>>>? future;
 
@@ -686,67 +678,105 @@ class FloatingSearchBarWebSearchScreen extends StatelessWidget {
     Key? key,
     this.query,
     this.future,
-  }) : super(key: key) {
-    controller = TextEditingController(text: this.query);
-  }
+  }) : super(key: key);
 
-  TextEditingController? controller;
+  @override
+  State<FloatingSearchBarWebSearchScreen> createState() =>
+      _FloatingSearchBarWebSearchScreenState();
+}
+
+class _FloatingSearchBarWebSearchScreenState
+    extends State<FloatingSearchBarWebSearchScreen> {
+  final FloatingSearchBarController floatingSearchBarController =
+      FloatingSearchBarController();
+  final FocusNode focusNode = FocusNode();
+  final ValueNotifier<String> query = ValueNotifier<String>('');
+
+  @override
+  void initState() {
+    super.initState();
+    floatingSearchBarController.query = widget.query ?? '';
+    if (widget.future == null && floatingSearchBarController.isClosed) {
+      floatingSearchBarController.open();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: Navigator.of(context).pop,
-          icon: Icon(Icons.arrow_back),
-          splashRadius: 24.0,
+      body: FloatingSearchBar(
+        controller: floatingSearchBarController,
+        automaticallyImplyBackButton: false,
+        hint: Language.instance.SEARCH_WELCOME,
+        transitionCurve: Curves.easeInOut,
+        width: MediaQuery.of(context).size.width - 2 * tileMargin,
+        height: kMobileSearchBarHeight,
+        margins: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top + tileMargin,
         ),
-        title: TextField(
-          autofocus: future == null,
-          controller: controller,
-          onSubmitted: (value) {
-            Navigator.of(context).pushReplacement(PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    FadeThroughTransition(
-                        fillColor: Colors.transparent,
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        child: FloatingSearchBarWebSearchScreen(
-                          query: value,
-                          future: YTMClient.search(value),
-                        ))));
-          },
-          decoration: InputDecoration.collapsed(
-            hintText: Language.instance.SEARCH,
-            border: InputBorder.none,
+        onSubmitted: (query) {
+          Navigator.of(context).pushReplacement(PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  FadeThroughTransition(
+                      fillColor: Colors.transparent,
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: FloatingSearchBarWebSearchScreen(
+                        query: query,
+                        future: YTMClient.search(query),
+                      ))));
+        },
+        textInputType: TextInputType.url,
+        accentColor: Theme.of(context).primaryColor,
+        onQueryChanged: (value) => query.value = value,
+        clearQueryOnClose: false,
+        transition: CircularFloatingSearchBarTransition(),
+        leadingActions: [
+          FloatingSearchBarAction(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.search, size: 24.0),
+            ),
+            showIfOpened: false,
           ),
-        ),
+          FloatingSearchBarAction.back(),
+        ],
         actions: [
-          IconButton(
-            onPressed: controller?.clear,
-            icon: Icon(Icons.close),
-            splashRadius: 24.0,
+          FloatingSearchBarAction(
+            showIfOpened: false,
+            child: contextMenu(context),
+          ),
+          FloatingSearchBarAction.searchToClear(
+            showIfClosed: false,
           ),
         ],
-      ),
-      body: future == null
-          ? Padding(
-              padding: MediaQuery.of(context).viewInsets,
-              child: Center(
-                child: ExceptionWidget(
-                  title: Language.instance.WEB_WELCOME_TITLE,
-                  subtitle: Language.instance.COLLECTION_SEARCH_WELCOME,
+        builder: (context, transition) {
+          return FloatingSearchBarWebSearchTab(query: query);
+        },
+        body: widget.future == null
+            ? Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Center(
+                  child: ExceptionWidget(
+                    title: Language.instance.WEB_WELCOME_TITLE,
+                    subtitle: Language.instance.COLLECTION_SEARCH_WELCOME,
+                  ),
                 ),
-              ),
-            )
-          : FutureBuilder<Map<String, List<Media>>>(
-              future: future,
-              builder: (context, asyncSnapshot) {
-                if (asyncSnapshot.hasData) {
-                  if (asyncSnapshot.data!.isNotEmpty) {
+              )
+            : CustomFutureBuilder<Map<String, List<Media>>>(
+                future: widget.future,
+                loadingBuilder: (_) => Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(
+                      Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ),
+                builder: (context, data) {
+                  if (data?.isNotEmpty ?? false) {
                     final widgets = <Widget>[];
-                    asyncSnapshot.data!.forEach(
+                    data?.forEach(
                       (key, value) {
                         widgets.add(
                           Row(
@@ -773,41 +803,49 @@ class FloatingSearchBarWebSearchScreen extends StatelessWidget {
                         );
                       },
                     );
-                    return NowPlayingBarScrollHideNotifier(
-                      child: Stack(
-                        children: [
-                          if (Configuration.instance.backgroundArtwork)
-                            Positioned.fill(
-                              child: Opacity(
-                                opacity: 0.2,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Image.memory(
-                                    visualAssets.collection,
-                                    height: 512.0,
-                                    width: 512.0,
-                                    filterQuality: FilterQuality.high,
-                                    fit: BoxFit.contain,
+                    return FloatingSearchBarScrollNotifier(
+                      child: NowPlayingBarScrollHideNotifier(
+                        child: Stack(
+                          children: [
+                            if (Configuration.instance.backgroundArtwork)
+                              Positioned.fill(
+                                child: Opacity(
+                                  opacity: 0.2,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Image.memory(
+                                      visualAssets.collection,
+                                      height: 512.0,
+                                      width: 512.0,
+                                      filterQuality: FilterQuality.high,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
                                 ),
                               ),
+                            CustomListView(
+                              padding: EdgeInsets.only(
+                                top: MediaQuery.of(context).padding.top +
+                                    kMobileSearchBarHeight +
+                                    2 * tileMargin,
+                              ),
+                              shrinkWrap: true,
+                              children: [
+                                Center(
+                                  child: ConstrainedBox(
+                                    constraints:
+                                        BoxConstraints(maxWidth: 840.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: widgets,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          CustomListView(
-                            shrinkWrap: true,
-                            children: [
-                              Center(
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints(maxWidth: 840.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: widgets,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   } else {
@@ -819,17 +857,9 @@ class FloatingSearchBarWebSearchScreen extends StatelessWidget {
                       ),
                     );
                   }
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(
-                        Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  );
-                }
-              },
-            ),
+                },
+              ),
+      ),
     );
   }
 }
