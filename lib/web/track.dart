@@ -379,7 +379,7 @@ class WebTrackTile extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 12.0),
+                    const SizedBox(width: 4.0),
                     Container(
                       width: 64.0,
                       height: 64.0,
