@@ -111,8 +111,7 @@ ThemeData createTheme({
   return ThemeData(
     // ignore: deprecated_member_use
     androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
-
-    /// Explicitly using [ChipThemeData] on Linux since it seems to be falling back to Ubuntu's font family.
+    // Explicitly using [ChipThemeData] on Linux since it seems to be falling back to Ubuntu's font family.
     chipTheme: Platform.isLinux
         ? ChipThemeData(
             backgroundColor: color,
