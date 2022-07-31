@@ -248,7 +248,9 @@ class _WebSearchBarState extends State<WebSearchBar> {
 }
 
 class PlaylistImportDialog extends StatefulWidget {
-  PlaylistImportDialog({Key? key}) : super(key: key);
+  const PlaylistImportDialog({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<PlaylistImportDialog> createState() => _PlaylistImportDialogState();
@@ -401,115 +403,101 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final content = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          child: Text(
+            Language.instance.IMPORT_PLAYLIST_TITLE,
+            style: Theme.of(context).textTheme.headline1,
+            textAlign: TextAlign.start,
+          ),
+          padding: EdgeInsets.only(
+            bottom: 16.0,
+            left: 4.0,
+          ),
+        ),
+        Container(
+          height: 40.0,
+          width: 360.0,
+          alignment: Alignment.center,
+          margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+          padding: EdgeInsets.only(top: 2.0),
+          child: Focus(
+            onFocusChange: (hasFocus) {
+              if (hasFocus) {
+                HotKeys.instance.disableSpaceHotKey();
+              } else {
+                HotKeys.instance.enableSpaceHotKey();
+              }
+            },
+            child: TextField(
+              autofocus: true,
+              controller: _controller,
+              cursorWidth: 1.0,
+              onSubmitted: (_) => add(),
+              cursorColor: Theme.of(context).brightness == Brightness.light
+                  ? Color(0xFF212121)
+                  : Colors.white,
+              textAlignVertical: TextAlignVertical.bottom,
+              style: Theme.of(context).textTheme.headline4,
+              decoration: inputDecoration(
+                context,
+                Language.instance.IMPORT_PLAYLIST_SUBTITLE,
+                trailingIcon: Icon(
+                  Icons.add,
+                  size: 20.0,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                trailingIconOnPressed: add,
+              ),
+            ),
+          ),
+        ),
+        if (playlist != null) ...[
+          const SizedBox(height: 12.0),
+          if (playlist?.continuation != '' && !fetched)
+            Align(
+              child: Container(
+                margin: EdgeInsets.all(16.0),
+                height: 24.0,
+                width: 24.0,
+                alignment: Alignment.center,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3.8,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
+            ),
+          Container(
+            width: 360.0,
+            child: Text(
+              '${Language.instance.PLAYLIST_NAME}: ${playlist?.name ?? ''}',
+              style: Theme.of(context).textTheme.headline3,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Text(
+            '${Language.instance.TRACK}: ${[
+              0,
+              null
+            ].contains(playlist?.tracks.length) ? '' : playlist?.tracks.length}',
+            style: Theme.of(context).textTheme.headline3,
+          ),
+        ],
+      ],
+    );
     return AlertDialog(
       contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            child: Text(
-              Language.instance.IMPORT_PLAYLIST_TITLE,
-              style: Theme.of(context).textTheme.headline1,
-              textAlign: TextAlign.start,
-            ),
-            padding: EdgeInsets.only(
-              bottom: 16.0,
-              left: 4.0,
-            ),
-          ),
-          Container(
-            height: 40.0,
-            width: 360.0,
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
-            padding: EdgeInsets.only(top: 2.0),
-            child: Focus(
-              onFocusChange: (hasFocus) {
-                if (hasFocus) {
-                  HotKeys.instance.disableSpaceHotKey();
-                } else {
-                  HotKeys.instance.enableSpaceHotKey();
-                }
-              },
-              child: TextField(
-                autofocus: true,
-                controller: _controller,
-                cursorWidth: 1.0,
-                onSubmitted: (_) => add(),
-                cursorColor: Theme.of(context).brightness == Brightness.light
-                    ? Color(0xFF212121)
-                    : Colors.white,
-                textAlignVertical: TextAlignVertical.bottom,
-                style: Theme.of(context).textTheme.headline4,
-                decoration: inputDecoration(
-                  context,
-                  Language.instance.IMPORT_PLAYLIST_SUBTITLE,
-                  trailingIcon: Icon(
-                    Icons.add,
-                    size: 20.0,
-                    color: Theme.of(context).iconTheme.color,
-                  ),
-                  trailingIconOnPressed: add,
-                ),
-              ),
-            ),
-          ),
-          if (playlist != null) ...[
-            const SizedBox(height: 12.0),
-            if (playlist?.continuation != '' && !fetched)
-              Align(
-                child: Container(
-                  margin: EdgeInsets.all(16.0),
-                  height: 24.0,
-                  width: 24.0,
-                  alignment: Alignment.center,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3.8,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-              ),
-            if (fetched && !saved)
-              Align(
-                child: Container(
-                  margin: EdgeInsets.all(16.0),
-                  height: 24.0,
-                  width: 24.0,
-                  alignment: Alignment.center,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3.8,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-              ),
-            Container(
-              width: 360.0,
-              child: Text(
-                '${Language.instance.PLAYLIST_NAME}: ${playlist?.name ?? ''}',
-                style: Theme.of(context).textTheme.headline3,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            Text(
-              '${Language.instance.TRACK}: ${[
-                0,
-                null
-              ].contains(playlist?.tracks.length) ? '' : playlist?.tracks.length}',
-              style: Theme.of(context).textTheme.headline3,
-            ),
-          ],
-        ],
-      ),
+      content: content,
       actions: saved
           ? [
               MaterialButton(
                 child: Text(
-                  'DONE',
+                  Language.instance.OK.toUpperCase(),
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                   ),
@@ -537,6 +525,304 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                 onPressed: Navigator.of(context).maybePop,
               ),
             ],
+    );
+  }
+}
+
+class PlaylistImportBottomSheet extends StatefulWidget {
+  PlaylistImportBottomSheet({Key? key}) : super(key: key);
+
+  @override
+  State<PlaylistImportBottomSheet> createState() =>
+      _PlaylistImportBottomSheetState();
+}
+
+class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
+  final TextEditingController controller = TextEditingController();
+  Playlist? playlist;
+  bool fetched = false;
+  bool saved = false;
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  void add() async {
+    if (controller.text.isNotEmpty) {
+      try {
+        playlist = Playlist.fromRawURL(controller.text);
+        setState(() {});
+        try {
+          while (playlist?.continuation != '') {
+            await YTMClient.playlist(playlist!);
+            setState(() {});
+          }
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
+        if (playlist!.name.isNotEmpty && playlist!.tracks.isNotEmpty) {
+          setState(() {
+            fetched = true;
+          });
+          final result = await Collection.instance.playlistAdd(playlist!.name);
+          await Collection.instance.playlistAddTracks(
+            result,
+            playlist!.tracks
+                .map(
+                  (track) => media.Track.fromWebTrack(
+                    track.toJson(),
+                  ),
+                )
+                .toList(),
+          );
+          setState(() {
+            saved = true;
+          });
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    child: Text(
+                      Language.instance.ERROR,
+                      style: Theme.of(context).textTheme.headline1,
+                      textAlign: TextAlign.start,
+                    ),
+                    padding: EdgeInsets.only(
+                      bottom: 16.0,
+                      left: 4.0,
+                    ),
+                  ),
+                  Padding(
+                    child: Text(
+                      Language.instance.INTERNET_ERROR,
+                      style: Theme.of(context).textTheme.headline3,
+                      textAlign: TextAlign.start,
+                    ),
+                    padding: EdgeInsets.only(
+                      bottom: 16.0,
+                      left: 4.0,
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                MaterialButton(
+                  child: Text(
+                    Language.instance.OK,
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  onPressed: Navigator.of(context).maybePop,
+                ),
+              ],
+            ),
+          );
+        }
+      } on ArgumentError catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+        playlist = null;
+        setState(() {});
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  child: Text(
+                    Language.instance.ERROR,
+                    style: Theme.of(context).textTheme.headline1,
+                    textAlign: TextAlign.start,
+                  ),
+                  padding: EdgeInsets.only(
+                    bottom: 16.0,
+                    left: 4.0,
+                  ),
+                ),
+                Padding(
+                  child: Text(
+                    Language.instance.INVALID_PLAYLIST_URL,
+                    style: Theme.of(context).textTheme.headline3,
+                    textAlign: TextAlign.start,
+                  ),
+                  padding: EdgeInsets.only(
+                    bottom: 16.0,
+                    left: 4.0,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              MaterialButton(
+                child: Text(
+                  Language.instance.OK,
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                onPressed: Navigator.of(context).maybePop,
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom -
+            MediaQuery.of(context).padding.bottom,
+      ),
+      padding: EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: 4.0),
+          TextField(
+            textCapitalization: TextCapitalization.none,
+            keyboardType: TextInputType.url,
+            textInputAction: TextInputAction.done,
+            autofocus: true,
+            controller: controller,
+            onSubmitted: (_) => add(),
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(
+                12,
+                30,
+                12,
+                6,
+              ),
+              hintText: Language.instance.IMPORT_PLAYLIST_SUBTITLE,
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).iconTheme.color!.withOpacity(0.4),
+                  width: 1.8,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).iconTheme.color!.withOpacity(0.4),
+                  width: 1.8,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                  width: 1.8,
+                ),
+              ),
+            ),
+          ),
+          if (playlist != null) ...[
+            const SizedBox(height: 12.0),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        child: Text(
+                          '${Language.instance.PLAYLIST_NAME}: ${playlist?.name ?? ''}',
+                          style: Theme.of(context).textTheme.headline3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        '${Language.instance.TRACK}: ${[
+                          0,
+                          null
+                        ].contains(playlist?.tracks.length) ? '' : playlist?.tracks.length}',
+                        style: Theme.of(context).textTheme.headline3,
+                      ),
+                    ],
+                  ),
+                ),
+                if (playlist?.continuation != '' && !fetched)
+                  Align(
+                    child: Container(
+                      margin: EdgeInsets.all(2.0).copyWith(
+                        left: 16.0,
+                        right: 16.0,
+                      ),
+                      height: 24.0,
+                      width: 24.0,
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3.8,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+          const SizedBox(height: 8.0),
+          if (saved)
+            ElevatedButton(
+              onPressed: Navigator.of(context).maybePop,
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).primaryColor,
+                ),
+              ),
+              child: Text(
+                Language.instance.OK.toUpperCase(),
+                style: TextStyle(letterSpacing: 2.0),
+              ),
+            )
+          else
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: add,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    child: Text(
+                      Language.instance.ADD.toUpperCase(),
+                      style: TextStyle(letterSpacing: 2.0),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8.0),
+                Expanded(
+                  child: MaterialButton(
+                    onPressed: Navigator.of(context).maybePop,
+                    textColor: Theme.of(context).primaryColor,
+                    child: Text(
+                      Language.instance.CANCEL.toUpperCase(),
+                      style: TextStyle(letterSpacing: 2.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+        ],
+      ),
     );
   }
 }
