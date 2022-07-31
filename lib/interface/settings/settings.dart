@@ -64,6 +64,11 @@ class Settings extends StatelessWidget {
         : Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
+              leading: IconButton(
+                onPressed: Navigator.of(context).pop,
+                icon: Icon(Icons.arrow_back),
+                splashRadius: 20.0,
+              ),
               title: Text(
                 Language.instance.SETTING,
                 style: Theme.of(context).textTheme.headline1,

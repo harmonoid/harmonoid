@@ -409,7 +409,7 @@ class _FloatingSearchBarSearchTabState
       child: SizedBox(
         height: MediaQuery.of(context).size.height -
             kMobileSearchBarHeight -
-            16.0 -
+            36.0 -
             MediaQuery.of(context).padding.vertical -
             MediaQuery.of(context).viewInsets.vertical,
         width: MediaQuery.of(context).size.width,

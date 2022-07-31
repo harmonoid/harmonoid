@@ -1398,6 +1398,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                 iconSize: 24.0,
                                 splashRadius: 20.0,
                               ),
+                              const SizedBox(width: 8.0),
                             ],
                             title: TweenAnimationBuilder<double>(
                               tween: Tween<double>(

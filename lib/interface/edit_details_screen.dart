@@ -462,6 +462,11 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
         : Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
+              leading: IconButton(
+                onPressed: Navigator.of(context).pop,
+                icon: Icon(Icons.arrow_back),
+                splashRadius: 20.0,
+              ),
               title: Text(
                 Language.instance.EDIT_DETAILS,
                 style: Theme.of(context).textTheme.headline1,
@@ -547,8 +552,10 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                           setState(() {
                             loading = true;
                           });
-                          await Collection.instance
-                              .delete(widget.track, delete: false);
+                          await Collection.instance.delete(
+                            widget.track,
+                            delete: false,
+                          );
                           // [copy]'s album & artists names could've been changed.
                           await Collection.instance
                               .add(file: File(copy.uri.toFilePath()));
@@ -564,7 +571,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                             floatingSearchBarController.close();
                           }
                         },
-                        icon: Icon(Icons.restore_rounded),
+                        icon: Icon(Icons.restore_page),
                       ),
                       const SizedBox(width: 8.0),
                     ],
