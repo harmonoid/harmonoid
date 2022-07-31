@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:animations/animations.dart';
+import 'package:harmonoid/web/state/web.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -212,8 +213,6 @@ class WebRecommendations extends StatefulWidget {
 
 class _WebRecommendationsState extends State<WebRecommendations>
     with AutomaticKeepAliveClientMixin {
-  PagingController<int, Track> _pagingController =
-      PagingController<int, Track>(firstPageKey: 0);
   late ScrollController _scrollController = ScrollController();
   final int _velocity = 40;
   final HashMap<String, Color> colorKeys = HashMap<String, Color>();
@@ -221,6 +220,7 @@ class _WebRecommendationsState extends State<WebRecommendations>
   @override
   void initState() {
     super.initState();
+    // TODO: Tightly coupled Windows specific configuration.
     if (Platform.isWindows) {
       _scrollController.addListener(
         () {
@@ -238,12 +238,12 @@ class _WebRecommendationsState extends State<WebRecommendations>
         },
       );
     }
-    _pagingController.addPageRequestListener(fetchNextPage);
+    Web.instance.pagingController.addPageRequestListener(fetchNextPage);
   }
 
   @override
   void dispose() {
-    _pagingController.dispose();
+    Web.instance.pagingController.removePageRequestListener(fetchNextPage);
     _scrollController.dispose();
     super.dispose();
   }
@@ -255,7 +255,7 @@ class _WebRecommendationsState extends State<WebRecommendations>
       Configuration.instance.save(
         webRecent: [items.last.id],
       );
-      _pagingController.appendPage(
+      Web.instance.pagingController.appendPage(
         items.skip(1).toList(),
         pageKey + 1,
       );
@@ -303,7 +303,7 @@ class _WebRecommendationsState extends State<WebRecommendations>
                       2 * tileMargin,
                   color: Theme.of(context).primaryColor,
                   onRefresh: () => Future.sync(
-                    () => _pagingController.refresh(),
+                    () => Web.instance.pagingController.refresh(),
                   ),
                   child: PagedGridView<int, Track>(
                     scrollController: _scrollController,
@@ -327,7 +327,7 @@ class _WebRecommendationsState extends State<WebRecommendations>
                               MediaQuery.of(context).padding.top,
                     ),
                     showNewPageProgressIndicatorAsGridChild: false,
-                    pagingController: _pagingController,
+                    pagingController: Web.instance.pagingController,
                     builderDelegate: PagedChildBuilderDelegate<Track>(
                       itemBuilder: (context, item, pageKey) =>
                           item.thumbnails.containsKey(120)
@@ -619,11 +619,15 @@ class _FloatingSearchBarWebSearchTabState
         elevation: 4.0,
         margin: EdgeInsets.zero,
         child: SizedBox(
-          height: 56.0 * 7,
+          height: MediaQuery.of(context).size.height -
+              kMobileSearchBarHeight -
+              36.0 -
+              MediaQuery.of(context).padding.vertical -
+              MediaQuery.of(context).viewInsets.vertical,
           width: MediaQuery.of(context).size.width,
           child: Center(
             child: ExceptionWidget(
-              title: Language.instance.WEB_WELCOME_TITLE,
+              title: Language.instance.COLLECTION_SEARCH_LABEL,
               subtitle: Language.instance.COLLECTION_SEARCH_WELCOME,
             ),
           ),
@@ -635,7 +639,11 @@ class _FloatingSearchBarWebSearchTabState
         elevation: 4.0,
         margin: EdgeInsets.zero,
         child: SizedBox(
-          height: 56.0 * 7,
+          height: MediaQuery.of(context).size.height -
+              kMobileSearchBarHeight -
+              36.0 -
+              MediaQuery.of(context).padding.vertical -
+              MediaQuery.of(context).viewInsets.vertical,
           width: MediaQuery.of(context).size.width,
           child: Center(
             child: ExceptionWidget(
@@ -776,13 +784,9 @@ class _FloatingSearchBarWebSearchScreenState
             return FloatingSearchBarWebSearchTab(query: query);
           },
           body: widget.future == null
-              ? Padding(
-                  padding: MediaQuery.of(context).viewInsets,
-                  child: Center(
-                    child: ExceptionWidget(
-                      title: Language.instance.WEB_WELCOME_TITLE,
-                      subtitle: Language.instance.COLLECTION_SEARCH_WELCOME,
-                    ),
+              ? FloatingSearchBarScrollNotifier(
+                  child: NowPlayingBarScrollHideNotifier(
+                    child: WebRecommendations(),
                   ),
                 )
               : CustomFutureBuilder<Map<String, List<Media>>>(

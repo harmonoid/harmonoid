@@ -7,19 +7,29 @@
 ///
 import 'package:libmpv/libmpv.dart';
 import 'package:ytm_client/ytm_client.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/models/media.dart' as media;
 
-abstract class Web {
-  /// Plays:
-  /// * [Track]
-  /// * [Video]
-  /// * [List] of [Track]s
+class Web {
+  /// [Web] object instance.
+  static final Web instance = Web();
+
+  /// [PagingController] for infinitely scrolling recommendations.
   ///
-  /// Automatically handling conversion to local model [media.Track].
-  static Future<void> open(
+  /// The reasons of this being here are:
+  /// * Ability to share already fetched recommendations on other screens.
+  /// * Ability to perform refresh once the user plays a [Track] or [Video]
+  ///   for the first time to switch to recommendations page from the
+  ///   "welcome page" dynamically. This is done from [open] method.
+  final PagingController<int, Track> pagingController =
+      PagingController<int, Track>(firstPageKey: 0);
+
+  /// Starts playback of a [Track], [Video] or a [List] of [Track]s.
+  /// Internally destructures the web specific models into local [media.Track].
+  Future<void> open(
     value, {
     int index = 0,
   }) async {
@@ -54,9 +64,13 @@ abstract class Web {
         value.map((e) => media.Track.fromWebTrack(e.toJson())).toList(),
         index: index,
       );
+      bool reload = Configuration.instance.webRecent.isEmpty;
       await Configuration.instance.save(
         webRecent: [Plugins.redirect(value.first.uri).queryParameters['id']!],
       );
+      if (reload) {
+        pagingController.refresh();
+      }
     }
   }
 }
