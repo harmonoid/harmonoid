@@ -706,8 +706,10 @@ class _FloatingSearchBarWebSearchScreenState
   void initState() {
     super.initState();
     floatingSearchBarController.query = widget.query ?? '';
-    if (widget.future == null && floatingSearchBarController.isClosed) {
-      floatingSearchBarController.open();
+    if (widget.query == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        floatingSearchBarController.open();
+      });
     }
   }
 

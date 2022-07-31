@@ -798,6 +798,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
               children: [
                 NowPlayingBarScrollHideNotifier(
                   child: CustomScrollView(
+                    physics: physics,
                     controller: controller,
                     slivers: [
                       SliverAppBar(
