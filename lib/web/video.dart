@@ -78,7 +78,7 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    Web.open(widget.track);
+                    Web.instance.open(widget.track);
                   },
                   onLongPress: () async {
                     int? result;
@@ -261,7 +261,7 @@ class VideoTile extends StatelessWidget {
         },
         child: InkWell(
           onTap: () {
-            Web.open(video);
+            Web.instance.open(video);
           },
           onLongPress: () async {
             int? result;

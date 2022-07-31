@@ -165,7 +165,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    Web.open(widget.track);
+                    Web.instance.open(widget.track);
                   },
                   onLongPress: () async {
                     int? result;
@@ -285,12 +285,12 @@ class WebTrackTile extends StatelessWidget {
         child: InkWell(
           onTap: () {
             if (group != null) {
-              Web.open(
+              Web.instance.open(
                 group,
                 index: group!.indexOf(track),
               );
             } else {
-              Web.open(track);
+              Web.instance.open(track);
             }
           },
           onLongPress: () async {

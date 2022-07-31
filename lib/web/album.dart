@@ -531,8 +531,9 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                       children: [
                                                         ElevatedButton.icon(
                                                           onPressed: () {
-                                                            Web.open(widget
-                                                                .album.tracks);
+                                                            Web.instance.open(
+                                                                widget.album
+                                                                    .tracks);
                                                           },
                                                           style: ButtonStyle(
                                                             elevation:
@@ -1057,7 +1058,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                           : 0],
                                       child: Icon(Icons.shuffle),
                                       onPressed: () {
-                                        Web.open(widget.album.tracks);
+                                        Web.instance.open(widget.album.tracks);
                                       },
                                     ),
                                   ),

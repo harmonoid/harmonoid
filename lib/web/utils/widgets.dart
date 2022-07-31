@@ -53,7 +53,7 @@ class _WebSearchBarState extends State<WebSearchBar> {
     if (value.isEmpty) return;
     final track = await YTMClient.player(value);
     if (track != null) {
-      Web.open(track);
+      Web.instance.open(track);
     } else {
       Configuration.instance.save(
         webSearchRecent:

@@ -460,8 +460,8 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                       children: [
                                         ElevatedButton.icon(
                                           onPressed: () {
-                                            Web.open(widget.artist.data.entries
-                                                .first.value.elements
+                                            Web.instance.open(widget.artist.data
+                                                .entries.first.value.elements
                                                 .cast<Track>());
                                           },
                                           style: ButtonStyle(
@@ -1026,8 +1026,8 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                           : 0],
                                       child: Icon(Icons.shuffle),
                                       onPressed: () {
-                                        Web.open(widget.artist.data.entries
-                                            .first.value.elements
+                                        Web.instance.open(widget.artist.data
+                                            .entries.first.value.elements
                                             .cast<Track>());
                                       },
                                     ),
