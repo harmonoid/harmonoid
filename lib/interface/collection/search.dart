@@ -62,8 +62,8 @@ class SearchTabState extends State<SearchTab> {
           artists.addAll(
             [
               ArtistTile(
-                height: kDesktopArtistTileHeight,
-                width: kDesktopArtistTileWidth,
+                height: kArtistTileHeight,
+                width: kArtistTileWidth,
                 artist: media,
               ),
               const SizedBox(
@@ -219,16 +219,15 @@ class SearchTabState extends State<SearchTab> {
                                                   children: tileGridListWidgets(
                                                     context: context,
                                                     tileHeight:
-                                                        kDesktopArtistTileHeight,
-                                                    tileWidth:
-                                                        kDesktopArtistTileWidth,
-                                                    elementsPerRow: (MediaQuery
-                                                                    .of(context)
-                                                                .size
-                                                                .width -
-                                                            tileMargin) ~/
-                                                        (kDesktopArtistTileWidth +
-                                                            tileMargin),
+                                                        kArtistTileHeight,
+                                                    tileWidth: kArtistTileWidth,
+                                                    elementsPerRow:
+                                                        (MediaQuery.of(context)
+                                                                    .size
+                                                                    .width -
+                                                                tileMargin) ~/
+                                                            (kArtistTileWidth +
+                                                                tileMargin),
                                                     subHeader: null,
                                                     leadingSubHeader: null,
                                                     widgetCount:
@@ -266,7 +265,7 @@ class SearchTabState extends State<SearchTab> {
                           ),
                         if (artists.isNotEmpty)
                           Container(
-                            height: kDesktopArtistTileHeight + 10.0,
+                            height: kArtistTileHeight + 10.0,
                             width: MediaQuery.of(context).size.width,
                             child: ListView(
                               padding: EdgeInsets.only(
@@ -362,8 +361,8 @@ class _FloatingSearchBarSearchTabState
           artists.addAll(
             [
               ArtistTile(
-                width: kDesktopArtistTileWidth,
-                height: kDesktopArtistTileHeight,
+                width: kArtistTileWidth,
+                height: kArtistTileHeight,
                 artist: media,
               ),
               const SizedBox(

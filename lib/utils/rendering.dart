@@ -153,21 +153,13 @@ class TileGridListWidgetsData {
 TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
   required double tileHeight,
   required double tileWidth,
-  required String? subHeader,
   required BuildContext context,
   required int widgetCount,
   required Widget Function(BuildContext context, int index) builder,
-  required String? leadingSubHeader,
-  required Widget? leadingWidget,
   required int elementsPerRow,
 }) {
   final widgets = <Widget>[];
   final data = <List<dynamic>>[];
-  widgets.addAll([
-    if (leadingSubHeader != null) SubHeader(leadingSubHeader),
-    if (leadingWidget != null) leadingWidget,
-    if (subHeader != null) SubHeader(subHeader),
-  ]);
   var rowIndex = 0;
   var rowChildren = <Widget>[];
   var rowData = <dynamic>[];
