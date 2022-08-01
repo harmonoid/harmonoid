@@ -245,6 +245,7 @@ class _WebRecommendationsState extends State<WebRecommendations>
         setState(() {});
       }
     };
+    Web.instance.pagingController.refresh();
     Web.instance.pagingController.addPageRequestListener(fetchNextPage);
   }
 
@@ -269,18 +270,20 @@ class _WebRecommendationsState extends State<WebRecommendations>
   }
 
   void fetchNextPage(int pageKey) async {
-    try {
-      final items =
-          await YTMClient.next(Configuration.instance.webRecent.first);
-      Configuration.instance.save(
-        webRecent: [items.last.id],
-      );
-      Web.instance.pagingController.appendPage(
-        items.skip(1).toList(),
-        pageKey + 1,
-      );
-    } catch (_) {
-      fetchNextPage(pageKey);
+    if (Configuration.instance.webRecent.isNotEmpty) {
+      try {
+        final items =
+            await YTMClient.next(Configuration.instance.webRecent.first);
+        Configuration.instance.save(
+          webRecent: [items.last.id],
+        );
+        Web.instance.pagingController.appendPage(
+          items.skip(1).toList(),
+          pageKey + 1,
+        );
+      } catch (_) {
+        fetchNextPage(pageKey);
+      }
     }
   }
 
