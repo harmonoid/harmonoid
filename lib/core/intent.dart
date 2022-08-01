@@ -70,8 +70,7 @@ class Intent {
       });
     } else {
       if (args.isNotEmpty) {
-        if (FileSystemEntity.typeSync(args.first) ==
-            FileSystemEntityType.file) {
+        if (FS.typeSync_(args.first) == FileSystemEntityType.file) {
           instance = Intent(file: File(args.first));
         } else {
           instance = Intent(directory: Directory(args.first));
@@ -262,8 +261,7 @@ class Intent {
         // TODO: Missing implementation for Android & iOS.
         MobileNowPlayingController.instance.show();
       }
-    } else if (FileSystemEntity.typeSync(uri.toFilePath()) ==
-        FileSystemEntityType.file) {
+    } else if (FS.typeSync_(uri.toFilePath()) == FileSystemEntityType.file) {
       final metadata = <String, dynamic>{
         'uri': uri.toString(),
       };
@@ -300,7 +298,7 @@ class Intent {
           MobileNowPlayingController.instance.show();
         }
       }
-    } else if (FileSystemEntity.typeSync(uri.toFilePath()) ==
+    } else if (FS.typeSync_(uri.toFilePath()) ==
         FileSystemEntityType.directory) {
       bool playing = false;
       for (final file in await Directory(uri.toFilePath())
