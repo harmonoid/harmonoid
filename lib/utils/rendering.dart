@@ -22,11 +22,13 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/models/media.dart';
-import 'package:harmonoid/interface/edit_details_screen.dart';
-import 'package:harmonoid/interface/collection/album.dart';
-import 'package:harmonoid/interface/settings/about.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/interface/home.dart';
+import 'package:harmonoid/interface/settings/about.dart';
+import 'package:harmonoid/interface/collection/album.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/interface/file_info_screen.dart';
+import 'package:harmonoid/interface/edit_details_screen.dart';
+
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -346,6 +348,18 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
         ),
       ),
     ),
+    PopupMenuItem<int>(
+      padding: EdgeInsets.zero,
+      value: 7,
+      child: ListTile(
+        leading:
+            Icon(Platform.isWindows ? FluentIcons.info_24_regular : Icons.info),
+        title: Text(
+          Language.instance.FILE_INFORMATION,
+          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+        ),
+      ),
+    ),
     if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
       PopupMenuItem<int>(
         padding: EdgeInsets.zero,
@@ -478,6 +492,9 @@ Future<void> trackPopupMenuHandle(
             ),
           ),
         );
+        break;
+      case 7:
+        FileInfoScreen.show(track, context);
         break;
     }
   }
