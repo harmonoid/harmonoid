@@ -76,6 +76,7 @@
   "EXIT_TITLE": "Sair",
   "EXPERIMENTAL": "Experimental",
   "EXPERIMENTAL_SUBTITLE": "Essas configurações ainda não estão marcadas como estáveis",
+  "FILE_INFORMATION": "File information",
   "FOLDERS_NOT_FOUND": "Algumas pastas da sua coleção não puderam ser localizadas.\nVerifique se elas existem e reinicie o aplicativo ou remova essas pastas antes de continuar:",
   "FOLDER_NOT_FOUND": "Esta pasta não pôde ser localizada",
   "FULLSCREEN": "Entrar em tela cheia",

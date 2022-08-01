@@ -78,6 +78,7 @@ class Strings {
   late String EXIT_TITLE;
   late String EXPERIMENTAL;
   late String EXPERIMENTAL_SUBTITLE;
+  late String FILE_INFORMATION;
   late String FOLDERS_NOT_FOUND;
   late String FOLDER_NOT_FOUND;
   late String FULLSCREEN;

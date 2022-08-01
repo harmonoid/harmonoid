@@ -76,6 +76,7 @@
   "EXIT_TITLE": "退出",
   "EXPERIMENTAL": "实验性",
   "EXPERIMENTAL_SUBTITLE": "这些设置尚未标记为稳定",
+  "FILE_INFORMATION": "File information",
   "FOLDERS_NOT_FOUND": "Few of the folders from your collection could not be located.\nPlease ensure the presence & re-start the app, or remove these folders before proceeding:",
   "FOLDER_NOT_FOUND": "This folder could not be located",
   "FULLSCREEN": "Enter fullscreen",

@@ -282,6 +282,7 @@ class Language extends Strings with ChangeNotifier {
     this.EXIT_TITLE = asset['EXIT_TITLE']!;
     this.EXPERIMENTAL = asset['EXPERIMENTAL']!;
     this.EXPERIMENTAL_SUBTITLE = asset['EXPERIMENTAL_SUBTITLE']!;
+    this.FILE_INFORMATION = asset['FILE_INFORMATION']!;
     this.FOLDERS_NOT_FOUND = asset['FOLDERS_NOT_FOUND']!;
     this.FOLDER_NOT_FOUND = asset['FOLDER_NOT_FOUND']!;
     this.FULLSCREEN = asset['FULLSCREEN']!;
