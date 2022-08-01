@@ -541,10 +541,104 @@ class CollectionScreenState extends State<CollectionScreen>
                       ],
                       actions: [
                         FloatingSearchBarAction(
-                          showIfOpened: true,
+                          showIfOpened: false,
                           showIfClosed: true,
                           child: MobileSortByButton(
                             value: index,
+                          ),
+                        ),
+                        FloatingSearchBarAction(
+                          showIfOpened: false,
+                          showIfClosed: true,
+                          child: CircularButton(
+                            icon: Icon(Icons.list, size: 24.0),
+                            onPressed: () {
+                              final position = RelativeRect.fromRect(
+                                Offset(
+                                      MediaQuery.of(context).size.width -
+                                          tileMargin -
+                                          48.0,
+                                      MediaQuery.of(context).padding.top +
+                                          kMobileSearchBarHeight +
+                                          2 * tileMargin,
+                                    ) &
+                                    Size(160.0, 160.0),
+                                Rect.fromLTWH(
+                                  0,
+                                  0,
+                                  MediaQuery.of(context).size.width,
+                                  MediaQuery.of(context).size.height,
+                                ),
+                              );
+                              showMenu<int>(
+                                context: context,
+                                position: position,
+                                elevation: 4.0,
+                                items: [
+                                  CheckedPopupMenuItem(
+                                    padding: EdgeInsets.zero,
+                                    checked: Configuration
+                                        .instance.mobileDenseAlbumTabLayout,
+                                    value: 0,
+                                    child: Text(Language
+                                        .instance.ENABLE_DENSE_ALBUMS_LAYOUT),
+                                  ),
+                                  CheckedPopupMenuItem(
+                                    padding: EdgeInsets.zero,
+                                    checked: Configuration
+                                        .instance.mobileDenseArtistTabLayout,
+                                    value: 1,
+                                    child: Text(Language
+                                        .instance.ENABLE_DENSE_ARTISTS_LAYOUT),
+                                  ),
+                                  CheckedPopupMenuItem(
+                                    padding: EdgeInsets.zero,
+                                    checked: Configuration
+                                        .instance.mobileGridArtistTabLayout,
+                                    value: 2,
+                                    child: Text(Language
+                                        .instance.ENABLE_GRID_ARTISTS_LAYOUT),
+                                  ),
+                                ],
+                              ).then((value) {
+                                switch (value) {
+                                  case 0:
+                                    {
+                                      Configuration.instance
+                                          .save(
+                                            mobileDenseAlbumTabLayout:
+                                                !Configuration.instance
+                                                    .mobileDenseAlbumTabLayout,
+                                          )
+                                          .then((_) => setState(() {}));
+                                      break;
+                                    }
+                                  case 1:
+                                    {
+                                      Configuration.instance
+                                          .save(
+                                            mobileDenseArtistTabLayout:
+                                                !Configuration.instance
+                                                    .mobileDenseArtistTabLayout,
+                                            mobileGridArtistTabLayout: true,
+                                          )
+                                          .then((_) => setState(() {}));
+                                      break;
+                                    }
+                                  case 2:
+                                    {
+                                      Configuration.instance
+                                          .save(
+                                            mobileGridArtistTabLayout:
+                                                !Configuration.instance
+                                                    .mobileGridArtistTabLayout,
+                                          )
+                                          .then((_) => setState(() {}));
+                                      break;
+                                    }
+                                }
+                              });
+                            },
                           ),
                         ),
                         FloatingSearchBarAction(

@@ -57,7 +57,7 @@ class Configuration extends ConfigurationKeys {
         '.Harmonoid',
         'Configuration.JSON',
       ),
-      fallback: _defaultConfiguration,
+      fallback: await _defaultConfiguration,
     );
     await instance.read();
     instance.cacheDirectory = Directory(
@@ -95,6 +95,9 @@ class Configuration extends ConfigurationKeys {
     bool? discordRPC,
     double? highlightedLyricsSize,
     double? unhighlightedLyricsSize,
+    bool? mobileDenseAlbumTabLayout,
+    bool? mobileDenseArtistTabLayout,
+    bool? mobileGridArtistTabLayout,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -169,6 +172,15 @@ class Configuration extends ConfigurationKeys {
     if (unhighlightedLyricsSize != null) {
       this.unhighlightedLyricsSize = unhighlightedLyricsSize;
     }
+    if (mobileDenseAlbumTabLayout != null) {
+      this.mobileDenseAlbumTabLayout = mobileDenseAlbumTabLayout;
+    }
+    if (mobileDenseArtistTabLayout != null) {
+      this.mobileDenseArtistTabLayout = mobileDenseArtistTabLayout;
+    }
+    if (mobileGridArtistTabLayout != null) {
+      this.mobileGridArtistTabLayout = mobileGridArtistTabLayout;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -200,6 +212,9 @@ class Configuration extends ConfigurationKeys {
         'discordRPC': this.discordRPC,
         'highlightedLyricsSize': this.highlightedLyricsSize,
         'unhighlightedLyricsSize': this.unhighlightedLyricsSize,
+        'mobileDenseAlbumTabLayout': this.mobileDenseAlbumTabLayout,
+        'mobileDenseArtistTabLayout': this.mobileDenseArtistTabLayout,
+        'mobileGridArtistTabLayout': this.mobileGridArtistTabLayout,
       },
     );
   }
@@ -211,10 +226,11 @@ class Configuration extends ConfigurationKeys {
   }) async {
     final current = await storage.read();
     // Emblace default values for the keys that not found. Possibly due to app update.
-    _defaultConfiguration.keys.forEach(
+    final conf = await _defaultConfiguration;
+    conf.keys.forEach(
       (key) {
         if (!current.containsKey(key)) {
-          current[key] = _defaultConfiguration[key];
+          current[key] = conf[key];
         }
       },
     );
@@ -248,6 +264,9 @@ class Configuration extends ConfigurationKeys {
     discordRPC = current['discordRPC'];
     highlightedLyricsSize = current['highlightedLyricsSize'];
     unhighlightedLyricsSize = current['unhighlightedLyricsSize'];
+    mobileDenseAlbumTabLayout = current['mobileDenseAlbumTabLayout'];
+    mobileDenseArtistTabLayout = current['mobileDenseArtistTabLayout'];
+    mobileGridArtistTabLayout = current['mobileGridArtistTabLayout'];
   }
 }
 
@@ -277,38 +296,50 @@ abstract class ConfigurationKeys {
   late bool discordRPC;
   late double highlightedLyricsSize;
   late double unhighlightedLyricsSize;
+  late bool mobileDenseAlbumTabLayout;
+  late bool mobileDenseArtistTabLayout;
+  late bool mobileGridArtistTabLayout;
 }
 
-final Map<String, dynamic> _defaultConfiguration = {
-  'collectionDirectories': <String>[
-    {
-      'windows': () => path.join(Platform.environment['USERPROFILE']!, 'Music'),
-      'linux': () =>
-          Process.runSync('xdg-user-dir', ['MUSIC']).stdout.toString().trim(),
-      'android': () => '/storage/emulated/0/Music',
-    }[Platform.operatingSystem]!(),
-  ],
-  'languageRegion': 0,
-  'accent': 0,
-  'themeMode': isMobile ? 0 : 1,
-  'collectionSortType': isMobile ? 0 : 3,
-  'collectionOrderType': 0,
-  'automaticAccent': false,
-  'notificationLyrics': true,
-  'collectionSearchRecent': [],
-  'webSearchRecent': [],
-  'webRecent': [],
-  'taskbarIndicator': false,
-  'seamlessPlayback': false,
-  'jumpToNowPlayingScreenOnPlay': isDesktop,
-  'automaticMusicLookup': false,
-  'dynamicNowPlayingBarColoring': isDesktop,
-  'proxyURL': null,
-  'backgroundArtwork': isDesktop,
-  'modernNowPlayingScreen': isDesktop,
-  'modernNowPlayingScreenCarouselIndex': 0,
-  'lyricsVisible': true,
-  'discordRPC': true,
-  'highlightedLyricsSize': 24.0,
-  'unhighlightedLyricsSize': 16.0,
-};
+Future<Map<String, dynamic>> get _defaultConfiguration async => {
+      'collectionDirectories': <String>[
+        await {
+          'windows': () async =>
+              path.join(Platform.environment['USERPROFILE']!, 'Music'),
+          'linux': () async => (await Process.run('xdg-user-dir', ['MUSIC']))
+              .stdout
+              .toString()
+              .trim(),
+          'android': () async => (await path.getExternalStorageDirectory())!
+              .path
+              .split('/Android/')
+              .first,
+        }[Platform.operatingSystem]!(),
+      ],
+      'languageRegion': 0,
+      'accent': 0,
+      'themeMode': isMobile ? 0 : 1,
+      'collectionSortType': isMobile ? 0 : 3,
+      'collectionOrderType': 0,
+      'automaticAccent': false,
+      'notificationLyrics': true,
+      'collectionSearchRecent': [],
+      'webSearchRecent': [],
+      'webRecent': [],
+      'taskbarIndicator': false,
+      'seamlessPlayback': false,
+      'jumpToNowPlayingScreenOnPlay': isDesktop,
+      'automaticMusicLookup': false,
+      'dynamicNowPlayingBarColoring': isDesktop,
+      'proxyURL': null,
+      'backgroundArtwork': isDesktop,
+      'modernNowPlayingScreen': isDesktop,
+      'modernNowPlayingScreenCarouselIndex': 0,
+      'lyricsVisible': true,
+      'discordRPC': true,
+      'highlightedLyricsSize': 24.0,
+      'unhighlightedLyricsSize': 16.0,
+      'mobileDenseAlbumTabLayout': false,
+      'mobileDenseArtistTabLayout': true,
+      'mobileGridArtistTabLayout': true,
+    };
