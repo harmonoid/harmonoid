@@ -257,6 +257,7 @@ class Language extends Strings with ChangeNotifier {
     this.COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY = asset['COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY']!;
     this.COMING_UP = asset['COMING_UP']!;
     this.CONTROL_PANEL = asset['CONTROL_PANEL']!;
+    this.COPY_AS_JSON = asset['COPY_AS_JSON']!;
     this.COPY_LINK = asset['COPY_LINK']!;
     this.CREATE = asset['CREATE']!;
     this.CREATE_NEW_PLAYLIST = asset['CREATE_NEW_PLAYLIST']!;
@@ -352,6 +353,7 @@ class Language extends Strings with ChangeNotifier {
     this.PLAY_URL = asset['PLAY_URL']!;
     this.PLAY_URL_SUBTITLE = asset['PLAY_URL_SUBTITLE']!;
     this.PREVIOUS = asset['PREVIOUS']!;
+    this.PROPERTY = asset['PROPERTY']!;
     this.PROXY_SUBTITLE = asset['PROXY_SUBTITLE']!;
     this.PROXY_TITLE = asset['PROXY_TITLE']!;
     this.PROXY_URL = asset['PROXY_URL']!;
@@ -443,6 +445,7 @@ class Language extends Strings with ChangeNotifier {
     this.UPDATE_AVAILABLE = asset['UPDATE_AVAILABLE']!;
     this.USE_MODERN_NOW_PLAYING_SCREEN = asset['USE_MODERN_NOW_PLAYING_SCREEN']!;
     this.USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS = asset['USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS']!;
+    this.VALUE = asset['VALUE']!;
     this.VIDEO_SINGLE = asset['VIDEO_SINGLE']!;
     this.VISUALS = asset['VISUALS']!;
     this.VISUALS_TITLE = asset['VISUALS_TITLE']!;

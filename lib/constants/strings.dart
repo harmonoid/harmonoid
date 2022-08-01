@@ -53,6 +53,7 @@ class Strings {
   late String COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY;
   late String COMING_UP;
   late String CONTROL_PANEL;
+  late String COPY_AS_JSON;
   late String COPY_LINK;
   late String CREATE;
   late String CREATE_NEW_PLAYLIST;
@@ -148,6 +149,7 @@ class Strings {
   late String PLAY_URL;
   late String PLAY_URL_SUBTITLE;
   late String PREVIOUS;
+  late String PROPERTY;
   late String PROXY_SUBTITLE;
   late String PROXY_TITLE;
   late String PROXY_URL;
@@ -239,6 +241,7 @@ class Strings {
   late String UPDATE_AVAILABLE;
   late String USE_MODERN_NOW_PLAYING_SCREEN;
   late String USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS;
+  late String VALUE;
   late String VIDEO_SINGLE;
   late String VISUALS;
   late String VISUALS_TITLE;
