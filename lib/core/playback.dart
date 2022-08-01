@@ -144,7 +144,7 @@ class Playback extends ChangeNotifier {
       libmpv?.volume = value;
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      audioService?.setVolume(value);
+      audioService?.setVolume(value / 100.0);
     }
     volume = value;
     if (Platform.isLinux) {
