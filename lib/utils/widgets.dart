@@ -6,6 +6,7 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'dart:math';
@@ -1554,6 +1555,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
       child: CircularButton(
         icon: const Icon(Icons.sort_by_alpha),
         onPressed: () async {
+          if (index == 4) return;
           final position = RelativeRect.fromRect(
             Offset(
                   MediaQuery.of(context).size.width - tileMargin - 48.0,

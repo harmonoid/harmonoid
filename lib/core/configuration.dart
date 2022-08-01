@@ -95,6 +95,9 @@ class Configuration extends ConfigurationKeys {
     bool? discordRPC,
     double? highlightedLyricsSize,
     double? unhighlightedLyricsSize,
+    bool? mobileDenseAlbumTabLayout,
+    bool? mobileDenseArtistTabLayout,
+    bool? mobileGridArtistTabLayout,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -169,6 +172,15 @@ class Configuration extends ConfigurationKeys {
     if (unhighlightedLyricsSize != null) {
       this.unhighlightedLyricsSize = unhighlightedLyricsSize;
     }
+    if (mobileDenseAlbumTabLayout != null) {
+      this.mobileDenseAlbumTabLayout = mobileDenseAlbumTabLayout;
+    }
+    if (mobileDenseArtistTabLayout != null) {
+      this.mobileDenseArtistTabLayout = mobileDenseArtistTabLayout;
+    }
+    if (mobileGridArtistTabLayout != null) {
+      this.mobileGridArtistTabLayout = mobileGridArtistTabLayout;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -200,6 +212,9 @@ class Configuration extends ConfigurationKeys {
         'discordRPC': this.discordRPC,
         'highlightedLyricsSize': this.highlightedLyricsSize,
         'unhighlightedLyricsSize': this.unhighlightedLyricsSize,
+        'mobileDenseAlbumTabLayout': this.mobileDenseAlbumTabLayout,
+        'mobileDenseArtistTabLayout': this.mobileDenseArtistTabLayout,
+        'mobileGridArtistTabLayout': this.mobileGridArtistTabLayout,
       },
     );
   }
@@ -249,6 +264,9 @@ class Configuration extends ConfigurationKeys {
     discordRPC = current['discordRPC'];
     highlightedLyricsSize = current['highlightedLyricsSize'];
     unhighlightedLyricsSize = current['unhighlightedLyricsSize'];
+    mobileDenseAlbumTabLayout = current['mobileDenseAlbumTabLayout'];
+    mobileDenseArtistTabLayout = current['mobileDenseArtistTabLayout'];
+    mobileGridArtistTabLayout = current['mobileGridArtistTabLayout'];
   }
 }
 
@@ -278,6 +296,9 @@ abstract class ConfigurationKeys {
   late bool discordRPC;
   late double highlightedLyricsSize;
   late double unhighlightedLyricsSize;
+  late bool mobileDenseAlbumTabLayout;
+  late bool mobileDenseArtistTabLayout;
+  late bool mobileGridArtistTabLayout;
 }
 
 Future<Map<String, dynamic>> get _defaultConfiguration async => {

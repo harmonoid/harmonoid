@@ -70,7 +70,10 @@ class Strings {
   late String EDIT_DETAILS;
   late String ENABLE_125_SCALING;
   late String ENABLE_ACRYLIC_BLUR;
+  late String ENABLE_DENSE_ALBUMS_LAYOUT;
+  late String ENABLE_DENSE_ARTISTS_LAYOUT;
   late String ENABLE_DISCORD_RPC;
+  late String ENABLE_GRID_ARTISTS_LAYOUT;
   late String ERROR;
   late String EXIT_FULLSCREEN;
   late String EXIT_NOW_PLAYING;
