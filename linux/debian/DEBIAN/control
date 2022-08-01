@@ -7,4 +7,4 @@ Architecture: amd64
 Depends: mpv, libmpv-dev
 Maintainer: Hitesh Kumar Saini <saini123hitesh@gmail.com>
 Description: Harmonoid
-Plays & manages your music library. Looks beautiful & juicy.
+  Plays & manages your music library. Looks beautiful & juicy.

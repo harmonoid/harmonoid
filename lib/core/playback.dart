@@ -623,28 +623,7 @@ class Playback extends ChangeNotifier {
   }
 
   /// Update Discord RPC state.
-  void notifyDiscordRPC() {}
-
-  /// Exposed for [_HarmonoidMobilePlayer].
-  /// Since, we're using composition with it, there's no choice less-refactor requiring approach I suppose.
-  void notify() => notifyListeners();
-
-  /// Save the current playback state.
-  Future<void> saveAppState() {
-    return AppState.instance.save(
-      tracks,
-      index,
-      rate,
-      isShuffling,
-      playlistLoopMode,
-      volume,
-      pitch,
-    );
-  }
-
-  @override
-  // ignore: must_call_super
-  void dispose() async {
+  void notifyDiscordRPC() async {
     return _discordLock.synchronized(() async {
       if (Configuration.instance.discordRPC) {
         try {
@@ -691,6 +670,27 @@ class Playback extends ChangeNotifier {
       }
     });
   }
+
+  /// Exposed for [_HarmonoidMobilePlayer].
+  /// Since, we're using composition with it, there's no choice less-refactor requiring approach I suppose.
+  void notify() => notifyListeners();
+
+  /// Save the current playback state.
+  Future<void> saveAppState() {
+    return AppState.instance.save(
+      tracks,
+      index,
+      rate,
+      isShuffling,
+      playlistLoopMode,
+      volume,
+      pitch,
+    );
+  }
+
+  @override
+  // ignore: must_call_super
+  void dispose() async {}
 
   /// `package:libmpv` [Player] instance used on Windows, Linux & macOS.
   Player? libmpv;
