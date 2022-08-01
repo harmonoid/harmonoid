@@ -34,6 +34,7 @@ import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:harmonoid/interface/file_info_screen.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/web.dart';
@@ -976,8 +977,8 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                 backgroundColor: color ?? Theme.of(context).primaryColor,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.play_circle),
-                label: Language.instance.WEB.split(' ').first,
+                icon: Icon(Icons.wifi_tethering_rounded),
+                label: Language.instance.STREAM,
                 backgroundColor: color ?? Theme.of(context).primaryColor,
               ),
             ],
@@ -1815,6 +1816,11 @@ class CollectionMoreButton extends StatelessWidget {
                 );
                 break;
               }
+            case 2:
+              {
+                FileInfoScreen.show(context);
+                break;
+              }
           }
         },
         itemBuilder: (context) => [
@@ -1825,6 +1831,17 @@ class CollectionMoreButton extends StatelessWidget {
               leading: Icon(Icons.link),
               title: Text(
                 Language.instance.PLAY_URL,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ),
+          ),
+          PopupMenuItem(
+            value: 2,
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.data_array),
+              title: Text(
+                Language.instance.READ_METADATA,
                 style: Theme.of(context).textTheme.headline4,
               ),
             ),
