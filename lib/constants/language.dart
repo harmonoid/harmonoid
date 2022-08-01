@@ -288,6 +288,7 @@ class Language extends Strings with ChangeNotifier {
     this.EXPERIMENTAL = asset['EXPERIMENTAL']!;
     this.EXPERIMENTAL_SUBTITLE = asset['EXPERIMENTAL_SUBTITLE']!;
     this.FILE_INFORMATION = asset['FILE_INFORMATION']!;
+    this.FILE_PATH_OR_URL = asset['FILE_PATH_OR_URL']!;
     this.FOLDERS_NOT_FOUND = asset['FOLDERS_NOT_FOUND']!;
     this.FOLDER_NOT_FOUND = asset['FOLDER_NOT_FOUND']!;
     this.FULLSCREEN = asset['FULLSCREEN']!;
@@ -359,6 +360,8 @@ class Language extends Strings with ChangeNotifier {
     this.PROXY_SUBTITLE = asset['PROXY_SUBTITLE']!;
     this.PROXY_TITLE = asset['PROXY_TITLE']!;
     this.PROXY_URL = asset['PROXY_URL']!;
+    this.READ = asset['READ']!;
+    this.READ_METADATA = asset['READ_METADATA']!;
     this.RECOMMENDATIONS = asset['RECOMMENDATIONS']!;
     this.REFRESH = asset['REFRESH']!;
     this.REFRESH_INFORMATION = asset['REFRESH_INFORMATION']!;
@@ -434,10 +437,12 @@ class Language extends Strings with ChangeNotifier {
     this.STARTING_PLAYBACK = asset['STARTING_PLAYBACK']!;
     this.STATS_SUBTITLE = asset['STATS_SUBTITLE']!;
     this.STATS_TITLE = asset['STATS_TITLE']!;
+    this.STREAM = asset['STREAM']!;
     this.SWITCH_THEME = asset['SWITCH_THEME']!;
     this.THEME_MODE_DARK = asset['THEME_MODE_DARK']!;
     this.THEME_MODE_LIGHT = asset['THEME_MODE_LIGHT']!;
     this.THEME_MODE_SYSTEM = asset['THEME_MODE_SYSTEM']!;
+    this.TIMEOUT = asset['TIMEOUT']!;
     this.TRACK = asset['TRACK']!;
     this.TRACKS_FROM_ARTIST = asset['TRACKS_FROM_ARTIST']!;
     this.TRACK_NUMBER = asset['TRACK_NUMBER']!;

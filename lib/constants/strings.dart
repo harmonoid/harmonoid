@@ -84,6 +84,7 @@ class Strings {
   late String EXPERIMENTAL;
   late String EXPERIMENTAL_SUBTITLE;
   late String FILE_INFORMATION;
+  late String FILE_PATH_OR_URL;
   late String FOLDERS_NOT_FOUND;
   late String FOLDER_NOT_FOUND;
   late String FULLSCREEN;
@@ -155,6 +156,8 @@ class Strings {
   late String PROXY_SUBTITLE;
   late String PROXY_TITLE;
   late String PROXY_URL;
+  late String READ;
+  late String READ_METADATA;
   late String RECOMMENDATIONS;
   late String REFRESH;
   late String REFRESH_INFORMATION;
@@ -230,10 +233,12 @@ class Strings {
   late String STARTING_PLAYBACK;
   late String STATS_SUBTITLE;
   late String STATS_TITLE;
+  late String STREAM;
   late String SWITCH_THEME;
   late String THEME_MODE_DARK;
   late String THEME_MODE_LIGHT;
   late String THEME_MODE_SYSTEM;
+  late String TIMEOUT;
   late String TRACK;
   late String TRACKS_FROM_ARTIST;
   late String TRACK_NUMBER;
