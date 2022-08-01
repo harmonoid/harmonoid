@@ -486,7 +486,7 @@ Future<void> trackPopupMenuHandle(
         );
         break;
       case 7:
-        FileInfoScreen.show(track, context);
+        FileInfoScreen.show(track.uri, context);
         break;
     }
   }

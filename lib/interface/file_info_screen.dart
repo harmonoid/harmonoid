@@ -14,19 +14,22 @@ import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/models/media.dart' hide Media;
 import 'package:harmonoid/constants/language.dart';
 
 class FileInfoScreen extends StatefulWidget {
   static Future<void> show(
-    Track track,
-    BuildContext context,
-  ) async {
+    Uri uri,
+    BuildContext context, {
+    Duration timeout: const Duration(seconds: 10),
+  }) async {
     if (isDesktop) {
       showDialog(
         context: context,
         builder: (context) => Dialog(
-          child: FileInfoScreen(track: track),
+          child: FileInfoScreen(
+            uri: uri,
+            timeout: timeout,
+          ),
           clipBehavior: Clip.antiAlias,
           elevation: 32.0,
           insetPadding: EdgeInsets.all(64.0),
@@ -36,10 +39,12 @@ class FileInfoScreen extends StatefulWidget {
     // TODO: Mobile support.
   }
 
-  final Track track;
+  final Uri uri;
+  final Duration timeout;
   FileInfoScreen({
     Key? key,
-    required this.track,
+    required this.uri,
+    required this.timeout,
   }) : super(key: key);
 
   @override
@@ -59,7 +64,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
           metadata.addAll(
             await tagger.parse(
               Media(
-                widget.track.uri.toString(),
+                widget.uri.toString(),
               ),
               duration: true,
               bitrate: true,
@@ -75,7 +80,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
       } else if (isMobile) {
         try {
           final metadata = await MetadataRetriever.fromUri(
-            widget.track.uri,
+            widget.uri,
             coverDirectory: Collection.instance.albumArtDirectory,
           );
           this.metadata.addAll(metadata.toJson());
@@ -89,11 +94,11 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
       debugPrint(metadata.toString());
       metadata.addAll(
         {
-          'uri': widget.track.uri.toString(),
-          if (widget.track.uri.isScheme('FILE') &&
-              widget.track.uri.toFilePath().contains('.')) ...{
+          'uri': widget.uri.toString(),
+          if (widget.uri.isScheme('FILE') &&
+              widget.uri.toFilePath().contains('.')) ...{
             'file_format':
-                basename(widget.track.uri.path).split('.').last.toUpperCase(),
+                basename(widget.uri.path).split('.').last.toUpperCase(),
           },
         },
       );
@@ -171,9 +176,9 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                                 style: Theme.of(context).textTheme.headline1,
                               ),
                               Text(
-                                !widget.track.uri.isScheme('FILE')
-                                    ? widget.track.uri.toString()
-                                    : basename(widget.track.uri.toFilePath()),
+                                !widget.uri.isScheme('FILE')
+                                    ? widget.uri.toString()
+                                    : basename(widget.uri.toFilePath()),
                                 style: Theme.of(context).textTheme.headline3,
                               ),
                             ],
@@ -190,7 +195,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                             );
                           },
                           child: Text(
-                            'COPY AS JSON'.toUpperCase(),
+                            Language.instance.COPY_AS_JSON.toUpperCase(),
                           ),
                           textColor: Theme.of(context).primaryColor,
                         ),
@@ -205,10 +210,10 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                       child: DataTable(
                         columns: [
                           DataColumn(
-                            label: Text('Property'),
+                            label: Text(Language.instance.PROPERTY),
                           ),
                           DataColumn(
-                            label: Text('Value'),
+                            label: Text(Language.instance.VALUE),
                           ),
                           DataColumn(
                             label: Text(''),
