@@ -213,6 +213,8 @@ class WebRecommendations extends StatefulWidget {
 
 class _WebRecommendationsState extends State<WebRecommendations>
     with AutomaticKeepAliveClientMixin {
+  bool shouldRefreshOnDidChangeDependencies =
+      Configuration.instance.webRecent.isEmpty;
   late ScrollController _scrollController = ScrollController();
   final int _velocity = 40;
   final HashMap<String, Color> colorKeys = HashMap<String, Color>();
@@ -238,7 +240,25 @@ class _WebRecommendationsState extends State<WebRecommendations>
         },
       );
     }
+    Web.instance.refreshCallback = () {
+      if (mounted) {
+        setState(() {});
+      }
+    };
     Web.instance.pagingController.addPageRequestListener(fetchNextPage);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (shouldRefreshOnDidChangeDependencies) {
+      Web.instance.pagingController.refresh();
+      if (mounted) {
+        setState(() {});
+      }
+      shouldRefreshOnDidChangeDependencies =
+          Configuration.instance.webRecent.isEmpty;
+    }
   }
 
   @override

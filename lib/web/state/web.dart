@@ -6,6 +6,7 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'package:libmpv/libmpv.dart';
+import 'package:flutter/material.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -38,7 +39,15 @@ class Web {
       Playback.instance.open(
         [media.Track.fromWebTrack(value.toJson())],
       );
-      await Configuration.instance.save(webRecent: [id]);
+      bool reload = Configuration.instance.webRecent.isEmpty;
+      await Configuration.instance.save(
+        webRecent: [Plugins.redirect(value.uri).queryParameters['id']!],
+      );
+      if (reload) {
+        debugPrint('Web.open: pagingController.refresh');
+        pagingController.refresh();
+        refreshCallback?.call();
+      }
       Playback.instance.add(
         (await YTMClient.next(id))
             .sublist(1)
@@ -50,9 +59,15 @@ class Web {
       Playback.instance.open(
         [media.Track.fromWebVideo(value.toJson())],
       );
+      bool reload = Configuration.instance.webRecent.isEmpty;
       await Configuration.instance.save(
         webRecent: [Plugins.redirect(value.uri).queryParameters['id']!],
       );
+      if (reload) {
+        debugPrint('Web.open: pagingController.refresh');
+        pagingController.refresh();
+        refreshCallback?.call();
+      }
       Playback.instance.add(
         (await YTMClient.next(id))
             .sublist(1)
@@ -69,8 +84,12 @@ class Web {
         webRecent: [Plugins.redirect(value.first.uri).queryParameters['id']!],
       );
       if (reload) {
+        debugPrint('Web.open: pagingController.refresh');
         pagingController.refresh();
+        refreshCallback?.call();
       }
     }
   }
+
+  VoidCallback? refreshCallback;
 }
