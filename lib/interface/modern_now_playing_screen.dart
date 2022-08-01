@@ -162,7 +162,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                     .map((e) => FileImage(File(e)))
                     .toList()
                     .cast<ImageProvider>(),
-            mouseValue: Playback.instance.volume,
+            mouseValue: Playback.instance.volume.clamp(0.0, 100.0),
             onMouseScrollUp: () {
               Playback.instance.setVolume(
                 (Playback.instance.volume + 5.0).clamp(0.0, 100.0),
@@ -789,15 +789,17 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 inferSliderInactiveTrackColor: false,
                                 min: 0,
                                 max: 100.0,
-                                value: playback.volume,
+                                value: playback.volume.clamp(0.0, 100.0),
                                 onScrolledUp: () {
                                   playback.setVolume(
-                                    (playback.volume + 5.0).clamp(0.0, 100.0),
+                                    (playback.volume.clamp(0.0, 100.0) + 5.0)
+                                        .clamp(0.0, 100.0),
                                   );
                                 },
                                 onScrolledDown: () {
                                   playback.setVolume(
-                                    (playback.volume - 5.0).clamp(0.0, 100.0),
+                                    (playback.volume.clamp(0.0, 100.0) - 5.0)
+                                        .clamp(0.0, 100.0),
                                   );
                                 },
                                 onChanged: (value) {
