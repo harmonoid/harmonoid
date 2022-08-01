@@ -62,6 +62,7 @@ class Strings {
   late String DELETE;
   late String DELETE_TRACK;
   late String DESCENDING;
+  late String DISABLE_VOLUME_BOOST;
   late String DISCORD;
   late String DISCOVERING_FILES;
   late String DONATE;
@@ -133,6 +134,7 @@ class Strings {
   late String OPTIONS;
   late String ORDER;
   late String PAUSE;
+  late String PITCH;
   late String PLAY;
   late String PLAYLIST;
   late String PLAYLISTS_CREATE;
@@ -218,6 +220,7 @@ class Strings {
   late String SHOW_LYRICS;
   late String SHOW_NOW_PLAYING_AFTER_PLAYING;
   late String SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE;
+  late String SHOW_NOW_PLAYING_SCREEN;
   late String SHOW_TRACK_PROGRESS_ON_TASKBAR;
   late String SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE;
   late String SHUFFLE;
@@ -245,6 +248,7 @@ class Strings {
   late String VIDEO_SINGLE;
   late String VISUALS;
   late String VISUALS_TITLE;
+  late String VOLUME_BOOST;
   late String WARNING;
   late String WEB;
   late String WEB_INTERNET_ERROR;

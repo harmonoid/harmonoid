@@ -266,6 +266,7 @@ class Language extends Strings with ChangeNotifier {
     this.DELETE = asset['DELETE']!;
     this.DELETE_TRACK = asset['DELETE_TRACK']!;
     this.DESCENDING = asset['DESCENDING']!;
+    this.DISABLE_VOLUME_BOOST = asset['DISABLE_VOLUME_BOOST']!;
     this.DISCORD = asset['DISCORD']!;
     this.DISCOVERING_FILES = asset['DISCOVERING_FILES']!;
     this.DONATE = asset['DONATE']!;
@@ -337,6 +338,7 @@ class Language extends Strings with ChangeNotifier {
     this.OPTIONS = asset['OPTIONS']!;
     this.ORDER = asset['ORDER']!;
     this.PAUSE = asset['PAUSE']!;
+    this.PITCH = asset['PITCH']!;
     this.PLAY = asset['PLAY']!;
     this.PLAYLIST = asset['PLAYLIST']!;
     this.PLAYLISTS_CREATE = asset['PLAYLISTS_CREATE']!;
@@ -422,6 +424,7 @@ class Language extends Strings with ChangeNotifier {
     this.SHOW_LYRICS = asset['SHOW_LYRICS']!;
     this.SHOW_NOW_PLAYING_AFTER_PLAYING = asset['SHOW_NOW_PLAYING_AFTER_PLAYING']!;
     this.SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE = asset['SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE']!;
+    this.SHOW_NOW_PLAYING_SCREEN = asset['SHOW_NOW_PLAYING_SCREEN']!;
     this.SHOW_TRACK_PROGRESS_ON_TASKBAR = asset['SHOW_TRACK_PROGRESS_ON_TASKBAR']!;
     this.SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE = asset['SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE']!;
     this.SHUFFLE = asset['SHUFFLE']!;
@@ -449,6 +452,7 @@ class Language extends Strings with ChangeNotifier {
     this.VIDEO_SINGLE = asset['VIDEO_SINGLE']!;
     this.VISUALS = asset['VISUALS']!;
     this.VISUALS_TITLE = asset['VISUALS_TITLE']!;
+    this.VOLUME_BOOST = asset['VOLUME_BOOST']!;
     this.WARNING = asset['WARNING']!;
     this.WEB = asset['WEB']!;
     this.WEB_INTERNET_ERROR = asset['WEB_INTERNET_ERROR']!;
