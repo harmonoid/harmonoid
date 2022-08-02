@@ -223,89 +223,93 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             CrossAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          MouseRegion(
-                                            onEnter: (e) {
-                                              setState(() {
-                                                showAlbumArtButton = true;
-                                              });
-                                            },
-                                            onExit: (e) {
-                                              setState(() {
-                                                showAlbumArtButton = false;
-                                              });
-                                            },
-                                            child: Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          0.0),
-                                                  child: AnimatedSwitcher(
-                                                    duration: const Duration(
-                                                        milliseconds: 300),
-                                                    transitionBuilder:
-                                                        (child, animation) =>
-                                                            FadeTransition(
-                                                      opacity: animation,
-                                                      child: child,
-                                                    ),
-                                                    child: ExtendedImage(
-                                                      key: Key(playback.index
-                                                          .toString()),
-                                                      image: getAlbumArt(
-                                                        playback.tracks[playback
-                                                            .index
-                                                            .clamp(
-                                                                0,
-                                                                playback.tracks
-                                                                        .length -
-                                                                    1)],
-                                                        small: true,
+                                          Tooltip(
+                                            message: Language.instance
+                                                .SHOW_NOW_PLAYING_SCREEN,
+                                            child: MouseRegion(
+                                              onEnter: (e) {
+                                                setState(() {
+                                                  showAlbumArtButton = true;
+                                                });
+                                              },
+                                              onExit: (e) {
+                                                setState(() {
+                                                  showAlbumArtButton = false;
+                                                });
+                                              },
+                                              child: Stack(
+                                                alignment: Alignment.center,
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            0.0),
+                                                    child: AnimatedSwitcher(
+                                                      duration: const Duration(
+                                                          milliseconds: 300),
+                                                      transitionBuilder:
+                                                          (child, animation) =>
+                                                              FadeTransition(
+                                                        opacity: animation,
+                                                        child: child,
                                                       ),
-                                                      height: 84.0,
-                                                      width: 84.0,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                                TweenAnimationBuilder(
-                                                  tween: Tween<double>(
-                                                    begin: 0.0,
-                                                    end: showAlbumArtButton
-                                                        ? 1.0
-                                                        : 0.0,
-                                                  ),
-                                                  duration: Duration(
-                                                      milliseconds: 100),
-                                                  curve: Curves.easeInOut,
-                                                  child: Material(
-                                                    color: Colors.transparent,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        DesktopNowPlayingController
-                                                            .instance
-                                                            .maximize();
-                                                      },
-                                                      child: Container(
-                                                        color: Colors.black38,
+                                                      child: ExtendedImage(
+                                                        key: Key(playback.index
+                                                            .toString()),
+                                                        image: getAlbumArt(
+                                                          playback.tracks[playback
+                                                              .index
+                                                              .clamp(
+                                                                  0,
+                                                                  playback.tracks
+                                                                          .length -
+                                                                      1)],
+                                                          small: true,
+                                                        ),
                                                         height: 84.0,
                                                         width: 84.0,
-                                                        child: Icon(
-                                                          Icons.image,
-                                                          color: Colors.white,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TweenAnimationBuilder(
+                                                    tween: Tween<double>(
+                                                      begin: 0.0,
+                                                      end: showAlbumArtButton
+                                                          ? 1.0
+                                                          : 0.0,
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 100),
+                                                    curve: Curves.easeInOut,
+                                                    child: Material(
+                                                      color: Colors.transparent,
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          DesktopNowPlayingController
+                                                              .instance
+                                                              .maximize();
+                                                        },
+                                                        child: Container(
+                                                          color: Colors.black38,
+                                                          height: 84.0,
+                                                          width: 84.0,
+                                                          child: Icon(
+                                                            Icons.image,
+                                                            color: Colors.white,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
+                                                    builder: (context, value,
+                                                            child) =>
+                                                        Opacity(
+                                                      opacity: value as double,
+                                                      child: child,
+                                                    ),
                                                   ),
-                                                  builder:
-                                                      (context, value, child) =>
-                                                          Opacity(
-                                                    opacity: value as double,
-                                                    child: child,
-                                                  ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                           SizedBox(
@@ -969,19 +973,24 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           child: ScrollableSlider(
                                             min: 0,
                                             max: 100.0,
-                                            value: playback.volume,
+                                            value: playback.volume
+                                                .clamp(0.0, 100.0),
                                             color: colors.palette?.last,
                                             secondaryColor:
                                                 colors.palette?.first,
                                             onScrolledUp: () {
                                               playback.setVolume(
-                                                (playback.volume + 5.0)
+                                                (playback.volume
+                                                            .clamp(0.0, 100.0) +
+                                                        5.0)
                                                     .clamp(0.0, 100.0),
                                               );
                                             },
                                             onScrolledDown: () {
                                               playback.setVolume(
-                                                (playback.volume - 5.0)
+                                                (playback.volume
+                                                            .clamp(0.0, 100.0) -
+                                                        5.0)
                                                     .clamp(0.0, 100.0),
                                               );
                                             },
@@ -1086,6 +1095,9 @@ class _ControlPanelState extends State<ControlPanel> {
     TextEditingController(
       text: Playback.instance.pitch.toStringAsFixed(2),
     ),
+    TextEditingController(
+      text: Playback.instance.volume.toInt().toString(),
+    ),
   ];
 
   @override
@@ -1109,6 +1121,9 @@ class _ControlPanelState extends State<ControlPanel> {
       }
       if (Playback.instance.pitch.toStringAsFixed(2) != controllers[1].text) {
         controllers[1].text = Playback.instance.pitch.toStringAsFixed(2);
+      }
+      if (Playback.instance.volume.toInt().toString() != controllers[2].text) {
+        controllers[2].text = Playback.instance.volume.toInt().toString();
       }
     }
   }
@@ -1144,6 +1159,7 @@ class _ControlPanelState extends State<ControlPanel> {
                 duration: Duration(milliseconds: 160),
                 child: Consumer<Playback>(
                   builder: (context, playback, _) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 16.0),
                       Row(
@@ -1178,6 +1194,17 @@ class _ControlPanelState extends State<ControlPanel> {
                         ],
                       ),
                       const SizedBox(height: 12.0),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 20.0,
+                          bottom: 8.0,
+                          top: 4.0,
+                        ),
+                        child: Text(
+                          Language.instance.SPEED,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -1261,7 +1288,17 @@ class _ControlPanelState extends State<ControlPanel> {
                           const SizedBox(width: 16.0),
                         ],
                       ),
-                      const SizedBox(height: 8.0),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 20.0,
+                          bottom: 8.0,
+                          top: 4.0,
+                        ),
+                        child: Text(
+                          Language.instance.PITCH,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -1341,6 +1378,100 @@ class _ControlPanelState extends State<ControlPanel> {
                           const SizedBox(width: 16.0),
                         ],
                       ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 20.0,
+                          bottom: 8.0,
+                          top: 4.0,
+                        ),
+                        child: Text(
+                          Language.instance.VOLUME_BOOST,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(width: 8.0),
+                          IconButton(
+                            padding: EdgeInsets.all(8.0),
+                            onPressed: () {
+                              if (playback.volume > 100.0) {
+                                playback.setVolume(100.0);
+                              }
+                            },
+                            iconSize: 20.0,
+                            splashRadius: 18.0,
+                            tooltip: Language.instance.DISABLE_VOLUME_BOOST,
+                            icon: Icon(Icons.volume_up),
+                          ),
+                          const SizedBox(width: 8.0),
+                          Expanded(
+                            child: ScrollableSlider(
+                              min: 100.0,
+                              max: 200.0,
+                              value: playback.volume.clamp(100.0, 200.0),
+                              onScrolledUp: () {
+                                playback.setVolume(
+                                  (playback.volume + 5.0).clamp(100.0, 200.0),
+                                );
+                              },
+                              onScrolledDown: () {
+                                playback.setVolume(
+                                  (playback.volume - 5.0).clamp(100.0, 200.0),
+                                );
+                              },
+                              onChanged: (value) {
+                                playback.setVolume(value);
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                          Container(
+                            width: 42.0,
+                            height: 32.0,
+                            padding: EdgeInsets.only(bottom: 4.0),
+                            child: Focus(
+                              onFocusChange: (hasFocus) {
+                                focused = hasFocus;
+                                if (hasFocus) {
+                                  HotKeys.instance.disableSpaceHotKey();
+                                } else {
+                                  HotKeys.instance.enableSpaceHotKey();
+                                }
+                              },
+                              child: TextField(
+                                controller: controllers[2],
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]|')),
+                                ],
+                                onChanged: (value) {
+                                  playback.setVolume(
+                                    double.tryParse(value) ?? playback.pitch,
+                                  );
+                                },
+                                scrollPhysics: NeverScrollableScrollPhysics(),
+                                textAlign: TextAlign.center,
+                                textAlignVertical: TextAlignVertical.center,
+                                style: Theme.of(context).textTheme.headline4,
+                                decoration: inputDecoration(
+                                  context,
+                                  '',
+                                ).copyWith(
+                                  contentPadding: EdgeInsets.only(
+                                    left: 4.0,
+                                    right: 4.0,
+                                    bottom: 14.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                        ],
+                      ),
                       const SizedBox(height: 8.0),
                     ],
                   ),
@@ -1361,8 +1492,9 @@ class _ControlPanelState extends State<ControlPanel> {
                           ),
                     child: Container(
                       width: 240.0,
-                      height: 156.0,
-                      child: child,
+                      child: IntrinsicHeight(
+                        child: child,
+                      ),
                     ),
                   ),
                 ),

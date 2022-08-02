@@ -223,33 +223,26 @@ class Collection extends ChangeNotifier {
 
   /// Searches for a [Media] based upon a the passed [query].
   ///
-  List<Media> search(
-    String query, {
-    Media? mode,
-    int? limit,
-  }) {
+  List<Media> search(String query, {Media? mode, int? limit}) {
     if (query.isEmpty) return <Media>[];
-    final terms = query.toLowerCase().split(' ')
-      ..removeWhere((term) => term.isEmpty);
     List<Media> result = <Media>[];
     if (mode is Album || mode == null) {
-      for (final album in _albums) {
-        if (terms.any((term) => album.albumName.toLowerCase().contains(term))) {
+      for (Album album in _albums) {
+        if (album.albumName.toLowerCase().contains(query.toLowerCase())) {
           result.add(album);
         }
       }
     }
     if (mode is Track || mode == null) {
-      for (final track in _tracks) {
-        if (terms.any((term) => track.trackName.toLowerCase().contains(term))) {
+      for (Track track in _tracks) {
+        if (track.trackName.toLowerCase().contains(query.toLowerCase())) {
           result.add(track);
         }
       }
     }
     if (mode is Artist || mode == null) {
-      for (final artist in _artists) {
-        if (terms
-            .any((term) => artist.artistName.toLowerCase().contains(term))) {
+      for (Artist artist in _artists) {
+        if (artist.artistName.toLowerCase().contains(query.toLowerCase())) {
           result.add(artist);
         }
       }

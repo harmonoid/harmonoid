@@ -277,16 +277,19 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
       });
     }
     if (isMobile) {
-      PaletteGenerator.fromImageProvider(ResizeImage.resizeIfNeeded(
-              100,
-              100,
-              ExtendedNetworkImageProvider(widget.artist.coverUrl,
-                  cache: true)))
-          .then((palette) {
+      PaletteGenerator.fromImageProvider(
+        ResizeImage.resizeIfNeeded(
+          100,
+          100,
+          ExtendedNetworkImageProvider(
+            widget.artist.coverUrl,
+            cache: true,
+          ),
+        ),
+      ).then((palette) {
         setState(() {
           color = palette.colors.first;
           secondary = palette.colors.last;
-          detailsVisible = true;
         });
       });
       Timer(Duration(milliseconds: 100), () {
@@ -306,7 +309,6 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
           });
         });
       });
-
       scrollController.addListener(() {
         if (scrollController.offset < 36.0) {
           if (!detailsVisible) {
@@ -458,8 +460,8 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                       children: [
                                         ElevatedButton.icon(
                                           onPressed: () {
-                                            Web.open(widget.artist.data.entries
-                                                .first.value.elements
+                                            Web.instance.open(widget.artist.data
+                                                .entries.first.value.elements
                                                 .cast<Track>());
                                           },
                                           style: ButtonStyle(
@@ -796,6 +798,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                             splashRadius: 20.0,
                           ),
                           contextMenu(context, color: Colors.white),
+                          const SizedBox(width: 8.0),
                         ],
                         forceElevated: true,
                         title: TweenAnimationBuilder<double>(
@@ -966,7 +969,9 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                 curve: Curves.easeOut,
                                 tween: Tween<double>(
                                     begin: 0.0,
-                                    end: detailsVisible ? 1.0 : 0.0),
+                                    end: detailsVisible && secondary != null
+                                        ? 1.0
+                                        : 0.0),
                                 duration: Duration(milliseconds: 200),
                                 builder: (context, value, _) => Transform.scale(
                                   scale: value as double,
@@ -1001,7 +1006,9 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                 curve: Curves.easeOut,
                                 tween: Tween<double>(
                                     begin: 0.0,
-                                    end: detailsVisible ? 1.0 : 0.0),
+                                    end: detailsVisible && secondary != null
+                                        ? 1.0
+                                        : 0.0),
                                 duration: Duration(milliseconds: 200),
                                 builder: (context, value, _) => Transform.scale(
                                   scale: value as double,
@@ -1019,8 +1026,8 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                           : 0],
                                       child: Icon(Icons.shuffle),
                                       onPressed: () {
-                                        Web.open(widget.artist.data.entries
-                                            .first.value.elements
+                                        Web.instance.open(widget.artist.data
+                                            .entries.first.value.elements
                                             .cast<Track>());
                                       },
                                     ),

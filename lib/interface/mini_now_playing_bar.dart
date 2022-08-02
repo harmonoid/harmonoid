@@ -96,11 +96,34 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
           try {
             await precacheImage(
               getAlbumArt(
-                  Playback.instance
-                      .tracks[index.clamp(0, Playback.instance.tracks.length)],
+                  Playback.instance.tracks[index.clamp(
+                    0,
+                    Playback.instance.tracks.length,
+                  )],
                   small: true),
               context,
             );
+            // Precache adjacent album arts for smoother swipe transitions to the next/previous track.
+            Future.wait([
+              precacheImage(
+                getAlbumArt(
+                    Playback.instance.tracks[(index - 1).clamp(
+                      0,
+                      Playback.instance.tracks.length,
+                    )],
+                    small: true),
+                context,
+              ),
+              precacheImage(
+                getAlbumArt(
+                    Playback.instance.tracks[(index + 1).clamp(
+                      0,
+                      Playback.instance.tracks.length,
+                    )],
+                    small: true),
+                context,
+              ),
+            ]);
           } catch (exception, stacktrace) {
             debugPrint(exception.toString());
             debugPrint(stacktrace.toString());

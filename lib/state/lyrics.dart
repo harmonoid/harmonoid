@@ -109,6 +109,11 @@ class Lyrics extends ChangeNotifier {
                       actionType: ActionType.DisabledAction,
                       notificationLayout: NotificationLayout.Messaging,
                       category: NotificationCategory.Status,
+                      // TODO: Fix lag.
+                      // Retrieval of image to be a circle seems to block the Flutter's UI thread.
+                      // This causes substantial amount of lag.
+                      // Maybe, the image is being processed entirely using Flutter's utilities.
+                      // I can see Skia screaming in the console.
                       largeIcon: image.toString(),
                       roundedLargeIcon: true,
                       title: title,

@@ -225,8 +225,8 @@ class Configuration extends ConfigurationKeys {
     bool retry = true,
   }) async {
     final current = await storage.read();
-    // Emblace default values for the keys that not found. Possibly due to app update.
     final conf = await _defaultConfiguration;
+    // Emblace default values for the keys that not found. Possibly due to app update.
     conf.keys.forEach(
       (key) {
         if (!current.containsKey(key)) {

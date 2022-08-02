@@ -257,6 +257,7 @@ class Language extends Strings with ChangeNotifier {
     this.COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY = asset['COLLECTION_TRACK_PLAYLIST_REMOVE_DIALOG_BODY']!;
     this.COMING_UP = asset['COMING_UP']!;
     this.CONTROL_PANEL = asset['CONTROL_PANEL']!;
+    this.COPY_AS_JSON = asset['COPY_AS_JSON']!;
     this.COPY_LINK = asset['COPY_LINK']!;
     this.CREATE = asset['CREATE']!;
     this.CREATE_NEW_PLAYLIST = asset['CREATE_NEW_PLAYLIST']!;
@@ -265,6 +266,7 @@ class Language extends Strings with ChangeNotifier {
     this.DELETE = asset['DELETE']!;
     this.DELETE_TRACK = asset['DELETE_TRACK']!;
     this.DESCENDING = asset['DESCENDING']!;
+    this.DISABLE_VOLUME_BOOST = asset['DISABLE_VOLUME_BOOST']!;
     this.DISCORD = asset['DISCORD']!;
     this.DISCOVERING_FILES = asset['DISCOVERING_FILES']!;
     this.DONATE = asset['DONATE']!;
@@ -285,6 +287,8 @@ class Language extends Strings with ChangeNotifier {
     this.EXIT_TITLE = asset['EXIT_TITLE']!;
     this.EXPERIMENTAL = asset['EXPERIMENTAL']!;
     this.EXPERIMENTAL_SUBTITLE = asset['EXPERIMENTAL_SUBTITLE']!;
+    this.FILE_INFORMATION = asset['FILE_INFORMATION']!;
+    this.FILE_PATH_OR_URL = asset['FILE_PATH_OR_URL']!;
     this.FOLDERS_NOT_FOUND = asset['FOLDERS_NOT_FOUND']!;
     this.FOLDER_NOT_FOUND = asset['FOLDER_NOT_FOUND']!;
     this.FULLSCREEN = asset['FULLSCREEN']!;
@@ -293,6 +297,7 @@ class Language extends Strings with ChangeNotifier {
     this.HIDE = asset['HIDE']!;
     this.HIDE_LYRICS = asset['HIDE_LYRICS']!;
     this.HIGHLIGHTED_LYRICS_SIZE = asset['HIGHLIGHTED_LYRICS_SIZE']!;
+    this.IMAGES = asset['IMAGES']!;
     this.IMPORT_PLAYLIST_FROM_WEB = asset['IMPORT_PLAYLIST_FROM_WEB']!;
     this.IMPORT_PLAYLIST_SUBTITLE = asset['IMPORT_PLAYLIST_SUBTITLE']!;
     this.IMPORT_PLAYLIST_TITLE = asset['IMPORT_PLAYLIST_TITLE']!;
@@ -335,6 +340,7 @@ class Language extends Strings with ChangeNotifier {
     this.OPTIONS = asset['OPTIONS']!;
     this.ORDER = asset['ORDER']!;
     this.PAUSE = asset['PAUSE']!;
+    this.PITCH = asset['PITCH']!;
     this.PLAY = asset['PLAY']!;
     this.PLAYLIST = asset['PLAYLIST']!;
     this.PLAYLISTS_CREATE = asset['PLAYLISTS_CREATE']!;
@@ -351,9 +357,12 @@ class Language extends Strings with ChangeNotifier {
     this.PLAY_URL = asset['PLAY_URL']!;
     this.PLAY_URL_SUBTITLE = asset['PLAY_URL_SUBTITLE']!;
     this.PREVIOUS = asset['PREVIOUS']!;
+    this.PROPERTY = asset['PROPERTY']!;
     this.PROXY_SUBTITLE = asset['PROXY_SUBTITLE']!;
     this.PROXY_TITLE = asset['PROXY_TITLE']!;
     this.PROXY_URL = asset['PROXY_URL']!;
+    this.READ = asset['READ']!;
+    this.READ_METADATA = asset['READ_METADATA']!;
     this.RECOMMENDATIONS = asset['RECOMMENDATIONS']!;
     this.REFRESH = asset['REFRESH']!;
     this.REFRESH_INFORMATION = asset['REFRESH_INFORMATION']!;
@@ -419,6 +428,7 @@ class Language extends Strings with ChangeNotifier {
     this.SHOW_LYRICS = asset['SHOW_LYRICS']!;
     this.SHOW_NOW_PLAYING_AFTER_PLAYING = asset['SHOW_NOW_PLAYING_AFTER_PLAYING']!;
     this.SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE = asset['SHOW_NOW_PLAYING_AFTER_PLAYING_SUBTITLE']!;
+    this.SHOW_NOW_PLAYING_SCREEN = asset['SHOW_NOW_PLAYING_SCREEN']!;
     this.SHOW_TRACK_PROGRESS_ON_TASKBAR = asset['SHOW_TRACK_PROGRESS_ON_TASKBAR']!;
     this.SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE = asset['SHOW_TRACK_PROGRESS_ON_TASKBAR_SUBTITLE']!;
     this.SHUFFLE = asset['SHUFFLE']!;
@@ -428,10 +438,12 @@ class Language extends Strings with ChangeNotifier {
     this.STARTING_PLAYBACK = asset['STARTING_PLAYBACK']!;
     this.STATS_SUBTITLE = asset['STATS_SUBTITLE']!;
     this.STATS_TITLE = asset['STATS_TITLE']!;
+    this.STREAM = asset['STREAM']!;
     this.SWITCH_THEME = asset['SWITCH_THEME']!;
     this.THEME_MODE_DARK = asset['THEME_MODE_DARK']!;
     this.THEME_MODE_LIGHT = asset['THEME_MODE_LIGHT']!;
     this.THEME_MODE_SYSTEM = asset['THEME_MODE_SYSTEM']!;
+    this.TIMEOUT = asset['TIMEOUT']!;
     this.TRACK = asset['TRACK']!;
     this.TRACKS_FROM_ARTIST = asset['TRACKS_FROM_ARTIST']!;
     this.TRACK_NUMBER = asset['TRACK_NUMBER']!;
@@ -442,9 +454,11 @@ class Language extends Strings with ChangeNotifier {
     this.UPDATE_AVAILABLE = asset['UPDATE_AVAILABLE']!;
     this.USE_MODERN_NOW_PLAYING_SCREEN = asset['USE_MODERN_NOW_PLAYING_SCREEN']!;
     this.USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS = asset['USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS']!;
+    this.VALUE = asset['VALUE']!;
     this.VIDEO_SINGLE = asset['VIDEO_SINGLE']!;
     this.VISUALS = asset['VISUALS']!;
     this.VISUALS_TITLE = asset['VISUALS_TITLE']!;
+    this.VOLUME_BOOST = asset['VOLUME_BOOST']!;
     this.WARNING = asset['WARNING']!;
     this.WEB = asset['WEB']!;
     this.WEB_INTERNET_ERROR = asset['WEB_INTERNET_ERROR']!;

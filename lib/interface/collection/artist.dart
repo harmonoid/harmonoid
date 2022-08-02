@@ -33,12 +33,15 @@ class ArtistTab extends StatelessWidget {
 
   Widget build(BuildContext context) {
     // Is dense or not?
-    final baseWidth = (Configuration.instance.mobileDenseArtistTabLayout
-        ? kDenseArtistTileWidth
-        : kArtistTileWidth);
-    final baseHeight = (Configuration.instance.mobileDenseArtistTabLayout
-        ? kDenseArtistTileHeight
-        : kArtistTileHeight);
+    // TODO: dense layouts only present on the mobile.
+    final baseWidth =
+        ((Configuration.instance.mobileGridArtistTabLayout && isMobile)
+            ? kDenseArtistTileWidth
+            : kArtistTileWidth);
+    final baseHeight =
+        ((Configuration.instance.mobileGridArtistTabLayout && isMobile)
+            ? kDenseArtistTileHeight
+            : kArtistTileHeight);
     final elementsPerRow =
         (Configuration.instance.mobileGridArtistTabLayout || isDesktop)
             ? (MediaQuery.of(context).size.width - tileMargin) ~/
@@ -66,7 +69,7 @@ class ArtistTab extends StatelessWidget {
             artist: collection.artists[index],
             key: ValueKey(collection.artists[index]),
             dense: Configuration.instance.mobileGridArtistTabLayout
-                ? Configuration.instance.mobileDenseArtistTabLayout
+                ? (Configuration.instance.mobileGridArtistTabLayout && isMobile)
                 : null,
           ),
         );
@@ -1540,7 +1543,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                       tracks[i],
                                       result,
                                       recursivelyPopNavigatorOnDeleteIf: () =>
-                                          tracks.isEmpty,
+                                          widget.artist.tracks.isEmpty,
                                     );
                                   },
                                   child: Column(
@@ -1644,7 +1647,8 @@ class ArtistScreenState extends State<ArtistScreen>
                                                     tracks[i],
                                                     result,
                                                     recursivelyPopNavigatorOnDeleteIf:
-                                                        () => tracks.isEmpty,
+                                                        () => widget.artist
+                                                            .tracks.isEmpty,
                                                   );
                                                 },
                                                 icon: Icon(

@@ -14,7 +14,6 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,6 +24,7 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
 import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -1405,6 +1405,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                 iconSize: 24.0,
                                 splashRadius: 20.0,
                               ),
+                              const SizedBox(width: 8.0),
                             ],
                             title: TweenAnimationBuilder<double>(
                               tween: Tween<double>(
@@ -1667,7 +1668,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       tracks[i],
                                       result,
                                       recursivelyPopNavigatorOnDeleteIf: () =>
-                                          tracks.isEmpty,
+                                          widget.album.tracks.isEmpty,
                                     );
                                   },
                                   child: Column(

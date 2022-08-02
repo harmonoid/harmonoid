@@ -495,7 +495,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                   children: [
                                                     ElevatedButton.icon(
                                                       onPressed: () {
-                                                        Web.open(widget
+                                                        Web.instance.open(widget
                                                             .playlist.tracks);
                                                       },
                                                       style: ButtonStyle(
@@ -871,7 +871,10 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                           child: TweenAnimationBuilder(
                             curve: Curves.easeOut,
                             tween: Tween<double>(
-                                begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                                begin: 0.0,
+                                end: detailsVisible && secondary != null
+                                    ? 1.0
+                                    : 0.0),
                             duration: Duration(milliseconds: 200),
                             builder: (context, value, _) => Transform.scale(
                               scale: value as double,
@@ -889,7 +892,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                   tooltip: Language.instance.PLAY_NOW,
                                   child: Icon(Icons.play_arrow),
                                   onPressed: () {
-                                    Web.open(widget.playlist.tracks);
+                                    Web.instance.open(widget.playlist.tracks);
                                   },
                                 ),
                               ),
@@ -904,7 +907,10 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                           child: TweenAnimationBuilder(
                             curve: Curves.easeOut,
                             tween: Tween<double>(
-                                begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                                begin: 0.0,
+                                end: detailsVisible && secondary != null
+                                    ? 1.0
+                                    : 0.0),
                             duration: Duration(milliseconds: 200),
                             builder: (context, value, _) => Transform.scale(
                               scale: value as double,

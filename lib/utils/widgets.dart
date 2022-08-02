@@ -34,6 +34,7 @@ import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:harmonoid/interface/file_info_screen.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/web.dart';
@@ -47,6 +48,7 @@ class CustomListView extends StatelessWidget {
   final bool? shrinkWrap;
   final EdgeInsets? padding;
   final double? itemExtent;
+  final ScrollViewKeyboardDismissBehavior? keyboardDismissBehavior;
 
   CustomListView({
     ScrollController? controller,
@@ -56,6 +58,7 @@ class CustomListView extends StatelessWidget {
     this.padding,
     this.itemExtent,
     this.cacheExtent,
+    this.keyboardDismissBehavior,
   }) {
     if (controller != null) {
       this.controller = controller;
@@ -84,7 +87,8 @@ class CustomListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       cacheExtent: cacheExtent,
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      keyboardDismissBehavior:
+          keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.onDrag,
       padding: padding ?? EdgeInsets.zero,
       controller: controller,
       scrollDirection: scrollDirection ?? Axis.vertical,
@@ -149,74 +153,41 @@ class CustomListViewBuilder extends StatelessWidget {
   }
 }
 
-class PickerButton extends StatefulWidget {
-  final String label;
-  final int selected;
-  final void Function(dynamic) onSelected;
-  final List<PopupMenuItem> items;
-  PickerButton({
+class CustomFutureBuilder<T> extends StatefulWidget {
+  final Future<T>? future;
+  final Widget Function(BuildContext) loadingBuilder;
+  final Widget Function(BuildContext, T?) builder;
+  CustomFutureBuilder({
     Key? key,
-    required this.label,
-    required this.selected,
-    required this.onSelected,
-    required this.items,
+    required this.future,
+    required this.loadingBuilder,
+    required this.builder,
   }) : super(key: key);
 
   @override
-  State<PickerButton> createState() => _PickerButtonState();
+  State<CustomFutureBuilder<T>> createState() => _CustomFutureBuilderState();
 }
 
-class _PickerButtonState extends State<PickerButton> {
-  final key = GlobalKey();
+class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
+  T? data;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.future?.then((value) {
+        setState(() {
+          data = value;
+        });
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        final position = RelativeRect.fromRect(
-          Offset(
-                key.globalPaintBounds!.left,
-                key.globalPaintBounds!.top + 40.0,
-              ) &
-              Size(228.0, 320.0),
-          Rect.fromLTWH(
-            0,
-            0,
-            MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height,
-          ),
-        );
-        showMenu(
-          context: context,
-          position: position,
-          items: widget.items,
-        ).then((value) {
-          widget.onSelected(value);
-        });
-      },
-      child: Container(
-        key: key,
-        height: 36.0,
-        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-        alignment: Alignment.centerLeft,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              widget.label + ':',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            const SizedBox(width: 4.0),
-            Text(
-              (widget.items[widget.selected].child as Text).data!,
-              style: Theme.of(context).textTheme.headline4?.copyWith(
-                    color: Theme.of(context).primaryColor,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return data == null
+        ? widget.loadingBuilder(context)
+        : widget.builder(context, data);
   }
 }
 
@@ -531,6 +502,9 @@ class _HyperLinkState extends State<HyperLink> {
   }
 }
 
+/// This piece of code is pure garbage.
+/// There aren't likely going to be any changes to this in future, so it's not worth it to make it better.
+/// But, since it's not much ground-breakingly tough to understand, I'm not going to fix it.
 class ExceptionWidget extends StatelessWidget {
   final String? title;
   final String? subtitle;
@@ -555,7 +529,11 @@ class ExceptionWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Transform.scale(
-            scale: title == Language.instance.NO_COLLECTION_TITLE ? 1.4 : 1.2,
+            scale: title == Language.instance.NO_COLLECTION_TITLE
+                ? 1.4
+                : title == Language.instance.COLLECTION_SEARCH_LABEL
+                    ? 1.0
+                    : 1.2,
             child: Image.memory(
               {
                 Language.instance.NO_COLLECTION_TITLE: visualAssets.collection,
@@ -999,8 +977,8 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                 backgroundColor: color ?? Theme.of(context).primaryColor,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.play_circle),
-                label: Language.instance.WEB.split(' ').first,
+                icon: Icon(Icons.wifi_tethering_rounded),
+                label: Language.instance.STREAM,
                 backgroundColor: color ?? Theme.of(context).primaryColor,
               ),
             ],
@@ -1442,6 +1420,8 @@ class CorrectedSwitchListTile extends StatelessWidget {
                     Text(
                       title,
                       style: Theme.of(context).textTheme.subtitle1,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4.0),
                     Text(
@@ -1513,6 +1493,8 @@ class CorrectedListTile extends StatelessWidget {
                   Text(
                     title,
                     style: Theme.of(context).textTheme.subtitle1,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   if (subtitle != null) const SizedBox(height: 4.0),
                   if (subtitle != null)
@@ -1834,6 +1816,11 @@ class CollectionMoreButton extends StatelessWidget {
                 );
                 break;
               }
+            case 2:
+              {
+                FileInfoScreen.show(context);
+                break;
+              }
           }
         },
         itemBuilder: (context) => [
@@ -1844,6 +1831,17 @@ class CollectionMoreButton extends StatelessWidget {
               leading: Icon(Icons.link),
               title: Text(
                 Language.instance.PLAY_URL,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ),
+          ),
+          PopupMenuItem(
+            value: 2,
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.data_array),
+              title: Text(
+                Language.instance.READ_METADATA,
                 style: Theme.of(context).textTheme.headline4,
               ),
             ),

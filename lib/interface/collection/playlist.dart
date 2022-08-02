@@ -9,12 +9,12 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:async';
-import 'package:animations/animations.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -213,20 +213,25 @@ class PlaylistTab extends StatelessWidget {
                                   showModalBottomSheet(
                                     context: context,
                                     elevation: 8.0,
+                                    useRootNavigator: true,
                                     backgroundColor:
                                         Theme.of(context).cardColor,
                                     builder: (context) => StatefulBuilder(
                                       builder: (context, setState) {
                                         return Container(
-                                          height: 72.0 +
-                                              MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .vertical,
-                                          child: ListView(
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
-                                            padding: EdgeInsets.all(8.0),
-                                            shrinkWrap: true,
+                                          margin: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context)
+                                                    .viewInsets
+                                                    .bottom -
+                                                MediaQuery.of(context)
+                                                    .padding
+                                                    .bottom,
+                                          ),
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
                                             children: [
                                               const SizedBox(height: 4.0),
                                               Focus(
@@ -261,7 +266,11 @@ class PlaylistTab extends StatelessWidget {
                                                   decoration: InputDecoration(
                                                     contentPadding:
                                                         EdgeInsets.fromLTRB(
-                                                            12, 26, 12, 10),
+                                                      12,
+                                                      30,
+                                                      12,
+                                                      6,
+                                                    ),
                                                     hintText: Language.instance
                                                         .PLAYLISTS_TEXT_FIELD_LABEL,
                                                     border: OutlineInputBorder(
@@ -345,11 +354,29 @@ class PlaylistTab extends StatelessWidget {
                             ),
                             MaterialButton(
                               onPressed: () {
-                                // TODO: Mobile Support.
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => PlaylistImportDialog(),
-                                );
+                                if (isDesktop) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) =>
+                                        PlaylistImportDialog(),
+                                  );
+                                } else if (isMobile) {
+                                  showModalBottomSheet(
+                                    constraints: BoxConstraints(
+                                      maxHeight: double.infinity,
+                                    ),
+                                    context: context,
+                                    elevation: 8.0,
+                                    useRootNavigator: true,
+                                    backgroundColor:
+                                        Theme.of(context).cardColor,
+                                    builder: (context) => StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return PlaylistImportBottomSheet();
+                                      },
+                                    ),
+                                  );
+                                }
                               },
                               padding: EdgeInsets.zero,
                               child: Text(

@@ -78,7 +78,7 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    Web.open(widget.track);
+                    Web.instance.open(widget.track);
                   },
                   onLongPress: () async {
                     int? result;
@@ -175,26 +175,54 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                   ),
                 ),
               ),
-              if (isDesktop)
-                Positioned(
-                  top: 4.0,
-                  right: 4.0,
-                  child: ContextMenuButton(
-                    itemBuilder: (BuildContext context) =>
-                        webTrackPopupMenuItems(
-                      context,
-                    ),
-                    onSelected: (result) async {
-                      webTrackPopupMenuHandle(
-                          context, widget.track, result as int?);
-                    },
-                    icon: Icon(
-                      Icons.more_vert,
-                      color: Colors.white70,
-                      size: 16.0,
-                    ),
-                  ),
-                ),
+              Positioned(
+                top: 4.0,
+                right: 4.0,
+                child: isMobile
+                    ? IconButton(
+                        splashRadius: 20.0,
+                        icon: Icon(
+                          Icons.more_vert,
+                          color: Colors.white54,
+                        ),
+                        onPressed: () async {
+                          int? result;
+                          await showModalBottomSheet(
+                            context: context,
+                            builder: (context) => Container(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: webTrackPopupMenuItems(context)
+                                    .map(
+                                      (item) => PopupMenuItem(
+                                        child: item.child,
+                                        onTap: () => result = item.value,
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          );
+                          webTrackPopupMenuHandle(
+                              context, widget.track, result);
+                        },
+                      )
+                    : ContextMenuButton(
+                        itemBuilder: (BuildContext context) =>
+                            webTrackPopupMenuItems(
+                          context,
+                        ),
+                        onSelected: (result) async {
+                          webTrackPopupMenuHandle(
+                              context, widget.track, result as int?);
+                        },
+                        icon: Icon(
+                          Icons.more_vert,
+                          size: 16.0,
+                          color: Colors.white54,
+                        ),
+                      ),
+              ),
             ],
           ),
         ),
@@ -233,7 +261,7 @@ class VideoTile extends StatelessWidget {
         },
         child: InkWell(
           onTap: () {
-            Web.open(video);
+            Web.instance.open(video);
           },
           onLongPress: () async {
             int? result;
@@ -307,19 +335,49 @@ class VideoTile extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 12.0),
-                    if (isDesktop)
-                      Container(
-                        width: 64.0,
-                        height: 64.0,
-                        child: ContextMenuButton<int>(
-                          onSelected: (result) {
-                            webTrackPopupMenuHandle(context, video, result);
-                          },
-                          itemBuilder: (context) =>
-                              webTrackPopupMenuItems(context),
-                        ),
-                      ),
+                    const SizedBox(width: 4.0),
+                    Container(
+                      width: 64.0,
+                      height: 64.0,
+                      child: isMobile
+                          ? IconButton(
+                              splashRadius: 20.0,
+                              icon: Icon(
+                                Icons.more_vert,
+                              ),
+                              onPressed: () async {
+                                int? result;
+                                await showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => Container(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: webTrackPopupMenuItems(context)
+                                          .map(
+                                            (item) => PopupMenuItem(
+                                              child: item.child,
+                                              onTap: () => result = item.value,
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                );
+                                webTrackPopupMenuHandle(
+                                  context,
+                                  video,
+                                  result,
+                                );
+                              },
+                            )
+                          : ContextMenuButton<int>(
+                              onSelected: (result) {
+                                webTrackPopupMenuHandle(context, video, result);
+                              },
+                              itemBuilder: (context) =>
+                                  webTrackPopupMenuItems(context),
+                            ),
+                    ),
                   ],
                 ),
               ),

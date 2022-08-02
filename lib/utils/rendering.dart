@@ -9,30 +9,37 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:path/path.dart' as path;
 import 'package:animations/animations.dart';
 import 'package:libmpv/libmpv.dart' hide Media;
 import 'package:share_plus/share_plus.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/models/media.dart';
-import 'package:harmonoid/interface/edit_details_screen.dart';
-import 'package:harmonoid/interface/collection/album.dart';
+import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/settings/about.dart';
+import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/interface/file_info_screen.dart';
+import 'package:harmonoid/interface/collection/playlist.dart';
+import 'package:harmonoid/interface/edit_details_screen.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/file_system.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
+
+export 'package:harmonoid/utils/extensions.dart';
 
 final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 final isMobile = Platform.isAndroid || Platform.isIOS;
@@ -337,12 +344,90 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
         ),
       ),
     ),
+    PopupMenuItem<int>(
+      padding: EdgeInsets.zero,
+      value: 7,
+      child: ListTile(
+        leading:
+            Icon(Platform.isWindows ? FluentIcons.info_24_regular : Icons.info),
+        title: Text(
+          Language.instance.FILE_INFORMATION,
+          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+        ),
+      ),
+    ),
     if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
       PopupMenuItem<int>(
         padding: EdgeInsets.zero,
         child: SizedBox(height: 64.0),
       ),
   ];
+}
+
+Future<File?> pickFile({
+  required String label,
+  required List<String> extensions,
+}) async {
+  String? path;
+  if (Platform.isWindows) {
+    OpenFilePicker picker = OpenFilePicker()
+      ..filterSpecification = {
+        label: extensions.map((e) => '*.${e.toLowerCase()}').join(';'),
+      }
+      // Choosing first [extensions] extension as default.
+      ..defaultFilterIndex = 0
+      ..defaultExtension = extensions.first.toLowerCase();
+    path = picker.getFile()?.path;
+  } else if (Platform.isLinux) {
+    final result = await openFile(
+      acceptedTypeGroups: [
+        XTypeGroup(
+          label: label,
+          // Case sensitive paths on GNU/Linux.
+          extensions: [
+            ...extensions.map((e) => e.toLowerCase()).toList(),
+            ...extensions.map((e) => e.toUpperCase()).toList(),
+          ].toSet().toList(),
+        ),
+      ],
+    );
+    path = result?.path;
+  }
+  // Using `package:file_picker` on other platforms.
+  else {
+    final result = await FilePicker.platform.pickFiles(
+      // Case sensitive paths on Android.
+      allowedExtensions: [
+        ...extensions.map((e) => e.toLowerCase()).toList(),
+        ...extensions.map((e) => e.toUpperCase()).toList(),
+      ].toSet().toList(),
+    );
+    if ((result?.count ?? 0) > 0) {
+      path = result?.files.first.path;
+    }
+  }
+  return path == null ? null : File(path);
+}
+
+Future<Directory?> pickDirectory() async {
+  Directory? directory;
+  if (Platform.isWindows) {
+    final picker = DirectoryPicker();
+    directory = picker.getDirectory();
+  } else if (Platform.isLinux) {
+    final path = await getDirectoryPath();
+    if (path != null) {
+      directory = Directory(path);
+    }
+  }
+  // Using `package:file_picker` on other platforms.
+  else {
+    final path = await FilePicker.platform.getDirectoryPath();
+    if (path != null) {
+      directory = Directory(path);
+    }
+  }
+  return directory;
 }
 
 Future<void> trackPopupMenuHandle(
@@ -378,6 +463,9 @@ Future<void> trackPopupMenuHandle(
                     if (recursivelyPopNavigatorOnDeleteIf()) {
                       while (Navigator.of(context).canPop()) {
                         Navigator.of(context).pop();
+                      }
+                      if (floatingSearchBarController.isOpen) {
+                        floatingSearchBarController.close();
                       }
                     }
                   }
@@ -465,6 +553,12 @@ Future<void> trackPopupMenuHandle(
               child: EditDetailsScreen(track: track),
             ),
           ),
+        );
+        break;
+      case 7:
+        FileInfoScreen.show(
+          context,
+          uri: track.uri,
         );
         break;
     }
@@ -729,19 +823,6 @@ enum TabRouteSender {
   systemNavigationBackButton,
 }
 
-extension StringExtension on String {
-  get overflow => Characters(this)
-      .replaceAll(Characters(''), Characters('\u{200B}'))
-      .toString();
-
-  get safePath => replaceAll(RegExp(kArtworkFileNameRegex), '');
-}
-
-extension DateTimeExtension on DateTime {
-  get label =>
-      '${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-$year';
-}
-
 ImageProvider getAlbumArt(Media media, {bool small: false}) {
   final result = () {
     if (media is Track) {
@@ -861,14 +942,4 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
     return ResizeImage.resizeIfNeeded(200, 200, result);
   }
   return result;
-}
-
-extension DurationExtension on Duration {
-  String get label {
-    int minutes = inSeconds ~/ 60;
-    String seconds = inSeconds - (minutes * 60) > 9
-        ? '${inSeconds - (minutes * 60)}'
-        : '0${inSeconds - (minutes * 60)}';
-    return '$minutes:$seconds';
-  }
 }
