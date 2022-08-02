@@ -1448,7 +1448,7 @@ class _ControlPanelState extends State<ControlPanel> {
                                       RegExp(r'[0-9]|')),
                                 ],
                                 onChanged: (value) {
-                                  playback.setPitch(
+                                  playback.setVolume(
                                     double.tryParse(value) ?? playback.pitch,
                                   );
                                 },
