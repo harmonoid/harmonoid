@@ -6,10 +6,6 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:file_picker/file_picker.dart';
-import 'package:file_selector/file_selector.dart';
-import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
@@ -19,6 +15,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/interface/home.dart';
+import 'package:harmonoid/state/now_playing_visuals.dart';
 import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -191,63 +188,17 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                       color: Colors.black38,
                                       child: InkWell(
                                         onTap: () async {
-                                          // TODO: Using un-safe FileSystem APIs.
-                                          Uint8List? file;
-                                          if (Platform.isWindows) {
-                                            OpenFilePicker picker =
-                                                OpenFilePicker()
-                                                  ..filterSpecification = {
-                                                    'Images':
-                                                        '*.jpg;*.jpeg;*.png;*.webp;*.bmp',
-                                                  }
-                                                  ..defaultFilterIndex = 0
-                                                  ..defaultExtension = 'jpg';
-                                            file = await picker
-                                                .getFile()!
-                                                .readAsBytes();
-                                          }
-                                          if (Platform.isLinux) {
-                                            final exts =
-                                                '*.jpg;*.jpeg;*.png;*.webp;*.bmp'
-                                                    .split(';')
-                                                    .map((e) =>
-                                                        e.replaceAll('*.', ''))
-                                                    .toList()
-                                                    .cast<String>();
-                                            final xFile = await openFile(
-                                              acceptedTypeGroups: [
-                                                XTypeGroup(
-                                                  label: 'Images',
-                                                  extensions: exts +
-                                                      exts
-                                                          .map((e) =>
-                                                              e.toUpperCase())
-                                                          .toList(),
-                                                ),
-                                              ],
-                                            );
-                                            if (xFile != null) {
-                                              file = await File(xFile.path)
-                                                  .readAsBytes();
-                                            }
-                                          }
-                                          if (Platform.isMacOS) {
-                                            final result = await FilePicker
-                                                .platform
-                                                .pickFiles(
-                                              type: FileType.image,
-                                            );
-                                            if (result!.count > 0) {
-                                              file = result.files.first.bytes;
-                                            }
-                                          }
+                                          final file = await pickFile(
+                                            label: Language.instance.IMAGES,
+                                            extensions: kSupportedImageFormats,
+                                          );
                                           if (file != null) {
                                             final path = join(
                                               Collection.instance
                                                   .albumArtDirectory.path,
                                               copy.albumArtFileName,
                                             );
-                                            await File(path).writeAsBytes(file);
+                                            await file.copy_(path);
                                             imageCache.clear();
                                             imageCache.clearLiveImages();
                                             await ExtendedFileImageProvider(
@@ -255,8 +206,8 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                 .evict();
                                             setState(() {
                                               provider =
-                                                  ExtendedMemoryImageProvider(
-                                                      file!);
+                                                  ExtendedFileImageProvider(
+                                                      file);
                                             });
                                           }
                                         },
@@ -594,36 +545,22 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                         color: Colors.black38,
                         child: InkWell(
                           onTap: () async {
-                            // TODO: Using un-safe FileSystem APIs.
-                            Uint8List? file;
-                            if (Platform.isAndroid ||
-                                Platform.isIOS ||
-                                Platform.isMacOS) {
-                              final result =
-                                  await FilePicker.platform.pickFiles(
-                                type: FileType.image,
-                              );
-                              if (result!.count > 0) {
-                                if (result.files.first.path != null) {
-                                  file = await File(result.files.first.path!)
-                                      .readAsBytes();
-                                } else {
-                                  file = result.files.first.bytes;
-                                }
-                              }
-                            }
+                            final file = await pickFile(
+                              label: Language.instance.IMAGES,
+                              extensions: kSupportedImageFormats,
+                            );
                             if (file != null) {
                               final path = join(
                                 Collection.instance.albumArtDirectory.path,
                                 copy.albumArtFileName,
                               );
-                              await File(path).writeAsBytes(file);
+                              await file.copy_(path);
                               imageCache.clear();
                               imageCache.clearLiveImages();
                               await ExtendedFileImageProvider(File(path))
                                   .evict();
                               setState(() {
-                                provider = ExtendedMemoryImageProvider(file!);
+                                provider = ExtendedFileImageProvider(file);
                               });
                             }
                           },

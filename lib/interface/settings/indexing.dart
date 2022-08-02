@@ -6,18 +6,14 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:file_selector/file_selector.dart';
-import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/file_system.dart';
@@ -41,9 +37,8 @@ class IndexingState extends State<IndexingSetting> {
             const SizedBox(height: 2.0),
             if (isMobile)
               CorrectedListTile(
-                onTap: controller.isCompleted
-                    ? _addNewFolder
-                    : _showProgressDialog,
+                onTap:
+                    controller.isCompleted ? pickNewFolder : showProgressDialog,
                 iconData: Icons.create_new_folder,
                 title: Language.instance.ADD_NEW_FOLDER,
                 subtitle: Language.instance.ADD_NEW_FOLDER_SUBTITLE,
@@ -51,7 +46,7 @@ class IndexingState extends State<IndexingSetting> {
             if (isMobile)
               CorrectedListTile(
                 onTap: controller.progress != controller.total
-                    ? _showProgressDialog
+                    ? showProgressDialog
                     : () async {
                         Collection.instance.refresh(
                           onProgress: (progress, total, _) {
@@ -66,7 +61,7 @@ class IndexingState extends State<IndexingSetting> {
             if (isMobile)
               CorrectedListTile(
                 onTap: controller.progress != controller.total
-                    ? _showProgressDialog
+                    ? showProgressDialog
                     : () async {
                         Collection.instance.index(
                           onProgress: (progress, total, _) {
@@ -94,8 +89,8 @@ class IndexingState extends State<IndexingSetting> {
                             minWidth: 0.0,
                             padding: EdgeInsets.zero,
                             onPressed: CollectionRefresh.instance.isCompleted
-                                ? _addNewFolder
-                                : _showProgressDialog,
+                                ? pickNewFolder
+                                : showProgressDialog,
                             child: Text(
                               Language.instance.ADD_NEW_FOLDER.toUpperCase(),
                               style: TextStyle(
@@ -178,7 +173,7 @@ class IndexingState extends State<IndexingSetting> {
                                       MaterialButton(
                                         onPressed: () async {
                                           if (!controller.isCompleted) {
-                                            _showProgressDialog();
+                                            showProgressDialog();
                                             return;
                                           }
                                           if (Configuration
@@ -378,7 +373,7 @@ class IndexingState extends State<IndexingSetting> {
                           minWidth: 0.0,
                           padding: EdgeInsets.zero,
                           onPressed: controller.progress != controller.total
-                              ? _showProgressDialog
+                              ? showProgressDialog
                               : () async {
                                   Collection.instance.refresh(
                                     onProgress: (progress, total, _) {
@@ -398,7 +393,7 @@ class IndexingState extends State<IndexingSetting> {
                           minWidth: 0.0,
                           padding: EdgeInsets.zero,
                           onPressed: controller.progress != controller.total
-                              ? _showProgressDialog
+                              ? showProgressDialog
                               : () async {
                                   Collection.instance.index(
                                     onProgress: (progress, total, _) {
@@ -460,7 +455,26 @@ class IndexingState extends State<IndexingSetting> {
     );
   }
 
-  void _showProgressDialog() {
+  void pickNewFolder() async {
+    final directory = await pickDirectory();
+    if (directory != null) {
+      if (Configuration.instance.collectionDirectories
+          .contains(directory.path)) {
+        return;
+      }
+      await Collection.instance.addDirectories(
+        directories: [directory],
+        onProgress: (progress, total, isCompleted) {
+          CollectionRefresh.instance.set(progress, total);
+        },
+      );
+      await Configuration.instance.save(
+        collectionDirectories: Collection.instance.collectionDirectories,
+      );
+    }
+  }
+
+  void showProgressDialog() {
     if (!CollectionRefresh.instance.isCompleted) {
       showDialog(
         context: context,
@@ -482,41 +496,6 @@ class IndexingState extends State<IndexingSetting> {
             ),
           ],
         ),
-      );
-    }
-  }
-
-  void _addNewFolder() async {
-    Directory? directory;
-    if (Platform.isWindows) {
-      DirectoryPicker picker = new DirectoryPicker();
-      directory = picker.getDirectory();
-    }
-    if (Platform.isLinux) {
-      final path = await getDirectoryPath();
-      if (path != null) {
-        directory = Directory(path);
-      }
-    }
-    if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS) {
-      final path = await FilePicker.platform.getDirectoryPath();
-      if (path != null) {
-        directory = Directory(path);
-      }
-    }
-    if (directory != null) {
-      if (Configuration.instance.collectionDirectories
-          .contains(directory.path)) {
-        return;
-      }
-      await Collection.instance.addDirectories(
-        directories: [directory],
-        onProgress: (progress, total, isCompleted) {
-          CollectionRefresh.instance.set(progress, total);
-        },
-      );
-      await Configuration.instance.save(
-        collectionDirectories: Collection.instance.collectionDirectories,
       );
     }
   }

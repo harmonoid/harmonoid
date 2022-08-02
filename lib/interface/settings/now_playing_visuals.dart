@@ -5,17 +5,13 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:file_selector/file_selector.dart';
-import 'package:filepicker_windows/filepicker_windows.dart';
 
 import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/state/now_playing_visuals.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/constants/language.dart';
 
 class NowPlayingVisualsSetting extends StatefulWidget {
   NowPlayingVisualsSetting({Key? key}) : super(key: key);
@@ -87,45 +83,10 @@ class NowPlayingVisualsSettingState extends State<NowPlayingVisualsSetting> {
                   [
                     InkWell(
                       onTap: () async {
-                        // TODO: Using un-safe FileSystem APIs.
-                        Uint8List? file;
-                        if (Platform.isWindows) {
-                          OpenFilePicker picker = OpenFilePicker()
-                            ..filterSpecification = {
-                              'Images': kSupportedImageFormats
-                                  .map((e) => '*.$e')
-                                  .join(';'),
-                            }
-                            ..defaultFilterIndex = 0
-                            ..defaultExtension = kSupportedImageFormats.first;
-                          file = await picker.getFile()!.readAsBytes();
-                        }
-                        if (Platform.isLinux) {
-                          final xFile = await openFile(
-                            acceptedTypeGroups: [
-                              XTypeGroup(
-                                label: 'Images',
-                                extensions: kSupportedImageFormats +
-                                    kSupportedImageFormats
-                                        .map((e) => e.toLowerCase())
-                                        .toList(),
-                              ),
-                            ],
-                          );
-                          if (xFile != null) {
-                            file = await File(xFile.path).readAsBytes();
-                          }
-                        }
-                        if (Platform.isAndroid ||
-                            Platform.isIOS ||
-                            Platform.isMacOS) {
-                          final result = await FilePicker.platform.pickFiles(
-                            type: FileType.image,
-                          );
-                          if (result!.count > 0) {
-                            file = result.files.first.bytes;
-                          }
-                        }
+                        final file = await pickFile(
+                          label: Language.instance.IMAGES,
+                          extensions: kSupportedImageFormats,
+                        );
                         if (file != null) {
                           await NowPlayingVisuals.instance.add(file);
                           setState(() {});
