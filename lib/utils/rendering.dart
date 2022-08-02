@@ -16,7 +16,6 @@ import 'package:animations/animations.dart';
 import 'package:libmpv/libmpv.dart' hide Media;
 import 'package:share_plus/share_plus.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -27,15 +26,17 @@ import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/interface/file_info_screen.dart';
+import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid/interface/edit_details_screen.dart';
-
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/file_system.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
+
+export 'package:harmonoid/utils/extensions.dart';
 
 final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 final isMobile = Platform.isAndroid || Platform.isIOS;
@@ -753,19 +754,6 @@ enum TabRouteSender {
   systemNavigationBackButton,
 }
 
-extension StringExtension on String {
-  get overflow => Characters(this)
-      .replaceAll(Characters(''), Characters('\u{200B}'))
-      .toString();
-
-  get safePath => replaceAll(RegExp(kArtworkFileNameRegex), '');
-}
-
-extension DateTimeExtension on DateTime {
-  get label =>
-      '${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-$year';
-}
-
 ImageProvider getAlbumArt(Media media, {bool small: false}) {
   final result = () {
     if (media is Track) {
@@ -885,14 +873,4 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
     return ResizeImage.resizeIfNeeded(200, 200, result);
   }
   return result;
-}
-
-extension DurationExtension on Duration {
-  String get label {
-    int minutes = inSeconds ~/ 60;
-    String seconds = inSeconds - (minutes * 60) > 9
-        ? '${inSeconds - (minutes * 60)}'
-        : '0${inSeconds - (minutes * 60)}';
-    return '$minutes:$seconds';
-  }
 }
