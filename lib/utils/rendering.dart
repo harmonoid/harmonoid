@@ -9,14 +9,17 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:path/path.dart' as path;
 import 'package:animations/animations.dart';
 import 'package:libmpv/libmpv.dart' hide Media;
 import 'package:share_plus/share_plus.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
@@ -359,6 +362,72 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
         child: SizedBox(height: 64.0),
       ),
   ];
+}
+
+Future<File?> pickFile({
+  required String label,
+  required List<String> extensions,
+}) async {
+  String? path;
+  if (Platform.isWindows) {
+    OpenFilePicker picker = OpenFilePicker()
+      ..filterSpecification = {
+        label: extensions.map((e) => '*.${e.toLowerCase()}').join(';'),
+      }
+      // Choosing first [extensions] extension as default.
+      ..defaultFilterIndex = 0
+      ..defaultExtension = extensions.first.toLowerCase();
+    path = picker.getFile()?.path;
+  } else if (Platform.isLinux) {
+    final result = await openFile(
+      acceptedTypeGroups: [
+        XTypeGroup(
+          label: label,
+          // Case sensitive paths on GNU/Linux.
+          extensions: [
+            ...extensions.map((e) => e.toLowerCase()).toList(),
+            ...extensions.map((e) => e.toUpperCase()).toList(),
+          ].toSet().toList(),
+        ),
+      ],
+    );
+    path = result?.path;
+  }
+  // Using `package:file_picker` on other platforms.
+  else {
+    final result = await FilePicker.platform.pickFiles(
+      // Case sensitive paths on Android.
+      allowedExtensions: [
+        ...extensions.map((e) => e.toLowerCase()).toList(),
+        ...extensions.map((e) => e.toUpperCase()).toList(),
+      ].toSet().toList(),
+    );
+    if ((result?.count ?? 0) > 0) {
+      path = result?.files.first.path;
+    }
+  }
+  return path == null ? null : File(path);
+}
+
+Future<Directory?> pickDirectory() async {
+  Directory? directory;
+  if (Platform.isWindows) {
+    final picker = DirectoryPicker();
+    directory = picker.getDirectory();
+  } else if (Platform.isLinux) {
+    final path = await getDirectoryPath();
+    if (path != null) {
+      directory = Directory(path);
+    }
+  }
+  // Using `package:file_picker` on other platforms.
+  else {
+    final path = await FilePicker.platform.getDirectoryPath();
+    if (path != null) {
+      directory = Directory(path);
+    }
+  }
+  return directory;
 }
 
 Future<void> trackPopupMenuHandle(
