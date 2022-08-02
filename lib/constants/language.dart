@@ -297,6 +297,7 @@ class Language extends Strings with ChangeNotifier {
     this.HIDE = asset['HIDE']!;
     this.HIDE_LYRICS = asset['HIDE_LYRICS']!;
     this.HIGHLIGHTED_LYRICS_SIZE = asset['HIGHLIGHTED_LYRICS_SIZE']!;
+    this.IMAGES = asset['IMAGES']!;
     this.IMPORT_PLAYLIST_FROM_WEB = asset['IMPORT_PLAYLIST_FROM_WEB']!;
     this.IMPORT_PLAYLIST_SUBTITLE = asset['IMPORT_PLAYLIST_SUBTITLE']!;
     this.IMPORT_PLAYLIST_TITLE = asset['IMPORT_PLAYLIST_TITLE']!;

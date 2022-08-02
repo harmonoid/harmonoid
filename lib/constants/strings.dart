@@ -93,6 +93,7 @@ class Strings {
   late String HIDE;
   late String HIDE_LYRICS;
   late String HIGHLIGHTED_LYRICS_SIZE;
+  late String IMAGES;
   late String IMPORT_PLAYLIST_FROM_WEB;
   late String IMPORT_PLAYLIST_SUBTITLE;
   late String IMPORT_PLAYLIST_TITLE;
