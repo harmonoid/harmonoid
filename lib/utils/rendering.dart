@@ -839,7 +839,12 @@ ImageProvider getAlbumArt(
   // Separately handle the web URLs.
   if (media is Track) {
     if (Plugins.isWebMedia(media.uri)) {
-      image = ExtendedNetworkImageProvider(Plugins.artwork(media.uri));
+      image = ExtendedNetworkImageProvider(
+        Plugins.artwork(
+          media.uri,
+          small: small,
+        ),
+      );
     }
   }
   if (image == null) {
@@ -855,7 +860,8 @@ ImageProvider getAlbumArt(
     // No album art found, use the default album art.
     image = ExtendedAssetImageProvider('assets/images/default_album_art.png');
   }
-  if (small) {
+  // [ResizeImage.resizeIfNeeded] is only needed for local images.
+  if (small && !(image is ExtendedNetworkImageProvider)) {
     // This doesn't seem to play well with local non-square album arts.
     // But, optimal performance is more important than perfect album art. I guess this is a fair trade-off.
     return ResizeImage.resizeIfNeeded(200, 200, image);
