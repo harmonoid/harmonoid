@@ -7,9 +7,9 @@
 ///
 
 import 'package:path/path.dart' as path;
+import 'package:media_library/media_library.dart';
+import 'package:safe_session_storage/safe_session_storage.dart';
 
-import 'package:harmonoid/models/media.dart';
-import 'package:harmonoid/utils/safe_session_storage.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 
