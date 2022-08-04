@@ -490,6 +490,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.6"
+  media_library:
+    dependency: "direct main"
+    description:
+      path: "external/media_library"
+      relative: true
+    source: path
+    version: "1.0.0"
   meta:
     dependency: transitive
     description:
@@ -938,5 +945,5 @@ packages:
     source: path
     version: "0.0.1"
 sdks:
-  dart: ">=2.17.0 <3.0.0"
+  dart: ">=2.19.0-31.0.dev <3.0.0"
   flutter: ">=3.0.0"
