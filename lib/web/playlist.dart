@@ -7,9 +7,11 @@
 ///
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/web/web.dart';
 import 'package:media_library/media_library.dart' as media;
@@ -299,6 +301,21 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
           });
         }
       });
+    }
+    // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
+    if (Platform.isWindows) {
+      scrollController.addListener(
+        () {
+          final scrollDirection = scrollController.position.userScrollDirection;
+          if (scrollDirection != ScrollDirection.idle) {
+            var scrollEnd = scrollController.offset +
+                (scrollDirection == ScrollDirection.reverse ? 60 : -60);
+            scrollEnd = min(scrollController.position.maxScrollExtent,
+                max(scrollController.position.minScrollExtent, scrollEnd));
+            scrollController.jumpTo(scrollEnd);
+          }
+        },
+      );
     }
     if (isMobile) {
       PaletteGenerator.fromImageProvider(ResizeImage.resizeIfNeeded(

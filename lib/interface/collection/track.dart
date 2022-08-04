@@ -48,6 +48,7 @@ class TrackTab extends StatelessWidget {
                         Theme.of(context).colorScheme.secondary,
                     borderHoverColor: Theme.of(context).colorScheme.secondary,
                   ),
+                  // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
                   child: desktop.ListTable(
                     onPressed: (index, _) {
                       Playback.instance.open(

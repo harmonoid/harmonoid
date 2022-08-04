@@ -41,8 +41,9 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/web.dart';
 
 class CustomListView extends StatelessWidget {
-  final ScrollController? controller;
+  late final ScrollController controller;
   final double? cacheExtent;
+  final int velocity = 40;
   final List<Widget> children;
   final Axis? scrollDirection;
   final bool? shrinkWrap;
@@ -51,15 +52,38 @@ class CustomListView extends StatelessWidget {
   final ScrollViewKeyboardDismissBehavior? keyboardDismissBehavior;
 
   CustomListView({
+    ScrollController? controller,
     required this.children,
-    this.controller,
     this.scrollDirection,
     this.shrinkWrap,
     this.padding,
     this.itemExtent,
     this.cacheExtent,
     this.keyboardDismissBehavior,
-  });
+  }) {
+    if (controller != null) {
+      this.controller = controller;
+    } else {
+      this.controller = ScrollController();
+    }
+    // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
+    if (Platform.isWindows) {
+      this.controller.addListener(
+        () {
+          final scrollDirection = this.controller.position.userScrollDirection;
+          if (scrollDirection != ScrollDirection.idle) {
+            var scrollEnd = this.controller.offset +
+                (scrollDirection == ScrollDirection.reverse
+                    ? velocity
+                    : -velocity);
+            scrollEnd = math.min(this.controller.position.maxScrollExtent,
+                math.max(this.controller.position.minScrollExtent, scrollEnd));
+            this.controller.jumpTo(scrollEnd);
+          }
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +102,8 @@ class CustomListView extends StatelessWidget {
 }
 
 class CustomListViewBuilder extends StatelessWidget {
-  final ScrollController? controller;
+  late final ScrollController controller;
+  final int velocity = 40;
   final int itemCount;
   final List<double> itemExtents;
   final Widget Function(BuildContext, int) itemBuilder;
@@ -87,14 +112,37 @@ class CustomListViewBuilder extends StatelessWidget {
   final EdgeInsets? padding;
 
   CustomListViewBuilder({
+    ScrollController? controller,
     required this.itemCount,
     required this.itemExtents,
     required this.itemBuilder,
-    this.controller,
     this.scrollDirection,
     this.shrinkWrap,
     this.padding,
-  });
+  }) {
+    if (controller != null) {
+      this.controller = controller;
+    } else {
+      this.controller = ScrollController();
+    }
+    // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
+    if (Platform.isWindows) {
+      this.controller.addListener(
+        () {
+          final scrollDirection = this.controller.position.userScrollDirection;
+          if (scrollDirection != ScrollDirection.idle) {
+            var scrollEnd = this.controller.offset +
+                (scrollDirection == ScrollDirection.reverse
+                    ? velocity
+                    : -velocity);
+            scrollEnd = math.min(this.controller.position.maxScrollExtent,
+                math.max(this.controller.position.minScrollExtent, scrollEnd));
+            this.controller.jumpTo(scrollEnd);
+          }
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

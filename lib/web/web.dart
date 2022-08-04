@@ -5,8 +5,11 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
+import 'dart:io';
+import 'dart:math';
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
 import 'package:harmonoid/web/state/web.dart';
@@ -214,10 +217,29 @@ class _WebRecommendationsState extends State<WebRecommendations>
       Configuration.instance.webRecent.isEmpty;
   late ScrollController _scrollController = ScrollController();
   final HashMap<String, Color> colorKeys = HashMap<String, Color>();
+  final int _velocity = 40;
 
   @override
   void initState() {
     super.initState();
+    // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
+    if (Platform.isWindows) {
+      _scrollController.addListener(
+        () {
+          final scrollDirection =
+              _scrollController.position.userScrollDirection;
+          if (scrollDirection != ScrollDirection.idle) {
+            var scrollEnd = _scrollController.offset +
+                (scrollDirection == ScrollDirection.reverse
+                    ? _velocity
+                    : -_velocity);
+            scrollEnd = min(_scrollController.position.maxScrollExtent,
+                max(_scrollController.position.minScrollExtent, scrollEnd));
+            _scrollController.jumpTo(scrollEnd);
+          }
+        },
+      );
+    }
     Web.instance.refreshCallback = () {
       if (mounted) {
         setState(() {});
