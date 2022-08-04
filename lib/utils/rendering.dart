@@ -823,145 +823,43 @@ enum TabRouteSender {
   systemNavigationBackButton,
 }
 
-ImageProvider getAlbumArt(Media media, {bool small: false}) {
-  const kAlbumArtFileNames = [
-    'Folder.jpg',
-    'Folder.png',
-    'AlbumArtSmall.jpg',
-    'AlbumArt.jpg',
-    'Album.jpg',
-    '.folder.png',
-    'cover.jpg',
-    'cover.png',
-    'cover.gif',
-    'front.jpg',
-    'front.png',
-    'front.gif',
-    'front.bmp',
-    'thumb.jpg',
-  ];
-  final result = () {
-    if (media is Track) {
-      if (Plugins.isWebMedia(media.uri)) {
-        return ExtendedNetworkImageProvider(
-          Plugins.artwork(media.uri, small: small),
-          cache: true,
-        );
-      }
-      final file = File(path.join(
-        Collection.instance.albumArtDirectory.path,
-        media.albumArtFileName,
-      ));
-      if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-        return ExtendedFileImageProvider(file);
-      } else {
-        try {
-          final file = File(path.join(
-            Collection.instance.albumArtDirectory.path,
-            media.legacyAlbumArtFileName,
-          ));
-          if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-            return ExtendedFileImageProvider(file);
-          } else {
-            for (final name in kAlbumArtFileNames) {
-              final file =
-                  File(path.join(path.basename(media.uri.toFilePath()), name));
-              if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-                return ExtendedFileImageProvider(file);
-              }
-            }
-          }
-        } catch (_) {}
-      }
-    } else if (media is Album) {
-      if (media.tracks.isEmpty) {
-        return ExtendedAssetImageProvider(
-          'assets/images/default_album_art.png',
-        );
-      }
-      if (Plugins.isWebMedia(media.tracks.first.uri)) {
-        return ExtendedNetworkImageProvider(
-          Plugins.artwork(
-            media.tracks.first.uri,
-            small: small,
-          ),
-          cache: true,
-        );
-      }
-      final file = File(path.join(
-        Collection.instance.albumArtDirectory.path,
-        media.tracks.first.albumArtFileName,
-      ));
-      if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-        return ExtendedFileImageProvider(file);
-      } else {
-        try {
-          final file = File(path.join(
-            Collection.instance.albumArtDirectory.path,
-            media.tracks.first.legacyAlbumArtFileName,
-          ));
-          if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-            return ExtendedFileImageProvider(file);
-          } else {
-            for (final name in kAlbumArtFileNames) {
-              final file = File(path.join(
-                  path.basename(media.tracks.first.uri.toFilePath()), name));
-              if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-                return ExtendedFileImageProvider(file);
-              }
-            }
-          }
-        } catch (_) {}
-      }
-    } else if (media is Artist) {
-      if (media.tracks.isEmpty) {
-        return ExtendedAssetImageProvider(
-          'assets/images/default_album_art.png',
-        );
-      }
-      if (Plugins.isWebMedia(media.tracks.first.uri)) {
-        return ExtendedNetworkImageProvider(
-          Plugins.artwork(
-            media.tracks.first.uri,
-            small: small,
-          ),
-          cache: true,
-        );
-      }
-      final file = File(path.join(
-        Collection.instance.albumArtDirectory.path,
-        media.tracks.first.albumArtFileName,
-      ));
-      if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-        return ExtendedFileImageProvider(file);
-      } else {
-        try {
-          final file = File(path.join(
-            Collection.instance.albumArtDirectory.path,
-            media.tracks.first.legacyAlbumArtFileName,
-          ));
-          if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-            return ExtendedFileImageProvider(file);
-          } else {
-            for (final name in kAlbumArtFileNames) {
-              final file = File(path.join(
-                  path.basename(media.tracks.first.uri.toFilePath()), name));
-              if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-                return ExtendedFileImageProvider(file);
-              }
-            }
-          }
-        } catch (_) {}
-      }
+/// Fetches the album art of a given [Media] either local or online.
+///
+/// Passing [small] as `true` will result in a smaller sized image, which may be useful
+/// for performance reasons e.g. generating palette using `package:palette_generator`
+/// or rendering on desktop platforms.
+///
+/// Automatically falls back to the default album art from Harmonoid's assets.
+///
+ImageProvider getAlbumArt(
+  Media media, {
+  bool small = false,
+}) {
+  ImageProvider? image;
+  // Separately handle the web URLs.
+  if (media is Track) {
+    if (Plugins.isWebMedia(media.uri)) {
+      image = ExtendedNetworkImageProvider(Plugins.artwork(media.uri));
     }
-    return ExtendedAssetImageProvider(
-      'assets/images/default_album_art.png',
-    );
-  }() as ImageProvider;
-  if (small && result is ExtendedNetworkImageProvider) {
-    return result;
-  } else if (small) {
-    return ResizeImage.resizeIfNeeded(200, 200, result);
   }
-  return result;
+  if (image == null) {
+    // The passed [media] wasn't a web entity, fetch album art for the locally stored media.
+    // Automatically checks for fallback album arts e.g. `Folder.jpg` or `cover.jpg` etc.
+    final file = Collection.instance.getAlbumArt(media);
+    if (file != null) {
+      // An album art is found.
+      image = ExtendedFileImageProvider(file);
+    }
+  }
+  if (image == null) {
+    // No album art found, use the default album art.
+    image = ExtendedAssetImageProvider('assets/images/default_album_art.png');
+  }
+  if (small) {
+    // This doesn't seem to play well with local non-square album arts.
+    // But, optimal performance is more important than perfect album art. I guess this is a fair trade-off.
+    return ResizeImage.resizeIfNeeded(200, 200, image);
+  } else {
+    return image;
+  }
 }
