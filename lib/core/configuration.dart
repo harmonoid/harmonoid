@@ -9,12 +9,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
+import 'package:media_library/media_library.dart';
 import 'package:path_provider/path_provider.dart' as path;
+import 'package:safe_session_storage/safe_session_storage.dart';
 
-import 'package:harmonoid/utils/safe_session_storage.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/constants/language.dart';
 
 /// Configuration
@@ -75,8 +75,6 @@ class Configuration extends ConfigurationKeys {
     LanguageRegion? languageRegion,
     Accent? accent,
     ThemeMode? themeMode,
-    CollectionOrder? collectionOrderType,
-    CollectionSort? collectionSortType,
     bool? automaticAccent,
     bool? notificationLyrics,
     List<String>? collectionSearchRecent,
@@ -98,6 +96,14 @@ class Configuration extends ConfigurationKeys {
     bool? mobileDenseAlbumTabLayout,
     bool? mobileDenseArtistTabLayout,
     bool? mobileGridArtistTabLayout,
+    AlbumsSort? albumsSort,
+    TracksSort? tracksSort,
+    ArtistsSort? artistsSort,
+    GenresSort? genresSort,
+    OrderType? albumsOrderType,
+    OrderType? tracksOrderType,
+    OrderType? artistsOrderType,
+    OrderType? genresOrderType,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -110,12 +116,6 @@ class Configuration extends ConfigurationKeys {
     }
     if (accent != null) {
       this.accent = accent;
-    }
-    if (collectionSortType != null) {
-      this.collectionSortType = collectionSortType;
-    }
-    if (collectionOrderType != null) {
-      this.collectionOrderType = collectionOrderType;
     }
     if (collectionSearchRecent != null) {
       this.collectionSearchRecent = collectionSearchRecent;
@@ -181,6 +181,30 @@ class Configuration extends ConfigurationKeys {
     if (mobileGridArtistTabLayout != null) {
       this.mobileGridArtistTabLayout = mobileGridArtistTabLayout;
     }
+    if (albumsSort != null) {
+      this.albumsSort = albumsSort;
+    }
+    if (tracksSort != null) {
+      this.tracksSort = tracksSort;
+    }
+    if (artistsSort != null) {
+      this.artistsSort = artistsSort;
+    }
+    if (genresSort != null) {
+      this.genresSort = genresSort;
+    }
+    if (albumsOrderType != null) {
+      this.albumsOrderType = albumsOrderType;
+    }
+    if (tracksOrderType != null) {
+      this.tracksOrderType = tracksOrderType;
+    }
+    if (artistsOrderType != null) {
+      this.artistsOrderType = artistsOrderType;
+    }
+    if (genresOrderType != null) {
+      this.genresOrderType = genresOrderType;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -191,8 +215,6 @@ class Configuration extends ConfigurationKeys {
         'languageRegion': this.languageRegion.index,
         'accent': kAccents.indexOf(this.accent),
         'themeMode': this.themeMode.index,
-        'collectionSortType': this.collectionSortType.index,
-        'collectionOrderType': this.collectionOrderType.index,
         'automaticAccent': this.automaticAccent,
         'notificationLyrics': this.notificationLyrics,
         'collectionSearchRecent': this.collectionSearchRecent,
@@ -215,6 +237,14 @@ class Configuration extends ConfigurationKeys {
         'mobileDenseAlbumTabLayout': this.mobileDenseAlbumTabLayout,
         'mobileDenseArtistTabLayout': this.mobileDenseArtistTabLayout,
         'mobileGridArtistTabLayout': this.mobileGridArtistTabLayout,
+        'albumsSort': this.albumsSort.index,
+        'tracksSort': this.tracksSort.index,
+        'artistsSort': this.artistsSort.index,
+        'genresSort': this.genresSort.index,
+        'albumsOrderType': this.albumsOrderType.index,
+        'tracksOrderType': this.tracksOrderType.index,
+        'artistsOrderType': this.artistsOrderType.index,
+        'genresOrderType': this.genresOrderType.index,
       },
     );
   }
@@ -226,7 +256,9 @@ class Configuration extends ConfigurationKeys {
   }) async {
     final current = await storage.read();
     final conf = await _defaultConfiguration;
-    // Emblace default values for the keys that not found. Possibly due to app update.
+    // Emblace default values for the keys that not found.
+    // Most likely due to update in Harmonoid's app version.
+    // The new Harmonoid's version likely brought new app keys & fallback to default for those.
     conf.keys.forEach(
       (key) {
         if (!current.containsKey(key)) {
@@ -242,9 +274,6 @@ class Configuration extends ConfigurationKeys {
     languageRegion = LanguageRegion.values[current['languageRegion']];
     accent = kAccents[current['accent']];
     themeMode = ThemeMode.values[current['themeMode']];
-    collectionSortType = CollectionSort.values[current['collectionSortType']];
-    collectionOrderType =
-        CollectionOrder.values[current['collectionOrderType']];
     automaticAccent = current['automaticAccent'];
     notificationLyrics = current['notificationLyrics'];
     collectionSearchRecent = current['collectionSearchRecent'].cast<String>();
@@ -267,6 +296,14 @@ class Configuration extends ConfigurationKeys {
     mobileDenseAlbumTabLayout = current['mobileDenseAlbumTabLayout'];
     mobileDenseArtistTabLayout = current['mobileDenseArtistTabLayout'];
     mobileGridArtistTabLayout = current['mobileGridArtistTabLayout'];
+    albumsSort = AlbumsSort.values[current['albumsSort']];
+    tracksSort = TracksSort.values[current['tracksSort']];
+    artistsSort = ArtistsSort.values[current['artistsSort']];
+    genresSort = GenresSort.values[current['genresSort']];
+    albumsOrderType = OrderType.values[current['albumsOrderType']];
+    tracksOrderType = OrderType.values[current['tracksOrderType']];
+    artistsOrderType = OrderType.values[current['artistsOrderType']];
+    genresOrderType = OrderType.values[current['genresOrderType']];
   }
 }
 
@@ -276,8 +313,6 @@ abstract class ConfigurationKeys {
   late LanguageRegion languageRegion;
   late Accent accent;
   late ThemeMode themeMode;
-  late CollectionSort collectionSortType;
-  late CollectionOrder collectionOrderType;
   late bool automaticAccent;
   late bool notificationLyrics;
   late List<String> collectionSearchRecent;
@@ -299,6 +334,14 @@ abstract class ConfigurationKeys {
   late bool mobileDenseAlbumTabLayout;
   late bool mobileDenseArtistTabLayout;
   late bool mobileGridArtistTabLayout;
+  late AlbumsSort albumsSort;
+  late TracksSort tracksSort;
+  late ArtistsSort artistsSort;
+  late GenresSort genresSort;
+  late OrderType albumsOrderType;
+  late OrderType tracksOrderType;
+  late OrderType artistsOrderType;
+  late OrderType genresOrderType;
 }
 
 Future<Map<String, dynamic>> get _defaultConfiguration async => {
@@ -319,8 +362,6 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'languageRegion': 0,
       'accent': 0,
       'themeMode': isMobile ? 0 : 1,
-      'collectionSortType': isMobile ? 0 : 3,
-      'collectionOrderType': 0,
       'automaticAccent': false,
       'notificationLyrics': true,
       'collectionSearchRecent': [],
@@ -342,4 +383,12 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'mobileDenseAlbumTabLayout': false,
       'mobileDenseArtistTabLayout': true,
       'mobileGridArtistTabLayout': true,
+      'albumsSort': isMobile ? 0 : 3,
+      'tracksSort': 0,
+      'artistsSort': 0,
+      'genresSort': 0,
+      'albumsOrderType': 0,
+      'tracksOrderType': 0,
+      'artistsOrderType': 0,
+      'genresOrderType': 0,
     };
