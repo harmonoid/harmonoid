@@ -9,12 +9,13 @@
 import 'dart:math';
 import 'dart:ui';
 import 'dart:async';
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:media_library/media_library.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:animations/animations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -22,12 +23,11 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
-import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/constants/language.dart';
 
 class AlbumTab extends StatelessWidget {
   final controller = ScrollController();
@@ -55,7 +55,7 @@ class AlbumTab extends StatelessWidget {
 
     return Consumer<Collection>(
       builder: (context, collection, _) {
-        if (collection.collectionSortType == CollectionSort.artist && isDesktop)
+        if (collection.albumsSort == AlbumsSort.artist && isDesktop)
           return DesktopAlbumArtistTab();
         final data = tileGridListWidgetsWithScrollbarSupport(
           context: context,
@@ -109,22 +109,22 @@ class AlbumTab extends StatelessWidget {
                             data.data.length - 1,
                           )]
                               .first as Album;
-                          switch (Collection.instance.collectionSortType) {
-                            case CollectionSort.aToZ:
+                          switch (Collection.instance.albumsSort) {
+                            case AlbumsSort.aToZ:
                               {
                                 return Text(
                                   album.albumName[0].toUpperCase(),
                                   style: Theme.of(context).textTheme.headline1,
                                 );
                               }
-                            case CollectionSort.dateAdded:
+                            case AlbumsSort.dateAdded:
                               {
                                 return Text(
                                   '${album.timeAdded.label}',
                                   style: Theme.of(context).textTheme.headline4,
                                 );
                               }
-                            case CollectionSort.year:
+                            case AlbumsSort.year:
                               {
                                 return Text(
                                   album.year,
@@ -190,7 +190,7 @@ class DesktopAlbumArtistTab extends StatelessWidget {
       double last = -1 * (tileMargin + 12.0);
       // Grid generated for each iteration of album artist.
       List<Widget> widgets = [];
-      if (collection.collectionOrderType == CollectionOrder.ascending) {
+      if (collection.albumsOrderType == OrderType.ascending) {
         for (final key in collection.albumArtists.keys) {
           offsets[key] =
               36.0 + (kAlbumTileHeight + tileMargin) * widgets.length + last;
@@ -256,7 +256,7 @@ class DesktopAlbumArtistTab extends StatelessWidget {
         itemExtents.addAll(List.generate(
             widgets.length, (_) => (kAlbumTileHeight + tileMargin)));
       }
-      if (collection.collectionOrderType == CollectionOrder.descending) {
+      if (collection.albumsOrderType == OrderType.descending) {
         for (final key in collection.albumArtists.keys.toList().reversed) {
           offsets[key] =
               36.0 + (kAlbumTileHeight + tileMargin) * widgets.length + last;
@@ -335,8 +335,7 @@ class DesktopAlbumArtistTab extends StatelessWidget {
                 child: InkWell(
                   onTap: () {
                     scrollController.animateTo(
-                      offsets[collection.collectionOrderType ==
-                              CollectionOrder.ascending
+                      offsets[collection.albumsOrderType == OrderType.ascending
                           ? collection.albumArtists.keys.elementAt(i)
                           : collection.albumArtists.keys.toList().elementAt(
                               collection.albumArtists.keys.length - i - 1)]!,
@@ -353,8 +352,7 @@ class DesktopAlbumArtistTab extends StatelessWidget {
                       right: 8.0,
                     ),
                     child: Text(
-                      collection.collectionOrderType ==
-                              CollectionOrder.ascending
+                      collection.albumsOrderType == OrderType.ascending
                           ? collection.albumArtists.keys
                               .elementAt(i)
                               .name

@@ -6,10 +6,11 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:libmpv/libmpv.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -20,7 +21,6 @@ import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class EditDetailsScreen extends StatefulWidget {
@@ -348,7 +348,8 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                     if (e.key ==
                                                         Language
                                                             .instance.GENRE) {
-                                                      copy.genre = value;
+                                                      copy.genre = value ??
+                                                          kUnknownGenre;
                                                     }
                                                     if (e.key ==
                                                         Language.instance
@@ -665,7 +666,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                           }
                                           if (e.key ==
                                               Language.instance.GENRE) {
-                                            copy.genre = value;
+                                            copy.genre = value ?? kUnknownGenre;
                                           }
                                           if (e.key ==
                                               Language.instance.TRACK_NUMBER) {

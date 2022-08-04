@@ -17,7 +17,7 @@ import 'package:miniplayer/miniplayer.dart';
 import 'package:extended_image/extended_image.dart';
 
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/models/media.dart';
+import 'package:media_library/media_library.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';

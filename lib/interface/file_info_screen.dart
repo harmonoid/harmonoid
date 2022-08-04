@@ -17,7 +17,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/file_system.dart';
-import 'package:harmonoid/models/media.dart' hide Media;
+import 'package:media_library/media_library.dart' hide Media;
 import 'package:harmonoid/constants/language.dart';
 
 class FileInfoScreen extends StatefulWidget {

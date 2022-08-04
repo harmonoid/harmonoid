@@ -13,7 +13,7 @@ import 'package:flutter_lyric/lyrics_reader_model.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/models/media.dart';
+import 'package:media_library/media_library.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';

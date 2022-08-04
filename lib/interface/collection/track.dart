@@ -7,23 +7,22 @@
 ///
 
 import 'dart:async';
-
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
-import 'package:extended_image/extended_image.dart';
+import 'package:libmpv/libmpv.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:desktop/desktop.dart' as desktop;
-import 'package:animations/animations.dart';
-import 'package:harmonoid/state/desktop_now_playing_controller.dart';
-import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
+import 'package:desktop/desktop.dart' as desktop;
+import 'package:media_library/media_library.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
-import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -293,22 +292,22 @@ class TrackTab extends StatelessWidget {
                           0,
                           collection.tracks.length - 1,
                         )];
-                        switch (collection.collectionSortType) {
-                          case CollectionSort.aToZ:
+                        switch (collection.tracksSort) {
+                          case TracksSort.aToZ:
                             {
                               return Text(
                                 track.trackName[0].toUpperCase(),
                                 style: Theme.of(context).textTheme.headline1,
                               );
                             }
-                          case CollectionSort.dateAdded:
+                          case TracksSort.dateAdded:
                             {
                               return Text(
                                 '${track.timeAdded.label}',
                                 style: Theme.of(context).textTheme.headline4,
                               );
                             }
-                          case CollectionSort.year:
+                          case TracksSort.year:
                             {
                               return Text(
                                 '${track.year}',
