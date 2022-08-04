@@ -14,13 +14,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
+import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -129,7 +129,8 @@ class PlaylistTab extends StatelessWidget {
                                                     FocusScope.of(context)
                                                         .unfocus();
                                                     await Collection.instance
-                                                        .playlistAdd(value);
+                                                        .playlistCreateFromName(
+                                                            value);
                                                     _controller.clear();
                                                     Navigator.of(context)
                                                         .maybePop();
@@ -163,7 +164,7 @@ class PlaylistTab extends StatelessWidget {
                                                       FocusScope.of(context)
                                                           .unfocus();
                                                       await Collection.instance
-                                                          .playlistAdd(
+                                                          .playlistCreateFromName(
                                                               _controller.text);
                                                       _controller.clear();
                                                       Navigator.of(context)
@@ -188,8 +189,9 @@ class PlaylistTab extends StatelessWidget {
                                           onPressed: () async {
                                             if (_controller.text.isNotEmpty) {
                                               FocusScope.of(context).unfocus();
-                                              await collection.playlistAdd(
-                                                  _controller.text);
+                                              await collection
+                                                  .playlistCreateFromName(
+                                                      _controller.text);
                                               _controller.clear();
                                               Navigator.of(context).maybePop();
                                             }
@@ -257,7 +259,8 @@ class PlaylistTab extends StatelessWidget {
                                                       FocusScope.of(context)
                                                           .unfocus();
                                                       await Collection.instance
-                                                          .playlistAdd(value);
+                                                          .playlistCreateFromName(
+                                                              value);
                                                       _controller.clear();
                                                       Navigator.of(context)
                                                           .maybePop();
@@ -311,7 +314,7 @@ class PlaylistTab extends StatelessWidget {
                                                     FocusScope.of(context)
                                                         .unfocus();
                                                     await Collection.instance
-                                                        .playlistAdd(
+                                                        .playlistCreateFromName(
                                                             _controller.text);
                                                     _controller.clear();
                                                     Navigator.of(context)
@@ -609,7 +612,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                       textColor: Theme.of(context).primaryColor,
                       onPressed: () async {
                         await Collection.instance
-                            .playlistRemove(widget.playlist);
+                            .playlistDelete(widget.playlist);
                         Navigator.of(subContext).pop();
                       },
                       child: Text(Language.instance.YES),
@@ -685,7 +688,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                       textColor: Theme.of(context).primaryColor,
                       onPressed: () async {
                         await Collection.instance
-                            .playlistRemove(widget.playlist);
+                            .playlistDelete(widget.playlist);
                         Navigator.of(subContext).pop();
                       },
                       child: Text(Language.instance.YES),

@@ -9,21 +9,21 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
+import 'package:animations/animations.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:libmpv/libmpv.dart' hide Media;
+import 'package:media_library/media_library.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:filepicker_windows/filepicker_windows.dart';
-import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:path/path.dart' as path;
-import 'package:animations/animations.dart';
-import 'package:libmpv/libmpv.dart' hide Media;
-import 'package:share_plus/share_plus.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/collection/album.dart';
@@ -824,6 +824,22 @@ enum TabRouteSender {
 }
 
 ImageProvider getAlbumArt(Media media, {bool small: false}) {
+  const kAlbumArtFileNames = [
+    'Folder.jpg',
+    'Folder.png',
+    'AlbumArtSmall.jpg',
+    'AlbumArt.jpg',
+    'Album.jpg',
+    '.folder.png',
+    'cover.jpg',
+    'cover.png',
+    'cover.gif',
+    'front.jpg',
+    'front.png',
+    'front.gif',
+    'front.bmp',
+    'thumb.jpg',
+  ];
   final result = () {
     if (media is Track) {
       if (Plugins.isWebMedia(media.uri)) {
@@ -859,7 +875,9 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
       }
     } else if (media is Album) {
       if (media.tracks.isEmpty) {
-        return ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
+        return ExtendedAssetImageProvider(
+          'assets/images/default_album_art.png',
+        );
       }
       if (Plugins.isWebMedia(media.tracks.first.uri)) {
         return ExtendedNetworkImageProvider(
@@ -897,7 +915,9 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
       }
     } else if (media is Artist) {
       if (media.tracks.isEmpty) {
-        return ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
+        return ExtendedAssetImageProvider(
+          'assets/images/default_album_art.png',
+        );
       }
       if (Plugins.isWebMedia(media.tracks.first.uri)) {
         return ExtendedNetworkImageProvider(
@@ -934,7 +954,9 @@ ImageProvider getAlbumArt(Media media, {bool small: false}) {
         } catch (_) {}
       }
     }
-    return ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
+    return ExtendedAssetImageProvider(
+      'assets/images/default_album_art.png',
+    );
   }() as ImageProvider;
   if (small && result is ExtendedNetworkImageProvider) {
     return result;

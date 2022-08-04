@@ -104,8 +104,14 @@ Future<void> main(List<String> args) async {
     await Collection.initialize(
       collectionDirectories: Configuration.instance.collectionDirectories,
       cacheDirectory: Configuration.instance.cacheDirectory,
-      collectionSortType: Configuration.instance.collectionSortType,
-      collectionOrderType: Configuration.instance.collectionOrderType,
+      albumsSort: Configuration.instance.albumsSort,
+      artistsSort: Configuration.instance.artistsSort,
+      tracksSort: Configuration.instance.tracksSort,
+      genresSort: Configuration.instance.genresSort,
+      albumsOrderType: Configuration.instance.albumsOrderType,
+      tracksOrderType: Configuration.instance.tracksOrderType,
+      artistsOrderType: Configuration.instance.artistsOrderType,
+      genresOrderType: Configuration.instance.genresOrderType,
     );
     await Collection.instance.refresh(
       onProgress: (progress, total, _) {

@@ -18,6 +18,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
+import 'package:media_library/media_library.dart' hide Media, Playlist;
 import 'package:ytm_client/ytm_client.dart' hide Media, Track, Playlist;
 import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
@@ -26,7 +27,6 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/app_state.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/models/media.dart' hide Media, Playlist;
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';

@@ -4,7 +4,7 @@ publish_to: "none"
 version: 0.2.7+5003
 
 environment:
-  sdk: ">=2.14.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -12,6 +12,8 @@ dependencies:
 
   # Plugins maintained by github.com/alexmercerind or first-party to the Harmonoid.
 
+  media_library:
+    path: external/media_library
   libmpv:
     path: external/libmpv.dart
   system_media_transport_controls:
@@ -109,6 +111,10 @@ dependencies:
       ref: main
 
 dependency_overrides:
+  libmpv:
+    path: external/libmpv.dart
+  safe_session_storage:
+    path: external/safe_session_storage
   bitsdojo_window_windows:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git

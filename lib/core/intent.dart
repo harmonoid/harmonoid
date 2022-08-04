@@ -11,16 +11,16 @@ import 'package:libmpv/libmpv.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:media_library/media_library.dart' hide Media;
 import 'package:ytm_client/ytm_client.dart' hide Media, Track;
+import 'package:safe_session_storage/safe_session_storage.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/models/media.dart' hide Media;
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
-import 'package:harmonoid/utils/file_system.dart';
 
 /// Intent
 /// ------

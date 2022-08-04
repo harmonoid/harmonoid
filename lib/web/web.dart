@@ -6,11 +6,8 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:collection';
-import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/rendering.dart';
 import 'package:animations/animations.dart';
 import 'package:harmonoid/web/state/web.dart';
 import 'package:ytm_client/ytm_client.dart';
@@ -216,30 +213,11 @@ class _WebRecommendationsState extends State<WebRecommendations>
   bool shouldRefreshOnDidChangeDependencies =
       Configuration.instance.webRecent.isEmpty;
   late ScrollController _scrollController = ScrollController();
-  final int _velocity = 40;
   final HashMap<String, Color> colorKeys = HashMap<String, Color>();
 
   @override
   void initState() {
     super.initState();
-    // TODO: Tightly coupled Windows specific configuration.
-    if (Platform.isWindows) {
-      _scrollController.addListener(
-        () {
-          final scrollDirection =
-              _scrollController.position.userScrollDirection;
-          if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = _scrollController.offset +
-                (scrollDirection == ScrollDirection.reverse
-                    ? _velocity
-                    : -_velocity);
-            scrollEnd = min(_scrollController.position.maxScrollExtent,
-                max(_scrollController.position.minScrollExtent, scrollEnd));
-            _scrollController.jumpTo(scrollEnd);
-          }
-        },
-      );
-    }
     Web.instance.refreshCallback = () {
       if (mounted) {
         setState(() {});

@@ -8,11 +8,11 @@
 import 'package:libmpv/libmpv.dart';
 import 'package:flutter/material.dart';
 import 'package:ytm_client/ytm_client.dart';
+import 'package:media_library/media_library.dart' as media;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/models/media.dart' as media;
 
 class Web {
   /// [Web] object instance.

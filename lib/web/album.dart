@@ -10,23 +10,23 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/utils/theme.dart';
-import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/web/web.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:media_library/media_library.dart' as media;
 
+import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/web/state/web.dart';
 

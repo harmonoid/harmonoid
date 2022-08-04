@@ -9,20 +9,20 @@
 import 'dart:ui';
 import 'dart:async';
 import 'dart:math';
-import 'package:animations/animations.dart';
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
+import 'package:media_library/media_library.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/collection/album.dart';
-import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -117,11 +117,33 @@ class ArtistTab extends StatelessWidget {
                                   data.data.length - 1,
                                 )]
                                     .first as Artist;
-                                // Always A to Z in artists' tab.
-                                return Text(
-                                  artist.artistName[0].toUpperCase(),
-                                  style: Theme.of(context).textTheme.headline1,
-                                );
+                                switch (collection.artistsSort) {
+                                  case ArtistsSort.aToZ:
+                                    {
+                                      return Text(
+                                        artist.artistName[0].toUpperCase(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline1,
+                                      );
+                                    }
+                                  case ArtistsSort.dateAdded:
+                                    {
+                                      return Text(
+                                        '${artist.timeAdded.label}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline4,
+                                      );
+                                    }
+
+                                  default:
+                                    return Text(
+                                      '',
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    );
+                                }
                               },
                               backgroundColor: Theme.of(context).cardColor,
                               controller: controller,

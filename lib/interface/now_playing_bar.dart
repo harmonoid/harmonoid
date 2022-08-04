@@ -28,7 +28,7 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
-import 'package:harmonoid/models/media.dart';
+import 'package:media_library/media_library.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class NowPlayingBar extends StatefulWidget {

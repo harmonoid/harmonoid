@@ -9,11 +9,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
-import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:ytm_client/ytm_client.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';

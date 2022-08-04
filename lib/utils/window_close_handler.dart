@@ -81,7 +81,7 @@ abstract class WindowCloseHandler {
     } else {
       try {
         if (Platform.isLinux) {
-          await Collection.instance.tagger.dispose();
+          await Collection.instance.dispose();
           await Intent.instance.tagger.dispose();
           await Playback.instance.libmpv?.dispose();
         }

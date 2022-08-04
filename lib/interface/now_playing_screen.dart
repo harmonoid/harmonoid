@@ -8,7 +8,7 @@
 
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/models/media.dart';
+import 'package:media_library/media_library.dart';
 import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
