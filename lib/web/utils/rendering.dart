@@ -12,13 +12,13 @@ import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:media_library/media_library.dart' as media;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/models/media.dart' as media;
 
 List<PopupMenuItem<int>> webTrackPopupMenuItems(BuildContext context) => [
       PopupMenuItem(

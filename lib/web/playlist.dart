@@ -5,31 +5,30 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
+
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/web/web.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:media_library/media_library.dart' as media;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/web/track.dart';
-import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/utils/theme.dart';
-import 'package:harmonoid/web/utils/widgets.dart';
 
 class WebPlaylistLargeTile extends StatelessWidget {
   final double width;
@@ -300,20 +299,6 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
           });
         }
       });
-    }
-    if (Platform.isWindows) {
-      scrollController.addListener(
-        () {
-          final scrollDirection = scrollController.position.userScrollDirection;
-          if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = scrollController.offset +
-                (scrollDirection == ScrollDirection.reverse ? 60 : -60);
-            scrollEnd = min(scrollController.position.maxScrollExtent,
-                max(scrollController.position.minScrollExtent, scrollEnd));
-            scrollController.jumpTo(scrollEnd);
-          }
-        },
-      );
     }
     if (isMobile) {
       PaletteGenerator.fromImageProvider(ResizeImage.resizeIfNeeded(

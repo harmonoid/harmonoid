@@ -7,9 +7,9 @@
 ///
 import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';

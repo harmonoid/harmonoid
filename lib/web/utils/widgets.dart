@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:media_library/media_library.dart' as media;
 import 'package:substring_highlight/substring_highlight.dart';
 
 import 'package:harmonoid/web/web.dart';
@@ -21,7 +22,6 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/models/media.dart' as media;
 
 class WebSearchBar extends StatefulWidget {
   final String? query;
@@ -286,7 +286,8 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
           setState(() {
             fetched = true;
           });
-          final result = await Collection.instance.playlistAdd(playlist!.name);
+          final result =
+              await Collection.instance.playlistCreateFromName(playlist!.name);
           await Collection.instance.playlistAddTracks(
             result,
             playlist!.tracks
@@ -567,7 +568,8 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
           setState(() {
             fetched = true;
           });
-          final result = await Collection.instance.playlistAdd(playlist!.name);
+          final result =
+              await Collection.instance.playlistCreateFromName(playlist!.name);
           await Collection.instance.playlistAddTracks(
             result,
             playlist!.tracks

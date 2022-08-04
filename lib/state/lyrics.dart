@@ -10,13 +10,13 @@ import 'dart:convert' as convert;
 import 'package:libmpv/libmpv.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart' hide ActionType;
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/models/lyric.dart';
-import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
 
