@@ -84,8 +84,6 @@ class Intent {
   /// Starts playing the possibly opened file & saves its metadata before doing it.
   /// If no file was opened, then load the last playing playlist from [AppState].
   ///
-  /// Only works on Windows, Linux & MacOS.
-  ///
   Future<void> play() {
     return _lock.synchronized(() async {
       _flutterSidedIntentPlayCalled = true;
