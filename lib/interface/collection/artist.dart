@@ -503,7 +503,7 @@ class ArtistTile extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              Spacer(),
+                              const SizedBox(height: 12.0),
                               Text(
                                 artist.artistName.overflow,
                                 style: Theme.of(context)
