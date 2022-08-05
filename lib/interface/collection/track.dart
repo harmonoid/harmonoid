@@ -947,6 +947,7 @@ class TrackTileState extends State<TrackTile> {
   void _showBottomSheet() async {
     int? result;
     await showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (context) => Container(
         child: Column(

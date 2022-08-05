@@ -170,6 +170,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                   onLongPress: () async {
                     int? result;
                     await showModalBottomSheet(
+                      isScrollControlled: true,
                       context: context,
                       builder: (context) => Container(
                         child: Column(
@@ -206,6 +207,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         onPressed: () async {
                           int? result;
                           await showModalBottomSheet(
+                            isScrollControlled: true,
                             context: context,
                             builder: (context) => Container(
                               child: Column(
@@ -296,6 +298,7 @@ class WebTrackTile extends StatelessWidget {
           onLongPress: () async {
             int? result;
             await showModalBottomSheet(
+              isScrollControlled: true,
               context: context,
               builder: (context) => Container(
                 child: Column(
@@ -392,6 +395,7 @@ class WebTrackTile extends StatelessWidget {
                               onPressed: () async {
                                 int? result;
                                 await showModalBottomSheet(
+                                  isScrollControlled: true,
                                   context: context,
                                   builder: (context) => Container(
                                     child: Column(

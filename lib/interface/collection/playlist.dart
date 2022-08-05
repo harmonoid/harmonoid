@@ -213,6 +213,7 @@ class PlaylistTab extends StatelessWidget {
                                   );
                                 } else {
                                   showModalBottomSheet(
+                                    isScrollControlled: true,
                                     context: context,
                                     elevation: 8.0,
                                     useRootNavigator: true,
@@ -365,6 +366,7 @@ class PlaylistTab extends StatelessWidget {
                                   );
                                 } else if (isMobile) {
                                   showModalBottomSheet(
+                                    isScrollControlled: true,
                                     constraints: BoxConstraints(
                                       maxHeight: double.infinity,
                                     ),

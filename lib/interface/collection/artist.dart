@@ -1545,6 +1545,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                   onLongPress: () async {
                                     var result;
                                     await showModalBottomSheet(
+                                      isScrollControlled: true,
                                       context: context,
                                       builder: (context) => Container(
                                         child: Column(
@@ -1642,6 +1643,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                                 onPressed: () async {
                                                   var result;
                                                   await showModalBottomSheet(
+                                                    isScrollControlled: true,
                                                     context: context,
                                                     builder: (context) =>
                                                         Container(

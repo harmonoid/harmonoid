@@ -359,7 +359,7 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
     if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
       PopupMenuItem<int>(
         padding: EdgeInsets.zero,
-        child: SizedBox(height: 64.0),
+        child: SizedBox(height: kMobileNowPlayingBarHeight),
       ),
   ];
 }
@@ -636,6 +636,7 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
     );
   } else {
     return showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.8,

@@ -83,6 +83,7 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                   onLongPress: () async {
                     int? result;
                     await showModalBottomSheet(
+                      isScrollControlled: true,
                       context: context,
                       builder: (context) => Container(
                         child: Column(
@@ -188,6 +189,7 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                         onPressed: () async {
                           int? result;
                           await showModalBottomSheet(
+                            isScrollControlled: true,
                             context: context,
                             builder: (context) => Container(
                               child: Column(
@@ -266,6 +268,7 @@ class VideoTile extends StatelessWidget {
           onLongPress: () async {
             int? result;
             await showModalBottomSheet(
+              isScrollControlled: true,
               context: context,
               builder: (context) => Container(
                 child: Column(
@@ -348,6 +351,7 @@ class VideoTile extends StatelessWidget {
                               onPressed: () async {
                                 int? result;
                                 await showModalBottomSheet(
+                                  isScrollControlled: true,
                                   context: context,
                                   builder: (context) => Container(
                                     child: Column(
