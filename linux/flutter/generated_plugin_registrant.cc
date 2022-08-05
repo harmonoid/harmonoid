@@ -10,7 +10,9 @@
 #include <dart_discord_rpc/dart_discord_rpc_plugin.h>
 #include <file_selector_linux/file_selector_plugin.h>
 #include <flutter_lyric/flutter_lyric_plugin.h>
-#include <override_window_destroy/override_window_destroy_plugin.h>
+#include <flutter_platform_alert/flutter_platform_alert_plugin.h>
+#include <flutter_window_close/flutter_window_close_plugin.h>
+#include <screen_retriever/screen_retriever_plugin.h>
 #include <url_launcher_linux/url_launcher_plugin.h>
 #include <window_manager/window_manager_plugin.h>
 
@@ -27,9 +29,15 @@ void fl_register_plugins(FlPluginRegistry* registry) {
   g_autoptr(FlPluginRegistrar) flutter_lyric_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "FlutterLyricPlugin");
   flutter_lyric_plugin_register_with_registrar(flutter_lyric_registrar);
-  g_autoptr(FlPluginRegistrar) override_window_destroy_registrar =
-      fl_plugin_registry_get_registrar_for_plugin(registry, "OverrideWindowDestroyPlugin");
-  override_window_destroy_plugin_register_with_registrar(override_window_destroy_registrar);
+  g_autoptr(FlPluginRegistrar) flutter_platform_alert_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "FlutterPlatformAlertPlugin");
+  flutter_platform_alert_plugin_register_with_registrar(flutter_platform_alert_registrar);
+  g_autoptr(FlPluginRegistrar) flutter_window_close_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "FlutterWindowClosePlugin");
+  flutter_window_close_plugin_register_with_registrar(flutter_window_close_registrar);
+  g_autoptr(FlPluginRegistrar) screen_retriever_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "ScreenRetrieverPlugin");
+  screen_retriever_plugin_register_with_registrar(screen_retriever_registrar);
   g_autoptr(FlPluginRegistrar) url_launcher_linux_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "UrlLauncherPlugin");
   url_launcher_plugin_register_with_registrar(url_launcher_linux_registrar);
