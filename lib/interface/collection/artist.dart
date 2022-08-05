@@ -35,18 +35,18 @@ class ArtistTab extends StatelessWidget {
     // Is dense or not?
     // TODO: dense layouts only present on the mobile.
     final baseWidth =
-        ((Configuration.instance.mobileGridArtistTabLayout && isMobile)
+        ((Configuration.instance.mobileDenseArtistTabLayout && isMobile)
             ? kDenseArtistTileWidth
             : kArtistTileWidth);
     final baseHeight =
-        ((Configuration.instance.mobileGridArtistTabLayout && isMobile)
+        ((Configuration.instance.mobileDenseArtistTabLayout && isMobile)
             ? kDenseArtistTileHeight
             : kArtistTileHeight);
     final elementsPerRow =
         (Configuration.instance.mobileGridArtistTabLayout || isDesktop)
             ? (MediaQuery.of(context).size.width - tileMargin) ~/
                 (baseWidth + tileMargin)
-            : 1;
+            : 2;
     final double width = isMobile
         ? (MediaQuery.of(context).size.width -
                 (elementsPerRow + 1) * tileMargin) /
@@ -69,7 +69,8 @@ class ArtistTab extends StatelessWidget {
             artist: collection.artists[index],
             key: ValueKey(collection.artists[index]),
             dense: Configuration.instance.mobileGridArtistTabLayout
-                ? (Configuration.instance.mobileGridArtistTabLayout && isMobile)
+                ? (Configuration.instance.mobileDenseArtistTabLayout &&
+                    isMobile)
                 : null,
           ),
         );
