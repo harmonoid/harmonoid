@@ -59,6 +59,7 @@
 	</screenshots>
 	<launchable type="desktop-id">harmonoid.desktop</launchable>
 	<releases>
+		<release version="0.2.7" date="2022-08-05" />
 		<release version="0.2.6" date="2022-07-17" />
 		<release version="0.2.5" date="2022-07-13" />
 		<release version="0.2.2" date="2022-03-24" />
