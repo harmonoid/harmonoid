@@ -16,12 +16,10 @@ import io.flutter.Log
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
-import java.util.*
+import java.util.Random
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.net.URLDecoder
-import java.nio.charset.StandardCharsets
 import com.ryanheise.audioservice.AudioServiceActivity
 
 
@@ -60,10 +58,10 @@ class MainActivity : AudioServiceActivity() {
         // This has been configured to work correctly with android:launchMode as singleTask.
         if (intent != null) {
             var result: String? = null
-            Log.d("MainActivity.java", intent.scheme.toString())
-            Log.d("MainActivity.java", intent.action.toString())
-            Log.d("MainActivity.java", intent.type.toString())
-            Log.d("MainActivity.java", intent.data.toString())
+            Log.d("Harmonoid", intent.scheme.toString())
+            Log.d("Harmonoid", intent.action.toString())
+            Log.d("Harmonoid", intent.type.toString())
+            Log.d("Harmonoid", intent.data.toString())
             if (arrayListOf("file", "http").contains(intent.data?.scheme)) {
                 result = intent.data.toString()
             }
@@ -99,22 +97,16 @@ class MainActivity : AudioServiceActivity() {
                 }
                 // Saving the file in "Intents" subdirectory, for easy clean-up the cache in future.
                 val intentFilesDirAbsolutePath = "$externalFilesDirAbsolutePath/Intents"
-                Log.d("MainActivity.java", intentFilesDirAbsolutePath)
-                // Last segment of the URI is interpreted as the file path.
-                val fileName = intent.data.toString().split("/").toList().lastOrNull()
-                Log.d("MainActivity.java", fileName.toString())
+                Log.d("Harmonoid", intentFilesDirAbsolutePath)
                 // If file name is null, then a random integer value is used as the temporary file's
                 // name. The file name is then parsed using URLDecode.decode, which removes any of
                 // ambiguity that can be caused by parsing the final URI by Dart's Uri.parse.
                 // Since, decoding of the URI component may result in some illegal file path
                 // characters, they are later on removed using a simple regex.
                 val path = "$intentFilesDirAbsolutePath/${
-                    URLDecoder.decode(
-                            fileName ?: Random().nextInt(Integer.MAX_VALUE).toString(),
-                            StandardCharsets.UTF_8.toString()
-                    ).replace("[\\\\/:*?\"<>| ]".toRegex(), "")
+                    Random().nextInt(Integer.MAX_VALUE).toString().replace("[\\\\/:*?\"<>| ]".toRegex(), "")
                 }"
-                Log.d("MainActivity.java", path)
+                Log.d("Harmonoid", path)
                 // Delete the directory where the temporary files are placed. This is because
                 // some previous intent handling would've resulted in file creations here.
                 // This wastage of space can quickly get out of hands.
@@ -130,13 +122,13 @@ class MainActivity : AudioServiceActivity() {
                 }
                 inputStream?.copyTo(FileOutputStream(path))
                 result = "file://$path"
-                Log.d("MainActivity.java", path)
+                Log.d("Harmonoid", path)
             }
             if (!arrayListOf(null, uri).contains(result)) {
                 // Notify the newly opened file through the platform channel.
                 uri = result
-                channel?.invokeMethod("MainActivity.java", uri)
-                Log.d("MainActivity.java", uri.toString())
+                channel?.invokeMethod("Harmonoid", uri)
+                Log.d("Harmonoid", uri.toString())
             }
         }
     }
