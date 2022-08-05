@@ -551,7 +551,7 @@ class CollectionScreenState extends State<CollectionScreen>
                           showIfOpened: false,
                           showIfClosed: true,
                           child: CircularButton(
-                            icon: Icon(Icons.list, size: 24.0),
+                            icon: Icon(Icons.grid_on, size: 20.0),
                             onPressed: () {
                               final position = RelativeRect.fromRect(
                                 Offset(
@@ -580,24 +580,30 @@ class CollectionScreenState extends State<CollectionScreen>
                                     checked: Configuration
                                         .instance.mobileDenseAlbumTabLayout,
                                     value: 0,
-                                    child: Text(Language
-                                        .instance.ENABLE_DENSE_ALBUMS_LAYOUT),
+                                    child: Text(
+                                      Language
+                                          .instance.ENABLE_DENSE_ALBUMS_LAYOUT,
+                                    ),
                                   ),
                                   CheckedPopupMenuItem(
                                     padding: EdgeInsets.zero,
                                     checked: Configuration
                                         .instance.mobileDenseArtistTabLayout,
                                     value: 1,
-                                    child: Text(Language
-                                        .instance.ENABLE_DENSE_ARTISTS_LAYOUT),
+                                    child: Text(
+                                      Language
+                                          .instance.ENABLE_DENSE_ARTISTS_LAYOUT,
+                                    ),
                                   ),
                                   CheckedPopupMenuItem(
                                     padding: EdgeInsets.zero,
                                     checked: Configuration
                                         .instance.mobileGridArtistTabLayout,
                                     value: 2,
-                                    child: Text(Language
-                                        .instance.ENABLE_GRID_ARTISTS_LAYOUT),
+                                    child: Text(
+                                      Language
+                                          .instance.ENABLE_GRID_ARTISTS_LAYOUT,
+                                    ),
                                   ),
                                 ],
                               ).then((value) {

@@ -1711,9 +1711,11 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
   Widget build(BuildContext context) {
     // Indices are different on mobile.
     final tab = {
-      0: 2,
-      1: 1,
-      2: 3,
+      // [PlaylistTab]
+      0: -1,
+      1: 2,
+      2: 0,
+      3: 2,
       4: 4,
     }[index]!;
     return AnimatedOpacity(
@@ -1741,7 +1743,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
           final value = await showMenu<dynamic>(
             context: context,
             position: position,
-            elevation: 8.0,
+            elevation: 4.0,
             items: [
               ...{
                 0: <PopupMenuItem>[
@@ -1752,7 +1754,6 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     child: ListTile(
                       title: Text(
                         Language.instance.A_TO_Z,
-                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
@@ -1764,7 +1765,6 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     child: ListTile(
                       title: Text(
                         Language.instance.DATE_ADDED,
-                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
@@ -1775,22 +1775,21 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     child: ListTile(
                       title: Text(
                         Language.instance.YEAR,
-                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
-                  CheckedPopupMenuItem(
-                    checked:
-                        Collection.instance.albumsSort == AlbumsSort.artist,
-                    value: AlbumsSort.artist,
-                    padding: EdgeInsets.zero,
-                    child: ListTile(
-                      title: Text(
-                        Language.instance.ARTIST,
-                        style: Theme.of(context).textTheme.headline4,
-                      ),
-                    ),
-                  ),
+                  // Not implemented for mobile.
+                  // CheckedPopupMenuItem(
+                  //   checked:
+                  //       Collection.instance.albumsSort == AlbumsSort.artist,
+                  //   value: AlbumsSort.artist,
+                  //   padding: EdgeInsets.zero,
+                  //   child: ListTile(
+                  //     title: Text(
+                  //       Language.instance.ARTIST,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
                 1: <PopupMenuItem>[
                   CheckedPopupMenuItem(
@@ -1800,7 +1799,6 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     child: ListTile(
                       title: Text(
                         Language.instance.A_TO_Z,
-                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
@@ -1812,7 +1810,6 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     child: ListTile(
                       title: Text(
                         Language.instance.DATE_ADDED,
-                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
@@ -1823,7 +1820,6 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     child: ListTile(
                       title: Text(
                         Language.instance.YEAR,
-                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
@@ -1837,7 +1833,6 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     child: ListTile(
                       title: Text(
                         Language.instance.A_TO_Z,
-                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
@@ -1849,7 +1844,6 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     child: ListTile(
                       title: Text(
                         Language.instance.DATE_ADDED,
-                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
@@ -1862,7 +1856,6 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     child: ListTile(
                       title: Text(
                         Language.instance.A_TO_Z,
-                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
@@ -1874,7 +1867,6 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     child: ListTile(
                       title: Text(
                         Language.instance.DATE_ADDED,
-                        style: Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
@@ -1898,7 +1890,6 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                   child: ListTile(
                     title: Text(
                       Language.instance.ASCENDING,
-                      style: Theme.of(context).textTheme.headline4,
                     ),
                   ),
                 ),
@@ -1918,7 +1909,6 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                   child: ListTile(
                     title: Text(
                       Language.instance.DESCENDING,
-                      style: Theme.of(context).textTheme.headline4,
                     ),
                   ),
                 ),
