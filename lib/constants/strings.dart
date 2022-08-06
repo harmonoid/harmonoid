@@ -136,6 +136,7 @@ class Strings {
   late String OPTIONS;
   late String ORDER;
   late String PAUSE;
+  late String PHONE;
   late String PITCH;
   late String PLAY;
   late String PLAYLIST;
@@ -180,6 +181,7 @@ class Strings {
   late String SAVE;
   late String SAVE_AS_PLAYLIST;
   late String SAVE_TO_DOWNLOADS;
+  late String SD_CARD;
   late String SEARCH;
   late String SEARCH_COLLECTION;
   late String SEARCH_HISTORY_SUBHEADER;

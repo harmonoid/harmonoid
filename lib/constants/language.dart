@@ -340,6 +340,7 @@ class Language extends Strings with ChangeNotifier {
     this.OPTIONS = asset['OPTIONS']!;
     this.ORDER = asset['ORDER']!;
     this.PAUSE = asset['PAUSE']!;
+    this.PHONE = asset['PHONE']!;
     this.PITCH = asset['PITCH']!;
     this.PLAY = asset['PLAY']!;
     this.PLAYLIST = asset['PLAYLIST']!;
@@ -384,6 +385,7 @@ class Language extends Strings with ChangeNotifier {
     this.SAVE = asset['SAVE']!;
     this.SAVE_AS_PLAYLIST = asset['SAVE_AS_PLAYLIST']!;
     this.SAVE_TO_DOWNLOADS = asset['SAVE_TO_DOWNLOADS']!;
+    this.SD_CARD = asset['SD_CARD']!;
     this.SEARCH = asset['SEARCH']!;
     this.SEARCH_COLLECTION = asset['SEARCH_COLLECTION']!;
     this.SEARCH_HISTORY_SUBHEADER = asset['SEARCH_HISTORY_SUBHEADER']!;
