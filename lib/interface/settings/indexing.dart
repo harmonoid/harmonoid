@@ -23,7 +23,7 @@ import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class IndexingSetting extends StatefulWidget {
-  IndexingSetting({Key? key}) : super(key: key);
+  const IndexingSetting({Key? key}) : super(key: key);
   IndexingState createState() => IndexingState();
 }
 

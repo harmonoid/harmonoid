@@ -1713,7 +1713,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
     final tab = {
       // [PlaylistTab]
       0: -1,
-      1: 2,
+      1: 1,
       2: 0,
       3: 2,
       4: 4,
