@@ -6,6 +6,9 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
+import 'dart:io';
+
+import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -24,9 +27,24 @@ class IndexingSetting extends StatefulWidget {
   IndexingState createState() => IndexingState();
 }
 
-class IndexingState extends State<IndexingSetting> {
+class IndexingState extends State<IndexingSetting>
+    with AutomaticKeepAliveClientMixin {
+  List<String>? storages;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final storages = await ExternalPath.getExternalStorageDirectories();
+        setState(() => this.storages = storages);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Consumer<CollectionRefresh>(
       builder: (context, controller, _) => SettingsTile(
         title: Language.instance.SETTING_INDEXING_TITLE,
@@ -108,15 +126,15 @@ class IndexingState extends State<IndexingSetting> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                            Text(
-                              Language.instance.SELECTED_DIRECTORIES,
-                              style: Theme.of(context).textTheme.headline3,
-                            ),
-                            SizedBox(
-                              height: 8.0,
-                            ),
-                          ] +
-                          Configuration.instance.collectionDirectories
+                        Text(
+                          Language.instance.SELECTED_DIRECTORIES,
+                          style: Theme.of(context).textTheme.headline3,
+                        ),
+                        SizedBox(
+                          height: 8.0,
+                        ),
+                        if (!Platform.isAndroid || storages != null)
+                          ...Configuration.instance.collectionDirectories
                               .map(
                                 (directory) => isDesktop
                                     ? Card(
@@ -297,11 +315,12 @@ class IndexingState extends State<IndexingSetting> {
                                               child: Text(
                                                 directory.path
                                                     .replaceAll(
-                                                      Configuration.instance
-                                                          .cacheDirectory.path
-                                                          .split('/Android/')
-                                                          .first,
-                                                      'Phone',
+                                                      storages!.first,
+                                                      Language.instance.PHONE,
+                                                    )
+                                                    .replaceAll(
+                                                      storages!.last,
+                                                      Language.instance.SD_CARD,
                                                     )
                                                     .overflow,
                                                 style: isMobile
@@ -368,7 +387,9 @@ class IndexingState extends State<IndexingSetting> {
                                                   onProgress: (progress, total,
                                                       isCompleted) {
                                                     controller.set(
-                                                        progress, total);
+                                                      progress,
+                                                      total,
+                                                    );
                                                   },
                                                 );
                                                 await Configuration.instance
@@ -393,125 +414,119 @@ class IndexingState extends State<IndexingSetting> {
                                         ),
                                       ),
                               )
-                              .toList() +
-                          [
-                            if (isDesktop) SizedBox(height: 8.0),
-                            if (controller.progress != controller.total)
-                              Container(
-                                height: 56.0,
-                                width: isDesktop
-                                    ? 320.0
-                                    : MediaQuery.of(context).size.width,
-                                alignment: Alignment.centerLeft,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    controller.progress == null
-                                        ? Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                Language
-                                                    .instance.DISCOVERING_FILES,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline3,
-                                              ),
-                                              Container(
-                                                margin:
-                                                    EdgeInsets.only(top: 6.0),
-                                                height: 4.0,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    32.0,
-                                                child: LinearProgressIndicator(
-                                                  value: null,
-                                                  backgroundColor:
+                              .toList(),
+                        if (isDesktop) SizedBox(height: 8.0),
+                        if (controller.progress != controller.total)
+                          Container(
+                            height: 56.0,
+                            width: isDesktop
+                                ? 320.0
+                                : MediaQuery.of(context).size.width,
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                controller.progress == null
+                                    ? Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            Language.instance.DISCOVERING_FILES,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline3,
+                                          ),
+                                          Container(
+                                            margin: EdgeInsets.only(top: 6.0),
+                                            height: 4.0,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                32.0,
+                                            child: LinearProgressIndicator(
+                                              value: null,
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary
+                                                  .withOpacity(0.2),
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(
                                                       Theme.of(context)
                                                           .colorScheme
-                                                          .secondary
-                                                          .withOpacity(0.2),
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation(
-                                                          Theme.of(context)
-                                                              .colorScheme
-                                                              .secondary),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : TweenAnimationBuilder(
-                                            tween: Tween<double>(
-                                              begin: 0,
-                                              end: (controller.progress ?? 0) /
-                                                  controller.total,
-                                            ),
-                                            duration:
-                                                Duration(milliseconds: 400),
-                                            child: Text(
-                                              (Language.instance
-                                                  .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
-                                                  .replaceAll(
-                                                'NUMBER_STRING',
-                                                controller.progress.toString(),
-                                              )).replaceAll(
-                                                'TOTAL_STRING',
-                                                controller.total.toString(),
-                                              ),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline3,
-                                            ),
-                                            builder:
-                                                (_, dynamic value, child) =>
-                                                    Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                child!,
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                    top: 8.0,
-                                                  ),
-                                                  height: 4.0,
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      32.0,
-                                                  child:
-                                                      LinearProgressIndicator(
-                                                    value: value,
-                                                    backgroundColor:
-                                                        Theme.of(context)
-                                                            .colorScheme
-                                                            .secondary
-                                                            .withOpacity(0.2),
-                                                    valueColor:
-                                                        AlwaysStoppedAnimation(
-                                                            Theme.of(context)
-                                                                .colorScheme
-                                                                .secondary),
-                                                  ),
-                                                ),
-                                              ],
+                                                          .secondary),
                                             ),
                                           ),
-                                  ],
-                                ),
-                              ),
-                            if (controller.progress != controller.total)
-                              Padding(
-                                padding: EdgeInsets.only(top: 4.0, bottom: 8.0),
-                                child: Text(
-                                  Language.instance.COLLECTION_INDEXING_LABEL,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.headline3,
-                                ),
-                              ),
-                          ],
+                                        ],
+                                      )
+                                    : TweenAnimationBuilder(
+                                        tween: Tween<double>(
+                                          begin: 0,
+                                          end: (controller.progress ?? 0) /
+                                              controller.total,
+                                        ),
+                                        duration: Duration(milliseconds: 400),
+                                        child: Text(
+                                          (Language.instance
+                                              .SETTING_INDEXING_LINEAR_PROGRESS_INDICATOR
+                                              .replaceAll(
+                                            'NUMBER_STRING',
+                                            controller.progress.toString(),
+                                          )).replaceAll(
+                                            'TOTAL_STRING',
+                                            controller.total.toString(),
+                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline3,
+                                        ),
+                                        builder: (_, dynamic value, child) =>
+                                            Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            child!,
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                top: 8.0,
+                                              ),
+                                              height: 4.0,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  32.0,
+                                              child: LinearProgressIndicator(
+                                                value: value,
+                                                backgroundColor:
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .secondary
+                                                        .withOpacity(0.2),
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                              ],
+                            ),
+                          ),
+                        if (controller.progress != controller.total)
+                          Padding(
+                            padding: EdgeInsets.only(top: 4.0, bottom: 8.0),
+                            child: Text(
+                              Language.instance.COLLECTION_INDEXING_LABEL,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   if (isDesktop)
@@ -650,4 +665,7 @@ class IndexingState extends State<IndexingSetting> {
       );
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
