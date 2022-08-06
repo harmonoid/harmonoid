@@ -22,7 +22,6 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import com.ryanheise.audioservice.AudioServiceActivity
 
-
 class MainActivity : AudioServiceActivity() {
     private var channel: MethodChannel? = null
     private var uri: String? = null
@@ -36,6 +35,10 @@ class MainActivity : AudioServiceActivity() {
         channel?.setMethodCallHandler { _, result ->
             result.success(uri)
         }
+        MethodChannel(
+                flutterEngine.dartExecutor.binaryMessenger,
+                "com.alexmercerind.harmonoid.MetadataRetriever"
+        ).setMethodCallHandler(MetadataRetriever())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
