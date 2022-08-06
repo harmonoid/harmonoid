@@ -209,6 +209,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
+  external_path:
+    dependency: "direct main"
+    description:
+      name: external_path
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   ffi:
     dependency: transitive
     description:
@@ -300,15 +307,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
-  flutter_media_metadata:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: d9fe63b5f0641b6be2af87097c6221e454b02c3e
-      resolved-ref: d9fe63b5f0641b6be2af87097c6221e454b02c3e
-      url: "https://github.com/alexmercerind/flutter_media_metadata.git"
-    source: git
-    version: "0.1.2"
   flutter_platform_alert:
     dependency: "direct main"
     description:

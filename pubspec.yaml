@@ -34,16 +34,13 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/dart_discord_rpc.git
       ref: harmonoid
-  flutter_media_metadata:
-    git:
-      url: https://github.com/alexmercerind/flutter_media_metadata.git
-      ref: d9fe63b5f0641b6be2af87097c6221e454b02c3e
 
   # Third-party plugins.
 
   just_audio: ^0.9.28
   audio_service: ^0.18.7
   awesome_notifications: ^0.7.0-beta.5
+  external_path: ^1.0.1
   share_plus: ^2.1.4
   url_launcher: ^6.1.3
   permission_handler: ^6.1.1
