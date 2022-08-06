@@ -14,7 +14,6 @@ import 'package:synchronized/synchronized.dart';
 import 'package:media_library/media_library.dart' hide Media;
 import 'package:ytm_client/ytm_client.dart' hide Media, Track;
 import 'package:safe_session_storage/safe_session_storage.dart';
-import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
@@ -139,11 +138,12 @@ class Intent {
           await Playback.instance.open([track]);
           DesktopNowPlayingController.instance.maximize();
         } else {
-          final _metadata = await MetadataRetriever.fromUri(
+          final _metadata =
+              await Collection.instance.retrievePlatformSpecificMetadataFromUri(
             file!.uri,
-            coverDirectory: Collection.instance.albumArtDirectory,
+            Collection.instance.albumArtDirectory,
           );
-          metadata.addAll(_metadata.toJson().cast());
+          metadata.addAll(_metadata.toJson());
           final track = Track.fromJson(metadata);
           await Playback.instance.open([track]);
           MobileNowPlayingController.instance.show();
@@ -179,11 +179,12 @@ class Intent {
               }
             } else {
               try {
-                final _metadata = await MetadataRetriever.fromUri(
+                final _metadata = await Collection.instance
+                    .retrievePlatformSpecificMetadataFromUri(
                   file.uri,
-                  coverDirectory: Collection.instance.albumArtDirectory,
+                  Collection.instance.albumArtDirectory,
                 );
-                metadata.addAll(_metadata.toJson().cast());
+                metadata.addAll(_metadata.toJson());
                 final track = Track.fromJson(metadata);
                 if (!playing) {
                   await Playback.instance.open([track]);
@@ -283,11 +284,12 @@ class Intent {
           MobileNowPlayingController.instance.show();
         }
       } else {
-        final _metadata = await MetadataRetriever.fromUri(
+        final _metadata =
+            await Collection.instance.retrievePlatformSpecificMetadataFromUri(
           uri,
-          coverDirectory: Collection.instance.albumArtDirectory,
+          Collection.instance.albumArtDirectory,
         );
-        metadata.addAll(_metadata.toJson().cast());
+        metadata.addAll(_metadata.toJson());
         final track = Track.fromJson(metadata);
         await Playback.instance.open([track]);
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -329,11 +331,12 @@ class Intent {
             }
           } else {
             try {
-              final _metadata = await MetadataRetriever.fromUri(
+              final _metadata = await Collection.instance
+                  .retrievePlatformSpecificMetadataFromUri(
                 file.uri,
-                coverDirectory: Collection.instance.albumArtDirectory,
+                Collection.instance.albumArtDirectory,
               );
-              metadata.addAll(_metadata.toJson().cast());
+              metadata.addAll(_metadata.toJson());
               final track = Track.fromJson(metadata);
               if (!playing) {
                 await Playback.instance.open([track]);

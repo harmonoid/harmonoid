@@ -8,8 +8,8 @@
 
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:media_library/media_library.dart';
-import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
 /// Collection
 /// ----------
@@ -68,22 +68,150 @@ class Collection extends MediaLibrary with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Overriden [retrievePlatformSpecificMetadataFromUri] to implement metadata retrieval for Android.
-  /// This is Flutter specific & dependent on native platform-channel method calls.
-  @override
-  Future<dynamic> retrievePlatformSpecificMetadataFromUri(
-    Uri uri,
-    Directory coverDirectory,
-  ) =>
-      MetadataRetriever.fromUri(
-        uri,
-        coverDirectory: coverDirectory,
-      );
-
   @override
   // ignore: must_call_super
   Future<void> dispose() {
     /// Closes the internal [Tagger] instance.
     return close();
   }
+
+  /// Overriden [retrievePlatformSpecificMetadataFromUri] to implement metadata retrieval for Android.
+  /// This is Flutter specific & dependent on native platform-channel method calls.
+  @override
+  Future<dynamic> retrievePlatformSpecificMetadataFromUri(
+    Uri uri,
+    Directory coverDirectory,
+  ) async {
+    try {
+      final metadata = await _kPlatformSpecificMetadataRetriever.invokeMethod(
+        'MetadataRetriever',
+        {
+          'uri': uri.toString(),
+          'coverDirectory': coverDirectory.path,
+        },
+      ).timeout(const Duration(seconds: 2));
+      return _PlatformSpecificMetadata.fromJson(metadata);
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+      return _PlatformSpecificMetadata(
+        uri: uri.toString(),
+      );
+    }
+  }
+
+  static int? _parsePlatformSpecificMetadataResponseInteger(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+    if (value is int) {
+      return value;
+    } else if (value is String) {
+      try {
+        try {
+          return int.parse(value);
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+          return int.parse(value.split('/').first);
+        }
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+    }
+    return null;
+  }
+
+  static const MethodChannel _kPlatformSpecificMetadataRetriever =
+      MethodChannel('com.alexmercerind.harmonoid.MetadataRetriever');
+}
+
+class _PlatformSpecificMetadata {
+  final String? trackName;
+  final String? trackArtistNames;
+  final String? albumName;
+  final String? albumArtistName;
+  final int? trackNumber;
+  final int? albumLength;
+  final int? year;
+  final String? genre;
+  final String? authorName;
+  final String? writerName;
+  final int? discNumber;
+  final String? mimeType;
+  final int? duration;
+  final int? bitrate;
+  final String? uri;
+
+  const _PlatformSpecificMetadata({
+    this.trackName,
+    this.trackArtistNames,
+    this.albumName,
+    this.albumArtistName,
+    this.trackNumber,
+    this.albumLength,
+    this.year,
+    this.genre,
+    this.authorName,
+    this.writerName,
+    this.discNumber,
+    this.mimeType,
+    this.duration,
+    this.bitrate,
+    this.uri,
+  });
+
+  factory _PlatformSpecificMetadata.fromJson(dynamic map) =>
+      _PlatformSpecificMetadata(
+        trackName: map['trackName'],
+        trackArtistNames: map['trackArtistNames'],
+        albumName: map['albumName'],
+        albumArtistName: map['albumArtistName'],
+        trackNumber: Collection._parsePlatformSpecificMetadataResponseInteger(
+          map['trackNumber'],
+        ),
+        albumLength: Collection._parsePlatformSpecificMetadataResponseInteger(
+          map['albumLength'],
+        ),
+        year: Collection._parsePlatformSpecificMetadataResponseInteger(
+          map['year'],
+        ),
+        genre: map['genre'],
+        authorName: map['authorName'],
+        writerName: map['writerName'],
+        discNumber: Collection._parsePlatformSpecificMetadataResponseInteger(
+          map['discNumber'],
+        ),
+        mimeType: map['mimeType'],
+        duration: Collection._parsePlatformSpecificMetadataResponseInteger(
+          map['duration'],
+        ),
+        bitrate: Collection._parsePlatformSpecificMetadataResponseInteger(
+          map['bitrate'],
+        ),
+        uri: map['uri'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'trackName': trackName,
+        'trackArtistNames': trackArtistNames,
+        'albumName': albumName,
+        'albumArtistName': albumArtistName,
+        'trackNumber': trackNumber,
+        'albumLength': albumLength,
+        'year': year,
+        'genre': genre,
+        'authorName': authorName,
+        'writerName': writerName,
+        'discNumber': discNumber,
+        'mimeType': mimeType,
+        'duration': duration,
+        'bitrate': bitrate,
+        'uri': uri,
+      };
+
+  @override
+  String toString() =>
+      '$_PlatformSpecificMetadata(trackName: $trackName, trackArtistNames: $trackArtistNames, albumName: $albumName, albumArtistName: $albumArtistName, trackNumber: $trackNumber, albumLength: $albumLength, year: $year, genre: $genre, authorName: $authorName, writerName: $writerName, discNumber: $discNumber, mimeType: $mimeType, duration: $duration, bitrate: $bitrate, uri: $uri)';
 }

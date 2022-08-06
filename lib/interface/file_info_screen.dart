@@ -11,7 +11,6 @@ import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:libmpv/libmpv.dart';
-import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/hotkeys.dart';
@@ -258,10 +257,10 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
         tagger.dispose();
       } else if (isMobile) {
         try {
-          final metadata = await MetadataRetriever.fromUri(
+          final metadata =
+              await Collection.instance.retrievePlatformSpecificMetadataFromUri(
             widget.uri,
-            coverDirectory: Collection.instance.albumArtDirectory,
-            timeout: widget.timeout,
+            Collection.instance.albumArtDirectory,
           );
           this.metadata.addAll(metadata.toJson());
           track = Track.fromTagger(this.metadata);
