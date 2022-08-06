@@ -859,7 +859,7 @@ ImageProvider getAlbumArt(
   }
   if (image == null) {
     // No album art found, use the default album art.
-    image = ExtendedAssetImageProvider('assets/images/default_album_art.png');
+    image = ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
   }
   // [ResizeImage.resizeIfNeeded] is only needed for local images.
   if (small && !(image is ExtendedNetworkImageProvider)) {

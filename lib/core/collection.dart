@@ -7,9 +7,11 @@
 ///
 
 import 'dart:io';
-import 'package:flutter/foundation.dart';
+import 'package:path/path.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:media_library/media_library.dart';
+import 'package:safe_session_storage/safe_session_storage.dart';
 
 /// Collection
 /// ----------
@@ -60,6 +62,11 @@ class Collection extends MediaLibrary with ChangeNotifier {
         genresOrderType: genresOrderType,
       ),
     );
+    if (!await instance.unknownAlbumArt.exists_()) {
+      await instance.unknownAlbumArt.create_();
+      final data = await rootBundle.load(_kUnknownAlbumArtRootBundle);
+      await instance.unknownAlbumArt.write_(data.buffer.asUint8List());
+    }
   }
 
   /// Overriden [notify] to get notified about updates & redraw UI using [notifyListeners] from [ChangeNotifier]s.
@@ -100,6 +107,14 @@ class Collection extends MediaLibrary with ChangeNotifier {
     }
   }
 
+  File get unknownAlbumArt => File(
+        join(
+          cacheDirectory.path,
+          kAlbumArtsDirectoryName,
+          _kUnknownAlbumArtFileName,
+        ),
+      );
+
   static int? _parsePlatformSpecificMetadataResponseInteger(dynamic value) {
     if (value == null) {
       return null;
@@ -125,6 +140,9 @@ class Collection extends MediaLibrary with ChangeNotifier {
 
   static const MethodChannel _kPlatformSpecificMetadataRetriever =
       MethodChannel('com.alexmercerind.harmonoid.MetadataRetriever');
+  static const String _kUnknownAlbumArtRootBundle =
+      'assets/images/default_album_art.png';
+  static const String _kUnknownAlbumArtFileName = 'UnknownAlbum.PNG';
 }
 
 class _PlatformSpecificMetadata {
