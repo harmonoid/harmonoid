@@ -101,31 +101,35 @@ class MainActivity : AudioServiceActivity() {
                 // Saving the file in "Intents" subdirectory, for easy clean-up the cache in future.
                 val intentFilesDirAbsolutePath = "$externalFilesDirAbsolutePath/Intents"
                 Log.d("Harmonoid", intentFilesDirAbsolutePath)
-                // If file name is null, then a random integer value is used as the temporary file's
-                // name. The file name is then parsed using URLDecode.decode, which removes any of
-                // ambiguity that can be caused by parsing the final URI by Dart's Uri.parse.
-                // Since, decoding of the URI component may result in some illegal file path
-                // characters, they are later on removed using a simple regex.
+                // Last segment of the URI is interpreted as the file path.
+                // Removing all special characters to prevent any issues with URI deserialization/
+                // serialization inside Flutter or file creation.
+                val fileName = intent.data.toString().split("/").toList().lastOrNull()?.replace("[^a-zA-Z0-9]".toRegex(), "")
+                Log.d("Harmonoid", fileName.toString())
+                // If file name is null, then a random integer value is used as the temporary file's name.
                 val path = "$intentFilesDirAbsolutePath/${
-                    Random().nextInt(Integer.MAX_VALUE).toString().replace("[\\\\/:*?\"<>| ]".toRegex(), "")
+                    fileName ?: Random().nextInt(Integer.MAX_VALUE).toString().replace("[\\\\/:*?\"<>| ]".toRegex(), "")
                 }"
-                Log.d("Harmonoid", path)
-                // Delete the directory where the temporary files are placed. This is because
-                // some previous intent handling would've resulted in file creations here.
-                // This wastage of space can quickly get out of hands.
-                if (File(intentFilesDirAbsolutePath).exists()
-                        && File(intentFilesDirAbsolutePath).isDirectory) {
-                    File(intentFilesDirAbsolutePath).deleteRecursively()
-                }
-                // Recursively create all the directories & subdirectories to the temporary file,
-                // and copy the stream to it after creation of file itself.
-                File(intentFilesDirAbsolutePath).mkdirs()
+                // Only create/copy the content from the [Intent] if same file does not exist.
                 if (!File(path).exists()) {
-                    File(path).createNewFile()
+                    Log.d("Harmonoid", path)
+                    // Delete the directory where the temporary files are placed. This is because
+                    // some previous intent handling would've resulted in file creations here.
+                    // This wastage of space can quickly get out of hands.
+                    if (File(intentFilesDirAbsolutePath).exists()
+                            && File(intentFilesDirAbsolutePath).isDirectory) {
+                        File(intentFilesDirAbsolutePath).deleteRecursively()
+                    }
+                    // Recursively create all the directories & subdirectories to the temporary file,
+                    // and copy the stream to it after creation of file itself.
+                    File(intentFilesDirAbsolutePath).mkdirs()
+                    if (!File(path).exists()) {
+                        File(path).createNewFile()
+                    }
+                    inputStream?.copyTo(FileOutputStream(path))
+                    result = "file://$path"
+                    Log.d("Harmonoid", path)
                 }
-                inputStream?.copyTo(FileOutputStream(path))
-                result = "file://$path"
-                Log.d("Harmonoid", path)
             }
             if (!arrayListOf(null, uri).contains(result)) {
                 // Notify the newly opened file through the platform channel.
