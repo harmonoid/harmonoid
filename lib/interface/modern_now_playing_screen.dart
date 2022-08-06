@@ -405,7 +405,6 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                                     .textTheme
                                                     .headline3
                                                     ?.copyWith(
-                                                  fontSize: 16.0,
                                                   color: Colors.white70,
                                                   shadows: <Shadow>[
                                                     Shadow(
@@ -433,7 +432,6 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                                       .textTheme
                                                       .headline3
                                                       ?.copyWith(
-                                                    fontSize: 16.0,
                                                     color: Colors.white70,
                                                     shadows: <Shadow>[
                                                       Shadow(
@@ -492,7 +490,6 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 playback.position.label,
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16.0,
                                 ),
                               ),
                             ),
@@ -547,7 +544,6 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 playback.duration.label,
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16.0,
                                 ),
                               ),
                             ),

@@ -136,283 +136,135 @@ class IndexingState extends State<IndexingSetting>
                         if (!Platform.isAndroid || storages != null)
                           ...Configuration.instance.collectionDirectories
                               .map(
-                                (directory) => isDesktop
-                                    ? Card(
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 4.0),
-                                        elevation: 4.0,
-                                        clipBehavior: Clip.antiAlias,
-                                        child: Container(
-                                          width: 560.0,
-                                          height: 40.0,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              directory.existsSync_()
-                                                  ? Container(
-                                                      width: 40.0,
-                                                      child: Icon(
-                                                        FluentIcons
-                                                            .folder_32_regular,
-                                                        size: 32.0,
-                                                      ),
-                                                    )
-                                                  : Tooltip(
-                                                      message: Language.instance
-                                                          .FOLDER_NOT_FOUND,
-                                                      verticalOffset: 24.0,
-                                                      waitDuration:
-                                                          Duration.zero,
-                                                      child: Container(
-                                                        width: 40.0,
-                                                        child: Icon(
-                                                          Icons.warning,
-                                                          size: 24.0,
-                                                        ),
-                                                      ),
-                                                    ),
-                                              SizedBox(
-                                                  width:
-                                                      isDesktop ? 2.0 : 16.0),
-                                              Expanded(
-                                                child: Text(
-                                                  directory.path.overflow,
-                                                  style: isMobile
-                                                      ? Theme.of(context)
-                                                          .textTheme
-                                                          .subtitle1
-                                                      : null,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                (directory) => Container(
+                                  width: isMobile
+                                      ? MediaQuery.of(context).size.width
+                                      : 480.0,
+                                  height: isMobile ? 56.0 : 40.0,
+                                  margin: EdgeInsets.symmetric(vertical: 2.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      directory.existsSync_()
+                                          ? Container(
+                                              width: 40.0,
+                                              child: Icon(
+                                                FluentIcons.folder_32_regular,
+                                                size: 32.0,
+                                              ),
+                                            )
+                                          : Tooltip(
+                                              message: Language
+                                                  .instance.FOLDER_NOT_FOUND,
+                                              verticalOffset: 24.0,
+                                              waitDuration: Duration.zero,
+                                              child: Container(
+                                                width: 40.0,
+                                                child: Icon(
+                                                  Icons.warning,
+                                                  size: 24.0,
                                                 ),
                                               ),
-                                              InkWell(
-                                                onTap: () async {
-                                                  if (!controller.isCompleted) {
-                                                    showProgressDialog();
-                                                    return;
-                                                  }
-                                                  if (Configuration
-                                                          .instance
-                                                          .collectionDirectories
-                                                          .length ==
-                                                      1) {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (subContext) =>
-                                                          AlertDialog(
-                                                        title: Text(
-                                                          Language
-                                                              .instance.WARNING,
-                                                          style: Theme.of(
-                                                                  subContext)
-                                                              .textTheme
-                                                              .headline1,
-                                                        ),
-                                                        content: Text(
-                                                          Language.instance
-                                                              .LAST_COLLECTION_DIRECTORY_REMOVED,
-                                                          style: Theme.of(
-                                                                  subContext)
-                                                              .textTheme
-                                                              .headline3,
-                                                        ),
-                                                        actions: [
-                                                          MaterialButton(
-                                                            textColor: Theme.of(
-                                                                    context)
-                                                                .primaryColor,
-                                                            onPressed:
-                                                                () async {
-                                                              Navigator.of(
-                                                                      subContext)
-                                                                  .pop();
-                                                            },
-                                                            child: Text(Language
-                                                                .instance.OK),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    );
-                                                    return;
-                                                  }
-                                                  await Collection.instance
-                                                      .removeDirectories(
-                                                    directories: [directory],
-                                                    onProgress: (progress,
-                                                        total, isCompleted) {
-                                                      controller.set(
-                                                          progress, total);
-                                                    },
-                                                  );
-                                                  await Configuration.instance
-                                                      .save(
-                                                    collectionDirectories:
-                                                        Configuration.instance
-                                                            .collectionDirectories
-                                                          ..remove(directory),
-                                                  );
-                                                },
-                                                child: Container(
-                                                  height: 40.0,
-                                                  width: 84.0,
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    Language.instance.REMOVE
-                                                        .toUpperCase(),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline2
-                                                        ?.copyWith(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                        ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    : Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height: 56.0,
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 2.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            directory.existsSync_()
-                                                ? Container(
-                                                    width: 40.0,
-                                                    child: Icon(
-                                                      FluentIcons
-                                                          .folder_32_regular,
-                                                      size: 32.0,
-                                                    ),
+                                            ),
+                                      SizedBox(width: isDesktop ? 2.0 : 16.0),
+                                      Expanded(
+                                        child: Text(
+                                          storages == null
+                                              ? directory.path.overflow
+                                              : directory.path
+                                                  .replaceAll(
+                                                    storages!.first,
+                                                    Language.instance.PHONE,
                                                   )
-                                                : Tooltip(
-                                                    message: Language.instance
-                                                        .FOLDER_NOT_FOUND,
-                                                    verticalOffset: 24.0,
-                                                    waitDuration: Duration.zero,
-                                                    child: Container(
-                                                      width: 40.0,
-                                                      child: Icon(
-                                                        Icons.warning,
-                                                        size: 24.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                            SizedBox(
-                                                width: isDesktop ? 2.0 : 16.0),
-                                            Expanded(
-                                              child: Text(
-                                                directory.path
-                                                    .replaceAll(
-                                                      storages!.first,
-                                                      Language.instance.PHONE,
-                                                    )
-                                                    .replaceAll(
-                                                      storages!.last,
-                                                      Language.instance.SD_CARD,
-                                                    )
-                                                    .overflow,
-                                                style: isMobile
-                                                    ? Theme.of(context)
-                                                        .textTheme
-                                                        .subtitle1
-                                                    : null,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            MaterialButton(
-                                              onPressed: () async {
-                                                if (!controller.isCompleted) {
-                                                  showProgressDialog();
-                                                  return;
-                                                }
-                                                if (Configuration
-                                                        .instance
-                                                        .collectionDirectories
-                                                        .length ==
-                                                    1) {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (subContext) =>
-                                                        AlertDialog(
-                                                      title: Text(
-                                                        Language
-                                                            .instance.WARNING,
-                                                        style:
-                                                            Theme.of(subContext)
-                                                                .textTheme
-                                                                .headline1,
-                                                      ),
-                                                      content: Text(
-                                                        Language.instance
-                                                            .LAST_COLLECTION_DIRECTORY_REMOVED,
-                                                        style:
-                                                            Theme.of(subContext)
-                                                                .textTheme
-                                                                .headline3,
-                                                      ),
-                                                      actions: [
-                                                        MaterialButton(
-                                                          textColor:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          onPressed: () async {
-                                                            Navigator.of(
-                                                                    subContext)
-                                                                .pop();
-                                                          },
-                                                          child: Text(Language
-                                                              .instance.OK),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                  return;
-                                                }
-                                                await Collection.instance
-                                                    .removeDirectories(
-                                                  directories: [directory],
-                                                  onProgress: (progress, total,
-                                                      isCompleted) {
-                                                    controller.set(
-                                                      progress,
-                                                      total,
-                                                    );
-                                                  },
-                                                );
-                                                await Configuration.instance
-                                                    .save(
-                                                  collectionDirectories:
-                                                      Configuration.instance
-                                                          .collectionDirectories
-                                                        ..remove(directory),
-                                                );
-                                              },
-                                              minWidth: 0.0,
-                                              child: Text(
-                                                Language.instance.REMOVE
-                                                    .toUpperCase(),
-                                                style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                                  .replaceAll(
+                                                    storages!.last,
+                                                    Language.instance.SD_CARD,
+                                                  )
+                                                  .overflow,
+                                          style: isMobile
+                                              ? Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1
+                                              : null,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
+                                      MaterialButton(
+                                        onPressed: () async {
+                                          if (!controller.isCompleted) {
+                                            showProgressDialog();
+                                            return;
+                                          }
+                                          if (Configuration
+                                                  .instance
+                                                  .collectionDirectories
+                                                  .length ==
+                                              1) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (subContext) =>
+                                                  AlertDialog(
+                                                title: Text(
+                                                  Language.instance.WARNING,
+                                                  style: Theme.of(subContext)
+                                                      .textTheme
+                                                      .headline1,
+                                                ),
+                                                content: Text(
+                                                  Language.instance
+                                                      .LAST_COLLECTION_DIRECTORY_REMOVED,
+                                                  style: Theme.of(subContext)
+                                                      .textTheme
+                                                      .headline3,
+                                                ),
+                                                actions: [
+                                                  MaterialButton(
+                                                    textColor: Theme.of(context)
+                                                        .primaryColor,
+                                                    onPressed: () async {
+                                                      Navigator.of(subContext)
+                                                          .pop();
+                                                    },
+                                                    child: Text(
+                                                        Language.instance.OK),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                            return;
+                                          }
+                                          await Collection.instance
+                                              .removeDirectories(
+                                            directories: [directory],
+                                            onProgress:
+                                                (progress, total, isCompleted) {
+                                              controller.set(
+                                                progress,
+                                                total,
+                                              );
+                                            },
+                                          );
+                                          await Configuration.instance.save(
+                                            collectionDirectories: Configuration
+                                                .instance.collectionDirectories
+                                              ..remove(directory),
+                                          );
+                                        },
+                                        minWidth: 0.0,
+                                        child: Text(
+                                          Language.instance.REMOVE
+                                              .toUpperCase(),
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               )
                               .toList(),
                         if (isDesktop) SizedBox(height: 8.0),
