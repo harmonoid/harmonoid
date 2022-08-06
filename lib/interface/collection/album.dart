@@ -585,7 +585,7 @@ class AlbumTile extends StatelessWidget {
                                   .headline2
                                   ?.copyWith(
                                     fontSize: dense ? 14.0 : null,
-                                    fontWeight: dense ? null : FontWeight.w600,
+                                    fontWeight: dense ? null : FontWeight.w700,
                                   ),
                               textAlign: TextAlign.left,
                               maxLines: 1,
