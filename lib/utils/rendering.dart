@@ -102,46 +102,48 @@ List<Widget> tileGridListWidgets({
       rowChildren = <Widget>[];
     }
   }
-  if (widgetCount % elementsPerRow != 0 && showIncompleteRow) {
-    rowChildren = <Widget>[];
-    for (int index = widgetCount - (widgetCount % elementsPerRow);
-        index < widgetCount;
-        index++) {
-      rowChildren.add(
+  if (elementsPerRow != 0) {
+    if (widgetCount % elementsPerRow != 0 && showIncompleteRow) {
+      rowChildren = <Widget>[];
+      for (int index = widgetCount - (widgetCount % elementsPerRow);
+          index < widgetCount;
+          index++) {
+        rowChildren.add(
+          Container(
+            child: builder(context, index),
+            margin: EdgeInsets.symmetric(
+              horizontal: tileMargin / 2.0,
+            ),
+          ),
+        );
+      }
+      for (int index = 0;
+          index < elementsPerRow - (widgetCount % elementsPerRow);
+          index++) {
+        rowChildren.add(
+          Container(
+            height: tileHeight + tileMargin,
+            width: tileWidth,
+            margin: EdgeInsets.only(
+                left: tileMargin / 2.0, right: tileMargin / 2.0),
+          ),
+        );
+      }
+      widgets.add(
         Container(
-          child: builder(context, index),
-          margin: EdgeInsets.symmetric(
-            horizontal: tileMargin / 2.0,
+          height: tileHeight + tileMargin,
+          margin:
+              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
+          alignment: Alignment.topCenter,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: mainAxisAlignment,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: rowChildren,
           ),
         ),
       );
     }
-    for (int index = 0;
-        index < elementsPerRow - (widgetCount % elementsPerRow);
-        index++) {
-      rowChildren.add(
-        Container(
-          height: tileHeight + tileMargin,
-          width: tileWidth,
-          margin:
-              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
-        ),
-      );
-    }
-    widgets.add(
-      Container(
-        height: tileHeight + tileMargin,
-        margin:
-            EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
-        alignment: Alignment.topCenter,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: mainAxisAlignment,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: rowChildren,
-        ),
-      ),
-    );
   }
   return widgets;
 }
@@ -202,49 +204,51 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
       rowData = <dynamic>[];
     }
   }
-  if (widgetCount % elementsPerRow != 0) {
-    rowChildren = <Widget>[];
-    for (int index = widgetCount - (widgetCount % elementsPerRow);
-        index < widgetCount;
-        index++) {
-      final widget = builder(context, index);
-      rowChildren.add(
+  if (elementsPerRow != 0) {
+    if (widgetCount % elementsPerRow != 0) {
+      rowChildren = <Widget>[];
+      for (int index = widgetCount - (widgetCount % elementsPerRow);
+          index < widgetCount;
+          index++) {
+        final widget = builder(context, index);
+        rowChildren.add(
+          Container(
+            child: widget,
+            margin: EdgeInsets.symmetric(
+              horizontal: tileMargin / 2.0,
+            ),
+          ),
+        );
+        rowData.add((widget.key as ValueKey).value);
+      }
+      for (int index = 0;
+          index < elementsPerRow - (widgetCount % elementsPerRow);
+          index++) {
+        rowChildren.add(
+          Container(
+            height: tileHeight + tileMargin,
+            width: tileWidth,
+            margin: EdgeInsets.only(
+                left: tileMargin / 2.0, right: tileMargin / 2.0),
+          ),
+        );
+      }
+      widgets.add(
         Container(
-          child: widget,
-          margin: EdgeInsets.symmetric(
-            horizontal: tileMargin / 2.0,
+          height: tileHeight + tileMargin,
+          margin:
+              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
+          alignment: Alignment.topCenter,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: rowChildren,
           ),
         ),
       );
-      rowData.add((widget.key as ValueKey).value);
+      data.add(rowData);
     }
-    for (int index = 0;
-        index < elementsPerRow - (widgetCount % elementsPerRow);
-        index++) {
-      rowChildren.add(
-        Container(
-          height: tileHeight + tileMargin,
-          width: tileWidth,
-          margin:
-              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
-        ),
-      );
-    }
-    widgets.add(
-      Container(
-        height: tileHeight + tileMargin,
-        margin:
-            EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
-        alignment: Alignment.topCenter,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: rowChildren,
-        ),
-      ),
-    );
-    data.add(rowData);
   }
   return TileGridListWidgetsData(
     widgets,
@@ -828,7 +832,7 @@ enum TabRouteSender {
 ///
 /// Passing [small] as `true` will result in a smaller sized image, which may be useful
 /// for performance reasons e.g. generating palette using `package:palette_generator`
-/// or rendering on desktop platforms.
+/// or rendering, especially on desktop platforms.
 ///
 /// Automatically falls back to the default album art from Harmonoid's assets.
 ///
@@ -863,9 +867,7 @@ ImageProvider getAlbumArt(
   }
   // [ResizeImage.resizeIfNeeded] is only needed for local images.
   if (small && !(image is ExtendedNetworkImageProvider)) {
-    // This doesn't seem to play well with local non-square album arts.
-    // But, optimal performance is more important than perfect album art. I guess this is a fair trade-off.
-    return ResizeImage.resizeIfNeeded(200, 200, image);
+    return ResizeImage.resizeIfNeeded(null, 200, image);
   } else {
     return image;
   }
