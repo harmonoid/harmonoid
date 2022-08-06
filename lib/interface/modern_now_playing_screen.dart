@@ -460,7 +460,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                       }(),
                                     ),
                                   ),
-                                  const SizedBox(width: 16.0),
+                                  const SizedBox(width: 32.0),
                                 ],
                               ),
                             ),

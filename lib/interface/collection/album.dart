@@ -483,15 +483,20 @@ class AlbumTile extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(top: 2),
                                 child: Text(
-                                  '${album.albumArtistName} • ${album.year}',
-                                  style: isDesktop
-                                      ? Theme.of(context)
-                                          .textTheme
-                                          .headline3
-                                          ?.copyWith(
-                                            fontSize: 12.0,
-                                          )
-                                      : Theme.of(context).textTheme.headline3,
+                                  [
+                                    if (!['', kUnknownArtist]
+                                        .contains(album.albumArtistName))
+                                      album.albumArtistName,
+                                    if (!['', kUnknownYear]
+                                        .contains(album.year))
+                                      album.year,
+                                  ].join(' • '),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline3
+                                      ?.copyWith(
+                                        fontSize: 12.0,
+                                      ),
                                   maxLines: 1,
                                   textAlign: TextAlign.left,
                                   overflow: TextOverflow.ellipsis,
@@ -595,7 +600,14 @@ class AlbumTile extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(top: 2),
                                 child: Text(
-                                  '${album.albumArtistName} • ${album.year}',
+                                  [
+                                    if (!['', kUnknownArtist]
+                                        .contains(album.albumArtistName))
+                                      album.albumArtistName,
+                                    if (!['', kUnknownYear]
+                                        .contains(album.year))
+                                      album.year,
+                                  ].join(' • '),
                                   style: Theme.of(context).textTheme.headline3,
                                   maxLines: 1,
                                   textAlign: TextAlign.left,
