@@ -693,7 +693,7 @@ CircularButton contextMenu(BuildContext context, {Color? color}) =>
                     kMobileSearchBarHeight +
                     2 * tileMargin,
               ) &
-              Size(160.0, 160.0),
+              Size(228.0, 320.0),
           Rect.fromLTWH(
             0,
             0,
