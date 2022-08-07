@@ -6,13 +6,14 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:convert' as convert;
-import 'package:harmonoid/interface/settings/about.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:harmonoid/main.dart';
 import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/interface/settings/about.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class Header extends StatefulWidget {
   const Header({Key? key}) : super(key: key);
@@ -35,18 +36,18 @@ class HeaderState extends State<Header> with AutomaticKeepAliveClientMixin {
   /// Get the the installed and the latest version from github releases:
   /// https://api.github.com/repos/harmonoid/harmonoid/releases
   Future<void> getAppVersion() async {
-    var response = await http.get(
+    final response = await http.get(
         Uri.parse('https://api.github.com/repos/harmonoid/harmonoid/releases'));
-
-    List<dynamic> releasesJson = convert.jsonDecode(response.body);
-    List<Release> releases = releasesJson
+    List<Release> releases = convert
+        .jsonDecode(response.body)
         .map((release) => Release.fromJson(release))
         .toList()
         .cast<Release>();
-
-    setState(() {
-      if (releases.length > 0) latestRelease = releases.first;
-    });
+    setState(
+      () {
+        if (releases.length > 0) latestRelease = releases.first;
+      },
+    );
   }
 
   Widget getVersionTableRow(String versionLabel, Release release) {
@@ -90,7 +91,7 @@ class HeaderState extends State<Header> with AutomaticKeepAliveClientMixin {
         Container(
           height: 96.0,
           width: MediaQuery.of(context).size.width,
-          color: Color(0xFF6200EA),
+          color: kPrimaryLightColor,
           child: Row(
             children: [
               Image.asset(
@@ -130,8 +131,7 @@ class HeaderState extends State<Header> with AutomaticKeepAliveClientMixin {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              MaterialButton(
-                padding: EdgeInsets.zero,
+              TextButton(
                 onPressed: () => launchUrl(
                   Uri.parse('https://github.com/harmonoid/harmonoid'),
                   mode: LaunchMode.externalApplication,
@@ -143,8 +143,7 @@ class HeaderState extends State<Header> with AutomaticKeepAliveClientMixin {
                   ),
                 ),
               ),
-              MaterialButton(
-                padding: EdgeInsets.zero,
+              TextButton(
                 onPressed: () => launchUrl(
                   Uri.parse('https://alexmercerind.github.io/donate'),
                   mode: LaunchMode.externalApplication,
@@ -156,7 +155,7 @@ class HeaderState extends State<Header> with AutomaticKeepAliveClientMixin {
                   ),
                 ),
               ),
-              MaterialButton(
+              TextButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -172,8 +171,7 @@ class HeaderState extends State<Header> with AutomaticKeepAliveClientMixin {
                 ),
               ),
               if (kVersion != latestRelease.tagName)
-                MaterialButton(
-                  padding: EdgeInsets.zero,
+                TextButton(
                   onPressed: () => launchUrl(
                     Uri.parse(
                         'https://github.com/harmonoid/harmonoid/releases'),

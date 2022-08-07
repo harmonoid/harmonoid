@@ -97,27 +97,22 @@ class IndexingState extends State<IndexingSetting>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (isDesktop)
-                    Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          MaterialButton(
-                            minWidth: 0.0,
-                            padding: EdgeInsets.zero,
-                            onPressed: CollectionRefresh.instance.isCompleted
-                                ? pickNewFolder
-                                : showProgressDialog,
-                            child: Text(
-                              Language.instance.ADD_NEW_FOLDER.toUpperCase(),
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        TextButton(
+                          onPressed: CollectionRefresh.instance.isCompleted
+                              ? pickNewFolder
+                              : showProgressDialog,
+                          child: Text(
+                            Language.instance.ADD_NEW_FOLDER.toUpperCase(),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   SizedBox(height: 12.0),
                   Container(
@@ -191,7 +186,7 @@ class IndexingState extends State<IndexingSetting>
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                      MaterialButton(
+                                      TextButton(
                                         onPressed: () async {
                                           if (!controller.isCompleted) {
                                             showProgressDialog();
@@ -208,9 +203,6 @@ class IndexingState extends State<IndexingSetting>
                                                   AlertDialog(
                                                 title: Text(
                                                   Language.instance.WARNING,
-                                                  style: Theme.of(subContext)
-                                                      .textTheme
-                                                      .headline1,
                                                 ),
                                                 content: Text(
                                                   Language.instance
@@ -220,15 +212,14 @@ class IndexingState extends State<IndexingSetting>
                                                       .headline3,
                                                 ),
                                                 actions: [
-                                                  MaterialButton(
-                                                    textColor: Theme.of(context)
-                                                        .primaryColor,
+                                                  TextButton(
                                                     onPressed: () async {
                                                       Navigator.of(subContext)
                                                           .pop();
                                                     },
                                                     child: Text(
-                                                        Language.instance.OK),
+                                                      Language.instance.OK,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -252,7 +243,6 @@ class IndexingState extends State<IndexingSetting>
                                               ..remove(directory),
                                           );
                                         },
-                                        minWidth: 0.0,
                                         child: Text(
                                           Language.instance.REMOVE
                                               .toUpperCase(),
@@ -386,10 +376,7 @@ class IndexingState extends State<IndexingSetting>
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        const SizedBox(width: 8.0),
-                        MaterialButton(
-                          minWidth: 0.0,
-                          padding: EdgeInsets.zero,
+                        TextButton(
                           onPressed: controller.progress != controller.total
                               ? showProgressDialog
                               : () async {
@@ -406,10 +393,8 @@ class IndexingState extends State<IndexingSetting>
                             ),
                           ),
                         ),
-                        const SizedBox(width: 12.0),
-                        MaterialButton(
-                          minWidth: 0.0,
-                          padding: EdgeInsets.zero,
+                        const SizedBox(width: 4.0),
+                        TextButton(
                           onPressed: controller.progress != controller.total
                               ? showProgressDialog
                               : () async {
@@ -438,28 +423,14 @@ class IndexingState extends State<IndexingSetting>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 8.0),
-                          Row(
-                            children: [
-                              const SizedBox(width: 8.0),
-                              Icon(Icons.info),
-                              const SizedBox(width: 8.0),
-                              Text(
-                                '${Language.instance.REFRESH.toUpperCase()}: ${Language.instance.REFRESH_INFORMATION}',
-                                style: Theme.of(context).textTheme.headline3,
-                              ),
-                            ],
+                          Text(
+                            '${Language.instance.REFRESH.toUpperCase()}: ${Language.instance.REFRESH_INFORMATION}',
+                            style: Theme.of(context).textTheme.headline3,
                           ),
                           const SizedBox(height: 4.0),
-                          Row(
-                            children: [
-                              const SizedBox(width: 8.0),
-                              Icon(Icons.info),
-                              const SizedBox(width: 8.0),
-                              Text(
-                                '${Language.instance.REINDEX.toUpperCase()}: ${Language.instance.REINDEX_INFORMATION}',
-                                style: Theme.of(context).textTheme.headline3,
-                              ),
-                            ],
+                          Text(
+                            '${Language.instance.REINDEX.toUpperCase()}: ${Language.instance.REINDEX_INFORMATION}',
+                            style: Theme.of(context).textTheme.headline3,
                           ),
                         ],
                       ),
@@ -500,15 +471,13 @@ class IndexingState extends State<IndexingSetting>
           backgroundColor: Theme.of(context).cardColor,
           title: Text(
             Language.instance.INDEXING_ALREADY_GOING_ON_TITLE,
-            style: Theme.of(context).textTheme.headline1,
           ),
           content: Text(
             Language.instance.INDEXING_ALREADY_GOING_ON_SUBTITLE,
             style: Theme.of(context).textTheme.headline3,
           ),
           actions: [
-            MaterialButton(
-              textColor: Theme.of(context).primaryColor,
+            TextButton(
               onPressed: Navigator.of(context).pop,
               child: Text(Language.instance.OK),
             ),

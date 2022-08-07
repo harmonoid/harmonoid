@@ -285,7 +285,9 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                   widget.playlist.thumbnails.values.first))
               .then((palette) {
             setState(() {
-              color = palette.colors.first;
+              if (palette.colors != null) {
+                color = palette.colors!.first;
+              }
             });
           });
         },
@@ -329,8 +331,10 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
         ),
       ).then((palette) {
         setState(() {
-          color = palette.colors.first;
-          secondary = palette.colors.last;
+          if (palette.colors != null) {
+            color = palette.colors!.first;
+            secondary = palette.colors!.last;
+          }
           detailsVisible = true;
         });
       });
@@ -665,8 +669,8 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                     builder: (context, color, _) => Theme(
                       data: createTheme(
                         color: isDark(context)
-                            ? kAccents.first.dark
-                            : kAccents.first.light,
+                            ? kPrimaryDarkColor
+                            : kPrimaryLightColor,
                         themeMode:
                             isDark(context) ? ThemeMode.dark : ThemeMode.light,
                       ),

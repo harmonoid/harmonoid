@@ -288,8 +288,10 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
         ),
       ).then((palette) {
         setState(() {
-          color = palette.colors.first;
-          secondary = palette.colors.last;
+          if (palette.colors != null) {
+            color = palette.colors!.first;
+            secondary = palette.colors!.last;
+          }
         });
       });
       Timer(Duration(milliseconds: 100), () {
@@ -882,15 +884,11 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                                     .headline3,
                                               ),
                                               actions: [
-                                                MaterialButton(
+                                                TextButton(
                                                   onPressed:
                                                       Navigator.of(context).pop,
                                                   child: Text(
                                                     Language.instance.OK,
-                                                    style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                    ),
                                                   ),
                                                 ),
                                               ],

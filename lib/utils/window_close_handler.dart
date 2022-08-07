@@ -61,10 +61,9 @@ abstract class WindowCloseHandler {
           builder: (c) => AlertDialog(
             title: Text(
               Language.instance.WARNING,
-              style: Theme.of(c).textTheme.headline1,
             ),
             content: Text(
-              Language.instance.COLLECTION_INDEXING_LABEL,
+              Language.instance.COLLECTION_INDEXING_LABEL.replaceAll('\n', ' '),
               style: Theme.of(c).textTheme.headline3,
             ),
             actions: [

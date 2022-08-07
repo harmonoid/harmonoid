@@ -9,7 +9,6 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' as path;
 import 'package:animations/animations.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:libmpv/libmpv.dart' hide Media;
@@ -41,6 +40,11 @@ import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
 
 export 'package:harmonoid/utils/extensions.dart';
 
+// Only global variables throughout Harmonoid's source code.
+
+const kPrimaryLightColor = Color(0xFF6200EA);
+const kPrimaryDarkColor = Color(0xFF7C4DFF);
+
 final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 final isMobile = Platform.isAndroid || Platform.isIOS;
 final desktopTitleBarHeight = Platform.isWindows ? 32.0 : 0.0;
@@ -51,6 +55,9 @@ final HotKey searchBarHotkey = HotKey(
   modifiers: [KeyModifier.control],
   scope: HotKeyScope.inapp,
 );
+
+// Remaining source code in this file consists of helper & utility functions used for rendering & handling some
+// repeated tasks linked at multiple places.
 
 List<Widget> tileGridListWidgets({
   required double tileHeight,
@@ -377,6 +384,7 @@ Future<File?> pickFile({
     OpenFilePicker picker = OpenFilePicker()
       ..filterSpecification = {
         label: extensions.map((e) => '*.${e.toLowerCase()}').join(';'),
+        Language.instance.ALL_FILES: '*',
       }
       // Choosing first [extensions] extension as default.
       ..defaultFilterIndex = 0
@@ -393,6 +401,9 @@ Future<File?> pickFile({
             ...extensions.map((e) => e.toUpperCase()).toList(),
           ].toSet().toList(),
         ),
+        XTypeGroup(
+          label: Language.instance.ALL_FILES,
+        ),
       ],
     );
     path = result?.path;
@@ -405,6 +416,8 @@ Future<File?> pickFile({
         ...extensions.map((e) => e.toLowerCase()).toList(),
         ...extensions.map((e) => e.toUpperCase()).toList(),
       ].toSet().toList(),
+      // Needed for [allowedExtensions].
+      type: FileType.custom,
     );
     if ((result?.count ?? 0) > 0) {
       path = result?.files.first.path;
@@ -448,7 +461,6 @@ Future<void> trackPopupMenuHandle(
           builder: (subContext) => AlertDialog(
             title: Text(
               Language.instance.COLLECTION_TRACK_DELETE_DIALOG_HEADER,
-              style: Theme.of(subContext).textTheme.headline1,
             ),
             content: Text(
               Language.instance.COLLECTION_TRACK_DELETE_DIALOG_BODY.replaceAll(
@@ -458,8 +470,7 @@ Future<void> trackPopupMenuHandle(
               style: Theme.of(subContext).textTheme.headline3,
             ),
             actions: [
-              MaterialButton(
-                textColor: Theme.of(context).primaryColor,
+              TextButton(
                 onPressed: () async {
                   await Collection.instance.delete(track);
                   Navigator.of(subContext).pop();
@@ -476,8 +487,7 @@ Future<void> trackPopupMenuHandle(
                 },
                 child: Text(Language.instance.YES),
               ),
-              MaterialButton(
-                textColor: Theme.of(context).primaryColor,
+              TextButton(
                 onPressed: Navigator.of(subContext).pop,
                 child: Text(Language.instance.NO),
               ),
@@ -630,8 +640,7 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
           ),
         ),
         actions: [
-          MaterialButton(
-            textColor: Theme.of(context).primaryColor,
+          TextButton(
             onPressed: Navigator.of(subContext).pop,
             child: Text(Language.instance.CANCEL),
           ),
@@ -778,10 +787,7 @@ InputDecoration inputDecoration(
               iconSize: 24.0,
             ),
           ),
-    contentPadding: isDesktop
-        ? EdgeInsets.only(
-            left: 10.0, bottom: trailingIcon == null ? 10.0 : 10.0)
-        : null,
+    contentPadding: null,
     hintText: hintText,
     hintStyle: isDesktop
         ? Theme.of(context).textTheme.headline3?.copyWith(
@@ -826,6 +832,44 @@ enum TabRouteSender {
   pageView,
   bottomNavigationBar,
   systemNavigationBackButton,
+}
+
+Uri? validate(String text) {
+  // Get rid of quotes.
+  if (text.startsWith('"') && text.endsWith('"')) {
+    text = text.substring(1, text.length - 1);
+  }
+  debugPrint(text);
+  Uri? uri;
+  if (uri == null) {
+    try {
+      if (FS.typeSync_(text) == FileSystemEntityType.file) {
+        if (Platform.isWindows) {
+          text = text.replaceAll('\\', '/');
+        }
+        uri = File(text).uri;
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+  }
+  if (uri == null) {
+    try {
+      uri = Uri.parse(text);
+      if (!(uri.isScheme('HTTP') ||
+          uri.isScheme('HTTPS') ||
+          uri.isScheme('FTP') ||
+          uri.isScheme('RSTP') ||
+          uri.isScheme('FILE'))) {
+        uri = null;
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+  }
+  return uri;
 }
 
 /// Fetches the album art of a given [Media] either local or online.

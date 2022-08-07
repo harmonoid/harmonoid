@@ -306,7 +306,9 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
             ),
           ).then((palette) {
             setState(() {
-              color = palette.colors.first;
+              if (palette.colors != null) {
+                color = palette.colors!.first;
+              }
             });
           });
         },
@@ -335,8 +337,10 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
         ),
       ).then((palette) {
         setState(() {
-          color = palette.colors.first;
-          secondary = palette.colors.last;
+          if (palette.colors != null) {
+            color = palette.colors!.first;
+            secondary = palette.colors!.last;
+          }
         });
       });
       Timer(Duration(milliseconds: 100), () {
@@ -724,8 +728,8 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                     builder: (context, color, _) => Theme(
                       data: createTheme(
                         color: isDark(context)
-                            ? kAccents.first.dark
-                            : kAccents.first.light,
+                            ? kPrimaryDarkColor
+                            : kPrimaryLightColor,
                         themeMode:
                             isDark(context) ? ThemeMode.dark : ThemeMode.light,
                       ),
@@ -930,15 +934,11 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                     .headline3,
                                               ),
                                               actions: [
-                                                MaterialButton(
+                                                TextButton(
                                                   onPressed:
                                                       Navigator.of(context).pop,
                                                   child: Text(
                                                     Language.instance.OK,
-                                                    style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                    ),
                                                   ),
                                                 ),
                                               ],

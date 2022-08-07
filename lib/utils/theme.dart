@@ -136,6 +136,35 @@ ThemeData createTheme({
             brightness: Brightness.dark,
           )
         : null,
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all<Color>(color),
+        overlayColor: MaterialStateProperty.all(
+          color.withOpacity(0.05),
+        ),
+        textStyle: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+            ? MaterialStateProperty.all(
+                TextStyle(
+                  letterSpacing: 0.8,
+                  fontWeight: FontWeight.w600,
+                ),
+              )
+            : null,
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(color),
+        textStyle: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+            ? MaterialStateProperty.all(
+                TextStyle(
+                  letterSpacing: 0.8,
+                  fontWeight: FontWeight.w600,
+                ),
+              )
+            : null,
+      ),
+    ),
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: color,
       selectionHandleColor: color,
@@ -259,24 +288,4 @@ ThemeData createTheme({
     ),
     fontFamily: Platform.isLinux ? 'Inter' : null,
   );
-}
-
-const kAccents = [
-  Accent(Color(0xFF6200EA), Color(0xFF7C4DFF)),
-  Accent(Color(0xFFF55A34), Color(0xFFF55A34)),
-  Accent(Color(0xFFE53935), Color(0xFFE53935)),
-  Accent(Color(0xFF4285F4), Color(0xFF82B1FF)),
-  Accent(Color(0xFFF4B400), Color(0xFFFFE57F)),
-  Accent(Color(0xFF0F9D58), Color(0xFF0F9D58)),
-  Accent(Color(0xFF89CDD0), Color(0xFF89CDD0)),
-  Accent(Color(0xFF5B51D8), Color(0xFFD1C4E9)),
-  Accent(Color(0xFFF50057), Color(0xFFFF80AB)),
-  Accent(Color(0xFF424242), Color(0xFF757575)),
-];
-
-class Accent {
-  final Color light;
-  final Color dark;
-
-  const Accent(this.light, this.dark);
 }

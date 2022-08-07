@@ -55,9 +55,11 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                 cache: true))
             .then((palette) {
           setState(() {
-            widget.colorKeys![widget.track.uri.toString()] =
-                palette.colors.first;
-            color = palette.colors.first;
+            if (palette.colors != null) {
+              widget.colorKeys![widget.track.uri.toString()] =
+                  palette.colors!.first;
+              color = palette.colors!.first;
+            }
           });
         });
       } else {

@@ -27,7 +27,7 @@ class ExceptionApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: createTheme(
-        color: kAccents.first.light,
+        color: Color(0xFF6200EA),
         themeMode: ThemeMode.light,
       ),
       themeMode: ThemeMode.light,

@@ -176,13 +176,10 @@ class SettingsTile extends StatelessWidget {
             child: child,
           ),
           if (actions != null) ...[
-            Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: ButtonBar(
-                alignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: actions!,
-              ),
+            ButtonBar(
+              alignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: actions!,
             ),
           ],
         ],

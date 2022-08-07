@@ -50,365 +50,292 @@ class PlaylistTab extends StatelessWidget {
                       MediaQuery.of(context).padding.top,
             ),
             children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (isDesktop) ...[
-                          Text(
-                            Language.instance.PLAYLIST,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline1
-                                ?.copyWith(fontSize: 20.0),
-                            textAlign: TextAlign.start,
-                          ),
-                          const SizedBox(height: 2.0),
-                          Text(Language.instance.PLAYLISTS_SUBHEADER),
-                          const SizedBox(
-                            height: 18.0,
-                          ),
-                        ],
-                        Flex(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          direction: isMobile ? Axis.vertical : Axis.horizontal,
-                          children: [
-                            MaterialButton(
-                              onPressed: () {
-                                if (isDesktop) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      contentPadding: const EdgeInsets.fromLTRB(
-                                          16.0, 16.0, 16.0, 8.0),
-                                      content: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Padding(
-                                            child: Text(
-                                              Language.instance.CREATE,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline1,
-                                              textAlign: TextAlign.start,
-                                            ),
-                                            padding: EdgeInsets.only(
-                                              bottom: 16.0,
-                                              left: 4.0,
-                                            ),
-                                          ),
-                                          Container(
-                                            height: 40.0,
-                                            width: 280.0,
-                                            alignment: Alignment.center,
-                                            margin: EdgeInsets.only(
-                                                top: 0.0, bottom: 0.0),
-                                            padding: EdgeInsets.only(top: 2.0),
-                                            child: Focus(
-                                              onFocusChange: (hasFocus) {
-                                                if (hasFocus) {
-                                                  HotKeys.instance
-                                                      .disableSpaceHotKey();
-                                                } else {
-                                                  HotKeys.instance
-                                                      .enableSpaceHotKey();
-                                                }
-                                              },
-                                              child: TextField(
-                                                autofocus: true,
-                                                controller: _controller,
-                                                cursorWidth: 1.0,
-                                                onSubmitted:
-                                                    (String value) async {
-                                                  if (value.isNotEmpty) {
-                                                    FocusScope.of(context)
-                                                        .unfocus();
-                                                    await Collection.instance
-                                                        .playlistCreateFromName(
-                                                            value);
-                                                    _controller.clear();
-                                                    Navigator.of(context)
-                                                        .maybePop();
-                                                  }
-                                                },
-                                                cursorColor: Theme.of(context)
-                                                            .brightness ==
-                                                        Brightness.light
-                                                    ? Color(0xFF212121)
-                                                    : Colors.white,
-                                                textAlignVertical:
-                                                    TextAlignVertical.bottom,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline4,
-                                                decoration: inputDecoration(
-                                                  context,
-                                                  Language.instance
-                                                      .PLAYLISTS_TEXT_FIELD_HINT,
-                                                  trailingIcon: Icon(
-                                                    Icons.add,
-                                                    size: 20.0,
-                                                    color: Theme.of(context)
-                                                        .iconTheme
-                                                        .color,
-                                                  ),
-                                                  trailingIconOnPressed:
-                                                      () async {
-                                                    if (_controller
-                                                        .text.isNotEmpty) {
-                                                      FocusScope.of(context)
-                                                          .unfocus();
-                                                      await Collection.instance
-                                                          .playlistCreateFromName(
-                                                              _controller.text);
-                                                      _controller.clear();
-                                                      Navigator.of(context)
-                                                          .maybePop();
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      actions: [
-                                        MaterialButton(
-                                          child: Text(
-                                            Language.instance.OK,
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                            ),
-                                          ),
-                                          onPressed: () async {
-                                            if (_controller.text.isNotEmpty) {
+              if (isDesktop)
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        Language.instance.PLAYLIST,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline1
+                            ?.copyWith(fontSize: 20.0),
+                        textAlign: TextAlign.start,
+                      ),
+                      const SizedBox(height: 2.0),
+                      Text(Language.instance.PLAYLISTS_SUBHEADER),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                    ],
+                  ),
+                ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Flex(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  direction: isMobile ? Axis.vertical : Axis.horizontal,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        if (isDesktop) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text(
+                                Language.instance.CREATE,
+                              ),
+                              content: Container(
+                                height: 40.0,
+                                width: 280.0,
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+                                padding: EdgeInsets.only(top: 2.0),
+                                child: Focus(
+                                  onFocusChange: (hasFocus) {
+                                    if (hasFocus) {
+                                      HotKeys.instance.disableSpaceHotKey();
+                                    } else {
+                                      HotKeys.instance.enableSpaceHotKey();
+                                    }
+                                  },
+                                  child: TextField(
+                                    autofocus: true,
+                                    controller: _controller,
+                                    cursorWidth: 1.0,
+                                    onSubmitted: (String value) async {
+                                      if (value.isNotEmpty) {
+                                        FocusScope.of(context).unfocus();
+                                        await Collection.instance
+                                            .playlistCreateFromName(value);
+                                        _controller.clear();
+                                        Navigator.of(context).maybePop();
+                                      }
+                                    },
+                                    cursorColor: Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? Color(0xFF212121)
+                                        : Colors.white,
+                                    textAlignVertical: TextAlignVertical.bottom,
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                    decoration: inputDecoration(
+                                      context,
+                                      Language
+                                          .instance.PLAYLISTS_TEXT_FIELD_HINT,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: Text(
+                                    Language.instance.OK,
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    if (_controller.text.isNotEmpty) {
+                                      FocusScope.of(context).unfocus();
+                                      await collection.playlistCreateFromName(
+                                          _controller.text);
+                                      _controller.clear();
+                                      Navigator.of(context).maybePop();
+                                    }
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text(
+                                    Language.instance.CANCEL,
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                  onPressed: Navigator.of(context).maybePop,
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            elevation: 8.0,
+                            useRootNavigator: true,
+                            backgroundColor: Theme.of(context).cardColor,
+                            builder: (context) => StatefulBuilder(
+                              builder: (context, setState) {
+                                return Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context)
+                                            .viewInsets
+                                            .bottom -
+                                        MediaQuery.of(context).padding.bottom,
+                                  ),
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      const SizedBox(height: 4.0),
+                                      Focus(
+                                        onFocusChange: (hasFocus) {
+                                          if (hasFocus) {
+                                            HotKeys.instance
+                                                .disableSpaceHotKey();
+                                          } else {
+                                            HotKeys.instance
+                                                .enableSpaceHotKey();
+                                          }
+                                        },
+                                        child: TextField(
+                                          textCapitalization:
+                                              TextCapitalization.words,
+                                          textInputAction: TextInputAction.done,
+                                          autofocus: true,
+                                          controller: _controller,
+                                          onSubmitted: (String value) async {
+                                            if (value.isNotEmpty) {
                                               FocusScope.of(context).unfocus();
-                                              await collection
+                                              await Collection.instance
                                                   .playlistCreateFromName(
-                                                      _controller.text);
+                                                      value);
                                               _controller.clear();
                                               Navigator.of(context).maybePop();
                                             }
                                           },
-                                        ),
-                                        MaterialButton(
-                                          child: Text(
-                                            Language.instance.CANCEL,
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.fromLTRB(
+                                              12,
+                                              30,
+                                              12,
+                                              6,
+                                            ),
+                                            hintText: Language.instance
+                                                .PLAYLISTS_TEXT_FIELD_LABEL,
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color!
+                                                    .withOpacity(0.4),
+                                                width: 1.8,
+                                              ),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color!
+                                                    .withOpacity(0.4),
+                                                width: 1.8,
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                width: 1.8,
+                                              ),
                                             ),
                                           ),
-                                          onPressed:
-                                              Navigator.of(context).maybePop,
                                         ),
-                                      ],
-                                    ),
-                                  );
-                                } else {
-                                  showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    context: context,
-                                    elevation: 8.0,
-                                    useRootNavigator: true,
-                                    backgroundColor:
-                                        Theme.of(context).cardColor,
-                                    builder: (context) => StatefulBuilder(
-                                      builder: (context, setState) {
-                                        return Container(
-                                          margin: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom -
-                                                MediaQuery.of(context)
-                                                    .padding
-                                                    .bottom,
+                                      ),
+                                      const SizedBox(height: 4.0),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          if (_controller.text.isNotEmpty) {
+                                            FocusScope.of(context).unfocus();
+                                            await Collection.instance
+                                                .playlistCreateFromName(
+                                                    _controller.text);
+                                            _controller.clear();
+                                            Navigator.of(context).maybePop();
+                                          }
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Theme.of(context).primaryColor,
                                           ),
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              const SizedBox(height: 4.0),
-                                              Focus(
-                                                onFocusChange: (hasFocus) {
-                                                  if (hasFocus) {
-                                                    HotKeys.instance
-                                                        .disableSpaceHotKey();
-                                                  } else {
-                                                    HotKeys.instance
-                                                        .enableSpaceHotKey();
-                                                  }
-                                                },
-                                                child: TextField(
-                                                  textCapitalization:
-                                                      TextCapitalization.words,
-                                                  textInputAction:
-                                                      TextInputAction.done,
-                                                  autofocus: true,
-                                                  controller: _controller,
-                                                  onSubmitted:
-                                                      (String value) async {
-                                                    if (value.isNotEmpty) {
-                                                      FocusScope.of(context)
-                                                          .unfocus();
-                                                      await Collection.instance
-                                                          .playlistCreateFromName(
-                                                              value);
-                                                      _controller.clear();
-                                                      Navigator.of(context)
-                                                          .maybePop();
-                                                    }
-                                                  },
-                                                  decoration: InputDecoration(
-                                                    contentPadding:
-                                                        EdgeInsets.fromLTRB(
-                                                      12,
-                                                      30,
-                                                      12,
-                                                      6,
-                                                    ),
-                                                    hintText: Language.instance
-                                                        .PLAYLISTS_TEXT_FIELD_LABEL,
-                                                    border: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Theme.of(context)
-                                                            .iconTheme
-                                                            .color!
-                                                            .withOpacity(0.4),
-                                                        width: 1.8,
-                                                      ),
-                                                    ),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Theme.of(context)
-                                                            .iconTheme
-                                                            .color!
-                                                            .withOpacity(0.4),
-                                                        width: 1.8,
-                                                      ),
-                                                    ),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                        width: 1.8,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4.0),
-                                              ElevatedButton(
-                                                onPressed: () async {
-                                                  if (_controller
-                                                      .text.isNotEmpty) {
-                                                    FocusScope.of(context)
-                                                        .unfocus();
-                                                    await Collection.instance
-                                                        .playlistCreateFromName(
-                                                            _controller.text);
-                                                    _controller.clear();
-                                                    Navigator.of(context)
-                                                        .maybePop();
-                                                  }
-                                                },
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                    Theme.of(context)
-                                                        .primaryColor,
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  Language.instance.CREATE
-                                                      .toUpperCase(),
-                                                  style: TextStyle(
-                                                      letterSpacing: 2.0),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                }
+                                        ),
+                                        child: Text(
+                                          Language.instance.CREATE
+                                              .toUpperCase(),
+                                          style: TextStyle(letterSpacing: 2.0),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
                               },
-                              padding: EdgeInsets.zero,
-                              child: Text(
-                                Language.instance.CREATE_NEW_PLAYLIST
-                                    .toUpperCase(),
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ),
                             ),
-                            const SizedBox(
-                              width: 16.0,
-                            ),
-                            MaterialButton(
-                              onPressed: () {
-                                if (isDesktop) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) =>
-                                        PlaylistImportDialog(),
-                                  );
-                                } else if (isMobile) {
-                                  showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    constraints: BoxConstraints(
-                                      maxHeight: double.infinity,
-                                    ),
-                                    context: context,
-                                    elevation: 8.0,
-                                    useRootNavigator: true,
-                                    backgroundColor:
-                                        Theme.of(context).cardColor,
-                                    builder: (context) => StatefulBuilder(
-                                      builder: (context, setState) {
-                                        return PlaylistImportBottomSheet();
-                                      },
-                                    ),
-                                  );
-                                }
-                              },
-                              padding: EdgeInsets.zero,
-                              child: Text(
-                                Language.instance.IMPORT_PLAYLIST_FROM_WEB
-                                    .toUpperCase(),
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ),
-                            ),
-                          ],
+                          );
+                        }
+                      },
+                      child: Text(
+                        Language.instance.CREATE_NEW_PLAYLIST.toUpperCase(),
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
                         ),
-                        const SizedBox(
-                          height: 4.0,
-                        ),
-                        if (isDesktop)
-                          const SizedBox(
-                            height: 16.0,
-                          ),
-                      ],
+                      ),
                     ),
-                  ),
-                ] +
-                Collection.instance.playlists
-                    .map(
-                        (Playlist playlist) => PlaylistTile(playlist: playlist))
-                    .toList(),
+                    const SizedBox(
+                      width: 4.0,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        if (isDesktop) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => PlaylistImportDialog(),
+                          );
+                        } else if (isMobile) {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            constraints: BoxConstraints(
+                              maxHeight: double.infinity,
+                            ),
+                            context: context,
+                            elevation: 8.0,
+                            useRootNavigator: true,
+                            backgroundColor: Theme.of(context).cardColor,
+                            builder: (context) => StatefulBuilder(
+                              builder: (context, setState) {
+                                return PlaylistImportBottomSheet();
+                              },
+                            ),
+                          );
+                        }
+                      },
+                      child: Text(
+                        Language.instance.IMPORT_PLAYLIST_FROM_WEB
+                            .toUpperCase(),
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 4.0,
+              ),
+              if (isDesktop)
+                const SizedBox(
+                  height: 16.0,
+                ),
+              ...Collection.instance.playlists
+                  .map((e) => PlaylistTile(playlist: e))
+                  .toList(),
+            ],
           ),
         );
       },
@@ -599,7 +526,6 @@ class PlaylistTileState extends State<PlaylistTile> {
                 builder: (subContext) => AlertDialog(
                   title: Text(
                     Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER,
-                    style: Theme.of(subContext).textTheme.headline1,
                   ),
                   content: Text(
                     Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY
@@ -610,8 +536,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                     style: Theme.of(subContext).textTheme.headline3,
                   ),
                   actions: [
-                    MaterialButton(
-                      textColor: Theme.of(context).primaryColor,
+                    TextButton(
                       onPressed: () async {
                         await Collection.instance
                             .playlistDelete(widget.playlist);
@@ -619,8 +544,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                       },
                       child: Text(Language.instance.YES),
                     ),
-                    MaterialButton(
-                      textColor: Theme.of(context).primaryColor,
+                    TextButton(
                       onPressed: Navigator.of(subContext).pop,
                       child: Text(Language.instance.NO),
                     ),
@@ -675,7 +599,6 @@ class PlaylistTileState extends State<PlaylistTile> {
                 builder: (subContext) => AlertDialog(
                   title: Text(
                     Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER,
-                    style: Theme.of(subContext).textTheme.headline1,
                   ),
                   content: Text(
                     Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY
@@ -686,17 +609,16 @@ class PlaylistTileState extends State<PlaylistTile> {
                     style: Theme.of(subContext).textTheme.headline3,
                   ),
                   actions: [
-                    MaterialButton(
-                      textColor: Theme.of(context).primaryColor,
+                    TextButton(
                       onPressed: () async {
-                        await Collection.instance
-                            .playlistDelete(widget.playlist);
+                        await Collection.instance.playlistDelete(
+                          widget.playlist,
+                        );
                         Navigator.of(subContext).pop();
                       },
                       child: Text(Language.instance.YES),
                     ),
-                    MaterialButton(
-                      textColor: Theme.of(context).primaryColor,
+                    TextButton(
                       onPressed: Navigator.of(subContext).pop,
                       child: Text(Language.instance.NO),
                     ),
@@ -744,7 +666,10 @@ class PlaylistTileState extends State<PlaylistTile> {
                             widget.playlist.name.overflow,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.headline2,
+                            style:
+                                Theme.of(context).textTheme.headline2?.copyWith(
+                                      letterSpacing: isDesktop ? 0.2 : 0.0,
+                                    ),
                           ),
                           const SizedBox(
                             height: 2.0,
@@ -813,8 +738,10 @@ class PlaylistScreenState extends State<PlaylistScreen>
                     getAlbumArt(widget.playlist.tracks.last, small: true))
                 .then((palette) {
               setState(() {
-                color = palette.colors.first;
-                secondary = palette.colors.last;
+                if (palette.colors != null) {
+                  color = palette.colors!.first;
+                  secondary = palette.colors!.last;
+                }
                 detailsVisible = true;
               });
             });
@@ -1642,9 +1569,6 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                   builder: (subContext) => AlertDialog(
                                     title: Text(
                                       Language.instance.REMOVE,
-                                      style: Theme.of(subContext)
-                                          .textTheme
-                                          .headline1,
                                     ),
                                     content: Text(
                                       Language.instance
@@ -1660,9 +1584,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                           .headline3,
                                     ),
                                     actions: [
-                                      MaterialButton(
-                                        textColor:
-                                            Theme.of(context).primaryColor,
+                                      TextButton(
                                         onPressed: () async {
                                           await Collection.instance
                                               .playlistRemoveTrack(
@@ -1675,9 +1597,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                         },
                                         child: Text(Language.instance.YES),
                                       ),
-                                      MaterialButton(
-                                        textColor:
-                                            Theme.of(context).primaryColor,
+                                      TextButton(
                                         onPressed: Navigator.of(subContext).pop,
                                         child: Text(Language.instance.NO),
                                       ),
@@ -1757,9 +1677,6 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                     AlertDialog(
                                                   title: Text(
                                                     Language.instance.REMOVE,
-                                                    style: Theme.of(subContext)
-                                                        .textTheme
-                                                        .headline1,
                                                   ),
                                                   content: Text(
                                                     Language.instance
@@ -1780,10 +1697,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                         .headline3,
                                                   ),
                                                   actions: [
-                                                    MaterialButton(
-                                                      textColor:
-                                                          Theme.of(context)
-                                                              .primaryColor,
+                                                    TextButton(
                                                       onPressed: () async {
                                                         await Collection
                                                             .instance
@@ -1800,10 +1714,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                       child: Text(Language
                                                           .instance.YES),
                                                     ),
-                                                    MaterialButton(
-                                                      textColor:
-                                                          Theme.of(context)
-                                                              .primaryColor,
+                                                    TextButton(
                                                       onPressed: Navigator.of(
                                                               subContext)
                                                           .pop,

@@ -645,8 +645,10 @@ class ArtistScreenState extends State<ArtistScreen>
                     getAlbumArt(widget.artist, small: true))
                 .then((palette) {
               setState(() {
-                color = palette.colors.first;
-                secondary = palette.colors.last;
+                if (palette.colors != null) {
+                  color = palette.colors!.first;
+                  secondary = palette.colors!.last;
+                }
                 detailsVisible = true;
               });
             });

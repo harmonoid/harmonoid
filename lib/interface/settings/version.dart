@@ -98,8 +98,7 @@ class VersionState extends State<VersionSetting>
       actions: kVersion == latestRelease.tagName
           ? null
           : [
-              MaterialButton(
-                padding: EdgeInsets.zero,
+              TextButton(
                 onPressed: () => launchUrl(
                   Uri.parse('https://github.com/harmonoid/harmonoid/releases'),
                   mode: LaunchMode.externalApplication,

@@ -208,20 +208,6 @@ class _WebSearchBarState extends State<WebSearchBar> {
                 decoration: inputDecoration(
                   context,
                   Language.instance.COLLECTION_SEARCH_WELCOME,
-                  trailingIcon: Transform.rotate(
-                    angle: pi / 2,
-                    child: Tooltip(
-                      message: Language.instance.SEARCH,
-                      child: Icon(
-                        Icons.search,
-                        size: 20.0,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                    ),
-                  ),
-                  trailingIconOnPressed: () {
-                    searchOrPlay(_query);
-                  },
                 ),
               ),
             ),
@@ -282,7 +268,70 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
           debugPrint(exception.toString());
           debugPrint(stacktrace.toString());
         }
-        if (playlist!.name.isNotEmpty && playlist!.tracks.isNotEmpty) {
+        if (playlist!.tracks.isNotEmpty) {
+          if (playlist!.name.isEmpty) {
+            debugPrint('playlist.name.isEmpty');
+            final playlistNameTextEditingController = TextEditingController();
+            await showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: Text(
+                  Language.instance.PLAYLISTS_TEXT_FIELD_LABEL,
+                ),
+                content: Container(
+                  height: 40.0,
+                  width: 360.0,
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+                  padding: EdgeInsets.only(top: 2.0),
+                  child: Focus(
+                    onFocusChange: (hasFocus) {
+                      if (hasFocus) {
+                        HotKeys.instance.disableSpaceHotKey();
+                      } else {
+                        HotKeys.instance.enableSpaceHotKey();
+                      }
+                    },
+                    child: TextField(
+                      autofocus: true,
+                      onChanged: (value) => playlist?.name = value,
+                      controller: playlistNameTextEditingController,
+                      cursorWidth: 1.0,
+                      onSubmitted: (value) {
+                        playlist?.name = value;
+                        add();
+                      },
+                      cursorColor: Theme.of(ctx).brightness == Brightness.light
+                          ? Color(0xFF212121)
+                          : Colors.white,
+                      textAlignVertical: TextAlignVertical.bottom,
+                      style: Theme.of(ctx).textTheme.headline4,
+                      decoration: inputDecoration(
+                        ctx,
+                        Language.instance.PLAYLISTS_TEXT_FIELD_HINT,
+                      ),
+                    ),
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    child: Text(
+                      Language.instance.OK,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    onPressed: Navigator.of(context).maybePop,
+                  ),
+                ],
+              ),
+            );
+            if (playlistNameTextEditingController.text.isEmpty) {
+              throw FormatException(
+                'playlistNameTextEditingController.text.isEmpty',
+              );
+            }
+          }
           setState(() {
             fetched = true;
           });
@@ -305,37 +354,16 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    child: Text(
-                      Language.instance.ERROR,
-                      style: Theme.of(context).textTheme.headline1,
-                      textAlign: TextAlign.start,
-                    ),
-                    padding: EdgeInsets.only(
-                      bottom: 16.0,
-                      left: 4.0,
-                    ),
-                  ),
-                  Padding(
-                    child: Text(
-                      Language.instance.INTERNET_ERROR,
-                      style: Theme.of(context).textTheme.headline3,
-                      textAlign: TextAlign.start,
-                    ),
-                    padding: EdgeInsets.only(
-                      bottom: 16.0,
-                      left: 4.0,
-                    ),
-                  ),
-                ],
+              title: Text(
+                Language.instance.ERROR,
+              ),
+              content: Text(
+                Language.instance.INTERNET_ERROR,
+                style: Theme.of(context).textTheme.headline3,
+                textAlign: TextAlign.start,
               ),
               actions: [
-                MaterialButton(
+                TextButton(
                   child: Text(
                     Language.instance.OK,
                     style: TextStyle(
@@ -356,42 +384,18 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  child: Text(
-                    Language.instance.ERROR,
-                    style: Theme.of(context).textTheme.headline1,
-                    textAlign: TextAlign.start,
-                  ),
-                  padding: EdgeInsets.only(
-                    bottom: 16.0,
-                    left: 4.0,
-                  ),
-                ),
-                Padding(
-                  child: Text(
-                    Language.instance.INVALID_PLAYLIST_URL,
-                    style: Theme.of(context).textTheme.headline3,
-                    textAlign: TextAlign.start,
-                  ),
-                  padding: EdgeInsets.only(
-                    bottom: 16.0,
-                    left: 4.0,
-                  ),
-                ),
-              ],
+            title: Text(
+              Language.instance.ERROR,
+            ),
+            content: Text(
+              Language.instance.INVALID_PLAYLIST_URL,
+              style: Theme.of(context).textTheme.headline3,
+              textAlign: TextAlign.start,
             ),
             actions: [
-              MaterialButton(
+              TextButton(
                 child: Text(
                   Language.instance.OK,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                  ),
                 ),
                 onPressed: Navigator.of(context).maybePop,
               ),
@@ -408,17 +412,6 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Padding(
-          child: Text(
-            Language.instance.IMPORT_PLAYLIST_TITLE,
-            style: Theme.of(context).textTheme.headline1,
-            textAlign: TextAlign.start,
-          ),
-          padding: EdgeInsets.only(
-            bottom: 16.0,
-            left: 4.0,
-          ),
-        ),
         Container(
           height: 40.0,
           width: 360.0,
@@ -446,12 +439,6 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
               decoration: inputDecoration(
                 context,
                 Language.instance.IMPORT_PLAYLIST_SUBTITLE,
-                trailingIcon: Icon(
-                  Icons.add,
-                  size: 20.0,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                trailingIconOnPressed: add,
               ),
             ),
           ),
@@ -492,22 +479,21 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
       ],
     );
     return AlertDialog(
-      contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+      title: Text(
+        Language.instance.IMPORT_PLAYLIST_TITLE,
+      ),
       content: content,
       actions: saved
           ? [
-              MaterialButton(
+              TextButton(
                 child: Text(
                   Language.instance.OK.toUpperCase(),
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                  ),
                 ),
                 onPressed: Navigator.of(context).maybePop,
               ),
             ]
           : [
-              MaterialButton(
+              TextButton(
                 child: Text(
                   Language.instance.SAVE.toUpperCase(),
                   style: TextStyle(
@@ -516,12 +502,9 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                 ),
                 onPressed: add,
               ),
-              MaterialButton(
+              TextButton(
                 child: Text(
                   Language.instance.CANCEL.toUpperCase(),
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                  ),
                 ),
                 onPressed: Navigator.of(context).maybePop,
               ),
@@ -589,8 +572,6 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
             builder: (context) => AlertDialog(
               title: Text(
                 Language.instance.ERROR,
-                style: Theme.of(context).textTheme.headline1,
-                textAlign: TextAlign.start,
               ),
               content: Text(
                 Language.instance.INTERNET_ERROR,
@@ -598,7 +579,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
                 textAlign: TextAlign.start,
               ),
               actions: [
-                MaterialButton(
+                TextButton(
                   child: Text(
                     Language.instance.OK,
                     style: TextStyle(
@@ -621,8 +602,6 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
           builder: (context) => AlertDialog(
             title: Text(
               Language.instance.ERROR,
-              style: Theme.of(context).textTheme.headline1,
-              textAlign: TextAlign.start,
             ),
             content: Text(
               Language.instance.INVALID_PLAYLIST_URL,
@@ -630,7 +609,7 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
               textAlign: TextAlign.start,
             ),
             actions: [
-              MaterialButton(
+              TextButton(
                 child: Text(
                   Language.instance.OK,
                   style: TextStyle(

@@ -696,16 +696,13 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                               .toList() +
                           [
                             const SizedBox(height: 24.0),
-                            Row(
-                              children: [
-                                Icon(Icons.info),
-                                const SizedBox(width: 8.0),
-                                Text(
-                                  Language.instance
-                                      .USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS,
-                                  style: Theme.of(context).textTheme.headline3,
-                                ),
-                              ],
+                            Text(
+                              Language
+                                  .instance
+                                  .USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS
+                                  .overflow,
+                              style: Theme.of(context).textTheme.headline3,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 24.0),
                           ],

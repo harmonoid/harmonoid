@@ -523,7 +523,6 @@ class AlbumTile extends StatelessWidget {
                   builder: (subContext) => AlertDialog(
                     title: Text(
                       Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-                      style: Theme.of(subContext).textTheme.headline1,
                     ),
                     content: Text(
                       Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_BODY
@@ -534,8 +533,7 @@ class AlbumTile extends StatelessWidget {
                       style: Theme.of(subContext).textTheme.headline3,
                     ),
                     actions: [
-                      MaterialButton(
-                        textColor: Theme.of(context).primaryColor,
+                      TextButton(
                         onPressed: () async {
                           await Collection.instance.delete(album);
                           Navigator.of(subContext).pop();
@@ -543,8 +541,7 @@ class AlbumTile extends StatelessWidget {
                         },
                         child: Text(Language.instance.YES),
                       ),
-                      MaterialButton(
-                        textColor: Theme.of(context).primaryColor,
+                      TextButton(
                         onPressed: Navigator.of(subContext).pop,
                         child: Text(Language.instance.NO),
                       ),
@@ -664,8 +661,10 @@ class AlbumScreenState extends State<AlbumScreen>
                     getAlbumArt(widget.album, small: true))
                 .then((palette) {
               setState(() {
-                color = palette.colors.first;
-                secondary = palette.colors.last;
+                if (palette.colors != null) {
+                  color = palette.colors!.first;
+                  secondary = palette.colors!.last;
+                }
                 detailsVisible = true;
               });
             });
@@ -1369,9 +1368,6 @@ class AlbumScreenState extends State<AlbumScreen>
                                       title: Text(
                                         Language.instance
                                             .COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-                                        style: Theme.of(subContext)
-                                            .textTheme
-                                            .headline1,
                                       ),
                                       content: Text(
                                         Language.instance
@@ -1385,9 +1381,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                             .headline3,
                                       ),
                                       actions: [
-                                        MaterialButton(
-                                          textColor:
-                                              Theme.of(context).primaryColor,
+                                        TextButton(
                                           onPressed: () async {
                                             await Collection.instance
                                                 .delete(widget.album);
@@ -1395,9 +1389,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                           },
                                           child: Text(Language.instance.YES),
                                         ),
-                                        MaterialButton(
-                                          textColor:
-                                              Theme.of(context).primaryColor,
+                                        TextButton(
                                           onPressed:
                                               Navigator.of(subContext).pop,
                                           child: Text(Language.instance.NO),
