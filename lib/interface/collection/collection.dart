@@ -404,6 +404,12 @@ class CollectionScreenState extends State<CollectionScreen>
                                                 });
                                               node.requestFocus();
                                             },
+                                          ).copyWith(
+                                            contentPadding: EdgeInsets.only(
+                                              left: 10.0,
+                                              bottom: 10.0,
+                                              right: 10.0,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -411,22 +417,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                     SizedBox(
                                       width: 12.0,
                                     ),
-                                    TweenAnimationBuilder<double>(
-                                      tween: Tween<double>(
-                                        begin: 0.0,
-                                        end: index.value == 3 ? 0.0 : 1.0,
-                                      ),
-                                      duration: Duration(milliseconds: 200),
-                                      child: CollectionSortButton(
-                                        tab: index.value,
-                                      ),
-                                      builder: (context, value, child) =>
-                                          Opacity(
-                                        opacity: value,
-                                        child:
-                                            value == 0.0 ? Container() : child,
-                                      ),
-                                    ),
+                                    PlayFileOrURLButton(),
                                     CollectionMoreButton(),
                                     Tooltip(
                                       message: Language.instance.SETTING,

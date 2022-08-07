@@ -14,13 +14,14 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart'
     hide ReorderableDragStartListener, Intent;
 import 'package:flutter/foundation.dart';
 import 'package:animations/animations.dart';
 import 'package:media_library/media_library.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/rendering.dart';
+import 'package:external_path/external_path.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -571,7 +572,7 @@ class ExceptionWidget extends StatelessWidget {
             const SizedBox(
               height: 4.0,
             ),
-            MaterialButton(
+            TextButton(
               onPressed: () {
                 Navigator.of(context).push(
                   PageRouteBuilder(
@@ -2004,183 +2005,225 @@ class CollectionMoreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
-      message: Language.instance.PLAY_INTERNET,
-      child: ContextMenuButton<int>(
-        padding: EdgeInsets.zero,
-        offset: Offset.fromDirection(pi / 2, 64.0),
-        icon: Icon(
-          Icons.public,
-          size: 20.0,
+    return ContextMenuButton<int>(
+      padding: EdgeInsets.zero,
+      offset: Offset.fromDirection(pi / 2, 64.0),
+      icon: Icon(
+        Icons.more_vert,
+        size: 20.0,
+      ),
+      elevation: 4.0,
+      onSelected: (value) async {
+        switch (value) {
+          case 0:
+            {
+              FileInfoScreen.show(context);
+              break;
+            }
+          case 1:
+            {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      FadeThroughTransition(
+                    fillColor: Colors.transparent,
+                    animation: animation,
+                    secondaryAnimation: secondaryAnimation,
+                    child: WebTab(),
+                  ),
+                ),
+              );
+              break;
+            }
+        }
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: 0,
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            leading: Icon(Icons.data_array),
+            title: Text(
+              Language.instance.READ_METADATA,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
         ),
-        elevation: 4.0,
-        onSelected: (value) async {
-          switch (value) {
-            case 0:
-              {
-                final controller = TextEditingController();
-                await showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    contentPadding:
-                        const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                    content: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          child: Text(
-                            Language.instance.PLAY_URL,
-                            style: Theme.of(context).textTheme.headline1,
-                            textAlign: TextAlign.start,
-                          ),
-                          padding: EdgeInsets.only(
-                            bottom: 16.0,
-                            left: 4.0,
-                          ),
-                        ),
-                        Container(
-                          height: 40.0,
-                          width: 420.0,
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
-                          padding: EdgeInsets.only(top: 2.0),
-                          child: Focus(
-                            onFocusChange: (hasFocus) {
-                              if (hasFocus) {
-                                HotKeys.instance.disableSpaceHotKey();
-                              } else {
-                                HotKeys.instance.enableSpaceHotKey();
-                              }
-                            },
-                            child: TextField(
-                              autofocus: true,
-                              controller: controller,
-                              cursorWidth: 1.0,
-                              onSubmitted: (String value) async {
-                                if (value.isNotEmpty) {
-                                  FocusScope.of(context).unfocus();
-                                  await Intent.instance
-                                      .playUri(Uri.parse(value));
+        PopupMenuItem(
+          value: 1,
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            leading: Icon(Icons.play_circle),
+            title: Text(
+              Language.instance.WEB,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class PlayFileOrURLButton extends StatefulWidget {
+  PlayFileOrURLButton({Key? key}) : super(key: key);
+
+  @override
+  State<PlayFileOrURLButton> createState() => _PlayFileOrURLButtonState();
+}
+
+class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: Language.instance.OPEN_FILE_OR_URL,
+      icon: Icon(Icons.file_open),
+      splashRadius: 20.0,
+      iconSize: 20.0,
+      onPressed: () async {
+        await showDialog(
+          context: context,
+          builder: (ctx) => SimpleDialog(
+            title: Text(
+              Language.instance.OPEN_FILE_OR_URL,
+            ),
+            children: [
+              ListTile(
+                onTap: () async {
+                  final file = await pickFile(
+                    label: Language.instance.MEDIA_FILES,
+                    extensions: kSupportedFileTypes,
+                  );
+                  if (file != null) {
+                    await Navigator.of(ctx).maybePop();
+                    await Intent.instance.playUri(file.uri);
+                  }
+                },
+                leading: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Theme.of(ctx).iconTheme.color,
+                  child: Icon(
+                    Icons.folder,
+                  ),
+                ),
+                title: Text(
+                  Language.instance.OPEN_FILE,
+                  style: Theme.of(ctx).textTheme.headline4,
+                ),
+              ),
+              ListTile(
+                onTap: () async {
+                  await Navigator.of(ctx).maybePop();
+                  String input = '';
+                  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+                  await showDialog(
+                    context: ctx,
+                    builder: (ctx) => AlertDialog(
+                      title: Text(
+                        Language.instance.OPEN_FILE_OR_URL,
+                      ),
+                      content: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            height: 40.0,
+                            width: 420.0,
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+                            padding: EdgeInsets.only(top: 2.0),
+                            child: Focus(
+                              onFocusChange: (hasFocus) {
+                                if (hasFocus) {
+                                  HotKeys.instance.disableSpaceHotKey();
+                                } else {
+                                  HotKeys.instance.enableSpaceHotKey();
                                 }
                               },
-                              cursorColor: Theme.of(context).brightness ==
-                                      Brightness.light
-                                  ? Colors.black
-                                  : Colors.white,
-                              textAlignVertical: TextAlignVertical.bottom,
-                              style: Theme.of(context).textTheme.headline4,
-                              decoration: inputDecoration(
-                                context,
-                                Language.instance.PLAY_URL_SUBTITLE,
-                                trailingIcon: Icon(
-                                  Icons.add,
-                                  size: 20.0,
-                                  color: Theme.of(context).iconTheme.color,
+                              child: Form(
+                                key: formKey,
+                                child: TextFormField(
+                                  autofocus: true,
+                                  cursorWidth: 1.0,
+                                  onChanged: (value) => input = value,
+                                  validator: (value) =>
+                                      validate(value ?? '') == null ? '' : null,
+                                  onFieldSubmitted: (value) async {
+                                    if (value.isNotEmpty &&
+                                        (formKey.currentState?.validate() ??
+                                            false)) {
+                                      Navigator.of(ctx).maybePop();
+                                      await Intent.instance.playUri(
+                                        validate(value)!,
+                                      );
+                                    }
+                                  },
+                                  cursorColor: Theme.of(ctx).brightness ==
+                                          Brightness.light
+                                      ? Colors.black
+                                      : Colors.white,
+                                  textAlignVertical: TextAlignVertical.bottom,
+                                  style: Theme.of(ctx).textTheme.headline4,
+                                  decoration: inputDecoration(
+                                    ctx,
+                                    Language.instance.PLAY_URL_SUBTITLE,
+                                  ).copyWith(
+                                    errorMaxLines: 1,
+                                    errorStyle: TextStyle(height: 0),
+                                  ),
                                 ),
-                                trailingIconOnPressed: () async {
-                                  if (controller.text.isNotEmpty) {
-                                    FocusScope.of(context).unfocus();
-                                    await Intent.instance
-                                        .playUri(Uri.parse(controller.text));
-                                  }
-                                },
                               ),
                             ),
                           ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          child: Text(
+                            Language.instance.PLAY.toUpperCase(),
+                            style: TextStyle(
+                              color: Theme.of(ctx).primaryColor,
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (input.isNotEmpty &&
+                                (formKey.currentState?.validate() ?? false)) {
+                              Navigator.of(ctx).maybePop();
+                              await Intent.instance.playUri(validate(input)!);
+                            }
+                          },
+                        ),
+                        TextButton(
+                          child: Text(
+                            Language.instance.CANCEL.toUpperCase(),
+                            style: TextStyle(
+                              color: Theme.of(ctx).primaryColor,
+                            ),
+                          ),
+                          onPressed: Navigator.of(ctx).maybePop,
                         ),
                       ],
                     ),
-                    actions: [
-                      MaterialButton(
-                        child: Text(
-                          Language.instance.PLAY.toUpperCase(),
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        onPressed: () async {
-                          if (controller.text.isNotEmpty) {
-                            await Intent.instance
-                                .playUri(Uri.parse(controller.text));
-                          }
-                        },
-                      ),
-                      MaterialButton(
-                        child: Text(
-                          Language.instance.CANCEL.toUpperCase(),
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        onPressed: Navigator.of(context).maybePop,
-                      ),
-                    ],
+                  );
+                },
+                leading: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Theme.of(ctx).iconTheme.color,
+                  child: Icon(
+                    Icons.link,
                   ),
-                );
-                break;
-              }
-            case 1:
-              {
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      fillColor: Colors.transparent,
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: WebTab(),
-                    ),
-                  ),
-                );
-                break;
-              }
-            case 2:
-              {
-                FileInfoScreen.show(context);
-                break;
-              }
-          }
-        },
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            value: 0,
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              leading: Icon(Icons.link),
-              title: Text(
-                Language.instance.PLAY_URL,
-                style: Theme.of(context).textTheme.headline4,
+                ),
+                title: Text(
+                  Language.instance.PLAY_URL,
+                  style: Theme.of(ctx).textTheme.headline4,
+                ),
               ),
-            ),
+            ],
           ),
-          PopupMenuItem(
-            value: 2,
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              leading: Icon(Icons.data_array),
-              title: Text(
-                Language.instance.READ_METADATA,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
-          ),
-          PopupMenuItem(
-            value: 1,
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              leading: Icon(Icons.play_circle),
-              title: Text(
-                Language.instance.WEB,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -2329,31 +2372,55 @@ class FoldersNotFoundDialog extends StatefulWidget {
 }
 
 class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
+  List<String>? storages;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) async {
+          final storages = await ExternalPath.getExternalStorageDirectories();
+          setState(
+            () => this.storages = storages,
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<Collection>(
       builder: (context, collection, _) {
-        final missingDirectories = collection.collectionDirectories
+        Iterable<Directory> missingDirectories = collection
+            .collectionDirectories
             .where((element) => !element.existsSync_());
+        if (storages != null) {
+          missingDirectories = missingDirectories.map(
+            (e) => Directory(
+              e.path
+                  .replaceAll(
+                    storages!.first,
+                    Language.instance.PHONE,
+                  )
+                  .replaceAll(
+                    storages!.last,
+                    Language.instance.SD_CARD,
+                  ),
+            ),
+          );
+        }
         return AlertDialog(
-          contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 4.0),
+          title: Text(
+            missingDirectories.isEmpty
+                ? Language.instance.AWESOME
+                : Language.instance.ERROR,
+          ),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                child: Text(
-                  missingDirectories.isEmpty
-                      ? Language.instance.AWESOME
-                      : Language.instance.ERROR,
-                  style: Theme.of(context).textTheme.headline1,
-                  textAlign: TextAlign.start,
-                ),
-                padding: EdgeInsets.only(
-                  bottom: 16.0,
-                  left: 4.0,
-                ),
-              ),
               Padding(
                 child: Text(
                   missingDirectories.isEmpty
@@ -2365,6 +2432,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                 padding: EdgeInsets.only(
                   bottom: 16.0,
                   left: 4.0,
+                  right: 4.0,
                 ),
               ),
               ...missingDirectories
@@ -2410,8 +2478,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          MaterialButton(
-                            padding: EdgeInsets.zero,
+                          TextButton(
                             onPressed: () async {
                               if (!CollectionRefresh.instance.isCompleted) {
                                 showDialog(
@@ -2422,8 +2489,6 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                     title: Text(
                                       Language.instance
                                           .INDEXING_ALREADY_GOING_ON_TITLE,
-                                      style:
-                                          Theme.of(context).textTheme.headline1,
                                     ),
                                     content: Text(
                                       Language.instance
@@ -2432,9 +2497,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                           Theme.of(context).textTheme.headline3,
                                     ),
                                     actions: [
-                                      MaterialButton(
-                                        textColor:
-                                            Theme.of(context).primaryColor,
+                                      TextButton(
                                         onPressed: Navigator.of(context).pop,
                                         child: Text(Language.instance.OK),
                                       ),
@@ -2451,9 +2514,6 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                   builder: (subContext) => AlertDialog(
                                     title: Text(
                                       Language.instance.WARNING,
-                                      style: Theme.of(subContext)
-                                          .textTheme
-                                          .headline1,
                                     ),
                                     content: Text(
                                       Language.instance
@@ -2463,9 +2523,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                           .headline3,
                                     ),
                                     actions: [
-                                      MaterialButton(
-                                        textColor:
-                                            Theme.of(context).primaryColor,
+                                      TextButton(
                                         onPressed: () async {
                                           Navigator.of(subContext).pop();
                                         },
@@ -2504,15 +2562,13 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
             ],
           ),
           actions: [
-            MaterialButton(
+            TextButton(
               child: Text(
                 Language.instance.DONE.toUpperCase(),
               ),
               onPressed: missingDirectories.isEmpty
                   ? Navigator.of(context).maybePop
                   : null,
-              textColor: Theme.of(context).primaryColor,
-              disabledTextColor: Theme.of(context).iconTheme.color,
             ),
           ],
         );

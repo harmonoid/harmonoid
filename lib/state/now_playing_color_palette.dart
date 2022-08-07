@@ -42,7 +42,7 @@ class NowPlayingColorPalette extends ChangeNotifier {
           try {
             final image = getAlbumArt(track, small: true);
             final result = await PaletteGenerator.fromImageProvider(image);
-            palette = result.colors.toList();
+            palette = result.colors?.toList();
             if (Configuration.instance.dynamicNowPlayingBarColoring) {
               MobileNowPlayingController.instance.palette.value = palette;
             }
