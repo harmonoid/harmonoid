@@ -587,34 +587,15 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    child: Text(
-                      Language.instance.ERROR,
-                      style: Theme.of(context).textTheme.headline1,
-                      textAlign: TextAlign.start,
-                    ),
-                    padding: EdgeInsets.only(
-                      bottom: 16.0,
-                      left: 4.0,
-                    ),
-                  ),
-                  Padding(
-                    child: Text(
-                      Language.instance.INTERNET_ERROR,
-                      style: Theme.of(context).textTheme.headline3,
-                      textAlign: TextAlign.start,
-                    ),
-                    padding: EdgeInsets.only(
-                      bottom: 16.0,
-                      left: 4.0,
-                    ),
-                  ),
-                ],
+              title: Text(
+                Language.instance.ERROR,
+                style: Theme.of(context).textTheme.headline1,
+                textAlign: TextAlign.start,
+              ),
+              content: Text(
+                Language.instance.INTERNET_ERROR,
+                style: Theme.of(context).textTheme.headline3,
+                textAlign: TextAlign.start,
               ),
               actions: [
                 MaterialButton(
@@ -638,34 +619,15 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  child: Text(
-                    Language.instance.ERROR,
-                    style: Theme.of(context).textTheme.headline1,
-                    textAlign: TextAlign.start,
-                  ),
-                  padding: EdgeInsets.only(
-                    bottom: 16.0,
-                    left: 4.0,
-                  ),
-                ),
-                Padding(
-                  child: Text(
-                    Language.instance.INVALID_PLAYLIST_URL,
-                    style: Theme.of(context).textTheme.headline3,
-                    textAlign: TextAlign.start,
-                  ),
-                  padding: EdgeInsets.only(
-                    bottom: 16.0,
-                    left: 4.0,
-                  ),
-                ),
-              ],
+            title: Text(
+              Language.instance.ERROR,
+              style: Theme.of(context).textTheme.headline1,
+              textAlign: TextAlign.start,
+            ),
+            content: Text(
+              Language.instance.INVALID_PLAYLIST_URL,
+              style: Theme.of(context).textTheme.headline3,
+              textAlign: TextAlign.start,
             ),
             actions: [
               MaterialButton(
@@ -794,34 +756,17 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
               ),
             )
           else
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: add,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    child: Text(
-                      Language.instance.ADD.toUpperCase(),
-                      style: TextStyle(letterSpacing: 2.0),
-                    ),
-                  ),
+            ElevatedButton(
+              onPressed: add,
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).primaryColor,
                 ),
-                const SizedBox(width: 8.0),
-                Expanded(
-                  child: MaterialButton(
-                    onPressed: Navigator.of(context).maybePop,
-                    textColor: Theme.of(context).primaryColor,
-                    child: Text(
-                      Language.instance.CANCEL.toUpperCase(),
-                      style: TextStyle(letterSpacing: 2.0),
-                    ),
-                  ),
-                ),
-              ],
+              ),
+              child: Text(
+                Language.instance.ADD.toUpperCase(),
+                style: TextStyle(letterSpacing: 2.0),
+              ),
             ),
         ],
       ),
