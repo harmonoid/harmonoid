@@ -13,7 +13,6 @@ import 'package:media_library/media_library.dart';
 import 'package:external_path/external_path.dart';
 import 'package:safe_session_storage/safe_session_storage.dart';
 
-import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -75,7 +74,6 @@ class Configuration extends ConfigurationKeys {
   Future<void> save({
     List<Directory>? collectionDirectories,
     LanguageRegion? languageRegion,
-    Accent? accent,
     ThemeMode? themeMode,
     bool? automaticAccent,
     bool? notificationLyrics,
@@ -115,9 +113,6 @@ class Configuration extends ConfigurationKeys {
     }
     if (themeMode != null) {
       this.themeMode = themeMode;
-    }
-    if (accent != null) {
-      this.accent = accent;
     }
     if (collectionSearchRecent != null) {
       this.collectionSearchRecent = collectionSearchRecent;
@@ -215,7 +210,6 @@ class Configuration extends ConfigurationKeys {
             .toList()
             .cast<String>(),
         'languageRegion': this.languageRegion.index,
-        'accent': kAccents.indexOf(this.accent),
         'themeMode': this.themeMode.index,
         'automaticAccent': this.automaticAccent,
         'notificationLyrics': this.notificationLyrics,
@@ -274,7 +268,6 @@ class Configuration extends ConfigurationKeys {
         .toList()
         .cast<Directory>();
     languageRegion = LanguageRegion.values[current['languageRegion']];
-    accent = kAccents[current['accent']];
     themeMode = ThemeMode.values[current['themeMode']];
     automaticAccent = current['automaticAccent'];
     notificationLyrics = current['notificationLyrics'];
@@ -313,7 +306,6 @@ abstract class ConfigurationKeys {
   late List<Directory> collectionDirectories;
   late Directory cacheDirectory;
   late LanguageRegion languageRegion;
-  late Accent accent;
   late ThemeMode themeMode;
   late bool automaticAccent;
   late bool notificationLyrics;
@@ -364,7 +356,6 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
         }[Platform.operatingSystem]!(),
       ],
       'languageRegion': 0,
-      'accent': 0,
       'themeMode': isMobile ? 0 : 1,
       'automaticAccent': false,
       'notificationLyrics': true,
