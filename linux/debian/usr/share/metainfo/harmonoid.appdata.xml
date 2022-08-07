@@ -2,7 +2,7 @@
 <component type="desktop-application">
 	<id>harmonoid</id>
 	<name>Harmonoid</name>
-	<summary>Elegant music app to play &amp; manage music library. Lyrics &amp; playlists. YouTube support.</summary>
+	<!-- <summary>Elegant music app to play &amp; manage music library. Lyrics &amp; playlists. YouTube support.</summary> -->
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>LicenseRef-proprietary=https://github.com/harmonoid/harmonoid/blob/master/EULA.txt</project_license>
 	<recommends>
@@ -60,7 +60,8 @@
 	</screenshots> -->
 	<launchable type="desktop-id">harmonoid.desktop</launchable>
 	<releases>
-    <release version="0.2.7" date="2022-08-05" />
+		<release version="0.2.8" date="2022-08-07" />
+		<release version="0.2.7" date="2022-08-05" />
 		<release version="0.2.6" date="2022-07-17" />
 		<release version="0.2.5" date="2022-07-13" />
 		<release version="0.2.2" date="2022-03-24" />
