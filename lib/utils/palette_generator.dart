@@ -176,10 +176,11 @@ class PaletteGenerator with Diagnosticable {
 
   final List<PaletteTarget> targets;
 
-  Iterable<Color> get colors sync* {
-    for (final PaletteColor paletteColor in paletteColors) {
-      yield paletteColor.color;
+  Iterable<Color>? get colors {
+    if (paletteColors.isEmpty) {
+      return null;
     }
+    return paletteColors.map((e) => e.color);
   }
 
   PaletteColor? get vibrantColor => selectedSwatches[PaletteTarget.vibrant];
