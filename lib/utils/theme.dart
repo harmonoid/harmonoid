@@ -6,6 +6,8 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
+// DO NOT IMPORT ANYTHING FROM `package:harmonoid` IN THIS FILE.
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -164,7 +166,12 @@ ThemeData createTheme({
         },
       ),
     ),
-    splashFactory: InkRipple.splashFactory,
+    splashFactory: Platform.isWindows || Platform.isMacOS || Platform.isLinux
+        ? InkRipple.splashFactory
+        : InkSparkle.splashFactory,
+    highlightColor: Platform.isWindows || Platform.isMacOS || Platform.isLinux
+        ? null
+        : Colors.transparent,
     primaryColorLight: color,
     primaryColor: color,
     primaryColorDark: color,

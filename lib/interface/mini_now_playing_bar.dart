@@ -646,190 +646,199 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                   ),
                                 ),
                               Positioned.fill(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Stack(
-                                      alignment: Alignment.topLeft,
-                                      children: [
-                                        percentage == 1.0
-                                            ? () {
-                                                if (pageController
-                                                        .initialPage !=
-                                                    Playback.instance.index) {
-                                                  pageController =
-                                                      PageController(
-                                                    initialPage:
-                                                        Playback.instance.index,
-                                                  );
-                                                }
-                                                return Container(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: PageView(
-                                                    scrollDirection:
-                                                        Axis.horizontal,
-                                                    controller: pageController,
-                                                    onPageChanged: (value) =>
-                                                        Playback.instance
-                                                            .jump(value),
-                                                    children: Playback
-                                                        .instance.tracks
-                                                        .map(
-                                                          (e) =>
-                                                              SizedBox.square(
-                                                            child:
-                                                                ExtendedImage(
-                                                              image:
-                                                                  getAlbumArt(
-                                                                      e),
-                                                              constraints:
-                                                                  BoxConstraints(
-                                                                maxWidth:
-                                                                    MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width,
-                                                                maxHeight:
-                                                                    MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Stack(
+                                        alignment: Alignment.topLeft,
+                                        children: [
+                                          percentage == 1.0
+                                              ? () {
+                                                  if (pageController
+                                                          .initialPage !=
+                                                      Playback.instance.index) {
+                                                    pageController =
+                                                        PageController(
+                                                      initialPage: Playback
+                                                          .instance.index,
+                                                    );
+                                                  }
+                                                  return Container(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: PageView(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      controller:
+                                                          pageController,
+                                                      onPageChanged: (value) =>
+                                                          Playback.instance
+                                                              .jump(value),
+                                                      children: Playback
+                                                          .instance.tracks
+                                                          .map(
+                                                            (e) =>
+                                                                SizedBox.square(
+                                                              child:
+                                                                  ExtendedImage(
+                                                                image:
+                                                                    getAlbumArt(
+                                                                        e),
+                                                                constraints:
+                                                                    BoxConstraints(
+                                                                  maxWidth:
+                                                                      MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width,
+                                                                  maxHeight:
+                                                                      MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width,
+                                                                ),
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                                height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                                fit: BoxFit
+                                                                    .cover,
                                                               ),
-                                                              width:
-                                                                  MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                              height:
-                                                                  MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                              fit: BoxFit.cover,
                                                             ),
-                                                          ),
-                                                        )
-                                                        .toList(),
-                                                  ),
-                                                );
-                                              }()
-                                            : Consumer<Playback>(
-                                                builder:
-                                                    (context, playback, _) =>
-                                                        SizedBox.square(
-                                                  child: ExtendedImage(
-                                                    image: getAlbumArt(
-                                                        playback.tracks[
-                                                            playback.index]),
-                                                    constraints: BoxConstraints(
-                                                      maxWidth:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
-                                                      maxHeight:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
+                                                          )
+                                                          .toList(),
                                                     ),
-                                                    width: percentage == 1.0
-                                                        ? MediaQuery.of(context)
+                                                  );
+                                                }()
+                                              : Consumer<Playback>(
+                                                  builder:
+                                                      (context, playback, _) =>
+                                                          SizedBox.square(
+                                                    child: ExtendedImage(
+                                                      image: getAlbumArt(
+                                                          playback.tracks[
+                                                              playback.index]),
+                                                      constraints:
+                                                          BoxConstraints(
+                                                        maxWidth: MediaQuery.of(
+                                                                context)
                                                             .size
-                                                            .width
-                                                        : height - 2.0,
-                                                    height: percentage == 1.0
-                                                        ? MediaQuery.of(context)
-                                                            .size
-                                                            .width
-                                                        : height - 2.0,
-                                                    fit: BoxFit.cover,
+                                                            .width,
+                                                        maxHeight:
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width,
+                                                      ),
+                                                      width: percentage == 1.0
+                                                          ? MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width
+                                                          : height - 2.0,
+                                                      height: percentage == 1.0
+                                                          ? MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width
+                                                          : height - 2.0,
+                                                      fit: BoxFit.cover,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                        if (height >
-                                            MediaQuery.of(context).size.width)
-                                          Material(
-                                            color: Colors.transparent,
-                                            child: Container(
-                                              padding: EdgeInsets.only(
-                                                top: MediaQuery.of(context)
-                                                        .padding
-                                                        .top +
-                                                    8.0,
-                                                left: 8.0,
-                                                right: 8.0,
-                                                bottom: 8.0,
-                                              ),
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  controller.animateToHeight(
-                                                    state: PanelState.MIN,
-                                                  );
-                                                },
-                                                color: (colors.palette ??
-                                                            [
-                                                              Theme.of(context)
-                                                                  .primaryColor
-                                                            ])
-                                                        .first
-                                                        .isDark
-                                                    ? Colors.white
-                                                        .withOpacity(0.87)
-                                                    : Colors.black87,
-                                                icon: Icon(Icons.close),
-                                                splashRadius: 24.0,
+                                          if (height >
+                                              MediaQuery.of(context).size.width)
+                                            Material(
+                                              color: Colors.transparent,
+                                              child: Container(
+                                                padding: EdgeInsets.only(
+                                                  top: MediaQuery.of(context)
+                                                          .padding
+                                                          .top +
+                                                      8.0,
+                                                  left: 8.0,
+                                                  right: 8.0,
+                                                  bottom: 8.0,
+                                                ),
+                                                child: IconButton(
+                                                  onPressed: () {
+                                                    controller.animateToHeight(
+                                                      state: PanelState.MIN,
+                                                    );
+                                                  },
+                                                  color: (colors.palette ??
+                                                              [
+                                                                Theme.of(
+                                                                        context)
+                                                                    .primaryColor
+                                                              ])
+                                                          .first
+                                                          .isDark
+                                                      ? Colors.white
+                                                          .withOpacity(0.87)
+                                                      : Colors.black87,
+                                                  icon: Icon(Icons.close),
+                                                  splashRadius: 24.0,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                      ],
-                                    ),
-                                    if (height < 200.0)
-                                      const SizedBox(width: 16.0),
-                                    if (height < 200.0)
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Text(
-                                              Playback
-                                                  .instance
-                                                  .tracks[
-                                                      Playback.instance.index]
-                                                  .trackName
-                                                  .overflow,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline2,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            Text(
-                                              Playback
-                                                  .instance
-                                                  .tracks[
-                                                      Playback.instance.index]
-                                                  .trackArtistNames
-                                                  .take(2)
-                                                  .join(', ')
-                                                  .overflow,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline3,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ],
-                                        ),
+                                        ],
                                       ),
-                                    if (height < 200.0)
-                                      Material(
-                                        child: Container(
+                                      if (height < 200.0)
+                                        const SizedBox(width: 16.0),
+                                      if (height < 200.0)
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Text(
+                                                Playback
+                                                    .instance
+                                                    .tracks[
+                                                        Playback.instance.index]
+                                                    .trackName
+                                                    .overflow,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              Text(
+                                                Playback
+                                                    .instance
+                                                    .tracks[
+                                                        Playback.instance.index]
+                                                    .trackArtistNames
+                                                    .take(2)
+                                                    .join(', ')
+                                                    .overflow,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline3,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      if (height < 200.0)
+                                        Container(
                                           height: 64.0,
                                           width: 64.0,
                                           child: IconButton(
@@ -842,9 +851,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                             splashRadius: 24.0,
                                           ),
                                         ),
-                                        color: Colors.transparent,
-                                      ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
