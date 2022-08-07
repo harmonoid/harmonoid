@@ -849,6 +849,7 @@ ImageProvider getAlbumArt(
           media.uri,
           small: small,
         ),
+        cache: true,
       );
     }
   }
