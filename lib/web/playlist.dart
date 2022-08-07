@@ -318,14 +318,16 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
       );
     }
     if (isMobile) {
-      PaletteGenerator.fromImageProvider(ResizeImage.resizeIfNeeded(
-              100,
-              100,
-              ExtendedNetworkImageProvider(
-                  widget.playlist.thumbnails.values
-                      .toList()[widget.playlist.thumbnails.length - 2],
-                  cache: true)))
-          .then((palette) {
+      PaletteGenerator.fromImageProvider(
+        ResizeImage.resizeIfNeeded(
+          100,
+          100,
+          ExtendedNetworkImageProvider(
+            widget.playlist.thumbnails.values.first,
+            cache: true,
+          ),
+        ),
+      ).then((palette) {
         setState(() {
           color = palette.colors.first;
           secondary = palette.colors.last;

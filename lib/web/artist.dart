@@ -282,7 +282,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
           100,
           100,
           ExtendedNetworkImageProvider(
-            widget.artist.coverUrl,
+            widget.artist.thumbnails.values.first,
             cache: true,
           ),
         ),
