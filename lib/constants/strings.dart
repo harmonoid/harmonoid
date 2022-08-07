@@ -12,6 +12,7 @@ class Strings {
   late String ALBUMS_FROM_ARTIST;
   late String ALBUM_ARTIST;
   late String ALBUM_SINGLE;
+  late String ALL_FILES;
   late String ARTIST;
   late String ARTIST_SINGLE;
   late String ASCENDING;
@@ -87,6 +88,8 @@ class Strings {
   late String FILE_PATH_OR_URL;
   late String FOLDERS_NOT_FOUND;
   late String FOLDER_NOT_FOUND;
+  late String FROM_FILE;
+  late String FROM_URL;
   late String FULLSCREEN;
   late String GENRE;
   late String GO_TO_SETTINGS;
@@ -108,6 +111,7 @@ class Strings {
   late String LYRICS;
   late String LYRICS_NOT_FOUND;
   late String LYRICS_RETRIEVING;
+  late String MEDIA_FILES;
   late String MENU;
   late String MORE;
   late String MUTE;
@@ -132,6 +136,8 @@ class Strings {
   late String NO_PLAYLISTS_FOUND;
   late String N_TRACKS;
   late String OK;
+  late String OPEN_FILE;
+  late String OPEN_FILE_OR_URL;
   late String OPEN_IN_BROWSER;
   late String OPTIONS;
   late String ORDER;

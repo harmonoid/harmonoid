@@ -216,6 +216,7 @@ class Language extends Strings with ChangeNotifier {
     this.ALBUMS_FROM_ARTIST = asset['ALBUMS_FROM_ARTIST']!;
     this.ALBUM_ARTIST = asset['ALBUM_ARTIST']!;
     this.ALBUM_SINGLE = asset['ALBUM_SINGLE']!;
+    this.ALL_FILES = asset['ALL_FILES']!;
     this.ARTIST = asset['ARTIST']!;
     this.ARTIST_SINGLE = asset['ARTIST_SINGLE']!;
     this.ASCENDING = asset['ASCENDING']!;
@@ -291,6 +292,8 @@ class Language extends Strings with ChangeNotifier {
     this.FILE_PATH_OR_URL = asset['FILE_PATH_OR_URL']!;
     this.FOLDERS_NOT_FOUND = asset['FOLDERS_NOT_FOUND']!;
     this.FOLDER_NOT_FOUND = asset['FOLDER_NOT_FOUND']!;
+    this.FROM_FILE = asset['FROM_FILE']!;
+    this.FROM_URL = asset['FROM_URL']!;
     this.FULLSCREEN = asset['FULLSCREEN']!;
     this.GENRE = asset['GENRE']!;
     this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
@@ -312,6 +315,7 @@ class Language extends Strings with ChangeNotifier {
     this.LYRICS = asset['LYRICS']!;
     this.LYRICS_NOT_FOUND = asset['LYRICS_NOT_FOUND']!;
     this.LYRICS_RETRIEVING = asset['LYRICS_RETRIEVING']!;
+    this.MEDIA_FILES = asset['MEDIA_FILES']!;
     this.MENU = asset['MENU']!;
     this.MORE = asset['MORE']!;
     this.MUTE = asset['MUTE']!;
@@ -336,6 +340,8 @@ class Language extends Strings with ChangeNotifier {
     this.NO_PLAYLISTS_FOUND = asset['NO_PLAYLISTS_FOUND']!;
     this.N_TRACKS = asset['N_TRACKS']!;
     this.OK = asset['OK']!;
+    this.OPEN_FILE = asset['OPEN_FILE']!;
+    this.OPEN_FILE_OR_URL = asset['OPEN_FILE_OR_URL']!;
     this.OPEN_IN_BROWSER = asset['OPEN_IN_BROWSER']!;
     this.OPTIONS = asset['OPTIONS']!;
     this.ORDER = asset['ORDER']!;
