@@ -6,7 +6,6 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
@@ -15,7 +14,6 @@ import 'package:libmpv/libmpv.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/file_system.dart';
 import 'package:media_library/media_library.dart' hide Media;
 import 'package:harmonoid/constants/language.dart';
 
@@ -40,170 +38,167 @@ class FileInfoScreen extends StatefulWidget {
           ),
         );
       } else {
-        const kTimeout = 1000;
-        final controller = TextEditingController();
-        final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-        Uri? validate(String text) {
-          // Get rid of quotes.
-          if (text.startsWith('"') && text.endsWith('"')) {
-            text = text.substring(1, text.length - 1);
-          }
-          debugPrint(text);
-          Uri? uri;
-          if (uri == null) {
-            try {
-              if (FS.typeSync_(text) == FileSystemEntityType.file) {
-                if (Platform.isWindows) {
-                  text = text.replaceAll('\\', '/');
-                }
-                uri = File(text).uri;
-              }
-            } catch (exception, stacktrace) {
-              debugPrint(exception.toString());
-              debugPrint(stacktrace.toString());
-            }
-          }
-          if (uri == null) {
-            try {
-              uri = Uri.parse(text);
-              if (!(uri.isScheme('HTTP') ||
-                  uri.isScheme('HTTPS') ||
-                  uri.isScheme('FTP') ||
-                  uri.isScheme('RSTP') ||
-                  uri.isScheme('FILE'))) {
-                uri = null;
-              }
-            } catch (exception, stacktrace) {
-              debugPrint(exception.toString());
-              debugPrint(stacktrace.toString());
-            }
-          }
-          return uri;
-        }
-
-        Future<void> showFileInfoScreen(
-          BuildContext ctx,
-          String text,
-          int timeout,
-        ) async {
-          if (text.isNotEmpty && (formKey.currentState?.validate() ?? false)) {
-            uri = validate(text);
-            if (uri != null) {
-              debugPrint(uri.toString());
-              Navigator.of(ctx).maybePop();
-              // Yeah! That's recursion.
-              await show(
-                context,
-                uri: uri,
-                timeout: Duration(seconds: timeout),
-              );
-            }
-          }
-        }
-
         await showDialog(
           context: context,
-          builder: (ctx) => AlertDialog(
-            contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  child: Text(
-                    Language.instance.READ_METADATA,
-                    style: Theme.of(ctx).textTheme.headline1,
-                    textAlign: TextAlign.start,
-                  ),
-                  padding: EdgeInsets.only(
-                    bottom: 16.0,
-                    left: 4.0,
-                  ),
-                ),
-                Container(
-                  height: 40.0,
-                  width: 420.0,
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
-                  padding: EdgeInsets.only(top: 2.0),
-                  child: Focus(
-                    onFocusChange: (hasFocus) {
-                      if (hasFocus) {
-                        HotKeys.instance.disableSpaceHotKey();
-                      } else {
-                        HotKeys.instance.enableSpaceHotKey();
-                      }
-                    },
-                    child: Form(
-                      key: formKey,
-                      child: TextFormField(
-                        autofocus: true,
-                        controller: controller,
-                        cursorWidth: 1.0,
-                        onFieldSubmitted: (String value) async {
-                          await showFileInfoScreen(ctx, value, kTimeout);
-                        },
-                        validator: (value) {
-                          final error = value == null
-                              ? null
-                              : validate(value) == null
-                                  ? ''
-                                  : null;
-                          debugPrint(error.toString());
-                          return error;
-                        },
-                        cursorColor:
-                            Theme.of(ctx).brightness == Brightness.light
-                                ? Colors.black
-                                : Colors.white,
-                        textAlignVertical: TextAlignVertical.bottom,
-                        style: Theme.of(ctx).textTheme.headline4,
-                        decoration: inputDecoration(
-                          ctx,
-                          Language.instance.FILE_PATH_OR_URL,
-                          trailingIcon: Icon(
-                            Icons.check,
-                            size: 20.0,
-                            color: Theme.of(ctx).iconTheme.color,
-                          ),
-                          trailingIconOnPressed: () async {
-                            await showFileInfoScreen(
-                                ctx, controller.text, kTimeout);
-                          },
-                        ).copyWith(
-                          errorMaxLines: 1,
-                          errorStyle: TextStyle(height: 0),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+          builder: (ctx) => SimpleDialog(
+            title: Text(
+              Language.instance.READ_METADATA,
             ),
-            actions: [
-              MaterialButton(
-                child: Text(
-                  Language.instance.READ.toUpperCase(),
-                  style: TextStyle(
-                    color: Theme.of(ctx).primaryColor,
+            children: [
+              ListTile(
+                onTap: () async {
+                  final file = await pickFile(
+                    label: Language.instance.MEDIA_FILES,
+                    extensions: kSupportedFileTypes,
+                  );
+                  debugPrint(file.toString());
+                  if (file != null) {
+                    await Navigator.of(ctx).maybePop();
+                    await show(
+                      context,
+                      uri: file.uri,
+                      timeout: timeout,
+                    );
+                  }
+                },
+                leading: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Theme.of(ctx).iconTheme.color,
+                  child: Icon(
+                    Icons.folder,
                   ),
                 ),
-                onPressed: () async {
-                  await showFileInfoScreen(
-                    ctx,
-                    controller.text,
-                    kTimeout,
+                title: Text(
+                  Language.instance.FROM_FILE,
+                  style: Theme.of(ctx).textTheme.headline4,
+                ),
+              ),
+              ListTile(
+                onTap: () async {
+                  await Navigator.of(ctx).maybePop();
+                  final controller = TextEditingController();
+                  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+                  Future<void> showFileInfoScreen(
+                    BuildContext ctx,
+                    String text,
+                    Duration timeout,
+                  ) async {
+                    if (text.isNotEmpty &&
+                        (formKey.currentState?.validate() ?? false)) {
+                      uri = validate(text);
+                      if (uri != null) {
+                        debugPrint(uri.toString());
+                        Navigator.of(ctx).maybePop();
+                        // Yeah! That's recursion.
+                        await show(
+                          context,
+                          uri: uri,
+                          timeout: timeout,
+                        );
+                      }
+                    }
+                  }
+
+                  await showDialog(
+                    context: ctx,
+                    builder: (ctx) => AlertDialog(
+                      title: Text(
+                        Language.instance.READ_METADATA,
+                      ),
+                      content: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            height: 40.0,
+                            width: 420.0,
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+                            padding: EdgeInsets.only(top: 2.0),
+                            child: Focus(
+                              onFocusChange: (hasFocus) {
+                                if (hasFocus) {
+                                  HotKeys.instance.disableSpaceHotKey();
+                                } else {
+                                  HotKeys.instance.enableSpaceHotKey();
+                                }
+                              },
+                              child: Form(
+                                key: formKey,
+                                child: TextFormField(
+                                  autofocus: true,
+                                  controller: controller,
+                                  cursorWidth: 1.0,
+                                  onFieldSubmitted: (String value) async {
+                                    await showFileInfoScreen(
+                                      ctx,
+                                      value,
+                                      timeout,
+                                    );
+                                  },
+                                  validator: (value) {
+                                    final error = value == null
+                                        ? null
+                                        : validate(value) == null
+                                            ? ''
+                                            : null;
+                                    debugPrint(error.toString());
+                                    return error;
+                                  },
+                                  cursorColor: Theme.of(ctx).brightness ==
+                                          Brightness.light
+                                      ? Colors.black
+                                      : Colors.white,
+                                  textAlignVertical: TextAlignVertical.bottom,
+                                  style: Theme.of(ctx).textTheme.headline4,
+                                  decoration: inputDecoration(
+                                    ctx,
+                                    Language.instance.FILE_PATH_OR_URL,
+                                  ).copyWith(
+                                    errorMaxLines: 1,
+                                    errorStyle: TextStyle(height: 0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          child: Text(
+                            Language.instance.READ.toUpperCase(),
+                          ),
+                          onPressed: () async {
+                            await showFileInfoScreen(
+                              ctx,
+                              controller.text,
+                              timeout,
+                            );
+                          },
+                        ),
+                        TextButton(
+                          child: Text(
+                            Language.instance.CANCEL.toUpperCase(),
+                          ),
+                          onPressed: Navigator.of(ctx).maybePop,
+                        ),
+                      ],
+                    ),
                   );
                 },
-              ),
-              MaterialButton(
-                child: Text(
-                  Language.instance.CANCEL.toUpperCase(),
-                  style: TextStyle(
-                    color: Theme.of(ctx).primaryColor,
+                leading: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Theme.of(ctx).iconTheme.color,
+                  child: Icon(
+                    Icons.link,
                   ),
                 ),
-                onPressed: Navigator.of(ctx).maybePop,
+                title: Text(
+                  Language.instance.FROM_URL,
+                  style: Theme.of(ctx).textTheme.headline4,
+                ),
               ),
             ],
           ),
@@ -353,7 +348,12 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                             children: [
                               Text(
                                 Language.instance.FILE_INFORMATION,
-                                style: Theme.of(context).textTheme.headline1,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline1
+                                    ?.copyWith(
+                                      fontSize: 24.0,
+                                    ),
                               ),
                               Text(
                                 !widget.uri.isScheme('FILE')
@@ -365,7 +365,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                           ),
                         ),
                         const SizedBox(width: 20.0),
-                        MaterialButton(
+                        TextButton(
                           onPressed: () {
                             Clipboard.setData(
                               ClipboardData(
@@ -377,7 +377,6 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
                           child: Text(
                             Language.instance.COPY_AS_JSON.toUpperCase(),
                           ),
-                          textColor: Theme.of(context).primaryColor,
                         ),
                       ],
                     ),
