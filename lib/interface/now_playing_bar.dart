@@ -351,83 +351,91 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
-                                                HyperLink(
-                                                  text: TextSpan(
-                                                    children: playback
-                                                        .tracks[playback.index
-                                                            .clamp(
-                                                                0,
-                                                                playback.tracks
-                                                                        .length -
-                                                                    1)]
-                                                        .trackArtistNames
-                                                        .take(2)
-                                                        .map(
-                                                          (e) => TextSpan(
-                                                            text: e,
-                                                            recognizer: !Plugins.isWebMedia(playback
-                                                                    .tracks[playback
-                                                                        .index
-                                                                        .clamp(
-                                                                            0,
-                                                                            playback.tracks.length -
-                                                                                1)]
-                                                                    .uri)
-                                                                ? (TapGestureRecognizer()
-                                                                  ..onTap = () {
-                                                                    navigatorKey
-                                                                        .currentState
-                                                                        ?.push(
-                                                                      PageRouteBuilder(
-                                                                        pageBuilder: ((context,
-                                                                                animation,
-                                                                                secondaryAnimation) =>
-                                                                            FadeThroughTransition(
-                                                                              animation: animation,
-                                                                              secondaryAnimation: secondaryAnimation,
-                                                                              child: ArtistScreen(
-                                                                                artist: Collection.instance.artistsSet.lookup(Artist(artistName: e))!,
-                                                                              ),
-                                                                            )),
-                                                                      ),
-                                                                    );
-                                                                  })
-                                                                : null,
-                                                          ),
-                                                        )
-                                                        .toList()
-                                                      ..insert(
-                                                        1,
-                                                        TextSpan(
-                                                            text: playback
-                                                                        .tracks[playback
-                                                                            .index
-                                                                            .clamp(0,
-                                                                                playback.tracks.length - 1)]
-                                                                        .trackArtistNames
-                                                                        .take(2)
-                                                                        .length ==
-                                                                    2
-                                                                ? ', '
-                                                                : ''),
-                                                      ),
+                                                if (!playback
+                                                    .tracks[playback.index
+                                                        .clamp(
+                                                            0,
+                                                            playback.tracks
+                                                                    .length -
+                                                                1)]
+                                                    .hasNoAvailableArtists)
+                                                  HyperLink(
+                                                    text: TextSpan(
+                                                      children: playback
+                                                          .tracks[playback.index
+                                                              .clamp(
+                                                                  0,
+                                                                  playback.tracks
+                                                                          .length -
+                                                                      1)]
+                                                          .trackArtistNames
+                                                          .take(2)
+                                                          .map(
+                                                            (e) => TextSpan(
+                                                              text: e,
+                                                              recognizer: !Plugins.isWebMedia(playback
+                                                                      .tracks[playback
+                                                                          .index
+                                                                          .clamp(
+                                                                              0,
+                                                                              playback.tracks.length -
+                                                                                  1)]
+                                                                      .uri)
+                                                                  ? (TapGestureRecognizer()
+                                                                    ..onTap =
+                                                                        () {
+                                                                      navigatorKey
+                                                                          .currentState
+                                                                          ?.push(
+                                                                        PageRouteBuilder(
+                                                                          pageBuilder: ((context, animation, secondaryAnimation) =>
+                                                                              FadeThroughTransition(
+                                                                                animation: animation,
+                                                                                secondaryAnimation: secondaryAnimation,
+                                                                                child: ArtistScreen(
+                                                                                  artist: Collection.instance.artistsSet.lookup(Artist(artistName: e))!,
+                                                                                ),
+                                                                              )),
+                                                                        ),
+                                                                      );
+                                                                    })
+                                                                  : null,
+                                                            ),
+                                                          )
+                                                          .toList()
+                                                        ..insert(
+                                                          1,
+                                                          TextSpan(
+                                                              text: playback
+                                                                          .tracks[playback.index.clamp(
+                                                                              0,
+                                                                              playback.tracks.length -
+                                                                                  1)]
+                                                                          .trackArtistNames
+                                                                          .take(
+                                                                              2)
+                                                                          .length ==
+                                                                      2
+                                                                  ? ', '
+                                                                  : ''),
+                                                        ),
+                                                    ),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline3
+                                                        ?.copyWith(
+                                                          color:
+                                                              (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).cardColor
+                                                                          ])
+                                                                      .first
+                                                                      .isDark
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black,
+                                                        ),
                                                   ),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline3
-                                                      ?.copyWith(
-                                                        color:
-                                                            (colors.palette ??
-                                                                        [
-                                                                          Theme.of(context)
-                                                                              .cardColor
-                                                                        ])
-                                                                    .first
-                                                                    .isDark
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                      ),
-                                                ),
                                               ],
                                             ),
                                           ),

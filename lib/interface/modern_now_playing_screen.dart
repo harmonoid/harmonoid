@@ -389,41 +389,51 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
-                                              Text(
-                                                [
-                                                  playback.tracks[i]
-                                                      .trackArtistNames
-                                                      .take(2)
-                                                      .join(', ')
-                                                      .overflow,
-                                                  if (playback.tracks[i]
-                                                          .albumName !=
-                                                      kUnknownAlbum)
-                                                    playback.tracks[i].albumName
-                                                ].join(' • '),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline3
-                                                    ?.copyWith(
-                                                  color: Colors.white70,
-                                                  shadows: <Shadow>[
-                                                    Shadow(
-                                                      offset: Offset(-2.0, 2.0),
-                                                      blurRadius: 3.0,
-                                                      color: Color.fromARGB(
-                                                          96, 0, 0, 0),
-                                                    ),
-                                                    Shadow(
-                                                      offset: Offset(2.0, 2.0),
-                                                      blurRadius: 8.0,
-                                                      color: Color.fromARGB(
-                                                          128, 0, 0, 0),
-                                                    ),
-                                                  ],
+                                              if (!playback
+                                                  .tracks[playback.index.clamp(
+                                                      0,
+                                                      playback.tracks.length -
+                                                          1)]
+                                                  .hasNoAvailableArtists)
+                                                Text(
+                                                  [
+                                                    playback.tracks[i]
+                                                        .trackArtistNames
+                                                        .take(2)
+                                                        .join(', ')
+                                                        .overflow,
+                                                    if (playback.tracks[i]
+                                                            .albumName !=
+                                                        kUnknownAlbum)
+                                                      playback
+                                                          .tracks[i].albumName
+                                                  ].join(' • '),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline3
+                                                      ?.copyWith(
+                                                    color: Colors.white70,
+                                                    shadows: <Shadow>[
+                                                      Shadow(
+                                                        offset:
+                                                            Offset(-2.0, 2.0),
+                                                        blurRadius: 3.0,
+                                                        color: Color.fromARGB(
+                                                            96, 0, 0, 0),
+                                                      ),
+                                                      Shadow(
+                                                        offset:
+                                                            Offset(2.0, 2.0),
+                                                        blurRadius: 8.0,
+                                                        color: Color.fromARGB(
+                                                            128, 0, 0, 0),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
                                               if (![kUnknownYear, ''].contains(
                                                   playback.tracks[i].year))
                                                 Text(

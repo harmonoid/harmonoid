@@ -8,6 +8,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:libmpv/libmpv.dart';
+import 'package:media_library/media_library.dart';
 
 extension IterableExtension<T> on Iterable<T> {
   /// Return distinct array by comparing hash codes.
@@ -57,4 +58,19 @@ extension DateTimeExtension on DateTime {
   /// Format [DateTime] as `DD-MM-YYYY`.
   String get label =>
       '${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-$year';
+}
+
+extension TrackExtension on Track {
+  /// Whether the [Track] actually has meaningful actual track artists from metadata tags.
+  bool get hasNoAvailableArtists {
+    if (trackArtistNames.isEmpty) {
+      return true;
+    }
+    if (trackArtistNames.length == 1) {
+      if (['', kUnknownArtist].contains(trackArtistNames.first)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
