@@ -819,7 +819,9 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                           onPressed: Navigator.of(context).maybePop,
                           icon: Icon(
                             Icons.arrow_back,
-                            color: Colors.white,
+                            color: Theme.of(context)
+                                .extension<IconColors>()
+                                ?.appBarDarkIconColor,
                           ),
                           iconSize: 24.0,
                           splashRadius: 20.0,
@@ -840,12 +842,19 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                             },
                             icon: Icon(
                               Icons.search,
-                              color: Colors.white,
+                              color: Theme.of(context)
+                                  .extension<IconColors>()
+                                  ?.appBarActionDarkIconColor,
                             ),
                             iconSize: 24.0,
                             splashRadius: 20.0,
                           ),
-                          contextMenu(context, color: Colors.white),
+                          contextMenu(
+                            context,
+                            color: Theme.of(context)
+                                .extension<IconColors>()
+                                ?.appBarActionDarkIconColor,
+                          ),
                           const SizedBox(width: 8.0),
                         ],
                         forceElevated: true,
@@ -861,7 +870,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                               widget.album.albumName.overflow,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline1
+                                  .headline6
                                   ?.copyWith(
                                     color: Colors.white,
                                   ),
@@ -876,33 +885,58 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                             FlexibleSpaceBar(
                               background: Column(
                                 children: [
-                                  ExtendedImage.network(
-                                    widget.album.thumbnails.values.last,
-                                    fit: BoxFit.cover,
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.width,
-                                    enableLoadState: true,
-                                    enableMemoryCache: false,
-                                    cache: true,
-                                    loadStateChanged:
-                                        (ExtendedImageState state) {
-                                      return state.extendedImageLoadState ==
-                                              LoadState.completed
-                                          ? TweenAnimationBuilder(
-                                              tween: Tween<double>(
-                                                  begin: 0.0, end: 1.0),
-                                              duration: const Duration(
-                                                  milliseconds: 800),
-                                              child: state.completedWidget,
-                                              builder:
-                                                  (context, value, child) =>
-                                                      Opacity(
-                                                opacity: value as double,
-                                                child: state.completedWidget,
-                                              ),
-                                            )
-                                          : SizedBox.shrink();
-                                    },
+                                  Stack(
+                                    children: [
+                                      ExtendedImage.network(
+                                        widget.album.thumbnails.values.last,
+                                        fit: BoxFit.cover,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height:
+                                            MediaQuery.of(context).size.width,
+                                        enableLoadState: true,
+                                        enableMemoryCache: false,
+                                        cache: true,
+                                        loadStateChanged:
+                                            (ExtendedImageState state) {
+                                          return state.extendedImageLoadState ==
+                                                  LoadState.completed
+                                              ? TweenAnimationBuilder(
+                                                  tween: Tween<double>(
+                                                      begin: 0.0, end: 1.0),
+                                                  duration: const Duration(
+                                                      milliseconds: 800),
+                                                  child: state.completedWidget,
+                                                  builder:
+                                                      (context, value, child) =>
+                                                          Opacity(
+                                                    opacity: value as double,
+                                                    child:
+                                                        state.completedWidget,
+                                                  ),
+                                                )
+                                              : SizedBox.shrink();
+                                        },
+                                      ),
+                                      Positioned.fill(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Colors.black26,
+                                                Colors.transparent,
+                                              ],
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              stops: [
+                                                0.0,
+                                                0.5,
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   TweenAnimationBuilder<double>(
                                     tween: Tween<double>(
@@ -917,18 +951,8 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                           showDialog(
                                             context: context,
                                             builder: (context) => AlertDialog(
-                                              contentPadding:
-                                                  EdgeInsets.fromLTRB(
-                                                20.0,
-                                                20.0,
-                                                20.0,
-                                                0.0,
-                                              ),
                                               content: Text(
-                                                widget.album.description
-                                                    .split('From Wikipedia')
-                                                    .first
-                                                    .trim(),
+                                                widget.album.description,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline3,
@@ -963,7 +987,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                 widget.album.albumName,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline1
+                                                    .headline6
                                                     ?.copyWith(
                                                       color: Colors.white,
                                                       fontSize: 24.0,

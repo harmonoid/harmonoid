@@ -124,7 +124,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         Text(
                           widget.track.trackName.replaceFirst('(', '\n('),
                           style:
-                              Theme.of(context).textTheme.headline2?.copyWith(
+                              Theme.of(context).textTheme.headline1?.copyWith(
                                     color: isDark ? Colors.white : Colors.black,
                                   ),
                           textAlign: TextAlign.left,

@@ -761,12 +761,19 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                         },
                         icon: Icon(
                           Icons.search,
-                          color: Colors.white,
+                          color: Theme.of(context)
+                              .extension<IconColors>()
+                              ?.appBarActionDarkIconColor,
                         ),
                         iconSize: 24.0,
                         splashRadius: 20.0,
                       ),
-                      contextMenu(context, color: Colors.white),
+                      contextMenu(
+                        context,
+                        color: Theme.of(context)
+                            .extension<IconColors>()
+                            ?.appBarActionDarkIconColor,
+                      ),
                     ],
                     systemOverlayStyle: SystemUiOverlayStyle(
                       statusBarColor: Colors.transparent,
@@ -780,7 +787,9 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                       onPressed: Navigator.of(context).maybePop,
                       icon: Icon(
                         Icons.arrow_back,
-                        color: Colors.white,
+                        color: Theme.of(context)
+                            .extension<IconColors>()
+                            ?.appBarDarkIconColor,
                       ),
                       iconSize: 24.0,
                       splashRadius: 20.0,
@@ -797,7 +806,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                         child: Text(
                           widget.playlist.name.overflow,
                           style:
-                              Theme.of(context).textTheme.headline1?.copyWith(
+                              Theme.of(context).textTheme.headline6?.copyWith(
                                     color: Colors.white,
                                   ),
                           maxLines: 1,
@@ -811,32 +820,56 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                         FlexibleSpaceBar(
                           background: Column(
                             children: [
-                              ExtendedImage.network(
-                                widget.playlist.thumbnails.values.toList()[
-                                    widget.playlist.thumbnails.length - 2],
-                                fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.width,
-                                enableLoadState: true,
-                                enableMemoryCache: false,
-                                cache: true,
-                                loadStateChanged: (ExtendedImageState state) {
-                                  return state.extendedImageLoadState ==
-                                          LoadState.completed
-                                      ? TweenAnimationBuilder(
-                                          tween: Tween<double>(
-                                              begin: 0.0, end: 1.0),
-                                          duration:
-                                              const Duration(milliseconds: 800),
-                                          child: state.completedWidget,
-                                          builder: (context, value, child) =>
-                                              Opacity(
-                                            opacity: value as double,
-                                            child: state.completedWidget,
-                                          ),
-                                        )
-                                      : SizedBox.shrink();
-                                },
+                              Stack(
+                                children: [
+                                  ExtendedImage.network(
+                                    widget.playlist.thumbnails.values.toList()[
+                                        widget.playlist.thumbnails.length - 1],
+                                    fit: BoxFit.cover,
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.width,
+                                    enableLoadState: true,
+                                    enableMemoryCache: false,
+                                    cache: true,
+                                    loadStateChanged:
+                                        (ExtendedImageState state) {
+                                      return state.extendedImageLoadState ==
+                                              LoadState.completed
+                                          ? TweenAnimationBuilder(
+                                              tween: Tween<double>(
+                                                  begin: 0.0, end: 1.0),
+                                              duration: const Duration(
+                                                  milliseconds: 800),
+                                              child: state.completedWidget,
+                                              builder:
+                                                  (context, value, child) =>
+                                                      Opacity(
+                                                opacity: value as double,
+                                                child: state.completedWidget,
+                                              ),
+                                            )
+                                          : SizedBox.shrink();
+                                    },
+                                  ),
+                                  Positioned.fill(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Colors.black26,
+                                            Colors.transparent,
+                                          ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          stops: [
+                                            0.0,
+                                            0.5,
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               TweenAnimationBuilder<double>(
                                 tween: Tween<double>(
@@ -857,7 +890,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                       widget.playlist.name.overflow,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline1
+                                          .headline6
                                           ?.copyWith(
                                             color: Colors.white,
                                             fontSize: 24.0,
@@ -953,6 +986,11 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                       ],
                     ),
                   ),
+                  SliverPadding(
+                    padding: EdgeInsets.only(
+                      top: 20.0,
+                    ),
+                  ),
                   PagedSliverList(
                     pagingController: pagingController,
                     builderDelegate: PagedChildBuilderDelegate<Track?>(
@@ -979,6 +1017,11 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                               track: track!,
                               group: widget.playlist.tracks,
                             ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.only(
+                      top: 20.0,
                     ),
                   ),
                 ],

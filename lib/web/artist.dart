@@ -11,8 +11,6 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/web/web.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -24,12 +22,15 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/web/album.dart';
 import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/web/video.dart';
 import 'package:harmonoid/web/playlist.dart';
 import 'package:harmonoid/web/utils/widgets.dart';
+import 'package:harmonoid/web/web.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 
 class WebArtistLargeTile extends StatelessWidget {
@@ -765,15 +766,18 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                           statusBarColor: Colors.transparent,
                           statusBarIconBrightness: Brightness.light,
                         ),
-                        expandedHeight: MediaQuery.of(context).size.width +
-                            128.0 -
-                            MediaQuery.of(context).padding.top,
+                        expandedHeight:
+                            MediaQuery.of(context).size.width * 0.6 +
+                                128.0 -
+                                MediaQuery.of(context).padding.top,
                         pinned: true,
                         leading: IconButton(
                           onPressed: Navigator.of(context).maybePop,
                           icon: Icon(
                             Icons.arrow_back,
-                            color: Colors.white,
+                            color: Theme.of(context)
+                                .extension<IconColors>()
+                                ?.appBarDarkIconColor,
                           ),
                           iconSize: 24.0,
                           splashRadius: 20.0,
@@ -794,12 +798,19 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                             },
                             icon: Icon(
                               Icons.search,
-                              color: Colors.white,
+                              color: Theme.of(context)
+                                  .extension<IconColors>()
+                                  ?.appBarActionDarkIconColor,
                             ),
                             iconSize: 24.0,
                             splashRadius: 20.0,
                           ),
-                          contextMenu(context, color: Colors.white),
+                          contextMenu(
+                            context,
+                            color: Theme.of(context)
+                                .extension<IconColors>()
+                                ?.appBarActionDarkIconColor,
+                          ),
                           const SizedBox(width: 8.0),
                         ],
                         forceElevated: true,
@@ -815,7 +826,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                               widget.artist.artistName.overflow,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline1
+                                  .headline6
                                   ?.copyWith(
                                     color: Colors.white,
                                   ),
@@ -830,33 +841,59 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                             FlexibleSpaceBar(
                               background: Column(
                                 children: [
-                                  ExtendedImage.network(
-                                    widget.artist.coverUrl,
-                                    fit: BoxFit.cover,
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.width,
-                                    enableLoadState: true,
-                                    enableMemoryCache: false,
-                                    cache: true,
-                                    loadStateChanged:
-                                        (ExtendedImageState state) {
-                                      return state.extendedImageLoadState ==
-                                              LoadState.completed
-                                          ? TweenAnimationBuilder(
-                                              tween: Tween<double>(
-                                                  begin: 0.0, end: 1.0),
-                                              duration: const Duration(
-                                                  milliseconds: 800),
-                                              child: state.completedWidget,
-                                              builder:
-                                                  (context, value, child) =>
-                                                      Opacity(
-                                                opacity: value as double,
-                                                child: state.completedWidget,
-                                              ),
-                                            )
-                                          : SizedBox.shrink();
-                                    },
+                                  Stack(
+                                    children: [
+                                      ExtendedImage.network(
+                                        widget.artist.coverUrl,
+                                        fit: BoxFit.cover,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                        enableLoadState: true,
+                                        enableMemoryCache: false,
+                                        cache: true,
+                                        loadStateChanged:
+                                            (ExtendedImageState state) {
+                                          return state.extendedImageLoadState ==
+                                                  LoadState.completed
+                                              ? TweenAnimationBuilder(
+                                                  tween: Tween<double>(
+                                                      begin: 0.0, end: 1.0),
+                                                  duration: const Duration(
+                                                      milliseconds: 800),
+                                                  child: state.completedWidget,
+                                                  builder:
+                                                      (context, value, child) =>
+                                                          Opacity(
+                                                    opacity: value as double,
+                                                    child:
+                                                        state.completedWidget,
+                                                  ),
+                                                )
+                                              : SizedBox.shrink();
+                                        },
+                                      ),
+                                      Positioned.fill(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Colors.black26,
+                                                Colors.transparent,
+                                              ],
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              stops: [
+                                                0.0,
+                                                1.0,
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   TweenAnimationBuilder<double>(
                                     tween: Tween<double>(
@@ -871,14 +908,8 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                           showDialog(
                                             context: context,
                                             builder: (context) => AlertDialog(
-                                              contentPadding:
-                                                  EdgeInsets.fromLTRB(
-                                                      20.0, 20.0, 20.0, 0.0),
                                               content: Text(
-                                                widget.artist.description
-                                                    .split('From Wikipedia')
-                                                    .first
-                                                    .trim(),
+                                                widget.artist.description,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline3,
@@ -914,7 +945,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                                     .artist.artistName.overflow,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline1
+                                                    .headline6
                                                     ?.copyWith(
                                                       color: Colors.white,
                                                       fontSize: 24.0,
@@ -959,7 +990,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width +
+                              top: MediaQuery.of(context).size.width * 0.6 +
                                   MediaQuery.of(context).padding.top -
                                   64.0,
                               right: 16.0 + 64.0,
@@ -996,7 +1027,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width +
+                              top: MediaQuery.of(context).size.width * 0.6 +
                                   MediaQuery.of(context).padding.top -
                                   64.0,
                               right: 16.0,
@@ -1090,14 +1121,15 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                     height: height + 8.0,
                                     child: HorizontalList(
                                       padding: EdgeInsets.only(
-                                        left: tileMargin,
+                                        left: tileMargin * 2.0,
                                         bottom: 8.0,
                                       ),
                                       children: e.value.elements
                                           .map(
                                             (f) => Padding(
                                               padding: EdgeInsets.only(
-                                                  right: tileMargin),
+                                                right: tileMargin * 2.0,
+                                              ),
                                               child: WebAlbumLargeTile(
                                                 album: f as Album,
                                                 width: width,
@@ -1114,14 +1146,15 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                     height: height * 0.8 + 8.0,
                                     child: HorizontalList(
                                       padding: EdgeInsets.only(
-                                        left: tileMargin,
+                                        left: tileMargin * 2.0,
                                         bottom: 8.0,
                                       ),
                                       children: e.value.elements
                                           .map(
                                             (f) => Padding(
                                               padding: EdgeInsets.only(
-                                                  right: tileMargin),
+                                                right: tileMargin * 2.0,
+                                              ),
                                               child: WebVideoLargeTile(
                                                 track: Track.fromWebVideo(
                                                     f.toJson()),
@@ -1139,14 +1172,15 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                     height: height + 8.0,
                                     child: HorizontalList(
                                       padding: EdgeInsets.only(
-                                        left: tileMargin,
+                                        left: tileMargin * 2.0,
                                         bottom: 8.0,
                                       ),
                                       children: e.value.elements
                                           .map(
                                             (f) => Padding(
                                               padding: EdgeInsets.only(
-                                                  right: tileMargin),
+                                                right: tileMargin * 2.0,
+                                              ),
                                               child: WebPlaylistLargeTile(
                                                 playlist: f as Playlist,
                                                 width: width,
@@ -1163,14 +1197,15 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                     height: width + 28.0 + 8.0,
                                     child: HorizontalList(
                                       padding: EdgeInsets.only(
-                                        left: tileMargin,
+                                        left: tileMargin * 2.0,
                                         bottom: 8.0,
                                       ),
                                       children: e.value.elements
                                           .map(
                                             (f) => Padding(
                                               padding: EdgeInsets.only(
-                                                  right: tileMargin),
+                                                right: tileMargin * 2.0,
+                                              ),
                                               child: WebArtistLargeTile(
                                                 artist: f as Artist,
                                                 width: width,

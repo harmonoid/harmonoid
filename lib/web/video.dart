@@ -136,7 +136,7 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                                   widget.track.trackName.overflow,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline2
+                                      .headline1
                                       ?.copyWith(color: Colors.white),
                                   textAlign: TextAlign.left,
                                   maxLines: 1,
