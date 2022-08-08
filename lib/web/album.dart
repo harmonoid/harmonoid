@@ -781,10 +781,13 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                     child: Icon(
                                       Icons.settings,
                                       size: 20.0,
-                                      color: Theme.of(context)
-                                          .appBarTheme
-                                          .actionsIconTheme
-                                          ?.color,
+                                      color: isDark(context)
+                                          ? Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionDarkIconColor
+                                          : Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionLightIconColor,
                                     ),
                                   ),
                                 ),
@@ -955,11 +958,36 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                           showDialog(
                                             context: context,
                                             builder: (context) => AlertDialog(
-                                              content: Text(
-                                                widget.album.description,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline3,
+                                              title:
+                                                  Text(widget.album.albumName),
+                                              contentPadding:
+                                                  EdgeInsets.only(top: 20.0),
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Divider(height: 1.0),
+                                                  ConstrainedBox(
+                                                    constraints: BoxConstraints(
+                                                      maxHeight: 360.0,
+                                                    ),
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal: 24.0,
+                                                        vertical: 16.0,
+                                                      ),
+                                                      child: Text(
+                                                        widget
+                                                            .album.description,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline3,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const Divider(height: 1.0),
+                                                ],
                                               ),
                                               actions: [
                                                 TextButton(

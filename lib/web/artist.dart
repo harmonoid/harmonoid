@@ -912,11 +912,36 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                           showDialog(
                                             context: context,
                                             builder: (context) => AlertDialog(
-                                              content: Text(
-                                                widget.artist.description,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline3,
+                                              title: Text(
+                                                  widget.artist.artistName),
+                                              contentPadding:
+                                                  EdgeInsets.only(top: 20.0),
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Divider(height: 1.0),
+                                                  ConstrainedBox(
+                                                    constraints: BoxConstraints(
+                                                      maxHeight: 360.0,
+                                                    ),
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal: 24.0,
+                                                        vertical: 16.0,
+                                                      ),
+                                                      child: Text(
+                                                        widget
+                                                            .artist.description,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline3,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const Divider(height: 1.0),
+                                                ],
                                               ),
                                               actions: [
                                                 TextButton(
