@@ -613,9 +613,7 @@ class TrackTileState extends State<TrackTile> {
                                           widget.track.albumName !=
                                               kUnknownAlbum)
                                         widget.track.albumName.overflow,
-                                      if (widget.track.trackArtistNames
-                                          .join('')
-                                          .isNotEmpty)
+                                      if (!widget.track.hasNoAvailableArtists)
                                         widget.track.trackArtistNames
                                             .take(2)
                                             .join(', ')
@@ -905,9 +903,8 @@ class TrackTileState extends State<TrackTile> {
                                               widget.track.albumName !=
                                                   kUnknownAlbum)
                                             widget.track.albumName.overflow,
-                                          if (widget.track.trackArtistNames
-                                              .join('')
-                                              .isNotEmpty)
+                                          if (!widget
+                                              .track.hasNoAvailableArtists)
                                             widget.track.trackArtistNames
                                                 .take(2)
                                                 .join(', ')

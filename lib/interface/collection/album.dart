@@ -25,6 +25,7 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -1329,8 +1330,14 @@ class AlbumScreenState extends State<AlbumScreen>
                           SliverAppBar(
                             systemOverlayStyle: SystemUiOverlayStyle(
                               statusBarColor: Colors.transparent,
-                              statusBarIconBrightness:
-                                  (color?.computeLuminance() ?? 0.0) < 0.5
+                              statusBarIconBrightness: detailsVisible
+                                  ? Brightness.light
+                                  : (color?.computeLuminance() ??
+                                              (Theme.of(context).brightness ==
+                                                      Brightness.dark
+                                                  ? 0.0
+                                                  : 1.0)) <
+                                          0.5
                                       ? Brightness.light
                                       : Brightness.dark,
                             ),
@@ -1342,8 +1349,23 @@ class AlbumScreenState extends State<AlbumScreen>
                               onPressed: Navigator.of(context).maybePop,
                               icon: Icon(
                                 Icons.arrow_back,
-                                color: [Color(0xFF212121), Colors.white][
-                                    (color?.computeLuminance() ?? 0.0) > 0.5
+                                color: detailsVisible
+                                    ? Theme.of(context)
+                                        .extension<IconColors>()
+                                        ?.appBarDarkIconColor
+                                    : [
+                                        Theme.of(context)
+                                            .extension<IconColors>()
+                                            ?.appBarLightIconColor,
+                                        Theme.of(context)
+                                            .extension<IconColors>()
+                                            ?.appBarDarkIconColor,
+                                      ][(color?.computeLuminance() ??
+                                                (Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? 0.0
+                                                    : 1.0)) >
+                                            0.5
                                         ? 0
                                         : 1],
                               ),
@@ -1400,8 +1422,24 @@ class AlbumScreenState extends State<AlbumScreen>
                                 },
                                 icon: Icon(
                                   Icons.delete,
-                                  color: [Color(0xFF212121), Colors.white][
-                                      (color?.computeLuminance() ?? 0.0) > 0.5
+                                  color: detailsVisible
+                                      ? Theme.of(context)
+                                          .extension<IconColors>()
+                                          ?.appBarActionDarkIconColor
+                                      : [
+                                          Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionLightIconColor,
+                                          Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionDarkIconColor,
+                                        ][(color?.computeLuminance() ??
+                                                  (Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? 0.0
+                                                      : 1.0)) >
+                                              0.5
                                           ? 0
                                           : 1],
                                 ),
@@ -1422,14 +1460,21 @@ class AlbumScreenState extends State<AlbumScreen>
                                   widget.album.albumName.overflow,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline1
+                                      .headline6
                                       ?.copyWith(
-                                          color: [
-                                        Color(0xFF212121),
-                                        Colors.white
-                                      ][(color?.computeLuminance() ?? 0.0) > 0.5
-                                              ? 0
-                                              : 1]),
+                                        color: [
+                                          Color(0xFF212121),
+                                          Colors.white,
+                                        ][(color?.computeLuminance() ??
+                                                    (Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? 0.0
+                                                        : 1.0)) >
+                                                0.5
+                                            ? 0
+                                            : 1],
+                                      ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -1441,13 +1486,37 @@ class AlbumScreenState extends State<AlbumScreen>
                                 FlexibleSpaceBar(
                                   background: Column(
                                     children: [
-                                      ExtendedImage(
-                                        image: getAlbumArt(widget.album),
-                                        fit: BoxFit.cover,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height:
-                                            MediaQuery.of(context).size.width,
+                                      Stack(
+                                        children: [
+                                          ExtendedImage(
+                                            image: getAlbumArt(widget.album),
+                                            fit: BoxFit.cover,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                          ),
+                                          Positioned.fill(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.black26,
+                                                    Colors.transparent,
+                                                  ],
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter,
+                                                  stops: [
+                                                    0.0,
+                                                    0.5,
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       TweenAnimationBuilder<double>(
                                         tween: Tween<double>(
@@ -1476,16 +1545,19 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       .album.albumName.overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline1
+                                                      .headline6
                                                       ?.copyWith(
                                                         color: [
+                                                          Color(0xFF212121),
                                                           Colors.white,
-                                                          Color(0xFF212121)
                                                         ][(color?.computeLuminance() ??
-                                                                    0.0) >
+                                                                    (Theme.of(context).brightness ==
+                                                                            Brightness.dark
+                                                                        ? 0.0
+                                                                        : 1.0)) >
                                                                 0.5
-                                                            ? 1
-                                                            : 0],
+                                                            ? 0
+                                                            : 1],
                                                         fontSize: 24.0,
                                                       ),
                                                   maxLines: 1,
@@ -1498,16 +1570,19 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       .overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline1
+                                                      .headline2
                                                       ?.copyWith(
                                                         color: [
+                                                          Color(0xFF363636),
                                                           Color(0xFFD9D9D9),
-                                                          Color(0xFF363636)
                                                         ][(color?.computeLuminance() ??
-                                                                    0.0) >
+                                                                    (Theme.of(context).brightness ==
+                                                                            Brightness.dark
+                                                                        ? 0.0
+                                                                        : 1.0)) >
                                                                 0.5
-                                                            ? 1
-                                                            : 0],
+                                                            ? 0
+                                                            : 1],
                                                         fontSize: 16.0,
                                                       ),
                                                   maxLines: 1,
@@ -1519,16 +1594,19 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   '${widget.album.year}',
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline1
+                                                      .headline2
                                                       ?.copyWith(
                                                         color: [
+                                                          Color(0xFF363636),
                                                           Color(0xFFD9D9D9),
-                                                          Color(0xFF363636)
                                                         ][(color?.computeLuminance() ??
-                                                                    0.0) >
+                                                                    (Theme.of(context).brightness ==
+                                                                            Brightness.dark
+                                                                        ? 0.0
+                                                                        : 1.0)) >
                                                                 0.5
-                                                            ? 1
-                                                            : 0],
+                                                            ? 0
+                                                            : 1],
                                                         fontSize: 16.0,
                                                       ),
                                                   maxLines: 1,

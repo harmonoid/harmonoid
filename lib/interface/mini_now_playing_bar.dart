@@ -219,7 +219,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                   .overflow,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline1
+                                  .headline6
                                   ?.copyWith(
                                     color: (colors.palette ??
                                                 [Theme.of(context).cardColor])
@@ -227,12 +227,12 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                             .isDark
                                         ? Colors.white
                                         : Colors.black,
-                                    fontSize: 20.0,
+                                    fontSize: 24.0,
                                   ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 2.0),
+                            const SizedBox(height: 4.0),
                             Text(
                               [
                                 if (!const ListEquality().equals(
@@ -242,7 +242,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                             .trackArtistNames
                                             .take(1)
                                             .toList(),
-                                        [kUnknownAlbum]) &&
+                                        [kUnknownArtist]) &&
                                     playback
                                         .tracks[playback.index.clamp(
                                             0, playback.tracks.length - 1)]
@@ -820,20 +820,26 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                     .headline2,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
-                                              Text(
-                                                Playback
-                                                    .instance
-                                                    .tracks[
-                                                        Playback.instance.index]
-                                                    .trackArtistNames
-                                                    .take(2)
-                                                    .join(', ')
-                                                    .overflow,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline3,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
+                                              if (!Playback
+                                                  .instance
+                                                  .tracks[
+                                                      Playback.instance.index]
+                                                  .hasNoAvailableArtists)
+                                                Text(
+                                                  Playback
+                                                      .instance
+                                                      .tracks[Playback
+                                                          .instance.index]
+                                                      .trackArtistNames
+                                                      .take(2)
+                                                      .join(', ')
+                                                      .overflow,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline3,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
                                             ],
                                           ),
                                         ),

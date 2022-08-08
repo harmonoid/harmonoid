@@ -417,11 +417,9 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
               leading: IconButton(
                 onPressed: Navigator.of(context).pop,
                 icon: Icon(Icons.arrow_back),
-                splashRadius: 20.0,
               ),
               title: Text(
                 Language.instance.EDIT_DETAILS,
-                style: Theme.of(context).textTheme.headline1,
               ),
               actions: loading
                   ? []

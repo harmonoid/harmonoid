@@ -25,6 +25,7 @@ import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 
@@ -394,7 +395,7 @@ class PlaylistThumbnail extends StatelessWidget {
             ExtendedImage(
               image: getAlbumArt(tracks[0], small: mini),
               height: width,
-              width: width / 2 - (!mini ? 12.0 : 0.0),
+              width: width / 2 - (!mini ? 4.0 : 0.0),
               fit: BoxFit.cover,
             ),
             if (!mini) SizedBox(width: 8.0),
@@ -402,7 +403,7 @@ class PlaylistThumbnail extends StatelessWidget {
               children: [
                 ExtendedImage(
                   image: getAlbumArt(tracks[1], small: mini),
-                  height: width / 2 - (!mini ? 12.0 : 0.0),
+                  height: width / 2 - (!mini ? 4.0 : 0.0),
                   width: width / 2 - (!mini ? 4.0 : 0.0),
                   fit: BoxFit.cover,
                 ),
@@ -427,7 +428,7 @@ class PlaylistThumbnail extends StatelessWidget {
             ExtendedImage(
               image: getAlbumArt(tracks[0], small: mini),
               height: width,
-              width: width / 2 - (!mini ? 12.0 : 0.0),
+              width: width / 2 - (!mini ? 4.0 : 0.0),
               fit: BoxFit.cover,
             ),
             if (!mini) SizedBox(width: 8.0),
@@ -1280,39 +1281,51 @@ class PlaylistScreenState extends State<PlaylistScreen>
                     physics: physics,
                     slivers: [
                       SliverAppBar(
-                        systemOverlayStyle: widget.playlist.tracks.isNotEmpty
-                            ? SystemUiOverlayStyle(
-                                statusBarColor: Colors.transparent,
-                                statusBarIconBrightness:
-                                    (color?.computeLuminance() ?? 0.0) < 0.5
-                                        ? Brightness.light
-                                        : Brightness.dark,
-                              )
-                            : SystemUiOverlayStyle(
-                                statusBarColor: Colors.transparent,
-                                statusBarIconBrightness:
-                                    Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Brightness.light
-                                        : Brightness.dark,
-                              ),
+                        systemOverlayStyle: SystemUiOverlayStyle(
+                          statusBarColor: Colors.transparent,
+                          statusBarIconBrightness: detailsVisible
+                              ? Brightness.light
+                              : (color?.computeLuminance() ??
+                                          (Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? 0.0
+                                              : 1.0)) <
+                                      0.5
+                                  ? Brightness.light
+                                  : Brightness.dark,
+                        ),
                         expandedHeight: MediaQuery.of(context).size.width +
                             96.0 -
                             MediaQuery.of(context).padding.top,
                         pinned: true,
                         leading: IconButton(
                           onPressed: Navigator.of(context).maybePop,
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: widget.playlist.tracks.isNotEmpty
-                                ? ([Colors.white, Color(0xFF212121)][
-                                    (color?.computeLuminance() ?? 0.0) > 0.5
-                                        ? 1
-                                        : 0])
-                                : Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Color(0xFF212121),
+                          icon: IconButton(
+                            onPressed: Navigator.of(context).maybePop,
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: detailsVisible
+                                  ? Theme.of(context)
+                                      .extension<IconColors>()
+                                      ?.appBarDarkIconColor
+                                  : [
+                                      Theme.of(context)
+                                          .extension<IconColors>()
+                                          ?.appBarLightIconColor,
+                                      Theme.of(context)
+                                          .extension<IconColors>()
+                                          ?.appBarDarkIconColor,
+                                    ][(color?.computeLuminance() ??
+                                              (Theme.of(context).brightness ==
+                                                      Brightness.dark
+                                                  ? 0.0
+                                                  : 1.0)) >
+                                          0.5
+                                      ? 0
+                                      : 1],
+                            ),
+                            iconSize: 24.0,
+                            splashRadius: 20.0,
                           ),
                           iconSize: 24.0,
                           splashRadius: 20.0,
@@ -1342,14 +1355,20 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                   : '',
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline1
+                                  .headline6
                                   ?.copyWith(
-                                      color: [
-                                    Color(0xFF212121),
-                                    Colors.white
-                                  ][(color?.computeLuminance() ?? 0.0) > 0.5
-                                          ? 0
-                                          : 1]),
+                                    color: [
+                                      Color(0xFF212121),
+                                      Colors.white,
+                                    ][(color?.computeLuminance() ??
+                                                (Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? 0.0
+                                                    : 1.0)) >
+                                            0.5
+                                        ? 0
+                                        : 1],
+                                  ),
                             ),
                           ),
                         ),
@@ -1359,22 +1378,43 @@ class PlaylistScreenState extends State<PlaylistScreen>
                             FlexibleSpaceBar(
                               background: Column(
                                 children: [
-                                  Container(
-                                    height: MediaQuery.of(context).size.width,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: LayoutBuilder(
-                                      builder: (context, constraints) =>
-                                          Padding(
-                                        padding: EdgeInsets.all(48.0),
-                                        child: PlaylistThumbnail(
-                                          tracks: widget.playlist.tracks,
-                                          width: min(constraints.maxHeight,
-                                                  constraints.maxWidth) -
-                                              96.0,
-                                          mini: false,
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Positioned.fill(
+                                        child: Container(
+                                          color: Theme.of(context).cardColor,
                                         ),
                                       ),
-                                    ),
+                                      PlaylistThumbnail(
+                                        tracks: widget.playlist.tracks,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                16.0,
+                                        mini: false,
+                                        encircle: false,
+                                      ),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.black26,
+                                              Colors.transparent,
+                                            ],
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            stops: [
+                                              0.0,
+                                              0.5,
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   TweenAnimationBuilder<double>(
                                     tween: Tween<double>(
@@ -1399,27 +1439,24 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                           children: [
                                             Text(
                                               widget.playlist.name.overflow,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline1
-                                                  ?.copyWith(
-                                                    color: widget.playlist
-                                                            .tracks.isNotEmpty
-                                                        ? ([
-                                                            Colors.white,
-                                                            Color(0xFF212121)
-                                                          ][(color?.computeLuminance() ??
-                                                                    0.0) >
+                                              style:
+                                                  Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      ?.copyWith(
+                                                        color: [
+                                                          Color(0xFF212121),
+                                                          Colors.white,
+                                                        ][(color?.computeLuminance() ??
+                                                                    (Theme.of(context).brightness ==
+                                                                            Brightness.dark
+                                                                        ? 0.0
+                                                                        : 1.0)) >
                                                                 0.5
-                                                            ? 1
-                                                            : 0])
-                                                        : Theme.of(context)
-                                                                    .brightness ==
-                                                                Brightness.dark
-                                                            ? Colors.white
-                                                            : Color(0xFF212121),
-                                                    fontSize: 24.0,
-                                                  ),
+                                                            ? 0
+                                                            : 1],
+                                                        fontSize: 24.0,
+                                                      ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -1430,27 +1467,24 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                 'N',
                                                 '${widget.playlist.tracks.length}',
                                               ),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline1
-                                                  ?.copyWith(
-                                                    color: widget.playlist
-                                                            .tracks.isNotEmpty
-                                                        ? ([
-                                                            Color(0xFFD9D9D9),
-                                                            Color(0xFF363636)
-                                                          ][(color?.computeLuminance() ??
-                                                                    0.0) >
+                                              style:
+                                                  Theme.of(context)
+                                                      .textTheme
+                                                      .headline2
+                                                      ?.copyWith(
+                                                        color: [
+                                                          Color(0xFF363636),
+                                                          Color(0xFFD9D9D9),
+                                                        ][(color?.computeLuminance() ??
+                                                                    (Theme.of(context).brightness ==
+                                                                            Brightness.dark
+                                                                        ? 0.0
+                                                                        : 1.0)) >
                                                                 0.5
-                                                            ? 1
-                                                            : 0])
-                                                        : Theme.of(context)
-                                                                    .brightness ==
-                                                                Brightness.dark
-                                                            ? Color(0xFFD9D9D9)
-                                                            : Color(0xFF363636),
-                                                    fontSize: 16.0,
-                                                  ),
+                                                            ? 0
+                                                            : 1],
+                                                        fontSize: 16.0,
+                                                      ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -1648,13 +1682,24 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                                 height: 2.0,
                                               ),
                                               Text(
-                                                (widget.playlist.tracks[i]
-                                                                .duration ??
-                                                            Duration.zero)
-                                                        .label +
-                                                    ' • ' +
+                                                [
+                                                  if (widget
+                                                          .playlist
+                                                          .tracks[i]
+                                                          .albumName
+                                                          .isNotEmpty &&
+                                                      widget.playlist.tracks[i]
+                                                              .albumName !=
+                                                          kUnknownAlbum)
                                                     widget.playlist.tracks[i]
-                                                        .albumName,
+                                                        .albumName.overflow,
+                                                  if (!widget.playlist.tracks[i]
+                                                      .hasNoAvailableArtists)
+                                                    widget.playlist.tracks[i]
+                                                        .trackArtistNames
+                                                        .take(2)
+                                                        .join(', ')
+                                                ].join(' • '),
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 1,
                                                 style: Theme.of(context)

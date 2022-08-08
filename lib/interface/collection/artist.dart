@@ -26,6 +26,7 @@ import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class ArtistTab extends StatelessWidget {
@@ -1262,8 +1263,14 @@ class ArtistScreenState extends State<ArtistScreen>
                           SliverAppBar(
                             systemOverlayStyle: SystemUiOverlayStyle(
                               statusBarColor: Colors.transparent,
-                              statusBarIconBrightness:
-                                  (color?.computeLuminance() ?? 0.0) < 0.5
+                              statusBarIconBrightness: detailsVisible
+                                  ? Brightness.light
+                                  : (color?.computeLuminance() ??
+                                              (Theme.of(context).brightness ==
+                                                      Brightness.dark
+                                                  ? 0.0
+                                                  : 1.0)) <
+                                          0.5
                                       ? Brightness.light
                                       : Brightness.dark,
                             ),
@@ -1275,8 +1282,23 @@ class ArtistScreenState extends State<ArtistScreen>
                               onPressed: Navigator.of(context).maybePop,
                               icon: Icon(
                                 Icons.arrow_back,
-                                color: [Color(0xFF212121), Colors.white][
-                                    (color?.computeLuminance() ?? 0.0) > 0.5
+                                color: detailsVisible
+                                    ? Theme.of(context)
+                                        .extension<IconColors>()
+                                        ?.appBarDarkIconColor
+                                    : [
+                                        Theme.of(context)
+                                            .extension<IconColors>()
+                                            ?.appBarLightIconColor,
+                                        Theme.of(context)
+                                            .extension<IconColors>()
+                                            ?.appBarDarkIconColor,
+                                      ][(color?.computeLuminance() ??
+                                                (Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? 0.0
+                                                    : 1.0)) >
+                                            0.5
                                         ? 0
                                         : 1],
                               ),
@@ -1296,14 +1318,21 @@ class ArtistScreenState extends State<ArtistScreen>
                                   widget.artist.artistName.overflow,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline1
+                                      .headline6
                                       ?.copyWith(
-                                          color: [
-                                        Color(0xFF212121),
-                                        Colors.white
-                                      ][(color?.computeLuminance() ?? 0.0) > 0.5
-                                              ? 0
-                                              : 1]),
+                                        color: [
+                                          Color(0xFF212121),
+                                          Colors.white,
+                                        ][(color?.computeLuminance() ??
+                                                    (Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? 0.0
+                                                        : 1.0)) >
+                                                0.5
+                                            ? 0
+                                            : 1],
+                                      ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -1315,54 +1344,37 @@ class ArtistScreenState extends State<ArtistScreen>
                                 FlexibleSpaceBar(
                                   background: Column(
                                     children: [
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.width,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: LayoutBuilder(
-                                          builder: (context, constraints) =>
-                                              Hero(
-                                            tag:
-                                                'artist_art_${widget.artist.artistName}',
-                                            child: Card(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(min(
-                                                            constraints
-                                                                .maxHeight,
-                                                            constraints
-                                                                .maxWidth) -
-                                                        28.0),
-                                              ),
-                                              elevation: 4.0,
-                                              margin: EdgeInsets.all(
-                                                56.0,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(4.0),
-                                                child: ClipOval(
-                                                  child: ExtendedImage(
-                                                    image: getAlbumArt(
-                                                        widget.artist),
-                                                    height: min(
-                                                            constraints
-                                                                .maxHeight,
-                                                            constraints
-                                                                .maxWidth) -
-                                                        64.0,
-                                                    width: min(
-                                                            constraints
-                                                                .maxHeight,
-                                                            constraints
-                                                                .maxWidth) -
-                                                        64.0,
-                                                  ),
+                                      Stack(
+                                        children: [
+                                          ExtendedImage(
+                                            image: getAlbumArt(widget.artist),
+                                            fit: BoxFit.cover,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                          ),
+                                          Positioned.fill(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.black26,
+                                                    Colors.transparent,
+                                                  ],
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter,
+                                                  stops: [
+                                                    0.0,
+                                                    0.5,
+                                                  ],
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                       TweenAnimationBuilder<double>(
                                         tween: Tween<double>(
@@ -1391,22 +1403,26 @@ class ArtistScreenState extends State<ArtistScreen>
                                                       .overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline1
+                                                      .headline6
                                                       ?.copyWith(
                                                         color: [
+                                                          Color(0xFF212121),
                                                           Colors.white,
-                                                          Color(0xFF212121)
                                                         ][(color?.computeLuminance() ??
-                                                                    0.0) >
+                                                                    (Theme.of(context).brightness ==
+                                                                            Brightness.dark
+                                                                        ? 0.0
+                                                                        : 1.0)) >
                                                                 0.5
-                                                            ? 1
-                                                            : 0],
+                                                            ? 0
+                                                            : 1],
                                                         fontSize: 24.0,
                                                       ),
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
+                                                const SizedBox(height: 4.0),
                                                 Text(
                                                   Language.instance
                                                       .M_TRACKS_AND_N_ALBUMS
@@ -1419,16 +1435,20 @@ class ArtistScreenState extends State<ArtistScreen>
                                                   maxLines: 1,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline3
+                                                      .headline2
                                                       ?.copyWith(
                                                         color: [
-                                                          Colors.white70,
-                                                          Colors.black54
+                                                          Color(0xFF363636),
+                                                          Color(0xFFD9D9D9),
                                                         ][(color?.computeLuminance() ??
-                                                                    0.0) >
+                                                                    (Theme.of(context).brightness ==
+                                                                            Brightness.dark
+                                                                        ? 0.0
+                                                                        : 1.0)) >
                                                                 0.5
-                                                            ? 1
-                                                            : 0],
+                                                            ? 0
+                                                            : 1],
+                                                        fontSize: 16.0,
                                                       ),
                                                 ),
                                               ],

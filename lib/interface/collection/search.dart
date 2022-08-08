@@ -431,9 +431,6 @@ class _FloatingSearchBarSearchTabState
                                     appBar: AppBar(
                                       title: Text(
                                         Language.instance.ALBUM,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6,
                                       ),
                                     ),
                                     body: NowPlayingBarScrollHideNotifier(
@@ -500,9 +497,6 @@ class _FloatingSearchBarSearchTabState
                                     appBar: AppBar(
                                       title: Text(
                                         Language.instance.ARTIST,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6,
                                       ),
                                     ),
                                     body: Container(

@@ -524,11 +524,20 @@ class CollectionScreenState extends State<CollectionScreen>
                         FloatingSearchBarAction(
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.search, size: 24.0),
+                            child: Icon(
+                              Icons.search,
+                              size: 24.0,
+                              color: Theme.of(context)
+                                  .appBarTheme
+                                  .iconTheme
+                                  ?.color,
+                            ),
                           ),
                           showIfOpened: false,
                         ),
-                        FloatingSearchBarAction.back(),
+                        FloatingSearchBarAction.back(
+                          color: Theme.of(context).appBarTheme.iconTheme?.color,
+                        ),
                       ],
                       actions: [
                         FloatingSearchBarAction(
@@ -542,7 +551,14 @@ class CollectionScreenState extends State<CollectionScreen>
                           showIfOpened: false,
                           showIfClosed: true,
                           child: CircularButton(
-                            icon: Icon(Icons.grid_on, size: 20.0),
+                            icon: Icon(
+                              Icons.grid_on,
+                              size: 20.0,
+                              color: Theme.of(context)
+                                  .appBarTheme
+                                  .actionsIconTheme
+                                  ?.color,
+                            ),
                             onPressed: () {
                               final position = RelativeRect.fromRect(
                                 Offset(
@@ -640,10 +656,20 @@ class CollectionScreenState extends State<CollectionScreen>
                         ),
                         FloatingSearchBarAction(
                           showIfOpened: false,
-                          child: contextMenu(context),
+                          child: contextMenu(
+                            context,
+                            color: Theme.of(context)
+                                .appBarTheme
+                                .actionsIconTheme
+                                ?.color,
+                          ),
                         ),
                         FloatingSearchBarAction.searchToClear(
                           showIfClosed: false,
+                          color: Theme.of(context)
+                              .appBarTheme
+                              .actionsIconTheme
+                              ?.color,
                         ),
                       ],
                       builder: (context, transition) {
