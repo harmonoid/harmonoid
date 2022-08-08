@@ -92,42 +92,42 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
         return;
       }
       if (index != Playback.instance.index) {
-        if (pageController.hasClients) {
-          try {
-            await precacheImage(
+        try {
+          await precacheImage(
+            getAlbumArt(
+                Playback.instance.tracks[index.clamp(
+                  0,
+                  Playback.instance.tracks.length,
+                )],
+                small: true),
+            context,
+          );
+          // Precache adjacent album arts for smoother swipe transitions to the next/previous track.
+          await Future.wait([
+            precacheImage(
               getAlbumArt(
-                  Playback.instance.tracks[index.clamp(
+                  Playback.instance.tracks[(index - 1).clamp(
                     0,
                     Playback.instance.tracks.length,
                   )],
                   small: true),
               context,
-            );
-            // Precache adjacent album arts for smoother swipe transitions to the next/previous track.
-            Future.wait([
-              precacheImage(
-                getAlbumArt(
-                    Playback.instance.tracks[(index - 1).clamp(
-                      0,
-                      Playback.instance.tracks.length,
-                    )],
-                    small: true),
-                context,
-              ),
-              precacheImage(
-                getAlbumArt(
-                    Playback.instance.tracks[(index + 1).clamp(
-                      0,
-                      Playback.instance.tracks.length,
-                    )],
-                    small: true),
-                context,
-              ),
-            ]);
-          } catch (exception, stacktrace) {
-            debugPrint(exception.toString());
-            debugPrint(stacktrace.toString());
-          }
+            ),
+            precacheImage(
+              getAlbumArt(
+                  Playback.instance.tracks[(index + 1).clamp(
+                    0,
+                    Playback.instance.tracks.length,
+                  )],
+                  small: true),
+              context,
+            ),
+          ]);
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
+        if (pageController.hasClients) {
           pageController.animateToPage(
             Playback.instance.index,
             duration: Duration(milliseconds: 400),
@@ -302,70 +302,46 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               const SizedBox(width: 12.0),
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  if (playback.playlistLoopMode !=
-                                      PlaylistLoopMode.none)
-                                    Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
-                                      color: (colors.palette ??
-                                              [Theme.of(context).primaryColor])
-                                          .last,
-                                      elevation: 4.0,
-                                      child: Container(
-                                        height: 40.0,
-                                        width: 40.0,
-                                      ),
-                                    ),
-                                  IconButton(
-                                    onPressed: () {
-                                      if (playback.playlistLoopMode ==
-                                          PlaylistLoopMode.loop) {
-                                        playback.setPlaylistLoopMode(
-                                          PlaylistLoopMode.none,
-                                        );
-                                        return;
-                                      }
-                                      playback.setPlaylistLoopMode(
-                                        PlaylistLoopMode.values[
-                                            playback.playlistLoopMode.index +
-                                                1],
-                                      );
-                                    },
-                                    iconSize: 24.0,
-                                    color: (playback.playlistLoopMode !=
-                                                PlaylistLoopMode.none
-                                            ? (colors.palette ??
-                                                    [
-                                                      Theme.of(context)
-                                                          .primaryColor
-                                                    ])
-                                                .last
-                                                .isDark
-                                            : (colors.palette ??
-                                                    [
-                                                      Theme.of(context)
-                                                          .cardColor
-                                                    ])
-                                                .first
-                                                .isDark)
+                              IconButton(
+                                onPressed: () {
+                                  if (playback.playlistLoopMode ==
+                                      PlaylistLoopMode.loop) {
+                                    playback.setPlaylistLoopMode(
+                                      PlaylistLoopMode.none,
+                                    );
+                                    return;
+                                  }
+                                  playback.setPlaylistLoopMode(
+                                    PlaylistLoopMode.values[
+                                        playback.playlistLoopMode.index + 1],
+                                  );
+                                },
+                                iconSize: 24.0,
+                                color: (playback.playlistLoopMode !=
+                                        PlaylistLoopMode.none)
+                                    ? (colors.palette ??
+                                                [Theme.of(context).cardColor])
+                                            .first
+                                            .isDark
                                         ? Color.lerp(
                                             Colors.black, Colors.white, 0.87)
                                         : Color.lerp(
-                                            Colors.white, Colors.black, 0.87),
-                                    splashRadius: 24.0,
-                                    icon: Icon(
-                                      playback.playlistLoopMode ==
-                                              PlaylistLoopMode.single
-                                          ? Icons.repeat_one
-                                          : Icons.repeat,
-                                    ),
-                                  ),
-                                ],
+                                            Colors.white, Colors.black, 0.87)
+                                    : (colors.palette ??
+                                                [Theme.of(context).cardColor])
+                                            .first
+                                            .isDark
+                                        ? Color.lerp(
+                                            Colors.black, Colors.white, 0.54)
+                                        : Color.lerp(
+                                            Colors.white, Colors.black, 0.54),
+                                splashRadius: 24.0,
+                                icon: Icon(
+                                  playback.playlistLoopMode ==
+                                          PlaylistLoopMode.single
+                                      ? Icons.repeat_one
+                                      : Icons.repeat,
+                                ),
                               ),
                               Spacer(),
                               Container(
@@ -431,52 +407,30 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                 ),
                               ),
                               Spacer(),
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  if (playback.isShuffling)
-                                    Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
-                                      color: (colors.palette ??
-                                              [Theme.of(context).primaryColor])
-                                          .last,
-                                      elevation: 4.0,
-                                      child: Container(
-                                        height: 40.0,
-                                        width: 40.0,
-                                      ),
-                                    ),
-                                  IconButton(
-                                    onPressed: playback.toggleShuffle,
-                                    iconSize: 24.0,
-                                    color: (playback.isShuffling
-                                            ? (colors.palette ??
-                                                    [
-                                                      Theme.of(context)
-                                                          .primaryColor
-                                                    ])
-                                                .last
-                                                .isDark
-                                            : (colors.palette ??
-                                                    [
-                                                      Theme.of(context)
-                                                          .cardColor
-                                                    ])
-                                                .first
-                                                .isDark)
+                              IconButton(
+                                onPressed: playback.toggleShuffle,
+                                iconSize: 24.0,
+                                color: playback.isShuffling
+                                    ? (colors.palette ??
+                                                [Theme.of(context).cardColor])
+                                            .first
+                                            .isDark
                                         ? Color.lerp(
                                             Colors.black, Colors.white, 0.87)
                                         : Color.lerp(
-                                            Colors.white, Colors.black, 0.87),
-                                    splashRadius: 24.0,
-                                    icon: Icon(
-                                      Icons.shuffle,
-                                    ),
-                                  ),
-                                ],
+                                            Colors.white, Colors.black, 0.87)
+                                    : (colors.palette ??
+                                                [Theme.of(context).cardColor])
+                                            .first
+                                            .isDark
+                                        ? Color.lerp(
+                                            Colors.black, Colors.white, 0.54)
+                                        : Color.lerp(
+                                            Colors.white, Colors.black, 0.54),
+                                splashRadius: 24.0,
+                                icon: Icon(
+                                  Icons.shuffle,
+                                ),
                               ),
                               const SizedBox(width: 12.0),
                             ],
