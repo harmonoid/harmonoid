@@ -39,7 +39,7 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
                   onPressed: () async {
                     await Configuration.instance.save(
                       highlightedLyricsSize: 24.0,
-                      unhighlightedLyricsSize: 16.0,
+                      unhighlightedLyricsSize: 14.0,
                     );
                     setState(() {});
                   },

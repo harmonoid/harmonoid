@@ -374,7 +374,7 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'lyricsVisible': true,
       'discordRPC': true,
       'highlightedLyricsSize': 24.0,
-      'unhighlightedLyricsSize': 16.0,
+      'unhighlightedLyricsSize': 14.0,
       'mobileDenseAlbumTabLayout': false,
       'mobileDenseArtistTabLayout': true,
       'mobileGridArtistTabLayout': true,
