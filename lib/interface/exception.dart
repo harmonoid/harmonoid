@@ -90,20 +90,18 @@ class _ExceptionApp extends StatelessWidget {
                 ),
                 ButtonBar(
                   children: [
-                    MaterialButton(
+                    TextButton(
                       onPressed: () => launchUrl(
                         Uri.parse(
-                            'https://github.com/harmonoid/harmonoid/issues'),
+                          'https://github.com/harmonoid/harmonoid/issues',
+                        ),
                         mode: LaunchMode.externalApplication,
                       ),
                       child: Text(
                         'REPORT',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
                       ),
                     ),
-                    MaterialButton(
+                    TextButton(
                       onPressed: () {
                         if (Platform.isWindows) {
                           appWindow.close();
@@ -113,9 +111,6 @@ class _ExceptionApp extends StatelessWidget {
                       },
                       child: Text(
                         'EXIT',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
                       ),
                     ),
                   ],
@@ -158,20 +153,18 @@ class _ExceptionApp extends StatelessWidget {
                 ),
                 ButtonBar(
                   children: [
-                    MaterialButton(
+                    TextButton(
                       onPressed: () => launchUrl(
                         Uri.parse(
-                            'https://github.com/harmonoid/harmonoid/issues'),
+                          'https://github.com/harmonoid/harmonoid/issues',
+                        ),
                         mode: LaunchMode.externalApplication,
                       ),
                       child: Text(
                         'REPORT',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
                       ),
                     ),
-                    MaterialButton(
+                    TextButton(
                       onPressed: () {
                         if (Platform.isWindows) {
                           appWindow.close();
@@ -181,9 +174,6 @@ class _ExceptionApp extends StatelessWidget {
                       },
                       child: Text(
                         'EXIT',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
                       ),
                     ),
                   ],
