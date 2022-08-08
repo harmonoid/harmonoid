@@ -362,6 +362,7 @@ class PlaylistThumbnail extends StatelessWidget {
     if (encircle) {
       return Card(
         elevation: 4.0,
+        margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(width / 2),
         ),

@@ -2018,6 +2018,7 @@ class CollectionMoreButton extends StatelessWidget {
       icon: Icon(
         Icons.more_vert,
         size: 20.0,
+        color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
       ),
       elevation: 4.0,
       onSelected: (value) async {
@@ -2086,7 +2087,10 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
   Widget build(BuildContext context) {
     return IconButton(
       tooltip: Language.instance.OPEN_FILE_OR_URL,
-      icon: Icon(Icons.file_open),
+      icon: Icon(
+        Icons.file_open,
+        color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+      ),
       splashRadius: 20.0,
       iconSize: 20.0,
       onPressed: () async {

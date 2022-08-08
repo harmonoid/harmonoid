@@ -445,6 +445,10 @@ class CollectionScreenState extends State<CollectionScreen>
                                           child: Icon(
                                             Icons.settings,
                                             size: 20.0,
+                                            color: Theme.of(context)
+                                                .appBarTheme
+                                                .actionsIconTheme
+                                                ?.color,
                                           ),
                                         ),
                                       ),
