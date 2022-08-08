@@ -268,7 +268,8 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
         if (playlist!.tracks.isNotEmpty) {
           if (playlist!.name.isEmpty) {
             debugPrint('playlist.name.isEmpty');
-            final playlistNameTextEditingController = TextEditingController();
+            await Navigator.of(context).maybePop();
+            String name = '';
             await showDialog(
               context: context,
               builder: (ctx) => AlertDialog(
@@ -291,12 +292,14 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                     },
                     child: TextField(
                       autofocus: true,
-                      onChanged: (value) => playlist?.name = value,
-                      controller: playlistNameTextEditingController,
+                      onChanged: (value) {
+                        playlist?.name = value;
+                        name = value;
+                      },
                       cursorWidth: 1.0,
                       onSubmitted: (value) {
                         playlist?.name = value;
-                        add();
+                        Navigator.of(ctx).maybePop();
                       },
                       cursorColor: Theme.of(ctx).brightness == Brightness.light
                           ? Color(0xFF212121)
@@ -323,15 +326,18 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                 ],
               ),
             );
-            if (playlistNameTextEditingController.text.isEmpty) {
+            if (name.isEmpty) {
               throw FormatException(
-                'playlistNameTextEditingController.text.isEmpty',
+                'name.isEmpty',
               );
             }
           }
-          setState(() {
-            fetched = true;
-          });
+          debugPrint(playlist?.name.toString());
+          try {
+            setState(() {
+              fetched = true;
+            });
+          } catch (exception) {}
           final result =
               await Collection.instance.playlistCreateFromName(playlist!.name);
           await Collection.instance.playlistAddTracks(
@@ -344,9 +350,11 @@ class _PlaylistImportDialogState extends State<PlaylistImportDialog> {
                 )
                 .toList(),
           );
-          setState(() {
-            saved = true;
-          });
+          try {
+            setState(() {
+              saved = true;
+            });
+          } catch (exception) {}
         } else {
           showDialog(
             context: context,
@@ -544,10 +552,97 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
           debugPrint(exception.toString());
           debugPrint(stacktrace.toString());
         }
-        if (playlist!.name.isNotEmpty && playlist!.tracks.isNotEmpty) {
-          setState(() {
-            fetched = true;
-          });
+        if (playlist!.tracks.isNotEmpty) {
+          if (playlist!.name.isEmpty) {
+            debugPrint('playlist.name.isEmpty');
+            await Navigator.of(context).maybePop();
+            String name = '';
+            await showModalBottomSheet(
+              context: context,
+              useRootNavigator: true,
+              builder: (ctx) => Container(
+                margin: EdgeInsets.only(
+                  bottom: MediaQuery.of(ctx).viewInsets.bottom -
+                      MediaQuery.of(ctx).padding.bottom,
+                ),
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 4.0),
+                    TextField(
+                      textCapitalization: TextCapitalization.none,
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.done,
+                      autofocus: true,
+                      onChanged: (value) {
+                        playlist?.name = value;
+                        name = value;
+                      },
+                      onSubmitted: (value) {
+                        playlist?.name = value;
+                        Navigator.of(ctx).maybePop();
+                      },
+                      decoration: InputDecoration(
+                        hintText: Language.instance.PLAYLIST_NAME,
+                        contentPadding: EdgeInsets.fromLTRB(
+                          12,
+                          30,
+                          12,
+                          6,
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color:
+                                Theme.of(ctx).iconTheme.color!.withOpacity(0.4),
+                            width: 1.8,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color:
+                                Theme.of(ctx).iconTheme.color!.withOpacity(0.4),
+                            width: 1.8,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(ctx).primaryColor,
+                            width: 1.8,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    ElevatedButton(
+                      onPressed: Navigator.of(ctx).maybePop,
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          Theme.of(ctx).primaryColor,
+                        ),
+                      ),
+                      child: Text(
+                        Language.instance.OK.toUpperCase(),
+                        style: TextStyle(letterSpacing: 2.0),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+            if (name.isEmpty) {
+              throw FormatException(
+                'name.isEmpty',
+              );
+            }
+          }
+          debugPrint(playlist?.name.toString());
+          try {
+            setState(() {
+              fetched = true;
+            });
+          } catch (exception) {}
           final result =
               await Collection.instance.playlistCreateFromName(playlist!.name);
           await Collection.instance.playlistAddTracks(
@@ -560,9 +655,11 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
                 )
                 .toList(),
           );
-          setState(() {
-            saved = true;
-          });
+          try {
+            setState(() {
+              saved = true;
+            });
+          } catch (exception) {}
         } else {
           showDialog(
             context: context,
