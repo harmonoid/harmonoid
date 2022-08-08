@@ -186,6 +186,10 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
                                   child: Icon(
                                     Icons.settings,
                                     size: 20.0,
+                                    color: Theme.of(context)
+                                        .appBarTheme
+                                        .actionsIconTheme
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -457,6 +461,10 @@ class WebSearch extends StatelessWidget {
                               child: Icon(
                                 Icons.settings,
                                 size: 20.0,
+                                color: Theme.of(context)
+                                    .appBarTheme
+                                    .actionsIconTheme
+                                    ?.color,
                               ),
                             ),
                           ),

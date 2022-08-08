@@ -781,6 +781,10 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                     child: Icon(
                                       Icons.settings,
                                       size: 20.0,
+                                      color: Theme.of(context)
+                                          .appBarTheme
+                                          .actionsIconTheme
+                                          ?.color,
                                     ),
                                   ),
                                 ),

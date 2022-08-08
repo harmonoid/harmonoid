@@ -722,6 +722,10 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                     child: Icon(
                                       Icons.settings,
                                       size: 20.0,
+                                      color: Theme.of(context)
+                                          .appBarTheme
+                                          .actionsIconTheme
+                                          ?.color,
                                     ),
                                   ),
                                 ),

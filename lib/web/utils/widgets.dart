@@ -5,7 +5,6 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
@@ -35,7 +34,6 @@ class WebSearchBar extends StatefulWidget {
 }
 
 class _WebSearchBarState extends State<WebSearchBar> {
-  String _query = '';
   List<String> _suggestions = <String>[];
   int _highlightedSuggestionIndex = -1;
   late TextEditingController _searchBarController;
@@ -190,7 +188,6 @@ class _WebSearchBarState extends State<WebSearchBar> {
                   value = value.trim();
                   setState(() {
                     _highlightedSuggestionIndex = -1;
-                    _query = value;
                   });
                   _suggestions = value.isEmpty
                       ? []
