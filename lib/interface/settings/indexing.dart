@@ -18,7 +18,6 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/constants/language.dart';
 
@@ -54,15 +53,16 @@ class IndexingState extends State<IndexingSetting>
           children: [
             const SizedBox(height: 2.0),
             if (isMobile)
-              CorrectedListTile(
+              ListTile(
+                dense: false,
                 onTap:
                     controller.isCompleted ? pickNewFolder : showProgressDialog,
-                iconData: Icons.create_new_folder,
-                title: Language.instance.ADD_NEW_FOLDER,
-                subtitle: Language.instance.ADD_NEW_FOLDER_SUBTITLE,
+                title: Text(Language.instance.ADD_NEW_FOLDER),
+                subtitle: Text(Language.instance.ADD_NEW_FOLDER_SUBTITLE),
               ),
             if (isMobile)
-              CorrectedListTile(
+              ListTile(
+                dense: false,
                 onTap: controller.progress != controller.total
                     ? showProgressDialog
                     : () async {
@@ -72,12 +72,12 @@ class IndexingState extends State<IndexingSetting>
                           },
                         );
                       },
-                iconData: Icons.refresh,
-                title: Language.instance.REFRESH,
-                subtitle: Language.instance.REFRESH_SUBTITLE,
+                title: Text(Language.instance.REFRESH),
+                subtitle: Text(Language.instance.REFRESH_SUBTITLE),
               ),
             if (isMobile)
-              CorrectedListTile(
+              ListTile(
+                dense: false,
                 onTap: controller.progress != controller.total
                     ? showProgressDialog
                     : () async {
@@ -87,9 +87,8 @@ class IndexingState extends State<IndexingSetting>
                           },
                         );
                       },
-                iconData: Icons.data_usage,
-                title: Language.instance.REINDEX,
-                subtitle: Language.instance.REINDEX_SUBTITLE,
+                title: Text(Language.instance.REINDEX),
+                subtitle: Text(Language.instance.REINDEX_SUBTITLE),
               ),
             Container(
               margin: EdgeInsets.only(left: 8.0, right: 8.0),
@@ -252,13 +251,15 @@ class IndexingState extends State<IndexingSetting>
                                           ),
                                         ),
                                       ),
+                                      const SizedBox(width: 8.0),
                                     ],
                                   ),
                                 ),
                               )
                               .toList(),
-                        if (isDesktop) SizedBox(height: 8.0),
-                        if (controller.progress != controller.total)
+                        if (isDesktop) const SizedBox(height: 8.0),
+                        if (controller.progress != controller.total &&
+                            isDesktop)
                           Container(
                             height: 56.0,
                             width: isDesktop
@@ -357,15 +358,6 @@ class IndexingState extends State<IndexingSetting>
                                         ),
                                       ),
                               ],
-                            ),
-                          ),
-                        if (controller.progress != controller.total)
-                          Padding(
-                            padding: EdgeInsets.only(top: 4.0, bottom: 8.0),
-                            child: Text(
-                              Language.instance.COLLECTION_INDEXING_LABEL,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.headline3,
                             ),
                           ),
                       ],

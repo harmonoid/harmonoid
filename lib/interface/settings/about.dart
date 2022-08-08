@@ -7,6 +7,7 @@
 ///
 
 import 'dart:convert' as convert;
+import 'package:extended_image/extended_image.dart';
 import 'package:harmonoid/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -595,7 +596,6 @@ class AboutPageState extends State<AboutPage> {
             appBar: AppBar(
               title: Text(
                 'About',
-                style: Theme.of(context).textTheme.headline1,
               ),
             ),
             body: NowPlayingBarScrollHideNotifier(
@@ -612,35 +612,47 @@ class AboutPageState extends State<AboutPage> {
                     elevation: 4.0,
                     child: Column(
                       children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('assets/images/project.png'),
-                                radius: 28.0,
+                        Container(
+                          color: kPrimaryLightColor,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: ExtendedImage.asset(
+                                  'assets/images/project.png',
+                                  width: 72.0,
+                                  height: 72.0,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Harmonoid',
-                                    style:
-                                        Theme.of(context).textTheme.headline1,
-                                  ),
-                                  Text(
-                                    '@alexmercerind',
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ),
-                                ],
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Harmonoid',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline1
+                                          ?.copyWith(
+                                            color: Colors.white,
+                                          ),
+                                    ),
+                                    Text(
+                                      '@alexmercerind',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5
+                                          ?.copyWith(
+                                            color: Colors.white70,
+                                          ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 16.0),
-                          ],
+                              const SizedBox(width: 16.0),
+                            ],
+                          ),
                         ),
                         const Divider(height: 1.0, thickness: 1.0),
                         CorrectedListTile(

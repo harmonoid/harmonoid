@@ -7,6 +7,7 @@
 ///
 
 import 'package:flutter/material.dart';
+import 'package:harmonoid/state/collection_refresh.dart';
 
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -23,6 +24,7 @@ import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid/interface/settings/proxy.dart';
 import 'package:harmonoid/interface/settings/now_playing_visuals.dart';
 import 'package:harmonoid/interface/settings/now_playing_screen.dart';
+import 'package:provider/provider.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -69,9 +71,12 @@ class Settings extends StatelessWidget {
                 icon: Icon(Icons.arrow_back),
                 splashRadius: 20.0,
               ),
+              bottom: PreferredSize(
+                preferredSize: Size(MediaQuery.of(context).size.width, 2.0),
+                child: MobileIndexingProgressIndicator(),
+              ),
               title: Text(
                 Language.instance.SETTING,
-                style: Theme.of(context).textTheme.headline1,
               ),
             ),
             body: NowPlayingBarScrollHideNotifier(
@@ -184,6 +189,30 @@ class SettingsTile extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+class MobileIndexingProgressIndicator extends StatelessWidget {
+  const MobileIndexingProgressIndicator({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<CollectionRefresh>(
+      builder: (context, controller, _) {
+        if (controller.progress != controller.total) {
+          return LinearProgressIndicator(
+            value: controller.progress == null
+                ? null
+                : controller.progress! / controller.total,
+            backgroundColor:
+                Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+            valueColor:
+                AlwaysStoppedAnimation(Theme.of(context).colorScheme.secondary),
+          );
+        } else
+          return SizedBox.shrink();
+      },
     );
   }
 }
