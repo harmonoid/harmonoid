@@ -14,6 +14,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart'
@@ -281,7 +282,7 @@ class NavigatorPopButton extends StatelessWidget {
             child: Icon(
               Icons.arrow_back,
               size: 20.0,
-              color: color,
+              color: color ?? Theme.of(context).appBarTheme.iconTheme?.color,
             ),
           ),
         ),
@@ -340,8 +341,12 @@ class DesktopAppBar extends StatelessWidget {
                             NavigatorPopButton(
                               color: color != null
                                   ? isDark
-                                      ? Colors.white
-                                      : Colors.black
+                                      ? Theme.of(context)
+                                          .extension<IconColors>()
+                                          ?.appBarDarkIconColor
+                                      : Theme.of(context)
+                                          .extension<IconColors>()
+                                          ?.appBarLightIconColor
                                   : null,
                             ),
                         SizedBox(
@@ -556,8 +561,10 @@ class ExceptionWidget extends StatelessWidget {
           ),
           Text(
             title!,
-            style:
-                Theme.of(context).textTheme.headline1?.copyWith(fontSize: 20.0),
+            style: Theme.of(context).textTheme.headline1?.copyWith(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w700,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(
@@ -1175,19 +1182,15 @@ class _HorizontalListState extends State<HorizontalList> {
   @override
   void initState() {
     super.initState();
-    if (isDesktop) {
-      controller.addListener(() {
-        setState(() {});
-      });
-    }
+    controller.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
   void didChangeDependencies() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (isDesktop) {
-        setState(() {});
-      }
+      setState(() {});
     });
     super.didChangeDependencies();
   }
@@ -1221,7 +1224,7 @@ class _HorizontalListState extends State<HorizontalList> {
               children: widget.children,
             ),
           ),
-          if (extentAfter != 0 && isDesktop)
+          if (extentAfter != 0)
             Positioned(
               child: Container(
                 height: c.maxHeight,
@@ -1241,9 +1244,9 @@ class _HorizontalListState extends State<HorizontalList> {
                   ),
                 ),
               ),
-              right: 32.0,
+              right: isDesktop ? 32.0 : tileMargin,
             ),
-          if (extentBefore != 0 && isDesktop)
+          if (extentBefore != 0)
             Positioned(
               child: Container(
                 height: c.maxHeight,
@@ -1263,7 +1266,7 @@ class _HorizontalListState extends State<HorizontalList> {
                   ),
                 ),
               ),
-              left: 32.0,
+              left: isDesktop ? 32.0 : tileMargin,
             ),
         ],
       ),
@@ -1612,13 +1615,13 @@ class CorrectedSwitchListTile extends StatelessWidget {
 
 class CorrectedListTile extends StatelessWidget {
   final void Function()? onTap;
-  final IconData iconData;
+  final IconData? iconData;
   final String title;
   final String? subtitle;
   final double? height;
   CorrectedListTile({
     Key? key,
-    required this.iconData,
+    this.iconData,
     required this.title,
     this.subtitle,
     this.onTap,
@@ -1638,13 +1641,14 @@ class CorrectedListTile extends StatelessWidget {
               ? CrossAxisAlignment.center
               : CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: EdgeInsets.only(
-                  top: subtitle == null ? 0.0 : 16.0, right: 16.0),
-              width: 40.0,
-              height: 40.0,
-              child: Icon(iconData),
-            ),
+            if (iconData != null)
+              Container(
+                margin: EdgeInsets.only(
+                    top: subtitle == null ? 0.0 : 16.0, right: 16.0),
+                width: 40.0,
+                height: 40.0,
+                child: Icon(iconData),
+              ),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1723,7 +1727,10 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
       opacity: [1, 2, 3].contains(index) ? 1.0 : 0.0,
       duration: Duration(milliseconds: 50),
       child: CircularButton(
-        icon: const Icon(Icons.sort_by_alpha),
+        icon: Icon(
+          Icons.sort_by_alpha,
+          color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+        ),
         onPressed: () async {
           if (index == 4) return;
           final position = RelativeRect.fromRect(

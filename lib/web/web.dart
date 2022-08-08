@@ -245,7 +245,6 @@ class _WebRecommendationsState extends State<WebRecommendations>
         setState(() {});
       }
     };
-    Web.instance.pagingController.refresh();
     Web.instance.pagingController.addPageRequestListener(fetchNextPage);
   }
 
@@ -768,16 +767,20 @@ class _FloatingSearchBarWebSearchScreenState
             top: MediaQuery.of(context).padding.top + tileMargin,
           ),
           onSubmitted: (query) {
-            Navigator.of(context).pushReplacement(PageRouteBuilder(
+            Navigator.of(context).pushReplacement(
+              PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
                     FadeThroughTransition(
-                        fillColor: Colors.transparent,
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        child: FloatingSearchBarWebSearchScreen(
-                          query: query,
-                          future: YTMClient.search(query),
-                        ))));
+                  fillColor: Colors.transparent,
+                  animation: animation,
+                  secondaryAnimation: secondaryAnimation,
+                  child: FloatingSearchBarWebSearchScreen(
+                    query: query,
+                    future: YTMClient.search(query),
+                  ),
+                ),
+              ),
+            );
           },
           textInputType: TextInputType.url,
           accentColor: Theme.of(context).primaryColor,
