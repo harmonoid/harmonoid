@@ -1759,10 +1759,8 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     checked: Collection.instance.albumsSort == AlbumsSort.aToZ,
                     value: AlbumsSort.aToZ,
                     padding: EdgeInsets.zero,
-                    child: ListTile(
-                      title: Text(
-                        Language.instance.A_TO_Z,
-                      ),
+                    child: Text(
+                      Language.instance.A_TO_Z,
                     ),
                   ),
                   CheckedPopupMenuItem(
@@ -1770,20 +1768,16 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                         Collection.instance.albumsSort == AlbumsSort.dateAdded,
                     value: AlbumsSort.dateAdded,
                     padding: EdgeInsets.zero,
-                    child: ListTile(
-                      title: Text(
-                        Language.instance.DATE_ADDED,
-                      ),
+                    child: Text(
+                      Language.instance.DATE_ADDED,
                     ),
                   ),
                   CheckedPopupMenuItem(
                     checked: Collection.instance.albumsSort == AlbumsSort.year,
                     value: AlbumsSort.year,
                     padding: EdgeInsets.zero,
-                    child: ListTile(
-                      title: Text(
-                        Language.instance.YEAR,
-                      ),
+                    child: Text(
+                      Language.instance.YEAR,
                     ),
                   ),
                   // Not implemented for mobile.
@@ -1804,10 +1798,8 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     checked: Collection.instance.tracksSort == TracksSort.aToZ,
                     value: TracksSort.aToZ,
                     padding: EdgeInsets.zero,
-                    child: ListTile(
-                      title: Text(
-                        Language.instance.A_TO_Z,
-                      ),
+                    child: Text(
+                      Language.instance.A_TO_Z,
                     ),
                   ),
                   CheckedPopupMenuItem(
@@ -1815,20 +1807,16 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                         Collection.instance.tracksSort == TracksSort.dateAdded,
                     value: TracksSort.dateAdded,
                     padding: EdgeInsets.zero,
-                    child: ListTile(
-                      title: Text(
-                        Language.instance.DATE_ADDED,
-                      ),
+                    child: Text(
+                      Language.instance.DATE_ADDED,
                     ),
                   ),
                   CheckedPopupMenuItem(
                     checked: Collection.instance.tracksSort == TracksSort.year,
                     value: TracksSort.year,
                     padding: EdgeInsets.zero,
-                    child: ListTile(
-                      title: Text(
-                        Language.instance.YEAR,
-                      ),
+                    child: Text(
+                      Language.instance.YEAR,
                     ),
                   ),
                 ],
@@ -1838,10 +1826,8 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                         Collection.instance.artistsSort == ArtistsSort.aToZ,
                     value: ArtistsSort.aToZ,
                     padding: EdgeInsets.zero,
-                    child: ListTile(
-                      title: Text(
-                        Language.instance.A_TO_Z,
-                      ),
+                    child: Text(
+                      Language.instance.A_TO_Z,
                     ),
                   ),
                   CheckedPopupMenuItem(
@@ -1849,10 +1835,8 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                         ArtistsSort.dateAdded,
                     value: ArtistsSort.dateAdded,
                     padding: EdgeInsets.zero,
-                    child: ListTile(
-                      title: Text(
-                        Language.instance.DATE_ADDED,
-                      ),
+                    child: Text(
+                      Language.instance.DATE_ADDED,
                     ),
                   ),
                 ],
@@ -1861,10 +1845,8 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                     checked: Collection.instance.genresSort == GenresSort.aToZ,
                     value: GenresSort.aToZ,
                     padding: EdgeInsets.zero,
-                    child: ListTile(
-                      title: Text(
-                        Language.instance.A_TO_Z,
-                      ),
+                    child: Text(
+                      Language.instance.A_TO_Z,
                     ),
                   ),
                   CheckedPopupMenuItem(
@@ -1872,10 +1854,8 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                         Collection.instance.genresSort == GenresSort.dateAdded,
                     value: GenresSort.dateAdded,
                     padding: EdgeInsets.zero,
-                    child: ListTile(
-                      title: Text(
-                        Language.instance.DATE_ADDED,
-                      ),
+                    child: Text(
+                      Language.instance.DATE_ADDED,
                     ),
                   ),
                 ],
@@ -1895,10 +1875,8 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                   }[tab]!,
                   value: OrderType.ascending,
                   padding: EdgeInsets.zero,
-                  child: ListTile(
-                    title: Text(
-                      Language.instance.ASCENDING,
-                    ),
+                  child: Text(
+                    Language.instance.ASCENDING,
                   ),
                 ),
                 CheckedPopupMenuItem(
@@ -1914,10 +1892,8 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                   }[tab]!,
                   value: OrderType.descending,
                   padding: EdgeInsets.zero,
-                  child: ListTile(
-                    title: Text(
-                      Language.instance.DESCENDING,
-                    ),
+                  child: Text(
+                    Language.instance.DESCENDING,
                   ),
                 ),
               ],
