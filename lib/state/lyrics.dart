@@ -93,7 +93,7 @@ class Lyrics extends ChangeNotifier {
                   kUnknownArtist,
                 ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName}';
                 Uri image;
-                if (Plugins.isWebMedia(track.uri)) {
+                if (LibmpvPluginUtils.isSupported(track.uri)) {
                   final artwork = getAlbumArt(track, small: true);
                   image =
                       Uri.parse((artwork as ExtendedNetworkImageProvider).url);

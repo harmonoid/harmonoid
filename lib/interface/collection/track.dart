@@ -479,35 +479,33 @@ class TrackTileState extends State<TrackTile> {
                                     .map(
                                   (e) => TextSpan(
                                     text: e,
-                                    recognizer:
-                                        !Plugins.isWebMedia(widget.track.uri)
-                                            ? (TapGestureRecognizer()
-                                              ..onTap = () {
-                                                DesktopNowPlayingController
-                                                    .instance
-                                                    .hide();
-                                                navigatorKey.currentState?.push(
-                                                  PageRouteBuilder(
-                                                    pageBuilder: ((context,
-                                                            animation,
-                                                            secondaryAnimation) =>
-                                                        FadeThroughTransition(
-                                                          animation: animation,
-                                                          secondaryAnimation:
-                                                              secondaryAnimation,
-                                                          child: ArtistScreen(
-                                                            artist: Collection
-                                                                .instance
-                                                                .artistsSet
-                                                                .lookup(Artist(
-                                                                    artistName:
-                                                                        e))!,
-                                                          ),
-                                                        )),
-                                                  ),
-                                                );
-                                              })
-                                            : null,
+                                    recognizer: !LibmpvPluginUtils.isSupported(
+                                            widget.track.uri)
+                                        ? (TapGestureRecognizer()
+                                          ..onTap = () {
+                                            DesktopNowPlayingController.instance
+                                                .hide();
+                                            navigatorKey.currentState?.push(
+                                              PageRouteBuilder(
+                                                pageBuilder: ((context,
+                                                        animation,
+                                                        secondaryAnimation) =>
+                                                    FadeThroughTransition(
+                                                      animation: animation,
+                                                      secondaryAnimation:
+                                                          secondaryAnimation,
+                                                      child: ArtistScreen(
+                                                        artist: Collection
+                                                            .instance.artistsSet
+                                                            .lookup(Artist(
+                                                                artistName:
+                                                                    e))!,
+                                                      ),
+                                                    )),
+                                              ),
+                                            );
+                                          })
+                                        : null,
                                   ),
                                 )
                                     .forEach((element) {
@@ -760,8 +758,8 @@ class TrackTileState extends State<TrackTile> {
                                         .map(
                                       (e) => TextSpan(
                                         text: e,
-                                        recognizer: !Plugins.isWebMedia(
-                                                widget.track.uri)
+                                        recognizer: !LibmpvPluginUtils
+                                                .isSupported(widget.track.uri)
                                             ? (TapGestureRecognizer()
                                               ..onTap = () {
                                                 navigatorKey.currentState?.push(

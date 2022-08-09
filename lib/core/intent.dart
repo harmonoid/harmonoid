@@ -230,7 +230,7 @@ class Intent {
   /// * Web [Media] [Uri].
   ///
   Future<void> playUri(Uri uri) async {
-    if (Plugins.isWebMedia(uri)) {
+    if (LibmpvPluginUtils.isSupported(uri)) {
       await Playback.instance.open([
         Track.fromWebTrack((await YTMClient.player(uri.toString()))!.toJson())
       ]);

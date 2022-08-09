@@ -35,13 +35,15 @@ class Web {
     int index = 0,
   }) async {
     if (value is Track) {
-      final id = Plugins.redirect(value.uri).queryParameters['id']!;
+      final id = LibmpvPluginUtils.redirect(value.uri).queryParameters['id']!;
       Playback.instance.open(
         [media.Track.fromWebTrack(value.toJson())],
       );
       bool reload = Configuration.instance.webRecent.isEmpty;
       await Configuration.instance.save(
-        webRecent: [Plugins.redirect(value.uri).queryParameters['id']!],
+        webRecent: [
+          LibmpvPluginUtils.redirect(value.uri).queryParameters['id']!
+        ],
       );
       if (reload) {
         debugPrint('Web.open: pagingController.refresh');
@@ -55,13 +57,15 @@ class Web {
             .toList(),
       );
     } else if (value is Video) {
-      final id = Plugins.redirect(value.uri).queryParameters['id']!;
+      final id = LibmpvPluginUtils.redirect(value.uri).queryParameters['id']!;
       Playback.instance.open(
         [media.Track.fromWebVideo(value.toJson())],
       );
       bool reload = Configuration.instance.webRecent.isEmpty;
       await Configuration.instance.save(
-        webRecent: [Plugins.redirect(value.uri).queryParameters['id']!],
+        webRecent: [
+          LibmpvPluginUtils.redirect(value.uri).queryParameters['id']!
+        ],
       );
       if (reload) {
         debugPrint('Web.open: pagingController.refresh');
@@ -81,7 +85,9 @@ class Web {
       );
       bool reload = Configuration.instance.webRecent.isEmpty;
       await Configuration.instance.save(
-        webRecent: [Plugins.redirect(value.first.uri).queryParameters['id']!],
+        webRecent: [
+          LibmpvPluginUtils.redirect(value.first.uri).queryParameters['id']!
+        ],
       );
       if (reload) {
         debugPrint('Web.open: pagingController.refresh');

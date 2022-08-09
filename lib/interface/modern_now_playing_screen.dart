@@ -739,7 +739,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 ),
                               ],
                             ),
-                            if (Plugins.isWebMedia(
+                            if (LibmpvPluginUtils.isSupported(
                                 playback.tracks[playback.index].uri))
                               IconButton(
                                 splashRadius: 20.0,
@@ -756,7 +756,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 color: Colors.white,
                                 tooltip: Language.instance.OPEN_IN_BROWSER,
                               ),
-                            if (Plugins.isWebMedia(
+                            if (LibmpvPluginUtils.isSupported(
                                 playback.tracks[playback.index].uri))
                               IconButton(
                                 splashRadius: 20.0,

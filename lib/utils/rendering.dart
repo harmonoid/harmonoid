@@ -887,12 +887,12 @@ ImageProvider getAlbumArt(
   ImageProvider? image;
   // Separately handle the web URLs.
   if (media is Track) {
-    if (Plugins.isWebMedia(media.uri)) {
+    if (LibmpvPluginUtils.isSupported(media.uri)) {
       image = ExtendedNetworkImageProvider(
-        Plugins.artwork(
+        LibmpvPluginUtils.thumbnail(
           media.uri,
           small: small,
-        ),
+        ).toString(),
         cache: true,
       );
     }

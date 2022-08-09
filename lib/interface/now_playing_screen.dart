@@ -165,7 +165,7 @@ class NowPlayingState extends State<NowPlayingScreen>
                                             ),
                                           ),
                                           SizedBox(width: 12.0),
-                                          if (Plugins.isWebMedia(
+                                          if (LibmpvPluginUtils.isSupported(
                                               tracks[index].uri))
                                             AnimatedScale(
                                               scale: scale,

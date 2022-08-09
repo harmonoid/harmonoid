@@ -223,7 +223,7 @@ class Playback extends ChangeNotifier {
         Playlist(
           tracks
               .map((e) => Media(
-                    Plugins.redirect(e.uri).toString(),
+                    LibmpvPluginUtils.redirect(e.uri).toString(),
                     extras: e.toJson(),
                   ))
               .toList(),
@@ -264,7 +264,7 @@ class Playback extends ChangeNotifier {
       tracks.forEach((element) {
         libmpv?.add(
           Media(
-            Plugins.redirect(element.uri).toString(),
+            LibmpvPluginUtils.redirect(element.uri).toString(),
             extras: element.toJson(),
           ),
         );
@@ -312,7 +312,7 @@ class Playback extends ChangeNotifier {
         Playlist(
           tracks
               .map((e) => Media(
-                    Plugins.redirect(e.uri).toString(),
+                    LibmpvPluginUtils.redirect(e.uri).toString(),
                     extras: e.toJson(),
                   ))
               .toList(),
@@ -526,7 +526,7 @@ class Playback extends ChangeNotifier {
               title: track.trackName,
               track_number: track.trackNumber,
             );
-            if (Plugins.isWebMedia(track.uri)) {
+            if (LibmpvPluginUtils.isSupported(track.uri)) {
               final artwork = getAlbumArt(track, small: true);
               smtc.set_artwork((artwork as ExtendedNetworkImageProvider).url);
             } else {
@@ -539,30 +539,30 @@ class Playback extends ChangeNotifier {
           }
         }
         if (Platform.isLinux) {
-          Uri? artworkUri;
-          if (Plugins.isWebMedia(track.uri)) {
+          Uri? image;
+          if (LibmpvPluginUtils.isSupported(track.uri)) {
             final artwork = getAlbumArt(track, small: true);
-            artworkUri =
-                Uri.parse((artwork as ExtendedNetworkImageProvider).url);
+            image = Uri.parse((artwork as ExtendedNetworkImageProvider).url);
           } else {
             final artwork = getAlbumArt(track);
-            artworkUri = (artwork as ExtendedFileImageProvider).file.uri;
+            image = (artwork as ExtendedFileImageProvider).file.uri;
           }
           _HarmonoidMPRIS.instance.isPlaying = isPlaying;
           _HarmonoidMPRIS.instance.isCompleted = isCompleted;
           _HarmonoidMPRIS.instance.index = index;
           _HarmonoidMPRIS.instance.playlist = tracks.map((e) {
             final json = e.toJson();
-            json['artworkUri'] = artworkUri.toString();
+            json['artworkUri'] = image.toString();
             return MPRISMedia.fromJson(json);
           }).toList();
         }
         if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
           // Fetch [largeImageKey] if the current [track] was changed.
           if (track != _discordPreviousTrack) {
-            _discordPreviousLargeImageKey = Plugins.isWebMedia(track.uri)
+            _discordPreviousLargeImageKey = LibmpvPluginUtils.isSupported(
+                    track.uri)
                 // web music.
-                ? Plugins.artwork(track.uri, small: true)
+                ? LibmpvPluginUtils.thumbnail(track.uri, small: true).toString()
                 // local music.
                 : await (() async {
                     try {
@@ -641,12 +641,15 @@ class Playback extends ChangeNotifier {
                 ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(',') : track.albumArtistName}',
                 details: '${track.trackName}',
                 largeImageKey: _discordPreviousLargeImageKey,
-                largeImageText:
-                    Plugins.isWebMedia(track.uri) ? null : '${track.albumName}',
+                largeImageText: LibmpvPluginUtils.isSupported(track.uri)
+                    ? null
+                    : '${track.albumName}',
                 smallImageKey: isPlaying ? 'play' : 'pause',
                 smallImageText: isPlaying ? 'Playing' : 'Paused',
-                button1Label: Plugins.isWebMedia(track.uri) ? 'Listen' : 'Find',
-                button1Url: Plugins.isWebMedia(track.uri)
+                button1Label: LibmpvPluginUtils.isSupported(track.uri)
+                    ? 'Listen'
+                    : 'Find',
+                button1Url: LibmpvPluginUtils.isSupported(track.uri)
                     ? track.uri.toString()
                     : 'https://www.google.com/search?q=${Uri.encodeComponent([
                         track.trackName,
@@ -1027,7 +1030,10 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     // handling the intent from Android.
     final playlist = ConcatenatingAudioSource(
       children: tracks
-          .map((e) => AudioSource.uri(Plugins.redirect(e.uri), tag: e.toJson()))
+          .map((e) => AudioSource.uri(
+                LibmpvPluginUtils.redirect(e.uri),
+                tag: e.toJson(),
+              ))
           .toList(),
     );
     queue.add(tracks.map((e) => _trackToMediaItem(e)).toList());
@@ -1054,7 +1060,8 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       ..notify();
     return (_player.audioSource as ConcatenatingAudioSource).addAll(
       tracks
-          .map((e) => AudioSource.uri(Plugins.redirect(e.uri), tag: e.toJson()))
+          .map((e) => AudioSource.uri(LibmpvPluginUtils.redirect(e.uri),
+              tag: e.toJson()))
           .toList(),
     );
   }
@@ -1067,7 +1074,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       ..notify();
     return (_player.audioSource as ConcatenatingAudioSource).add(
       AudioSource.uri(
-        Plugins.redirect(Uri.parse(mediaItem.id)),
+        LibmpvPluginUtils.redirect(Uri.parse(mediaItem.id)),
         tag: mediaItem.extras,
       ),
     );
@@ -1129,7 +1136,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         duration: track.duration,
         artUri: () {
           Uri? image;
-          if (Plugins.isWebMedia(track.uri)) {
+          if (LibmpvPluginUtils.isSupported(track.uri)) {
             final artwork = getAlbumArt(track, small: true);
             image = Uri.parse((artwork as ExtendedNetworkImageProvider).url);
           } else {

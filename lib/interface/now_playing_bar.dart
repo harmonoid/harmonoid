@@ -373,7 +373,7 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                           .map(
                                                             (e) => TextSpan(
                                                               text: e,
-                                                              recognizer: !Plugins.isWebMedia(playback
+                                                              recognizer: !LibmpvPluginUtils.isSupported(playback
                                                                       .tracks[playback
                                                                           .index
                                                                           .clamp(
@@ -606,12 +606,16 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           //   ),
                                           // ),
                                           if (playback.tracks.isNotEmpty &&
-                                              Plugins.isWebMedia(playback
-                                                  .tracks[playback.index.clamp(
-                                                      0,
-                                                      playback.tracks.length -
-                                                          1)]
-                                                  .uri))
+                                              LibmpvPluginUtils.isSupported(
+                                                  playback
+                                                      .tracks[playback
+                                                          .index
+                                                          .clamp(
+                                                              0,
+                                                              playback.tracks
+                                                                      .length -
+                                                                  1)]
+                                                      .uri))
                                             IconButton(
                                               splashRadius: 20.0,
                                               iconSize: 20.0,
@@ -852,12 +856,16 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             ],
                                           ),
                                           if (playback.tracks.isNotEmpty &&
-                                              Plugins.isWebMedia(playback
-                                                  .tracks[playback.index.clamp(
-                                                      0,
-                                                      playback.tracks.length -
-                                                          1)]
-                                                  .uri))
+                                              LibmpvPluginUtils.isSupported(
+                                                  playback
+                                                      .tracks[playback
+                                                          .index
+                                                          .clamp(
+                                                              0,
+                                                              playback.tracks
+                                                                      .length -
+                                                                  1)]
+                                                      .uri))
                                             IconButton(
                                               splashRadius: 20.0,
                                               iconSize: 18.0,

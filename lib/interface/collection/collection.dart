@@ -80,20 +80,24 @@ class CollectionScreenState extends State<CollectionScreen>
         widget.floatingSearchBarController.show();
       });
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!Collection.instance.collectionDirectories
-          .map((e) => e.existsSync_())
-          .reduce((value, element) => value = value ? element : false))
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            useRootNavigator: false,
-            builder: (context) => FoldersNotFoundDialog(),
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        if (!Collection.instance.collectionDirectories
+            .map((e) => e.existsSync_())
+            .reduce((value, element) => value = value ? element : false))
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                useRootNavigator: false,
+                builder: (context) => FoldersNotFoundDialog(),
+              );
+            },
           );
-        });
-      Intent.instance.play();
-    });
+        Intent.instance.play();
+      },
+    );
     HotKeyManager.instance.register(
       searchBarHotkey,
       keyDownHandler: (_) {
