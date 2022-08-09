@@ -205,21 +205,23 @@ public class MetadataRetriever implements MethodCallHandler {
                             )
                     );
                     Log.d("Harmonoid", file.getAbsolutePath());
-                    try {
-                        byte[] embeddedPicture = retriever.getEmbeddedPicture();
-                        if (embeddedPicture != null) {
-                            // Recursively create directories to the specified album art [File] &
-                            // also create the [File] if not already present at the location.
-                            final boolean mkdirs = new File(coverDirectory[0]).mkdirs();
-                            if (!file.exists()) {
-                                final boolean created = file.createNewFile();
+                    if (!file.exists()) {
+                        try {
+                            byte[] embeddedPicture = retriever.getEmbeddedPicture();
+                            if (embeddedPicture != null) {
+                                // Recursively create directories to the specified album art [File] &
+                                // also create the [File] if not already present at the location.
+                                final boolean mkdirs = new File(coverDirectory[0]).mkdirs();
+                                if (!file.exists()) {
+                                    final boolean created = file.createNewFile();
+                                }
+                                final FileOutputStream output = new FileOutputStream(file);
+                                output.write(retriever.getEmbeddedPicture());
+                                output.close();
                             }
-                            final FileOutputStream output = new FileOutputStream(file);
-                            output.write(retriever.getEmbeddedPicture());
-                            output.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
                     retriever.release();
                     if (input != null) {
