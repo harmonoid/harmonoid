@@ -53,12 +53,6 @@ ThemeData createTheme({
         fontSize: 12.0,
         fontWeight: FontWeight.normal,
       ),
-      // Same as [headline1].
-      headline6: TextStyle(
-        color: isLight ? Colors.black : Colors.white,
-        fontSize: 16.0,
-        fontWeight: FontWeight.w600,
-      ),
 
       /// [ListTile] text theme.
       /// [ListTile.title]'s text theme must be overrided to headline4, if it does not contain subtitle.
