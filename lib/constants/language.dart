@@ -288,12 +288,11 @@ class Language extends Strings with ChangeNotifier {
     this.EXIT_TITLE = asset['EXIT_TITLE']!;
     this.EXPERIMENTAL = asset['EXPERIMENTAL']!;
     this.EXPERIMENTAL_SUBTITLE = asset['EXPERIMENTAL_SUBTITLE']!;
+    this.FILE = asset['FILE']!;
     this.FILE_INFORMATION = asset['FILE_INFORMATION']!;
     this.FILE_PATH_OR_URL = asset['FILE_PATH_OR_URL']!;
     this.FOLDERS_NOT_FOUND = asset['FOLDERS_NOT_FOUND']!;
     this.FOLDER_NOT_FOUND = asset['FOLDER_NOT_FOUND']!;
-    this.FROM_FILE = asset['FROM_FILE']!;
-    this.FROM_URL = asset['FROM_URL']!;
     this.FULLSCREEN = asset['FULLSCREEN']!;
     this.GENRE = asset['GENRE']!;
     this.GO_TO_SETTINGS = asset['GO_TO_SETTINGS']!;
@@ -340,7 +339,6 @@ class Language extends Strings with ChangeNotifier {
     this.NO_PLAYLISTS_FOUND = asset['NO_PLAYLISTS_FOUND']!;
     this.N_TRACKS = asset['N_TRACKS']!;
     this.OK = asset['OK']!;
-    this.OPEN_FILE = asset['OPEN_FILE']!;
     this.OPEN_FILE_OR_URL = asset['OPEN_FILE_OR_URL']!;
     this.OPEN_IN_BROWSER = asset['OPEN_IN_BROWSER']!;
     this.OPTIONS = asset['OPTIONS']!;
@@ -460,6 +458,7 @@ class Language extends Strings with ChangeNotifier {
     this.UNHIGHLIGHTED_LYRICS_SIZE = asset['UNHIGHLIGHTED_LYRICS_SIZE']!;
     this.UNMUTE = asset['UNMUTE']!;
     this.UPDATE_AVAILABLE = asset['UPDATE_AVAILABLE']!;
+    this.URL = asset['URL']!;
     this.USE_MODERN_NOW_PLAYING_SCREEN = asset['USE_MODERN_NOW_PLAYING_SCREEN']!;
     this.USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS = asset['USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS']!;
     this.VALUE = asset['VALUE']!;

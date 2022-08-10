@@ -84,12 +84,11 @@ class Strings {
   late String EXIT_TITLE;
   late String EXPERIMENTAL;
   late String EXPERIMENTAL_SUBTITLE;
+  late String FILE;
   late String FILE_INFORMATION;
   late String FILE_PATH_OR_URL;
   late String FOLDERS_NOT_FOUND;
   late String FOLDER_NOT_FOUND;
-  late String FROM_FILE;
-  late String FROM_URL;
   late String FULLSCREEN;
   late String GENRE;
   late String GO_TO_SETTINGS;
@@ -136,7 +135,6 @@ class Strings {
   late String NO_PLAYLISTS_FOUND;
   late String N_TRACKS;
   late String OK;
-  late String OPEN_FILE;
   late String OPEN_FILE_OR_URL;
   late String OPEN_IN_BROWSER;
   late String OPTIONS;
@@ -256,6 +254,7 @@ class Strings {
   late String UNHIGHLIGHTED_LYRICS_SIZE;
   late String UNMUTE;
   late String UPDATE_AVAILABLE;
+  late String URL;
   late String USE_MODERN_NOW_PLAYING_SCREEN;
   late String USE_THESE_CHARACTERS_TO_SEPARATE_ARTISTS;
   late String VALUE;
