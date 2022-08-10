@@ -30,7 +30,7 @@ import 'package:harmonoid/utils/argument_vector_handler.dart';
 import 'package:harmonoid/utils/window_close_handler.dart';
 
 const String kTitle = 'Harmonoid';
-const String kVersion = 'v0.2.7';
+const String kVersion = 'v0.2.8';
 const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 

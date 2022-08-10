@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Harmonoid"
-#define MyAppVersion "0.2.7.0"
+#define MyAppVersion "0.2.8.0"
 #define MyAppPublisher "Hitesh Kumar Saini"
 #define MyAppURL "https://github.com/harmonoid/harmonoid"
 #define MyAppExeName "harmonoid.exe"
