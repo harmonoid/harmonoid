@@ -808,7 +808,7 @@ class _FloatingSearchBarWebSearchScreenState
           actions: [
             FloatingSearchBarAction(
               showIfOpened: false,
-              child: contextMenu(context),
+              child: WebMobileAppBarOverflowButton(),
             ),
             FloatingSearchBarAction.searchToClear(
               showIfClosed: false,

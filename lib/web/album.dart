@@ -856,12 +856,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                             iconSize: 24.0,
                             splashRadius: 20.0,
                           ),
-                          contextMenu(
-                            context,
-                            color: Theme.of(context)
-                                .extension<IconColors>()
-                                ?.appBarActionDarkIconColor,
-                          ),
+                          WebMobileAppBarOverflowButton(),
                           const SizedBox(width: 8.0),
                         ],
                         forceElevated: true,
@@ -955,51 +950,64 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                       opacity: value,
                                       child: GestureDetector(
                                         onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => AlertDialog(
-                                              title:
-                                                  Text(widget.album.albumName),
-                                              contentPadding:
-                                                  EdgeInsets.only(top: 20.0),
-                                              content: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  const Divider(height: 1.0),
-                                                  ConstrainedBox(
-                                                    constraints: BoxConstraints(
-                                                      maxHeight: 360.0,
+                                          if (widget
+                                              .album.description.isNotEmpty) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: Text(
+                                                    widget.album.albumName),
+                                                contentPadding:
+                                                    EdgeInsets.only(top: 20.0),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    const Divider(
+                                                      height: 1.0,
+                                                      thickness: 1.0,
                                                     ),
-                                                    child:
-                                                        SingleChildScrollView(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                        horizontal: 24.0,
-                                                        vertical: 16.0,
+                                                    ConstrainedBox(
+                                                      constraints:
+                                                          BoxConstraints(
+                                                        maxHeight: 360.0,
                                                       ),
-                                                      child: Text(
-                                                        widget
-                                                            .album.description,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline3,
+                                                      child:
+                                                          SingleChildScrollView(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 24.0,
+                                                          vertical: 16.0,
+                                                        ),
+                                                        child: Text(
+                                                          widget.album
+                                                              .description,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline3,
+                                                        ),
                                                       ),
+                                                    ),
+                                                    const Divider(
+                                                      height: 1.0,
+                                                      thickness: 1.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed:
+                                                        Navigator.of(context)
+                                                            .pop,
+                                                    child: Text(
+                                                      Language.instance.OK,
                                                     ),
                                                   ),
-                                                  const Divider(height: 1.0),
                                                 ],
                                               ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed:
-                                                      Navigator.of(context).pop,
-                                                  child: Text(
-                                                    Language.instance.OK,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
+                                            );
+                                          }
                                         },
                                         child: Container(
                                           color: Colors.grey.shade900,

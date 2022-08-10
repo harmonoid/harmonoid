@@ -775,12 +775,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                         iconSize: 24.0,
                         splashRadius: 20.0,
                       ),
-                      contextMenu(
-                        context,
-                        color: Theme.of(context)
-                            .extension<IconColors>()
-                            ?.appBarActionDarkIconColor,
-                      ),
+                      WebMobileAppBarOverflowButton(),
                     ],
                     systemOverlayStyle: SystemUiOverlayStyle(
                       statusBarColor: Colors.transparent,

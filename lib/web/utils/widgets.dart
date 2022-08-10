@@ -12,15 +12,18 @@ import 'package:ytm_client/ytm_client.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:media_library/media_library.dart' as media;
 import 'package:substring_highlight/substring_highlight.dart';
-
-import 'package:harmonoid/web/web.dart';
-import 'package:harmonoid/web/state/web.dart';
-import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/core/hotkeys.dart';
-import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/utils/rendering.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/interface/settings/about.dart';
+import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/web/web.dart';
+import 'package:harmonoid/web/state/web.dart';
 
 class WebSearchBar extends StatefulWidget {
   final String? query;
@@ -843,6 +846,103 @@ class _PlaylistImportBottomSheetState extends State<PlaylistImportBottomSheet> {
             ),
         ],
       ),
+    );
+  }
+}
+
+class WebMobileAppBarOverflowButton extends StatefulWidget {
+  final Color? color;
+  WebMobileAppBarOverflowButton({
+    Key? key,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  State<WebMobileAppBarOverflowButton> createState() =>
+      _WebMobileAppBarOverflowButtonState();
+}
+
+class _WebMobileAppBarOverflowButtonState
+    extends State<WebMobileAppBarOverflowButton> {
+  @override
+  Widget build(BuildContext context) {
+    return CircularButton(
+      icon: Icon(
+        Icons.more_vert,
+        color: widget.color ??
+            Theme.of(context).appBarTheme.actionsIconTheme?.color,
+      ),
+      onPressed: () {
+        final position = RelativeRect.fromRect(
+          Offset(
+                MediaQuery.of(context).size.width - tileMargin - 48.0,
+                MediaQuery.of(context).padding.top +
+                    kMobileSearchBarHeight +
+                    2 * tileMargin,
+              ) &
+              Size(160.0, 160.0),
+          Rect.fromLTWH(
+            0,
+            0,
+            MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height,
+          ),
+        );
+        showMenu<int>(
+          context: context,
+          position: position,
+          elevation: 4.0,
+          items: [
+            PopupMenuItem(
+              value: 0,
+              child: ListTile(
+                leading: Icon(Icons.settings),
+                title: Text(Language.instance.SETTING),
+              ),
+            ),
+            PopupMenuItem(
+              value: 1,
+              child: ListTile(
+                leading: Icon(Icons.info),
+                title: Text(Language.instance.ABOUT_TITLE),
+              ),
+            ),
+          ],
+        ).then((value) {
+          switch (value) {
+            case 0:
+              {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: Settings(),
+                    ),
+                  ),
+                );
+                break;
+              }
+            case 1:
+              {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: AboutPage(),
+                    ),
+                  ),
+                );
+                break;
+              }
+          }
+        });
+      },
     );
   }
 }
