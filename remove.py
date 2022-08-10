@@ -3,9 +3,9 @@ import sys
 import json
 
 if __name__ == "__main__":
-    string, value = sys.argv[1], sys.argv[2]
+    string = sys.argv[1]
     keys = []
-    if input(f"Add {string} = {value}?\n") in ["y", "Y"]:
+    if input(f"Remove {string}?\n") in ["y", "Y"]:
         file_names = os.listdir("assets/translations")
         for file_name in file_names:
             with open(
@@ -15,7 +15,8 @@ if __name__ == "__main__":
                 errors="ignore",
             ) as file:
                 language = dict(json.loads(file.read()))
-                language[string] = value
+                file.close()
+                language.pop(string)
                 keys = list(language.keys())
                 with open(
                     f"assets/translations/{file_name}",
