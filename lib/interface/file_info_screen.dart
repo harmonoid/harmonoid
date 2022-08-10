@@ -6,25 +6,27 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:convert';
+import 'package:path/path.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
-import 'package:path/path.dart';
 import 'package:libmpv/libmpv.dart';
+import 'package:media_library/media_library.dart' hide Media;
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:media_library/media_library.dart' hide Media;
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class FileInfoScreen extends StatefulWidget {
   static Future<void> show(
     BuildContext context, {
     Uri? uri,
-    Duration timeout: const Duration(seconds: 10),
+    Duration timeout: const Duration(days: 1),
   }) async {
-    if (isDesktop) {
-      if (uri != null) {
+    if (uri != null) {
+      // Show [Dialog] on desktop & use [showGeneralDialog] on mobile.
+      if (isDesktop) {
         await showDialog(
           context: context,
           builder: (context) => Dialog(
@@ -37,71 +39,87 @@ class FileInfoScreen extends StatefulWidget {
             insetPadding: EdgeInsets.all(64.0),
           ),
         );
-      } else {
-        await showDialog(
+      } else if (isMobile) {
+        await showGeneralDialog(
+          useRootNavigator: false,
           context: context,
-          builder: (ctx) => SimpleDialog(
-            title: Text(
-              Language.instance.READ_METADATA,
-            ),
-            children: [
-              ListTile(
-                onTap: () async {
-                  final file = await pickFile(
-                    label: Language.instance.MEDIA_FILES,
-                    extensions: kSupportedFileTypes,
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return FileInfoScreen(
+              uri: uri!,
+              timeout: timeout,
+            );
+          },
+        );
+      }
+    } else {
+      await showDialog(
+        context: context,
+        builder: (ctx) => SimpleDialog(
+          title: Text(
+            Language.instance.READ_METADATA,
+          ),
+          children: [
+            ListTile(
+              onTap: () async {
+                final file = await pickFile(
+                  label: Language.instance.MEDIA_FILES,
+                  extensions: kSupportedFileTypes,
+                );
+                debugPrint(file.toString());
+                if (file != null) {
+                  await Navigator.of(ctx).maybePop();
+                  await show(
+                    context,
+                    uri: file.uri,
+                    timeout: timeout,
                   );
-                  debugPrint(file.toString());
-                  if (file != null) {
-                    await Navigator.of(ctx).maybePop();
-                    await show(
-                      context,
-                      uri: file.uri,
-                      timeout: timeout,
-                    );
-                  }
-                },
-                leading: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Theme.of(ctx).iconTheme.color,
-                  child: Icon(
-                    Icons.folder,
-                  ),
-                ),
-                title: Text(
-                  Language.instance.FROM_FILE,
-                  style: Theme.of(ctx).textTheme.headline4,
+                }
+              },
+              leading: CircleAvatar(
+                backgroundColor: Colors.transparent,
+                foregroundColor: Theme.of(ctx).iconTheme.color,
+                child: Icon(
+                  Icons.folder,
                 ),
               ),
-              ListTile(
-                onTap: () async {
-                  await Navigator.of(ctx).maybePop();
-                  final controller = TextEditingController();
-                  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+              title: Text(
+                Language.instance.FILE,
+                style: Theme.of(ctx).textTheme.headline3?.copyWith(
+                      fontSize: 16.0,
+                    ),
+              ),
+            ),
+            ListTile(
+              onTap: () async {
+                await Navigator.of(ctx).maybePop();
+                final controller = TextEditingController();
+                final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-                  Future<void> showFileInfoScreen(
-                    BuildContext ctx,
-                    String text,
-                    Duration timeout,
-                  ) async {
-                    if (text.isNotEmpty &&
-                        (formKey.currentState?.validate() ?? false)) {
-                      uri = validate(text);
-                      if (uri != null) {
-                        debugPrint(uri.toString());
-                        Navigator.of(ctx).maybePop();
-                        // Yeah! That's recursion.
-                        await show(
-                          context,
-                          uri: uri,
-                          timeout: timeout,
-                        );
-                      }
+                Future<void> showFileInfoScreen(
+                  BuildContext ctx,
+                  String text,
+                  Duration timeout,
+                ) async {
+                  if (text.isNotEmpty &&
+                      (formKey.currentState?.validate() ?? false)) {
+                    uri = validate(text);
+                    if (uri != null) {
+                      debugPrint(uri.toString());
+                      Navigator.of(ctx).maybePop();
+                      // Yeah! That's recursion.
+                      await show(
+                        context,
+                        uri: uri,
+                        timeout: timeout,
+                      );
                     }
                   }
+                }
 
+                // Show [AlertDialog] on desktop & [showModalBottomSheet] on mobile.
+                if (isDesktop) {
                   await showDialog(
-                    context: ctx,
+                    context: context,
                     builder: (ctx) => AlertDialog(
                       title: Text(
                         Language.instance.READ_METADATA,
@@ -127,16 +145,6 @@ class FileInfoScreen extends StatefulWidget {
                               child: Form(
                                 key: formKey,
                                 child: TextFormField(
-                                  autofocus: true,
-                                  controller: controller,
-                                  cursorWidth: 1.0,
-                                  onFieldSubmitted: (String value) async {
-                                    await showFileInfoScreen(
-                                      ctx,
-                                      value,
-                                      timeout,
-                                    );
-                                  },
                                   validator: (value) {
                                     final error = value == null
                                         ? null
@@ -146,6 +154,16 @@ class FileInfoScreen extends StatefulWidget {
                                     debugPrint(error.toString());
                                     return error;
                                   },
+                                  autofocus: true,
+                                  controller: controller,
+                                  cursorWidth: 1.0,
+                                  onFieldSubmitted: (String value) async {
+                                    await showFileInfoScreen(
+                                      context,
+                                      value,
+                                      timeout,
+                                    );
+                                  },
                                   cursorColor: Theme.of(ctx).brightness ==
                                           Brightness.light
                                       ? Colors.black
@@ -153,7 +171,7 @@ class FileInfoScreen extends StatefulWidget {
                                   textAlignVertical: TextAlignVertical.bottom,
                                   style: Theme.of(ctx).textTheme.headline4,
                                   decoration: inputDecoration(
-                                    ctx,
+                                    context,
                                     Language.instance.FILE_PATH_OR_URL,
                                   ).copyWith(
                                     errorMaxLines: 1,
@@ -172,7 +190,7 @@ class FileInfoScreen extends StatefulWidget {
                           ),
                           onPressed: () async {
                             await showFileInfoScreen(
-                              ctx,
+                              context,
                               controller.text,
                               timeout,
                             );
@@ -187,25 +205,132 @@ class FileInfoScreen extends StatefulWidget {
                       ],
                     ),
                   );
-                },
-                leading: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Theme.of(ctx).iconTheme.color,
-                  child: Icon(
-                    Icons.link,
-                  ),
-                ),
-                title: Text(
-                  Language.instance.FROM_URL,
-                  style: Theme.of(ctx).textTheme.headline4,
+                } else {
+                  await showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    elevation: 8.0,
+                    useRootNavigator: true,
+                    backgroundColor: Theme.of(context).cardColor,
+                    builder: (context) => StatefulBuilder(
+                      builder: (context, setState) {
+                        return Container(
+                          margin: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom -
+                                MediaQuery.of(context).padding.bottom,
+                          ),
+                          padding: EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const SizedBox(height: 4.0),
+                              Form(
+                                key: formKey,
+                                child: TextFormField(
+                                  autofocus: true,
+                                  autocorrect: false,
+                                  validator: (value) {
+                                    final error = value == null
+                                        ? null
+                                        : validate(value) == null
+                                            ? ''
+                                            : null;
+                                    debugPrint(error.toString());
+                                    return error;
+                                  },
+                                  controller: controller,
+                                  keyboardType: TextInputType.url,
+                                  textCapitalization: TextCapitalization.none,
+                                  textInputAction: TextInputAction.done,
+                                  onFieldSubmitted: (value) async {
+                                    await showFileInfoScreen(
+                                      context,
+                                      controller.text,
+                                      timeout,
+                                    );
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.fromLTRB(
+                                      12,
+                                      30,
+                                      12,
+                                      6,
+                                    ),
+                                    hintText:
+                                        Language.instance.FILE_PATH_OR_URL,
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .iconTheme
+                                            .color!
+                                            .withOpacity(0.4),
+                                        width: 1.8,
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .iconTheme
+                                            .color!
+                                            .withOpacity(0.4),
+                                        width: 1.8,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context).primaryColor,
+                                        width: 1.8,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 4.0),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  await showFileInfoScreen(
+                                    context,
+                                    controller.text,
+                                    timeout,
+                                  );
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                    Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                child: Text(
+                                  Language.instance.READ.toUpperCase(),
+                                  style: TextStyle(letterSpacing: 2.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+              },
+              leading: CircleAvatar(
+                backgroundColor: Colors.transparent,
+                foregroundColor: Theme.of(ctx).iconTheme.color,
+                child: Icon(
+                  Icons.link,
                 ),
               ),
-            ],
-          ),
-        );
-      }
+              title: Text(
+                Language.instance.URL,
+                style: Theme.of(ctx).textTheme.headline3?.copyWith(
+                      fontSize: 16.0,
+                    ),
+              ),
+            ),
+          ],
+        ),
+      );
     }
-    // TODO: Mobile support.
   }
 
   final Uri uri;
@@ -256,9 +381,11 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
               await Collection.instance.retrievePlatformSpecificMetadataFromUri(
             widget.uri,
             Collection.instance.albumArtDirectory,
+            timeout: widget.timeout,
+            waitUntilAlbumArtIsSaved: true,
           );
           this.metadata.addAll(metadata.toJson());
-          track = Track.fromTagger(this.metadata);
+          track = Track.fromJson(this.metadata);
           cleanup();
           setState(() {});
         } catch (exception, stacktrace) {
@@ -282,6 +409,8 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
   }
 
   void cleanup() {
+    final durationDivisor = isDesktop ? 1000 : 1;
+    final bitrateDivisor = isDesktop ? 1e9 : 1000;
     metadata.removeWhere((key, value) => key.toUpperCase() == key);
     if (metadata.isNotEmpty) {
       if (metadata.containsKey('duration')) {
@@ -290,7 +419,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
             milliseconds: (metadata['duration'] is int
                     ? metadata['duration']
                     : int.parse(metadata['duration'])) ~/
-                1000,
+                durationDivisor,
           ).toString();
         } catch (exception, stacktrace) {
           debugPrint(exception.toString());
@@ -300,7 +429,7 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
       if (metadata.containsKey('bitrate')) {
         try {
           metadata['bitrate'] =
-              '${(metadata['bitrate'] is int ? metadata['bitrate'] : int.parse(metadata['bitrate'])) ~/ 1e9} kbps';
+              '${(metadata['bitrate'] is int ? metadata['bitrate'] : int.parse(metadata['bitrate'])) ~/ bitrateDivisor} kbps';
         } catch (exception, stacktrace) {
           debugPrint(exception.toString());
           debugPrint(stacktrace.toString());
@@ -311,158 +440,230 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: isDesktop ? 960.0 : double.infinity,
-        maxHeight: isDesktop ? 640.0 : double.infinity,
-      ),
-      child: metadata.isEmpty
-          ? Container(
-              constraints: BoxConstraints(
-                maxWidth: isDesktop ? 640.0 : double.infinity,
-                maxHeight: isDesktop ? 480.0 : double.infinity,
-              ),
-              child: Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(
-                    Theme.of(context).primaryColor,
+    final data = DataTable(
+      columns: [
+        DataColumn(
+          label: Text(Language.instance.PROPERTY),
+        ),
+        DataColumn(
+          label: Text(Language.instance.VALUE),
+        ),
+        DataColumn(
+          label: Text(''),
+        ),
+      ],
+      rows: metadata.entries
+          .map(
+            (e) => DataRow(
+              cells: [
+                DataCell(
+                  Text(
+                    e.key.toString(),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
                 ),
-              ),
-            )
-          : IntrinsicWidth(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                DataCell(
                   Container(
-                    padding: EdgeInsets.all(20.0),
-                    child: Flex(
-                      direction: Axis.horizontal,
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    constraints: BoxConstraints(
+                      maxWidth: isDesktop ? 420.0 : double.infinity,
+                    ),
+                    child: Tooltip(
+                      message: e.value.toString(),
+                      child: Text(
+                        e.value.toString().overflow,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
+                ),
+                DataCell(
+                  IconButton(
+                    onPressed: () {
+                      Clipboard.setData(
+                        ClipboardData(
+                          text: e.value.toString(),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.copy),
+                    iconSize: 18.0,
+                    splashRadius: 18.0,
+                  ),
+                ),
+              ],
+            ),
+          )
+          .toList(),
+    );
+    return isDesktop
+        ? Container(
+            constraints: BoxConstraints(
+              maxWidth: isDesktop ? 960.0 : double.infinity,
+              maxHeight: isDesktop ? 640.0 : double.infinity,
+            ),
+            child: metadata.isEmpty
+                ? Container(
+                    constraints: BoxConstraints(
+                      maxWidth: isDesktop ? 640.0 : double.infinity,
+                      maxHeight: isDesktop ? 480.0 : double.infinity,
+                    ),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(
+                          Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                  )
+                : IntrinsicWidth(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Flexible(
-                          fit: FlexFit.tight,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        Container(
+                          padding: EdgeInsets.all(20.0),
+                          child: Flex(
+                            direction: Axis.horizontal,
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                Language.instance.FILE_INFORMATION,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    ?.copyWith(
-                                      fontSize: 24.0,
+                              Flexible(
+                                fit: FlexFit.tight,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      Language.instance.FILE_INFORMATION,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline1
+                                          ?.copyWith(
+                                            fontSize: 24.0,
+                                          ),
                                     ),
+                                    Text(
+                                      !widget.uri.isScheme('FILE')
+                                          ? widget.uri.toString()
+                                          : basename(widget.uri.toFilePath()),
+                                      style:
+                                          Theme.of(context).textTheme.headline3,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Text(
-                                !widget.uri.isScheme('FILE')
-                                    ? widget.uri.toString()
-                                    : basename(widget.uri.toFilePath()),
-                                style: Theme.of(context).textTheme.headline3,
+                              const SizedBox(width: 20.0),
+                              TextButton(
+                                onPressed: () {
+                                  Clipboard.setData(
+                                    ClipboardData(
+                                      text: const JsonEncoder.withIndent('    ')
+                                          .convert(metadata),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  Language.instance.COPY_AS_JSON.toUpperCase(),
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(width: 20.0),
-                        TextButton(
-                          onPressed: () {
-                            Clipboard.setData(
-                              ClipboardData(
-                                text: const JsonEncoder.withIndent('    ')
-                                    .convert(metadata),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            Language.instance.COPY_AS_JSON.toUpperCase(),
+                        Divider(
+                          height: 1.0,
+                        ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                if (track != null)
+                                  Padding(
+                                    padding: EdgeInsets.all(20.0),
+                                    child: Image(
+                                      image: getAlbumArt(track!),
+                                      height: 200.0,
+                                    ),
+                                  ),
+                                data,
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Divider(
-                    height: 1.0,
-                  ),
-                  Expanded(
+          )
+        : Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                onPressed: Navigator.of(context).maybePop,
+                icon: Icon(Icons.close),
+              ),
+              title: Text(Language.instance.FILE_INFORMATION),
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+            floatingActionButton: track == null
+                ? FloatingActionButton(
+                    onPressed: () {
+                      Clipboard.setData(
+                        ClipboardData(
+                          text: const JsonEncoder.withIndent('    ')
+                              .convert(metadata),
+                        ),
+                      );
+                    },
+                    child: Icon(Icons.copy_all),
+                    tooltip: Language.instance.COPY_AS_JSON,
+                  )
+                : null,
+            body: metadata.isEmpty
+                ? Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(
+                        Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  )
+                : NowPlayingBarScrollHideNotifier(
                     child: SingleChildScrollView(
-                      child: Column(
+                      child: Stack(
                         children: [
-                          if (track != null)
-                            Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Image(
-                                image: getAlbumArt(track!),
-                                height: 200.0,
-                              ),
-                            ),
-                          DataTable(
-                            columns: [
-                              DataColumn(
-                                label: Text(Language.instance.PROPERTY),
-                              ),
-                              DataColumn(
-                                label: Text(Language.instance.VALUE),
-                              ),
-                              DataColumn(
-                                label: Text(''),
+                          Column(
+                            children: [
+                              if (track != null)
+                                Image(
+                                  image: getAlbumArt(track!),
+                                  height: MediaQuery.of(context).size.width,
+                                  width: MediaQuery.of(context).size.width,
+                                  fit: BoxFit.cover,
+                                ),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: data,
                               ),
                             ],
-                            rows: metadata.entries
-                                .map(
-                                  (e) => DataRow(
-                                    cells: [
-                                      DataCell(
-                                        Text(
-                                          e.key.toString(),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Container(
-                                          constraints: BoxConstraints(
-                                            maxWidth: isDesktop
-                                                ? 420.0
-                                                : double.infinity,
-                                          ),
-                                          child: Tooltip(
-                                            message: e.value.toString(),
-                                            child: Text(
-                                              e.value.toString().overflow,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      if (isDesktop)
-                                        DataCell(
-                                          IconButton(
-                                            onPressed: () {
-                                              Clipboard.setData(
-                                                ClipboardData(
-                                                  text: e.value.toString(),
-                                                ),
-                                              );
-                                            },
-                                            icon: Icon(Icons.copy),
-                                            iconSize: 18.0,
-                                            splashRadius: 18.0,
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                )
-                                .toList(),
                           ),
+                          if (track != null)
+                            Positioned(
+                              top: MediaQuery.of(context).size.width - 28.0,
+                              right: 28.0,
+                              child: FloatingActionButton(
+                                onPressed: () {
+                                  Clipboard.setData(
+                                    ClipboardData(
+                                      text: const JsonEncoder.withIndent('    ')
+                                          .convert(metadata),
+                                    ),
+                                  );
+                                },
+                                child: Icon(Icons.copy_all),
+                                tooltip: Language.instance.COPY_AS_JSON,
+                              ),
+                            ),
                         ],
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-    );
+          );
   }
 }
