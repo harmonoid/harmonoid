@@ -119,6 +119,10 @@ public class MetadataRetriever implements MethodCallHandler {
         if (call.method.equals("MetadataRetriever")) {
             final String[] uri = {call.argument("uri")};
             final String[] coverDirectory = {call.argument("coverDirectory")};
+            final Boolean[] waitUntilAlbumArtIsSaved = {call.argument("waitUntilAlbumArtIsSaved")};
+            if (waitUntilAlbumArtIsSaved[0] == null) {
+                waitUntilAlbumArtIsSaved[0] = false;
+            }
             if (uri[0] != null) {
                 Log.d("Harmonoid", uri[0]);
             }
@@ -130,7 +134,7 @@ public class MetadataRetriever implements MethodCallHandler {
                 try {
                     // Only used for `file://` scheme.
                     FileInputStream input = null;
-                    HashMap<String, Object> metadata = new HashMap<>();
+                    HashMap<String, Object> metadata;
                     // Handle `file://`.
                     if (uri[0].toLowerCase().startsWith("file://")) {
                         input = new FileInputStream(Uri.parse(uri[0]).getPath());
@@ -140,14 +144,22 @@ public class MetadataRetriever implements MethodCallHandler {
                         metadata.put("uri", uri[0]);
                         // Return the metadata.
                         final HashMap<String, Object> response = metadata;
-                        new Handler(
-                                Looper.getMainLooper()).post(() -> result.success(response)
-                        );
+                        if (!waitUntilAlbumArtIsSaved[0]) {
+                            new Handler(
+                                    Looper.getMainLooper()).post(() -> result.success(response)
+                            );
+                        }
                     } else {
                         // Handle other URI schemes. Expected to be network URLs. Hope for the best!
                         retriever.setDataSource(uri[0], new HashMap<>());
                         metadata = retriever.getMetadata();
                         metadata.put("uri", uri[0]);
+                        final HashMap<String, Object> response = metadata;
+                        if (!waitUntilAlbumArtIsSaved[0]) {
+                            new Handler(
+                                    Looper.getMainLooper()).post(() -> result.success(response)
+                            );
+                        }
                     }
                     // Now proceed to save the album art in background.
                     String trackName = (String) metadata.get("trackName");
@@ -219,13 +231,26 @@ public class MetadataRetriever implements MethodCallHandler {
                                 output.write(retriever.getEmbeddedPicture());
                                 output.close();
                             }
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-                    retriever.release();
-                    if (input != null) {
-                        input.close();
+                    try {
+                        retriever.release();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        if (input != null) {
+                            input.close();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (waitUntilAlbumArtIsSaved[0]) {
+                        new Handler(
+                                Looper.getMainLooper()).post(() -> result.success(metadata)
+                        );
                     }
                 }
                 // Return fallback [metadata] [HashMap], with only [uri] key present inside it.
