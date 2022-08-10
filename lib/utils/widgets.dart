@@ -564,7 +564,7 @@ class ExceptionWidget extends StatelessWidget {
             title!,
             style: Theme.of(context).textTheme.headline1?.copyWith(
                   fontSize: 20.0,
-                  fontWeight: isDesktop ? null : FontWeight.w700,
+                  fontWeight: isDesktop ? null : FontWeight.normal,
                 ),
             textAlign: TextAlign.center,
           ),
@@ -2053,6 +2053,11 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                 ),
                 title: Text(
                   Language.instance.FILE,
+                  style: isDesktop
+                      ? Theme.of(ctx).textTheme.headline4
+                      : Theme.of(ctx).textTheme.headline3?.copyWith(
+                            fontSize: 16.0,
+                          ),
                 ),
               ),
               ListTile(
@@ -2158,7 +2163,12 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                   ),
                 ),
                 title: Text(
-                  Language.instance.PLAY_URL,
+                  Language.instance.URL,
+                  style: isDesktop
+                      ? Theme.of(ctx).textTheme.headline4
+                      : Theme.of(ctx).textTheme.headline3?.copyWith(
+                            fontSize: 16.0,
+                          ),
                 ),
               ),
             ],
@@ -2590,20 +2600,198 @@ class _MobileAppBarOverflowButtonState
               ),
             ),
           ],
-        ).then((value) {
+        ).then((value) async {
           switch (value) {
             case 0:
               {
+                await showDialog(
+                  context: context,
+                  builder: (ctx) => SimpleDialog(
+                    title: Text(
+                      Language.instance.OPEN_FILE_OR_URL,
+                    ),
+                    children: [
+                      ListTile(
+                        onTap: () async {
+                          final file = await pickFile(
+                            label: Language.instance.MEDIA_FILES,
+                            extensions: kSupportedFileTypes,
+                          );
+                          if (file != null) {
+                            await Navigator.of(ctx).maybePop();
+                            await Intent.instance.playUri(file.uri);
+                          }
+                        },
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Theme.of(ctx).iconTheme.color,
+                          child: Icon(
+                            Icons.folder,
+                          ),
+                        ),
+                        title: Text(
+                          Language.instance.FILE,
+                          style: isDesktop
+                              ? Theme.of(ctx).textTheme.headline4
+                              : Theme.of(ctx).textTheme.headline3?.copyWith(
+                                    fontSize: 16.0,
+                                  ),
+                        ),
+                      ),
+                      ListTile(
+                        onTap: () async {
+                          await Navigator.of(ctx).maybePop();
+                          String input = '';
+                          final GlobalKey<FormState> formKey =
+                              GlobalKey<FormState>();
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            elevation: 8.0,
+                            useRootNavigator: true,
+                            backgroundColor: Theme.of(context).cardColor,
+                            builder: (context) => StatefulBuilder(
+                              builder: (context, setState) {
+                                return Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context)
+                                            .viewInsets
+                                            .bottom -
+                                        MediaQuery.of(context).padding.bottom,
+                                  ),
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      const SizedBox(height: 4.0),
+                                      Form(
+                                        key: formKey,
+                                        child: TextFormField(
+                                          autofocus: true,
+                                          autocorrect: false,
+                                          validator: (value) {
+                                            final error = value == null
+                                                ? null
+                                                : validate(value) == null
+                                                    ? ''
+                                                    : null;
+                                            debugPrint(error.toString());
+                                            return error;
+                                          },
+                                          onChanged: (value) => input = value,
+                                          keyboardType: TextInputType.url,
+                                          textCapitalization:
+                                              TextCapitalization.none,
+                                          textInputAction: TextInputAction.done,
+                                          onFieldSubmitted: (value) async {
+                                            if (formKey.currentState
+                                                    ?.validate() ??
+                                                false) {
+                                              await Navigator.of(context)
+                                                  .maybePop();
+                                              await Intent.instance
+                                                  .playUri(validate(value)!);
+                                            }
+                                          },
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.fromLTRB(
+                                              12,
+                                              30,
+                                              12,
+                                              6,
+                                            ),
+                                            hintText: Language
+                                                .instance.FILE_PATH_OR_URL,
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color!
+                                                    .withOpacity(0.4),
+                                                width: 1.8,
+                                              ),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color!
+                                                    .withOpacity(0.4),
+                                                width: 1.8,
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                width: 1.8,
+                                              ),
+                                            ),
+                                            errorStyle: TextStyle(height: 0.0),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4.0),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          if (formKey.currentState
+                                                  ?.validate() ??
+                                              false) {
+                                            await Navigator.of(context)
+                                                .maybePop();
+                                            await Intent.instance
+                                                .playUri(validate(input)!);
+                                          }
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          Language.instance.PLAY.toUpperCase(),
+                                          style: TextStyle(letterSpacing: 2.0),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Theme.of(ctx).iconTheme.color,
+                          child: Icon(
+                            Icons.link,
+                          ),
+                        ),
+                        title: Text(
+                          Language.instance.URL,
+                          style: isDesktop
+                              ? Theme.of(ctx).textTheme.headline4
+                              : Theme.of(ctx).textTheme.headline3?.copyWith(
+                                    fontSize: 16.0,
+                                  ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
                 break;
               }
             case 1:
               {
-                FileInfoScreen.show(context);
+                await FileInfoScreen.show(context);
                 break;
               }
             case 2:
               {
-                Navigator.push(
+                await Navigator.push(
                   context,
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
@@ -2618,7 +2806,7 @@ class _MobileAppBarOverflowButtonState
               }
             case 3:
               {
-                Navigator.push(
+                await Navigator.push(
                   context,
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>

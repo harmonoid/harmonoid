@@ -283,6 +283,7 @@ class FileInfoScreen extends StatefulWidget {
                                         width: 1.8,
                                       ),
                                     ),
+                                    errorStyle: TextStyle(height: 0.0),
                                   ),
                                 ),
                               ),
