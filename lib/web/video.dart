@@ -137,7 +137,10 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline1
-                                      ?.copyWith(color: Colors.white),
+                                      ?.copyWith(
+                                        color: Colors.white,
+                                        fontSize: isDesktop ? null : 18.0,
+                                      ),
                                   textAlign: TextAlign.left,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,

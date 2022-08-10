@@ -126,6 +126,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                           style:
                               Theme.of(context).textTheme.headline1?.copyWith(
                                     color: isDark ? Colors.white : Colors.black,
+                                    fontSize: isDesktop ? null : 18.0,
                                   ),
                           textAlign: TextAlign.left,
                           maxLines: 2,
