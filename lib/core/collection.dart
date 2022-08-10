@@ -87,16 +87,21 @@ class Collection extends MediaLibrary with ChangeNotifier {
   @override
   Future<dynamic> retrievePlatformSpecificMetadataFromUri(
     Uri uri,
-    Directory coverDirectory,
-  ) async {
+    Directory coverDirectory, {
+    // Not used by [MediaLibrary], specific to Harmonoid's source code.
+    Duration? timeout,
+    // Not used by [MediaLibrary], specific to Harmonoid's source code.
+    bool waitUntilAlbumArtIsSaved = false,
+  }) async {
     try {
       final metadata = await _kPlatformSpecificMetadataRetriever.invokeMethod(
         'MetadataRetriever',
         {
           'uri': uri.toString(),
           'coverDirectory': coverDirectory.path,
+          'waitUntilAlbumArtIsSaved': waitUntilAlbumArtIsSaved,
         },
-      ).timeout(const Duration(seconds: 2));
+      ).timeout(timeout ?? const Duration(seconds: 2));
       return _PlatformSpecificMetadata.fromJson(metadata);
     } catch (exception, stacktrace) {
       debugPrint(exception.toString());
