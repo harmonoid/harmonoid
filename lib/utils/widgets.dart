@@ -39,6 +39,7 @@ import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/interface/file_info_screen.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/web.dart';
 
@@ -1553,63 +1554,18 @@ class CorrectedSwitchListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isDesktop) {
-      return SwitchListTile(
-        value: value,
-        title: Text(
-          subtitle,
-          style: Theme.of(context).textTheme.headline4,
-        ),
-        onChanged: (value) {
-          onChanged.call(value);
-        },
-      );
-    } else {
-      return InkWell(
-        onTap: () {
-          onChanged.call(!value);
-        },
-        child: Container(
-          height: 88.0,
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.subtitle1,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4.0),
-                    Text(
-                      subtitle,
-                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                            color: Theme.of(context).textTheme.headline3?.color,
-                          ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16.0),
-              Switch(
-                value: value,
-                onChanged: (value) {
-                  onChanged.call(value);
-                },
-              ),
-            ],
-          ),
-        ),
-      );
-    }
+    return SwitchListTile(
+      value: value,
+      title: Text(
+        isDesktop ? subtitle : title,
+        style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      onChanged: (value) {
+        onChanged.call(value);
+      },
+    );
   }
 }
 
@@ -2027,7 +1983,7 @@ class CollectionMoreButton extends StatelessWidget {
           child: ListTile(
             contentPadding: EdgeInsets.zero,
             dense: true,
-            leading: Icon(Icons.data_array),
+            leading: Icon(Icons.code),
             title: Text(
               Language.instance.READ_METADATA,
               style: Theme.of(context).textTheme.headline4,
@@ -2096,8 +2052,7 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                   ),
                 ),
                 title: Text(
-                  Language.instance.OPEN_FILE,
-                  style: Theme.of(ctx).textTheme.headline4,
+                  Language.instance.FILE,
                 ),
               ),
               ListTile(
@@ -2204,7 +2159,6 @@ class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
                 ),
                 title: Text(
                   Language.instance.PLAY_URL,
-                  style: Theme.of(ctx).textTheme.headline4,
                 ),
               ),
             ],
@@ -2559,6 +2513,126 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
             ),
           ],
         );
+      },
+    );
+  }
+}
+
+class MobileAppBarOverflowButton extends StatefulWidget {
+  final Color? color;
+  MobileAppBarOverflowButton({
+    Key? key,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  State<MobileAppBarOverflowButton> createState() =>
+      _MobileAppBarOverflowButtonState();
+}
+
+class _MobileAppBarOverflowButtonState
+    extends State<MobileAppBarOverflowButton> {
+  @override
+  Widget build(BuildContext context) {
+    return CircularButton(
+      icon: Icon(
+        Icons.more_vert,
+        color: widget.color ??
+            Theme.of(context).appBarTheme.actionsIconTheme?.color,
+      ),
+      onPressed: () {
+        final position = RelativeRect.fromRect(
+          Offset(
+                MediaQuery.of(context).size.width - tileMargin - 48.0,
+                MediaQuery.of(context).padding.top +
+                    kMobileSearchBarHeight +
+                    2 * tileMargin,
+              ) &
+              Size(160.0, 160.0),
+          Rect.fromLTWH(
+            0,
+            0,
+            MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height,
+          ),
+        );
+        showMenu<int>(
+          context: context,
+          position: position,
+          elevation: 4.0,
+          items: [
+            PopupMenuItem(
+              value: 0,
+              child: ListTile(
+                leading: Icon(Icons.file_open),
+                title: Text(Language.instance.OPEN_FILE_OR_URL),
+              ),
+            ),
+            PopupMenuItem(
+              value: 1,
+              child: ListTile(
+                leading: Icon(Icons.code),
+                title: Text(Language.instance.READ_METADATA),
+              ),
+            ),
+            PopupMenuItem(
+              value: 2,
+              child: ListTile(
+                leading: Icon(Icons.settings),
+                title: Text(Language.instance.SETTING),
+              ),
+            ),
+            PopupMenuItem(
+              value: 3,
+              child: ListTile(
+                leading: Icon(Icons.info),
+                title: Text(Language.instance.ABOUT_TITLE),
+              ),
+            ),
+          ],
+        ).then((value) {
+          switch (value) {
+            case 0:
+              {
+                break;
+              }
+            case 1:
+              {
+                FileInfoScreen.show(context);
+                break;
+              }
+            case 2:
+              {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: Settings(),
+                    ),
+                  ),
+                );
+                break;
+              }
+            case 3:
+              {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: AboutPage(),
+                    ),
+                  ),
+                );
+                break;
+              }
+          }
+        });
       },
     );
   }

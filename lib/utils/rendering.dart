@@ -19,14 +19,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/home.dart';
-import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/interface/collection/album.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/interface/file_info_screen.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid/interface/edit_details_screen.dart';
@@ -690,82 +687,6 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
     );
   }
 }
-
-CircularButton contextMenu(BuildContext context, {Color? color}) =>
-    CircularButton(
-      icon: Icon(Icons.more_vert, color: color),
-      onPressed: () {
-        final position = RelativeRect.fromRect(
-          Offset(
-                MediaQuery.of(context).size.width - tileMargin - 48.0,
-                MediaQuery.of(context).padding.top +
-                    kMobileSearchBarHeight +
-                    2 * tileMargin,
-              ) &
-              Size(160.0, 160.0),
-          Rect.fromLTWH(
-            0,
-            0,
-            MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height,
-          ),
-        );
-        showMenu<int>(
-          context: context,
-          position: position,
-          elevation: 4.0,
-          items: [
-            PopupMenuItem(
-              value: 0,
-              child: ListTile(
-                leading: Icon(Icons.settings),
-                title: Text(Language.instance.SETTING),
-              ),
-            ),
-            PopupMenuItem(
-              value: 1,
-              child: ListTile(
-                leading: Icon(Icons.info),
-                title: Text(Language.instance.ABOUT_TITLE),
-              ),
-            ),
-          ],
-        ).then((value) {
-          switch (value) {
-            case 0:
-              {
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: Settings(),
-                    ),
-                  ),
-                );
-                break;
-              }
-            case 1:
-              {
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: AboutPage(),
-                    ),
-                  ),
-                );
-                break;
-              }
-          }
-        });
-      },
-    );
 
 InputDecoration inputDecoration(
   BuildContext context,

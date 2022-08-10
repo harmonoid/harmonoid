@@ -664,13 +664,7 @@ class CollectionScreenState extends State<CollectionScreen>
                         ),
                         FloatingSearchBarAction(
                           showIfOpened: false,
-                          child: contextMenu(
-                            context,
-                            color: Theme.of(context)
-                                .appBarTheme
-                                .actionsIconTheme
-                                ?.color,
-                          ),
+                          child: MobileAppBarOverflowButton(),
                         ),
                         FloatingSearchBarAction.searchToClear(
                           showIfClosed: false,
