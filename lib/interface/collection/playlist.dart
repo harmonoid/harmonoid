@@ -79,7 +79,7 @@ class PlaylistTab extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Flex(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  direction: isMobile ? Axis.vertical : Axis.horizontal,
+                  direction: Axis.horizontal,
                   children: [
                     TextButton(
                       onPressed: () {
@@ -316,7 +316,7 @@ class PlaylistTab extends StatelessWidget {
                         }
                       },
                       child: Text(
-                        Language.instance.IMPORT_PLAYLIST_TITLE.toUpperCase(),
+                        Language.instance.IMPORT.toUpperCase(),
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                         ),

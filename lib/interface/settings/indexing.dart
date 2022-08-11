@@ -10,6 +10,7 @@ import 'dart:io';
 
 import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
@@ -90,6 +91,60 @@ class IndexingState extends State<IndexingSetting>
                 title: Text(Language.instance.REINDEX),
                 subtitle: Text(Language.instance.REINDEX_SUBTITLE),
               ),
+            if (isMobile)
+              () {
+                final sizes = {
+                  0: '0 MB',
+                  512 * 1024: '512 KB',
+                  1024 * 1024: '1 MB',
+                  2 * 1024 * 1024: '2 MB',
+                  5 * 1024 * 1024: '5 MB',
+                  10 * 1024 * 1024: '10 MB',
+                  20 * 1024 * 1024: '20 MB',
+                };
+                return PopupMenuButton<int>(
+                  tooltip: '',
+                  offset: Offset(
+                    0.0,
+                    28.0,
+                  ),
+                  onSelected: (value) async {
+                    if (controller.progress != controller.total) {
+                      showProgressDialog();
+                      return;
+                    }
+                    Collection.instance.minimumFileSize = value;
+                    await Configuration.instance.save(
+                      minimumFileSize: value,
+                    );
+                    setState(() {});
+                    showShouldBeReindexedDialog();
+                  },
+                  child: ListTile(
+                    dense: false,
+                    title: Text(Language.instance.MINIMUM_FILE_SIZE),
+                    subtitle: Text(
+                      '${sizes[Configuration.instance.minimumFileSize] == null ? () {
+                          if (Configuration.instance.minimumFileSize >
+                              1024 * 1024) {
+                            return '${(Configuration.instance.minimumFileSize / (1024 * 1024)).toStringAsFixed(2)} MB';
+                          } else {
+                            return '${(Configuration.instance.minimumFileSize / 1024).toStringAsFixed(2)} KB';
+                          }
+                        }() : sizes[Configuration.instance.minimumFileSize]}',
+                    ),
+                  ),
+                  elevation: 4.0,
+                  itemBuilder: (ctx) => sizes.entries
+                      .map(
+                        (e) => PopupMenuItem(
+                          child: Text(e.value),
+                          value: e.key,
+                        ),
+                      )
+                      .toList(),
+                );
+              }(),
             Container(
               margin: EdgeInsets.only(left: 8.0, right: 8.0),
               child: Column(
@@ -477,6 +532,28 @@ class IndexingState extends State<IndexingSetting>
         ),
       );
     }
+  }
+
+  void showShouldBeReindexedDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).cardColor,
+        title: Text(
+          Language.instance.WARNING,
+        ),
+        content: Text(
+          Language.instance.MINIMUM_FILE_SIZE_WARNING,
+          style: Theme.of(context).textTheme.headline3,
+        ),
+        actions: [
+          TextButton(
+            onPressed: Navigator.of(context).pop,
+            child: Text(Language.instance.OK),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

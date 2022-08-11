@@ -17,6 +17,7 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/interface/settings/about.dart';
@@ -870,7 +871,9 @@ class _WebMobileAppBarOverflowButtonState
       icon: Icon(
         Icons.more_vert,
         color: widget.color ??
-            Theme.of(context).appBarTheme.actionsIconTheme?.color,
+            Theme.of(context)
+                .extension<IconColors>()
+                ?.appBarActionDarkIconColor,
       ),
       onPressed: () {
         final position = RelativeRect.fromRect(

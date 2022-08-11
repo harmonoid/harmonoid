@@ -104,6 +104,7 @@ class Configuration extends ConfigurationKeys {
     OrderType? tracksOrderType,
     OrderType? artistsOrderType,
     OrderType? genresOrderType,
+    int? minimumFileSize,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -202,6 +203,9 @@ class Configuration extends ConfigurationKeys {
     if (genresOrderType != null) {
       this.genresOrderType = genresOrderType;
     }
+    if (minimumFileSize != null) {
+      this.minimumFileSize = minimumFileSize;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -241,6 +245,7 @@ class Configuration extends ConfigurationKeys {
         'tracksOrderType': this.tracksOrderType.index,
         'artistsOrderType': this.artistsOrderType.index,
         'genresOrderType': this.genresOrderType.index,
+        'minimumFileSize': this.minimumFileSize,
       },
     );
   }
@@ -299,6 +304,7 @@ class Configuration extends ConfigurationKeys {
     tracksOrderType = OrderType.values[current['tracksOrderType']];
     artistsOrderType = OrderType.values[current['artistsOrderType']];
     genresOrderType = OrderType.values[current['genresOrderType']];
+    minimumFileSize = current['minimumFileSize'];
   }
 }
 
@@ -336,6 +342,7 @@ abstract class ConfigurationKeys {
   late OrderType tracksOrderType;
   late OrderType artistsOrderType;
   late OrderType genresOrderType;
+  late int minimumFileSize;
 }
 
 Future<Map<String, dynamic>> get _defaultConfiguration async => {
@@ -386,4 +393,5 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'tracksOrderType': 0,
       'artistsOrderType': 0,
       'genresOrderType': 0,
+      'minimumFileSize': 1024 * 1024,
     };

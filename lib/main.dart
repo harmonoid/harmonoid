@@ -112,6 +112,7 @@ Future<void> main(List<String> args) async {
       tracksOrderType: Configuration.instance.tracksOrderType,
       artistsOrderType: Configuration.instance.artistsOrderType,
       genresOrderType: Configuration.instance.genresOrderType,
+      minimumFileSize: Configuration.instance.minimumFileSize,
     );
     await Collection.instance.refresh(
       onProgress: (progress, total, _) {

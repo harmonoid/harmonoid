@@ -34,6 +34,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
     required super.tracksOrderType,
     required super.artistsOrderType,
     required super.genresOrderType,
+    required super.minimumFileSize,
   });
 
   static Future<void> initialize({
@@ -47,6 +48,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
     required OrderType tracksOrderType,
     required OrderType artistsOrderType,
     required OrderType genresOrderType,
+    required int minimumFileSize,
   }) async {
     instance = await MediaLibrary.register(
       Collection(
@@ -60,6 +62,7 @@ class Collection extends MediaLibrary with ChangeNotifier {
         tracksOrderType: tracksOrderType,
         artistsOrderType: artistsOrderType,
         genresOrderType: genresOrderType,
+        minimumFileSize: minimumFileSize,
       ),
     );
     if (!await instance.unknownAlbumArt.exists_()) {
