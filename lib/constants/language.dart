@@ -300,7 +300,6 @@ class Language extends Strings with ChangeNotifier {
     this.HIDE_LYRICS = asset['HIDE_LYRICS']!;
     this.HIGHLIGHTED_LYRICS_SIZE = asset['HIGHLIGHTED_LYRICS_SIZE']!;
     this.IMAGES = asset['IMAGES']!;
-    this.IMPORT_PLAYLIST_FROM_WEB = asset['IMPORT_PLAYLIST_FROM_WEB']!;
     this.IMPORT_PLAYLIST_SUBTITLE = asset['IMPORT_PLAYLIST_SUBTITLE']!;
     this.IMPORT_PLAYLIST_TITLE = asset['IMPORT_PLAYLIST_TITLE']!;
     this.INDEXING_ALREADY_GOING_ON_SUBTITLE = asset['INDEXING_ALREADY_GOING_ON_SUBTITLE']!;
@@ -467,7 +466,6 @@ class Language extends Strings with ChangeNotifier {
     this.VISUALS_TITLE = asset['VISUALS_TITLE']!;
     this.VOLUME_BOOST = asset['VOLUME_BOOST']!;
     this.WARNING = asset['WARNING']!;
-    this.WEB = asset['WEB']!;
     this.WEB_INTERNET_ERROR = asset['WEB_INTERNET_ERROR']!;
     this.WEB_NO_RESULTS = asset['WEB_NO_RESULTS']!;
     this.WEB_WELCOME = asset['WEB_WELCOME']!;

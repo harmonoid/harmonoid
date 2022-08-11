@@ -96,7 +96,6 @@ class Strings {
   late String HIDE_LYRICS;
   late String HIGHLIGHTED_LYRICS_SIZE;
   late String IMAGES;
-  late String IMPORT_PLAYLIST_FROM_WEB;
   late String IMPORT_PLAYLIST_SUBTITLE;
   late String IMPORT_PLAYLIST_TITLE;
   late String INDEXING_ALREADY_GOING_ON_SUBTITLE;
@@ -263,7 +262,6 @@ class Strings {
   late String VISUALS_TITLE;
   late String VOLUME_BOOST;
   late String WARNING;
-  late String WEB;
   late String WEB_INTERNET_ERROR;
   late String WEB_NO_RESULTS;
   late String WEB_WELCOME;
