@@ -730,11 +730,12 @@ class Playback extends ChangeNotifier {
   /// In current analysis, I have observed that rebuilds in the seekbar [Slider] present on
   /// [NowPlayingBar] causes substantial lag in the hero animations.
   /// This causes experience to be jittery.
+  ///
   /// By setting [interceptPositionChangeRebuilds] to `true`, whenever a [Route] is in the
   /// middle of transition, the [NowPlayingBar] will not rebuild.
+  ///
   /// Since, the transition is only visible for 300 ~ 400ms, this should be fine. While,
   /// the animation will be buttery smooth to the user's eyes.
-  /// TODO: WIP for mobile builds.
   bool interceptPositionChangeRebuilds = false;
 }
 
@@ -861,6 +862,14 @@ class _HarmonoidMPRIS extends MPRISService {
 class _HarmonoidMobilePlayer extends BaseAudioHandler
     with SeekHandler, QueueHandler {
   _HarmonoidMobilePlayer(this.playback) {
+    _player = AudioPlayer(
+      audioPipeline: AudioPipeline(
+        androidAudioEffects: [
+          _playerAndroidEqualizer,
+          _playerAndroidLoudnessEnhancer,
+        ],
+      ),
+    );
     _player.playbackEventStream.listen((e) {
       if (e.processingState == ProcessingState.completed) {
         // The audio playback needs to be interpreted as paused once the playback of a media is completed.
@@ -1111,7 +1120,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       },
       androidCompactActionIndices: const [0, 1, 2],
       processingState: const {
-        ProcessingState.idle: AudioProcessingState.ready,
+        ProcessingState.idle: AudioProcessingState.idle,
         ProcessingState.loading: AudioProcessingState.loading,
         ProcessingState.buffering: AudioProcessingState.buffering,
         ProcessingState.ready: AudioProcessingState.ready,
@@ -1154,8 +1163,12 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       );
 
   /// [AudioPlayer] instance from `package:just_audio`.
-  final AudioPlayer _player = AudioPlayer();
+  late final AudioPlayer _player;
+  final AndroidEqualizer _playerAndroidEqualizer = AndroidEqualizer();
+  final AndroidLoudnessEnhancer _playerAndroidLoudnessEnhancer =
+      AndroidLoudnessEnhancer();
   final Playback playback;
+  // Encapsulated private attributes which are used to maintain & restore the mute state.
   bool _muted = false;
   double _volume = 0.0;
 }

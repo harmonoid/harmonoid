@@ -1995,9 +1995,9 @@ class CollectionMoreButton extends StatelessWidget {
           child: ListTile(
             contentPadding: EdgeInsets.zero,
             dense: true,
-            leading: Icon(Icons.play_circle),
+            leading: Icon(Icons.wifi_tethering),
             title: Text(
-              Language.instance.WEB,
+              Language.instance.STREAM,
               style: Theme.of(context).textTheme.headline4,
             ),
           ),

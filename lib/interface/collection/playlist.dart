@@ -18,14 +18,14 @@ import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
-import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 
@@ -88,7 +88,7 @@ class PlaylistTab extends StatelessWidget {
                             context: context,
                             builder: (context) => AlertDialog(
                               title: Text(
-                                Language.instance.CREATE,
+                                Language.instance.CREATE_NEW_PLAYLIST,
                               ),
                               content: Container(
                                 height: 40.0,
@@ -281,7 +281,7 @@ class PlaylistTab extends StatelessWidget {
                         }
                       },
                       child: Text(
-                        Language.instance.CREATE_NEW_PLAYLIST.toUpperCase(),
+                        Language.instance.CREATE.toUpperCase(),
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                         ),
@@ -316,8 +316,7 @@ class PlaylistTab extends StatelessWidget {
                         }
                       },
                       child: Text(
-                        Language.instance.IMPORT_PLAYLIST_FROM_WEB
-                            .toUpperCase(),
+                        Language.instance.IMPORT_PLAYLIST_TITLE.toUpperCase(),
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                         ),
