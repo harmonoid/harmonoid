@@ -96,6 +96,7 @@ class Strings {
   late String HIDE_LYRICS;
   late String HIGHLIGHTED_LYRICS_SIZE;
   late String IMAGES;
+  late String IMPORT;
   late String IMPORT_PLAYLIST_SUBTITLE;
   late String IMPORT_PLAYLIST_TITLE;
   late String INDEXING_ALREADY_GOING_ON_SUBTITLE;
@@ -111,6 +112,8 @@ class Strings {
   late String LYRICS_RETRIEVING;
   late String MEDIA_FILES;
   late String MENU;
+  late String MINIMUM_FILE_SIZE;
+  late String MINIMUM_FILE_SIZE_WARNING;
   late String MORE;
   late String MUTE;
   late String M_TRACKS_AND_N_ALBUMS;

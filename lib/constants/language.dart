@@ -300,6 +300,7 @@ class Language extends Strings with ChangeNotifier {
     this.HIDE_LYRICS = asset['HIDE_LYRICS']!;
     this.HIGHLIGHTED_LYRICS_SIZE = asset['HIGHLIGHTED_LYRICS_SIZE']!;
     this.IMAGES = asset['IMAGES']!;
+    this.IMPORT = asset['IMPORT']!;
     this.IMPORT_PLAYLIST_SUBTITLE = asset['IMPORT_PLAYLIST_SUBTITLE']!;
     this.IMPORT_PLAYLIST_TITLE = asset['IMPORT_PLAYLIST_TITLE']!;
     this.INDEXING_ALREADY_GOING_ON_SUBTITLE = asset['INDEXING_ALREADY_GOING_ON_SUBTITLE']!;
@@ -315,6 +316,8 @@ class Language extends Strings with ChangeNotifier {
     this.LYRICS_RETRIEVING = asset['LYRICS_RETRIEVING']!;
     this.MEDIA_FILES = asset['MEDIA_FILES']!;
     this.MENU = asset['MENU']!;
+    this.MINIMUM_FILE_SIZE = asset['MINIMUM_FILE_SIZE']!;
+    this.MINIMUM_FILE_SIZE_WARNING = asset['MINIMUM_FILE_SIZE_WARNING']!;
     this.MORE = asset['MORE']!;
     this.MUTE = asset['MUTE']!;
     this.M_TRACKS_AND_N_ALBUMS = asset['M_TRACKS_AND_N_ALBUMS']!;
