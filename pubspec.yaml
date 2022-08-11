@@ -1,7 +1,7 @@
 name: harmonoid
 description: Plays & manages your music library. Looks beautiful & juicy.
 publish_to: "none"
-version: 0.2.8+5003
+version: 0.2.9+5003
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -167,7 +167,7 @@ flutter:
           weight: 900
 
 msix_config:
-  msix_version: 0.2.8.0
+  msix_version: 0.2.9.0
   display_name: Harmonoid
   identity_name: com.alexmercerind.harmonoid
   file_extension: ogg, ogx, aac, m4a, mp3, wma, wav, aiff, flac, opus
