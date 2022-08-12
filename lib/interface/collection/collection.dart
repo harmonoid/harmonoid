@@ -169,6 +169,8 @@ class CollectionScreenState extends State<CollectionScreen>
                         ),
                         if (!refresh.isCompleted)
                           Positioned(
+                            left: 0.0,
+                            bottom: 0.0,
                             child: Card(
                               clipBehavior: Clip.antiAlias,
                               margin: EdgeInsets.all(16.0),
@@ -249,8 +251,6 @@ class CollectionScreenState extends State<CollectionScreen>
                                 ),
                               ),
                             ),
-                            right: 0.0,
-                            top: 0.0,
                           ),
                       ],
                     ),
