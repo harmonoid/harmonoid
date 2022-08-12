@@ -581,36 +581,20 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
     return showDialog(
       context: context,
       builder: (subContext) => AlertDialog(
-        contentPadding: EdgeInsets.zero,
-        actionsPadding: EdgeInsets.zero,
-        titlePadding: EdgeInsets.zero,
+        contentPadding: EdgeInsets.only(top: 20.0),
+        title: Text(Language.instance.PLAYLIST_ADD_DIALOG_TITLE),
         content: Container(
-          width: isDesktop ? 512.0 : 280.0,
-          height: isDesktop ? 480.0 : 280.0,
+          height: 480.0,
+          width: 512.0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(28, 20, 0, 0),
-                child: Text(
-                  Language.instance.PLAYLIST_ADD_DIALOG_TITLE,
-                  style: Theme.of(subContext).textTheme.headline1?.copyWith(
-                        fontSize: 20.0,
-                      ),
-                ),
+              Divider(
+                height: 1.0,
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(28, 2, 0, 16),
-                child: Text(
-                  Language.instance.PLAYLIST_ADD_DIALOG_BODY,
-                  style: Theme.of(subContext).textTheme.headline3,
-                ),
-              ),
-              Container(
-                height: (isDesktop ? 512.0 : 280.0) - 118.0,
-                width: isDesktop ? 512.0 : 280.0,
+              Expanded(
                 child: CustomListViewBuilder(
                   itemExtents: List.generate(
                     Collection.instance.playlists.length,

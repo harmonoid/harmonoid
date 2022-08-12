@@ -672,6 +672,9 @@ class ContextMenuButton<T> extends StatefulWidget {
     this.shape,
     this.color,
     this.enableFeedback,
+    this.highlightColor,
+    this.splashColor,
+    this.hoverColor,
   })  : assert(
           !(child != null && icon != null),
           'You can only pass [child] or [icon], not both.',
@@ -707,6 +710,12 @@ class ContextMenuButton<T> extends StatefulWidget {
   final bool? enableFeedback;
 
   final double? iconSize;
+
+  final Color? highlightColor;
+
+  final Color? splashColor;
+
+  final Color? hoverColor;
 
   @override
   ContextMenuButtonState<T> createState() => ContextMenuButtonState<T>();
@@ -777,6 +786,9 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
         message:
             widget.tooltip ?? MaterialLocalizations.of(context).showMenuTooltip,
         child: InkWell(
+          highlightColor: widget.highlightColor,
+          splashColor: widget.splashColor,
+          hoverColor: widget.hoverColor,
           onTap: widget.enabled ? showButtonMenu : null,
           canRequestFocus: _canRequestFocus,
           child: widget.child,
@@ -2382,8 +2394,6 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                 ),
                 padding: EdgeInsets.only(
                   bottom: 16.0,
-                  left: 4.0,
-                  right: 4.0,
                 ),
               ),
               ...missingDirectories
@@ -2516,6 +2526,9 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
             TextButton(
               child: Text(
                 Language.instance.DONE.toUpperCase(),
+              ),
+              style: TextButton.styleFrom(
+                disabledForegroundColor: Theme.of(context).disabledColor,
               ),
               onPressed: missingDirectories.isEmpty
                   ? Navigator.of(context).maybePop

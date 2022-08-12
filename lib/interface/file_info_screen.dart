@@ -84,9 +84,11 @@ class FileInfoScreen extends StatefulWidget {
               ),
               title: Text(
                 Language.instance.FILE,
-                style: Theme.of(ctx).textTheme.headline3?.copyWith(
-                      fontSize: 16.0,
-                    ),
+                style: isDesktop
+                    ? Theme.of(ctx).textTheme.headline4
+                    : Theme.of(ctx).textTheme.headline3?.copyWith(
+                          fontSize: 16.0,
+                        ),
               ),
             ),
             ListTile(
@@ -321,12 +323,12 @@ class FileInfoScreen extends StatefulWidget {
                   Icons.link,
                 ),
               ),
-              title: Text(
-                Language.instance.URL,
-                style: Theme.of(ctx).textTheme.headline3?.copyWith(
-                      fontSize: 16.0,
-                    ),
-              ),
+              title: Text(Language.instance.URL,
+                  style: isDesktop
+                      ? Theme.of(ctx).textTheme.headline4
+                      : Theme.of(ctx).textTheme.headline3?.copyWith(
+                            fontSize: 16.0,
+                          )),
             ),
           ],
         ),
