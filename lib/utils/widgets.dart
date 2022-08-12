@@ -810,8 +810,13 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
 }
 
 class DesktopTitleBar extends StatelessWidget {
+  final hideMaximizeAndRestoreButton;
   final Color? color;
-  const DesktopTitleBar({Key? key, this.color}) : super(key: key);
+  const DesktopTitleBar({
+    Key? key,
+    this.color,
+    this.hideMaximizeAndRestoreButton = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -856,13 +861,14 @@ class DesktopTitleBar extends StatelessWidget {
                 MinimizeWindowButton(
                   colors: windowButtonColors(context),
                 ),
-                appWindow.isMaximized
-                    ? RestoreWindowButton(
-                        colors: windowButtonColors(context),
-                      )
-                    : MaximizeWindowButton(
-                        colors: windowButtonColors(context),
-                      ),
+                if (!hideMaximizeAndRestoreButton)
+                  appWindow.isMaximized
+                      ? RestoreWindowButton(
+                          colors: windowButtonColors(context),
+                        )
+                      : MaximizeWindowButton(
+                          colors: windowButtonColors(context),
+                        ),
                 CloseWindowButton(
                   colors: windowButtonColors(context)
                     ..mouseOver = Color(0xFFC42B1C)

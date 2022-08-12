@@ -10,6 +10,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
@@ -27,8 +28,12 @@ class ExceptionApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: createTheme(
-        color: Color(0xFF6200EA),
+        color: Colors.red.shade800,
         themeMode: ThemeMode.light,
+      ).copyWith(
+        highlightColor: Colors.white10,
+        splashColor: Colors.white10,
+        hoverColor: Colors.white10,
       ),
       themeMode: ThemeMode.light,
       home: _ExceptionApp(
@@ -53,67 +58,164 @@ class _ExceptionApp extends StatelessWidget {
         ? Scaffold(
             body: Column(
               children: [
-                DesktopAppBar(
-                  leading: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 40.0,
-                      width: 40.0,
-                      child: Icon(Icons.error),
+                Stack(
+                  children: [
+                    Material(
+                      color: Theme.of(context).primaryColor,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            right: 0.0,
+                            bottom: 0.0,
+                            child: Transform.translate(
+                              offset: Offset(16.0, 48.0),
+                              child: Icon(
+                                Icons.close_outlined,
+                                color: Colors.red.shade900,
+                                size: 356.0,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 324.0,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    top: desktopTitleBarHeight + 16.0,
+                                    left: 36.0,
+                                    right: 36.0,
+                                    bottom: 16.0,
+                                  ),
+                                  child: Text(
+                                    'Error',
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      fontSize: 96.0,
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                  ),
+                                ),
+                                Divider(
+                                  color: Colors.white24,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 16.0,
+                                    left: 36.0,
+                                    right: 36.0,
+                                  ),
+                                  child: Text(
+                                    exception.toString(),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary
+                                          .withOpacity(0.87),
+                                      fontSize: 14.0,
+                                    ),
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Material(
+                                  color: Colors.transparent,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      top: 16.0,
+                                      left: 20.0,
+                                      right: 20.0,
+                                      bottom: 16.0,
+                                    ),
+                                    child: ButtonBar(
+                                      alignment: MainAxisAlignment.start,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Clipboard.setData(
+                                              ClipboardData(
+                                                text:
+                                                    'Exception: ${exception.toString()}\nStacktrace: ${stacktrace.toString()}',
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            'COPY',
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            launchUrl(
+                                              Uri.https(
+                                                'github.com',
+                                                '/harmonoid/harmonoid/issues/new',
+                                                {
+                                                  'assignees': 'alexmercerind',
+                                                  'labels': 'bug',
+                                                  'template': 'bug_report.md',
+                                                },
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            ' REPORT',
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      elevation: 4.0,
                     ),
-                  ),
-                  title: 'Exception',
+                    if (Platform.isWindows)
+                      DesktopTitleBar(
+                        color: Theme.of(context).primaryColor,
+                        hideMaximizeAndRestoreButton: true,
+                      ),
+                  ],
                 ),
                 Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                  child: CustomListView(
+                    padding: EdgeInsets.only(
+                      top: 16.0,
+                      left: 36.0,
+                      right: 36.0,
+                      bottom: 16.0,
+                    ),
                     children: [
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              exception.toString(),
-                              style: Theme.of(context).textTheme.headline2,
-                            ),
-                            SizedBox(height: 8.0),
-                            Text(
-                              stacktrace.toString(),
-                              style: Theme.of(context).textTheme.headline3,
-                            ),
-                          ],
+                      Text(
+                        'Stack trace',
+                        style: TextStyle(
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.w400,
                         ),
-                        margin: EdgeInsets.symmetric(horizontal: 16.0),
+                      ),
+                      const SizedBox(height: 16.0),
+                      Text(
+                        stacktrace.toString(),
                       ),
                     ],
                   ),
-                ),
-                ButtonBar(
-                  children: [
-                    TextButton(
-                      onPressed: () => launchUrl(
-                        Uri.parse(
-                          'https://github.com/harmonoid/harmonoid/issues',
-                        ),
-                        mode: LaunchMode.externalApplication,
-                      ),
-                      child: Text(
-                        'REPORT',
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        if (Platform.isWindows) {
-                          appWindow.close();
-                        } else {
-                          SystemNavigator.pop();
-                        }
-                      },
-                      child: Text(
-                        'EXIT',
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
