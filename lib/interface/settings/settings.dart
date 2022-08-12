@@ -64,7 +64,7 @@ class Settings extends StatelessWidget {
             ),
           )
         : Scaffold(
-            resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: true,
             appBar: AppBar(
               leading: IconButton(
                 onPressed: Navigator.of(context).pop,

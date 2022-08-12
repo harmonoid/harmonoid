@@ -134,13 +134,22 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                               children: [
                                 Text(
                                   widget.track.trackName.overflow,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline1
-                                      ?.copyWith(
-                                        color: Colors.white,
-                                        fontSize: isDesktop ? null : 18.0,
-                                      ),
+                                  style: isDesktop
+                                      ? Theme.of(context)
+                                          .textTheme
+                                          .headline3
+                                          ?.copyWith(
+                                            fontSize: 14.0,
+                                            color: Colors.white,
+                                          )
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          ?.copyWith(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
                                   textAlign: TextAlign.left,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,

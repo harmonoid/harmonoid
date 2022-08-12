@@ -113,7 +113,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16.0),
+                  const SizedBox(width: 12.0),
                   Expanded(
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
@@ -123,16 +123,23 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                         const SizedBox(height: 16.0),
                         Text(
                           widget.track.trackName.replaceFirst('(', '\n('),
-                          style:
-                              Theme.of(context).textTheme.headline1?.copyWith(
+                          style: isDesktop
+                              ? Theme.of(context).textTheme.headline3?.copyWith(
+                                    fontSize: 14.0,
+                                    color: isDark
+                                        ? Colors.white54
+                                        : Colors.black54,
+                                  )
+                              : Theme.of(context).textTheme.headline6?.copyWith(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600,
                                     color: isDark ? Colors.white : Colors.black,
-                                    fontSize: isDesktop ? null : 18.0,
                                   ),
                           textAlign: TextAlign.left,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 2.0),
+                        const SizedBox(height: 4.0),
                         Text(
                           '${widget.track.trackArtistNames.take(2).join(', ')}',
                           style: Theme.of(context)
@@ -161,7 +168,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 8.0),
+                  const SizedBox(width: 12.0),
                 ],
               ),
               Material(

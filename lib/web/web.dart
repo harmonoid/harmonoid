@@ -808,7 +808,9 @@ class _FloatingSearchBarWebSearchScreenState
           actions: [
             FloatingSearchBarAction(
               showIfOpened: false,
-              child: WebMobileAppBarOverflowButton(),
+              child: WebMobileAppBarOverflowButton(
+                color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+              ),
             ),
             FloatingSearchBarAction.searchToClear(
               showIfClosed: false,
