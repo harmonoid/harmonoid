@@ -561,20 +561,33 @@ class Playback extends ChangeNotifier {
           if (track != _discordPreviousTrack) {
             _discordPreviousLargeImageKey = LibmpvPluginUtils.isSupported(
                     track.uri)
-                // web music.
                 ? LibmpvPluginUtils.thumbnail(track.uri, small: true).toString()
-                // local music.
                 : await (() async {
+                    final hasNoAlbumTag =
+                        ['', kUnknownAlbum].contains(track.albumName);
+                    final hasNoTrackArtistsTag = track.hasNoAvailableArtists;
+                    final hasNoAlbumArtistsTag = [
+                      '',
+                      kUnknownArtist,
+                    ].contains(track.albumArtistName);
+                    // Chances are file has no tagged metadata, thus fallback to the default album art.
+                    if (hasNoAlbumTag &&
+                        hasNoTrackArtistsTag &&
+                        hasNoAlbumArtistsTag) {
+                      return 'default_album_art';
+                    }
+                    final search = [
+                      track.trackName,
+                      if (!hasNoTrackArtistsTag)
+                        track.trackArtistNames.take(1).join('')
+                      else if (!hasNoAlbumArtistsTag)
+                        track.albumArtistName
+                      else if (!hasNoAlbumTag)
+                        track.albumName,
+                    ].join(' ');
                     try {
-                      // No OOP boilerplate for this small cute piece of code.
                       final result = await YTMClient.search(
-                        [
-                          track.trackName,
-                          (track.albumArtistName.isNotEmpty &&
-                                  track.albumArtistName != kUnknownArtist
-                              ? track.albumArtistName
-                              : track.trackArtistNames.take(1).join('')),
-                        ].join(' '),
+                        search,
                         filter: SearchFilter.track,
                       );
                       return (result.values.first.first as dynamic)
@@ -585,16 +598,12 @@ class Playback extends ChangeNotifier {
                       debugPrint(exception.toString());
                       debugPrint(stacktrace.toString());
                       try {
-                        // No OOP boilerplate for this small cute piece of code.
                         final response = await get(
                           Uri.https(
                             'itunes.apple.com',
                             '/search',
                             {
-                              'term': track.albumArtistName.isNotEmpty &&
-                                      track.albumArtistName != kUnknownArtist
-                                  ? track.albumArtistName
-                                  : track.trackArtistNames.take(1).join(''),
+                              'term': search,
                               'limit': '1',
                               'country': 'us',
                               'entity': 'song',
@@ -631,19 +640,31 @@ class Playback extends ChangeNotifier {
       if (Configuration.instance.discordRPC) {
         try {
           final track = tracks[index];
+          final hasNoAlbumTag = ['', kUnknownAlbum].contains(track.albumName);
+          final hasNoTrackArtistsTag = track.hasNoAvailableArtists;
+          final hasNoAlbumArtistsTag = [
+            '',
+            kUnknownArtist,
+          ].contains(track.albumArtistName);
+          final search = [
+            track.trackName,
+            if (!hasNoTrackArtistsTag)
+              track.trackArtistNames.take(1).join('')
+            else if (!hasNoAlbumArtistsTag)
+              track.albumArtistName,
+          ].join(' ');
           if (!isCompleted) {
             discord?.start(autoRegister: true);
             discord?.updatePresence(
               DiscordPresence(
-                state: '${[
-                  null,
-                  kUnknownArtist
-                ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(',') : track.albumArtistName}',
-                details: '${track.trackName}',
+                state: !hasNoTrackArtistsTag
+                    ? track.trackArtistNames.join(', ')
+                    : !hasNoAlbumArtistsTag
+                        ? track.albumArtistName
+                        : null,
+                details: track.trackName,
                 largeImageKey: _discordPreviousLargeImageKey,
-                largeImageText: LibmpvPluginUtils.isSupported(track.uri)
-                    ? null
-                    : '${track.albumName}',
+                largeImageText: !hasNoAlbumTag ? track.albumName : null,
                 smallImageKey: isPlaying ? 'play' : 'pause',
                 smallImageText: isPlaying ? 'Playing' : 'Paused',
                 button1Label: LibmpvPluginUtils.isSupported(track.uri)
@@ -651,13 +672,7 @@ class Playback extends ChangeNotifier {
                     : 'Find',
                 button1Url: LibmpvPluginUtils.isSupported(track.uri)
                     ? track.uri.toString()
-                    : 'https://www.google.com/search?q=${Uri.encodeComponent([
-                        track.trackName,
-                        (track.albumArtistName.isNotEmpty &&
-                                track.albumArtistName != kUnknownArtist
-                            ? track.albumArtistName
-                            : track.trackArtistNames.take(1).join('')),
-                      ].join(' '))}',
+                    : 'https://www.google.com/search?q=${Uri.encodeComponent(search)}',
                 endTimeStamp: isPlaying
                     ? DateTime.now().millisecondsSinceEpoch +
                         duration.inMilliseconds -
