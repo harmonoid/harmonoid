@@ -8,10 +8,9 @@
 
 import 'dart:io';
 
-import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
-import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:provider/provider.dart';
+import 'package:external_path/external_path.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
@@ -30,6 +29,8 @@ class IndexingSetting extends StatefulWidget {
 class IndexingState extends State<IndexingSetting>
     with AutomaticKeepAliveClientMixin {
   List<String>? storages;
+
+  bool hovered = false;
 
   @override
   void initState() {
@@ -96,7 +97,7 @@ class IndexingState extends State<IndexingSetting>
                 final sizes = {
                   0: '0 MB',
                   512 * 1024: '512 KB',
-                  1024 * 1024: '1 MB',
+                  1024 * 1024: '1 MB ${Language.instance.RECOMMENDED_HINT}',
                   2 * 1024 * 1024: '2 MB',
                   5 * 1024 * 1024: '5 MB',
                   10 * 1024 * 1024: '10 MB',
@@ -120,6 +121,15 @@ class IndexingState extends State<IndexingSetting>
                     setState(() {});
                     showShouldBeReindexedDialog();
                   },
+                  elevation: 4.0,
+                  itemBuilder: (ctx) => sizes.entries
+                      .map(
+                        (e) => PopupMenuItem(
+                          child: Text(e.value),
+                          value: e.key,
+                        ),
+                      )
+                      .toList(),
                   child: ListTile(
                     dense: false,
                     title: Text(Language.instance.MINIMUM_FILE_SIZE),
@@ -134,15 +144,6 @@ class IndexingState extends State<IndexingSetting>
                         }() : sizes[Configuration.instance.minimumFileSize]}',
                     ),
                   ),
-                  elevation: 4.0,
-                  itemBuilder: (ctx) => sizes.entries
-                      .map(
-                        (e) => PopupMenuItem(
-                          child: Text(e.value),
-                          value: e.key,
-                        ),
-                      )
-                      .toList(),
                 );
               }(),
             Container(
@@ -464,7 +465,7 @@ class IndexingState extends State<IndexingSetting>
                     Padding(
                       padding: EdgeInsets.only(
                         left: 8.0,
-                        top: 4.0,
+                        top: 0.0,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -474,7 +475,7 @@ class IndexingState extends State<IndexingSetting>
                             '${Language.instance.REFRESH.toUpperCase()}: ${Language.instance.REFRESH_INFORMATION}',
                             style: Theme.of(context).textTheme.headline3,
                           ),
-                          const SizedBox(height: 4.0),
+                          const SizedBox(height: 2.0),
                           Text(
                             '${Language.instance.REINDEX.toUpperCase()}: ${Language.instance.REINDEX_INFORMATION}',
                             style: Theme.of(context).textTheme.headline3,
@@ -482,6 +483,120 @@ class IndexingState extends State<IndexingSetting>
                         ],
                       ),
                     ),
+                  if (isDesktop) ...[
+                    const SizedBox(height: 8.0),
+                    TextButton(
+                      onPressed: () async {
+                        final sizes = {
+                          0: '0 MB',
+                          512 * 1024: '512 KB',
+                          1024 * 1024:
+                              '1 MB ${Language.instance.RECOMMENDED_HINT}',
+                          2 * 1024 * 1024: '2 MB',
+                          5 * 1024 * 1024: '5 MB',
+                          10 * 1024 * 1024: '10 MB',
+                          20 * 1024 * 1024: '20 MB',
+                        };
+                        int value = Configuration.instance.minimumFileSize;
+                        await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(Language.instance.MINIMUM_FILE_SIZE),
+                            contentPadding: EdgeInsets.only(top: 20.0),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Divider(
+                                  height: 1.0,
+                                  thickness: 1.0,
+                                ),
+                                ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxHeight: 420.0,
+                                  ),
+                                  child: StatefulBuilder(
+                                    builder: (context, setState) =>
+                                        SingleChildScrollView(
+                                      child: Column(
+                                        children: sizes.entries
+                                            .map(
+                                              (e) => RadioListTile<int>(
+                                                groupValue: value,
+                                                value: e.key,
+                                                onChanged: (e) {
+                                                  if (e != null) {
+                                                    setState(() => value = e);
+                                                  }
+                                                },
+                                                title: Text(
+                                                  e.value,
+                                                  style: isDesktop
+                                                      ? Theme.of(context)
+                                                          .textTheme
+                                                          .headline4
+                                                      : null,
+                                                ),
+                                              ),
+                                            )
+                                            .toList(),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Divider(
+                                  height: 1.0,
+                                  thickness: 1.0,
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () async {
+                                  Navigator.of(context).maybePop();
+                                  if (controller.progress != controller.total) {
+                                    showProgressDialog();
+                                    return;
+                                  }
+                                  Collection.instance.minimumFileSize = value;
+                                  await Configuration.instance.save(
+                                    minimumFileSize: value,
+                                  );
+                                  setState(() {});
+                                },
+                                child: Text(
+                                  Language.instance.OK,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: Navigator.of(context).maybePop,
+                                child: Text(
+                                  Language.instance.CANCEL,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      child: Text('EDIT MINIMUM FILE SIZE'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 8.0,
+                        top: 0.0,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 8.0),
+                          Text(
+                            Language.instance.MINIMUM_FILE_SIZE_WARNING,
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                          const SizedBox(height: 8.0),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
