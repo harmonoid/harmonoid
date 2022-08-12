@@ -40,6 +40,10 @@ import 'package:harmonoid/constants/language.dart';
 ///
 abstract class WindowCloseHandler {
   static void initialize() {
+    if (_initialized) {
+      return;
+    }
+    _initialized = true;
     FlutterWindowClose.setWindowShouldCloseHandler(onWindowClose);
     // const channel = const MethodChannel('override_window_destroy');
     // channel.setMethodCallHandler((call) async {
@@ -106,4 +110,7 @@ abstract class WindowCloseHandler {
       return true;
     }
   }
+
+  /// Prevent registering method call handler on platform channel more than once.
+  static bool _initialized = false;
 }

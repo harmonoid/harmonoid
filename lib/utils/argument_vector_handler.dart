@@ -21,6 +21,10 @@ import 'package:harmonoid/core/intent.dart';
 ///
 abstract class ArgumentVectorHandler {
   static void initialize() {
+    if (_initialized) {
+      return;
+    }
+    _initialized = true;
     const MethodChannel('com.alexmercerind.harmonoid/argument_vector_handler')
         .setMethodCallHandler(
       (call) async {
@@ -28,4 +32,7 @@ abstract class ArgumentVectorHandler {
       },
     );
   }
+
+  /// Prevent registering method call handler on platform channel more than once.
+  static bool _initialized = false;
 }

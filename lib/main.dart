@@ -46,6 +46,12 @@ Future<void> main(List<String> args) async {
   }
   try {
     if (Platform.isWindows) {
+      doWhenWindowReady(() {
+        appWindow.minSize = Size(960, 640);
+        appWindow.size = Size(1024, 640);
+        appWindow.alignment = Alignment.center;
+        appWindow.show();
+      });
       await Configuration.initialize();
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
@@ -58,12 +64,6 @@ Future<void> main(List<String> args) async {
       WindowCloseHandler.initialize();
       ArgumentVectorHandler.initialize();
       DiscordRPC.initialize();
-      doWhenWindowReady(() {
-        appWindow.minSize = Size(960, 640);
-        appWindow.size = Size(1024, 640);
-        appWindow.alignment = Alignment.center;
-        appWindow.show();
-      });
     }
     if (Platform.isLinux) {
       await Configuration.initialize();
@@ -129,6 +129,8 @@ Future<void> main(List<String> args) async {
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
+    WindowCloseHandler.initialize();
+    ArgumentVectorHandler.initialize();
     runApp(
       ExceptionApp(
         exception: exception,
