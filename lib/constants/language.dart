@@ -371,6 +371,7 @@ class Language extends Strings with ChangeNotifier {
     this.READ = asset['READ']!;
     this.READ_METADATA = asset['READ_METADATA']!;
     this.RECOMMENDATIONS = asset['RECOMMENDATIONS']!;
+    this.RECOMMENDED_HINT = asset['RECOMMENDED_HINT']!;
     this.REFRESH = asset['REFRESH']!;
     this.REFRESH_INFORMATION = asset['REFRESH_INFORMATION']!;
     this.REFRESH_SUBTITLE = asset['REFRESH_SUBTITLE']!;

@@ -167,6 +167,7 @@ class Strings {
   late String READ;
   late String READ_METADATA;
   late String RECOMMENDATIONS;
+  late String RECOMMENDED_HINT;
   late String REFRESH;
   late String REFRESH_INFORMATION;
   late String REFRESH_SUBTITLE;
