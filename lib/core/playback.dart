@@ -87,30 +87,31 @@ class Playback extends ChangeNotifier {
   }
 
   void playOrPause() {
-    if (isPlaying) {
-      pause();
-    } else {
-      play();
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      libmpv?.playOrPause();
+    }
+    if (Platform.isAndroid || Platform.isIOS) {
+      if (isPlaying) {
+        pause();
+      } else {
+        play();
+      }
     }
   }
 
   void next() {
-    libmpv?.play().then((value) {
-      if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-        libmpv?.next();
-      }
-    });
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      libmpv?.next();
+    }
     if (Platform.isAndroid || Platform.isIOS) {
       audioService?.skipToNext();
     }
   }
 
   void previous() {
-    libmpv?.play().then((value) {
-      if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-        libmpv?.previous();
-      }
-    });
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      libmpv?.previous();
+    }
     if (Platform.isAndroid || Platform.isIOS) {
       audioService?.skipToPrevious();
     }
@@ -316,19 +317,13 @@ class Playback extends ChangeNotifier {
                     extras: e.toJson(),
                   ))
               .toList(),
-          index: index,
+          index: AppState.instance.index,
         ),
         play: false,
       );
-      // TODO: This needs some changes & fixes internally in `package:libmpv`.
-      // I couldn't find a way to load a playlist at a particular [index], without causing the [Player] to play.
-      // Best is to not restore the [index] from the [AppState] for now.
-      //
-      // index = AppState.instance.index;
+      index = AppState.instance.index;
     }
     if (Platform.isAndroid || Platform.isIOS) {
-      debugPrint('AppState.instance.index: ${AppState.instance.index}');
-      debugPrint('AppState.instance.playlist: $tracks');
       await audioService?.open(
         tracks,
         index: AppState.instance.index,
@@ -442,8 +437,8 @@ class Playback extends ChangeNotifier {
         config: AudioServiceConfig(
           androidNotificationChannelId: 'com.alexmercerind.harmonoid',
           androidNotificationChannelName: 'Harmonoid',
-          androidNotificationOngoing: true,
-          androidStopForegroundOnPause: true,
+          androidNotificationOngoing: false,
+          androidStopForegroundOnPause: false,
         ),
       );
     }
