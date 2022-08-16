@@ -33,10 +33,12 @@ dependencies:
   dart_discord_rpc:
     git:
       url: https://github.com/alexmercerind/dart_discord_rpc.git
-      ref: harmonoid
+      ref: 48a15a750d9ee50c521a408c466bd681321a38e2
 
   # Third-party plugins.
 
+  ffi: ^2.0.1
+  win32: ^2.7.0
   just_audio: ^0.9.28
   audio_service: ^0.18.7
   awesome_notifications: ^0.7.0-beta.5
@@ -89,12 +91,12 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/desktop.git
       path: desktop
-      ref: 88e9a3931c84ca821d1acad0289882f5510aafdb
+      ref: da1a59f6c6ae83029e2bece885a2c2c7dddb6767
   bitsdojo_window:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window
-      ref: e0f7c46e94a75aea957574148459879a83fa3bbb
+      ref: 1290c426397fcc1de9ca5f66871964ae0d16c8b1
   hotkey_manager:
     git:
       url: https://github.com/alexmercerind/hotkey_manager.git
@@ -116,17 +118,17 @@ dependency_overrides:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_windows
-      ref: e0f7c46e94a75aea957574148459879a83fa3bbb
+      ref: 1290c426397fcc1de9ca5f66871964ae0d16c8b1
   bitsdojo_window_linux:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_linux
-      ref: e0f7c46e94a75aea957574148459879a83fa3bbb
+      ref: 1290c426397fcc1de9ca5f66871964ae0d16c8b1
   bitsdojo_window_macos:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_macos
-      ref: e0f7c46e94a75aea957574148459879a83fa3bbb
+      ref: 1290c426397fcc1de9ca5f66871964ae0d16c8b1
   platform: ^3.1.0
 
 dev_dependencies:
