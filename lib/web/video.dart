@@ -144,9 +144,9 @@ class WebVideoLargeTileState extends State<WebVideoLargeTile> {
                                           )
                                       : Theme.of(context)
                                           .textTheme
-                                          .headline6
+                                          .headline1
                                           ?.copyWith(
-                                            fontSize: 18.0,
+                                            fontSize: 20.0,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.white,
                                           ),

@@ -331,68 +331,105 @@ class _WebRecommendationsState extends State<WebRecommendations>
                   onRefresh: () => Future.sync(
                     () => Web.instance.pagingController.refresh(),
                   ),
-                  child: PagedGridView<int, Track>(
-                    scrollController: _scrollController,
-                    padding: EdgeInsets.only(
-                      left: isDesktop
-                          ? (MediaQuery.of(context).size.width -
-                                  (elementsPerRow * kLargeTileWidth +
-                                      (elementsPerRow - 1) * tileMargin)) /
-                              2
-                          : tileMargin,
-                      right: isDesktop
-                          ? (MediaQuery.of(context).size.width -
-                                  (elementsPerRow * kLargeTileWidth +
-                                      (elementsPerRow - 1) * tileMargin)) /
-                              2
-                          : tileMargin,
-                      top: isDesktop
-                          ? tileMargin
-                          : kMobileSearchBarHeight +
-                              2 * tileMargin +
-                              MediaQuery.of(context).padding.top,
-                    ),
-                    showNewPageProgressIndicatorAsGridChild: false,
-                    pagingController: Web.instance.pagingController,
-                    builderDelegate: PagedChildBuilderDelegate<Track>(
-                      itemBuilder: (context, item, pageKey) =>
-                          item.thumbnails.containsKey(120)
-                              ? WebTrackLargeTile(
-                                  height: height,
-                                  width: width,
-                                  track: item,
-                                  colorKeys: colorKeys,
-                                )
-                              : WebVideoLargeTile(
-                                  height: height,
-                                  width: width,
-                                  track: item,
+                  child: isDesktop
+                      ? PagedGridView<int, Track>(
+                          scrollController: _scrollController,
+                          padding: EdgeInsets.only(
+                            left: (MediaQuery.of(context).size.width -
+                                    (elementsPerRow * kLargeTileWidth +
+                                        (elementsPerRow - 1) * tileMargin)) /
+                                2,
+                            right: (MediaQuery.of(context).size.width -
+                                    (elementsPerRow * kLargeTileWidth +
+                                        (elementsPerRow - 1) * tileMargin)) /
+                                2,
+                            top: tileMargin,
+                          ),
+                          showNewPageProgressIndicatorAsGridChild: false,
+                          pagingController: Web.instance.pagingController,
+                          builderDelegate: PagedChildBuilderDelegate<Track>(
+                            itemBuilder: (context, item, pageKey) =>
+                                item.thumbnails.containsKey(120)
+                                    ? WebTrackLargeTile(
+                                        height: height,
+                                        width: width,
+                                        track: item,
+                                        colorKeys: colorKeys,
+                                      )
+                                    : WebVideoLargeTile(
+                                        height: height,
+                                        width: width,
+                                        track: item,
+                                      ),
+                            newPageProgressIndicatorBuilder: (_) => Container(
+                              height: 96.0,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation(
+                                    Theme.of(context).primaryColor,
+                                  ),
                                 ),
-                      newPageProgressIndicatorBuilder: (_) => Container(
-                        height: 96.0,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation(
-                              Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            firstPageProgressIndicatorBuilder: (_) => Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                  Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: elementsPerRow,
+                            childAspectRatio: width / height,
+                            mainAxisSpacing: tileMargin,
+                            crossAxisSpacing: tileMargin,
+                          ),
+                        )
+                      : PagedListView(
+                          pagingController: Web.instance.pagingController,
+                          padding: EdgeInsets.only(
+                            top: kMobileSearchBarHeight +
+                                2 * tileMargin +
+                                MediaQuery.of(context).padding.top,
+                          ),
+                          builderDelegate: PagedChildBuilderDelegate<Track>(
+                            itemBuilder: (context, item, pageKey) => Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                  tileMargin, 0, tileMargin, tileMargin),
+                              child: item.thumbnails.containsKey(120)
+                                  ? WebTrackLargeTile(
+                                      height: 72.0,
+                                      width: width,
+                                      track: item,
+                                      colorKeys: colorKeys,
+                                    )
+                                  : WebVideoLargeTile(
+                                      height: height,
+                                      width: width,
+                                      track: item,
+                                    ),
+                            ),
+                            newPageProgressIndicatorBuilder: (_) => Container(
+                              height: 96.0,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation(
+                                    Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            firstPageProgressIndicatorBuilder: (_) => Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                  Theme.of(context).primaryColor,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      firstPageProgressIndicatorBuilder: (_) => Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation(
-                            Theme.of(context).primaryColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: elementsPerRow,
-                      childAspectRatio: width / height,
-                      mainAxisSpacing: tileMargin,
-                      crossAxisSpacing: tileMargin,
-                    ),
-                  ),
                 ),
               ),
             ),
@@ -693,7 +730,11 @@ class _FloatingSearchBarWebSearchTabState
           children: result
               .map(
                 (e) => ListTile(
-                  title: Text(e),
+                  title: Text(
+                    e.overflow,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   onTap: () {
                     Navigator.of(context).push(PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
