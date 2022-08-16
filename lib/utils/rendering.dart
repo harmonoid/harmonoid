@@ -28,9 +28,10 @@ import 'package:harmonoid/interface/file_info_screen.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
 import 'package:harmonoid/interface/edit_details_screen.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
-import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/file_system.dart';
+import 'package:harmonoid/utils/windows_info.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
@@ -44,7 +45,8 @@ const kPrimaryDarkColor = Color(0xFF7C4DFF);
 
 final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 final isMobile = Platform.isAndroid || Platform.isIOS;
-final desktopTitleBarHeight = Platform.isWindows ? 32.0 : 0.0;
+final desktopTitleBarHeight =
+    WindowsInfo.instance.isWindows10OrGreater ? 32.0 : 0.0;
 final tileMargin = isDesktop ? kDesktopTileMargin : kMobileTileMargin;
 final visualAssets = VisualAssets();
 final HotKey searchBarHotkey = HotKey(
@@ -68,6 +70,7 @@ List<Widget> tileGridListWidgets({
   required int elementsPerRow,
   MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center,
   bool showIncompleteRow = true,
+  double? margin,
 }) {
   List<Widget> widgets = <Widget>[];
   widgets.addAll([
@@ -77,12 +80,13 @@ List<Widget> tileGridListWidgets({
   ]);
   int rowIndex = 0;
   List<Widget> rowChildren = <Widget>[];
+  margin ??= tileMargin;
   for (int index = 0; index < widgetCount; index++) {
     rowChildren.add(
       Container(
         child: builder(context, index),
         margin: EdgeInsets.symmetric(
-          horizontal: tileMargin / 2.0,
+          horizontal: margin / 2.0,
         ),
       ),
     );
@@ -90,9 +94,8 @@ List<Widget> tileGridListWidgets({
     if (rowIndex > elementsPerRow - 1) {
       widgets.add(
         Container(
-          height: tileHeight + tileMargin,
-          margin:
-              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
+          height: tileHeight + margin,
+          margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
           alignment: Alignment.topCenter,
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -116,7 +119,7 @@ List<Widget> tileGridListWidgets({
           Container(
             child: builder(context, index),
             margin: EdgeInsets.symmetric(
-              horizontal: tileMargin / 2.0,
+              horizontal: margin / 2.0,
             ),
           ),
         );
@@ -126,18 +129,16 @@ List<Widget> tileGridListWidgets({
           index++) {
         rowChildren.add(
           Container(
-            height: tileHeight + tileMargin,
+            height: tileHeight + margin,
             width: tileWidth,
-            margin: EdgeInsets.only(
-                left: tileMargin / 2.0, right: tileMargin / 2.0),
+            margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
           ),
         );
       }
       widgets.add(
         Container(
-          height: tileHeight + tileMargin,
-          margin:
-              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
+          height: tileHeight + margin,
+          margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
           alignment: Alignment.topCenter,
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -169,19 +170,21 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
   required int widgetCount,
   required Widget Function(BuildContext context, int index) builder,
   required int elementsPerRow,
+  double? margin,
 }) {
   final widgets = <Widget>[];
   final data = <List<dynamic>>[];
   var rowIndex = 0;
   var rowChildren = <Widget>[];
   var rowData = <dynamic>[];
+  margin ??= tileMargin;
   for (int index = 0; index < widgetCount; index++) {
     final widget = builder(context, index);
     rowChildren.add(
       Container(
         child: widget,
         margin: EdgeInsets.symmetric(
-          horizontal: tileMargin / 2.0,
+          horizontal: margin / 2.0,
         ),
       ),
     );
@@ -190,9 +193,8 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
     if (rowIndex > elementsPerRow - 1) {
       widgets.add(
         Container(
-          height: tileHeight + tileMargin,
-          margin:
-              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
+          height: tileHeight + margin,
+          margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
           alignment: Alignment.topCenter,
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -219,7 +221,7 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
           Container(
             child: widget,
             margin: EdgeInsets.symmetric(
-              horizontal: tileMargin / 2.0,
+              horizontal: margin / 2.0,
             ),
           ),
         );
@@ -230,18 +232,16 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
           index++) {
         rowChildren.add(
           Container(
-            height: tileHeight + tileMargin,
+            height: tileHeight + margin,
             width: tileWidth,
-            margin: EdgeInsets.only(
-                left: tileMargin / 2.0, right: tileMargin / 2.0),
+            margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
           ),
         );
       }
       widgets.add(
         Container(
-          height: tileHeight + tileMargin,
-          margin:
-              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
+          height: tileHeight + margin,
+          margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
           alignment: Alignment.topCenter,
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -633,8 +633,8 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
       isScrollControlled: true,
       context: context,
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.8,
-        maxChildSize: 1.0,
+        initialChildSize: 0.6,
+        maxChildSize: 0.8,
         expand: false,
         builder: (context, controller) => ListView.builder(
           padding: EdgeInsets.zero,
@@ -642,21 +642,8 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
           shrinkWrap: true,
           itemCount: Collection.instance.playlists.length,
           itemBuilder: (context, i) {
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.transparent,
-                child: Icon(
-                  Icons.playlist_add,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-              ),
-              title: Text(Collection.instance.playlists[i].name),
-              subtitle: Text(
-                Language.instance.N_TRACKS.replaceAll(
-                  'N',
-                  Collection.instance.playlists[i].tracks.length.toString(),
-                ),
-              ),
+            return PlaylistTile(
+              playlist: Collection.instance.playlists[i],
               onTap: () async {
                 await Collection.instance.playlistAddTrack(
                   Collection.instance.playlists[i],

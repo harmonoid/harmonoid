@@ -7,11 +7,9 @@
 ///
 import 'dart:async';
 import 'dart:convert' as convert;
-import 'package:libmpv/libmpv.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:media_library/media_library.dart';
-import 'package:extended_image/extended_image.dart' hide ActionType;
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'package:harmonoid/core/playback.dart';
@@ -88,48 +86,45 @@ class Lyrics extends ChangeNotifier {
                   Playback.instance.position.inSeconds;
               for (int i = start + 1; i <= end; i++) {
                 final track = Playback.instance.tracks[Playback.instance.index];
-                final title = '${track.trackName} • ${[
+                final hasNoAlbumTag =
+                    ['', kUnknownAlbum].contains(track.albumName);
+                final hasNoTrackArtistsTag = track.hasNoAvailableArtists;
+                final hasNoAlbumArtistsTag = [
                   '',
                   kUnknownArtist,
-                ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName}';
-                Uri image;
-                if (LibmpvPluginUtils.isSupported(track.uri)) {
-                  final artwork = getAlbumArt(track, small: true);
-                  image =
-                      Uri.parse((artwork as ExtendedNetworkImageProvider).url);
-                } else {
-                  final artwork = getAlbumArt(track);
-                  image = (artwork as ExtendedFileImageProvider).file.uri;
-                }
+                ].contains(track.albumArtistName);
+                final title = [
+                  track.trackName,
+                  if (!hasNoTrackArtistsTag)
+                    track.trackArtistNames.take(1).join('')
+                  else if (!hasNoAlbumArtistsTag)
+                    track.albumArtistName
+                  else if (!hasNoAlbumTag)
+                    track.albumName,
+                ].join(' • ');
                 await AwesomeNotifications().createNotification(
-                    content: NotificationContent(
-                      id: _kNotificationID,
-                      channelKey: _kNotificationChannelKey,
-                      groupKey: _kNotificationChannelKey,
-                      actionType: ActionType.DisabledAction,
-                      notificationLayout: NotificationLayout.Messaging,
-                      category: NotificationCategory.Status,
-                      // TODO: Fix lag.
-                      // Retrieval of image to be a circle seems to block the Flutter's UI thread.
-                      // This causes substantial amount of lag.
-                      // Maybe, the image is being processed entirely using Flutter's utilities.
-                      // I can see Skia screaming in the console.
-                      largeIcon: image.toString(),
-                      roundedLargeIcon: true,
-                      title: title,
-                      body: instance._currentLyricsAveragedMap[
-                          instance._currentLyricsTimeStamps[i]],
-                      summary: title,
-                      showWhen: false,
-                      autoDismissible: true,
-                      wakeUpScreen: false,
+                  content: NotificationContent(
+                    id: _kNotificationID,
+                    channelKey: _kNotificationChannelKey,
+                    groupKey: _kNotificationChannelKey,
+                    actionType: ActionType.DisabledAction,
+                    notificationLayout: NotificationLayout.Messaging,
+                    category: NotificationCategory.Status,
+                    title: title,
+                    body: instance._currentLyricsAveragedMap[
+                        instance._currentLyricsTimeStamps[i]],
+                    summary: title,
+                    showWhen: false,
+                    autoDismissible: true,
+                    wakeUpScreen: false,
+                  ),
+                  actionButtons: [
+                    NotificationActionButton(
+                      key: _kNotificationHideButtonKey,
+                      label: Language.instance.HIDE,
                     ),
-                    actionButtons: [
-                      NotificationActionButton(
-                        key: _kNotificationHideButtonKey,
-                        label: Language.instance.HIDE,
-                      ),
-                    ]);
+                  ],
+                );
               }
             } catch (exception, stacktrace) {
               debugPrint(exception.toString());

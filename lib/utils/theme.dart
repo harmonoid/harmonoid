@@ -79,7 +79,7 @@ ThemeData createTheme({
   } else {
     textTheme = TextTheme(
       headline1: TextStyle(
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.normal,
         color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
         fontSize: 18.0,
       ),

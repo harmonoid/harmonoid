@@ -14,7 +14,6 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
-import 'package:harmonoid/utils/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart'
@@ -35,6 +34,8 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/windows_info.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/interface/file_info_screen.dart';
@@ -252,11 +253,12 @@ class SubHeader extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
                 child: Text(
                   text!.toUpperCase(),
-                  style: Theme.of(context).textTheme.overline?.copyWith(
-                        color: Theme.of(context).textTheme.headline3?.color,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: style ??
+                      Theme.of(context).textTheme.overline?.copyWith(
+                            color: Theme.of(context).textTheme.headline3?.color,
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w600,
+                          ),
                 ),
               )
         : Container();
@@ -402,14 +404,6 @@ class RefreshCollectionButton extends StatefulWidget {
 
 class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
   bool lock = false;
-  final double turns = 2 * math.pi;
-  late Tween<double> tween;
-
-  @override
-  void initState() {
-    super.initState();
-    this.tween = Tween<double>(begin: 0, end: this.turns);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -420,27 +414,15 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
               heroTag: 'collection_refresh_button',
               backgroundColor:
                   widget.color ?? Theme.of(context).colorScheme.secondary,
-              child: TweenAnimationBuilder(
-                child: Icon(
-                  Icons.refresh,
-                  color: widget.color?.isDark ?? true
-                      ? Colors.white
-                      : Colors.black87,
-                ),
-                tween: tween,
-                duration: Duration(milliseconds: 800),
-                builder: (_, dynamic value, child) => Transform.rotate(
-                  alignment: Alignment.center,
-                  angle: value,
-                  child: child,
-                ),
+              child: Icon(
+                Icons.refresh,
+                color: widget.color?.isDark ?? true
+                    ? Colors.white
+                    : Colors.black87,
               ),
               onPressed: () {
                 if (lock) return;
-                setState(() {
-                  lock = true;
-                });
-                tween = Tween<double>(begin: 0, end: turns);
+                lock = true;
                 Collection.instance.refresh(
                     onProgress: (progress, total, isCompleted) {
                   CollectionRefresh.instance.set(progress, total);
@@ -825,7 +807,7 @@ class DesktopTitleBar extends StatelessWidget {
         height: MediaQuery.of(context).padding.top,
         color: color ?? Theme.of(context).appBarTheme.backgroundColor,
       );
-    return Platform.isWindows
+    return WindowsInfo.instance.isWindows10OrGreater
         ? Container(
             width: MediaQuery.of(context).size.width,
             height: desktopTitleBarHeight,
@@ -977,6 +959,7 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
             unselectedItemColor: color?.isDark ?? true ? null : Colors.black45,
             type: BottomNavigationBarType.shifting,
             onTap: (index) {
+              MobileNowPlayingController.instance.restore();
               if (index != _index) {
                 widget.tabControllerNotifier.value =
                     TabRoute(index, TabRouteSender.bottomNavigationBar);
