@@ -10,7 +10,7 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/core/collection.dart';
 
 import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:provider/provider.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class StatsSetting extends StatefulWidget {
   StatsSetting({Key? key}) : super(key: key);
@@ -24,41 +24,80 @@ class StatsSettingState extends State<StatsSetting> {
       margin: EdgeInsets.symmetric(horizontal: 16.0),
       title: Language.instance.STATS_TITLE,
       subtitle: Language.instance.STATS_SUBTITLE,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Consumer<Collection>(
-            builder: (context, collection, _) => Container(
-              width: 360.0,
-              child: Table(
-                children: [
-                  TableRow(
-                    children: [
-                      Text(Language.instance.TRACK + ' : '),
-                      Text(collection.tracks.length.toString()),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Text(Language.instance.ALBUM + ' : '),
-                      Text(collection.albums.length.toString()),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Text(Language.instance.ARTIST + ' : '),
-                      Text(collection.artists.length.toString()),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Text(Language.instance.PLAYLIST + ' : '),
-                      Text(collection.playlists.length.toString()),
-                    ],
-                  ),
-                ],
-              ),
+      child: Table(),
+    );
+  }
+}
+
+class Table extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4.0),
+        border: Border.all(
+          color: Theme.of(context).dividerColor,
+          width: 1.0,
+        ),
+      ),
+      margin: isDesktop
+          ? EdgeInsets.only(top: tileMargin)
+          : EdgeInsets.symmetric(vertical: 2 * tileMargin),
+      child: DataTable(
+        headingRowHeight: 44.0,
+        dataRowHeight: 44.0,
+        columnSpacing: 0.0,
+        columns: [
+          DataColumn(
+            label: Container(
+              width: 56.0,
+              child: Text(''),
             ),
+          ),
+          DataColumn(
+            label: Container(
+              width: isDesktop
+                  ? 160.0
+                  : (MediaQuery.of(context).size.width - 56.0) / 2,
+              child: Text(Language.instance.TYPE),
+            ),
+          ),
+          DataColumn(
+            label: Container(
+              width: isDesktop
+                  ? 60.0
+                  : (MediaQuery.of(context).size.width - 56.0) / 2,
+              child: Text(Language.instance.COUNT),
+            ),
+          ),
+        ],
+        rows: [
+          DataRow(
+            cells: [
+              DataCell(Icon(Icons.music_note)),
+              DataCell(Text(Language.instance.TRACK)),
+              DataCell(Text(Collection.instance.tracks.length.toString())),
+            ],
+          ),
+          DataRow(
+            cells: [
+              DataCell(Icon(Icons.album)),
+              DataCell(Text(Language.instance.ALBUM)),
+              DataCell(Text(Collection.instance.albums.length.toString())),
+            ],
+          ),
+          DataRow(
+            cells: [
+              DataCell(Icon(Icons.person)),
+              DataCell(Text(Language.instance.ARTIST)),
+              DataCell(Text(Collection.instance.artists.length.toString())),
+            ],
+          ),
+          DataRow(
+            cells: [
+              DataCell(Icon(Icons.piano)),
+              DataCell(Text(Language.instance.GENRE)),
+              DataCell(Text(Collection.instance.genres.length.toString())),
+            ],
           ),
         ],
       ),

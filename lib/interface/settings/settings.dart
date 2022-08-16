@@ -89,6 +89,7 @@ class Settings extends StatelessWidget {
                   ThemeSetting(),
                   LanguageSetting(),
                   Divider(thickness: 1.0),
+                  StatsSetting(),
                   MiscellaneousSetting(),
                   Divider(thickness: 1.0),
                   ExperimentalSetting(),

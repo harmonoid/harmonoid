@@ -103,46 +103,99 @@ class IndexingState extends State<IndexingSetting>
                   10 * 1024 * 1024: '10 MB',
                   20 * 1024 * 1024: '20 MB',
                 };
-                return PopupMenuButton<int>(
-                  tooltip: '',
-                  offset: Offset(
-                    0.0,
-                    28.0,
-                  ),
-                  onSelected: (value) async {
-                    if (controller.progress != controller.total) {
-                      showProgressDialog();
-                      return;
-                    }
-                    Collection.instance.minimumFileSize = value;
-                    await Configuration.instance.save(
-                      minimumFileSize: value,
-                    );
-                    setState(() {});
-                    showShouldBeReindexedDialog();
-                  },
-                  elevation: 4.0,
-                  itemBuilder: (ctx) => sizes.entries
-                      .map(
-                        (e) => PopupMenuItem(
-                          child: Text(e.value),
-                          value: e.key,
+                return ListTile(
+                  onTap: () async {
+                    int value = Configuration.instance.minimumFileSize;
+                    await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(Language.instance.MINIMUM_FILE_SIZE),
+                        contentPadding: EdgeInsets.only(top: 20.0),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Divider(
+                              height: 1.0,
+                              thickness: 1.0,
+                            ),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight: 420.0,
+                              ),
+                              child: StatefulBuilder(
+                                builder: (context, setState) =>
+                                    SingleChildScrollView(
+                                  child: Column(
+                                    children: sizes.entries
+                                        .map(
+                                          (e) => RadioListTile<int>(
+                                            groupValue: value,
+                                            value: e.key,
+                                            onChanged: (e) {
+                                              if (e != null) {
+                                                setState(() => value = e);
+                                              }
+                                            },
+                                            title: Text(
+                                              e.value,
+                                              style: isDesktop
+                                                  ? Theme.of(context)
+                                                      .textTheme
+                                                      .headline4
+                                                  : null,
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Divider(
+                              height: 1.0,
+                              thickness: 1.0,
+                            ),
+                          ],
                         ),
-                      )
-                      .toList(),
-                  child: ListTile(
-                    dense: false,
-                    title: Text(Language.instance.MINIMUM_FILE_SIZE),
-                    subtitle: Text(
-                      '${sizes[Configuration.instance.minimumFileSize] == null ? () {
-                          if (Configuration.instance.minimumFileSize >
-                              1024 * 1024) {
-                            return '${(Configuration.instance.minimumFileSize / (1024 * 1024)).toStringAsFixed(2)} MB';
-                          } else {
-                            return '${(Configuration.instance.minimumFileSize / 1024).toStringAsFixed(2)} KB';
-                          }
-                        }() : sizes[Configuration.instance.minimumFileSize]}',
-                    ),
+                        actions: [
+                          TextButton(
+                            onPressed: () async {
+                              Navigator.of(context).maybePop();
+                              if (controller.progress != controller.total) {
+                                showProgressDialog();
+                                return;
+                              }
+                              Collection.instance.minimumFileSize = value;
+                              await Configuration.instance.save(
+                                minimumFileSize: value,
+                              );
+                              setState(() {});
+                            },
+                            child: Text(
+                              Language.instance.OK,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: Navigator.of(context).maybePop,
+                            child: Text(
+                              Language.instance.CANCEL,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  dense: false,
+                  title: Text(Language.instance.MINIMUM_FILE_SIZE),
+                  subtitle: Text(
+                    '${sizes[Configuration.instance.minimumFileSize] == null ? () {
+                        if (Configuration.instance.minimumFileSize >
+                            1024 * 1024) {
+                          return '${(Configuration.instance.minimumFileSize / (1024 * 1024)).toStringAsFixed(2)} MB';
+                        } else {
+                          return '${(Configuration.instance.minimumFileSize / 1024).toStringAsFixed(2)} KB';
+                        }
+                      }() : sizes[Configuration.instance.minimumFileSize]}',
                   ),
                 );
               }(),

@@ -486,8 +486,23 @@ class CollectionScreenState extends State<CollectionScreen>
             child: Consumer<CollectionRefresh>(
               builder: (context, refresh, _) => Scaffold(
                 resizeToAvoidBottomInset: false,
-                floatingActionButton: MiniNowPlayingBarRefreshCollectionButton(
-                  key: MobileNowPlayingController.instance.fabKey,
+                floatingActionButton: ValueListenableBuilder(
+                  valueListenable: index,
+                  builder: (context, value, child) => AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    reverseDuration: const Duration(milliseconds: 200),
+                    switchInCurve: Curves.easeInOut,
+                    switchOutCurve: Curves.easeInOut,
+                    transitionBuilder: (child, value) => FadeTransition(
+                      opacity: value,
+                      child: child,
+                    ),
+                    child: [1, 2, 3].contains(index.value)
+                        ? MiniNowPlayingBarRefreshCollectionButton(
+                            key: MobileNowPlayingController.instance.fabKey,
+                          )
+                        : Container(),
+                  ),
                 ),
                 body: Stack(
                   fit: StackFit.expand,
@@ -500,9 +515,11 @@ class CollectionScreenState extends State<CollectionScreen>
                           : Language.instance.COLLECTION_INDEXING_HINT,
                       progress: refresh.isCompleted
                           ? null
-                          : refresh.total == 0
-                              ? 1.0
-                              : (refresh.progress ?? 0.0) / refresh.total,
+                          : refresh.progress == null
+                              ? true
+                              : refresh.total == 0
+                                  ? 1.0
+                                  : (refresh.progress ?? 0.0) / refresh.total,
                       transitionCurve: Curves.easeInOut,
                       width: MediaQuery.of(context).size.width - 2 * tileMargin,
                       height: kMobileSearchBarHeight,
