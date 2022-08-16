@@ -56,6 +56,7 @@ class Strings {
   late String CONTROL_PANEL;
   late String COPY_AS_JSON;
   late String COPY_LINK;
+  late String COUNT;
   late String CREATE;
   late String CREATE_NEW_PLAYLIST;
   late String CREATE_PLAYLIST_SUBHEADER;
@@ -254,6 +255,7 @@ class Strings {
   late String TRACK_NUMBER;
   late String TRACK_SINGLE;
   late String TRANSFERS;
+  late String TYPE;
   late String UNHIGHLIGHTED_LYRICS_SIZE;
   late String UNMUTE;
   late String UPDATE_AVAILABLE;

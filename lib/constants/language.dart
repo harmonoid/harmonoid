@@ -260,6 +260,7 @@ class Language extends Strings with ChangeNotifier {
     this.CONTROL_PANEL = asset['CONTROL_PANEL']!;
     this.COPY_AS_JSON = asset['COPY_AS_JSON']!;
     this.COPY_LINK = asset['COPY_LINK']!;
+    this.COUNT = asset['COUNT']!;
     this.CREATE = asset['CREATE']!;
     this.CREATE_NEW_PLAYLIST = asset['CREATE_NEW_PLAYLIST']!;
     this.CREATE_PLAYLIST_SUBHEADER = asset['CREATE_PLAYLIST_SUBHEADER']!;
@@ -458,6 +459,7 @@ class Language extends Strings with ChangeNotifier {
     this.TRACK_NUMBER = asset['TRACK_NUMBER']!;
     this.TRACK_SINGLE = asset['TRACK_SINGLE']!;
     this.TRANSFERS = asset['TRANSFERS']!;
+    this.TYPE = asset['TYPE']!;
     this.UNHIGHLIGHTED_LYRICS_SIZE = asset['UNHIGHLIGHTED_LYRICS_SIZE']!;
     this.UNMUTE = asset['UNMUTE']!;
     this.UPDATE_AVAILABLE = asset['UPDATE_AVAILABLE']!;
