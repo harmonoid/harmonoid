@@ -55,26 +55,6 @@ class WebTabState extends State<WebTab> with AutomaticKeepAliveClientMixin {
               )
             : Stack(
                 children: [
-                  if (Configuration.instance.webRecent.isNotEmpty &&
-                      Configuration.instance.backgroundArtwork)
-                    Positioned.fill(
-                      child: Opacity(
-                        opacity: 0.2,
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              top:
-                                  desktopTitleBarHeight + kDesktopAppBarHeight),
-                          alignment: Alignment.center,
-                          child: Image.memory(
-                            visualAssets.collection,
-                            height: 512.0,
-                            width: 512.0,
-                            filterQuality: FilterQuality.high,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                    ),
                   Padding(
                     padding: EdgeInsets.only(
                       top: desktopTitleBarHeight + kDesktopAppBarHeight,
@@ -907,44 +887,23 @@ class _FloatingSearchBarWebSearchScreenState
                       );
                       return FloatingSearchBarScrollNotifier(
                         child: NowPlayingBarScrollHideNotifier(
-                          child: Stack(
+                          child: CustomListView(
+                            padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).padding.top +
+                                  kMobileSearchBarHeight +
+                                  2 * tileMargin,
+                            ),
+                            shrinkWrap: true,
                             children: [
-                              if (Configuration.instance.backgroundArtwork)
-                                Positioned.fill(
-                                  child: Opacity(
-                                    opacity: 0.2,
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      child: Image.memory(
-                                        visualAssets.collection,
-                                        height: 512.0,
-                                        width: 512.0,
-                                        filterQuality: FilterQuality.high,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
+                              Center(
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(maxWidth: 840.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: widgets,
                                   ),
                                 ),
-                              CustomListView(
-                                padding: EdgeInsets.only(
-                                  top: MediaQuery.of(context).padding.top +
-                                      kMobileSearchBarHeight +
-                                      2 * tileMargin,
-                                ),
-                                shrinkWrap: true,
-                                children: [
-                                  Center(
-                                    child: ConstrainedBox(
-                                      constraints:
-                                          BoxConstraints(maxWidth: 840.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: widgets,
-                                      ),
-                                    ),
-                                  ),
-                                ],
                               ),
                             ],
                           ),

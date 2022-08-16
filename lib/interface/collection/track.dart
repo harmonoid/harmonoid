@@ -99,7 +99,6 @@ class TrackTab extends StatelessWidget {
                     },
                     tableHeaderBuilder: (context, index, constraints) =>
                         Container(
-                      height: 36.0,
                       alignment: Alignment.center,
                       child: Text(
                         [
@@ -110,6 +109,8 @@ class TrackTab extends StatelessWidget {
                           Language.instance.YEAR
                         ][index],
                         style: Theme.of(context).textTheme.headline2,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     tableRowBuilder: (context, index, property, constraints) =>

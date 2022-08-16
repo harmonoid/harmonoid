@@ -132,23 +132,6 @@ class CollectionScreenState extends State<CollectionScreen>
                     builder: (context, refresh, __) => Stack(
                       alignment: Alignment.bottomLeft,
                       children: <Widget>[
-                        if (Collection.instance.tracks.isNotEmpty &&
-                            Configuration.instance.backgroundArtwork)
-                          Positioned.fill(
-                            child: Opacity(
-                              opacity: 0.2,
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Image.memory(
-                                  visualAssets.collection,
-                                  height: 512.0,
-                                  width: 512.0,
-                                  filterQuality: FilterQuality.high,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                          ),
                         PageTransitionSwitcher(
                           child: [
                             AlbumTab(),
@@ -697,53 +680,30 @@ class CollectionScreenState extends State<CollectionScreen>
                             : FloatingSearchBarWebSearchTab(query: query);
                       },
                       body: FloatingSearchBarScrollNotifier(
-                        child: Stack(
-                          children: [
-                            if (Collection.instance.tracks.isNotEmpty &&
-                                Configuration.instance.backgroundArtwork)
-                              Positioned.fill(
-                                child: Opacity(
-                                  opacity: 0.2,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Image.memory(
-                                      visualAssets.collection,
-                                      height: 512.0,
-                                      width: 512.0,
-                                      filterQuality: FilterQuality.high,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            NotificationListener<ScrollNotification>(
-                              onNotification:
-                                  (ScrollNotification notification) {
-                                if (notification.depth == 0 &&
-                                    notification is ScrollEndNotification &&
-                                    notification.metrics.axis ==
-                                        Axis.horizontal) {
-                                  index.value = currentIndex;
-                                  widget.tabControllerNotifier.value = TabRoute(
-                                      currentIndex, TabRouteSender.pageView);
-                                }
-                                return false;
-                              },
-                              child: PageView(
-                                controller: pageController,
-                                onPageChanged: (page) {
-                                  currentIndex = page;
-                                },
-                                children: [
-                                  PlaylistTab(),
-                                  TrackTab(),
-                                  AlbumTab(),
-                                  ArtistTab(),
-                                  WebTab(),
-                                ],
-                              ),
-                            ),
-                          ],
+                        child: NotificationListener<ScrollNotification>(
+                          onNotification: (ScrollNotification notification) {
+                            if (notification.depth == 0 &&
+                                notification is ScrollEndNotification &&
+                                notification.metrics.axis == Axis.horizontal) {
+                              index.value = currentIndex;
+                              widget.tabControllerNotifier.value = TabRoute(
+                                  currentIndex, TabRouteSender.pageView);
+                            }
+                            return false;
+                          },
+                          child: PageView(
+                            controller: pageController,
+                            onPageChanged: (page) {
+                              currentIndex = page;
+                            },
+                            children: [
+                              PlaylistTab(),
+                              TrackTab(),
+                              AlbumTab(),
+                              ArtistTab(),
+                              WebTab(),
+                            ],
+                          ),
                         ),
                       ),
                     ),

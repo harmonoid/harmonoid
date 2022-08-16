@@ -92,17 +92,6 @@ class MiscellaneousSettingState extends State<MiscellaneousSetting> {
                 .then((_) => setState(() {})),
             value: Configuration.instance.jumpToNowPlayingScreenOnPlay,
           ),
-          CorrectedSwitchListTile(
-            title: Language.instance.BACKGROUND_ARTWORK_TITLE,
-            subtitle: Language.instance.BACKGROUND_ARTWORK_SUBTITLE,
-            onChanged: (_) => Configuration.instance
-                .save(
-                  backgroundArtwork: !Configuration.instance.backgroundArtwork,
-                )
-                .then((_) =>
-                    Provider.of<Visuals>(context, listen: false).update()),
-            value: Configuration.instance.backgroundArtwork,
-          ),
           if (isDesktop)
             CorrectedSwitchListTile(
               title: Language.instance.USE_MODERN_NOW_PLAYING_SCREEN,

@@ -86,7 +86,6 @@ class Configuration extends ConfigurationKeys {
     bool? automaticMusicLookup,
     bool? dynamicNowPlayingBarColoring,
     String? proxyURL,
-    bool? backgroundArtwork,
     bool? modernNowPlayingScreen,
     int? modernNowPlayingScreenCarouselIndex,
     bool? lyricsVisible,
@@ -147,9 +146,6 @@ class Configuration extends ConfigurationKeys {
     }
     if (proxyURL != null) {
       this.proxyURL = proxyURL;
-    }
-    if (backgroundArtwork != null) {
-      this.backgroundArtwork = backgroundArtwork;
     }
     if (modernNowPlayingScreen != null) {
       this.modernNowPlayingScreen = modernNowPlayingScreen;
@@ -226,7 +222,6 @@ class Configuration extends ConfigurationKeys {
         'automaticMusicLookup': this.automaticMusicLookup,
         'dynamicNowPlayingBarColoring': this.dynamicNowPlayingBarColoring,
         'proxyURL': this.proxyURL,
-        'backgroundArtwork': this.backgroundArtwork,
         'modernNowPlayingScreen': this.modernNowPlayingScreen,
         'modernNowPlayingScreenCarouselIndex':
             this.modernNowPlayingScreenCarouselIndex,
@@ -285,7 +280,6 @@ class Configuration extends ConfigurationKeys {
     automaticMusicLookup = current['automaticMusicLookup'];
     dynamicNowPlayingBarColoring = current['dynamicNowPlayingBarColoring'];
     proxyURL = current['proxyURL'];
-    backgroundArtwork = current['backgroundArtwork'];
     modernNowPlayingScreen = current['modernNowPlayingScreen'];
     modernNowPlayingScreenCarouselIndex =
         current['modernNowPlayingScreenCarouselIndex'];
@@ -324,7 +318,6 @@ abstract class ConfigurationKeys {
   late bool automaticMusicLookup;
   late bool dynamicNowPlayingBarColoring;
   late String? proxyURL;
-  late bool backgroundArtwork;
   late bool modernNowPlayingScreen;
   late int modernNowPlayingScreenCarouselIndex;
   late bool lyricsVisible;
@@ -375,7 +368,6 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'automaticMusicLookup': false,
       'dynamicNowPlayingBarColoring': isDesktop,
       'proxyURL': null,
-      'backgroundArtwork': isDesktop,
       'modernNowPlayingScreen': isDesktop,
       'modernNowPlayingScreenCarouselIndex': 0,
       'lyricsVisible': true,
