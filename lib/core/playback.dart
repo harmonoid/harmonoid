@@ -108,7 +108,7 @@ class Playback extends ChangeNotifier {
   void previous() {
     libmpv?.play().then((value) {
       if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-        libmpv?.back();
+        libmpv?.previous();
       }
     });
     if (Platform.isAndroid || Platform.isIOS) {
