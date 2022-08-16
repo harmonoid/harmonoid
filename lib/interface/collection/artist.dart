@@ -12,6 +12,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:media_library/media_library.dart';
@@ -33,6 +34,8 @@ class ArtistTab extends StatelessWidget {
   final controller = ScrollController();
 
   Widget build(BuildContext context) {
+    // Enforcing larger [tileMargin] on mobile.
+    final tileMargin = isDesktop ? kDesktopTileMargin : 16.0;
     // Is dense or not?
     // TODO: dense layouts only present on the mobile.
     final baseWidth =
@@ -62,6 +65,7 @@ class ArtistTab extends StatelessWidget {
           context: context,
           tileHeight: height,
           tileWidth: width,
+          margin: tileMargin,
           elementsPerRow: elementsPerRow,
           widgetCount: collection.artists.length,
           builder: (BuildContext context, int index) => ArtistTile(
@@ -347,13 +351,19 @@ class ArtistTile extends StatelessWidget {
                     ),
                     closedBuilder: (context, open) => InkWell(
                       onTap: () async {
-                        if (palette == null) {
-                          final result =
-                              await PaletteGenerator.fromImageProvider(
-                                  getAlbumArt(artist, small: true));
-                          palette = result.colors;
+                        try {
+                          if (palette == null) {
+                            final result =
+                                await PaletteGenerator.fromImageProvider(
+                                    getAlbumArt(artist, small: true));
+                            palette = result.colors;
+                          }
+                          await precacheImage(getAlbumArt(artist), context);
+                          MobileNowPlayingController.instance.hide();
+                        } catch (exception, stacktrace) {
+                          debugPrint(exception.toString());
+                          debugPrint(stacktrace.toString());
                         }
-                        await precacheImage(getAlbumArt(artist), context);
                         open();
                       },
                       child: Column(
@@ -466,8 +476,7 @@ class ArtistTile extends StatelessWidget {
                                       tag: 'artist_art_${artist.artistName}',
                                       child: ClipOval(
                                         child: ExtendedImage(
-                                          image:
-                                              getAlbumArt(artist, small: true),
+                                          image: getAlbumArt(artist),
                                           height: width - 8.0,
                                           width: width - 8.0,
                                         ),
@@ -482,16 +491,23 @@ class ArtistTile extends StatelessWidget {
                                       color: Colors.transparent,
                                       child: InkWell(
                                         onTap: () async {
-                                          if (palette == null) {
-                                            final result =
-                                                await PaletteGenerator
-                                                    .fromImageProvider(
-                                                        getAlbumArt(artist,
-                                                            small: true));
-                                            palette = result.colors;
+                                          try {
+                                            if (palette == null) {
+                                              final result =
+                                                  await PaletteGenerator
+                                                      .fromImageProvider(
+                                                          getAlbumArt(artist,
+                                                              small: true));
+                                              palette = result.colors;
+                                            }
+                                            await precacheImage(
+                                                getAlbumArt(artist), context);
+                                            MobileNowPlayingController.instance
+                                                .hide();
+                                          } catch (exception, stacktrace) {
+                                            debugPrint(exception.toString());
+                                            debugPrint(stacktrace.toString());
                                           }
-                                          await precacheImage(
-                                              getAlbumArt(artist), context);
                                           open();
                                         },
                                         child: Container(
@@ -504,7 +520,7 @@ class ArtistTile extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              const SizedBox(height: 12.0),
+                              const SizedBox(height: 14.0),
                               Text(
                                 artist.artistName.overflow,
                                 style: Theme.of(context)
@@ -517,6 +533,7 @@ class ArtistTile extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
+                              const Spacer(),
                             ],
                           ),
                         ),
@@ -556,8 +573,7 @@ class ArtistTile extends StatelessWidget {
                                       tag: 'artist_art_${artist.artistName}',
                                       child: ClipOval(
                                         child: ExtendedImage(
-                                          image:
-                                              getAlbumArt(artist, small: true),
+                                          image: getAlbumArt(artist),
                                           height: width - 8.0,
                                           width: width - 8.0,
                                         ),
@@ -572,16 +588,23 @@ class ArtistTile extends StatelessWidget {
                                       color: Colors.transparent,
                                       child: InkWell(
                                         onTap: () async {
-                                          if (palette == null) {
-                                            final result =
-                                                await PaletteGenerator
-                                                    .fromImageProvider(
-                                                        getAlbumArt(artist,
-                                                            small: true));
-                                            palette = result.colors;
+                                          try {
+                                            if (palette == null) {
+                                              final result =
+                                                  await PaletteGenerator
+                                                      .fromImageProvider(
+                                                          getAlbumArt(artist,
+                                                              small: true));
+                                              palette = result.colors;
+                                            }
+                                            await precacheImage(
+                                                getAlbumArt(artist), context);
+                                            MobileNowPlayingController.instance
+                                                .hide();
+                                          } catch (exception, stacktrace) {
+                                            debugPrint(exception.toString());
+                                            debugPrint(stacktrace.toString());
                                           }
-                                          await precacheImage(
-                                              getAlbumArt(artist), context);
                                           open();
                                         },
                                         child: Container(
@@ -594,7 +617,7 @@ class ArtistTile extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              Spacer(),
+                              const SizedBox(height: 14.0),
                               Text(
                                 artist.artistName.overflow,
                                 style: Theme.of(context).textTheme.headline2,
@@ -602,6 +625,7 @@ class ArtistTile extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
+                              const Spacer(),
                             ],
                           ),
                         ),
@@ -631,7 +655,7 @@ class ArtistScreenState extends State<ArtistScreen>
   bool reactToSecondaryPress = false;
   bool detailsVisible = false;
   bool detailsLoaded = false;
-  ScrollController controller = ScrollController(initialScrollOffset: 96.0);
+  ScrollController controller = ScrollController(initialScrollOffset: 116.0);
   ScrollPhysics? physics = NeverScrollableScrollPhysics();
 
   @override
@@ -1275,7 +1299,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                       : Brightness.dark,
                             ),
                             expandedHeight: MediaQuery.of(context).size.width +
-                                96.0 -
+                                116.0 -
                                 MediaQuery.of(context).padding.top,
                             pinned: true,
                             leading: IconButton(
@@ -1386,7 +1410,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                           opacity: value,
                                           child: Container(
                                             color: color,
-                                            height: 96.0,
+                                            height: 116.0,
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,

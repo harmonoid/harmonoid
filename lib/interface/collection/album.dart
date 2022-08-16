@@ -12,6 +12,7 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
@@ -551,12 +552,18 @@ class AlbumTile extends StatelessWidget {
                 );
               },
               onTap: () async {
-                if (palette == null) {
-                  final result = await PaletteGenerator.fromImageProvider(
-                      getAlbumArt(album, small: true));
-                  palette = result.colors;
+                try {
+                  if (palette == null) {
+                    final result = await PaletteGenerator.fromImageProvider(
+                        getAlbumArt(album, small: true));
+                    palette = result.colors;
+                  }
+                  await precacheImage(getAlbumArt(album), context);
+                  MobileNowPlayingController.instance.hide();
+                } catch (exception, stacktrace) {
+                  debugPrint(exception.toString());
+                  debugPrint(stacktrace.toString());
                 }
-                await precacheImage(getAlbumArt(album), context);
                 open();
               },
               child: Container(
@@ -679,13 +686,12 @@ class AlbumScreenState extends State<AlbumScreen>
     }
     if (isMobile) {
       Timer(Duration(milliseconds: 100), () {
-        this
-            .controller
+        controller
             .animateTo(
-              0.0,
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            )
+          0.0,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        )
             .then((_) {
           Timer(Duration(milliseconds: 50), () {
             setState(() {

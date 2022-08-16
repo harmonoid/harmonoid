@@ -21,13 +21,14 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/core/hotkeys.dart';
 
 import 'package:harmonoid/web/utils/widgets.dart';
 
@@ -43,11 +44,11 @@ class PlaylistTab extends StatelessWidget {
           backgroundColor: Colors.transparent,
           body: CustomListView(
             shrinkWrap: true,
-            padding: EdgeInsets.symmetric(
-              vertical: isDesktop
+            padding: EdgeInsets.only(
+              top: isDesktop
                   ? 20.0
                   : kMobileSearchBarHeight +
-                      16.0 +
+                      2 * tileMargin +
                       MediaQuery.of(context).padding.top,
             ),
             children: <Widget>[
@@ -571,6 +572,7 @@ class PlaylistTileState extends State<PlaylistTile> {
                         getAlbumArt(widget.playlist.tracks.first, small: true));
                     palette = result.colors;
                   }
+                  MobileNowPlayingController.instance.hide();
                 } catch (exception, stacktrace) {
                   debugPrint(exception.toString());
                   debugPrint(stacktrace.toString());
@@ -1295,7 +1297,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                   : Brightness.dark,
                         ),
                         expandedHeight: MediaQuery.of(context).size.width +
-                            96.0 -
+                            116.0 -
                             MediaQuery.of(context).padding.top,
                         pinned: true,
                         leading: IconButton(
@@ -1426,7 +1428,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                       opacity: value,
                                       child: Container(
                                         color: color,
-                                        height: 96.0,
+                                        height: 116.0,
                                         width:
                                             MediaQuery.of(context).size.width,
                                         padding: EdgeInsets.all(16.0),
@@ -1652,13 +1654,17 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                           CrossAxisAlignment.center,
                                       children: [
                                         const SizedBox(width: 12.0),
-                                        ExtendedImage(
-                                          image: getAlbumArt(
-                                              widget.playlist.tracks[i],
-                                              small: true),
+                                        Container(
                                           height: 56.0,
                                           width: 56.0,
-                                          fit: BoxFit.cover,
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            (i + 1).toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline3
+                                                ?.copyWith(fontSize: 18.0),
+                                          ),
                                         ),
                                         const SizedBox(width: 12.0),
                                         Expanded(

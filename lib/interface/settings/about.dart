@@ -7,17 +7,16 @@
 ///
 
 import 'dart:convert' as convert;
-import 'package:extended_image/extended_image.dart';
-import 'package:harmonoid/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+
+import 'package:harmonoid/main.dart';
 
 const kContributors = [
   [
