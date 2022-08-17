@@ -108,6 +108,7 @@ dependencies:
     git:
       url: https://github.com/harmonoid/window_manager.git
       ref: main
+  flutter_speed_dial: ^6.0.0
 
 dependency_overrides:
   libmpv:
