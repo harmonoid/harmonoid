@@ -76,256 +76,128 @@ class PlaylistTab extends StatelessWidget {
                     ],
                   ),
                 ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Flex(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  direction: Axis.horizontal,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        if (isDesktop) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(
-                                Language.instance.CREATE_NEW_PLAYLIST,
-                              ),
-                              content: Container(
-                                height: 40.0,
-                                width: 280.0,
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
-                                padding: EdgeInsets.only(top: 2.0),
-                                child: Focus(
-                                  onFocusChange: (hasFocus) {
-                                    if (hasFocus) {
-                                      HotKeys.instance.disableSpaceHotKey();
-                                    } else {
-                                      HotKeys.instance.enableSpaceHotKey();
-                                    }
-                                  },
-                                  child: TextField(
-                                    autofocus: true,
-                                    controller: _controller,
-                                    cursorWidth: 1.0,
-                                    onSubmitted: (String value) async {
-                                      if (value.isNotEmpty) {
+              if (isDesktop)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Flex(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    direction: Axis.horizontal,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          if (isDesktop) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text(
+                                  Language.instance.CREATE_NEW_PLAYLIST,
+                                ),
+                                content: Container(
+                                  height: 40.0,
+                                  width: 280.0,
+                                  alignment: Alignment.center,
+                                  margin:
+                                      EdgeInsets.only(top: 0.0, bottom: 0.0),
+                                  padding: EdgeInsets.only(top: 2.0),
+                                  child: Focus(
+                                    onFocusChange: (hasFocus) {
+                                      if (hasFocus) {
+                                        HotKeys.instance.disableSpaceHotKey();
+                                      } else {
+                                        HotKeys.instance.enableSpaceHotKey();
+                                      }
+                                    },
+                                    child: TextField(
+                                      autofocus: true,
+                                      controller: _controller,
+                                      cursorWidth: 1.0,
+                                      onSubmitted: (String value) async {
+                                        if (value.isNotEmpty) {
+                                          FocusScope.of(context).unfocus();
+                                          await Collection.instance
+                                              .playlistCreateFromName(value);
+                                          _controller.clear();
+                                          Navigator.of(context).maybePop();
+                                        }
+                                      },
+                                      cursorColor:
+                                          Theme.of(context).brightness ==
+                                                  Brightness.light
+                                              ? Color(0xFF212121)
+                                              : Colors.white,
+                                      textAlignVertical:
+                                          TextAlignVertical.bottom,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                      decoration: inputDecoration(
+                                        context,
+                                        Language
+                                            .instance.PLAYLISTS_TEXT_FIELD_HINT,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    child: Text(
+                                      Language.instance.OK,
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      if (_controller.text.isNotEmpty) {
                                         FocusScope.of(context).unfocus();
-                                        await Collection.instance
-                                            .playlistCreateFromName(value);
+                                        await collection.playlistCreateFromName(
+                                            _controller.text);
                                         _controller.clear();
                                         Navigator.of(context).maybePop();
                                       }
                                     },
-                                    cursorColor: Theme.of(context).brightness ==
-                                            Brightness.light
-                                        ? Color(0xFF212121)
-                                        : Colors.white,
-                                    textAlignVertical: TextAlignVertical.bottom,
-                                    style:
-                                        Theme.of(context).textTheme.headline4,
-                                    decoration: inputDecoration(
-                                      context,
-                                      Language
-                                          .instance.PLAYLISTS_TEXT_FIELD_HINT,
-                                    ),
                                   ),
-                                ),
+                                  TextButton(
+                                    child: Text(
+                                      Language.instance.CANCEL,
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                    onPressed: Navigator.of(context).maybePop,
+                                  ),
+                                ],
                               ),
-                              actions: [
-                                TextButton(
-                                  child: Text(
-                                    Language.instance.OK,
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    if (_controller.text.isNotEmpty) {
-                                      FocusScope.of(context).unfocus();
-                                      await collection.playlistCreateFromName(
-                                          _controller.text);
-                                      _controller.clear();
-                                      Navigator.of(context).maybePop();
-                                    }
-                                  },
-                                ),
-                                TextButton(
-                                  child: Text(
-                                    Language.instance.CANCEL,
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  onPressed: Navigator.of(context).maybePop,
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            elevation: 8.0,
-                            useRootNavigator: true,
-                            backgroundColor: Theme.of(context).cardColor,
-                            builder: (context) => StatefulBuilder(
-                              builder: (context, setState) {
-                                return Container(
-                                  margin: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom -
-                                        MediaQuery.of(context).padding.bottom,
-                                  ),
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      const SizedBox(height: 4.0),
-                                      Focus(
-                                        onFocusChange: (hasFocus) {
-                                          if (hasFocus) {
-                                            HotKeys.instance
-                                                .disableSpaceHotKey();
-                                          } else {
-                                            HotKeys.instance
-                                                .enableSpaceHotKey();
-                                          }
-                                        },
-                                        child: TextField(
-                                          textCapitalization:
-                                              TextCapitalization.words,
-                                          textInputAction: TextInputAction.done,
-                                          autofocus: true,
-                                          controller: _controller,
-                                          onSubmitted: (String value) async {
-                                            if (value.isNotEmpty) {
-                                              FocusScope.of(context).unfocus();
-                                              await Collection.instance
-                                                  .playlistCreateFromName(
-                                                      value);
-                                              _controller.clear();
-                                              Navigator.of(context).maybePop();
-                                            }
-                                          },
-                                          decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.fromLTRB(
-                                              12,
-                                              30,
-                                              12,
-                                              6,
-                                            ),
-                                            hintText: Language.instance
-                                                .PLAYLISTS_TEXT_FIELD_LABEL,
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .iconTheme
-                                                    .color!
-                                                    .withOpacity(0.4),
-                                                width: 1.8,
-                                              ),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .iconTheme
-                                                    .color!
-                                                    .withOpacity(0.4),
-                                                width: 1.8,
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                width: 1.8,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4.0),
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          if (_controller.text.isNotEmpty) {
-                                            FocusScope.of(context).unfocus();
-                                            await Collection.instance
-                                                .playlistCreateFromName(
-                                                    _controller.text);
-                                            _controller.clear();
-                                            Navigator.of(context).maybePop();
-                                          }
-                                        },
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                            Theme.of(context).primaryColor,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          Language.instance.CREATE
-                                              .toUpperCase(),
-                                          style: TextStyle(letterSpacing: 2.0),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        }
-                      },
-                      child: Text(
-                        Language.instance.CREATE.toUpperCase(),
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
+                            );
+                          }
+                        },
+                        child: Text(
+                          Language.instance.CREATE.toUpperCase(),
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 4.0,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        if (isDesktop) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => PlaylistImportDialog(),
-                          );
-                        } else if (isMobile) {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            constraints: BoxConstraints(
-                              maxHeight: double.infinity,
-                            ),
-                            context: context,
-                            elevation: 8.0,
-                            useRootNavigator: true,
-                            backgroundColor: Theme.of(context).cardColor,
-                            builder: (context) => StatefulBuilder(
-                              builder: (context, setState) {
-                                return PlaylistImportBottomSheet();
-                              },
-                            ),
-                          );
-                        }
-                      },
-                      child: Text(
-                        Language.instance.IMPORT.toUpperCase(),
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
+                      const SizedBox(
+                        width: 4.0,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          if (isDesktop) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => PlaylistImportDialog(),
+                            );
+                          }
+                        },
+                        child: Text(
+                          Language.instance.IMPORT.toUpperCase(),
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
               const SizedBox(
                 height: 4.0,
               ),

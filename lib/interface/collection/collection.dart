@@ -480,9 +480,10 @@ class CollectionScreenState extends State<CollectionScreen>
                       opacity: value,
                       child: child,
                     ),
-                    child: [1, 2, 3].contains(index.value)
+                    child: [0, 1, 2, 3].contains(index.value)
                         ? MiniNowPlayingBarRefreshCollectionButton(
                             key: MobileNowPlayingController.instance.fabKey,
+                            index: index,
                           )
                         : Container(),
                   ),

@@ -6,23 +6,26 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:ui';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/interface/collection/track.dart';
-import 'package:harmonoid/state/now_playing_color_palette.dart';
-import 'package:harmonoid/utils/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:miniplayer/miniplayer.dart';
-import 'package:extended_image/extended_image.dart';
-
-import 'package:harmonoid/core/playback.dart';
+import 'package:collection/collection.dart';
 import 'package:media_library/media_library.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
+import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/web/utils/widgets.dart';
 
 const kDetailsAreaHeight = 96.0;
 const kControlsAreaHeight = 136.0;
@@ -981,7 +984,11 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
 }
 
 class MiniNowPlayingBarRefreshCollectionButton extends StatefulWidget {
-  MiniNowPlayingBarRefreshCollectionButton({Key? key}) : super(key: key);
+  final ValueNotifier<int> index;
+  MiniNowPlayingBarRefreshCollectionButton({
+    Key? key,
+    required this.index,
+  }) : super(key: key);
 
   @override
   State<MiniNowPlayingBarRefreshCollectionButton> createState() =>
@@ -990,9 +997,32 @@ class MiniNowPlayingBarRefreshCollectionButton extends StatefulWidget {
 
 class MiniNowPlayingBarRefreshCollectionButtonState
     extends State<MiniNowPlayingBarRefreshCollectionButton> {
+  bool refreshFAB = true;
   double _yOffset = MobileNowPlayingController.instance.isHidden
       ? 0.0
       : kMobileNowPlayingBarHeight;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.index.addListener(listener);
+  }
+
+  @override
+  void dispose() {
+    widget.index.removeListener(listener);
+    super.dispose();
+  }
+
+  void listener() {
+    if (refreshFAB && widget.index.value == 0) {
+      refreshFAB = false;
+      setState((() {}));
+    } else if (!refreshFAB && widget.index.value != 0) {
+      refreshFAB = true;
+      setState((() {}));
+    }
+  }
 
   void show() {
     if (Playback.instance.tracks.isEmpty) return;
@@ -1023,9 +1053,163 @@ class MiniNowPlayingBarRefreshCollectionButtonState
                 end: value?.first ?? Theme.of(context).primaryColor,
               ),
               builder: (context, color, _) => Container(
-                child: RefreshCollectionButton(
-                  color: color as Color?,
-                ),
+                child: widget.index.value == 0
+                    ? SpeedDial(
+                        icon: Icons.add,
+                        activeIcon: Icons.close,
+                        spacing: 5.0,
+                        tooltip: Language.instance.CREATE_NEW_PLAYLIST,
+                        heroTag: 'create-playlist-fab',
+                        elevation: 8.0,
+                        animationCurve: Curves.elasticInOut,
+                        children: [
+                          SpeedDialChild(
+                            child: const Icon(Icons.downloading),
+                            label: Language.instance.IMPORT,
+                            visible: true,
+                            onTap: () {
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                constraints: BoxConstraints(
+                                  maxHeight: double.infinity,
+                                ),
+                                context: context,
+                                elevation: 8.0,
+                                useRootNavigator: true,
+                                backgroundColor: Theme.of(context).cardColor,
+                                builder: (context) => StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return PlaylistImportBottomSheet();
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                          SpeedDialChild(
+                            child: const Icon(Icons.edit),
+                            label: Language.instance.CREATE,
+                            visible: true,
+                            onTap: () async {
+                              String text = '';
+                              await showModalBottomSheet(
+                                isScrollControlled: true,
+                                context: context,
+                                elevation: 8.0,
+                                useRootNavigator: true,
+                                backgroundColor: Theme.of(context).cardColor,
+                                builder: (context) => StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return Container(
+                                      margin: EdgeInsets.only(
+                                        bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom -
+                                            MediaQuery.of(context)
+                                                .padding
+                                                .bottom,
+                                      ),
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          const SizedBox(height: 4.0),
+                                          TextField(
+                                            textCapitalization:
+                                                TextCapitalization.words,
+                                            textInputAction:
+                                                TextInputAction.done,
+                                            autofocus: true,
+                                            onChanged: (value) => text = value,
+                                            onSubmitted: (String value) async {
+                                              if (value.isNotEmpty) {
+                                                FocusScope.of(context)
+                                                    .unfocus();
+                                                await Collection.instance
+                                                    .playlistCreateFromName(
+                                                        value);
+                                                Navigator.of(context)
+                                                    .maybePop();
+                                              }
+                                            },
+                                            decoration: InputDecoration(
+                                              contentPadding:
+                                                  EdgeInsets.fromLTRB(
+                                                12,
+                                                30,
+                                                12,
+                                                6,
+                                              ),
+                                              hintText: Language.instance
+                                                  .PLAYLISTS_TEXT_FIELD_LABEL,
+                                              border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .iconTheme
+                                                      .color!
+                                                      .withOpacity(0.4),
+                                                  width: 1.8,
+                                                ),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .iconTheme
+                                                      .color!
+                                                      .withOpacity(0.4),
+                                                  width: 1.8,
+                                                ),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  width: 1.8,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              if (text.isNotEmpty) {
+                                                FocusScope.of(context)
+                                                    .unfocus();
+                                                await Collection.instance
+                                                    .playlistCreateFromName(
+                                                  text,
+                                                );
+                                                Navigator.of(context)
+                                                    .maybePop();
+                                              }
+                                            },
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                Theme.of(context).primaryColor,
+                                              ),
+                                            ),
+                                            child: Text(
+                                              Language.instance.CREATE
+                                                  .toUpperCase(),
+                                              style:
+                                                  TextStyle(letterSpacing: 2.0),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      )
+                    : RefreshCollectionButton(
+                        color: color as Color?,
+                      ),
               ),
             ),
           ),
