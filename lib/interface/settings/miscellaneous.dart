@@ -1,16 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/state/mobile_now_playing_controller.dart';
-import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 
 class MiscellaneousSetting extends StatefulWidget {
   MiscellaneousSetting({Key? key}) : super(key: key);
