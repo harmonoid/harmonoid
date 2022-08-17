@@ -759,7 +759,8 @@ enum PlaylistLoopMode {
 abstract class DefaultPlaybackValues {
   static int index = 0;
   static List<Track> tracks = [];
-  static double volume = 50.0;
+  static double volume =
+      Platform.isWindows || Platform.isLinux || Platform.isMacOS ? 50.0 : 100.0;
   static double rate = 1.0;
   static double pitch = 1.0;
   static PlaylistLoopMode playlistLoopMode = PlaylistLoopMode.none;

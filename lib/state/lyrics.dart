@@ -64,6 +64,7 @@ class Lyrics extends ChangeNotifier {
         onActionReceivedMethod: _onNotificationActionReceived,
       );
       Playback.instance.addListener(() async {
+        debugPrint(instance.current.length.toString());
         if (instance.current.isNotEmpty &&
             Configuration.instance.notificationLyrics &&
             !instance._currentLyricsHidden) {

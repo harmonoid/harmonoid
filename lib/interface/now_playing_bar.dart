@@ -1146,388 +1146,466 @@ class _ControlPanelState extends State<ControlPanel> {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      scopesRoute: true,
-      explicitChildNodes: true,
-      child: WillPopScope(
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).maybePop();
-                },
-                child: Container(
-                  color: Colors.transparent,
-                  width: double.infinity,
-                  height: double.infinity,
+    final content = Consumer<Playback>(
+      builder: (context, playback, _) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (isDesktop) ...[
+            const SizedBox(height: 16.0),
+            Row(
+              children: [
+                const SizedBox(width: 20.0),
+                Text(
+                  Language.instance.CONTROL_PANEL,
+                  style: Theme.of(context).textTheme.headline1,
                 ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.bottomRight,
-              child: TweenAnimationBuilder(
-                tween: Tween<double>(
-                  begin: 156.0,
-                  end: end,
-                ),
-                curve: Curves.easeInOut,
-                duration: Duration(milliseconds: 160),
-                child: Consumer<Playback>(
-                  builder: (context, playback, _) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 16.0),
-                      Row(
-                        children: [
-                          const SizedBox(width: 20.0),
-                          Text(
-                            Language.instance.CONTROL_PANEL,
-                            style: Theme.of(context).textTheme.headline1,
-                          ),
-                          Transform.translate(
-                            offset: Offset(2.0, -6.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Theme.of(context).dividerColor,
-                                  width: 1.0,
-                                ),
-                              ),
-                              padding: EdgeInsets.all(1.0),
-                              child: Text(
-                                Language.instance.BETA.toUpperCase(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    ?.copyWith(
-                                      fontSize: 10.0,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                        ],
+                Transform.translate(
+                  offset: Offset(2.0, -6.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Theme.of(context).dividerColor,
+                        width: 1.0,
                       ),
-                      const SizedBox(height: 12.0),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 20.0,
-                          bottom: 8.0,
-                          top: 4.0,
-                        ),
-                        child: Text(
-                          Language.instance.SPEED,
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 8.0),
-                          IconButton(
-                            padding: EdgeInsets.all(8.0),
-                            onPressed: () {
-                              playback.setRate(1.0);
-                            },
-                            iconSize: 20.0,
-                            splashRadius: 18.0,
-                            tooltip: Language.instance.RESET_SPEED,
-                            icon: Icon(
-                              Icons.speed,
-                            ),
+                    ),
+                    padding: EdgeInsets.all(1.0),
+                    child: Text(
+                      Language.instance.BETA.toUpperCase(),
+                      style: Theme.of(context).textTheme.headline5?.copyWith(
+                            fontSize: 10.0,
                           ),
-                          const SizedBox(width: 8.0),
-                          Expanded(
-                            child: ScrollableSlider(
-                              min: 0.0,
-                              max: 2.0,
-                              value: playback.rate.clamp(0.5, 2.0),
-                              onScrolledUp: () {
-                                playback.setRate(
-                                  (playback.rate + 0.05).clamp(0.0, 2.0),
-                                );
-                              },
-                              onScrolledDown: () {
-                                playback.setRate(
-                                  (playback.rate - 0.05).clamp(0.0, 2.0),
-                                );
-                              },
-                              onChanged: (value) {
-                                playback.setRate(value);
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                          Container(
-                            width: 42.0,
-                            height: 32.0,
-                            padding: EdgeInsets.only(bottom: 4.0),
-                            child: Focus(
-                              onFocusChange: (hasFocus) {
-                                focused = hasFocus;
-                                if (hasFocus) {
-                                  HotKeys.instance.disableSpaceHotKey();
-                                } else {
-                                  HotKeys.instance.enableSpaceHotKey();
-                                }
-                              },
-                              child: TextField(
-                                controller: controllers[0],
-                                scrollPhysics: NeverScrollableScrollPhysics(),
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'[0-9]|.')),
-                                ],
-                                onChanged: (value) {
-                                  playback.setRate(
-                                    double.tryParse(value) ?? playback.rate,
-                                  );
-                                },
-                                textAlign: TextAlign.center,
-                                textAlignVertical: TextAlignVertical.center,
-                                style: Theme.of(context).textTheme.headline4,
-                                decoration: inputDecoration(
-                                  context,
-                                  '',
-                                ).copyWith(
-                                  contentPadding: EdgeInsets.only(
-                                    left: 4.0,
-                                    right: 4.0,
-                                    bottom: 14.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 20.0,
-                          bottom: 8.0,
-                          top: 4.0,
-                        ),
-                        child: Text(
-                          Language.instance.PITCH,
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 8.0),
-                          IconButton(
-                            padding: EdgeInsets.all(8.0),
-                            onPressed: () => playback.setPitch(1.0),
-                            iconSize: 20.0,
-                            splashRadius: 18.0,
-                            tooltip: Language.instance.RESET_PITCH,
-                            icon: Icon(FluentIcons.pulse_20_filled),
-                          ),
-                          const SizedBox(width: 8.0),
-                          Expanded(
-                            child: ScrollableSlider(
-                              min: 0.5,
-                              max: 1.5,
-                              value: playback.pitch.clamp(0.5, 1.5),
-                              onScrolledUp: () {
-                                playback.setPitch(
-                                  (playback.pitch + 0.05).clamp(0.5, 1.5),
-                                );
-                              },
-                              onScrolledDown: () {
-                                playback.setPitch(
-                                  (playback.pitch - 0.05).clamp(0.5, 1.5),
-                                );
-                              },
-                              onChanged: (value) {
-                                playback.setPitch(value);
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                          Container(
-                            width: 42.0,
-                            height: 32.0,
-                            padding: EdgeInsets.only(bottom: 4.0),
-                            child: Focus(
-                              onFocusChange: (hasFocus) {
-                                focused = hasFocus;
-                                if (hasFocus) {
-                                  HotKeys.instance.disableSpaceHotKey();
-                                } else {
-                                  HotKeys.instance.enableSpaceHotKey();
-                                }
-                              },
-                              child: TextField(
-                                controller: controllers[1],
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'[0-9]|.')),
-                                ],
-                                onChanged: (value) {
-                                  playback.setPitch(
-                                    double.tryParse(value) ?? playback.pitch,
-                                  );
-                                },
-                                scrollPhysics: NeverScrollableScrollPhysics(),
-                                textAlign: TextAlign.center,
-                                textAlignVertical: TextAlignVertical.center,
-                                style: Theme.of(context).textTheme.headline4,
-                                decoration: inputDecoration(
-                                  context,
-                                  '',
-                                ).copyWith(
-                                  contentPadding: EdgeInsets.only(
-                                    left: 4.0,
-                                    right: 4.0,
-                                    bottom: 14.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 20.0,
-                          bottom: 8.0,
-                          top: 4.0,
-                        ),
-                        child: Text(
-                          Language.instance.VOLUME_BOOST,
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 8.0),
-                          IconButton(
-                            padding: EdgeInsets.all(8.0),
-                            onPressed: () {
-                              if (playback.volume > 100.0) {
-                                playback.setVolume(100.0);
-                              }
-                            },
-                            iconSize: 20.0,
-                            splashRadius: 18.0,
-                            tooltip: Language.instance.DISABLE_VOLUME_BOOST,
-                            icon: Icon(Icons.volume_up),
-                          ),
-                          const SizedBox(width: 8.0),
-                          Expanded(
-                            child: ScrollableSlider(
-                              min: 100.0,
-                              max: 200.0,
-                              value: playback.volume.clamp(100.0, 200.0),
-                              onScrolledUp: () {
-                                playback.setVolume(
-                                  (playback.volume + 5.0).clamp(100.0, 200.0),
-                                );
-                              },
-                              onScrolledDown: () {
-                                playback.setVolume(
-                                  (playback.volume - 5.0).clamp(100.0, 200.0),
-                                );
-                              },
-                              onChanged: (value) {
-                                playback.setVolume(value);
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                          Container(
-                            width: 42.0,
-                            height: 32.0,
-                            padding: EdgeInsets.only(bottom: 4.0),
-                            child: Focus(
-                              onFocusChange: (hasFocus) {
-                                focused = hasFocus;
-                                if (hasFocus) {
-                                  HotKeys.instance.disableSpaceHotKey();
-                                } else {
-                                  HotKeys.instance.enableSpaceHotKey();
-                                }
-                              },
-                              child: TextField(
-                                controller: controllers[2],
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'[0-9]|')),
-                                ],
-                                onChanged: (value) {
-                                  playback.setVolume(
-                                    double.tryParse(value) ?? playback.pitch,
-                                  );
-                                },
-                                scrollPhysics: NeverScrollableScrollPhysics(),
-                                textAlign: TextAlign.center,
-                                textAlignVertical: TextAlignVertical.center,
-                                style: Theme.of(context).textTheme.headline4,
-                                decoration: inputDecoration(
-                                  context,
-                                  '',
-                                ).copyWith(
-                                  contentPadding: EdgeInsets.only(
-                                    left: 4.0,
-                                    right: 4.0,
-                                    bottom: 14.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                        ],
-                      ),
-                      const SizedBox(height: 8.0),
-                    ],
+                    ),
                   ),
                 ),
-                builder: (context, value, child) => Transform.translate(
-                  offset: Offset(0, value as double),
-                  child: Card(
-                    color: Theme.of(context).cardColor,
-                    elevation: 8.0,
-                    margin: widget.x == null
-                        ? EdgeInsets.all(16.0)
-                        : EdgeInsets.only(
-                            right: MediaQuery.of(context).size.width -
-                                (widget.x ?? 0.0) -
-                                64.0 -
-                                240.0,
-                            bottom: 16.0,
-                          ),
-                    child: Container(
-                      width: 240.0,
-                      child: IntrinsicHeight(
-                        child: child,
+                const Spacer(),
+              ],
+            ),
+          ],
+          const SizedBox(height: 12.0),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 20.0,
+              bottom: 8.0,
+              top: 4.0,
+            ),
+            child: Text(
+              isDesktop
+                  ? Language.instance.SPEED
+                  : Language.instance.SPEED.toUpperCase(),
+              style: isDesktop
+                  ? Theme.of(context).textTheme.headline4
+                  : Theme.of(context).textTheme.overline?.copyWith(
+                        color: Theme.of(context).textTheme.headline3?.color,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(width: 8.0),
+              IconButton(
+                padding: EdgeInsets.all(8.0),
+                onPressed: () {
+                  playback.setRate(1.0);
+                },
+                iconSize: 20.0,
+                splashRadius: 18.0,
+                tooltip: Language.instance.RESET_SPEED,
+                icon: Icon(
+                  Icons.speed,
+                ),
+              ),
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: ScrollableSlider(
+                  min: 0.5,
+                  max: 2.0,
+                  value: playback.rate.clamp(0.5, 2.0),
+                  onScrolledUp: () {
+                    playback.setRate(
+                      (playback.rate + 0.05).clamp(0.0, 2.0),
+                    );
+                  },
+                  onScrolledDown: () {
+                    playback.setRate(
+                      (playback.rate - 0.05).clamp(0.0, 2.0),
+                    );
+                  },
+                  onChanged: (value) {
+                    playback.setRate(value);
+                  },
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Container(
+                width: isMobile ? 56.0 : 42.0,
+                height: isMobile ? 42.0 : 32.0,
+                padding: EdgeInsets.only(bottom: 4.0),
+                child: Focus(
+                  onFocusChange: (hasFocus) {
+                    focused = hasFocus;
+                    if (hasFocus) {
+                      HotKeys.instance.disableSpaceHotKey();
+                    } else {
+                      HotKeys.instance.enableSpaceHotKey();
+                    }
+                  },
+                  child: TextField(
+                    controller: controllers[0],
+                    scrollPhysics: NeverScrollableScrollPhysics(),
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
+                    ],
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      playback.setRate(
+                        double.tryParse(value) ?? playback.rate,
+                      );
+                    },
+                    textAlign: TextAlign.center,
+                    textAlignVertical: TextAlignVertical.center,
+                    style:
+                        isMobile ? null : Theme.of(context).textTheme.headline4,
+                    decoration: inputDecoration(
+                      context,
+                      '',
+                    ).copyWith(
+                      contentPadding: EdgeInsets.only(
+                        left: 4.0,
+                        right: 4.0,
+                        bottom: 14.0,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
                       ),
                     ),
                   ),
                 ),
               ),
+              const SizedBox(width: 16.0),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 20.0,
+              bottom: 8.0,
+              top: 4.0,
             ),
-          ],
-        ),
-        onWillPop: () async {
-          widget.onPop();
-          setState(() {
-            end = 156.0;
-          });
-          await Future.delayed(const Duration(milliseconds: 100));
-          return Future.value(true);
-        },
+            child: Text(
+              isDesktop
+                  ? Language.instance.PITCH
+                  : Language.instance.PITCH.toUpperCase(),
+              style: isDesktop
+                  ? Theme.of(context).textTheme.headline4
+                  : Theme.of(context).textTheme.overline?.copyWith(
+                        color: Theme.of(context).textTheme.headline3?.color,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(width: 8.0),
+              IconButton(
+                padding: EdgeInsets.all(8.0),
+                onPressed: () => playback.setPitch(1.0),
+                iconSize: 20.0,
+                splashRadius: 18.0,
+                tooltip: Language.instance.RESET_PITCH,
+                icon: Icon(FluentIcons.pulse_20_filled),
+              ),
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: ScrollableSlider(
+                  min: 0.5,
+                  max: 1.5,
+                  value: playback.pitch.clamp(0.5, 1.5),
+                  onScrolledUp: () {
+                    playback.setPitch(
+                      (playback.pitch + 0.05).clamp(0.5, 1.5),
+                    );
+                  },
+                  onScrolledDown: () {
+                    playback.setPitch(
+                      (playback.pitch - 0.05).clamp(0.5, 1.5),
+                    );
+                  },
+                  onChanged: (value) {
+                    playback.setPitch(value);
+                  },
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Container(
+                width: isMobile ? 56.0 : 42.0,
+                height: isMobile ? 42.0 : 32.0,
+                padding: EdgeInsets.only(bottom: 4.0),
+                child: Focus(
+                  onFocusChange: (hasFocus) {
+                    focused = hasFocus;
+                    if (hasFocus) {
+                      HotKeys.instance.disableSpaceHotKey();
+                    } else {
+                      HotKeys.instance.enableSpaceHotKey();
+                    }
+                  },
+                  child: TextField(
+                    controller: controllers[1],
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
+                    ],
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      playback.setPitch(
+                        double.tryParse(value) ?? playback.pitch,
+                      );
+                    },
+                    scrollPhysics: NeverScrollableScrollPhysics(),
+                    textAlign: TextAlign.center,
+                    textAlignVertical: TextAlignVertical.center,
+                    style:
+                        isMobile ? null : Theme.of(context).textTheme.headline4,
+                    decoration: inputDecoration(
+                      context,
+                      '',
+                    ).copyWith(
+                      contentPadding: EdgeInsets.only(
+                        left: 4.0,
+                        right: 4.0,
+                        bottom: 14.0,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16.0),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 20.0,
+              bottom: 8.0,
+              top: 4.0,
+            ),
+            child: Text(
+              isDesktop
+                  ? Language.instance.VOLUME_BOOST
+                  : Language.instance.VOLUME_BOOST.toUpperCase(),
+              style: isDesktop
+                  ? Theme.of(context).textTheme.headline4
+                  : Theme.of(context).textTheme.overline?.copyWith(
+                        color: Theme.of(context).textTheme.headline3?.color,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(width: 8.0),
+              IconButton(
+                padding: EdgeInsets.all(8.0),
+                onPressed: () {
+                  if (playback.volume > 100.0) {
+                    playback.setVolume(100.0);
+                  }
+                },
+                iconSize: 20.0,
+                splashRadius: 18.0,
+                tooltip: Language.instance.DISABLE_VOLUME_BOOST,
+                icon: Icon(Icons.volume_up),
+              ),
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: ScrollableSlider(
+                  min: 100.0,
+                  max: 200.0,
+                  value: playback.volume.clamp(100.0, 200.0),
+                  onScrolledUp: () {
+                    playback.setVolume(
+                      (playback.volume + 5.0).clamp(100.0, 200.0),
+                    );
+                  },
+                  onScrolledDown: () {
+                    playback.setVolume(
+                      (playback.volume - 5.0).clamp(100.0, 200.0),
+                    );
+                  },
+                  onChanged: (value) {
+                    playback.setVolume(value);
+                  },
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Container(
+                width: isMobile ? 56.0 : 42.0,
+                height: isMobile ? 42.0 : 32.0,
+                padding: EdgeInsets.only(bottom: 4.0),
+                child: Focus(
+                  onFocusChange: (hasFocus) {
+                    focused = hasFocus;
+                    if (hasFocus) {
+                      HotKeys.instance.disableSpaceHotKey();
+                    } else {
+                      HotKeys.instance.enableSpaceHotKey();
+                    }
+                  },
+                  child: TextField(
+                    controller: controllers[2],
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]|')),
+                    ],
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      playback.setVolume(
+                        double.tryParse(value) ?? playback.volume,
+                      );
+                    },
+                    scrollPhysics: NeverScrollableScrollPhysics(),
+                    textAlign: TextAlign.center,
+                    textAlignVertical: TextAlignVertical.center,
+                    style:
+                        isMobile ? null : Theme.of(context).textTheme.headline4,
+                    decoration: inputDecoration(
+                      context,
+                      '',
+                    ).copyWith(
+                      contentPadding: EdgeInsets.only(
+                        left: 4.0,
+                        right: 4.0,
+                        bottom: 14.0,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16.0),
+            ],
+          ),
+          const SizedBox(height: 8.0),
+        ],
       ),
     );
+    return isDesktop
+        ? Semantics(
+            scopesRoute: true,
+            explicitChildNodes: true,
+            child: WillPopScope(
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).maybePop();
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.bottomRight,
+                    child: TweenAnimationBuilder(
+                      tween: Tween<double>(
+                        begin: 156.0,
+                        end: end,
+                      ),
+                      curve: Curves.easeInOut,
+                      duration: Duration(milliseconds: 160),
+                      child: content,
+                      builder: (context, value, child) => Transform.translate(
+                        offset: Offset(0, value as double),
+                        child: Card(
+                          color: Theme.of(context).cardColor,
+                          elevation: 8.0,
+                          margin: widget.x == null
+                              ? EdgeInsets.all(16.0)
+                              : EdgeInsets.only(
+                                  right: MediaQuery.of(context).size.width -
+                                      (widget.x ?? 0.0) -
+                                      64.0 -
+                                      240.0,
+                                  bottom: 16.0,
+                                ),
+                          child: Container(
+                            width: 240.0,
+                            child: IntrinsicHeight(
+                              child: child,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              onWillPop: () async {
+                widget.onPop();
+                setState(() {
+                  end = 156.0;
+                });
+                await Future.delayed(const Duration(milliseconds: 100));
+                return Future.value(true);
+              },
+            ),
+          )
+        : content;
   }
 }
 

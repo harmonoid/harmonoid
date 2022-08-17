@@ -5,9 +5,12 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/interface/now_playing_bar.dart';
+import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:collection/collection.dart';
@@ -26,6 +29,7 @@ import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/utils/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const kDetailsAreaHeight = 96.0;
 const kControlsAreaHeight = 136.0;
@@ -738,6 +742,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                     ),
                                                                                     child: IconButton(
                                                                                       onPressed: () async {
+                                                                                        final track = Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)];
                                                                                         final position = RelativeRect.fromRect(
                                                                                           Offset(
                                                                                                 MediaQuery.of(context).size.width - tileMargin - 64.0,
@@ -759,33 +764,92 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                             PopupMenuItem(
                                                                                               value: 0,
                                                                                               child: ListTile(
-                                                                                                leading: Icon(Icons.file_open),
-                                                                                                title: Text(Language.instance.OPEN_FILE_OR_URL),
+                                                                                                leading: Icon(Icons.equalizer),
+                                                                                                title: Text(Language.instance.CONTROL_PANEL),
                                                                                               ),
                                                                                             ),
-                                                                                            PopupMenuItem(
-                                                                                              value: 1,
-                                                                                              child: ListTile(
-                                                                                                leading: Icon(Icons.code),
-                                                                                                title: Text(Language.instance.READ_METADATA),
+                                                                                            if (LibmpvPluginUtils.isSupported(track.uri))
+                                                                                              PopupMenuItem(
+                                                                                                value: 1,
+                                                                                                child: ListTile(
+                                                                                                  leading: Icon(Icons.link),
+                                                                                                  title: Text(Language.instance.COPY_LINK),
+                                                                                                ),
                                                                                               ),
-                                                                                            ),
-                                                                                            PopupMenuItem(
-                                                                                              value: 2,
-                                                                                              child: ListTile(
-                                                                                                leading: Icon(Icons.settings),
-                                                                                                title: Text(Language.instance.SETTING),
+                                                                                            if (LibmpvPluginUtils.isSupported(track.uri))
+                                                                                              PopupMenuItem(
+                                                                                                value: 2,
+                                                                                                child: ListTile(
+                                                                                                  leading: Icon(Icons.open_in_new),
+                                                                                                  title: Text(Language.instance.OPEN_IN_BROWSER),
+                                                                                                ),
                                                                                               ),
-                                                                                            ),
                                                                                             PopupMenuItem(
                                                                                               value: 3,
                                                                                               child: ListTile(
-                                                                                                leading: Icon(Icons.info),
-                                                                                                title: Text(Language.instance.ABOUT_TITLE),
+                                                                                                leading: Icon(Icons.playlist_add),
+                                                                                                title: Text(Language.instance.ADD_TO_PLAYLIST),
+                                                                                              ),
+                                                                                            ),
+                                                                                            PopupMenuItem(
+                                                                                              value: 4,
+                                                                                              child: ListTile(
+                                                                                                leading: Icon(Icons.text_format),
+                                                                                                title: Text(Language.instance.SHOW_LYRICS),
                                                                                               ),
                                                                                             ),
                                                                                           ],
                                                                                         );
+
+                                                                                        switch (result) {
+                                                                                          case 0:
+                                                                                            {
+                                                                                              showModalBottomSheet(
+                                                                                                isScrollControlled: true,
+                                                                                                context: context,
+                                                                                                elevation: 8.0,
+                                                                                                useRootNavigator: true,
+                                                                                                backgroundColor: Theme.of(context).cardColor,
+                                                                                                builder: (context) => StatefulBuilder(
+                                                                                                  builder: (context, setState) {
+                                                                                                    return Container(
+                                                                                                      margin: EdgeInsets.only(
+                                                                                                        bottom: MediaQuery.of(context).viewInsets.bottom - MediaQuery.of(context).padding.bottom,
+                                                                                                      ),
+                                                                                                      child: ControlPanel(
+                                                                                                        onPop: () {},
+                                                                                                      ),
+                                                                                                    );
+                                                                                                  },
+                                                                                                ),
+                                                                                              );
+                                                                                              break;
+                                                                                            }
+                                                                                          case 1:
+                                                                                            {
+                                                                                              Clipboard.setData(ClipboardData(text: track.uri.toString()));
+                                                                                              break;
+                                                                                            }
+                                                                                          case 2:
+                                                                                            {
+                                                                                              launchUrl(
+                                                                                                track.uri,
+                                                                                                mode: LaunchMode.externalApplication,
+                                                                                              );
+                                                                                              break;
+                                                                                            }
+                                                                                          case 3:
+                                                                                            {
+                                                                                              showAddToPlaylistDialog(context, track);
+                                                                                              break;
+                                                                                            }
+                                                                                          case 4:
+                                                                                            {
+                                                                                              break;
+                                                                                            }
+                                                                                          default:
+                                                                                            break;
+                                                                                        }
                                                                                       },
                                                                                       color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
                                                                                       icon: Icon(Icons.more_vert),
@@ -864,8 +928,6 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                         ],
                                       ),
                                       if (percentage < 1.0)
-                                        const SizedBox(width: 16.0),
-                                      if (percentage < 1.0)
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
@@ -877,18 +939,22 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                               Opacity(
                                                 opacity: (1 - percentage * 5)
                                                     .clamp(0.0, 1.0),
-                                                child: Text(
-                                                  Playback
-                                                      .instance
-                                                      .tracks[Playback
-                                                          .instance.index]
-                                                      .trackName
-                                                      .overflow,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 16.0),
+                                                  child: Text(
+                                                    Playback
+                                                        .instance
+                                                        .tracks[Playback
+                                                            .instance.index]
+                                                        .trackName
+                                                        .overflow,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
                                                 ),
                                               ),
                                               if (!Playback
@@ -899,26 +965,30 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                 Opacity(
                                                   opacity: (1 - percentage * 5)
                                                       .clamp(0.0, 1.0),
-                                                  child: Text(
-                                                    Playback
-                                                        .instance
-                                                        .tracks[Playback
-                                                            .instance.index]
-                                                        .trackArtistNames
-                                                        .take(2)
-                                                        .join(', ')
-                                                        .overflow,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline3,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 16.0),
+                                                    child: Text(
+                                                      Playback
+                                                          .instance
+                                                          .tracks[Playback
+                                                              .instance.index]
+                                                          .trackArtistNames
+                                                          .take(2)
+                                                          .join(', ')
+                                                          .overflow,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline3,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
                                                   ),
                                                 ),
                                             ],
                                           ),
                                         ),
-                                      if (height < 200.0)
+                                      if (percentage < 1.0)
                                         Opacity(
                                           opacity: (1 - percentage * 5)
                                               .clamp(0.0, 1.0),
@@ -960,7 +1030,16 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                             height: 72.0,
                             child: Center(
                               child: Text(
-                                Language.instance.NOTHING_IN_QUEUE,
+                                Random().nextInt(100) == 50
+                                    ? 'Yeah! You found the easter egg. 🥚'
+                                    : DateTime.now().day == 25 &&
+                                            DateTime.now().month == 12
+                                        ? 'Merry Christmas! ❄️'
+                                        : DateTime.now().day == 1 &&
+                                                DateTime.now().month == 1
+                                            ? 'Happy New Year! 🎈'
+                                            : Language
+                                                .instance.NOTHING_IN_QUEUE,
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline3
