@@ -437,8 +437,9 @@ class Playback extends ChangeNotifier {
         config: AudioServiceConfig(
           androidNotificationChannelId: 'com.alexmercerind.harmonoid',
           androidNotificationChannelName: 'Harmonoid',
-          androidNotificationOngoing: false,
-          androidStopForegroundOnPause: false,
+          androidNotificationIcon: 'drawable/ic_stat_music_note',
+          androidNotificationOngoing: true,
+          androidStopForegroundOnPause: true,
         ),
       );
     }
@@ -1151,8 +1152,14 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   static MediaItem _trackToMediaItem(Track track) => MediaItem(
         id: track.uri.toString(),
         title: track.trackName,
-        album: track.albumName,
-        artist: track.trackArtistNames.take(2).join(', '),
+        album: !['', kUnknownAlbum].contains(track.albumName)
+            ? track.albumName
+            : null,
+        artist: !track.hasNoAvailableArtists
+            ? track.trackArtistNames.take(2).join(', ')
+            : !['', kUnknownArtist].contains(track.albumArtistName)
+                ? track.albumArtistName
+                : null,
         genre: track.genre,
         duration: track.duration,
         artUri: () {
