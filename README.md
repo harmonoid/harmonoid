@@ -6,11 +6,11 @@
 
 [Website](https://harmonoid.com) • [Download](https://harmonoid.com) • [Discord](https://discord.gg/2Rc3edFWd8)
 
-![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_W8Oi1qPZ0O.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_MOnywQpgPB.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_BRfMT0wIX6.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_zZZ1d0yO5G.webp?raw=true)
-![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_yFdqibq6DF.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_W8Oi1qPZ0O_2.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_MOnywQpgPB_2.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_BRfMT0wIX6_2.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_zZZ1d0yO5G_2.webp?raw=true)
+![](https://github.com/harmonoid/harmonoid/blob/assets/harmonoid_yFdqibq6DF_2.webp?raw=true)
 
 ## Videos
 
