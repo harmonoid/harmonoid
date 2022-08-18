@@ -289,10 +289,12 @@ packages:
   flutter_lyric:
     dependency: "direct main"
     description:
-      name: flutter_lyric
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.3"
+      path: "."
+      ref: master
+      resolved-ref: e3e8bf88c843c1e4f4ab19aaeb1c66bb6fd1f34c
+      url: "https://github.com/alexmercerind/flutter_lyric.git"
+    source: git
+    version: "2.0.4"
   flutter_platform_alert:
     dependency: "direct main"
     description:

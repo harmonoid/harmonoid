@@ -72,7 +72,7 @@ dependencies:
   auto_size_text: ^3.0.0
   uuid: ^3.0.6
   synchronized: ^3.0.0+2
-  flutter_lyric: ^2.0.3
+  flutter_speed_dial: ^6.0.0
 
   # Third-party forked plugins & packages to meet requirements.
 
@@ -108,7 +108,10 @@ dependencies:
     git:
       url: https://github.com/harmonoid/window_manager.git
       ref: main
-  flutter_speed_dial: ^6.0.0
+  flutter_lyric:
+    git:
+      url: https://github.com/alexmercerind/flutter_lyric.git
+      ref: master
 
 dependency_overrides:
   libmpv:
