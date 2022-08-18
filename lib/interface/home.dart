@@ -94,7 +94,7 @@ class HomeState extends State<Home>
     // Save the application state & remove any existing lyrics notifications present.
     if (state == AppLifecycleState.paused) {
       await Playback.instance.saveAppState();
-      await Lyrics.instance.killAllNotifications();
+      await Lyrics.instance.dismissNotification();
     }
   }
 

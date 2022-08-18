@@ -66,49 +66,54 @@ class Lyrics extends ChangeNotifier {
         if (instance.current.isNotEmpty &&
             Configuration.instance.notificationLyrics &&
             !instance._currentLyricsHidden) {
-          // Dismiss the whole notification, if the user seeked behind to avoid cluttering.
-          if (instance._currentLyricsTimeStamp >
-              Playback.instance.position.inSeconds) {
-            await AwesomeNotifications().dismiss(_kNotificationID);
+          // If a seek is performed, then clean the existing notifications to avoid missing text in-between.
+          if (instance._currentLyricsTimeStamps[
+                      instance._currentLyricsTimeStamp] !=
+                  null &&
+              instance._currentLyricsTimeStamps[
+                      Playback.instance.position.inSeconds] !=
+                  null) {
+            final current = instance._currentLyricsTimeStamps[
+                Playback.instance.position.inSeconds]!;
+            final previous = instance
+                ._currentLyricsTimeStamps[instance._currentLyricsTimeStamp]!;
+            if (![0, 1].contains(current - previous)) {
+              debugPrint('![0, 1].contains(current - previous)');
+              instance.dismissNotification();
+            }
           }
           // The rounded-off [Map] contains current position timestamp, and it hasn't been shown before.
           if (instance._currentLyricsAveragedMap
                   .containsKey(Playback.instance.position.inSeconds) &&
               instance._currentLyricsTimeStamp !=
                   Playback.instance.position.inSeconds) {
+            instance._currentLyricsTimeStamp =
+                Playback.instance.position.inSeconds;
             try {
-              final start = instance._currentLyricsTimeStamps
-                      .indexOf(instance._currentLyricsTimeStamp),
-                  end = instance._currentLyricsTimeStamps
-                      .indexOf(Playback.instance.position.inSeconds);
-              instance._currentLyricsTimeStamp =
-                  Playback.instance.position.inSeconds;
-              for (int i = start + 1; i <= end; i++) {
-                final track = Playback.instance.tracks[Playback.instance.index];
-                await AwesomeNotifications().createNotification(
-                  content: NotificationContent(
-                    id: _kNotificationID,
-                    channelKey: _kNotificationChannelKey,
-                    groupKey: _kNotificationChannelKey,
-                    actionType: ActionType.DisabledAction,
-                    notificationLayout: NotificationLayout.Messaging,
-                    category: NotificationCategory.Status,
-                    title: track.trackName,
-                    body: instance._currentLyricsAveragedMap[
-                        instance._currentLyricsTimeStamps[i]],
-                    summary: track.trackName,
-                    showWhen: false,
-                    autoDismissible: true,
-                    wakeUpScreen: false,
+              final track = Playback.instance.tracks[Playback.instance.index];
+              await AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                  id: _kNotificationID,
+                  channelKey: _kNotificationChannelKey,
+                  groupKey: _kNotificationChannelKey,
+                  actionType: ActionType.DisabledAction,
+                  notificationLayout: NotificationLayout.Messaging,
+                  category: NotificationCategory.Status,
+                  title: track.trackName,
+                  body: instance._currentLyricsAveragedMap[
+                      instance._currentLyricsTimeStamp],
+                  summary: track.trackName,
+                  showWhen: false,
+                  autoDismissible: true,
+                  wakeUpScreen: false,
+                ),
+                actionButtons: [
+                  NotificationActionButton(
+                    key: _kNotificationHideButtonKey,
+                    label: Language.instance.HIDE,
                   ),
-                  actionButtons: [
-                    NotificationActionButton(
-                      key: _kNotificationHideButtonKey,
-                      label: Language.instance.HIDE,
-                    ),
-                  ],
-                );
-              }
+                ],
+              );
             } catch (exception, stacktrace) {
               debugPrint(exception.toString());
               debugPrint(stacktrace.toString());
@@ -130,7 +135,7 @@ class Lyrics extends ChangeNotifier {
         if (_query == query) continue;
         current = <Lyric>[];
         _currentLyricsAveragedMap = {};
-        _currentLyricsTimeStamps = [];
+        _currentLyricsTimeStamps = {};
         _currentLyricsHidden = false;
         notifyListeners();
         _query = query;
@@ -143,7 +148,7 @@ class Lyrics extends ChangeNotifier {
         );
         try {
           if (isMobile && Configuration.instance.notificationLyrics) {
-            await killAllNotifications();
+            await dismissNotification();
           }
           final response = await http.get(uri);
           current.add(Lyric(time: -1, words: ''));
@@ -157,10 +162,17 @@ class Lyrics extends ChangeNotifier {
             for (final lyric in current) {
               _currentLyricsAveragedMap[lyric.time ~/ 1000] = lyric.words;
             }
-            _currentLyricsTimeStamps = _currentLyricsAveragedMap.keys.toList();
+            _currentLyricsTimeStamps.addEntries(
+              _currentLyricsAveragedMap.keys.toList().asMap().entries.map(
+                    (e) => MapEntry(
+                      e.value,
+                      e.key,
+                    ),
+                  ),
+            );
           }
         } catch (exception, stacktrace) {
-          await killAllNotifications();
+          await dismissNotification();
           debugPrint(exception.toString());
           debugPrint(stacktrace.toString());
         }
@@ -173,7 +185,7 @@ class Lyrics extends ChangeNotifier {
     _controller.add(query);
   }
 
-  FutureOr<void> killAllNotifications() {
+  FutureOr<void> dismissNotification() {
     if (isMobile) {
       return AwesomeNotifications().dismiss(_kNotificationID);
     }
@@ -211,7 +223,7 @@ class Lyrics extends ChangeNotifier {
   /// Current lyrics hashmap with averaged seconds timestamps.
   Map<int, String> _currentLyricsAveragedMap = {};
 
-  List<int> _currentLyricsTimeStamps = <int>[];
+  Map<int, int> _currentLyricsTimeStamps = {};
 
   /// Whether notification lyrics are hidden for the current song.
   bool _currentLyricsHidden = false;
