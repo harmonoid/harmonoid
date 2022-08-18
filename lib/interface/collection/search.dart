@@ -406,11 +406,13 @@ class _FloatingSearchBarSearchTabState
       elevation: 4.0,
       margin: EdgeInsets.zero,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height -
-            kMobileSearchBarHeight -
-            36.0 -
-            MediaQuery.of(context).padding.vertical -
-            MediaQuery.of(context).viewInsets.vertical,
+        height: (MediaQuery.of(context).size.height -
+                kMobileSearchBarHeight -
+                36.0 -
+                MediaQuery.of(context).padding.vertical -
+                MediaQuery.of(context).viewInsets.vertical)
+            .clamp(480.0, 1 << 32)
+            .toDouble(),
         width: MediaQuery.of(context).size.width,
         child: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
             ? Consumer<Collection>(

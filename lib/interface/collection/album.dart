@@ -723,6 +723,20 @@ class AlbumScreenState extends State<AlbumScreen>
 
   @override
   Widget build(BuildContext context) {
+    const mobileSliverLabelHeight = 136.0;
+    double mobileSliverExpandedHeight = MediaQuery.of(context).size.width -
+        MediaQuery.of(context).padding.top +
+        mobileSliverLabelHeight;
+    double mobileSliverContentHeight = MediaQuery.of(context).size.width;
+    double mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    if (mobileSliverExpandedHeight >
+        MediaQuery.of(context).size.height * 3 / 5) {
+      mobileSliverExpandedHeight = MediaQuery.of(context).size.height * 3 / 5;
+      mobileSliverContentHeight = mobileSliverExpandedHeight -
+          mobileSliverLabelHeight +
+          MediaQuery.of(context).padding.top;
+      mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    }
     return Consumer<Collection>(
       builder: (context, value, child) {
         final tracks = widget.album.tracks.toList();
@@ -1347,9 +1361,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       ? Brightness.light
                                       : Brightness.dark,
                             ),
-                            expandedHeight: MediaQuery.of(context).size.width +
-                                136.0 -
-                                MediaQuery.of(context).padding.top,
+                            expandedHeight: mobileSliverExpandedHeight,
                             pinned: true,
                             leading: IconButton(
                               onPressed: Navigator.of(context).maybePop,
@@ -1413,7 +1425,8 @@ class AlbumScreenState extends State<AlbumScreen>
                                           onPressed: () async {
                                             await Collection.instance
                                                 .delete(widget.album);
-                                            Navigator.of(subContext).pop();
+                                            Navigator.of(subContext).maybePop();
+                                            Navigator.of(subContext).maybePop();
                                           },
                                           child: Text(Language.instance.YES),
                                         ),
@@ -1500,9 +1513,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
-                                            height: MediaQuery.of(context)
-                                                .size
-                                                .width,
+                                            height: mobileSliverContentHeight,
                                           ),
                                           Positioned.fill(
                                             child: Container(
@@ -1628,9 +1639,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                   ),
                                 ),
                                 Positioned(
-                                  top: MediaQuery.of(context).size.width +
-                                      MediaQuery.of(context).padding.top -
-                                      64.0,
+                                  top: mobileSliverFABYPos,
                                   right: 16.0 + 64.0,
                                   child: TweenAnimationBuilder(
                                     curve: Curves.easeOut,
@@ -1671,9 +1680,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                   ),
                                 ),
                                 Positioned(
-                                  top: MediaQuery.of(context).size.width +
-                                      MediaQuery.of(context).padding.top -
-                                      64.0,
+                                  top: mobileSliverFABYPos,
                                   right: 16.0,
                                   child: TweenAnimationBuilder(
                                     curve: Curves.easeOut,

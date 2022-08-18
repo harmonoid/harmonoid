@@ -589,11 +589,22 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                             ),
                           ),
                         Container(
-                          height: height < MediaQuery.of(context).size.width
-                              ? height - 2.0
-                              : height >= MediaQuery.of(context).size.width
+                          height: percentage == 1.0
+                              ? MediaQuery.of(context).size.width +
+                                          kDetailsAreaHeight +
+                                          kControlsAreaHeight +
+                                          kBottomNavigationBarHeight <
+                                      MediaQuery.of(context).size.height
                                   ? MediaQuery.of(context).size.width
-                                  : null,
+                                  : MediaQuery.of(context).size.height -
+                                      kDetailsAreaHeight -
+                                      kControlsAreaHeight -
+                                      kBottomNavigationBarHeight
+                              : height < MediaQuery.of(context).size.width
+                                  ? height - 2.0
+                                  : height >= MediaQuery.of(context).size.width
+                                      ? MediaQuery.of(context).size.width
+                                      : null,
                           child: Stack(
                             children: [
                               if (percentage < 0.8)
@@ -657,25 +668,27 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                               .map(
                                                                 (e) => Stack(
                                                                   children: [
-                                                                    SizedBox
-                                                                        .square(
-                                                                      child:
-                                                                          ExtendedImage(
-                                                                        image:
-                                                                            getAlbumArt(e),
-                                                                        width: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width,
-                                                                        height: MediaQuery.of(context).size.width + kDetailsAreaHeight + kControlsAreaHeight + kBottomNavigationBarHeight < MediaQuery.of(context).size.height
-                                                                            ? MediaQuery.of(context)
-                                                                                .size
-                                                                                .width
-                                                                            : MediaQuery.of(context).size.height -
-                                                                                kDetailsAreaHeight -
-                                                                                kControlsAreaHeight -
-                                                                                kBottomNavigationBarHeight,
-                                                                        fit: BoxFit
-                                                                            .cover,
+                                                                    SizedBox(
+                                                                      child: Transform
+                                                                          .scale(
+                                                                        // Scale up the network images on smaller screens.
+                                                                        scale: LibmpvPluginUtils.isSupported(e.uri) &&
+                                                                                MediaQuery.of(context).size.width + kDetailsAreaHeight + kControlsAreaHeight + kBottomNavigationBarHeight > MediaQuery.of(context).size.height
+                                                                            ? 1.4
+                                                                            : 1.0,
+                                                                        child:
+                                                                            ExtendedImage(
+                                                                          image:
+                                                                              getAlbumArt(e),
+                                                                          width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width,
+                                                                          height: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width,
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                     TweenAnimationBuilder<
@@ -919,7 +932,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                               : Consumer<Playback>(
                                                   builder:
                                                       (context, playback, _) =>
-                                                          SizedBox.square(
+                                                          SizedBox(
                                                     child: ExtendedImage(
                                                       image: getAlbumArt(playback
                                                               .tracks[

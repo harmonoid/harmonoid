@@ -219,12 +219,14 @@ class PlaylistTab extends StatelessWidget {
 class PlaylistThumbnail extends StatelessWidget {
   final List<Track> tracks;
   final double width;
+  final double? height;
   final bool encircle;
   final bool mini;
   const PlaylistThumbnail({
     Key? key,
     required this.tracks,
     required this.width,
+    this.height,
     this.encircle = true,
     this.mini = true,
   }) : super(key: key);
@@ -244,6 +246,7 @@ class PlaylistThumbnail extends StatelessWidget {
             child: _child(
               context,
               width - (mini ? 8.0 : 16.0),
+              (height ?? width) - (mini ? 8.0 : 16.0),
               mini,
             ),
           ),
@@ -253,21 +256,22 @@ class PlaylistThumbnail extends StatelessWidget {
       return _child(
         context,
         width,
+        height ?? width,
         mini,
       );
     }
   }
 
-  Widget _child(BuildContext context, double width, bool mini) {
+  Widget _child(BuildContext context, double width, double height, bool mini) {
     if (tracks.length > 2) {
       return Container(
-        height: width,
+        height: height,
         width: width,
         child: Row(
           children: [
             ExtendedImage(
               image: getAlbumArt(tracks[0], small: mini),
-              height: width,
+              height: height,
               width: width / 2 - (!mini ? 4.0 : 0.0),
               fit: BoxFit.cover,
             ),
@@ -276,14 +280,14 @@ class PlaylistThumbnail extends StatelessWidget {
               children: [
                 ExtendedImage(
                   image: getAlbumArt(tracks[1], small: mini),
-                  height: width / 2 - (!mini ? 4.0 : 0.0),
+                  height: height / 2 - (!mini ? 4.0 : 0.0),
                   width: width / 2 - (!mini ? 4.0 : 0.0),
                   fit: BoxFit.cover,
                 ),
                 if (!mini) SizedBox(height: 8.0),
                 ExtendedImage(
                   image: getAlbumArt(tracks[2], small: mini),
-                  height: width / 2 - (!mini ? 4.0 : 0.0),
+                  height: height / 2 - (!mini ? 4.0 : 0.0),
                   width: width / 2 - (!mini ? 4.0 : 0.0),
                   fit: BoxFit.cover,
                 ),
@@ -294,20 +298,20 @@ class PlaylistThumbnail extends StatelessWidget {
       );
     } else if (tracks.length == 2) {
       return Container(
-        height: width,
+        height: height,
         width: width,
         child: Row(
           children: [
             ExtendedImage(
               image: getAlbumArt(tracks[0], small: mini),
-              height: width,
+              height: height,
               width: width / 2 - (!mini ? 4.0 : 0.0),
               fit: BoxFit.cover,
             ),
             if (!mini) SizedBox(width: 8.0),
             ExtendedImage(
               image: getAlbumArt(tracks[1], small: mini),
-              height: width,
+              height: height,
               width: width / 2 - (!mini ? 4.0 : 0.0),
               fit: BoxFit.cover,
             ),
@@ -317,13 +321,13 @@ class PlaylistThumbnail extends StatelessWidget {
     } else if (tracks.length == 1) {
       return ExtendedImage(
         image: getAlbumArt(tracks[0], small: mini),
-        height: width,
+        height: height,
         width: width,
         fit: BoxFit.cover,
       );
     } else {
       return Container(
-        height: width,
+        height: height,
         width: width,
         alignment: Alignment.center,
         child: Icon(
@@ -666,6 +670,20 @@ class PlaylistScreenState extends State<PlaylistScreen>
 
   @override
   Widget build(BuildContext context) {
+    const mobileSliverLabelHeight = 116.0;
+    double mobileSliverExpandedHeight = MediaQuery.of(context).size.width -
+        MediaQuery.of(context).padding.top +
+        mobileSliverLabelHeight;
+    double mobileSliverContentHeight = MediaQuery.of(context).size.width;
+    double mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    if (mobileSliverExpandedHeight >
+        MediaQuery.of(context).size.height * 3 / 5) {
+      mobileSliverExpandedHeight = MediaQuery.of(context).size.height * 3 / 5;
+      mobileSliverContentHeight = mobileSliverExpandedHeight -
+          mobileSliverLabelHeight +
+          MediaQuery.of(context).padding.top;
+      mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    }
     return Consumer<Collection>(
       builder: (context, collection, _) {
         return isDesktop
@@ -1168,9 +1186,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                   ? Brightness.light
                                   : Brightness.dark,
                         ),
-                        expandedHeight: MediaQuery.of(context).size.width +
-                            116.0 -
-                            MediaQuery.of(context).padding.top,
+                        expandedHeight: mobileSliverExpandedHeight,
                         pinned: true,
                         leading: IconButton(
                           onPressed: Navigator.of(context).maybePop,
@@ -1260,19 +1276,23 @@ class PlaylistScreenState extends State<PlaylistScreen>
                                           color: Theme.of(context).cardColor,
                                         ),
                                       ),
-                                      PlaylistThumbnail(
-                                        tracks: widget.playlist.tracks,
+                                      Container(
+                                        height: mobileSliverContentHeight,
                                         width:
-                                            MediaQuery.of(context).size.width -
-                                                16.0,
-                                        mini: false,
-                                        encircle: false,
+                                            MediaQuery.of(context).size.width,
+                                        child: PlaylistThumbnail(
+                                          tracks: widget.playlist.tracks,
+                                          height: mobileSliverContentHeight,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          mini: false,
+                                          encircle: false,
+                                        ),
                                       ),
                                       Container(
                                         width:
                                             MediaQuery.of(context).size.width,
-                                        height:
-                                            MediaQuery.of(context).size.width,
+                                        height: mobileSliverContentHeight,
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                             colors: [
@@ -1371,9 +1391,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width +
-                                  MediaQuery.of(context).padding.top -
-                                  64.0,
+                              top: mobileSliverFABYPos,
                               right: 16.0 + 64.0,
                               child: TweenAnimationBuilder(
                                 curve: Curves.easeOut,
@@ -1413,9 +1431,7 @@ class PlaylistScreenState extends State<PlaylistScreen>
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width +
-                                  MediaQuery.of(context).padding.top -
-                                  64.0,
+                              top: mobileSliverFABYPos,
                               right: 16.0,
                               child: TweenAnimationBuilder(
                                 curve: Curves.easeOut,

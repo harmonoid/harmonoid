@@ -36,7 +36,7 @@ class LanguageSetting extends StatelessWidget {
                   ),
                   ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxHeight: 420.0,
+                      maxHeight: MediaQuery.of(context).size.height / 2,
                     ),
                     child: StatefulBuilder(
                       builder: (context, setState) => SingleChildScrollView(

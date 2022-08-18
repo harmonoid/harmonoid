@@ -724,6 +724,20 @@ class ArtistScreenState extends State<ArtistScreen>
 
   @override
   Widget build(BuildContext context) {
+    const mobileSliverLabelHeight = 116.0;
+    double mobileSliverExpandedHeight = MediaQuery.of(context).size.width -
+        MediaQuery.of(context).padding.top +
+        mobileSliverLabelHeight;
+    double mobileSliverContentHeight = MediaQuery.of(context).size.width;
+    double mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    if (mobileSliverExpandedHeight >
+        MediaQuery.of(context).size.height * 3 / 5) {
+      mobileSliverExpandedHeight = MediaQuery.of(context).size.height * 3 / 5;
+      mobileSliverContentHeight = mobileSliverExpandedHeight -
+          mobileSliverLabelHeight +
+          MediaQuery.of(context).padding.top;
+      mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    }
     return Consumer<Collection>(
       builder: (context, collection, _) {
         final tracks = widget.artist.tracks.toList();
@@ -1298,9 +1312,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                       ? Brightness.light
                                       : Brightness.dark,
                             ),
-                            expandedHeight: MediaQuery.of(context).size.width +
-                                116.0 -
-                                MediaQuery.of(context).padding.top,
+                            expandedHeight: mobileSliverExpandedHeight,
                             pinned: true,
                             leading: IconButton(
                               onPressed: Navigator.of(context).maybePop,
@@ -1376,9 +1388,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
-                                            height: MediaQuery.of(context)
-                                                .size
-                                                .width,
+                                            height: mobileSliverContentHeight,
                                           ),
                                           Positioned.fill(
                                             child: Container(
@@ -1484,9 +1494,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                   ),
                                 ),
                                 Positioned(
-                                  top: MediaQuery.of(context).size.width +
-                                      MediaQuery.of(context).padding.top -
-                                      64.0,
+                                  top: mobileSliverFABYPos,
                                   right: 16.0 + 64.0,
                                   child: TweenAnimationBuilder(
                                     curve: Curves.easeOut,
@@ -1527,9 +1535,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                   ),
                                 ),
                                 Positioned(
-                                  top: MediaQuery.of(context).size.width +
-                                      MediaQuery.of(context).padding.top -
-                                      64.0,
+                                  top: mobileSliverFABYPos,
                                   right: 16.0,
                                   child: TweenAnimationBuilder(
                                     curve: Curves.easeOut,
