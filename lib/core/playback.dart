@@ -882,6 +882,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
       ),
     );
     _player.playbackEventStream.listen((e) {
+      debugPrint(e.processingState.toString());
       if (e.processingState == ProcessingState.completed) {
         // The audio playback needs to be interpreted as paused once the playback of a media is completed.
         playback.isPlaying = false;
@@ -1138,8 +1139,8 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         ProcessingState.completed: AudioProcessingState.completed,
       }[_player.processingState]!,
       // The audio playback needs to be interpreted as paused once the playback of a media is completed.
-      playing: _player.playing &&
-          _player.processingState != ProcessingState.completed,
+      playing:
+          _player.playing && _player.processingState == ProcessingState.ready,
       updatePosition: _player.position,
       bufferedPosition: _player.bufferedPosition,
       speed: _player.speed,
@@ -1151,7 +1152,7 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         id: track.uri.toString(),
         title: track.trackName,
         album: track.albumName,
-        artist: track.trackArtistNames.take(2).join(','),
+        artist: track.trackArtistNames.take(2).join(', '),
         genre: track.genre,
         duration: track.duration,
         artUri: () {
@@ -1165,11 +1166,6 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
           }
           return image;
         }(),
-        displayTitle: track.trackName,
-        displaySubtitle:
-            '${track.albumName} • ${track.trackArtistNames.take(2).join(',')}',
-        displayDescription:
-            '${track.albumName} • ${track.year} • ${track.trackArtistNames.take(2).join(',')}',
         extras: track.toJson(),
       );
 
