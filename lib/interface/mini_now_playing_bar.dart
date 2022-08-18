@@ -1343,110 +1343,107 @@ class LyricsScreen extends StatefulWidget {
 class _LyricsScreenState extends State<LyricsScreen> {
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: Theme.of(context).appBarTheme.systemOverlayStyle!,
-      child: Consumer<NowPlayingColorPalette>(
-        builder: (context, palette, _) => TweenAnimationBuilder<Color?>(
-          tween: ColorTween(
-            begin: palette.palette?.first ??
-                Theme.of(context).scaffoldBackgroundColor,
-            end: palette.palette?.first ??
-                Theme.of(context).scaffoldBackgroundColor,
-          ),
-          duration: Duration(milliseconds: 400),
-          curve: Curves.easeInOut,
-          builder: (context, value, _) => Consumer<Playback>(
-            builder: (context, playback, _) => AnimatedContainer(
-              color: value,
-              duration: Duration(milliseconds: 400),
-              curve: Curves.easeInOut,
-              alignment: Alignment.center,
-              child: Consumer<Lyrics>(
-                builder: (context, lyrics, _) => () {
-                  if (Lyrics.instance.current.length > 2) {
-                    return TweenAnimationBuilder<double>(
-                      tween: Tween<double>(
-                        begin: 0.0,
-                        end: (Lyrics.instance.current.length > 2 &&
-                                Configuration.instance.lyricsVisible)
-                            ? 1.0
-                            : 0.0,
-                      ),
-                      duration: Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
-                      builder: (context, opacity, _) => Opacity(
-                        opacity: opacity,
-                        child: Consumer<Playback>(
-                          builder: (context, playback, _) => ShaderMask(
-                            shaderCallback: (Rect rect) {
-                              return LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.black,
-                                  Colors.transparent,
-                                  Colors.black,
-                                ],
-                                stops: [0.1, 0.5, 0.9],
-                              ).createShader(rect);
-                            },
-                            blendMode: BlendMode.dstOut,
-                            child: LyricsReader(
-                              padding: EdgeInsets.all(tileMargin * 2),
-                              model: LyricsReaderModel()
-                                ..lyrics = Lyrics.instance.current
-                                    .map(
-                                      (e) => LyricsLineModel()
-                                        ..mainText = e.words
-                                        ..startTime = e.time
-                                        ..endTime = Lyrics
-                                            .instance
-                                            .current[(Lyrics.instance.current
-                                                        .indexOf(Lyrics
-                                                            .instance.current
-                                                            .firstWhere(
-                                                                (element) =>
-                                                                    element
-                                                                        .time ==
-                                                                    e.time)) +
-                                                    1)
-                                                .clamp(
-                                                    0,
-                                                    Lyrics.instance.current
-                                                            .length -
-                                                        1)]
-                                            .time,
-                                    )
-                                    .toList(),
-                              position: playback.position.inMilliseconds,
-                              lyricUi: () {
-                                final colors = palette.palette ??
-                                    [Theme.of(context).cardColor];
-                                return LyricsStyle(
-                                  color: colors.first.isDark
-                                      ? Colors.white
-                                      : Colors.black,
-                                  primary: colors.first !=
-                                          Theme.of(context).cardColor
-                                      ? colors.first.isDark
-                                          ? Colors.white
-                                          : Colors.black
-                                      : (palette.palette ??
-                                              [Theme.of(context).primaryColor])
-                                          .last,
-                                );
-                              }(),
-                              playing: true,
-                            ),
+    return Consumer<NowPlayingColorPalette>(
+      builder: (context, palette, _) => TweenAnimationBuilder<Color?>(
+        tween: ColorTween(
+          begin: palette.palette?.first ??
+              Theme.of(context).scaffoldBackgroundColor,
+          end: palette.palette?.first ??
+              Theme.of(context).scaffoldBackgroundColor,
+        ),
+        duration: Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+        builder: (context, value, _) => Consumer<Playback>(
+          builder: (context, playback, _) => AnimatedContainer(
+            color: value,
+            duration: Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+            alignment: Alignment.center,
+            child: Consumer<Lyrics>(
+              builder: (context, lyrics, _) => () {
+                if (Lyrics.instance.current.length > 2) {
+                  return TweenAnimationBuilder<double>(
+                    tween: Tween<double>(
+                      begin: 0.0,
+                      end: (Lyrics.instance.current.length > 2 &&
+                              Configuration.instance.lyricsVisible)
+                          ? 1.0
+                          : 0.0,
+                    ),
+                    duration: Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                    builder: (context, opacity, _) => Opacity(
+                      opacity: opacity,
+                      child: Consumer<Playback>(
+                        builder: (context, playback, _) => ShaderMask(
+                          shaderCallback: (Rect rect) {
+                            return LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black,
+                                Colors.transparent,
+                                Colors.black,
+                              ],
+                              stops: [0.1, 0.5, 0.9],
+                            ).createShader(rect);
+                          },
+                          blendMode: BlendMode.dstOut,
+                          child: LyricsReader(
+                            padding: EdgeInsets.all(tileMargin * 2),
+                            model: LyricsReaderModel()
+                              ..lyrics = Lyrics.instance.current
+                                  .map(
+                                    (e) => LyricsLineModel()
+                                      ..mainText = e.words
+                                      ..startTime = e.time
+                                      ..endTime = Lyrics
+                                          .instance
+                                          .current[(Lyrics.instance.current
+                                                      .indexOf(Lyrics
+                                                          .instance.current
+                                                          .firstWhere(
+                                                              (element) =>
+                                                                  element
+                                                                      .time ==
+                                                                  e.time)) +
+                                                  1)
+                                              .clamp(
+                                                  0,
+                                                  Lyrics.instance.current
+                                                          .length -
+                                                      1)]
+                                          .time,
+                                  )
+                                  .toList(),
+                            position: playback.position.inMilliseconds,
+                            lyricUi: () {
+                              final colors = palette.palette ??
+                                  [Theme.of(context).cardColor];
+                              return LyricsStyle(
+                                color: colors.first.isDark
+                                    ? Colors.white
+                                    : Colors.black,
+                                primary: colors.first !=
+                                        Theme.of(context).cardColor
+                                    ? colors.first.isDark
+                                        ? Colors.white
+                                        : Colors.black
+                                    : (palette.palette ??
+                                            [Theme.of(context).primaryColor])
+                                        .last,
+                              );
+                            }(),
+                            playing: true,
                           ),
                         ),
                       ),
-                    );
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                }(),
-              ),
+                    ),
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              }(),
             ),
           ),
         ),
@@ -1490,21 +1487,21 @@ class LyricsStyle extends LyricUI {
   TextStyle getPlayingExtTextStyle() => TextStyle(
         color: color,
         fontSize: defaultExtSize,
-        height: defaultExtSize + 20.0,
+        height: 1.2,
       );
 
   @override
   TextStyle getOtherExtTextStyle() => TextStyle(
         color: color,
         fontSize: defaultExtSize,
-        height: defaultExtSize + 20.0,
+        height: 1.2,
       );
 
   @override
   TextStyle getOtherMainTextStyle() => TextStyle(
         color: color,
         fontSize: otherMainSize,
-        height: otherMainSize + 20.0,
+        height: 1.2,
       );
 
   @override
@@ -1512,7 +1509,7 @@ class LyricsStyle extends LyricUI {
         color: primary,
         fontSize: defaultSize,
         fontWeight: FontWeight.w700,
-        height: defaultSize + 20.0,
+        height: 1.2,
       );
 
   @override

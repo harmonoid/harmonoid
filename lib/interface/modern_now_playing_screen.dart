@@ -1222,7 +1222,7 @@ class CarouselState extends State<Carousel> {
                 bottom: 96.0 + 16.0,
               ),
               child: FloatingActionButton(
-                heroTag: 'playlist_button',
+                heroTag: 'playlist_button_modern_now_playing_screen',
                 onPressed: () {
                   setState(() {
                     playlistVisible = !playlistVisible;
@@ -1491,14 +1491,18 @@ class LyricsStyle extends LyricUI {
         );
 
   @override
-  TextStyle getPlayingExtTextStyle() =>
-      TextStyle(color: Colors.grey[300], fontSize: defaultExtSize);
+  TextStyle getPlayingExtTextStyle() => TextStyle(
+        color: Colors.grey[300],
+        fontSize: defaultExtSize,
+        height: 1.2,
+      );
 
   @override
   TextStyle getOtherExtTextStyle() => TextStyle(
         color: Colors.grey[300],
         fontSize: defaultExtSize,
         fontFamily: Platform.isLinux ? 'Inter' : null,
+        height: 1.2,
       );
 
   @override
@@ -1519,7 +1523,7 @@ class LyricsStyle extends LyricUI {
         ],
         overflow: TextOverflow.ellipsis,
         fontFamily: Platform.isLinux ? 'Inter' : null,
-        height: Configuration.instance.unhighlightedLyricsSize + 20.0,
+        height: 1.2,
       );
 
   @override
@@ -1541,7 +1545,7 @@ class LyricsStyle extends LyricUI {
         ],
         overflow: TextOverflow.ellipsis,
         fontFamily: Platform.isLinux ? 'Inter' : null,
-        height: Configuration.instance.highlightedLyricsSize + 20.0,
+        height: 1.2,
       );
 
   @override
