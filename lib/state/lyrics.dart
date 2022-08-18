@@ -9,7 +9,6 @@ import 'dart:async';
 import 'dart:convert' as convert;
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
-import 'package:media_library/media_library.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'package:harmonoid/core/playback.dart';
@@ -64,7 +63,6 @@ class Lyrics extends ChangeNotifier {
         onActionReceivedMethod: _onNotificationActionReceived,
       );
       Playback.instance.addListener(() async {
-        debugPrint(instance.current.length.toString());
         if (instance.current.isNotEmpty &&
             Configuration.instance.notificationLyrics &&
             !instance._currentLyricsHidden) {
@@ -87,22 +85,6 @@ class Lyrics extends ChangeNotifier {
                   Playback.instance.position.inSeconds;
               for (int i = start + 1; i <= end; i++) {
                 final track = Playback.instance.tracks[Playback.instance.index];
-                final hasNoAlbumTag =
-                    ['', kUnknownAlbum].contains(track.albumName);
-                final hasNoTrackArtistsTag = track.hasNoAvailableArtists;
-                final hasNoAlbumArtistsTag = [
-                  '',
-                  kUnknownArtist,
-                ].contains(track.albumArtistName);
-                final title = [
-                  track.trackName,
-                  if (!hasNoTrackArtistsTag)
-                    track.trackArtistNames.take(1).join('')
-                  else if (!hasNoAlbumArtistsTag)
-                    track.albumArtistName
-                  else if (!hasNoAlbumTag)
-                    track.albumName,
-                ].join(' • ');
                 await AwesomeNotifications().createNotification(
                   content: NotificationContent(
                     id: _kNotificationID,
@@ -111,10 +93,10 @@ class Lyrics extends ChangeNotifier {
                     actionType: ActionType.DisabledAction,
                     notificationLayout: NotificationLayout.Messaging,
                     category: NotificationCategory.Status,
-                    title: title,
+                    title: track.trackName,
                     body: instance._currentLyricsAveragedMap[
                         instance._currentLyricsTimeStamps[i]],
-                    summary: title,
+                    summary: track.trackName,
                     showWhen: false,
                     autoDismissible: true,
                     wakeUpScreen: false,

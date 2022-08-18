@@ -5,26 +5,30 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
-import 'dart:math';
 import 'dart:ui';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/interface/now_playing_bar.dart';
 import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:collection/collection.dart';
+import 'package:harmonoid/state/lyrics.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter_lyric/lyrics_reader.dart';
+import 'package:flutter_lyric/lyrics_reader_model.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/interface/now_playing_bar.dart';
+import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/constants/language.dart';
@@ -205,7 +209,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
         curve: Curves.easeInOut,
         child: TweenAnimationBuilder<Color?>(
           tween: ColorTween(
-            begin: Theme.of(context).cardColor,
+            begin: colors.palette?.first ?? Theme.of(context).cardColor,
             end: colors.palette?.first ?? Theme.of(context).cardColor,
           ),
           duration: Duration(milliseconds: 400),
@@ -388,13 +392,15 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                       ? Playback.instance.pause
                                       : Playback.instance.play,
                                   backgroundColor: (colors.palette ??
-                                          [Theme.of(context).cardColor])
+                                          [Theme.of(context).primaryColor])
                                       .last,
                                   child: AnimatedIcon(
                                     progress: playOrPause,
                                     icon: AnimatedIcons.play_pause,
                                     color: (colors.palette ??
-                                                [Theme.of(context).cardColor])
+                                                [
+                                                  Theme.of(context).primaryColor
+                                                ])
                                             .last
                                             .isDark
                                         ? Colors.white
@@ -743,84 +749,97 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                     child: IconButton(
                                                                                       onPressed: () async {
                                                                                         final track = Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)];
-                                                                                        final position = RelativeRect.fromRect(
-                                                                                          Offset(
-                                                                                                MediaQuery.of(context).size.width - tileMargin - 64.0,
-                                                                                                MediaQuery.of(context).padding.top + 64.0,
-                                                                                              ) &
-                                                                                              Size(160.0, 160.0),
-                                                                                          Rect.fromLTWH(
-                                                                                            0,
-                                                                                            0,
-                                                                                            MediaQuery.of(context).size.width,
-                                                                                            MediaQuery.of(context).size.height,
+
+                                                                                        late final int result;
+                                                                                        await showModalBottomSheet(
+                                                                                          isScrollControlled: true,
+                                                                                          backgroundColor: Colors.transparent,
+                                                                                          context: context,
+                                                                                          builder: (context) => Card(
+                                                                                            margin: EdgeInsets.only(
+                                                                                              left: 8.0,
+                                                                                              right: 8.0,
+                                                                                              bottom: kBottomNavigationBarHeight + 8.0,
+                                                                                            ),
+                                                                                            elevation: 8.0,
+                                                                                            child: Container(
+                                                                                              child: Column(
+                                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                                children: [
+                                                                                                  PopupMenuItem(
+                                                                                                    onTap: () => result = 0,
+                                                                                                    value: 0,
+                                                                                                    child: ListTile(
+                                                                                                      leading: Icon(Icons.equalizer),
+                                                                                                      title: Text(Language.instance.CONTROL_PANEL),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  if (LibmpvPluginUtils.isSupported(track.uri))
+                                                                                                    PopupMenuItem(
+                                                                                                      onTap: () => result = 1,
+                                                                                                      value: 1,
+                                                                                                      child: ListTile(
+                                                                                                        leading: Icon(Icons.link),
+                                                                                                        title: Text(Language.instance.COPY_LINK),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  if (LibmpvPluginUtils.isSupported(track.uri))
+                                                                                                    PopupMenuItem(
+                                                                                                      onTap: () => result = 2,
+                                                                                                      value: 2,
+                                                                                                      child: ListTile(
+                                                                                                        leading: Icon(Icons.open_in_new),
+                                                                                                        title: Text(Language.instance.OPEN_IN_BROWSER),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  PopupMenuItem(
+                                                                                                    onTap: () => result = 3,
+                                                                                                    value: 3,
+                                                                                                    child: ListTile(
+                                                                                                      leading: Icon(Icons.playlist_add),
+                                                                                                      title: Text(Language.instance.ADD_TO_PLAYLIST),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  if (Lyrics.instance.current.length > 2)
+                                                                                                    PopupMenuItem(
+                                                                                                      onTap: () => result = 4,
+                                                                                                      value: 4,
+                                                                                                      child: ListTile(
+                                                                                                        leading: Icon(Icons.text_format),
+                                                                                                        title: Text(Language.instance.SHOW_LYRICS),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                ],
+                                                                                              ),
+                                                                                            ),
                                                                                           ),
                                                                                         );
-                                                                                        final result = await showMenu<int>(
-                                                                                          context: context,
-                                                                                          position: position,
-                                                                                          elevation: 4.0,
-                                                                                          items: [
-                                                                                            PopupMenuItem(
-                                                                                              value: 0,
-                                                                                              child: ListTile(
-                                                                                                leading: Icon(Icons.equalizer),
-                                                                                                title: Text(Language.instance.CONTROL_PANEL),
-                                                                                              ),
-                                                                                            ),
-                                                                                            if (LibmpvPluginUtils.isSupported(track.uri))
-                                                                                              PopupMenuItem(
-                                                                                                value: 1,
-                                                                                                child: ListTile(
-                                                                                                  leading: Icon(Icons.link),
-                                                                                                  title: Text(Language.instance.COPY_LINK),
-                                                                                                ),
-                                                                                              ),
-                                                                                            if (LibmpvPluginUtils.isSupported(track.uri))
-                                                                                              PopupMenuItem(
-                                                                                                value: 2,
-                                                                                                child: ListTile(
-                                                                                                  leading: Icon(Icons.open_in_new),
-                                                                                                  title: Text(Language.instance.OPEN_IN_BROWSER),
-                                                                                                ),
-                                                                                              ),
-                                                                                            PopupMenuItem(
-                                                                                              value: 3,
-                                                                                              child: ListTile(
-                                                                                                leading: Icon(Icons.playlist_add),
-                                                                                                title: Text(Language.instance.ADD_TO_PLAYLIST),
-                                                                                              ),
-                                                                                            ),
-                                                                                            PopupMenuItem(
-                                                                                              value: 4,
-                                                                                              child: ListTile(
-                                                                                                leading: Icon(Icons.text_format),
-                                                                                                title: Text(Language.instance.SHOW_LYRICS),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        );
-
                                                                                         switch (result) {
                                                                                           case 0:
                                                                                             {
                                                                                               showModalBottomSheet(
                                                                                                 isScrollControlled: true,
+                                                                                                backgroundColor: Colors.transparent,
                                                                                                 context: context,
-                                                                                                elevation: 8.0,
-                                                                                                useRootNavigator: true,
-                                                                                                backgroundColor: Theme.of(context).cardColor,
-                                                                                                builder: (context) => StatefulBuilder(
-                                                                                                  builder: (context, setState) {
-                                                                                                    return Container(
-                                                                                                      margin: EdgeInsets.only(
-                                                                                                        bottom: MediaQuery.of(context).viewInsets.bottom - MediaQuery.of(context).padding.bottom,
-                                                                                                      ),
-                                                                                                      child: ControlPanel(
-                                                                                                        onPop: () {},
-                                                                                                      ),
-                                                                                                    );
-                                                                                                  },
+                                                                                                builder: (context) => Card(
+                                                                                                  margin: EdgeInsets.only(
+                                                                                                    left: 8.0,
+                                                                                                    right: 8.0,
+                                                                                                    bottom: kBottomNavigationBarHeight + 8.0,
+                                                                                                  ),
+                                                                                                  elevation: 8.0,
+                                                                                                  child: StatefulBuilder(
+                                                                                                    builder: (context, setState) {
+                                                                                                      return Container(
+                                                                                                        margin: EdgeInsets.only(
+                                                                                                          bottom: MediaQuery.of(context).viewInsets.bottom - MediaQuery.of(context).padding.bottom,
+                                                                                                        ),
+                                                                                                        child: ControlPanel(
+                                                                                                          onPop: () {},
+                                                                                                        ),
+                                                                                                      );
+                                                                                                    },
+                                                                                                  ),
                                                                                                 ),
                                                                                               );
                                                                                               break;
@@ -840,11 +859,22 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                             }
                                                                                           case 3:
                                                                                             {
-                                                                                              showAddToPlaylistDialog(context, track);
+                                                                                              showAddToPlaylistDialog(
+                                                                                                context,
+                                                                                                track,
+                                                                                                elevated: true,
+                                                                                              );
                                                                                               break;
                                                                                             }
                                                                                           case 4:
                                                                                             {
+                                                                                              await showGeneralDialog(
+                                                                                                useRootNavigator: false,
+                                                                                                context: context,
+                                                                                                pageBuilder: (context, animation, secondaryAnimation) {
+                                                                                                  return LyricsScreen();
+                                                                                                },
+                                                                                              );
                                                                                               break;
                                                                                             }
                                                                                           default:
@@ -1303,6 +1333,203 @@ class MiniNowPlayingBarRefreshCollectionButtonState
   }
 }
 
+class LyricsScreen extends StatefulWidget {
+  LyricsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LyricsScreen> createState() => _LyricsScreenState();
+}
+
+class _LyricsScreenState extends State<LyricsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: Theme.of(context).appBarTheme.systemOverlayStyle!,
+      child: Consumer<NowPlayingColorPalette>(
+        builder: (context, palette, _) => TweenAnimationBuilder<Color?>(
+          tween: ColorTween(
+            begin: palette.palette?.first ??
+                Theme.of(context).scaffoldBackgroundColor,
+            end: palette.palette?.first ??
+                Theme.of(context).scaffoldBackgroundColor,
+          ),
+          duration: Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+          builder: (context, value, _) => Consumer<Playback>(
+            builder: (context, playback, _) => AnimatedContainer(
+              color: value,
+              duration: Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
+              alignment: Alignment.center,
+              child: Consumer<Lyrics>(
+                builder: (context, lyrics, _) => () {
+                  if (Lyrics.instance.current.length > 2) {
+                    return TweenAnimationBuilder<double>(
+                      tween: Tween<double>(
+                        begin: 0.0,
+                        end: (Lyrics.instance.current.length > 2 &&
+                                Configuration.instance.lyricsVisible)
+                            ? 1.0
+                            : 0.0,
+                      ),
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      builder: (context, opacity, _) => Opacity(
+                        opacity: opacity,
+                        child: Consumer<Playback>(
+                          builder: (context, playback, _) => ShaderMask(
+                            shaderCallback: (Rect rect) {
+                              return LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black,
+                                  Colors.transparent,
+                                  Colors.black,
+                                ],
+                                stops: [0.1, 0.5, 0.9],
+                              ).createShader(rect);
+                            },
+                            blendMode: BlendMode.dstOut,
+                            child: LyricsReader(
+                              padding: EdgeInsets.all(tileMargin * 2),
+                              model: LyricsReaderModel()
+                                ..lyrics = Lyrics.instance.current
+                                    .map(
+                                      (e) => LyricsLineModel()
+                                        ..mainText = e.words
+                                        ..startTime = e.time
+                                        ..endTime = Lyrics
+                                            .instance
+                                            .current[(Lyrics.instance.current
+                                                        .indexOf(Lyrics
+                                                            .instance.current
+                                                            .firstWhere(
+                                                                (element) =>
+                                                                    element
+                                                                        .time ==
+                                                                    e.time)) +
+                                                    1)
+                                                .clamp(
+                                                    0,
+                                                    Lyrics.instance.current
+                                                            .length -
+                                                        1)]
+                                            .time,
+                                    )
+                                    .toList(),
+                              position: playback.position.inMilliseconds,
+                              lyricUi: () {
+                                final colors = palette.palette ??
+                                    [Theme.of(context).cardColor];
+                                return LyricsStyle(
+                                  color: colors.first.isDark
+                                      ? Colors.white
+                                      : Colors.black,
+                                  primary: colors.first !=
+                                          Theme.of(context).cardColor
+                                      ? colors.first.isDark
+                                          ? Colors.white
+                                          : Colors.black
+                                      : (palette.palette ??
+                                              [Theme.of(context).primaryColor])
+                                          .last,
+                                );
+                              }(),
+                              playing: true,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                }(),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 extension on Color {
   bool get isDark => (0.299 * red) + (0.587 * green) + (0.114 * blue) < 128.0;
+}
+
+class LyricsStyle extends LyricUI {
+  Color color;
+  Color primary;
+  double defaultSize;
+  double defaultExtSize;
+  double otherMainSize;
+  double bias;
+  double lineGap;
+  double inlineGap;
+  LyricAlign lyricAlign;
+  LyricBaseLine lyricBaseLine;
+  bool highlight;
+
+  LyricsStyle({
+    this.color = Colors.white,
+    this.primary = Colors.white,
+    this.defaultSize = 48.0,
+    this.defaultExtSize = 24.0,
+    this.otherMainSize = 24.0,
+    this.bias = 0.5,
+    this.lineGap = 25,
+    this.inlineGap = 25,
+    this.lyricAlign = LyricAlign.LEFT,
+    this.lyricBaseLine = LyricBaseLine.MAIN_CENTER,
+    this.highlight = false,
+  });
+
+  @override
+  TextStyle getPlayingExtTextStyle() => TextStyle(
+        color: color,
+        fontSize: defaultExtSize,
+        height: defaultExtSize + 20.0,
+      );
+
+  @override
+  TextStyle getOtherExtTextStyle() => TextStyle(
+        color: color,
+        fontSize: defaultExtSize,
+        height: defaultExtSize + 20.0,
+      );
+
+  @override
+  TextStyle getOtherMainTextStyle() => TextStyle(
+        color: color,
+        fontSize: otherMainSize,
+        height: otherMainSize + 20.0,
+      );
+
+  @override
+  TextStyle getPlayingMainTextStyle() => TextStyle(
+        color: primary,
+        fontSize: defaultSize,
+        fontWeight: FontWeight.w700,
+        height: defaultSize + 20.0,
+      );
+
+  @override
+  double getInlineSpace() => inlineGap;
+
+  @override
+  double getLineSpace() => lineGap;
+
+  @override
+  double getPlayingLineBias() => bias;
+
+  @override
+  LyricAlign getLyricHorizontalAlign() => lyricAlign;
+
+  @override
+  LyricBaseLine getBiasBaseLine() => lyricBaseLine;
+
+  @override
+  bool enableHighlight() => highlight;
 }

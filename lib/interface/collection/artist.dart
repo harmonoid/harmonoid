@@ -199,7 +199,7 @@ class ArtistTab extends StatelessWidget {
                               padding: EdgeInsets.only(
                                 top: MediaQuery.of(context).padding.top +
                                     kMobileSearchBarHeight +
-                                    2 * tileMargin,
+                                    tileMargin,
                               ),
                               children: collection.artists
                                   .map(

@@ -576,7 +576,11 @@ Future<void> trackPopupMenuHandle(
   }
 }
 
-Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
+Future<void> showAddToPlaylistDialog(
+  BuildContext context,
+  Track track, {
+  bool elevated = false,
+}) {
   if (isDesktop) {
     return showDialog(
       context: context,
@@ -629,6 +633,44 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
       ),
     );
   } else {
+    if (elevated) {
+      return showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        context: context,
+        builder: (context) => Card(
+          margin: EdgeInsets.only(
+            left: 8.0,
+            right: 8.0,
+            bottom: kBottomNavigationBarHeight + 8.0,
+          ),
+          elevation: 8.0,
+          child: DraggableScrollableSheet(
+            initialChildSize: 0.6,
+            maxChildSize: 0.8,
+            expand: false,
+            builder: (context, controller) => ListView.builder(
+              padding: EdgeInsets.zero,
+              controller: controller,
+              shrinkWrap: true,
+              itemCount: Collection.instance.playlists.length,
+              itemBuilder: (context, i) {
+                return PlaylistTile(
+                  playlist: Collection.instance.playlists[i],
+                  onTap: () async {
+                    await Collection.instance.playlistAddTrack(
+                      Collection.instance.playlists[i],
+                      track,
+                    );
+                    Navigator.of(context).pop();
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      );
+    }
     return showModalBottomSheet(
       isScrollControlled: true,
       context: context,

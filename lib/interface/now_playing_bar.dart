@@ -1206,20 +1206,20 @@ class _ControlPanelState extends State<ControlPanel> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(width: 8.0),
+              const SizedBox(width: 12.0),
               IconButton(
                 padding: EdgeInsets.all(8.0),
                 onPressed: () {
                   playback.setRate(1.0);
                 },
-                iconSize: 20.0,
-                splashRadius: 18.0,
+                iconSize: isMobile ? null : 20.0,
+                splashRadius: isMobile ? null : 18.0,
                 tooltip: Language.instance.RESET_SPEED,
                 icon: Icon(
                   Icons.speed,
                 ),
               ),
-              const SizedBox(width: 8.0),
+              const SizedBox(width: 12.0),
               Expanded(
                 child: ScrollableSlider(
                   min: 0.5,
@@ -1243,8 +1243,7 @@ class _ControlPanelState extends State<ControlPanel> {
               const SizedBox(width: 16.0),
               Container(
                 width: isMobile ? 56.0 : 42.0,
-                height: isMobile ? 42.0 : 32.0,
-                padding: EdgeInsets.only(bottom: 4.0),
+                height: isMobile ? 56.0 : 32.0,
                 child: Focus(
                   onFocusChange: (hasFocus) {
                     focused = hasFocus;
@@ -1274,11 +1273,7 @@ class _ControlPanelState extends State<ControlPanel> {
                       context,
                       '',
                     ).copyWith(
-                      contentPadding: EdgeInsets.only(
-                        left: 4.0,
-                        right: 4.0,
-                        bottom: 14.0,
-                      ),
+                      contentPadding: EdgeInsets.all(0.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide.none,
@@ -1325,16 +1320,16 @@ class _ControlPanelState extends State<ControlPanel> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(width: 8.0),
+              const SizedBox(width: 12.0),
               IconButton(
                 padding: EdgeInsets.all(8.0),
                 onPressed: () => playback.setPitch(1.0),
-                iconSize: 20.0,
-                splashRadius: 18.0,
+                iconSize: isMobile ? null : 20.0,
+                splashRadius: isMobile ? null : 18.0,
                 tooltip: Language.instance.RESET_PITCH,
                 icon: Icon(FluentIcons.pulse_20_filled),
               ),
-              const SizedBox(width: 8.0),
+              const SizedBox(width: 12.0),
               Expanded(
                 child: ScrollableSlider(
                   min: 0.5,
@@ -1358,8 +1353,7 @@ class _ControlPanelState extends State<ControlPanel> {
               const SizedBox(width: 16.0),
               Container(
                 width: isMobile ? 56.0 : 42.0,
-                height: isMobile ? 42.0 : 32.0,
-                padding: EdgeInsets.only(bottom: 4.0),
+                height: isMobile ? 56.0 : 32.0,
                 child: Focus(
                   onFocusChange: (hasFocus) {
                     focused = hasFocus;
@@ -1389,11 +1383,7 @@ class _ControlPanelState extends State<ControlPanel> {
                       context,
                       '',
                     ).copyWith(
-                      contentPadding: EdgeInsets.only(
-                        left: 4.0,
-                        right: 4.0,
-                        bottom: 14.0,
-                      ),
+                      contentPadding: EdgeInsets.all(0.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide.none,
@@ -1440,7 +1430,7 @@ class _ControlPanelState extends State<ControlPanel> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(width: 8.0),
+              const SizedBox(width: 12.0),
               IconButton(
                 padding: EdgeInsets.all(8.0),
                 onPressed: () {
@@ -1448,12 +1438,12 @@ class _ControlPanelState extends State<ControlPanel> {
                     playback.setVolume(100.0);
                   }
                 },
-                iconSize: 20.0,
-                splashRadius: 18.0,
+                iconSize: isMobile ? null : 20.0,
+                splashRadius: isMobile ? null : 18.0,
                 tooltip: Language.instance.DISABLE_VOLUME_BOOST,
                 icon: Icon(Icons.volume_up),
               ),
-              const SizedBox(width: 8.0),
+              const SizedBox(width: 12.0),
               Expanded(
                 child: ScrollableSlider(
                   min: 100.0,
@@ -1477,8 +1467,7 @@ class _ControlPanelState extends State<ControlPanel> {
               const SizedBox(width: 16.0),
               Container(
                 width: isMobile ? 56.0 : 42.0,
-                height: isMobile ? 42.0 : 32.0,
-                padding: EdgeInsets.only(bottom: 4.0),
+                height: isMobile ? 56.0 : 32.0,
                 child: Focus(
                   onFocusChange: (hasFocus) {
                     focused = hasFocus;
@@ -1508,11 +1497,7 @@ class _ControlPanelState extends State<ControlPanel> {
                       context,
                       '',
                     ).copyWith(
-                      contentPadding: EdgeInsets.only(
-                        left: 4.0,
-                        right: 4.0,
-                        bottom: 14.0,
-                      ),
+                      contentPadding: EdgeInsets.all(0.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide.none,
