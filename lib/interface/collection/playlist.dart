@@ -384,11 +384,29 @@ class PlaylistTileState extends State<PlaylistTile> {
               padding: EdgeInsets.zero,
               value: 0,
               child: ListTile(
-                leading: Icon(Platform.isWindows
-                    ? FluentIcons.delete_16_regular
-                    : Icons.delete),
+                leading: Icon(
+                  Platform.isWindows
+                      ? FluentIcons.delete_16_regular
+                      : Icons.delete,
+                ),
                 title: Text(
                   Language.instance.DELETE,
+                  style:
+                      isDesktop ? Theme.of(context).textTheme.headline4 : null,
+                ),
+              ),
+            ),
+            PopupMenuItem<int>(
+              padding: EdgeInsets.zero,
+              value: 1,
+              child: ListTile(
+                leading: Icon(
+                  Platform.isWindows
+                      ? FluentIcons.rename_16_regular
+                      : Icons.text_format,
+                ),
+                title: Text(
+                  Language.instance.RENAME,
                   style:
                       isDesktop ? Theme.of(context).textTheme.headline4 : null,
                 ),
@@ -399,7 +417,7 @@ class PlaylistTileState extends State<PlaylistTile> {
         switch (result) {
           case 0:
             {
-              showDialog(
+              await showDialog(
                 context: context,
                 builder: (subContext) => AlertDialog(
                   title: Text(
@@ -425,6 +443,88 @@ class PlaylistTileState extends State<PlaylistTile> {
                     TextButton(
                       onPressed: Navigator.of(subContext).pop,
                       child: Text(Language.instance.NO),
+                    ),
+                  ],
+                ),
+              );
+              break;
+            }
+          case 1:
+            {
+              String rename = widget.playlist.name;
+              await showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text(
+                    Language.instance.RENAME,
+                  ),
+                  content: Container(
+                    height: 40.0,
+                    width: 280.0,
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+                    padding: EdgeInsets.only(top: 2.0),
+                    child: Focus(
+                      onFocusChange: (hasFocus) {
+                        if (hasFocus) {
+                          HotKeys.instance.disableSpaceHotKey();
+                        } else {
+                          HotKeys.instance.enableSpaceHotKey();
+                        }
+                      },
+                      child: TextFormField(
+                        initialValue: widget.playlist.name,
+                        autofocus: true,
+                        cursorWidth: 1.0,
+                        onChanged: (value) => rename = value,
+                        onFieldSubmitted: (String value) async {
+                          if (value.isNotEmpty &&
+                              value != widget.playlist.name) {
+                            widget.playlist.name = value;
+                            Collection.instance.playlistsSaveToCache();
+                            Navigator.of(context).maybePop();
+                            setState(() {});
+                          }
+                        },
+                        cursorColor:
+                            Theme.of(context).brightness == Brightness.light
+                                ? Color(0xFF212121)
+                                : Colors.white,
+                        textAlignVertical: TextAlignVertical.bottom,
+                        style: Theme.of(context).textTheme.headline4,
+                        decoration: inputDecoration(
+                          context,
+                          Language.instance.PLAYLISTS_TEXT_FIELD_LABEL,
+                        ),
+                      ),
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      child: Text(
+                        Language.instance.OK,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      onPressed: () async {
+                        if (rename.isNotEmpty &&
+                            rename != widget.playlist.name) {
+                          widget.playlist.name = rename;
+                          Collection.instance.playlistsSaveToCache();
+                          Navigator.of(context).maybePop();
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    TextButton(
+                      child: Text(
+                        Language.instance.CANCEL,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      onPressed: Navigator.of(context).maybePop,
                     ),
                   ],
                 ),
