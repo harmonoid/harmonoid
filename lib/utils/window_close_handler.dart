@@ -40,6 +40,10 @@ import 'package:harmonoid/constants/language.dart';
 ///
 abstract class WindowCloseHandler {
   static void initialize() {
+    if (_initialized) {
+      return;
+    }
+    _initialized = true;
     FlutterWindowClose.setWindowShouldCloseHandler(onWindowClose);
     // const channel = const MethodChannel('override_window_destroy');
     // channel.setMethodCallHandler((call) async {
@@ -61,10 +65,9 @@ abstract class WindowCloseHandler {
           builder: (c) => AlertDialog(
             title: Text(
               Language.instance.WARNING,
-              style: Theme.of(c).textTheme.headline1,
             ),
             content: Text(
-              Language.instance.COLLECTION_INDEXING_LABEL,
+              Language.instance.COLLECTION_INDEXING_LABEL.replaceAll('\n', ' '),
               style: Theme.of(c).textTheme.headline3,
             ),
             actions: [
@@ -80,23 +83,23 @@ abstract class WindowCloseHandler {
       return false;
     } else {
       try {
-        await Collection.instance.tagger.dispose();
-        await Intent.instance.tagger.dispose();
-        await Playback.instance.player.dispose();
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-      }
-      try {
         await Playback.instance.saveAppState();
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
       }
       try {
+        await Collection.instance.dispose();
+        await Intent.instance.tagger.dispose();
+        await Playback.instance.libmpv?.dispose();
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      try {
         if (Platform.isWindows) {
-          smtc.clear();
-          smtc.dispose();
+          SystemMediaTransportControls.instance.clear();
+          SystemMediaTransportControls.instance.dispose();
         }
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
@@ -105,4 +108,7 @@ abstract class WindowCloseHandler {
       return true;
     }
   }
+
+  /// Prevent registering method call handler on platform channel more than once.
+  static bool _initialized = false;
 }

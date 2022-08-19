@@ -9,34 +9,44 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:path/path.dart' as path;
 import 'package:animations/animations.dart';
-import 'package:libmpv/libmpv.dart' hide Media;
 import 'package:share_plus/share_plus.dart';
+import 'package:libmpv/libmpv.dart' hide Media;
+import 'package:media_library/media_library.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
-import 'package:harmonoid/models/media.dart';
-import 'package:harmonoid/interface/edit_details_screen.dart';
+import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/album.dart';
-import 'package:harmonoid/interface/settings/about.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/state/mobile_now_playing_controller.dart';
-import 'package:harmonoid/utils/dimensions.dart';
-import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/utils/file_system.dart';
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/interface/file_info_screen.dart';
 import 'package:harmonoid/interface/collection/playlist.dart';
+import 'package:harmonoid/interface/edit_details_screen.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/dimensions.dart';
+import 'package:harmonoid/utils/file_system.dart';
+import 'package:harmonoid/utils/windows_info.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid_visual_assets/harmonoid_visual_assets.dart';
+
+export 'package:harmonoid/utils/extensions.dart';
+
+// Only global variables throughout Harmonoid's source code.
+
+const kPrimaryLightColor = Color(0xFF6200EA);
+const kPrimaryDarkColor = Color(0xFF7C4DFF);
 
 final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 final isMobile = Platform.isAndroid || Platform.isIOS;
-final desktopTitleBarHeight = Platform.isWindows ? 32.0 : 0.0;
+final desktopTitleBarHeight =
+    WindowsInfo.instance.isWindows10OrGreater ? 32.0 : 0.0;
 final tileMargin = isDesktop ? kDesktopTileMargin : kMobileTileMargin;
 final visualAssets = VisualAssets();
 final HotKey searchBarHotkey = HotKey(
@@ -44,6 +54,9 @@ final HotKey searchBarHotkey = HotKey(
   modifiers: [KeyModifier.control],
   scope: HotKeyScope.inapp,
 );
+
+// Remaining source code in this file consists of helper & utility functions used for rendering & handling some
+// repeated tasks linked at multiple places.
 
 List<Widget> tileGridListWidgets({
   required double tileHeight,
@@ -57,6 +70,7 @@ List<Widget> tileGridListWidgets({
   required int elementsPerRow,
   MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center,
   bool showIncompleteRow = true,
+  double? margin,
 }) {
   List<Widget> widgets = <Widget>[];
   widgets.addAll([
@@ -66,12 +80,13 @@ List<Widget> tileGridListWidgets({
   ]);
   int rowIndex = 0;
   List<Widget> rowChildren = <Widget>[];
+  margin ??= tileMargin;
   for (int index = 0; index < widgetCount; index++) {
     rowChildren.add(
       Container(
         child: builder(context, index),
         margin: EdgeInsets.symmetric(
-          horizontal: tileMargin / 2.0,
+          horizontal: margin / 2.0,
         ),
       ),
     );
@@ -79,9 +94,8 @@ List<Widget> tileGridListWidgets({
     if (rowIndex > elementsPerRow - 1) {
       widgets.add(
         Container(
-          height: tileHeight + tileMargin,
-          margin:
-              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
+          height: tileHeight + margin,
+          margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
           alignment: Alignment.topCenter,
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -95,46 +109,46 @@ List<Widget> tileGridListWidgets({
       rowChildren = <Widget>[];
     }
   }
-  if (widgetCount % elementsPerRow != 0 && showIncompleteRow) {
-    rowChildren = <Widget>[];
-    for (int index = widgetCount - (widgetCount % elementsPerRow);
-        index < widgetCount;
-        index++) {
-      rowChildren.add(
+  if (elementsPerRow != 0) {
+    if (widgetCount % elementsPerRow != 0 && showIncompleteRow) {
+      rowChildren = <Widget>[];
+      for (int index = widgetCount - (widgetCount % elementsPerRow);
+          index < widgetCount;
+          index++) {
+        rowChildren.add(
+          Container(
+            child: builder(context, index),
+            margin: EdgeInsets.symmetric(
+              horizontal: margin / 2.0,
+            ),
+          ),
+        );
+      }
+      for (int index = 0;
+          index < elementsPerRow - (widgetCount % elementsPerRow);
+          index++) {
+        rowChildren.add(
+          Container(
+            height: tileHeight + margin,
+            width: tileWidth,
+            margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
+          ),
+        );
+      }
+      widgets.add(
         Container(
-          child: builder(context, index),
-          margin: EdgeInsets.symmetric(
-            horizontal: tileMargin / 2.0,
+          height: tileHeight + margin,
+          margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
+          alignment: Alignment.topCenter,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: mainAxisAlignment,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: rowChildren,
           ),
         ),
       );
     }
-    for (int index = 0;
-        index < elementsPerRow - (widgetCount % elementsPerRow);
-        index++) {
-      rowChildren.add(
-        Container(
-          height: tileHeight + tileMargin,
-          width: tileWidth,
-          margin:
-              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
-        ),
-      );
-    }
-    widgets.add(
-      Container(
-        height: tileHeight + tileMargin,
-        margin:
-            EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
-        alignment: Alignment.topCenter,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: mainAxisAlignment,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: rowChildren,
-        ),
-      ),
-    );
   }
   return widgets;
 }
@@ -152,31 +166,25 @@ class TileGridListWidgetsData {
 TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
   required double tileHeight,
   required double tileWidth,
-  required String? subHeader,
   required BuildContext context,
   required int widgetCount,
   required Widget Function(BuildContext context, int index) builder,
-  required String? leadingSubHeader,
-  required Widget? leadingWidget,
   required int elementsPerRow,
+  double? margin,
 }) {
   final widgets = <Widget>[];
   final data = <List<dynamic>>[];
-  widgets.addAll([
-    if (leadingSubHeader != null) SubHeader(leadingSubHeader),
-    if (leadingWidget != null) leadingWidget,
-    if (subHeader != null) SubHeader(subHeader),
-  ]);
   var rowIndex = 0;
   var rowChildren = <Widget>[];
   var rowData = <dynamic>[];
+  margin ??= tileMargin;
   for (int index = 0; index < widgetCount; index++) {
     final widget = builder(context, index);
     rowChildren.add(
       Container(
         child: widget,
         margin: EdgeInsets.symmetric(
-          horizontal: tileMargin / 2.0,
+          horizontal: margin / 2.0,
         ),
       ),
     );
@@ -185,9 +193,8 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
     if (rowIndex > elementsPerRow - 1) {
       widgets.add(
         Container(
-          height: tileHeight + tileMargin,
-          margin:
-              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
+          height: tileHeight + margin,
+          margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
           alignment: Alignment.topCenter,
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -203,49 +210,49 @@ TileGridListWidgetsData tileGridListWidgetsWithScrollbarSupport({
       rowData = <dynamic>[];
     }
   }
-  if (widgetCount % elementsPerRow != 0) {
-    rowChildren = <Widget>[];
-    for (int index = widgetCount - (widgetCount % elementsPerRow);
-        index < widgetCount;
-        index++) {
-      final widget = builder(context, index);
-      rowChildren.add(
+  if (elementsPerRow != 0) {
+    if (widgetCount % elementsPerRow != 0) {
+      rowChildren = <Widget>[];
+      for (int index = widgetCount - (widgetCount % elementsPerRow);
+          index < widgetCount;
+          index++) {
+        final widget = builder(context, index);
+        rowChildren.add(
+          Container(
+            child: widget,
+            margin: EdgeInsets.symmetric(
+              horizontal: margin / 2.0,
+            ),
+          ),
+        );
+        rowData.add((widget.key as ValueKey).value);
+      }
+      for (int index = 0;
+          index < elementsPerRow - (widgetCount % elementsPerRow);
+          index++) {
+        rowChildren.add(
+          Container(
+            height: tileHeight + margin,
+            width: tileWidth,
+            margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
+          ),
+        );
+      }
+      widgets.add(
         Container(
-          child: widget,
-          margin: EdgeInsets.symmetric(
-            horizontal: tileMargin / 2.0,
+          height: tileHeight + margin,
+          margin: EdgeInsets.only(left: margin / 2.0, right: margin / 2.0),
+          alignment: Alignment.topCenter,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: rowChildren,
           ),
         ),
       );
-      rowData.add((widget.key as ValueKey).value);
+      data.add(rowData);
     }
-    for (int index = 0;
-        index < elementsPerRow - (widgetCount % elementsPerRow);
-        index++) {
-      rowChildren.add(
-        Container(
-          height: tileHeight + tileMargin,
-          width: tileWidth,
-          margin:
-              EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
-        ),
-      );
-    }
-    widgets.add(
-      Container(
-        height: tileHeight + tileMargin,
-        margin:
-            EdgeInsets.only(left: tileMargin / 2.0, right: tileMargin / 2.0),
-        alignment: Alignment.topCenter,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: rowChildren,
-        ),
-      ),
-    );
-    data.add(rowData);
   }
   return TileGridListWidgetsData(
     widgets,
@@ -345,12 +352,96 @@ List<PopupMenuItem<int>> trackPopupMenuItems(BuildContext context) {
         ),
       ),
     ),
+    PopupMenuItem<int>(
+      padding: EdgeInsets.zero,
+      value: 7,
+      child: ListTile(
+        leading:
+            Icon(Platform.isWindows ? FluentIcons.info_24_regular : Icons.info),
+        title: Text(
+          Language.instance.FILE_INFORMATION,
+          style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+        ),
+      ),
+    ),
     if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
       PopupMenuItem<int>(
         padding: EdgeInsets.zero,
-        child: SizedBox(height: 64.0),
+        child: SizedBox(height: kMobileNowPlayingBarHeight),
       ),
   ];
+}
+
+Future<File?> pickFile({
+  required String label,
+  required List<String> extensions,
+}) async {
+  String? path;
+  if (Platform.isWindows) {
+    OpenFilePicker picker = OpenFilePicker()
+      ..filterSpecification = {
+        label: extensions.map((e) => '*.${e.toLowerCase()}').join(';'),
+        Language.instance.ALL_FILES: '*',
+      }
+      // Choosing first [extensions] extension as default.
+      ..defaultFilterIndex = 0
+      ..defaultExtension = extensions.first.toLowerCase();
+    path = picker.getFile()?.path;
+  } else if (Platform.isLinux) {
+    final result = await openFile(
+      acceptedTypeGroups: [
+        XTypeGroup(
+          label: label,
+          // Case sensitive paths on GNU/Linux.
+          extensions: [
+            ...extensions.map((e) => e.toLowerCase()).toList(),
+            ...extensions.map((e) => e.toUpperCase()).toList(),
+          ].toSet().toList(),
+        ),
+        XTypeGroup(
+          label: Language.instance.ALL_FILES,
+        ),
+      ],
+    );
+    path = result?.path;
+  }
+  // Using `package:file_picker` on other platforms.
+  else {
+    final result = await FilePicker.platform.pickFiles(
+      // Case sensitive paths on Android.
+      allowedExtensions: [
+        ...extensions.map((e) => e.toLowerCase()).toList(),
+        ...extensions.map((e) => e.toUpperCase()).toList(),
+      ].toSet().toList(),
+      // Needed for [allowedExtensions].
+      type: FileType.custom,
+    );
+    if ((result?.count ?? 0) > 0) {
+      path = result?.files.first.path;
+    }
+  }
+  return path == null ? null : File(path);
+}
+
+Future<Directory?> pickDirectory() async {
+  Directory? directory;
+  if (Platform.isWindows) {
+    final picker = DirectoryPicker();
+    directory = picker.getDirectory();
+  } else if (Platform.isLinux) {
+    final path = await getDirectoryPath();
+    if (path != null) {
+      directory = Directory(path);
+    }
+  }
+  // Using `package:file_picker` on other platforms.
+  else {
+    final path = await FilePicker.platform.getDirectoryPath();
+    if (path != null) {
+      directory = Directory(path);
+    }
+  }
+  return directory;
 }
 
 Future<void> trackPopupMenuHandle(
@@ -367,7 +458,6 @@ Future<void> trackPopupMenuHandle(
           builder: (subContext) => AlertDialog(
             title: Text(
               Language.instance.COLLECTION_TRACK_DELETE_DIALOG_HEADER,
-              style: Theme.of(subContext).textTheme.headline1,
             ),
             content: Text(
               Language.instance.COLLECTION_TRACK_DELETE_DIALOG_BODY.replaceAll(
@@ -377,8 +467,7 @@ Future<void> trackPopupMenuHandle(
               style: Theme.of(subContext).textTheme.headline3,
             ),
             actions: [
-              MaterialButton(
-                textColor: Theme.of(context).primaryColor,
+              TextButton(
                 onPressed: () async {
                   await Collection.instance.delete(track);
                   Navigator.of(subContext).pop();
@@ -387,13 +476,15 @@ Future<void> trackPopupMenuHandle(
                       while (Navigator.of(context).canPop()) {
                         Navigator.of(context).pop();
                       }
+                      if (floatingSearchBarController.isOpen) {
+                        floatingSearchBarController.close();
+                      }
                     }
                   }
                 },
                 child: Text(Language.instance.YES),
               ),
-              MaterialButton(
-                textColor: Theme.of(context).primaryColor,
+              TextButton(
                 onPressed: Navigator.of(subContext).pop,
                 child: Text(Language.instance.NO),
               ),
@@ -402,10 +493,22 @@ Future<void> trackPopupMenuHandle(
         );
         break;
       case 1:
-        Share.shareFiles(
-          [track.uri.toString()],
-          subject: '${track.trackName} • ${track.albumName}',
-        );
+        if (track.uri.isScheme('FILE')) {
+          Share.shareFiles(
+            [track.uri.toFilePath()],
+            subject: '${track.trackName} • ${[
+              '',
+              kUnknownArtist,
+            ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName}',
+          );
+        } else {
+          Share.share(
+            '${track.trackName} • ${[
+              '',
+              kUnknownArtist,
+            ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName} • ${track.uri.toString()}',
+          );
+        }
         break;
       case 2:
         showAddToPlaylistDialog(context, track);
@@ -463,45 +566,39 @@ Future<void> trackPopupMenuHandle(
           ),
         );
         break;
+      case 7:
+        FileInfoScreen.show(
+          context,
+          uri: track.uri,
+        );
+        break;
     }
   }
 }
 
-Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
+Future<void> showAddToPlaylistDialog(
+  BuildContext context,
+  Track track, {
+  bool elevated = false,
+}) {
   if (isDesktop) {
     return showDialog(
       context: context,
       builder: (subContext) => AlertDialog(
-        contentPadding: EdgeInsets.zero,
-        actionsPadding: EdgeInsets.zero,
-        titlePadding: EdgeInsets.zero,
+        contentPadding: EdgeInsets.only(top: 20.0),
+        title: Text(Language.instance.PLAYLIST_ADD_DIALOG_TITLE),
         content: Container(
-          width: isDesktop ? 512.0 : 280.0,
-          height: isDesktop ? 480.0 : 280.0,
+          height: 480.0,
+          width: 512.0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(28, 20, 0, 0),
-                child: Text(
-                  Language.instance.PLAYLIST_ADD_DIALOG_TITLE,
-                  style: Theme.of(subContext).textTheme.headline1?.copyWith(
-                        fontSize: 20.0,
-                      ),
-                ),
+              Divider(
+                height: 1.0,
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(28, 2, 0, 16),
-                child: Text(
-                  Language.instance.PLAYLIST_ADD_DIALOG_BODY,
-                  style: Theme.of(subContext).textTheme.headline3,
-                ),
-              ),
-              Container(
-                height: (isDesktop ? 512.0 : 280.0) - 118.0,
-                width: isDesktop ? 512.0 : 280.0,
+              Expanded(
                 child: CustomListViewBuilder(
                   itemExtents: List.generate(
                     Collection.instance.playlists.length,
@@ -528,8 +625,7 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
           ),
         ),
         actions: [
-          MaterialButton(
-            textColor: Theme.of(context).primaryColor,
+          TextButton(
             onPressed: Navigator.of(subContext).pop,
             child: Text(Language.instance.CANCEL),
           ),
@@ -537,11 +633,50 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
       ),
     );
   } else {
+    if (elevated) {
+      return showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        context: context,
+        builder: (context) => Card(
+          margin: EdgeInsets.only(
+            left: 8.0,
+            right: 8.0,
+            bottom: kBottomNavigationBarHeight + 8.0,
+          ),
+          elevation: 8.0,
+          child: DraggableScrollableSheet(
+            initialChildSize: 0.6,
+            maxChildSize: 0.8,
+            expand: false,
+            builder: (context, controller) => ListView.builder(
+              padding: EdgeInsets.zero,
+              controller: controller,
+              shrinkWrap: true,
+              itemCount: Collection.instance.playlists.length,
+              itemBuilder: (context, i) {
+                return PlaylistTile(
+                  playlist: Collection.instance.playlists[i],
+                  onTap: () async {
+                    await Collection.instance.playlistAddTrack(
+                      Collection.instance.playlists[i],
+                      track,
+                    );
+                    Navigator.of(context).pop();
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      );
+    }
     return showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.8,
-        maxChildSize: 1.0,
+        initialChildSize: 0.6,
+        maxChildSize: 0.8,
         expand: false,
         builder: (context, controller) => ListView.builder(
           padding: EdgeInsets.zero,
@@ -549,21 +684,8 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
           shrinkWrap: true,
           itemCount: Collection.instance.playlists.length,
           itemBuilder: (context, i) {
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.transparent,
-                child: Icon(
-                  Icons.playlist_add,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-              ),
-              title: Text(Collection.instance.playlists[i].name),
-              subtitle: Text(
-                Language.instance.N_TRACKS.replaceAll(
-                  'N',
-                  Collection.instance.playlists[i].tracks.length.toString(),
-                ),
-              ),
+            return PlaylistTile(
+              playlist: Collection.instance.playlists[i],
               onTap: () async {
                 await Collection.instance.playlistAddTrack(
                   Collection.instance.playlists[i],
@@ -578,82 +700,6 @@ Future<void> showAddToPlaylistDialog(BuildContext context, Track track) {
     );
   }
 }
-
-CircularButton contextMenu(BuildContext context, {Color? color}) =>
-    CircularButton(
-      icon: Icon(Icons.more_vert, color: color),
-      onPressed: () {
-        final position = RelativeRect.fromRect(
-          Offset(
-                MediaQuery.of(context).size.width - tileMargin - 48.0,
-                MediaQuery.of(context).padding.top +
-                    kMobileSearchBarHeight +
-                    2 * tileMargin,
-              ) &
-              Size(160.0, 160.0),
-          Rect.fromLTWH(
-            0,
-            0,
-            MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height,
-          ),
-        );
-        showMenu<int>(
-          context: context,
-          position: position,
-          elevation: 4.0,
-          items: [
-            PopupMenuItem(
-              value: 0,
-              child: ListTile(
-                leading: Icon(Icons.settings),
-                title: Text(Language.instance.SETTING),
-              ),
-            ),
-            PopupMenuItem(
-              value: 1,
-              child: ListTile(
-                leading: Icon(Icons.info),
-                title: Text(Language.instance.ABOUT_TITLE),
-              ),
-            ),
-          ],
-        ).then((value) {
-          switch (value) {
-            case 0:
-              {
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: Settings(),
-                    ),
-                  ),
-                );
-                break;
-              }
-            case 1:
-              {
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: AboutPage(),
-                    ),
-                  ),
-                );
-                break;
-              }
-          }
-        });
-      },
-    );
 
 InputDecoration inputDecoration(
   BuildContext context,
@@ -675,10 +721,7 @@ InputDecoration inputDecoration(
               iconSize: 24.0,
             ),
           ),
-    contentPadding: isDesktop
-        ? EdgeInsets.only(
-            left: 10.0, bottom: trailingIcon == null ? 10.0 : 10.0)
-        : null,
+    contentPadding: null,
     hintText: hintText,
     hintStyle: isDesktop
         ? Theme.of(context).textTheme.headline3?.copyWith(
@@ -725,146 +768,86 @@ enum TabRouteSender {
   systemNavigationBackButton,
 }
 
-extension StringExtension on String {
-  get overflow => Characters(this)
-      .replaceAll(Characters(''), Characters('\u{200B}'))
-      .toString();
-
-  get safePath => replaceAll(RegExp(kArtworkFileNameRegex), '');
-}
-
-extension DateTimeExtension on DateTime {
-  get label =>
-      '${day.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-$year';
-}
-
-ImageProvider getAlbumArt(Media media, {bool small: false}) {
-  final result = () {
-    if (media is Track) {
-      if (Plugins.isWebMedia(media.uri)) {
-        return ExtendedNetworkImageProvider(
-          Plugins.artwork(media.uri, small: small),
-          cache: true,
-        );
-      }
-      final file = File(path.join(
-        Collection.instance.albumArtDirectory.path,
-        media.albumArtFileName,
-      ));
-      if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-        return ExtendedFileImageProvider(file);
-      } else {
-        try {
-          final file = File(path.join(
-            Collection.instance.albumArtDirectory.path,
-            media.legacyAlbumArtFileName,
-          ));
-          if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-            return ExtendedFileImageProvider(file);
-          } else {
-            for (final name in kAlbumArtFileNames) {
-              final file =
-                  File(path.join(path.basename(media.uri.toFilePath()), name));
-              if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-                return ExtendedFileImageProvider(file);
-              }
-            }
-          }
-        } catch (_) {}
-      }
-    } else if (media is Album) {
-      if (media.tracks.isEmpty) {
-        return ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
-      }
-      if (Plugins.isWebMedia(media.tracks.first.uri)) {
-        return ExtendedNetworkImageProvider(
-          Plugins.artwork(
-            media.tracks.first.uri,
-            small: small,
-          ),
-          cache: true,
-        );
-      }
-      final file = File(path.join(
-        Collection.instance.albumArtDirectory.path,
-        media.tracks.first.albumArtFileName,
-      ));
-      if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-        return ExtendedFileImageProvider(file);
-      } else {
-        try {
-          final file = File(path.join(
-            Collection.instance.albumArtDirectory.path,
-            media.tracks.first.legacyAlbumArtFileName,
-          ));
-          if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-            return ExtendedFileImageProvider(file);
-          } else {
-            for (final name in kAlbumArtFileNames) {
-              final file = File(path.join(
-                  path.basename(media.tracks.first.uri.toFilePath()), name));
-              if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-                return ExtendedFileImageProvider(file);
-              }
-            }
-          }
-        } catch (_) {}
-      }
-    } else if (media is Artist) {
-      if (media.tracks.isEmpty) {
-        return ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
-      }
-      if (Plugins.isWebMedia(media.tracks.first.uri)) {
-        return ExtendedNetworkImageProvider(
-          Plugins.artwork(
-            media.tracks.first.uri,
-            small: small,
-          ),
-          cache: true,
-        );
-      }
-      final file = File(path.join(
-        Collection.instance.albumArtDirectory.path,
-        media.tracks.first.albumArtFileName,
-      ));
-      if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-        return ExtendedFileImageProvider(file);
-      } else {
-        try {
-          final file = File(path.join(
-            Collection.instance.albumArtDirectory.path,
-            media.tracks.first.legacyAlbumArtFileName,
-          ));
-          if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-            return ExtendedFileImageProvider(file);
-          } else {
-            for (final name in kAlbumArtFileNames) {
-              final file = File(path.join(
-                  path.basename(media.tracks.first.uri.toFilePath()), name));
-              if (file.existsSync_() && file.lengthSync().compareTo(0) != 0) {
-                return ExtendedFileImageProvider(file);
-              }
-            }
-          }
-        } catch (_) {}
-      }
-    }
-    return ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
-  }() as ImageProvider;
-  if (small && result is ExtendedNetworkImageProvider) {
-    return result;
-  } else if (small) {
-    return ResizeImage.resizeIfNeeded(200, 200, result);
+Uri? validate(String text) {
+  // Get rid of quotes.
+  if (text.startsWith('"') && text.endsWith('"')) {
+    text = text.substring(1, text.length - 1);
   }
-  return result;
+  debugPrint(text);
+  Uri? uri;
+  if (uri == null) {
+    try {
+      if (FS.typeSync_(text) == FileSystemEntityType.file) {
+        if (Platform.isWindows) {
+          text = text.replaceAll('\\', '/');
+        }
+        uri = File(text).uri;
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+  }
+  if (uri == null) {
+    try {
+      uri = Uri.parse(text);
+      if (!(uri.isScheme('HTTP') ||
+          uri.isScheme('HTTPS') ||
+          uri.isScheme('FTP') ||
+          uri.isScheme('RSTP') ||
+          uri.isScheme('FILE'))) {
+        uri = null;
+      }
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
+  }
+  return uri;
 }
 
-extension DurationExtension on Duration {
-  String get label {
-    int minutes = inSeconds ~/ 60;
-    String seconds = inSeconds - (minutes * 60) > 9
-        ? '${inSeconds - (minutes * 60)}'
-        : '0${inSeconds - (minutes * 60)}';
-    return '$minutes:$seconds';
+/// Fetches the album art of a given [Media] either local or online.
+///
+/// Passing [small] as `true` will result in a smaller sized image, which may be useful
+/// for performance reasons e.g. generating palette using `package:palette_generator`
+/// or rendering, especially on desktop platforms.
+///
+/// Automatically falls back to the default album art from Harmonoid's assets.
+///
+ImageProvider getAlbumArt(
+  Media media, {
+  bool small = false,
+}) {
+  ImageProvider? image;
+  // Separately handle the web URLs.
+  if (media is Track) {
+    if (LibmpvPluginUtils.isSupported(media.uri)) {
+      image = ExtendedNetworkImageProvider(
+        LibmpvPluginUtils.thumbnail(
+          media.uri,
+          small: small,
+        ).toString(),
+        cache: true,
+      );
+    }
+  }
+  if (image == null) {
+    // The passed [media] wasn't a web entity, fetch album art for the locally stored media.
+    // Automatically checks for fallback album arts e.g. `Folder.jpg` or `cover.jpg` etc.
+    final file = Collection.instance.getAlbumArt(media);
+    if (file != null) {
+      // An album art is found.
+      image = ExtendedFileImageProvider(file);
+    }
+  }
+  if (image == null) {
+    // No album art found, use the default album art.
+    image = ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
+  }
+  // [ResizeImage.resizeIfNeeded] is only needed for local images.
+  if (small && !(image is ExtendedNetworkImageProvider)) {
+    return ResizeImage.resizeIfNeeded(null, 200, image);
+  } else {
+    return image;
   }
 }

@@ -50,16 +50,20 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
     super.initState();
     if (widget.colorKeys != null) {
       if (!widget.colorKeys!.containsKey(widget.track.uri.toString())) {
-        PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
-                widget.track.thumbnails.values.first,
-                cache: true))
-            .then((palette) {
-          setState(() {
-            widget.colorKeys![widget.track.uri.toString()] =
-                palette.colors.first;
-            color = palette.colors.first;
+        if (isDesktop) {
+          PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
+                  widget.track.thumbnails.values.first,
+                  cache: true))
+              .then((palette) {
+            setState(() {
+              if (palette.colors != null) {
+                widget.colorKeys![widget.track.uri.toString()] =
+                    palette.colors!.first;
+                color = palette.colors!.first;
+              }
+            });
           });
-        });
+        }
       } else {
         color = widget.colorKeys![widget.track.uri.toString()];
       }
@@ -67,161 +71,281 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
   }
 
   Widget build(BuildContext context) {
-    return Card(
-      color: color,
-      clipBehavior: Clip.antiAlias,
-      elevation: 4.0,
-      margin: EdgeInsets.zero,
-      child: MouseRegion(
-        onEnter: (e) => setState(() {
-          scale = 1.1;
-        }),
-        onExit: (e) => setState(() {
-          scale = 1.0;
-        }),
-        child: Container(
-          height: widget.height,
-          width: widget.width,
-          child: Stack(
-            alignment: Alignment.bottomLeft,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRect(
-                    child: Hero(
-                      tag: widget.track.hashCode,
-                      child: TweenAnimationBuilder(
-                        duration: const Duration(milliseconds: 100),
-                        tween: Tween<double>(begin: 1.0, end: scale),
-                        builder: (BuildContext context, double value, _) {
-                          return Transform.scale(
-                            scale: value,
-                            child: ExtendedImage(
-                              image: NetworkImage(
-                                widget.track.thumbnails[180] ??
-                                    widget.track.thumbnails.values.first,
-                              ),
-                              fit: BoxFit.cover,
-                              width: widget.height,
-                              height: widget.height,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16.0),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
+    return isDesktop
+        ? Card(
+            color: color,
+            clipBehavior: Clip.antiAlias,
+            elevation: 4.0,
+            margin: EdgeInsets.zero,
+            child: MouseRegion(
+              onEnter: (e) => setState(() {
+                scale = 1.1;
+              }),
+              onExit: (e) => setState(() {
+                scale = 1.0;
+              }),
+              child: Container(
+                height: widget.height,
+                width: widget.width,
+                child: Stack(
+                  alignment: Alignment.bottomLeft,
+                  children: [
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 16.0),
-                        Text(
-                          widget.track.trackName.replaceFirst('(', '\n('),
-                          style:
-                              Theme.of(context).textTheme.headline2?.copyWith(
-                                    color: isDark ? Colors.white : Colors.black,
+                        ClipRect(
+                          child: Hero(
+                            tag: widget.track.hashCode,
+                            child: TweenAnimationBuilder(
+                              duration: const Duration(milliseconds: 100),
+                              tween: Tween<double>(begin: 1.0, end: scale),
+                              builder: (BuildContext context, double value, _) {
+                                return Transform.scale(
+                                  scale: value,
+                                  child: ExtendedImage(
+                                    image: NetworkImage(
+                                      widget.track.thumbnails[180] ??
+                                          widget.track.thumbnails.values.first,
+                                    ),
+                                    fit: BoxFit.cover,
+                                    width: widget.height,
+                                    height: widget.height,
                                   ),
-                          textAlign: TextAlign.left,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                        const SizedBox(height: 2.0),
-                        Text(
-                          '${widget.track.trackArtistNames.take(2).join(', ')}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline3
-                              ?.copyWith(
-                                fontSize: isDesktop ? 12.0 : null,
-                                color: isDark ? Colors.white54 : Colors.black54,
+                        const SizedBox(width: 12.0),
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 16.0),
+                              Text(
+                                widget.track.trackName.replaceFirst('(', '\n('),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline3
+                                    ?.copyWith(
+                                      fontSize: 14.0,
+                                      color:
+                                          isDark ? Colors.white : Colors.black,
+                                    ),
+                                textAlign: TextAlign.left,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                          maxLines: 1,
-                          textAlign: TextAlign.left,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 2.0),
-                        Text(
-                          widget.track.duration.label,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline3
-                              ?.copyWith(
-                                fontSize: isDesktop ? 12.0 : null,
-                                color: isDark ? Colors.white54 : Colors.black54,
+                              const SizedBox(height: 4.0),
+                              Text(
+                                '${widget.track.trackArtistNames.take(2).join(', ')}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline3
+                                    ?.copyWith(
+                                      fontSize: isDesktop ? 12.0 : null,
+                                      color: isDark
+                                          ? Colors.white54
+                                          : Colors.black54,
+                                    ),
+                                maxLines: 1,
+                                textAlign: TextAlign.left,
+                                overflow: TextOverflow.ellipsis,
                               ),
+                              const SizedBox(height: 2.0),
+                              Text(
+                                widget.track.duration.label,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline3
+                                    ?.copyWith(
+                                      fontSize: isDesktop ? 12.0 : null,
+                                      color: isDark
+                                          ? Colors.white54
+                                          : Colors.black54,
+                                    ),
+                              ),
+                              const SizedBox(height: 16.0),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 16.0),
+                        const SizedBox(width: 12.0),
                       ],
                     ),
-                  ),
-                  const SizedBox(width: 8.0),
-                ],
-              ),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    Web.open(widget.track);
-                  },
-                  onLongPress: () async {
-                    int? result;
-                    await showModalBottomSheet(
-                      context: context,
-                      builder: (context) => Container(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: webTrackPopupMenuItems(context)
-                              .map(
-                                (item) => PopupMenuItem(
-                                  child: item.child,
-                                  onTap: () => result = item.value,
-                                ),
-                              )
-                              .toList(),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          Web.instance.open(widget.track);
+                        },
+                        onLongPress: () async {
+                          int? result;
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) => Container(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: webTrackPopupMenuItems(context)
+                                    .map(
+                                      (item) => PopupMenuItem(
+                                        child: item.child,
+                                        onTap: () => result = item.value,
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          );
+                          webTrackPopupMenuHandle(
+                              context, widget.track, result);
+                        },
+                        child: Container(
+                          width: widget.width,
+                          height: widget.height,
                         ),
                       ),
-                    );
-                    webTrackPopupMenuHandle(context, widget.track, result);
-                  },
-                  child: Container(
-                    width: widget.width,
-                    height: widget.height,
+                    ),
+                    Positioned(
+                      bottom: 4.0,
+                      right: 4.0,
+                      child: ContextMenuButton(
+                        itemBuilder: (BuildContext context) =>
+                            webTrackPopupMenuItems(
+                          context,
+                        ),
+                        onSelected: (result) async {
+                          webTrackPopupMenuHandle(
+                              context, widget.track, result as int?);
+                        },
+                        icon: Icon(
+                          Icons.more_vert,
+                          size: 16.0,
+                          color: isDark ? Colors.white54 : Colors.black54,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        : Card(
+            clipBehavior: Clip.antiAlias,
+            elevation: 4.0,
+            margin: EdgeInsets.zero,
+            color: Theme.of(context).cardColor,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  Web.instance.open(widget.track);
+                },
+                onLongPress: () async {
+                  int? result;
+                  await showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) => Container(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: webTrackPopupMenuItems(context)
+                            .map(
+                              (item) => PopupMenuItem(
+                                child: item.child,
+                                onTap: () => result = item.value,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  );
+                  webTrackPopupMenuHandle(context, widget.track, result);
+                },
+                child: Container(
+                  height: widget.height,
+                  width: widget.width,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ExtendedImage(
+                        image: NetworkImage(
+                          widget.track.thumbnails.values.skip(1).first,
+                        ),
+                        fit: BoxFit.cover,
+                        width: widget.height,
+                        height: widget.height,
+                      ),
+                      const SizedBox(width: 12.0),
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.track.trackName.overflow,
+                              style: Theme.of(context).textTheme.headline2,
+                              textAlign: TextAlign.left,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4.0),
+                            Text(
+                              widget.track.trackArtistNames
+                                  .take(2)
+                                  .join(', ')
+                                  .overflow,
+                              style: Theme.of(context).textTheme.headline3,
+                              maxLines: 1,
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: widget.height,
+                        width: widget.height - 12.0,
+                        child: IconButton(
+                          iconSize: 24.0,
+                          splashRadius: 20.0,
+                          icon: Icon(
+                            Icons.more_vert,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                          onPressed: () async {
+                            int? result;
+                            await showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) => Container(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: webTrackPopupMenuItems(context)
+                                      .map(
+                                        (item) => PopupMenuItem(
+                                          child: item.child,
+                                          onTap: () => result = item.value,
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              ),
+                            );
+                            webTrackPopupMenuHandle(
+                                context, widget.track, result);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              if (isDesktop)
-                Positioned(
-                  bottom: 4.0,
-                  right: 4.0,
-                  child: Material(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(16.0),
-                    child: ContextMenuButton(
-                      itemBuilder: (BuildContext context) =>
-                          webTrackPopupMenuItems(
-                        context,
-                      ),
-                      onSelected: (result) async {
-                        webTrackPopupMenuHandle(
-                            context, widget.track, result as int?);
-                      },
-                      icon: Icon(
-                        Icons.more_vert,
-                        size: 16.0,
-                        // color: isDark ? Colors.white54 : Colors.black54,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }
 
@@ -261,17 +385,18 @@ class WebTrackTile extends StatelessWidget {
         child: InkWell(
           onTap: () {
             if (group != null) {
-              Web.open(
+              Web.instance.open(
                 group,
                 index: group!.indexOf(track),
               );
             } else {
-              Web.open(track);
+              Web.instance.open(track);
             }
           },
           onLongPress: () async {
             int? result;
             await showModalBottomSheet(
+              isScrollControlled: true,
               context: context,
               builder: (context) => Container(
                 child: Column(
@@ -355,19 +480,50 @@ class WebTrackTile extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 12.0),
-                    if (isDesktop)
-                      Container(
-                        width: 64.0,
-                        height: 64.0,
-                        child: ContextMenuButton<int>(
-                          onSelected: (result) {
-                            webTrackPopupMenuHandle(context, track, result);
-                          },
-                          itemBuilder: (context) =>
-                              webTrackPopupMenuItems(context),
-                        ),
-                      ),
+                    const SizedBox(width: 4.0),
+                    Container(
+                      width: 64.0,
+                      height: 64.0,
+                      child: isMobile
+                          ? IconButton(
+                              splashRadius: 20.0,
+                              icon: Icon(
+                                Icons.more_vert,
+                              ),
+                              onPressed: () async {
+                                int? result;
+                                await showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  context: context,
+                                  builder: (context) => Container(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: webTrackPopupMenuItems(context)
+                                          .map(
+                                            (item) => PopupMenuItem(
+                                              child: item.child,
+                                              onTap: () => result = item.value,
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                );
+                                webTrackPopupMenuHandle(
+                                  context,
+                                  track,
+                                  result,
+                                );
+                              },
+                            )
+                          : ContextMenuButton<int>(
+                              onSelected: (result) {
+                                webTrackPopupMenuHandle(context, track, result);
+                              },
+                              itemBuilder: (context) =>
+                                  webTrackPopupMenuItems(context),
+                            ),
+                    ),
                   ],
                 ),
               ),

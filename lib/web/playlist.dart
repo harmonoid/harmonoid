@@ -5,6 +5,7 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
@@ -13,23 +14,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:harmonoid/web/web.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:media_library/media_library.dart' as media;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/web/track.dart';
-import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/utils/theme.dart';
-import 'package:harmonoid/web/utils/widgets.dart';
 
 class WebPlaylistLargeTile extends StatelessWidget {
   final double width;
@@ -284,7 +285,9 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                   widget.playlist.thumbnails.values.first))
               .then((palette) {
             setState(() {
-              color = palette.colors.first;
+              if (palette.colors != null) {
+                color = palette.colors!.first;
+              }
             });
           });
         },
@@ -301,6 +304,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
         }
       });
     }
+    // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
     if (Platform.isWindows) {
       scrollController.addListener(
         () {
@@ -316,17 +320,21 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
       );
     }
     if (isMobile) {
-      PaletteGenerator.fromImageProvider(ResizeImage.resizeIfNeeded(
-              100,
-              100,
-              ExtendedNetworkImageProvider(
-                  widget.playlist.thumbnails.values
-                      .toList()[widget.playlist.thumbnails.length - 2],
-                  cache: true)))
-          .then((palette) {
+      PaletteGenerator.fromImageProvider(
+        ResizeImage.resizeIfNeeded(
+          100,
+          100,
+          ExtendedNetworkImageProvider(
+            widget.playlist.thumbnails.values.first,
+            cache: true,
+          ),
+        ),
+      ).then((palette) {
         setState(() {
-          color = palette.colors.first;
-          secondary = palette.colors.last;
+          if (palette.colors != null) {
+            color = palette.colors!.first;
+            secondary = palette.colors!.last;
+          }
           detailsVisible = true;
         });
       });
@@ -372,6 +380,20 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
 
   @override
   Widget build(BuildContext context) {
+    const mobileSliverLabelHeight = 116.0;
+    double mobileSliverContentHeight = MediaQuery.of(context).size.width * 0.6;
+    double mobileSliverExpandedHeight = mobileSliverContentHeight -
+        MediaQuery.of(context).padding.top +
+        mobileSliverLabelHeight;
+    double mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    if (mobileSliverExpandedHeight >
+        MediaQuery.of(context).size.height * 3 / 5) {
+      mobileSliverExpandedHeight = MediaQuery.of(context).size.height * 3 / 5;
+      mobileSliverContentHeight = mobileSliverExpandedHeight -
+          mobileSliverLabelHeight +
+          MediaQuery.of(context).padding.top;
+      mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    }
     return isDesktop
         ? Scaffold(
             body: Container(
@@ -495,7 +517,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                                   children: [
                                                     ElevatedButton.icon(
                                                       onPressed: () {
-                                                        Web.open(widget
+                                                        Web.instance.open(widget
                                                             .playlist.tracks);
                                                       },
                                                       style: ButtonStyle(
@@ -661,8 +683,8 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                     builder: (context, color, _) => Theme(
                       data: createTheme(
                         color: isDark(context)
-                            ? kAccents.first.dark
-                            : kAccents.first.light,
+                            ? kPrimaryDarkColor
+                            : kPrimaryLightColor,
                         themeMode:
                             isDark(context) ? ThemeMode.dark : ThemeMode.light,
                       ),
@@ -714,6 +736,13 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                     child: Icon(
                                       Icons.settings,
                                       size: 20.0,
+                                      color: isDark(context)
+                                          ? Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionDarkIconColor
+                                          : Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionLightIconColor,
                                     ),
                                   ),
                                 ),
@@ -753,26 +782,28 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                         },
                         icon: Icon(
                           Icons.search,
-                          color: Colors.white,
+                          color: Theme.of(context)
+                              .extension<IconColors>()
+                              ?.appBarActionDarkIconColor,
                         ),
                         iconSize: 24.0,
                         splashRadius: 20.0,
                       ),
-                      contextMenu(context, color: Colors.white),
+                      WebMobileAppBarOverflowButton(),
                     ],
                     systemOverlayStyle: SystemUiOverlayStyle(
                       statusBarColor: Colors.transparent,
                       statusBarIconBrightness: Brightness.light,
                     ),
-                    expandedHeight: MediaQuery.of(context).size.width +
-                        128.0 -
-                        MediaQuery.of(context).padding.top,
+                    expandedHeight: mobileSliverExpandedHeight,
                     pinned: true,
                     leading: IconButton(
                       onPressed: Navigator.of(context).maybePop,
                       icon: Icon(
                         Icons.arrow_back,
-                        color: Colors.white,
+                        color: Theme.of(context)
+                            .extension<IconColors>()
+                            ?.appBarDarkIconColor,
                       ),
                       iconSize: 24.0,
                       splashRadius: 20.0,
@@ -789,7 +820,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                         child: Text(
                           widget.playlist.name.overflow,
                           style:
-                              Theme.of(context).textTheme.headline1?.copyWith(
+                              Theme.of(context).textTheme.headline6?.copyWith(
                                     color: Colors.white,
                                   ),
                           maxLines: 1,
@@ -803,32 +834,57 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                         FlexibleSpaceBar(
                           background: Column(
                             children: [
-                              ExtendedImage.network(
-                                widget.playlist.thumbnails.values.toList()[
-                                    widget.playlist.thumbnails.length - 2],
-                                fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.width,
-                                enableLoadState: true,
-                                enableMemoryCache: false,
-                                cache: true,
-                                loadStateChanged: (ExtendedImageState state) {
-                                  return state.extendedImageLoadState ==
-                                          LoadState.completed
-                                      ? TweenAnimationBuilder(
-                                          tween: Tween<double>(
-                                              begin: 0.0, end: 1.0),
-                                          duration:
-                                              const Duration(milliseconds: 800),
-                                          child: state.completedWidget,
-                                          builder: (context, value, child) =>
-                                              Opacity(
-                                            opacity: value as double,
-                                            child: state.completedWidget,
-                                          ),
-                                        )
-                                      : SizedBox.shrink();
-                                },
+                              Stack(
+                                children: [
+                                  ExtendedImage.network(
+                                    widget.playlist.thumbnails.values
+                                        .toList()
+                                        .last,
+                                    fit: BoxFit.cover,
+                                    width: MediaQuery.of(context).size.width,
+                                    height: mobileSliverContentHeight,
+                                    enableLoadState: true,
+                                    enableMemoryCache: false,
+                                    cache: true,
+                                    loadStateChanged:
+                                        (ExtendedImageState state) {
+                                      return state.extendedImageLoadState ==
+                                              LoadState.completed
+                                          ? TweenAnimationBuilder(
+                                              tween: Tween<double>(
+                                                  begin: 0.0, end: 1.0),
+                                              duration: const Duration(
+                                                  milliseconds: 800),
+                                              child: state.completedWidget,
+                                              builder:
+                                                  (context, value, child) =>
+                                                      Opacity(
+                                                opacity: value as double,
+                                                child: state.completedWidget,
+                                              ),
+                                            )
+                                          : SizedBox.shrink();
+                                    },
+                                  ),
+                                  Positioned.fill(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Colors.black26,
+                                            Colors.transparent,
+                                          ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          stops: [
+                                            0.0,
+                                            0.5,
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               TweenAnimationBuilder<double>(
                                 tween: Tween<double>(
@@ -841,7 +897,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                   child: Container(
                                     color: Colors.grey.shade900,
                                     alignment: Alignment.centerLeft,
-                                    height: 128.0,
+                                    height: mobileSliverLabelHeight,
                                     width: MediaQuery.of(context).size.width,
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 16.0),
@@ -849,7 +905,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                       widget.playlist.name.overflow,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .headline1
+                                          .headline6
                                           ?.copyWith(
                                             color: Colors.white,
                                             fontSize: 24.0,
@@ -864,14 +920,15 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                           ),
                         ),
                         Positioned(
-                          top: MediaQuery.of(context).size.width +
-                              MediaQuery.of(context).padding.top -
-                              64.0,
+                          top: mobileSliverFABYPos,
                           right: 16.0 + 64.0,
                           child: TweenAnimationBuilder(
                             curve: Curves.easeOut,
                             tween: Tween<double>(
-                                begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                                begin: 0.0,
+                                end: detailsVisible && secondary != null
+                                    ? 1.0
+                                    : 0.0),
                             duration: Duration(milliseconds: 200),
                             builder: (context, value, _) => Transform.scale(
                               scale: value as double,
@@ -889,7 +946,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                                   tooltip: Language.instance.PLAY_NOW,
                                   child: Icon(Icons.play_arrow),
                                   onPressed: () {
-                                    Web.open(widget.playlist.tracks);
+                                    Web.instance.open(widget.playlist.tracks);
                                   },
                                 ),
                               ),
@@ -897,14 +954,15 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                           ),
                         ),
                         Positioned(
-                          top: MediaQuery.of(context).size.width +
-                              MediaQuery.of(context).padding.top -
-                              64.0,
+                          top: mobileSliverFABYPos,
                           right: 16.0,
                           child: TweenAnimationBuilder(
                             curve: Curves.easeOut,
                             tween: Tween<double>(
-                                begin: 0.0, end: detailsVisible ? 1.0 : 0.0),
+                                begin: 0.0,
+                                end: detailsVisible && secondary != null
+                                    ? 1.0
+                                    : 0.0),
                             duration: Duration(milliseconds: 200),
                             builder: (context, value, _) => Transform.scale(
                               scale: value as double,
@@ -939,6 +997,11 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                       ],
                     ),
                   ),
+                  SliverPadding(
+                    padding: EdgeInsets.only(
+                      top: 20.0,
+                    ),
+                  ),
                   PagedSliverList(
                     pagingController: pagingController,
                     builderDelegate: PagedChildBuilderDelegate<Track?>(
@@ -965,6 +1028,11 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
                               track: track!,
                               group: widget.playlist.tracks,
                             ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.only(
+                      top: 20.0,
                     ),
                   ),
                 ],

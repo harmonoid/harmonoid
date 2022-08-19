@@ -28,7 +28,7 @@ import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
-import 'package:harmonoid/models/media.dart';
+import 'package:media_library/media_library.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class NowPlayingBar extends StatefulWidget {
@@ -223,89 +223,93 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             CrossAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          MouseRegion(
-                                            onEnter: (e) {
-                                              setState(() {
-                                                showAlbumArtButton = true;
-                                              });
-                                            },
-                                            onExit: (e) {
-                                              setState(() {
-                                                showAlbumArtButton = false;
-                                              });
-                                            },
-                                            child: Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          0.0),
-                                                  child: AnimatedSwitcher(
-                                                    duration: const Duration(
-                                                        milliseconds: 300),
-                                                    transitionBuilder:
-                                                        (child, animation) =>
-                                                            FadeTransition(
-                                                      opacity: animation,
-                                                      child: child,
-                                                    ),
-                                                    child: ExtendedImage(
-                                                      key: Key(playback.index
-                                                          .toString()),
-                                                      image: getAlbumArt(
-                                                        playback.tracks[playback
-                                                            .index
-                                                            .clamp(
-                                                                0,
-                                                                playback.tracks
-                                                                        .length -
-                                                                    1)],
-                                                        small: true,
+                                          Tooltip(
+                                            message: Language.instance
+                                                .SHOW_NOW_PLAYING_SCREEN,
+                                            child: MouseRegion(
+                                              onEnter: (e) {
+                                                setState(() {
+                                                  showAlbumArtButton = true;
+                                                });
+                                              },
+                                              onExit: (e) {
+                                                setState(() {
+                                                  showAlbumArtButton = false;
+                                                });
+                                              },
+                                              child: Stack(
+                                                alignment: Alignment.center,
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            0.0),
+                                                    child: AnimatedSwitcher(
+                                                      duration: const Duration(
+                                                          milliseconds: 300),
+                                                      transitionBuilder:
+                                                          (child, animation) =>
+                                                              FadeTransition(
+                                                        opacity: animation,
+                                                        child: child,
                                                       ),
-                                                      height: 84.0,
-                                                      width: 84.0,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                                TweenAnimationBuilder(
-                                                  tween: Tween<double>(
-                                                    begin: 0.0,
-                                                    end: showAlbumArtButton
-                                                        ? 1.0
-                                                        : 0.0,
-                                                  ),
-                                                  duration: Duration(
-                                                      milliseconds: 100),
-                                                  curve: Curves.easeInOut,
-                                                  child: Material(
-                                                    color: Colors.transparent,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        DesktopNowPlayingController
-                                                            .instance
-                                                            .maximize();
-                                                      },
-                                                      child: Container(
-                                                        color: Colors.black38,
+                                                      child: ExtendedImage(
+                                                        key: Key(playback.index
+                                                            .toString()),
+                                                        image: getAlbumArt(
+                                                          playback.tracks[playback
+                                                              .index
+                                                              .clamp(
+                                                                  0,
+                                                                  playback.tracks
+                                                                          .length -
+                                                                      1)],
+                                                          small: true,
+                                                        ),
                                                         height: 84.0,
                                                         width: 84.0,
-                                                        child: Icon(
-                                                          Icons.image,
-                                                          color: Colors.white,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TweenAnimationBuilder(
+                                                    tween: Tween<double>(
+                                                      begin: 0.0,
+                                                      end: showAlbumArtButton
+                                                          ? 1.0
+                                                          : 0.0,
+                                                    ),
+                                                    duration: Duration(
+                                                        milliseconds: 100),
+                                                    curve: Curves.easeInOut,
+                                                    child: Material(
+                                                      color: Colors.transparent,
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          DesktopNowPlayingController
+                                                              .instance
+                                                              .maximize();
+                                                        },
+                                                        child: Container(
+                                                          color: Colors.black38,
+                                                          height: 84.0,
+                                                          width: 84.0,
+                                                          child: Icon(
+                                                            Icons.image,
+                                                            color: Colors.white,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
+                                                    builder: (context, value,
+                                                            child) =>
+                                                        Opacity(
+                                                      opacity: value as double,
+                                                      child: child,
+                                                    ),
                                                   ),
-                                                  builder:
-                                                      (context, value, child) =>
-                                                          Opacity(
-                                                    opacity: value as double,
-                                                    child: child,
-                                                  ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                           SizedBox(
@@ -347,83 +351,91 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
-                                                HyperLink(
-                                                  text: TextSpan(
-                                                    children: playback
-                                                        .tracks[playback.index
-                                                            .clamp(
-                                                                0,
-                                                                playback.tracks
-                                                                        .length -
-                                                                    1)]
-                                                        .trackArtistNames
-                                                        .take(2)
-                                                        .map(
-                                                          (e) => TextSpan(
-                                                            text: e,
-                                                            recognizer: !Plugins.isWebMedia(playback
-                                                                    .tracks[playback
-                                                                        .index
-                                                                        .clamp(
-                                                                            0,
-                                                                            playback.tracks.length -
-                                                                                1)]
-                                                                    .uri)
-                                                                ? (TapGestureRecognizer()
-                                                                  ..onTap = () {
-                                                                    navigatorKey
-                                                                        .currentState
-                                                                        ?.push(
-                                                                      PageRouteBuilder(
-                                                                        pageBuilder: ((context,
-                                                                                animation,
-                                                                                secondaryAnimation) =>
-                                                                            FadeThroughTransition(
-                                                                              animation: animation,
-                                                                              secondaryAnimation: secondaryAnimation,
-                                                                              child: ArtistScreen(
-                                                                                artist: Collection.instance.artistsSet.lookup(Artist(artistName: e))!,
-                                                                              ),
-                                                                            )),
-                                                                      ),
-                                                                    );
-                                                                  })
-                                                                : null,
-                                                          ),
-                                                        )
-                                                        .toList()
-                                                      ..insert(
-                                                        1,
-                                                        TextSpan(
-                                                            text: playback
-                                                                        .tracks[playback
-                                                                            .index
-                                                                            .clamp(0,
-                                                                                playback.tracks.length - 1)]
-                                                                        .trackArtistNames
-                                                                        .take(2)
-                                                                        .length ==
-                                                                    2
-                                                                ? ', '
-                                                                : ''),
-                                                      ),
+                                                if (!playback
+                                                    .tracks[playback.index
+                                                        .clamp(
+                                                            0,
+                                                            playback.tracks
+                                                                    .length -
+                                                                1)]
+                                                    .hasNoAvailableArtists)
+                                                  HyperLink(
+                                                    text: TextSpan(
+                                                      children: playback
+                                                          .tracks[playback.index
+                                                              .clamp(
+                                                                  0,
+                                                                  playback.tracks
+                                                                          .length -
+                                                                      1)]
+                                                          .trackArtistNames
+                                                          .take(2)
+                                                          .map(
+                                                            (e) => TextSpan(
+                                                              text: e,
+                                                              recognizer: !LibmpvPluginUtils.isSupported(playback
+                                                                      .tracks[playback
+                                                                          .index
+                                                                          .clamp(
+                                                                              0,
+                                                                              playback.tracks.length -
+                                                                                  1)]
+                                                                      .uri)
+                                                                  ? (TapGestureRecognizer()
+                                                                    ..onTap =
+                                                                        () {
+                                                                      navigatorKey
+                                                                          .currentState
+                                                                          ?.push(
+                                                                        PageRouteBuilder(
+                                                                          pageBuilder: ((context, animation, secondaryAnimation) =>
+                                                                              FadeThroughTransition(
+                                                                                animation: animation,
+                                                                                secondaryAnimation: secondaryAnimation,
+                                                                                child: ArtistScreen(
+                                                                                  artist: Collection.instance.artistsSet.lookup(Artist(artistName: e))!,
+                                                                                ),
+                                                                              )),
+                                                                        ),
+                                                                      );
+                                                                    })
+                                                                  : null,
+                                                            ),
+                                                          )
+                                                          .toList()
+                                                        ..insert(
+                                                          1,
+                                                          TextSpan(
+                                                              text: playback
+                                                                          .tracks[playback.index.clamp(
+                                                                              0,
+                                                                              playback.tracks.length -
+                                                                                  1)]
+                                                                          .trackArtistNames
+                                                                          .take(
+                                                                              2)
+                                                                          .length ==
+                                                                      2
+                                                                  ? ', '
+                                                                  : ''),
+                                                        ),
+                                                    ),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline3
+                                                        ?.copyWith(
+                                                          color:
+                                                              (colors.palette ??
+                                                                          [
+                                                                            Theme.of(context).cardColor
+                                                                          ])
+                                                                      .first
+                                                                      .isDark
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black,
+                                                        ),
                                                   ),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline3
-                                                      ?.copyWith(
-                                                        color:
-                                                            (colors.palette ??
-                                                                        [
-                                                                          Theme.of(context)
-                                                                              .cardColor
-                                                                        ])
-                                                                    .first
-                                                                    .isDark
-                                                                ? Colors.white
-                                                                : Colors.black,
-                                                      ),
-                                                ),
                                               ],
                                             ),
                                           ),
@@ -594,12 +606,16 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           //   ),
                                           // ),
                                           if (playback.tracks.isNotEmpty &&
-                                              Plugins.isWebMedia(playback
-                                                  .tracks[playback.index.clamp(
-                                                      0,
-                                                      playback.tracks.length -
-                                                          1)]
-                                                  .uri))
+                                              LibmpvPluginUtils.isSupported(
+                                                  playback
+                                                      .tracks[playback
+                                                          .index
+                                                          .clamp(
+                                                              0,
+                                                              playback.tracks
+                                                                      .length -
+                                                                  1)]
+                                                      .uri))
                                             IconButton(
                                               splashRadius: 20.0,
                                               iconSize: 20.0,
@@ -840,25 +856,32 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                             ],
                                           ),
                                           if (playback.tracks.isNotEmpty &&
-                                              Plugins.isWebMedia(playback
-                                                  .tracks[playback.index.clamp(
-                                                      0,
-                                                      playback.tracks.length -
-                                                          1)]
-                                                  .uri))
+                                              LibmpvPluginUtils.isSupported(
+                                                  playback
+                                                      .tracks[playback
+                                                          .index
+                                                          .clamp(
+                                                              0,
+                                                              playback.tracks
+                                                                      .length -
+                                                                  1)]
+                                                      .uri))
                                             IconButton(
                                               splashRadius: 20.0,
                                               iconSize: 18.0,
                                               onPressed: () {
-                                                launch(playback
-                                                    .tracks[playback.index
-                                                        .clamp(
-                                                            0,
-                                                            playback.tracks
-                                                                    .length -
-                                                                1)]
-                                                    .uri
-                                                    .toString());
+                                                launchUrl(
+                                                  playback
+                                                      .tracks[playback.index
+                                                          .clamp(
+                                                              0,
+                                                              playback.tracks
+                                                                      .length -
+                                                                  1)]
+                                                      .uri,
+                                                  mode: LaunchMode
+                                                      .externalApplication,
+                                                );
                                               },
                                               icon: Icon(
                                                 Icons.open_in_new,
@@ -966,19 +989,24 @@ class NowPlayingBarState extends State<NowPlayingBar>
                                           child: ScrollableSlider(
                                             min: 0,
                                             max: 100.0,
-                                            value: playback.volume,
+                                            value: playback.volume
+                                                .clamp(0.0, 100.0),
                                             color: colors.palette?.last,
                                             secondaryColor:
                                                 colors.palette?.first,
                                             onScrolledUp: () {
                                               playback.setVolume(
-                                                (playback.volume + 5.0)
+                                                (playback.volume
+                                                            .clamp(0.0, 100.0) +
+                                                        5.0)
                                                     .clamp(0.0, 100.0),
                                               );
                                             },
                                             onScrolledDown: () {
                                               playback.setVolume(
-                                                (playback.volume - 5.0)
+                                                (playback.volume
+                                                            .clamp(0.0, 100.0) -
+                                                        5.0)
                                                     .clamp(0.0, 100.0),
                                               );
                                             },
@@ -1083,6 +1111,9 @@ class _ControlPanelState extends State<ControlPanel> {
     TextEditingController(
       text: Playback.instance.pitch.toStringAsFixed(2),
     ),
+    TextEditingController(
+      text: Playback.instance.volume.toInt().toString(),
+    ),
   ];
 
   @override
@@ -1107,276 +1138,459 @@ class _ControlPanelState extends State<ControlPanel> {
       if (Playback.instance.pitch.toStringAsFixed(2) != controllers[1].text) {
         controllers[1].text = Playback.instance.pitch.toStringAsFixed(2);
       }
+      if (Playback.instance.volume.toInt().toString() != controllers[2].text) {
+        controllers[2].text = Playback.instance.volume.toInt().toString();
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      scopesRoute: true,
-      explicitChildNodes: true,
-      child: WillPopScope(
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).maybePop();
-                },
-                child: Container(
-                  color: Colors.transparent,
-                  width: double.infinity,
-                  height: double.infinity,
+    final content = Consumer<Playback>(
+      builder: (context, playback, _) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (isDesktop) ...[
+            const SizedBox(height: 16.0),
+            Row(
+              children: [
+                const SizedBox(width: 20.0),
+                Text(
+                  Language.instance.CONTROL_PANEL,
+                  style: Theme.of(context).textTheme.headline1,
                 ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.bottomRight,
-              child: TweenAnimationBuilder(
-                tween: Tween<double>(
-                  begin: 156.0,
-                  end: end,
-                ),
-                curve: Curves.easeInOut,
-                duration: Duration(milliseconds: 160),
-                child: Consumer<Playback>(
-                  builder: (context, playback, _) => Column(
-                    children: [
-                      const SizedBox(height: 16.0),
-                      Row(
-                        children: [
-                          const SizedBox(width: 20.0),
-                          Text(
-                            Language.instance.CONTROL_PANEL,
-                            style: Theme.of(context).textTheme.headline1,
-                          ),
-                          Transform.translate(
-                            offset: Offset(2.0, -6.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Theme.of(context).dividerColor,
-                                  width: 1.0,
-                                ),
-                              ),
-                              padding: EdgeInsets.all(1.0),
-                              child: Text(
-                                Language.instance.BETA.toUpperCase(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    ?.copyWith(
-                                      fontSize: 10.0,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                        ],
+                Transform.translate(
+                  offset: Offset(2.0, -6.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Theme.of(context).dividerColor,
+                        width: 1.0,
                       ),
-                      const SizedBox(height: 12.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 8.0),
-                          IconButton(
-                            padding: EdgeInsets.all(8.0),
-                            onPressed: () {
-                              playback.setRate(1.0);
-                            },
-                            iconSize: 20.0,
-                            splashRadius: 18.0,
-                            tooltip: Language.instance.RESET_SPEED,
-                            icon: Icon(
-                              Icons.speed,
-                            ),
+                    ),
+                    padding: EdgeInsets.all(1.0),
+                    child: Text(
+                      Language.instance.BETA.toUpperCase(),
+                      style: Theme.of(context).textTheme.headline5?.copyWith(
+                            fontSize: 10.0,
                           ),
-                          const SizedBox(width: 8.0),
-                          Expanded(
-                            child: ScrollableSlider(
-                              min: 0.0,
-                              max: 2.0,
-                              value: playback.rate.clamp(0.5, 2.0),
-                              onScrolledUp: () {
-                                playback.setRate(
-                                  (playback.rate + 0.05).clamp(0.0, 2.0),
-                                );
-                              },
-                              onScrolledDown: () {
-                                playback.setRate(
-                                  (playback.rate - 0.05).clamp(0.0, 2.0),
-                                );
-                              },
-                              onChanged: (value) {
-                                playback.setRate(value);
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                          Container(
-                            width: 42.0,
-                            height: 32.0,
-                            padding: EdgeInsets.only(bottom: 4.0),
-                            child: Focus(
-                              onFocusChange: (hasFocus) {
-                                focused = hasFocus;
-                                if (hasFocus) {
-                                  HotKeys.instance.disableSpaceHotKey();
-                                } else {
-                                  HotKeys.instance.enableSpaceHotKey();
-                                }
-                              },
-                              child: TextField(
-                                controller: controllers[0],
-                                scrollPhysics: NeverScrollableScrollPhysics(),
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'[0-9]|.')),
-                                ],
-                                onChanged: (value) {
-                                  playback.setRate(
-                                    double.tryParse(value) ?? playback.rate,
-                                  );
-                                },
-                                textAlign: TextAlign.center,
-                                textAlignVertical: TextAlignVertical.center,
-                                style: Theme.of(context).textTheme.headline4,
-                                decoration: inputDecoration(
-                                  context,
-                                  '',
-                                ).copyWith(
-                                  contentPadding: EdgeInsets.only(
-                                    left: 4.0,
-                                    right: 4.0,
-                                    bottom: 14.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                        ],
-                      ),
-                      const SizedBox(height: 8.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 8.0),
-                          IconButton(
-                            padding: EdgeInsets.all(8.0),
-                            onPressed: () => playback.setPitch(1.0),
-                            iconSize: 20.0,
-                            splashRadius: 18.0,
-                            tooltip: Language.instance.RESET_PITCH,
-                            icon: Icon(FluentIcons.pulse_20_filled),
-                          ),
-                          const SizedBox(width: 8.0),
-                          Expanded(
-                            child: ScrollableSlider(
-                              min: 0.5,
-                              max: 1.5,
-                              value: playback.pitch.clamp(0.5, 1.5),
-                              onScrolledUp: () {
-                                playback.setPitch(
-                                  (playback.pitch + 0.05).clamp(0.5, 1.5),
-                                );
-                              },
-                              onScrolledDown: () {
-                                playback.setPitch(
-                                  (playback.pitch - 0.05).clamp(0.5, 1.5),
-                                );
-                              },
-                              onChanged: (value) {
-                                playback.setPitch(value);
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                          Container(
-                            width: 42.0,
-                            height: 32.0,
-                            padding: EdgeInsets.only(bottom: 4.0),
-                            child: Focus(
-                              onFocusChange: (hasFocus) {
-                                focused = hasFocus;
-                                if (hasFocus) {
-                                  HotKeys.instance.disableSpaceHotKey();
-                                } else {
-                                  HotKeys.instance.enableSpaceHotKey();
-                                }
-                              },
-                              child: TextField(
-                                controller: controllers[1],
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'[0-9]|.')),
-                                ],
-                                onChanged: (value) {
-                                  playback.setPitch(
-                                    double.tryParse(value) ?? playback.pitch,
-                                  );
-                                },
-                                scrollPhysics: NeverScrollableScrollPhysics(),
-                                textAlign: TextAlign.center,
-                                textAlignVertical: TextAlignVertical.center,
-                                style: Theme.of(context).textTheme.headline4,
-                                decoration: inputDecoration(
-                                  context,
-                                  '',
-                                ).copyWith(
-                                  contentPadding: EdgeInsets.only(
-                                    left: 4.0,
-                                    right: 4.0,
-                                    bottom: 14.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16.0),
-                        ],
-                      ),
-                      const SizedBox(height: 8.0),
-                    ],
+                    ),
                   ),
                 ),
-                builder: (context, value, child) => Transform.translate(
-                  offset: Offset(0, value as double),
-                  child: Card(
-                    color: Theme.of(context).cardColor,
-                    elevation: 8.0,
-                    margin: widget.x == null
-                        ? EdgeInsets.all(16.0)
-                        : EdgeInsets.only(
-                            right: MediaQuery.of(context).size.width -
-                                (widget.x ?? 0.0) -
-                                64.0 -
-                                240.0,
-                            bottom: 16.0,
-                          ),
-                    child: Container(
-                      width: 240.0,
-                      height: 156.0,
-                      child: child,
+                const Spacer(),
+              ],
+            ),
+          ],
+          const SizedBox(height: 12.0),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 20.0,
+              bottom: 8.0,
+              top: 4.0,
+            ),
+            child: Text(
+              isDesktop
+                  ? Language.instance.SPEED
+                  : Language.instance.SPEED.toUpperCase(),
+              style: isDesktop
+                  ? Theme.of(context).textTheme.headline4
+                  : Theme.of(context).textTheme.overline?.copyWith(
+                        color: Theme.of(context).textTheme.headline3?.color,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(width: 12.0),
+              IconButton(
+                padding: EdgeInsets.all(8.0),
+                onPressed: () {
+                  playback.setRate(1.0);
+                },
+                iconSize: isMobile ? null : 20.0,
+                splashRadius: isMobile ? null : 18.0,
+                tooltip: Language.instance.RESET_SPEED,
+                icon: Icon(
+                  Icons.speed,
+                ),
+              ),
+              const SizedBox(width: 12.0),
+              Expanded(
+                child: ScrollableSlider(
+                  min: 0.5,
+                  max: 2.0,
+                  value: playback.rate.clamp(0.5, 2.0),
+                  onScrolledUp: () {
+                    playback.setRate(
+                      (playback.rate + 0.05).clamp(0.0, 2.0),
+                    );
+                  },
+                  onScrolledDown: () {
+                    playback.setRate(
+                      (playback.rate - 0.05).clamp(0.0, 2.0),
+                    );
+                  },
+                  onChanged: (value) {
+                    playback.setRate(value);
+                  },
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Container(
+                width: isMobile ? 56.0 : 42.0,
+                height: isMobile ? 56.0 : 32.0,
+                child: Focus(
+                  onFocusChange: (hasFocus) {
+                    focused = hasFocus;
+                    if (hasFocus) {
+                      HotKeys.instance.disableSpaceHotKey();
+                    } else {
+                      HotKeys.instance.enableSpaceHotKey();
+                    }
+                  },
+                  child: TextField(
+                    controller: controllers[0],
+                    scrollPhysics: NeverScrollableScrollPhysics(),
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
+                    ],
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      playback.setRate(
+                        double.tryParse(value) ?? playback.rate,
+                      );
+                    },
+                    textAlign: TextAlign.center,
+                    textAlignVertical: TextAlignVertical.center,
+                    style:
+                        isMobile ? null : Theme.of(context).textTheme.headline4,
+                    decoration: inputDecoration(
+                      context,
+                      '',
+                    ).copyWith(
+                      contentPadding: EdgeInsets.all(0.0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
               ),
+              const SizedBox(width: 16.0),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 20.0,
+              bottom: 8.0,
+              top: 4.0,
             ),
-          ],
-        ),
-        onWillPop: () async {
-          widget.onPop();
-          setState(() {
-            end = 156.0;
-          });
-          await Future.delayed(const Duration(milliseconds: 100));
-          return Future.value(true);
-        },
+            child: Text(
+              isDesktop
+                  ? Language.instance.PITCH
+                  : Language.instance.PITCH.toUpperCase(),
+              style: isDesktop
+                  ? Theme.of(context).textTheme.headline4
+                  : Theme.of(context).textTheme.overline?.copyWith(
+                        color: Theme.of(context).textTheme.headline3?.color,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(width: 12.0),
+              IconButton(
+                padding: EdgeInsets.all(8.0),
+                onPressed: () => playback.setPitch(1.0),
+                iconSize: isMobile ? null : 20.0,
+                splashRadius: isMobile ? null : 18.0,
+                tooltip: Language.instance.RESET_PITCH,
+                icon: Icon(FluentIcons.pulse_20_filled),
+              ),
+              const SizedBox(width: 12.0),
+              Expanded(
+                child: ScrollableSlider(
+                  min: 0.5,
+                  max: 1.5,
+                  value: playback.pitch.clamp(0.5, 1.5),
+                  onScrolledUp: () {
+                    playback.setPitch(
+                      (playback.pitch + 0.05).clamp(0.5, 1.5),
+                    );
+                  },
+                  onScrolledDown: () {
+                    playback.setPitch(
+                      (playback.pitch - 0.05).clamp(0.5, 1.5),
+                    );
+                  },
+                  onChanged: (value) {
+                    playback.setPitch(value);
+                  },
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Container(
+                width: isMobile ? 56.0 : 42.0,
+                height: isMobile ? 56.0 : 32.0,
+                child: Focus(
+                  onFocusChange: (hasFocus) {
+                    focused = hasFocus;
+                    if (hasFocus) {
+                      HotKeys.instance.disableSpaceHotKey();
+                    } else {
+                      HotKeys.instance.enableSpaceHotKey();
+                    }
+                  },
+                  child: TextField(
+                    controller: controllers[1],
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]|.')),
+                    ],
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      playback.setPitch(
+                        double.tryParse(value) ?? playback.pitch,
+                      );
+                    },
+                    scrollPhysics: NeverScrollableScrollPhysics(),
+                    textAlign: TextAlign.center,
+                    textAlignVertical: TextAlignVertical.center,
+                    style:
+                        isMobile ? null : Theme.of(context).textTheme.headline4,
+                    decoration: inputDecoration(
+                      context,
+                      '',
+                    ).copyWith(
+                      contentPadding: EdgeInsets.all(0.0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16.0),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 20.0,
+              bottom: 8.0,
+              top: 4.0,
+            ),
+            child: Text(
+              isDesktop
+                  ? Language.instance.VOLUME_BOOST
+                  : Language.instance.VOLUME_BOOST.toUpperCase(),
+              style: isDesktop
+                  ? Theme.of(context).textTheme.headline4
+                  : Theme.of(context).textTheme.overline?.copyWith(
+                        color: Theme.of(context).textTheme.headline3?.color,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(width: 12.0),
+              IconButton(
+                padding: EdgeInsets.all(8.0),
+                onPressed: () {
+                  if (playback.volume > 100.0) {
+                    playback.setVolume(100.0);
+                  }
+                },
+                iconSize: isMobile ? null : 20.0,
+                splashRadius: isMobile ? null : 18.0,
+                tooltip: Language.instance.DISABLE_VOLUME_BOOST,
+                icon: Icon(Icons.volume_up),
+              ),
+              const SizedBox(width: 12.0),
+              Expanded(
+                child: ScrollableSlider(
+                  min: 100.0,
+                  max: 200.0,
+                  value: playback.volume.clamp(100.0, 200.0),
+                  onScrolledUp: () {
+                    playback.setVolume(
+                      (playback.volume + 5.0).clamp(100.0, 200.0),
+                    );
+                  },
+                  onScrolledDown: () {
+                    playback.setVolume(
+                      (playback.volume - 5.0).clamp(100.0, 200.0),
+                    );
+                  },
+                  onChanged: (value) {
+                    playback.setVolume(value);
+                  },
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Container(
+                width: isMobile ? 56.0 : 42.0,
+                height: isMobile ? 56.0 : 32.0,
+                child: Focus(
+                  onFocusChange: (hasFocus) {
+                    focused = hasFocus;
+                    if (hasFocus) {
+                      HotKeys.instance.disableSpaceHotKey();
+                    } else {
+                      HotKeys.instance.enableSpaceHotKey();
+                    }
+                  },
+                  child: TextField(
+                    controller: controllers[2],
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]|')),
+                    ],
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      playback.setVolume(
+                        double.tryParse(value) ?? playback.volume,
+                      );
+                    },
+                    scrollPhysics: NeverScrollableScrollPhysics(),
+                    textAlign: TextAlign.center,
+                    textAlignVertical: TextAlignVertical.center,
+                    style:
+                        isMobile ? null : Theme.of(context).textTheme.headline4,
+                    decoration: inputDecoration(
+                      context,
+                      '',
+                    ).copyWith(
+                      contentPadding: EdgeInsets.all(0.0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16.0),
+            ],
+          ),
+          const SizedBox(height: 8.0),
+        ],
       ),
     );
+    return isDesktop
+        ? Semantics(
+            scopesRoute: true,
+            explicitChildNodes: true,
+            child: WillPopScope(
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).maybePop();
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.bottomRight,
+                    child: TweenAnimationBuilder(
+                      tween: Tween<double>(
+                        begin: 156.0,
+                        end: end,
+                      ),
+                      curve: Curves.easeInOut,
+                      duration: Duration(milliseconds: 160),
+                      child: content,
+                      builder: (context, value, child) => Transform.translate(
+                        offset: Offset(0, value as double),
+                        child: Card(
+                          color: Theme.of(context).cardColor,
+                          elevation: 8.0,
+                          margin: widget.x == null
+                              ? EdgeInsets.all(16.0)
+                              : EdgeInsets.only(
+                                  right: MediaQuery.of(context).size.width -
+                                      (widget.x ?? 0.0) -
+                                      64.0 -
+                                      240.0,
+                                  bottom: 16.0,
+                                ),
+                          child: Container(
+                            width: 240.0,
+                            child: IntrinsicHeight(
+                              child: child,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              onWillPop: () async {
+                widget.onPop();
+                setState(() {
+                  end = 156.0;
+                });
+                await Future.delayed(const Duration(milliseconds: 100));
+                return Future.value(true);
+              },
+            ),
+          )
+        : content;
   }
 }
 

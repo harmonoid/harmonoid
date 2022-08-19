@@ -7,39 +7,96 @@
 ///
 
 import 'package:flutter/material.dart' hide ExpansionTile;
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/utils/rendering.dart';
+import 'package:provider/provider.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:provider/provider.dart';
 
 class LanguageSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isMobile) {
-      return SettingsTile(
-        title: Language.instance.SETTING_LANGUAGE_TITLE,
-        subtitle: Language.instance.SETTING_LANGUAGE_SUBTITLE,
-        child: Column(
-          children: LanguageRegion.values
-              .map(
-                (e) => RadioListTile<LanguageRegion>(
-                  title: Text(e.name),
-                  subtitle: Text(e.country),
-                  value: e,
-                  groupValue: Configuration.instance.languageRegion,
-                  onChanged: (value) async {
-                    if (value != null) {
-                      await Language.instance.set(languageRegion: value);
-                      Configuration.instance.save(languageRegion: value);
-                    }
+      return ListTile(
+        onTap: () async {
+          LanguageRegion value = Language.instance.current;
+          await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(Language.instance.SETTING_LANGUAGE_TITLE),
+              contentPadding: EdgeInsets.only(top: 20.0),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Divider(
+                    height: 1.0,
+                    thickness: 1.0,
+                  ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height / 2,
+                    ),
+                    child: StatefulBuilder(
+                      builder: (context, setState) => SingleChildScrollView(
+                        child: Column(
+                          children: LanguageRegion.values
+                              .map(
+                                (e) => RadioListTile<LanguageRegion>(
+                                  title: Text(
+                                    e.name,
+                                    style: isDesktop
+                                        ? Theme.of(context).textTheme.headline4
+                                        : null,
+                                  ),
+                                  groupValue: value,
+                                  onChanged: (e) {
+                                    if (e != null) {
+                                      setState(() => value = e);
+                                    }
+                                  },
+                                  value: e,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Divider(
+                    height: 1.0,
+                    thickness: 1.0,
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).maybePop();
+                    await Language.instance.set(languageRegion: value);
+                    await Configuration.instance.save(languageRegion: value);
                   },
+                  child: Text(
+                    Language.instance.OK,
+                  ),
                 ),
-              )
-              .toList(),
+                TextButton(
+                  onPressed: Navigator.of(context).maybePop,
+                  child: Text(
+                    Language.instance.CANCEL,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+        title: Text(Language.instance.SETTING_LANGUAGE_TITLE),
+        subtitle: Text(
+          [
+            Language.instance.current.name,
+            Language.instance.current.country,
+          ].join(' \u2022 '),
         ),
       );
     }

@@ -7,8 +7,9 @@
 ///
 import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:media_library/media_library.dart';
 
-import 'package:harmonoid/models/media.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
@@ -41,8 +42,10 @@ class NowPlayingColorPalette extends ChangeNotifier {
           try {
             final image = getAlbumArt(track, small: true);
             final result = await PaletteGenerator.fromImageProvider(image);
-            palette = result.colors.toList();
-            MobileNowPlayingController.instance.palette.value = palette;
+            palette = result.colors?.toList();
+            if (Configuration.instance.dynamicNowPlayingBarColoring) {
+              MobileNowPlayingController.instance.palette.value = palette;
+            }
             notifyListeners();
           } catch (exception, stacktrace) {
             palette = null;

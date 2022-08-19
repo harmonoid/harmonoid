@@ -10,11 +10,9 @@ import 'package:flutter/services.dart';
 
 import 'package:harmonoid/core/intent.dart';
 
-const _kMethodChannelName =
-    'com.alexmercerind.harmonoid/argument_vector_handler';
-
 /// ArgumentVectorHandler
 /// ---------------------
+///
 /// Responsible for maintaining single instance of Harmonoid on Windows
 /// and Linux & handling opening of files from File Explorer.
 ///
@@ -23,8 +21,18 @@ const _kMethodChannelName =
 ///
 abstract class ArgumentVectorHandler {
   static void initialize() {
-    const MethodChannel(_kMethodChannelName).setMethodCallHandler((call) async {
-      Intent.instance.playUri(Uri.file(call.arguments));
-    });
+    if (_initialized) {
+      return;
+    }
+    _initialized = true;
+    const MethodChannel('com.alexmercerind.harmonoid/argument_vector_handler')
+        .setMethodCallHandler(
+      (call) async {
+        Intent.instance.playUri(Uri.file(call.arguments));
+      },
+    );
   }
+
+  /// Prevent registering method call handler on platform channel more than once.
+  static bool _initialized = false;
 }

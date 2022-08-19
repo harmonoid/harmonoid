@@ -23,11 +23,13 @@ import 'package:harmonoid/core/configuration.dart';
 ///
 class Visuals extends ChangeNotifier {
   BuildContext context;
-  Accent accent;
+  Color light;
+  Color dark;
   ThemeMode themeMode;
 
   Visuals({
-    required this.accent,
+    required this.light,
+    required this.dark,
     required this.themeMode,
     required this.context,
   }) {
@@ -35,12 +37,14 @@ class Visuals extends ChangeNotifier {
   }
 
   void update({
-    Accent? accent,
+    Color? light,
+    Color? dark,
     ThemeMode? themeMode,
     TargetPlatform? platform,
     BuildContext? context,
-  }) {
-    this.accent = accent ?? this.accent;
+  }) async {
+    this.light = light ?? this.light;
+    this.dark = dark ?? this.dark;
     this.themeMode = themeMode ?? this.themeMode;
     if (isMobile && context != null) {
       SystemChrome.setSystemUIOverlayStyle(
@@ -56,19 +60,16 @@ class Visuals extends ChangeNotifier {
       );
     }
     this.notifyListeners();
-    Configuration.instance.save(
-      accent: this.accent,
-      themeMode: this.themeMode,
-    );
+    await Configuration.instance.save(themeMode: this.themeMode);
   }
 
   ThemeData get theme => createTheme(
-        color: this.accent.light,
+        color: light,
         themeMode: ThemeMode.light,
       );
 
   ThemeData get darkTheme => createTheme(
-        color: this.accent.dark,
+        color: dark,
         themeMode: ThemeMode.dark,
       );
 }

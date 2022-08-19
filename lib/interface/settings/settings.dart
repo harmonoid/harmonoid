@@ -7,6 +7,7 @@
 ///
 
 import 'package:flutter/material.dart';
+import 'package:harmonoid/state/collection_refresh.dart';
 
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
@@ -23,6 +24,7 @@ import 'package:harmonoid/interface/settings/version.dart';
 import 'package:harmonoid/interface/settings/proxy.dart';
 import 'package:harmonoid/interface/settings/now_playing_visuals.dart';
 import 'package:harmonoid/interface/settings/now_playing_screen.dart';
+import 'package:provider/provider.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -62,11 +64,19 @@ class Settings extends StatelessWidget {
             ),
           )
         : Scaffold(
-            resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: true,
             appBar: AppBar(
+              leading: IconButton(
+                onPressed: Navigator.of(context).pop,
+                icon: Icon(Icons.arrow_back),
+                splashRadius: 20.0,
+              ),
+              bottom: PreferredSize(
+                preferredSize: Size(MediaQuery.of(context).size.width, 2.0),
+                child: MobileIndexingProgressIndicator(),
+              ),
               title: Text(
                 Language.instance.SETTING,
-                style: Theme.of(context).textTheme.headline1,
               ),
             ),
             body: NowPlayingBarScrollHideNotifier(
@@ -77,14 +87,14 @@ class Settings extends StatelessWidget {
                   IndexingSetting(),
                   Divider(thickness: 1.0),
                   ThemeSetting(),
+                  LanguageSetting(),
                   Divider(thickness: 1.0),
+                  StatsSetting(),
                   MiscellaneousSetting(),
                   Divider(thickness: 1.0),
                   ExperimentalSetting(),
                   Divider(thickness: 1.0),
                   ProxySetting(),
-                  Divider(thickness: 1.0),
-                  LanguageSetting(),
                   Divider(thickness: 1.0),
                   VersionSetting(),
                   const SizedBox(height: 8.0),
@@ -96,8 +106,8 @@ class Settings extends StatelessWidget {
 }
 
 class SettingsTile extends StatelessWidget {
-  final String? title;
-  final String? subtitle;
+  final String title;
+  final String subtitle;
   final Widget child;
   final EdgeInsets? margin;
   final List<Widget>? actions;
@@ -138,7 +148,7 @@ class SettingsTile extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    this.title!,
+                    title,
                     style: Theme.of(context)
                         .textTheme
                         .headline1
@@ -146,29 +156,63 @@ class SettingsTile extends StatelessWidget {
                   ),
                   SizedBox(height: 2.0),
                   Text(
-                    this.subtitle!,
+                    subtitle,
                     style: Theme.of(context).textTheme.headline3,
                   ),
                 ],
               ),
             ),
-          if (isMobile) SubHeader(this.title!),
-          Container(
-            margin: this.margin ?? EdgeInsets.zero,
-            child: this.child,
-          ),
-          if (this.actions != null) ...[
-            Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: ButtonBar(
-                alignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: this.actions!,
+          if (isMobile)
+            Container(
+              alignment: Alignment.bottomLeft,
+              height: 40.0,
+              padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 12.0),
+              child: Text(
+                title.toUpperCase(),
+                style: Theme.of(context).textTheme.overline?.copyWith(
+                      color: Theme.of(context).textTheme.headline3?.color,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w600,
+                    ),
               ),
+            ),
+          Container(
+            margin: margin ?? EdgeInsets.zero,
+            child: child,
+          ),
+          if (actions != null) ...[
+            ButtonBar(
+              alignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: actions!,
             ),
           ],
         ],
       ),
+    );
+  }
+}
+
+class MobileIndexingProgressIndicator extends StatelessWidget {
+  const MobileIndexingProgressIndicator({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<CollectionRefresh>(
+      builder: (context, controller, _) {
+        if (controller.progress != controller.total) {
+          return LinearProgressIndicator(
+            value: controller.progress == null
+                ? null
+                : controller.progress! / controller.total,
+            backgroundColor:
+                Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+            valueColor:
+                AlwaysStoppedAnimation(Theme.of(context).colorScheme.secondary),
+          );
+        } else
+          return SizedBox.shrink();
+      },
     );
   }
 }

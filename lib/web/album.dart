@@ -10,23 +10,23 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/interface/settings/settings.dart';
-import 'package:harmonoid/utils/theme.dart';
-import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/web/web.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ytm_client/ytm_client.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:media_library/media_library.dart' as media;
 
+import 'package:harmonoid/interface/settings/settings.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/web/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/models/media.dart' as media;
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/web/state/web.dart';
 
@@ -295,12 +295,20 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
       Timer(
         Duration(milliseconds: 300),
         () {
-          PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
-                  widget.album.thumbnails.values.first,
-                  cache: true))
-              .then((palette) {
+          PaletteGenerator.fromImageProvider(
+            ResizeImage.resizeIfNeeded(
+              100,
+              100,
+              ExtendedNetworkImageProvider(
+                widget.album.thumbnails.values.first,
+                cache: true,
+              ),
+            ),
+          ).then((palette) {
             setState(() {
-              color = palette.colors.first;
+              if (palette.colors != null) {
+                color = palette.colors!.first;
+              }
             });
           });
         },
@@ -318,13 +326,21 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
       });
     }
     if (isMobile) {
-      PaletteGenerator.fromImageProvider(ExtendedNetworkImageProvider(
-              widget.album.thumbnails.values.first,
-              cache: true))
-          .then((palette) {
+      PaletteGenerator.fromImageProvider(
+        ResizeImage.resizeIfNeeded(
+          100,
+          100,
+          ExtendedNetworkImageProvider(
+            widget.album.thumbnails.values.first,
+            cache: true,
+          ),
+        ),
+      ).then((palette) {
         setState(() {
-          color = palette.colors.first;
-          secondary = palette.colors.last;
+          if (palette.colors != null) {
+            color = palette.colors!.first;
+            secondary = palette.colors!.last;
+          }
         });
       });
       Timer(Duration(milliseconds: 100), () {
@@ -368,6 +384,20 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
 
   @override
   Widget build(BuildContext context) {
+    const mobileSliverLabelHeight = 116.0;
+    double mobileSliverContentHeight = MediaQuery.of(context).size.width * 0.6;
+    double mobileSliverExpandedHeight = mobileSliverContentHeight -
+        MediaQuery.of(context).padding.top +
+        mobileSliverLabelHeight;
+    double mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    if (mobileSliverExpandedHeight >
+        MediaQuery.of(context).size.height * 3 / 5) {
+      mobileSliverExpandedHeight = MediaQuery.of(context).size.height * 3 / 5;
+      mobileSliverContentHeight = mobileSliverExpandedHeight -
+          mobileSliverLabelHeight +
+          MediaQuery.of(context).padding.top;
+      mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    }
     return isDesktop
         ? Scaffold(
             body: Container(
@@ -519,8 +549,9 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                       children: [
                                                         ElevatedButton.icon(
                                                           onPressed: () {
-                                                            Web.open(widget
-                                                                .album.tracks);
+                                                            Web.instance.open(
+                                                                widget.album
+                                                                    .tracks);
                                                           },
                                                           style: ButtonStyle(
                                                             elevation:
@@ -711,8 +742,8 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                     builder: (context, color, _) => Theme(
                       data: createTheme(
                         color: isDark(context)
-                            ? kAccents.first.dark
-                            : kAccents.first.light,
+                            ? kPrimaryDarkColor
+                            : kPrimaryLightColor,
                         themeMode:
                             isDark(context) ? ThemeMode.dark : ThemeMode.light,
                       ),
@@ -764,6 +795,13 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                     child: Icon(
                                       Icons.settings,
                                       size: 20.0,
+                                      color: isDark(context)
+                                          ? Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionDarkIconColor
+                                          : Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionLightIconColor,
                                     ),
                                   ),
                                 ),
@@ -786,6 +824,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
               children: [
                 NowPlayingBarScrollHideNotifier(
                   child: CustomScrollView(
+                    physics: physics,
                     controller: controller,
                     slivers: [
                       SliverAppBar(
@@ -793,15 +832,15 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                           statusBarColor: Colors.transparent,
                           statusBarIconBrightness: Brightness.light,
                         ),
-                        expandedHeight: MediaQuery.of(context).size.width +
-                            128.0 -
-                            MediaQuery.of(context).padding.top,
+                        expandedHeight: mobileSliverExpandedHeight,
                         pinned: true,
                         leading: IconButton(
                           onPressed: Navigator.of(context).maybePop,
                           icon: Icon(
                             Icons.arrow_back,
-                            color: Colors.white,
+                            color: Theme.of(context)
+                                .extension<IconColors>()
+                                ?.appBarDarkIconColor,
                           ),
                           iconSize: 24.0,
                           splashRadius: 20.0,
@@ -822,12 +861,15 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                             },
                             icon: Icon(
                               Icons.search,
-                              color: Colors.white,
+                              color: Theme.of(context)
+                                  .extension<IconColors>()
+                                  ?.appBarActionDarkIconColor,
                             ),
                             iconSize: 24.0,
                             splashRadius: 20.0,
                           ),
-                          contextMenu(context, color: Colors.white),
+                          WebMobileAppBarOverflowButton(),
+                          const SizedBox(width: 8.0),
                         ],
                         forceElevated: true,
                         title: TweenAnimationBuilder<double>(
@@ -842,7 +884,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                               widget.album.albumName.overflow,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline1
+                                  .headline6
                                   ?.copyWith(
                                     color: Colors.white,
                                   ),
@@ -857,33 +899,57 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                             FlexibleSpaceBar(
                               background: Column(
                                 children: [
-                                  ExtendedImage.network(
-                                    widget.album.thumbnails.values.last,
-                                    fit: BoxFit.cover,
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.width,
-                                    enableLoadState: true,
-                                    enableMemoryCache: false,
-                                    cache: true,
-                                    loadStateChanged:
-                                        (ExtendedImageState state) {
-                                      return state.extendedImageLoadState ==
-                                              LoadState.completed
-                                          ? TweenAnimationBuilder(
-                                              tween: Tween<double>(
-                                                  begin: 0.0, end: 1.0),
-                                              duration: const Duration(
-                                                  milliseconds: 800),
-                                              child: state.completedWidget,
-                                              builder:
-                                                  (context, value, child) =>
-                                                      Opacity(
-                                                opacity: value as double,
-                                                child: state.completedWidget,
-                                              ),
-                                            )
-                                          : SizedBox.shrink();
-                                    },
+                                  Stack(
+                                    children: [
+                                      ExtendedImage.network(
+                                        widget.album.thumbnails.values.last,
+                                        fit: BoxFit.cover,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: mobileSliverContentHeight,
+                                        enableLoadState: true,
+                                        enableMemoryCache: false,
+                                        cache: true,
+                                        loadStateChanged:
+                                            (ExtendedImageState state) {
+                                          return state.extendedImageLoadState ==
+                                                  LoadState.completed
+                                              ? TweenAnimationBuilder(
+                                                  tween: Tween<double>(
+                                                      begin: 0.0, end: 1.0),
+                                                  duration: const Duration(
+                                                      milliseconds: 800),
+                                                  child: state.completedWidget,
+                                                  builder:
+                                                      (context, value, child) =>
+                                                          Opacity(
+                                                    opacity: value as double,
+                                                    child:
+                                                        state.completedWidget,
+                                                  ),
+                                                )
+                                              : SizedBox.shrink();
+                                        },
+                                      ),
+                                      Positioned.fill(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Colors.black26,
+                                                Colors.transparent,
+                                              ],
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              stops: [
+                                                0.0,
+                                                0.5,
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   TweenAnimationBuilder<double>(
                                     tween: Tween<double>(
@@ -895,28 +961,68 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                       opacity: value,
                                       child: GestureDetector(
                                         onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => SimpleDialog(
-                                              contentPadding:
-                                                  EdgeInsets.all(20.0),
-                                              children: [
-                                                Text(
-                                                  widget.album.description
-                                                      .split('From Wikipedia')
-                                                      .first
-                                                      .trim(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline3,
+                                          if (widget
+                                              .album.description.isNotEmpty) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: Text(
+                                                    widget.album.albumName),
+                                                contentPadding:
+                                                    EdgeInsets.only(top: 20.0),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    const Divider(
+                                                      height: 1.0,
+                                                      thickness: 1.0,
+                                                    ),
+                                                    ConstrainedBox(
+                                                      constraints:
+                                                          BoxConstraints(
+                                                        maxHeight: 360.0,
+                                                      ),
+                                                      child:
+                                                          SingleChildScrollView(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 24.0,
+                                                          vertical: 16.0,
+                                                        ),
+                                                        child: Text(
+                                                          widget.album
+                                                              .description,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline3,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const Divider(
+                                                      height: 1.0,
+                                                      thickness: 1.0,
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                          );
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed:
+                                                        Navigator.of(context)
+                                                            .pop,
+                                                    child: Text(
+                                                      Language.instance.OK,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
                                         },
                                         child: Container(
                                           color: Colors.grey.shade900,
-                                          height: 128.0,
+                                          height: mobileSliverLabelHeight,
                                           width:
                                               MediaQuery.of(context).size.width,
                                           padding: EdgeInsets.symmetric(
@@ -932,7 +1038,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                                 widget.album.albumName,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline1
+                                                    .headline6
                                                     ?.copyWith(
                                                       color: Colors.white,
                                                       fontSize: 24.0,
@@ -962,15 +1068,15 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width +
-                                  MediaQuery.of(context).padding.top -
-                                  64.0,
+                              top: mobileSliverFABYPos,
                               right: 16.0 + 64.0,
                               child: TweenAnimationBuilder(
                                 curve: Curves.easeOut,
                                 tween: Tween<double>(
                                     begin: 0.0,
-                                    end: detailsVisible ? 1.0 : 0.0),
+                                    end: detailsVisible && secondary != null
+                                        ? 1.0
+                                        : 0.0),
                                 duration: Duration(milliseconds: 200),
                                 builder: (context, value, _) => Transform.scale(
                                   scale: value as double,
@@ -997,15 +1103,15 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width +
-                                  MediaQuery.of(context).padding.top -
-                                  64.0,
+                              top: mobileSliverFABYPos,
                               right: 16.0,
                               child: TweenAnimationBuilder(
                                 curve: Curves.easeOut,
                                 tween: Tween<double>(
                                     begin: 0.0,
-                                    end: detailsVisible ? 1.0 : 0.0),
+                                    end: detailsVisible && secondary != null
+                                        ? 1.0
+                                        : 0.0),
                                 duration: Duration(milliseconds: 200),
                                 builder: (context, value, _) => Transform.scale(
                                   scale: value as double,
@@ -1023,7 +1129,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                           : 0],
                                       child: Icon(Icons.shuffle),
                                       onPressed: () {
-                                        Web.open(widget.album.tracks);
+                                        Web.instance.open(widget.album.tracks);
                                       },
                                     ),
                                   ),

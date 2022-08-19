@@ -6,6 +6,7 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'dart:math';
@@ -13,12 +14,14 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart'
     hide ReorderableDragStartListener, Intent;
 import 'package:flutter/foundation.dart';
 import 'package:animations/animations.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/rendering.dart';
+import 'package:media_library/media_library.dart';
+import 'package:external_path/external_path.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
@@ -31,9 +34,13 @@ import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/utils/file_system.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/windows_info.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
+import 'package:harmonoid/interface/file_info_screen.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
+import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/web.dart';
 
@@ -46,6 +53,7 @@ class CustomListView extends StatelessWidget {
   final bool? shrinkWrap;
   final EdgeInsets? padding;
   final double? itemExtent;
+  final ScrollViewKeyboardDismissBehavior? keyboardDismissBehavior;
 
   CustomListView({
     ScrollController? controller,
@@ -55,12 +63,14 @@ class CustomListView extends StatelessWidget {
     this.padding,
     this.itemExtent,
     this.cacheExtent,
+    this.keyboardDismissBehavior,
   }) {
     if (controller != null) {
       this.controller = controller;
     } else {
       this.controller = ScrollController();
     }
+    // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
     if (Platform.isWindows) {
       this.controller.addListener(
         () {
@@ -83,7 +93,8 @@ class CustomListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       cacheExtent: cacheExtent,
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      keyboardDismissBehavior:
+          keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.onDrag,
       padding: padding ?? EdgeInsets.zero,
       controller: controller,
       scrollDirection: scrollDirection ?? Axis.vertical,
@@ -118,6 +129,7 @@ class CustomListViewBuilder extends StatelessWidget {
     } else {
       this.controller = ScrollController();
     }
+    // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
     if (Platform.isWindows) {
       this.controller.addListener(
         () {
@@ -148,74 +160,41 @@ class CustomListViewBuilder extends StatelessWidget {
   }
 }
 
-class PickerButton extends StatefulWidget {
-  final String label;
-  final int selected;
-  final void Function(dynamic) onSelected;
-  final List<PopupMenuItem> items;
-  PickerButton({
+class CustomFutureBuilder<T> extends StatefulWidget {
+  final Future<T>? future;
+  final Widget Function(BuildContext) loadingBuilder;
+  final Widget Function(BuildContext, T?) builder;
+  CustomFutureBuilder({
     Key? key,
-    required this.label,
-    required this.selected,
-    required this.onSelected,
-    required this.items,
+    required this.future,
+    required this.loadingBuilder,
+    required this.builder,
   }) : super(key: key);
 
   @override
-  State<PickerButton> createState() => _PickerButtonState();
+  State<CustomFutureBuilder<T>> createState() => _CustomFutureBuilderState();
 }
 
-class _PickerButtonState extends State<PickerButton> {
-  final key = GlobalKey();
+class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
+  T? data;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.future?.then((value) {
+        setState(() {
+          data = value;
+        });
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        final position = RelativeRect.fromRect(
-          Offset(
-                key.globalPaintBounds!.left,
-                key.globalPaintBounds!.top + 40.0,
-              ) &
-              Size(228.0, 320.0),
-          Rect.fromLTWH(
-            0,
-            0,
-            MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height,
-          ),
-        );
-        showMenu(
-          context: context,
-          position: position,
-          items: widget.items,
-        ).then((value) {
-          widget.onSelected(value);
-        });
-      },
-      child: Container(
-        key: key,
-        height: 36.0,
-        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-        alignment: Alignment.centerLeft,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              widget.label + ':',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            const SizedBox(width: 4.0),
-            Text(
-              (widget.items[widget.selected].child as Text).data!,
-              style: Theme.of(context).textTheme.headline4?.copyWith(
-                    color: Theme.of(context).primaryColor,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return data == null
+        ? widget.loadingBuilder(context)
+        : widget.builder(context, data);
   }
 }
 
@@ -274,11 +253,12 @@ class SubHeader extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(16.0, 0, 0, 0),
                 child: Text(
                   text!.toUpperCase(),
-                  style: Theme.of(context).textTheme.overline?.copyWith(
-                        color: Theme.of(context).textTheme.headline3?.color,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: style ??
+                      Theme.of(context).textTheme.overline?.copyWith(
+                            color: Theme.of(context).textTheme.headline3?.color,
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w600,
+                          ),
                 ),
               )
         : Container();
@@ -305,7 +285,7 @@ class NavigatorPopButton extends StatelessWidget {
             child: Icon(
               Icons.arrow_back,
               size: 20.0,
-              color: color,
+              color: color ?? Theme.of(context).appBarTheme.iconTheme?.color,
             ),
           ),
         ),
@@ -364,8 +344,12 @@ class DesktopAppBar extends StatelessWidget {
                             NavigatorPopButton(
                               color: color != null
                                   ? isDark
-                                      ? Colors.white
-                                      : Colors.black
+                                      ? Theme.of(context)
+                                          .extension<IconColors>()
+                                          ?.appBarDarkIconColor
+                                      : Theme.of(context)
+                                          .extension<IconColors>()
+                                          ?.appBarLightIconColor
                                   : null,
                             ),
                         SizedBox(
@@ -420,14 +404,6 @@ class RefreshCollectionButton extends StatefulWidget {
 
 class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
   bool lock = false;
-  final double turns = 2 * math.pi;
-  late Tween<double> tween;
-
-  @override
-  void initState() {
-    super.initState();
-    this.tween = Tween<double>(begin: 0, end: this.turns);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -438,27 +414,15 @@ class _RefreshCollectionButtonState extends State<RefreshCollectionButton> {
               heroTag: 'collection_refresh_button',
               backgroundColor:
                   widget.color ?? Theme.of(context).colorScheme.secondary,
-              child: TweenAnimationBuilder(
-                child: Icon(
-                  Icons.refresh,
-                  color: widget.color?.isDark ?? true
-                      ? Colors.white
-                      : Colors.black87,
-                ),
-                tween: tween,
-                duration: Duration(milliseconds: 800),
-                builder: (_, dynamic value, child) => Transform.rotate(
-                  alignment: Alignment.center,
-                  angle: value,
-                  child: child,
-                ),
+              child: Icon(
+                Icons.refresh,
+                color: widget.color?.isDark ?? true
+                    ? Colors.white
+                    : Colors.black87,
               ),
               onPressed: () {
                 if (lock) return;
-                setState(() {
-                  lock = true;
-                });
-                tween = Tween<double>(begin: 0, end: turns);
+                lock = true;
                 Collection.instance.refresh(
                     onProgress: (progress, total, isCompleted) {
                   CollectionRefresh.instance.set(progress, total);
@@ -530,6 +494,9 @@ class _HyperLinkState extends State<HyperLink> {
   }
 }
 
+/// This piece of code is pure garbage.
+/// There aren't likely going to be any changes to this in future, so it's not worth it to make it better.
+/// But, since it's not much ground-breakingly tough to understand, I'm not going to fix it.
 class ExceptionWidget extends StatelessWidget {
   final String? title;
   final String? subtitle;
@@ -542,6 +509,7 @@ class ExceptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconSize = isDesktop ? 196.0 : 244.0;
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: 16.0,
@@ -553,7 +521,11 @@ class ExceptionWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Transform.scale(
-            scale: title == Language.instance.NO_COLLECTION_TITLE ? 1.4 : 1.2,
+            scale: title == Language.instance.NO_COLLECTION_TITLE
+                ? 1.4
+                : title == Language.instance.COLLECTION_SEARCH_LABEL
+                    ? 1.0
+                    : 1.2,
             child: Image.memory(
               {
                 Language.instance.NO_COLLECTION_TITLE: visualAssets.collection,
@@ -564,16 +536,18 @@ class ExceptionWidget extends StatelessWidget {
                 Language.instance.COLLECTION_SEARCH_LABEL:
                     visualAssets.searchPage,
               }[title]!,
-              height: 196.0,
-              width: 196.0,
+              height: iconSize,
+              width: iconSize,
               filterQuality: FilterQuality.high,
               fit: BoxFit.contain,
             ),
           ),
           Text(
             title!,
-            style:
-                Theme.of(context).textTheme.headline1?.copyWith(fontSize: 20.0),
+            style: Theme.of(context).textTheme.headline1?.copyWith(
+                  fontSize: 20.0,
+                  fontWeight: isDesktop ? null : FontWeight.normal,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(
@@ -588,7 +562,7 @@ class ExceptionWidget extends StatelessWidget {
             const SizedBox(
               height: 4.0,
             ),
-            MaterialButton(
+            TextButton(
               onPressed: () {
                 Navigator.of(context).push(
                   PageRouteBuilder(
@@ -680,6 +654,9 @@ class ContextMenuButton<T> extends StatefulWidget {
     this.shape,
     this.color,
     this.enableFeedback,
+    this.highlightColor,
+    this.splashColor,
+    this.hoverColor,
   })  : assert(
           !(child != null && icon != null),
           'You can only pass [child] or [icon], not both.',
@@ -715,6 +692,12 @@ class ContextMenuButton<T> extends StatefulWidget {
   final bool? enableFeedback;
 
   final double? iconSize;
+
+  final Color? highlightColor;
+
+  final Color? splashColor;
+
+  final Color? hoverColor;
 
   @override
   ContextMenuButtonState<T> createState() => ContextMenuButtonState<T>();
@@ -785,6 +768,9 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
         message:
             widget.tooltip ?? MaterialLocalizations.of(context).showMenuTooltip,
         child: InkWell(
+          highlightColor: widget.highlightColor,
+          splashColor: widget.splashColor,
+          hoverColor: widget.hoverColor,
           onTap: widget.enabled ? showButtonMenu : null,
           canRequestFocus: _canRequestFocus,
           child: widget.child,
@@ -806,8 +792,13 @@ class ContextMenuButtonState<T> extends State<ContextMenuButton<T>> {
 }
 
 class DesktopTitleBar extends StatelessWidget {
+  final hideMaximizeAndRestoreButton;
   final Color? color;
-  const DesktopTitleBar({Key? key, this.color}) : super(key: key);
+  const DesktopTitleBar({
+    Key? key,
+    this.color,
+    this.hideMaximizeAndRestoreButton = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -816,7 +807,7 @@ class DesktopTitleBar extends StatelessWidget {
         height: MediaQuery.of(context).padding.top,
         color: color ?? Theme.of(context).appBarTheme.backgroundColor,
       );
-    return Platform.isWindows
+    return WindowsInfo.instance.isWindows10OrGreater
         ? Container(
             width: MediaQuery.of(context).size.width,
             height: desktopTitleBarHeight,
@@ -852,13 +843,14 @@ class DesktopTitleBar extends StatelessWidget {
                 MinimizeWindowButton(
                   colors: windowButtonColors(context),
                 ),
-                appWindow.isMaximized
-                    ? RestoreWindowButton(
-                        colors: windowButtonColors(context),
-                      )
-                    : MaximizeWindowButton(
-                        colors: windowButtonColors(context),
-                      ),
+                if (!hideMaximizeAndRestoreButton)
+                  appWindow.isMaximized
+                      ? RestoreWindowButton(
+                          colors: windowButtonColors(context),
+                        )
+                      : MaximizeWindowButton(
+                          colors: windowButtonColors(context),
+                        ),
                 CloseWindowButton(
                   colors: windowButtonColors(context)
                     ..mouseOver = Color(0xFFC42B1C)
@@ -967,6 +959,7 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
             unselectedItemColor: color?.isDark ?? true ? null : Colors.black45,
             type: BottomNavigationBarType.shifting,
             onTap: (index) {
+              MobileNowPlayingController.instance.restore();
               if (index != _index) {
                 widget.tabControllerNotifier.value =
                     TabRoute(index, TabRouteSender.bottomNavigationBar);
@@ -997,8 +990,8 @@ class _MobileBottomNavigationBarState extends State<MobileBottomNavigationBar> {
                 backgroundColor: color ?? Theme.of(context).primaryColor,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.play_circle),
-                label: Language.instance.WEB,
+                icon: Icon(Icons.wifi_tethering_rounded),
+                label: Language.instance.STREAM,
                 backgroundColor: color ?? Theme.of(context).primaryColor,
               ),
             ],
@@ -1191,19 +1184,15 @@ class _HorizontalListState extends State<HorizontalList> {
   @override
   void initState() {
     super.initState();
-    if (isDesktop) {
-      controller.addListener(() {
-        setState(() {});
-      });
-    }
+    controller.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
   void didChangeDependencies() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (isDesktop) {
-        setState(() {});
-      }
+      setState(() {});
     });
     super.didChangeDependencies();
   }
@@ -1237,7 +1226,7 @@ class _HorizontalListState extends State<HorizontalList> {
               children: widget.children,
             ),
           ),
-          if (extentAfter != 0 && isDesktop)
+          if (extentAfter != 0)
             Positioned(
               child: Container(
                 height: c.maxHeight,
@@ -1257,9 +1246,9 @@ class _HorizontalListState extends State<HorizontalList> {
                   ),
                 ),
               ),
-              right: 32.0,
+              right: isDesktop ? 32.0 : tileMargin,
             ),
-          if (extentBefore != 0 && isDesktop)
+          if (extentBefore != 0)
             Positioned(
               child: Container(
                 height: c.maxHeight,
@@ -1279,7 +1268,7 @@ class _HorizontalListState extends State<HorizontalList> {
                   ),
                 ),
               ),
-              left: 32.0,
+              left: isDesktop ? 32.0 : tileMargin,
             ),
         ],
       ),
@@ -1304,91 +1293,247 @@ class CollectionSortButton extends StatelessWidget {
           Icons.sort_by_alpha,
           size: 20.0,
         ),
-        elevation: 4.0,
+        elevation: 8.0,
         onSelected: (value) async {
-          if (value is CollectionSort) {
-            Provider.of<Collection>(context, listen: false).sort(type: value);
-            await Configuration.instance.save(
-              collectionSortType: value,
-            );
-          } else if (value is CollectionOrder) {
-            Provider.of<Collection>(context, listen: false).order(type: value);
-            await Configuration.instance.save(
-              collectionOrderType: value,
-            );
+          if (value is AlbumsSort) {
+            await Collection.instance.sort(albumsSort: value);
+            await Configuration.instance.save(albumsSort: value);
+          }
+          if (value is TracksSort) {
+            await Collection.instance.sort(tracksSort: value);
+            await Configuration.instance.save(tracksSort: value);
+          }
+          if (value is ArtistsSort) {
+            await Collection.instance.sort(artistsSort: value);
+            await Configuration.instance.save(artistsSort: value);
+          }
+          if (value is GenresSort) {
+            await Collection.instance.sort(genresSort: value);
+            await Configuration.instance.save(genresSort: value);
+          }
+          if (value is OrderType) {
+            switch (tab) {
+              case 0:
+                {
+                  await Collection.instance.sort(albumsOrderType: value);
+                  await Configuration.instance.save(albumsOrderType: value);
+                  break;
+                }
+              case 1:
+                {
+                  await Collection.instance.sort(tracksOrderType: value);
+                  await Configuration.instance.save(tracksOrderType: value);
+                  break;
+                }
+              case 2:
+                {
+                  await Collection.instance.sort(artistsOrderType: value);
+                  await Configuration.instance.save(artistsOrderType: value);
+                  break;
+                }
+              case 3:
+                {
+                  await Collection.instance.sort(genresOrderType: value);
+                  await Configuration.instance.save(genresOrderType: value);
+                  break;
+                }
+            }
           }
         },
         itemBuilder: (context) => [
-          CheckedPopupMenuItem(
-            padding: EdgeInsets.zero,
-            checked:
-                Collection.instance.collectionSortType == CollectionSort.aToZ ||
-                    (tab == 1 &&
-                        Collection.instance.collectionSortType ==
-                            CollectionSort.artist) ||
-                    (tab == 2 &&
-                        Collection.instance.collectionSortType !=
-                            CollectionSort.aToZ),
-            value: CollectionSort.aToZ,
-            child: Text(
-              Language.instance.A_TO_Z,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ),
-          if (tab == 0 || tab == 1 || tab == 4)
-            CheckedPopupMenuItem(
-              padding: EdgeInsets.zero,
-              checked: Collection.instance.collectionSortType ==
-                  CollectionSort.dateAdded,
-              value: CollectionSort.dateAdded,
-              child: Text(
-                Language.instance.DATE_ADDED,
-                style: Theme.of(context).textTheme.headline4,
+          ...{
+            0: <PopupMenuItem>[
+              CheckedPopupMenuItem(
+                checked: Collection.instance.albumsSort == AlbumsSort.aToZ,
+                value: AlbumsSort.aToZ,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    Language.instance.A_TO_Z,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
               ),
-            ),
-          if (tab == 0 || tab == 1 || tab == 4)
-            CheckedPopupMenuItem(
-              padding: EdgeInsets.zero,
-              checked:
-                  Collection.instance.collectionSortType == CollectionSort.year,
-              value: CollectionSort.year,
-              child: Text(
-                Language.instance.YEAR,
-                style: Theme.of(context).textTheme.headline4,
+              CheckedPopupMenuItem(
+                checked: Collection.instance.albumsSort == AlbumsSort.dateAdded,
+                value: AlbumsSort.dateAdded,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    Language.instance.DATE_ADDED,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
               ),
-            ),
-          if (tab == 0)
-            CheckedPopupMenuItem(
-              padding: EdgeInsets.zero,
-              checked: Collection.instance.collectionSortType ==
-                  CollectionSort.artist,
-              value: CollectionSort.artist,
-              child: Text(
-                Language.instance.ARTIST_SINGLE,
-                style: Theme.of(context).textTheme.headline4,
+              CheckedPopupMenuItem(
+                checked: Collection.instance.albumsSort == AlbumsSort.year,
+                value: AlbumsSort.year,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    Language.instance.YEAR,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
               ),
-            ),
+              CheckedPopupMenuItem(
+                checked: Collection.instance.albumsSort == AlbumsSort.artist,
+                value: AlbumsSort.artist,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    Language.instance.ARTIST,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+              ),
+            ],
+            1: <PopupMenuItem>[
+              CheckedPopupMenuItem(
+                checked: Collection.instance.tracksSort == TracksSort.aToZ,
+                value: TracksSort.aToZ,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    Language.instance.A_TO_Z,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+              ),
+              CheckedPopupMenuItem(
+                checked: Collection.instance.tracksSort == TracksSort.dateAdded,
+                value: TracksSort.dateAdded,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    Language.instance.DATE_ADDED,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+              ),
+              CheckedPopupMenuItem(
+                checked: Collection.instance.tracksSort == TracksSort.year,
+                value: TracksSort.year,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    Language.instance.YEAR,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+              ),
+            ],
+            2: <PopupMenuItem>[
+              CheckedPopupMenuItem(
+                checked: Collection.instance.artistsSort == ArtistsSort.aToZ,
+                value: ArtistsSort.aToZ,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    Language.instance.A_TO_Z,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+              ),
+              CheckedPopupMenuItem(
+                checked:
+                    Collection.instance.artistsSort == ArtistsSort.dateAdded,
+                value: ArtistsSort.dateAdded,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    Language.instance.DATE_ADDED,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+              ),
+            ],
+            3: <PopupMenuItem>[
+              CheckedPopupMenuItem(
+                checked: Collection.instance.genresSort == GenresSort.aToZ,
+                value: GenresSort.aToZ,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    Language.instance.A_TO_Z,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+              ),
+              CheckedPopupMenuItem(
+                checked: Collection.instance.genresSort == GenresSort.dateAdded,
+                value: GenresSort.dateAdded,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    Language.instance.DATE_ADDED,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+              ),
+            ],
+          }[tab]!,
           PopupMenuDivider(),
-          CheckedPopupMenuItem(
-            padding: EdgeInsets.zero,
-            checked: Collection.instance.collectionOrderType ==
-                CollectionOrder.ascending,
-            value: CollectionOrder.ascending,
-            child: Text(
-              Language.instance.ASCENDING,
-              style: Theme.of(context).textTheme.headline4,
+          ...[
+            CheckedPopupMenuItem(
+              checked: {
+                0: Collection.instance.albumsOrderType == OrderType.ascending,
+                1: Collection.instance.tracksOrderType == OrderType.ascending,
+                2: Collection.instance.artistsOrderType == OrderType.ascending,
+                3: Collection.instance.genresOrderType == OrderType.ascending,
+              }[tab]!,
+              value: OrderType.ascending,
+              padding: EdgeInsets.zero,
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                title: Text(
+                  Language.instance.ASCENDING,
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+              ),
             ),
-          ),
-          CheckedPopupMenuItem(
-            padding: EdgeInsets.zero,
-            checked: Collection.instance.collectionOrderType ==
-                CollectionOrder.descending,
-            value: CollectionOrder.descending,
-            child: Text(
-              Language.instance.DESCENDING,
-              style: Theme.of(context).textTheme.headline4,
+            CheckedPopupMenuItem(
+              checked: {
+                0: Collection.instance.albumsOrderType == OrderType.descending,
+                1: Collection.instance.tracksOrderType == OrderType.descending,
+                2: Collection.instance.artistsOrderType == OrderType.descending,
+                3: Collection.instance.genresOrderType == OrderType.descending,
+              }[tab]!,
+              value: OrderType.descending,
+              padding: EdgeInsets.zero,
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                title: Text(
+                  Language.instance.DESCENDING,
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
@@ -1410,73 +1555,30 @@ class CorrectedSwitchListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isDesktop) {
-      return SwitchListTile(
-        value: value,
-        title: Text(
-          subtitle,
-          style: Theme.of(context).textTheme.headline4,
-        ),
-        onChanged: (value) {
-          onChanged.call(value);
-        },
-      );
-    } else {
-      return InkWell(
-        onTap: () {
-          onChanged.call(!value);
-        },
-        child: Container(
-          height: 88.0,
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    const SizedBox(height: 4.0),
-                    Text(
-                      subtitle,
-                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                            color: Theme.of(context).textTheme.headline3?.color,
-                          ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16.0),
-              Switch(
-                value: value,
-                onChanged: (value) {
-                  onChanged.call(value);
-                },
-              ),
-            ],
-          ),
-        ),
-      );
-    }
+    return SwitchListTile(
+      value: value,
+      title: Text(
+        isDesktop ? subtitle : title,
+        style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      onChanged: (value) {
+        onChanged.call(value);
+      },
+    );
   }
 }
 
 class CorrectedListTile extends StatelessWidget {
   final void Function()? onTap;
-  final IconData iconData;
+  final IconData? iconData;
   final String title;
   final String? subtitle;
   final double? height;
   CorrectedListTile({
     Key? key,
-    required this.iconData,
+    this.iconData,
     required this.title,
     this.subtitle,
     this.onTap,
@@ -1496,13 +1598,14 @@ class CorrectedListTile extends StatelessWidget {
               ? CrossAxisAlignment.center
               : CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: EdgeInsets.only(
-                  top: subtitle == null ? 0.0 : 16.0, right: 16.0),
-              width: 40.0,
-              height: 40.0,
-              child: Icon(iconData),
-            ),
+            if (iconData != null)
+              Container(
+                margin: EdgeInsets.only(
+                    top: subtitle == null ? 0.0 : 16.0, right: 16.0),
+                width: 40.0,
+                height: 40.0,
+                child: Icon(iconData),
+              ),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1511,6 +1614,8 @@ class CorrectedListTile extends StatelessWidget {
                   Text(
                     title,
                     style: Theme.of(context).textTheme.subtitle1,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   if (subtitle != null) const SizedBox(height: 4.0),
                   if (subtitle != null)
@@ -1566,12 +1671,25 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
 
   @override
   Widget build(BuildContext context) {
+    // Indices are different on mobile.
+    final tab = {
+      // [PlaylistTab]
+      0: -1,
+      1: 1,
+      2: 0,
+      3: 2,
+      4: 4,
+    }[index]!;
     return AnimatedOpacity(
       opacity: [1, 2, 3].contains(index) ? 1.0 : 0.0,
-      duration: Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 50),
       child: CircularButton(
-        icon: const Icon(Icons.sort_by_alpha),
+        icon: Icon(
+          Icons.sort_by_alpha,
+          color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+        ),
         onPressed: () async {
+          if (index == 4) return;
           final position = RelativeRect.fromRect(
             Offset(
                   MediaQuery.of(context).size.width - tileMargin - 48.0,
@@ -1592,68 +1710,195 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
             position: position,
             elevation: 4.0,
             items: [
-              if (index == 1 || index == 2 || index == 3)
-                CheckedPopupMenuItem(
-                  padding: EdgeInsets.zero,
-                  checked: Collection.instance.collectionSortType ==
-                          CollectionSort.aToZ ||
-                      index == 3,
-                  value: CollectionSort.aToZ,
-                  child: Text(
-                    Language.instance.A_TO_Z,
+              ...{
+                0: <PopupMenuItem>[
+                  CheckedPopupMenuItem(
+                    checked: Collection.instance.albumsSort == AlbumsSort.aToZ,
+                    value: AlbumsSort.aToZ,
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      Language.instance.A_TO_Z,
+                    ),
                   ),
-                ),
-              if (index == 1 || index == 2)
-                CheckedPopupMenuItem(
-                  padding: EdgeInsets.zero,
-                  checked: Collection.instance.collectionSortType ==
-                      CollectionSort.dateAdded,
-                  value: CollectionSort.dateAdded,
-                  child: Text(
-                    Language.instance.DATE_ADDED,
+                  CheckedPopupMenuItem(
+                    checked:
+                        Collection.instance.albumsSort == AlbumsSort.dateAdded,
+                    value: AlbumsSort.dateAdded,
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      Language.instance.DATE_ADDED,
+                    ),
                   ),
-                ),
-              if (index == 1 || index == 2)
-                CheckedPopupMenuItem(
-                  padding: EdgeInsets.zero,
-                  checked: Collection.instance.collectionSortType ==
-                      CollectionSort.year,
-                  value: CollectionSort.year,
-                  child: Text(
-                    Language.instance.YEAR,
+                  CheckedPopupMenuItem(
+                    checked: Collection.instance.albumsSort == AlbumsSort.year,
+                    value: AlbumsSort.year,
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      Language.instance.YEAR,
+                    ),
                   ),
-                ),
+                  // Not implemented for mobile.
+                  // CheckedPopupMenuItem(
+                  //   checked:
+                  //       Collection.instance.albumsSort == AlbumsSort.artist,
+                  //   value: AlbumsSort.artist,
+                  //   padding: EdgeInsets.zero,
+                  //   child: ListTile(
+                  //     title: Text(
+                  //       Language.instance.ARTIST,
+                  //     ),
+                  //   ),
+                  // ),
+                ],
+                1: <PopupMenuItem>[
+                  CheckedPopupMenuItem(
+                    checked: Collection.instance.tracksSort == TracksSort.aToZ,
+                    value: TracksSort.aToZ,
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      Language.instance.A_TO_Z,
+                    ),
+                  ),
+                  CheckedPopupMenuItem(
+                    checked:
+                        Collection.instance.tracksSort == TracksSort.dateAdded,
+                    value: TracksSort.dateAdded,
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      Language.instance.DATE_ADDED,
+                    ),
+                  ),
+                  CheckedPopupMenuItem(
+                    checked: Collection.instance.tracksSort == TracksSort.year,
+                    value: TracksSort.year,
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      Language.instance.YEAR,
+                    ),
+                  ),
+                ],
+                2: <PopupMenuItem>[
+                  CheckedPopupMenuItem(
+                    checked:
+                        Collection.instance.artistsSort == ArtistsSort.aToZ,
+                    value: ArtistsSort.aToZ,
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      Language.instance.A_TO_Z,
+                    ),
+                  ),
+                  CheckedPopupMenuItem(
+                    checked: Collection.instance.artistsSort ==
+                        ArtistsSort.dateAdded,
+                    value: ArtistsSort.dateAdded,
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      Language.instance.DATE_ADDED,
+                    ),
+                  ),
+                ],
+                3: <PopupMenuItem>[
+                  CheckedPopupMenuItem(
+                    checked: Collection.instance.genresSort == GenresSort.aToZ,
+                    value: GenresSort.aToZ,
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      Language.instance.A_TO_Z,
+                    ),
+                  ),
+                  CheckedPopupMenuItem(
+                    checked:
+                        Collection.instance.genresSort == GenresSort.dateAdded,
+                    value: GenresSort.dateAdded,
+                    padding: EdgeInsets.zero,
+                    child: Text(
+                      Language.instance.DATE_ADDED,
+                    ),
+                  ),
+                ],
+              }[tab]!,
               PopupMenuDivider(),
-              CheckedPopupMenuItem(
-                padding: EdgeInsets.zero,
-                checked: Collection.instance.collectionOrderType ==
-                    CollectionOrder.ascending,
-                value: CollectionOrder.ascending,
-                child: Text(
-                  Language.instance.ASCENDING,
+              ...[
+                CheckedPopupMenuItem(
+                  checked: {
+                    0: Collection.instance.albumsOrderType ==
+                        OrderType.ascending,
+                    1: Collection.instance.tracksOrderType ==
+                        OrderType.ascending,
+                    2: Collection.instance.artistsOrderType ==
+                        OrderType.ascending,
+                    3: Collection.instance.genresOrderType ==
+                        OrderType.ascending,
+                  }[tab]!,
+                  value: OrderType.ascending,
+                  padding: EdgeInsets.zero,
+                  child: Text(
+                    Language.instance.ASCENDING,
+                  ),
                 ),
-              ),
-              CheckedPopupMenuItem(
-                padding: EdgeInsets.zero,
-                checked: Collection.instance.collectionOrderType ==
-                    CollectionOrder.descending,
-                value: CollectionOrder.descending,
-                child: Text(
-                  Language.instance.DESCENDING,
+                CheckedPopupMenuItem(
+                  checked: {
+                    0: Collection.instance.albumsOrderType ==
+                        OrderType.descending,
+                    1: Collection.instance.tracksOrderType ==
+                        OrderType.descending,
+                    2: Collection.instance.artistsOrderType ==
+                        OrderType.descending,
+                    3: Collection.instance.genresOrderType ==
+                        OrderType.descending,
+                  }[tab]!,
+                  value: OrderType.descending,
+                  padding: EdgeInsets.zero,
+                  child: Text(
+                    Language.instance.DESCENDING,
+                  ),
                 ),
-              ),
+              ],
             ],
           );
-          if (value is CollectionSort) {
-            Provider.of<Collection>(context, listen: false).sort(type: value);
-            await Configuration.instance.save(
-              collectionSortType: value,
-            );
-          } else if (value is CollectionOrder) {
-            Provider.of<Collection>(context, listen: false).order(type: value);
-            await Configuration.instance.save(
-              collectionOrderType: value,
-            );
+          if (value is AlbumsSort) {
+            await Collection.instance.sort(albumsSort: value);
+            await Configuration.instance.save(albumsSort: value);
+          }
+          if (value is TracksSort) {
+            await Collection.instance.sort(tracksSort: value);
+            await Configuration.instance.save(tracksSort: value);
+          }
+          if (value is ArtistsSort) {
+            await Collection.instance.sort(artistsSort: value);
+            await Configuration.instance.save(artistsSort: value);
+          }
+          if (value is GenresSort) {
+            await Collection.instance.sort(genresSort: value);
+            await Configuration.instance.save(genresSort: value);
+          }
+          if (value is OrderType) {
+            switch (tab) {
+              case 0:
+                {
+                  await Collection.instance.sort(albumsOrderType: value);
+                  await Configuration.instance.save(albumsOrderType: value);
+                  break;
+                }
+              case 1:
+                {
+                  await Collection.instance.sort(tracksOrderType: value);
+                  await Configuration.instance.save(tracksOrderType: value);
+                  break;
+                }
+              case 2:
+                {
+                  await Collection.instance.sort(artistsOrderType: value);
+                  await Configuration.instance.save(artistsOrderType: value);
+                  break;
+                }
+              case 3:
+                {
+                  await Collection.instance.sort(genresOrderType: value);
+                  await Configuration.instance.save(genresOrderType: value);
+                  break;
+                }
+            }
           }
         },
       ),
@@ -1673,14 +1918,18 @@ class NowPlayingBarScrollHideNotifier extends StatelessWidget {
     if (isDesktop) {
       return child;
     } else {
-      return NotificationListener<ScrollUpdateNotification>(
+      return NotificationListener<UserScrollNotification>(
         onNotification: (notification) {
-          final scrollDelta = notification.scrollDelta ?? 0.0;
-          if (notification.metrics.axis == Axis.vertical) {
-            if (scrollDelta > 0.0) {
-              MobileNowPlayingController.instance.hide();
-            } else {
+          if (notification.metrics.axis == Axis.vertical &&
+              [
+                AxisDirection.up,
+                AxisDirection.down,
+              ].contains(notification.metrics.axisDirection)) {
+            // Do not handle [ScrollDirection.idle].
+            if (notification.direction == ScrollDirection.forward) {
               MobileNowPlayingController.instance.show();
+            } else if (notification.direction == ScrollDirection.reverse) {
+              MobileNowPlayingController.instance.hide();
             }
           }
           return false;
@@ -1696,164 +1945,237 @@ class CollectionMoreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
-      message: Language.instance.PLAY_INTERNET,
-      child: ContextMenuButton<int>(
-        padding: EdgeInsets.zero,
-        offset: Offset.fromDirection(pi / 2, 64.0),
-        icon: Icon(
-          Icons.public,
-          size: 20.0,
+    return ContextMenuButton<int>(
+      padding: EdgeInsets.zero,
+      offset: Offset.fromDirection(pi / 2, 64.0),
+      icon: Icon(
+        Icons.more_vert,
+        size: 20.0,
+        color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+      ),
+      elevation: 4.0,
+      onSelected: (value) async {
+        switch (value) {
+          case 0:
+            {
+              FileInfoScreen.show(context);
+              break;
+            }
+          case 1:
+            {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      FadeThroughTransition(
+                    fillColor: Colors.transparent,
+                    animation: animation,
+                    secondaryAnimation: secondaryAnimation,
+                    child: WebTab(),
+                  ),
+                ),
+              );
+              break;
+            }
+        }
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: 0,
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            leading: Icon(Icons.code),
+            title: Text(
+              Language.instance.READ_METADATA,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
         ),
-        elevation: 4.0,
-        onSelected: (value) async {
-          switch (value) {
-            case 0:
-              {
-                final controller = TextEditingController();
-                await showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    contentPadding:
-                        const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                    content: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          child: Text(
-                            Language.instance.PLAY_URL,
-                            style: Theme.of(context).textTheme.headline1,
-                            textAlign: TextAlign.start,
+        PopupMenuItem(
+          value: 1,
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            leading: Icon(Icons.wifi_tethering),
+            title: Text(
+              Language.instance.STREAM,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class PlayFileOrURLButton extends StatefulWidget {
+  PlayFileOrURLButton({Key? key}) : super(key: key);
+
+  @override
+  State<PlayFileOrURLButton> createState() => _PlayFileOrURLButtonState();
+}
+
+class _PlayFileOrURLButtonState extends State<PlayFileOrURLButton> {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: Language.instance.OPEN_FILE_OR_URL,
+      icon: Icon(
+        Icons.file_open,
+        color: Theme.of(context).appBarTheme.actionsIconTheme?.color,
+      ),
+      splashRadius: 20.0,
+      iconSize: 20.0,
+      onPressed: () async {
+        await showDialog(
+          context: context,
+          builder: (ctx) => SimpleDialog(
+            title: Text(
+              Language.instance.OPEN_FILE_OR_URL,
+            ),
+            children: [
+              ListTile(
+                onTap: () async {
+                  final file = await pickFile(
+                    label: Language.instance.MEDIA_FILES,
+                    extensions: kSupportedFileTypes,
+                  );
+                  if (file != null) {
+                    await Navigator.of(ctx).maybePop();
+                    await Intent.instance.playUri(file.uri);
+                  }
+                },
+                leading: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Theme.of(ctx).iconTheme.color,
+                  child: Icon(
+                    Icons.folder,
+                  ),
+                ),
+                title: Text(
+                  Language.instance.FILE,
+                  style: isDesktop
+                      ? Theme.of(ctx).textTheme.headline4
+                      : Theme.of(ctx).textTheme.headline3?.copyWith(
+                            fontSize: 16.0,
                           ),
-                          padding: EdgeInsets.only(
-                            bottom: 16.0,
-                            left: 4.0,
-                          ),
-                        ),
-                        Container(
-                          height: 40.0,
-                          width: 420.0,
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
-                          padding: EdgeInsets.only(top: 2.0),
-                          child: Focus(
-                            onFocusChange: (hasFocus) {
-                              if (hasFocus) {
-                                HotKeys.instance.disableSpaceHotKey();
-                              } else {
-                                HotKeys.instance.enableSpaceHotKey();
-                              }
-                            },
-                            child: TextField(
-                              autofocus: true,
-                              controller: controller,
-                              cursorWidth: 1.0,
-                              onSubmitted: (String value) async {
-                                if (value.isNotEmpty) {
-                                  FocusScope.of(context).unfocus();
-                                  await Intent.instance
-                                      .playUri(Uri.parse(value));
+                ),
+              ),
+              ListTile(
+                onTap: () async {
+                  await Navigator.of(ctx).maybePop();
+                  String input = '';
+                  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+                  await showDialog(
+                    context: ctx,
+                    builder: (ctx) => AlertDialog(
+                      title: Text(
+                        Language.instance.OPEN_FILE_OR_URL,
+                      ),
+                      content: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            height: 40.0,
+                            width: 420.0,
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+                            padding: EdgeInsets.only(top: 2.0),
+                            child: Focus(
+                              onFocusChange: (hasFocus) {
+                                if (hasFocus) {
+                                  HotKeys.instance.disableSpaceHotKey();
+                                } else {
+                                  HotKeys.instance.enableSpaceHotKey();
                                 }
                               },
-                              cursorColor: Theme.of(context).brightness ==
-                                      Brightness.light
-                                  ? Colors.black
-                                  : Colors.white,
-                              textAlignVertical: TextAlignVertical.bottom,
-                              style: Theme.of(context).textTheme.headline4,
-                              decoration: inputDecoration(
-                                context,
-                                Language.instance.PLAY_URL_SUBTITLE,
-                                trailingIcon: Icon(
-                                  Icons.add,
-                                  size: 20.0,
-                                  color: Theme.of(context).iconTheme.color,
+                              child: Form(
+                                key: formKey,
+                                child: TextFormField(
+                                  autofocus: true,
+                                  cursorWidth: 1.0,
+                                  onChanged: (value) => input = value,
+                                  validator: (value) =>
+                                      validate(value ?? '') == null ? '' : null,
+                                  onFieldSubmitted: (value) async {
+                                    if (value.isNotEmpty &&
+                                        (formKey.currentState?.validate() ??
+                                            false)) {
+                                      Navigator.of(ctx).maybePop();
+                                      await Intent.instance.playUri(
+                                        validate(value)!,
+                                      );
+                                    }
+                                  },
+                                  cursorColor: Theme.of(ctx).brightness ==
+                                          Brightness.light
+                                      ? Colors.black
+                                      : Colors.white,
+                                  textAlignVertical: TextAlignVertical.bottom,
+                                  style: Theme.of(ctx).textTheme.headline4,
+                                  decoration: inputDecoration(
+                                    ctx,
+                                    Language.instance.PLAY_URL_SUBTITLE,
+                                  ).copyWith(
+                                    errorMaxLines: 1,
+                                    errorStyle: TextStyle(height: 0),
+                                  ),
                                 ),
-                                trailingIconOnPressed: () async {
-                                  if (controller.text.isNotEmpty) {
-                                    FocusScope.of(context).unfocus();
-                                    await Intent.instance
-                                        .playUri(Uri.parse(controller.text));
-                                  }
-                                },
                               ),
                             ),
                           ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          child: Text(
+                            Language.instance.PLAY.toUpperCase(),
+                            style: TextStyle(
+                              color: Theme.of(ctx).primaryColor,
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (input.isNotEmpty &&
+                                (formKey.currentState?.validate() ?? false)) {
+                              Navigator.of(ctx).maybePop();
+                              await Intent.instance.playUri(validate(input)!);
+                            }
+                          },
+                        ),
+                        TextButton(
+                          child: Text(
+                            Language.instance.CANCEL.toUpperCase(),
+                            style: TextStyle(
+                              color: Theme.of(ctx).primaryColor,
+                            ),
+                          ),
+                          onPressed: Navigator.of(ctx).maybePop,
                         ),
                       ],
                     ),
-                    actions: [
-                      MaterialButton(
-                        child: Text(
-                          Language.instance.PLAY.toUpperCase(),
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        onPressed: () async {
-                          if (controller.text.isNotEmpty) {
-                            await Intent.instance
-                                .playUri(Uri.parse(controller.text));
-                          }
-                        },
-                      ),
-                      MaterialButton(
-                        child: Text(
-                          Language.instance.CANCEL.toUpperCase(),
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        onPressed: Navigator.of(context).maybePop,
-                      ),
-                    ],
+                  );
+                },
+                leading: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Theme.of(ctx).iconTheme.color,
+                  child: Icon(
+                    Icons.link,
                   ),
-                );
-                break;
-              }
-            case 1:
-              {
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        FadeThroughTransition(
-                      fillColor: Colors.transparent,
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: WebTab(),
-                    ),
-                  ),
-                );
-                break;
-              }
-          }
-        },
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            value: 0,
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.link),
-              title: Text(
-                Language.instance.PLAY_URL,
-                style: Theme.of(context).textTheme.headline4,
+                ),
+                title: Text(
+                  Language.instance.URL,
+                  style: isDesktop
+                      ? Theme.of(ctx).textTheme.headline4
+                      : Theme.of(ctx).textTheme.headline3?.copyWith(
+                            fontSize: 16.0,
+                          ),
+                ),
               ),
-            ),
+            ],
           ),
-          PopupMenuItem(
-            value: 1,
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.play_circle),
-              title: Text(
-                Language.instance.WEB,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -2002,31 +2324,55 @@ class FoldersNotFoundDialog extends StatefulWidget {
 }
 
 class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
+  List<String>? storages;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) async {
+          final storages = await ExternalPath.getExternalStorageDirectories();
+          setState(
+            () => this.storages = storages,
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<Collection>(
       builder: (context, collection, _) {
-        final missingDirectories = collection.collectionDirectories
+        Iterable<Directory> missingDirectories = collection
+            .collectionDirectories
             .where((element) => !element.existsSync_());
+        if (storages != null) {
+          missingDirectories = missingDirectories.map(
+            (e) => Directory(
+              e.path
+                  .replaceAll(
+                    storages!.first,
+                    Language.instance.PHONE,
+                  )
+                  .replaceAll(
+                    storages!.last,
+                    Language.instance.SD_CARD,
+                  ),
+            ),
+          );
+        }
         return AlertDialog(
-          contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 4.0),
+          title: Text(
+            missingDirectories.isEmpty
+                ? Language.instance.AWESOME
+                : Language.instance.ERROR,
+          ),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                child: Text(
-                  missingDirectories.isEmpty
-                      ? Language.instance.AWESOME
-                      : Language.instance.ERROR,
-                  style: Theme.of(context).textTheme.headline1,
-                  textAlign: TextAlign.start,
-                ),
-                padding: EdgeInsets.only(
-                  bottom: 16.0,
-                  left: 4.0,
-                ),
-              ),
               Padding(
                 child: Text(
                   missingDirectories.isEmpty
@@ -2037,7 +2383,6 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                 ),
                 padding: EdgeInsets.only(
                   bottom: 16.0,
-                  left: 4.0,
                 ),
               ),
               ...missingDirectories
@@ -2083,8 +2428,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          MaterialButton(
-                            padding: EdgeInsets.zero,
+                          TextButton(
                             onPressed: () async {
                               if (!CollectionRefresh.instance.isCompleted) {
                                 showDialog(
@@ -2095,8 +2439,6 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                     title: Text(
                                       Language.instance
                                           .INDEXING_ALREADY_GOING_ON_TITLE,
-                                      style:
-                                          Theme.of(context).textTheme.headline1,
                                     ),
                                     content: Text(
                                       Language.instance
@@ -2105,9 +2447,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                           Theme.of(context).textTheme.headline3,
                                     ),
                                     actions: [
-                                      MaterialButton(
-                                        textColor:
-                                            Theme.of(context).primaryColor,
+                                      TextButton(
                                         onPressed: Navigator.of(context).pop,
                                         child: Text(Language.instance.OK),
                                       ),
@@ -2124,9 +2464,6 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                   builder: (subContext) => AlertDialog(
                                     title: Text(
                                       Language.instance.WARNING,
-                                      style: Theme.of(subContext)
-                                          .textTheme
-                                          .headline1,
                                     ),
                                     content: Text(
                                       Language.instance
@@ -2136,9 +2473,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                           .headline3,
                                     ),
                                     actions: [
-                                      MaterialButton(
-                                        textColor:
-                                            Theme.of(context).primaryColor,
+                                      TextButton(
                                         onPressed: () async {
                                           Navigator.of(subContext).pop();
                                         },
@@ -2177,18 +2512,317 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
             ],
           ),
           actions: [
-            MaterialButton(
+            TextButton(
               child: Text(
                 Language.instance.DONE.toUpperCase(),
+              ),
+              style: TextButton.styleFrom(
+                disabledForegroundColor: Theme.of(context).disabledColor,
               ),
               onPressed: missingDirectories.isEmpty
                   ? Navigator.of(context).maybePop
                   : null,
-              textColor: Theme.of(context).primaryColor,
-              disabledTextColor: Theme.of(context).iconTheme.color,
             ),
           ],
         );
+      },
+    );
+  }
+}
+
+class MobileAppBarOverflowButton extends StatefulWidget {
+  final Color? color;
+  MobileAppBarOverflowButton({
+    Key? key,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  State<MobileAppBarOverflowButton> createState() =>
+      _MobileAppBarOverflowButtonState();
+}
+
+class _MobileAppBarOverflowButtonState
+    extends State<MobileAppBarOverflowButton> {
+  @override
+  Widget build(BuildContext context) {
+    return CircularButton(
+      icon: Icon(
+        Icons.more_vert,
+        color: widget.color ??
+            Theme.of(context).appBarTheme.actionsIconTheme?.color,
+      ),
+      onPressed: () {
+        final position = RelativeRect.fromRect(
+          Offset(
+                MediaQuery.of(context).size.width - tileMargin - 48.0,
+                MediaQuery.of(context).padding.top +
+                    kMobileSearchBarHeight +
+                    2 * tileMargin,
+              ) &
+              Size(160.0, 160.0),
+          Rect.fromLTWH(
+            0,
+            0,
+            MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height,
+          ),
+        );
+        showMenu<int>(
+          context: context,
+          position: position,
+          elevation: 4.0,
+          items: [
+            PopupMenuItem(
+              value: 0,
+              child: ListTile(
+                leading: Icon(Icons.file_open),
+                title: Text(Language.instance.OPEN_FILE_OR_URL),
+              ),
+            ),
+            PopupMenuItem(
+              value: 1,
+              child: ListTile(
+                leading: Icon(Icons.code),
+                title: Text(Language.instance.READ_METADATA),
+              ),
+            ),
+            PopupMenuItem(
+              value: 2,
+              child: ListTile(
+                leading: Icon(Icons.settings),
+                title: Text(Language.instance.SETTING),
+              ),
+            ),
+            PopupMenuItem(
+              value: 3,
+              child: ListTile(
+                leading: Icon(Icons.info),
+                title: Text(Language.instance.ABOUT_TITLE),
+              ),
+            ),
+          ],
+        ).then((value) async {
+          switch (value) {
+            case 0:
+              {
+                await showDialog(
+                  context: context,
+                  builder: (ctx) => SimpleDialog(
+                    title: Text(
+                      Language.instance.OPEN_FILE_OR_URL,
+                    ),
+                    children: [
+                      ListTile(
+                        onTap: () async {
+                          final file = await pickFile(
+                            label: Language.instance.MEDIA_FILES,
+                            extensions: kSupportedFileTypes,
+                          );
+                          if (file != null) {
+                            await Navigator.of(ctx).maybePop();
+                            await Intent.instance.playUri(file.uri);
+                          }
+                        },
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Theme.of(ctx).iconTheme.color,
+                          child: Icon(
+                            Icons.folder,
+                          ),
+                        ),
+                        title: Text(
+                          Language.instance.FILE,
+                          style: isDesktop
+                              ? Theme.of(ctx).textTheme.headline4
+                              : Theme.of(ctx).textTheme.headline3?.copyWith(
+                                    fontSize: 16.0,
+                                  ),
+                        ),
+                      ),
+                      ListTile(
+                        onTap: () async {
+                          await Navigator.of(ctx).maybePop();
+                          String input = '';
+                          final GlobalKey<FormState> formKey =
+                              GlobalKey<FormState>();
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            elevation: 8.0,
+                            useRootNavigator: true,
+                            backgroundColor: Theme.of(context).cardColor,
+                            builder: (context) => StatefulBuilder(
+                              builder: (context, setState) {
+                                return Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context)
+                                            .viewInsets
+                                            .bottom -
+                                        MediaQuery.of(context).padding.bottom,
+                                  ),
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      const SizedBox(height: 4.0),
+                                      Form(
+                                        key: formKey,
+                                        child: TextFormField(
+                                          autofocus: true,
+                                          autocorrect: false,
+                                          validator: (value) {
+                                            final error = value == null
+                                                ? null
+                                                : validate(value) == null
+                                                    ? ''
+                                                    : null;
+                                            debugPrint(error.toString());
+                                            return error;
+                                          },
+                                          onChanged: (value) => input = value,
+                                          keyboardType: TextInputType.url,
+                                          textCapitalization:
+                                              TextCapitalization.none,
+                                          textInputAction: TextInputAction.done,
+                                          onFieldSubmitted: (value) async {
+                                            if (formKey.currentState
+                                                    ?.validate() ??
+                                                false) {
+                                              await Navigator.of(context)
+                                                  .maybePop();
+                                              await Intent.instance
+                                                  .playUri(validate(value)!);
+                                            }
+                                          },
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.fromLTRB(
+                                              12,
+                                              30,
+                                              12,
+                                              6,
+                                            ),
+                                            hintText: Language
+                                                .instance.FILE_PATH_OR_URL,
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color!
+                                                    .withOpacity(0.4),
+                                                width: 1.8,
+                                              ),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color!
+                                                    .withOpacity(0.4),
+                                                width: 1.8,
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                width: 1.8,
+                                              ),
+                                            ),
+                                            errorStyle: TextStyle(height: 0.0),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4.0),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          if (formKey.currentState
+                                                  ?.validate() ??
+                                              false) {
+                                            await Navigator.of(context)
+                                                .maybePop();
+                                            await Intent.instance
+                                                .playUri(validate(input)!);
+                                          }
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          Language.instance.PLAY.toUpperCase(),
+                                          style: TextStyle(letterSpacing: 2.0),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: Theme.of(ctx).iconTheme.color,
+                          child: Icon(
+                            Icons.link,
+                          ),
+                        ),
+                        title: Text(
+                          Language.instance.URL,
+                          style: isDesktop
+                              ? Theme.of(ctx).textTheme.headline4
+                              : Theme.of(ctx).textTheme.headline3?.copyWith(
+                                    fontSize: 16.0,
+                                  ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+                break;
+              }
+            case 1:
+              {
+                await FileInfoScreen.show(context);
+                break;
+              }
+            case 2:
+              {
+                await Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: Settings(),
+                    ),
+                  ),
+                );
+                break;
+              }
+            case 3:
+              {
+                await Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: AboutPage(),
+                    ),
+                  ),
+                );
+                break;
+              }
+          }
+        });
       },
     );
   }

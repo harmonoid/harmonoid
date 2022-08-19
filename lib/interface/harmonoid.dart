@@ -7,19 +7,21 @@ import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/state/visuals.dart';
 import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
+import 'package:harmonoid/utils/rendering.dart';
 
 class Harmonoid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => Visuals(
-        accent: Configuration.instance.accent,
+        light: kPrimaryLightColor,
+        dark: kPrimaryDarkColor,
         themeMode: Configuration.instance.themeMode,
         context: context,
       ),
-      builder: (_, __) => Consumer<Visuals>(
-        builder: (_, visuals, __) => MultiProvider(
-          builder: (_, __) => MaterialApp(
+      builder: (context, _) => Consumer<Visuals>(
+        builder: (context, visuals, _) => MultiProvider(
+          builder: (context, _) => MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: visuals.theme,
             darkTheme: visuals.darkTheme,

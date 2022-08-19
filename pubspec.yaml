@@ -1,10 +1,10 @@
 name: harmonoid
-description: Elegant music app to play & manage music library.
+description: Plays & manages your music library. Looks beautiful & juicy.
 publish_to: "none"
-version: 0.2.8+5003
+version: 0.2.9+5003
 
 environment:
-  sdk: ">=2.14.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -12,6 +12,8 @@ dependencies:
 
   # Plugins maintained by github.com/alexmercerind or first-party to the Harmonoid.
 
+  media_library:
+    path: external/media_library
   libmpv:
     path: external/libmpv.dart
   system_media_transport_controls:
@@ -31,22 +33,20 @@ dependencies:
   dart_discord_rpc:
     git:
       url: https://github.com/alexmercerind/dart_discord_rpc.git
-      ref: harmonoid
-  flutter_media_metadata:
-    git:
-      url: https://github.com/alexmercerind/flutter_media_metadata.git
-      ref: d9fe63b5f0641b6be2af87097c6221e454b02c3e
+      ref: 48a15a750d9ee50c521a408c466bd681321a38e2
 
   # Third-party plugins.
 
+  ffi: ^2.0.1
+  win32: ^2.7.0
+  just_audio: ^0.9.28
+  audio_service: ^0.18.7
+  awesome_notifications: ^0.7.0-beta.5
+  external_path: ^1.0.1
   share_plus: ^2.1.4
   url_launcher: ^6.1.3
   permission_handler: ^6.1.1
   filepicker_windows: ^2.0.0
-  flutter_local_notifications: ^5.0.0
-  assets_audio_player:
-    git:
-      url: https://github.com/florent37/Flutter-AssetsAudioPlayer.git
   file_picker: ^3.0.0
   file_selector: ^0.8.2
   file_selector_linux:
@@ -71,7 +71,8 @@ dependencies:
   extended_image: ^6.0.2
   auto_size_text: ^3.0.0
   uuid: ^3.0.6
-  flutter_lyric: ^2.0.3
+  synchronized: ^3.0.0+2
+  flutter_speed_dial: ^6.0.0
 
   # Third-party forked plugins & packages to meet requirements.
 
@@ -82,7 +83,7 @@ dependencies:
   flutter_platform_alert:
     git:
       url: https://github.com/alexmercerind/flutter_platform_alert.git
-      ref: b223598a8b063e847e2dd8d80e18b4e0f70ad458
+      ref: b174a505c6c2c00bad973c2fc285e80d6a85cb7d
   miniplayer:
     git:
       url: https://github.com/alexmercerind/miniplayer.git
@@ -90,12 +91,12 @@ dependencies:
     git:
       url: https://github.com/alexmercerind/desktop.git
       path: desktop
-      ref: 88e9a3931c84ca821d1acad0289882f5510aafdb
+      ref: fa4e6c0ed4a4fa417bd3a27de4ef7ef52debfbda
   bitsdojo_window:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window
-      ref: e0f7c46e94a75aea957574148459879a83fa3bbb
+      ref: 1290c426397fcc1de9ca5f66871964ae0d16c8b1
   hotkey_manager:
     git:
       url: https://github.com/alexmercerind/hotkey_manager.git
@@ -107,23 +108,31 @@ dependencies:
     git:
       url: https://github.com/harmonoid/window_manager.git
       ref: main
+  flutter_lyric:
+    git:
+      url: https://github.com/alexmercerind/flutter_lyric.git
+      ref: master
 
 dependency_overrides:
+  libmpv:
+    path: external/libmpv.dart
+  safe_session_storage:
+    path: external/safe_session_storage
   bitsdojo_window_windows:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_windows
-      ref: e0f7c46e94a75aea957574148459879a83fa3bbb
+      ref: 1290c426397fcc1de9ca5f66871964ae0d16c8b1
   bitsdojo_window_linux:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_linux
-      ref: e0f7c46e94a75aea957574148459879a83fa3bbb
+      ref: 1290c426397fcc1de9ca5f66871964ae0d16c8b1
   bitsdojo_window_macos:
     git:
       url: https://github.com/alexmercerind/bitsdojo_window.git
       path: bitsdojo_window_macos
-      ref: e0f7c46e94a75aea957574148459879a83fa3bbb
+      ref: 1290c426397fcc1de9ca5f66871964ae0d16c8b1
   platform: ^3.1.0
 
 dev_dependencies:
@@ -164,7 +173,7 @@ flutter:
           weight: 900
 
 msix_config:
-  msix_version: 0.2.8.0
+  msix_version: 0.2.9.0
   display_name: Harmonoid
   identity_name: com.alexmercerind.harmonoid
   file_extension: ogg, ogx, aac, m4a, mp3, wma, wav, aiff, flac, opus

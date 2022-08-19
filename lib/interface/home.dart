@@ -6,14 +6,16 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
+import 'package:harmonoid/core/intent.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';
 import 'package:harmonoid/interface/now_playing_screen.dart';
 import 'package:harmonoid/interface/mini_now_playing_bar.dart';
@@ -22,12 +24,15 @@ import 'package:harmonoid/interface/collection/collection.dart';
 import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
+import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final FloatingSearchBarController floatingSearchBarController =
+    FloatingSearchBarController();
 
 class _NavigatorObserver extends NavigatorObserver {
   final VoidCallback onPushRoute;
@@ -53,8 +58,6 @@ class HomeState extends State<Home>
   final List<TabRoute> tabControllerRouteStack = <TabRoute>[
     TabRoute(isMobile ? 2 : 0, TabRouteSender.systemNavigationBackButton),
   ];
-  final FloatingSearchBarController floatingSearchBarController =
-      FloatingSearchBarController();
   final MobileNowPlayingController mobileNowPlayingController =
       MobileNowPlayingController();
 
@@ -76,6 +79,23 @@ class HomeState extends State<Home>
       }
     });
     tabControllerNotifier.addListener(onTabChange);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    debugPrint(state.toString());
+    // This section attempts to initialize the playback of the opened file
+    // through Android intents, if the app was already alive in the background.
+    // Otherwise, the [Intent.play] call from [CollectionScreen] is responsible.
+    if (state == AppLifecycleState.resumed) {
+      Intent.instance.play();
+    }
+    // https://stackoverflow.com/a/65101428/12825435
+    // Save the application state & remove any existing lyrics notifications present.
+    if (state == AppLifecycleState.paused) {
+      await Playback.instance.saveAppState();
+      await Lyrics.instance.dismissNotification();
+    }
   }
 
   @override
@@ -160,33 +180,7 @@ class HomeState extends State<Home>
         debugPrint(
             '${TabRouteSender.systemNavigationBackButton}: ${tabControllerRouteStack.last.index}');
       } else {
-        // Show application exit dialog.
-        showDialog(
-          context: context,
-          builder: (subContext) => AlertDialog(
-            backgroundColor: Theme.of(context).cardColor,
-            title: Text(
-              Language.instance.EXIT_TITLE,
-              style: Theme.of(subContext).textTheme.headline1,
-            ),
-            content: Text(
-              Language.instance.EXIT_SUBTITLE,
-              style: Theme.of(subContext).textTheme.headline3,
-            ),
-            actions: [
-              MaterialButton(
-                textColor: Theme.of(context).primaryColor,
-                onPressed: SystemNavigator.pop,
-                child: Text(Language.instance.YES),
-              ),
-              MaterialButton(
-                textColor: Theme.of(context).primaryColor,
-                onPressed: Navigator.of(subContext).pop,
-                child: Text(Language.instance.NO),
-              ),
-            ],
-          ),
-        );
+        SystemNavigator.pop();
       }
     }
     return Future.value(true);
@@ -331,7 +325,8 @@ class HomeState extends State<Home>
                       ),
                     ],
                   ),
-                  bottomNavigationBar: isMobile
+                  bottomNavigationBar: (isMobile &&
+                          MediaQuery.of(context).viewInsets.bottom < 180.0)
                       ? MobileBottomNavigationBar(
                           tabControllerNotifier: tabControllerNotifier,
                         )

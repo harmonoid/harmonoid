@@ -9,11 +9,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
-import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:ytm_client/ytm_client.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/configuration.dart';
@@ -78,23 +78,26 @@ class CollectionScreenState extends State<CollectionScreen>
     if (isMobile) {
       pageController.addListener(() {
         widget.floatingSearchBarController.show();
-        MobileNowPlayingController.instance.show();
       });
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!Collection.instance.collectionDirectories
-          .map((e) => e.existsSync_())
-          .reduce((value, element) => value = value ? element : false))
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            useRootNavigator: false,
-            builder: (context) => FoldersNotFoundDialog(),
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        if (!Collection.instance.collectionDirectories
+            .map((e) => e.existsSync_())
+            .reduce((value, element) => value = value ? element : false))
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                useRootNavigator: false,
+                builder: (context) => FoldersNotFoundDialog(),
+              );
+            },
           );
-        });
-      Intent.instance.play();
-    });
+        Intent.instance.play();
+      },
+    );
     HotKeyManager.instance.register(
       searchBarHotkey,
       keyDownHandler: (_) {
@@ -129,23 +132,6 @@ class CollectionScreenState extends State<CollectionScreen>
                     builder: (context, refresh, __) => Stack(
                       alignment: Alignment.bottomLeft,
                       children: <Widget>[
-                        if (Collection.instance.tracks.isNotEmpty &&
-                            Configuration.instance.backgroundArtwork)
-                          Positioned.fill(
-                            child: Opacity(
-                              opacity: 0.2,
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Image.memory(
-                                  visualAssets.collection,
-                                  height: 512.0,
-                                  width: 512.0,
-                                  filterQuality: FilterQuality.high,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                          ),
                         PageTransitionSwitcher(
                           child: [
                             AlbumTab(),
@@ -166,6 +152,8 @@ class CollectionScreenState extends State<CollectionScreen>
                         ),
                         if (!refresh.isCompleted)
                           Positioned(
+                            left: 0.0,
+                            bottom: 0.0,
                             child: Card(
                               clipBehavior: Clip.antiAlias,
                               margin: EdgeInsets.all(16.0),
@@ -246,8 +234,6 @@ class CollectionScreenState extends State<CollectionScreen>
                                 ),
                               ),
                             ),
-                            right: 0.0,
-                            top: 0.0,
                           ),
                       ],
                     ),
@@ -405,6 +391,12 @@ class CollectionScreenState extends State<CollectionScreen>
                                                 });
                                               node.requestFocus();
                                             },
+                                          ).copyWith(
+                                            contentPadding: EdgeInsets.only(
+                                              left: 10.0,
+                                              bottom: 10.0,
+                                              right: 10.0,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -412,22 +404,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                     SizedBox(
                                       width: 12.0,
                                     ),
-                                    TweenAnimationBuilder<double>(
-                                      tween: Tween<double>(
-                                        begin: 0.0,
-                                        end: index.value == 3 ? 0.0 : 1.0,
-                                      ),
-                                      duration: Duration(milliseconds: 200),
-                                      child: CollectionSortButton(
-                                        tab: index.value,
-                                      ),
-                                      builder: (context, value, child) =>
-                                          Opacity(
-                                        opacity: value,
-                                        child:
-                                            value == 0.0 ? Container() : child,
-                                      ),
-                                    ),
+                                    PlayFileOrURLButton(),
                                     CollectionMoreButton(),
                                     Tooltip(
                                       message: Language.instance.SETTING,
@@ -455,6 +432,10 @@ class CollectionScreenState extends State<CollectionScreen>
                                           child: Icon(
                                             Icons.settings,
                                             size: 20.0,
+                                            color: Theme.of(context)
+                                                .appBarTheme
+                                                .actionsIconTheme
+                                                ?.color,
                                           ),
                                         ),
                                       ),
@@ -488,8 +469,24 @@ class CollectionScreenState extends State<CollectionScreen>
             child: Consumer<CollectionRefresh>(
               builder: (context, refresh, _) => Scaffold(
                 resizeToAvoidBottomInset: false,
-                floatingActionButton: MiniNowPlayingBarRefreshCollectionButton(
-                  key: MobileNowPlayingController.instance.fabKey,
+                floatingActionButton: ValueListenableBuilder(
+                  valueListenable: index,
+                  builder: (context, value, child) => AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    reverseDuration: const Duration(milliseconds: 200),
+                    switchInCurve: Curves.easeInOut,
+                    switchOutCurve: Curves.easeInOut,
+                    transitionBuilder: (child, value) => FadeTransition(
+                      opacity: value,
+                      child: child,
+                    ),
+                    child: [0, 1, 2, 3].contains(index.value)
+                        ? MiniNowPlayingBarRefreshCollectionButton(
+                            key: MobileNowPlayingController.instance.fabKey,
+                            index: index,
+                          )
+                        : Container(),
+                  ),
                 ),
                 body: Stack(
                   fit: StackFit.expand,
@@ -502,9 +499,11 @@ class CollectionScreenState extends State<CollectionScreen>
                           : Language.instance.COLLECTION_INDEXING_HINT,
                       progress: refresh.isCompleted
                           ? null
-                          : refresh.total == 0
-                              ? 1.0
-                              : refresh.progress! / refresh.total,
+                          : refresh.progress == null
+                              ? true
+                              : refresh.total == 0
+                                  ? 1.0
+                                  : (refresh.progress ?? 0.0) / refresh.total,
                       transitionCurve: Curves.easeInOut,
                       width: MediaQuery.of(context).size.width - 2 * tileMargin,
                       height: kMobileSearchBarHeight,
@@ -534,15 +533,24 @@ class CollectionScreenState extends State<CollectionScreen>
                         FloatingSearchBarAction(
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.search, size: 24.0),
+                            child: Icon(
+                              Icons.search,
+                              size: 24.0,
+                              color: Theme.of(context)
+                                  .appBarTheme
+                                  .iconTheme
+                                  ?.color,
+                            ),
                           ),
                           showIfOpened: false,
                         ),
-                        FloatingSearchBarAction.back(),
+                        FloatingSearchBarAction.back(
+                          color: Theme.of(context).appBarTheme.iconTheme?.color,
+                        ),
                       ],
                       actions: [
                         FloatingSearchBarAction(
-                          showIfOpened: true,
+                          showIfOpened: false,
                           showIfClosed: true,
                           child: MobileSortByButton(
                             value: index,
@@ -550,10 +558,121 @@ class CollectionScreenState extends State<CollectionScreen>
                         ),
                         FloatingSearchBarAction(
                           showIfOpened: false,
-                          child: contextMenu(context),
+                          showIfClosed: true,
+                          child: CircularButton(
+                            icon: Icon(
+                              Icons.grid_on,
+                              size: 20.0,
+                              color: Theme.of(context)
+                                  .appBarTheme
+                                  .actionsIconTheme
+                                  ?.color,
+                            ),
+                            onPressed: () {
+                              final position = RelativeRect.fromRect(
+                                Offset(
+                                      MediaQuery.of(context).size.width -
+                                          tileMargin -
+                                          48.0,
+                                      MediaQuery.of(context).padding.top +
+                                          kMobileSearchBarHeight +
+                                          2 * tileMargin,
+                                    ) &
+                                    Size(160.0, 160.0),
+                                Rect.fromLTWH(
+                                  0,
+                                  0,
+                                  MediaQuery.of(context).size.width,
+                                  MediaQuery.of(context).size.height,
+                                ),
+                              );
+                              showMenu<int>(
+                                context: context,
+                                position: position,
+                                elevation: 4.0,
+                                items: [
+                                  CheckedPopupMenuItem(
+                                    padding: EdgeInsets.zero,
+                                    checked: Configuration
+                                        .instance.mobileDenseAlbumTabLayout,
+                                    value: 0,
+                                    child: Text(
+                                      Language
+                                          .instance.ENABLE_DENSE_ALBUMS_LAYOUT,
+                                    ),
+                                  ),
+                                  CheckedPopupMenuItem(
+                                    padding: EdgeInsets.zero,
+                                    checked: Configuration
+                                        .instance.mobileDenseArtistTabLayout,
+                                    value: 1,
+                                    child: Text(
+                                      Language
+                                          .instance.ENABLE_DENSE_ARTISTS_LAYOUT,
+                                    ),
+                                  ),
+                                  CheckedPopupMenuItem(
+                                    padding: EdgeInsets.zero,
+                                    checked: Configuration
+                                        .instance.mobileGridArtistTabLayout,
+                                    value: 2,
+                                    child: Text(
+                                      Language
+                                          .instance.ENABLE_GRID_ARTISTS_LAYOUT,
+                                    ),
+                                  ),
+                                ],
+                              ).then((value) {
+                                switch (value) {
+                                  case 0:
+                                    {
+                                      Configuration.instance
+                                          .save(
+                                            mobileDenseAlbumTabLayout:
+                                                !Configuration.instance
+                                                    .mobileDenseAlbumTabLayout,
+                                          )
+                                          .then((_) => setState(() {}));
+                                      break;
+                                    }
+                                  case 1:
+                                    {
+                                      Configuration.instance
+                                          .save(
+                                            mobileDenseArtistTabLayout:
+                                                !Configuration.instance
+                                                    .mobileDenseArtistTabLayout,
+                                            mobileGridArtistTabLayout: true,
+                                          )
+                                          .then((_) => setState(() {}));
+                                      break;
+                                    }
+                                  case 2:
+                                    {
+                                      Configuration.instance
+                                          .save(
+                                            mobileGridArtistTabLayout:
+                                                !Configuration.instance
+                                                    .mobileGridArtistTabLayout,
+                                          )
+                                          .then((_) => setState(() {}));
+                                      break;
+                                    }
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                        FloatingSearchBarAction(
+                          showIfOpened: false,
+                          child: MobileAppBarOverflowButton(),
                         ),
                         FloatingSearchBarAction.searchToClear(
                           showIfClosed: false,
+                          color: Theme.of(context)
+                              .appBarTheme
+                              .actionsIconTheme
+                              ?.color,
                         ),
                       ],
                       builder: (context, transition) {
@@ -562,53 +681,30 @@ class CollectionScreenState extends State<CollectionScreen>
                             : FloatingSearchBarWebSearchTab(query: query);
                       },
                       body: FloatingSearchBarScrollNotifier(
-                        child: Stack(
-                          children: [
-                            if (Collection.instance.tracks.isNotEmpty &&
-                                Configuration.instance.backgroundArtwork)
-                              Positioned.fill(
-                                child: Opacity(
-                                  opacity: 0.2,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Image.memory(
-                                      visualAssets.collection,
-                                      height: 512.0,
-                                      width: 512.0,
-                                      filterQuality: FilterQuality.high,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            NotificationListener<ScrollNotification>(
-                              onNotification:
-                                  (ScrollNotification notification) {
-                                if (notification.depth == 0 &&
-                                    notification is ScrollEndNotification &&
-                                    notification.metrics.axis ==
-                                        Axis.horizontal) {
-                                  index.value = currentIndex;
-                                  widget.tabControllerNotifier.value = TabRoute(
-                                      currentIndex, TabRouteSender.pageView);
-                                }
-                                return false;
-                              },
-                              child: PageView(
-                                controller: pageController,
-                                onPageChanged: (page) {
-                                  currentIndex = page;
-                                },
-                                children: [
-                                  PlaylistTab(),
-                                  TrackTab(),
-                                  AlbumTab(),
-                                  ArtistTab(),
-                                  WebTab(),
-                                ],
-                              ),
-                            ),
-                          ],
+                        child: NotificationListener<ScrollNotification>(
+                          onNotification: (ScrollNotification notification) {
+                            if (notification.depth == 0 &&
+                                notification is ScrollEndNotification &&
+                                notification.metrics.axis == Axis.horizontal) {
+                              index.value = currentIndex;
+                              widget.tabControllerNotifier.value = TabRoute(
+                                  currentIndex, TabRouteSender.pageView);
+                            }
+                            return false;
+                          },
+                          child: PageView(
+                            controller: pageController,
+                            onPageChanged: (page) {
+                              currentIndex = page;
+                            },
+                            children: [
+                              PlaylistTab(),
+                              TrackTab(),
+                              AlbumTab(),
+                              ArtistTab(),
+                              WebTab(),
+                            ],
+                          ),
                         ),
                       ),
                     ),

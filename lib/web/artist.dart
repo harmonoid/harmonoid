@@ -11,8 +11,6 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/web/web.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -24,12 +22,15 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/utils/theme.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
 import 'package:harmonoid/web/album.dart';
 import 'package:harmonoid/web/state/web.dart';
 import 'package:harmonoid/web/track.dart';
 import 'package:harmonoid/web/video.dart';
 import 'package:harmonoid/web/playlist.dart';
 import 'package:harmonoid/web/utils/widgets.dart';
+import 'package:harmonoid/web/web.dart';
 import 'package:harmonoid/interface/settings/settings.dart';
 
 class WebArtistLargeTile extends StatelessWidget {
@@ -277,16 +278,21 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
       });
     }
     if (isMobile) {
-      PaletteGenerator.fromImageProvider(ResizeImage.resizeIfNeeded(
-              100,
-              100,
-              ExtendedNetworkImageProvider(widget.artist.coverUrl,
-                  cache: true)))
-          .then((palette) {
+      PaletteGenerator.fromImageProvider(
+        ResizeImage.resizeIfNeeded(
+          100,
+          100,
+          ExtendedNetworkImageProvider(
+            widget.artist.thumbnails.values.first,
+            cache: true,
+          ),
+        ),
+      ).then((palette) {
         setState(() {
-          color = palette.colors.first;
-          secondary = palette.colors.last;
-          detailsVisible = true;
+          if (palette.colors != null) {
+            color = palette.colors!.first;
+            secondary = palette.colors!.last;
+          }
         });
       });
       Timer(Duration(milliseconds: 100), () {
@@ -306,7 +312,6 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
           });
         });
       });
-
       scrollController.addListener(() {
         if (scrollController.offset < 36.0) {
           if (!detailsVisible) {
@@ -336,6 +341,20 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
     final double height = isMobile
         ? width * kAlbumTileHeight / kAlbumTileWidth
         : kAlbumTileHeight;
+    const mobileSliverLabelHeight = 116.0;
+    double mobileSliverContentHeight = MediaQuery.of(context).size.width * 0.6;
+    double mobileSliverExpandedHeight = mobileSliverContentHeight -
+        MediaQuery.of(context).padding.top +
+        mobileSliverLabelHeight;
+    double mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    if (mobileSliverExpandedHeight >
+        MediaQuery.of(context).size.height * 3 / 5) {
+      mobileSliverExpandedHeight = MediaQuery.of(context).size.height * 3 / 5;
+      mobileSliverContentHeight = mobileSliverExpandedHeight -
+          mobileSliverLabelHeight +
+          MediaQuery.of(context).padding.top;
+      mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    }
     return isDesktop
         ? Scaffold(
             body: Stack(
@@ -458,8 +477,8 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                       children: [
                                         ElevatedButton.icon(
                                           onPressed: () {
-                                            Web.open(widget.artist.data.entries
-                                                .first.value.elements
+                                            Web.instance.open(widget.artist.data
+                                                .entries.first.value.elements
                                                 .cast<Track>());
                                           },
                                           style: ButtonStyle(
@@ -718,6 +737,10 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                               child: Icon(
                                 Icons.settings,
                                 size: 20.0,
+                                color: Theme.of(context)
+                                    .appBarTheme
+                                    .actionsIconTheme
+                                    ?.color,
                               ),
                             ),
                           ),
@@ -761,15 +784,15 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                           statusBarColor: Colors.transparent,
                           statusBarIconBrightness: Brightness.light,
                         ),
-                        expandedHeight: MediaQuery.of(context).size.width +
-                            128.0 -
-                            MediaQuery.of(context).padding.top,
+                        expandedHeight: mobileSliverExpandedHeight,
                         pinned: true,
                         leading: IconButton(
                           onPressed: Navigator.of(context).maybePop,
                           icon: Icon(
                             Icons.arrow_back,
-                            color: Colors.white,
+                            color: Theme.of(context)
+                                .extension<IconColors>()
+                                ?.appBarDarkIconColor,
                           ),
                           iconSize: 24.0,
                           splashRadius: 20.0,
@@ -790,12 +813,15 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                             },
                             icon: Icon(
                               Icons.search,
-                              color: Colors.white,
+                              color: Theme.of(context)
+                                  .extension<IconColors>()
+                                  ?.appBarActionDarkIconColor,
                             ),
                             iconSize: 24.0,
                             splashRadius: 20.0,
                           ),
-                          contextMenu(context, color: Colors.white),
+                          WebMobileAppBarOverflowButton(),
+                          const SizedBox(width: 8.0),
                         ],
                         forceElevated: true,
                         title: TweenAnimationBuilder<double>(
@@ -810,7 +836,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                               widget.artist.artistName.overflow,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline1
+                                  .headline6
                                   ?.copyWith(
                                     color: Colors.white,
                                   ),
@@ -825,33 +851,57 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                             FlexibleSpaceBar(
                               background: Column(
                                 children: [
-                                  ExtendedImage.network(
-                                    widget.artist.coverUrl,
-                                    fit: BoxFit.cover,
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.width,
-                                    enableLoadState: true,
-                                    enableMemoryCache: false,
-                                    cache: true,
-                                    loadStateChanged:
-                                        (ExtendedImageState state) {
-                                      return state.extendedImageLoadState ==
-                                              LoadState.completed
-                                          ? TweenAnimationBuilder(
-                                              tween: Tween<double>(
-                                                  begin: 0.0, end: 1.0),
-                                              duration: const Duration(
-                                                  milliseconds: 800),
-                                              child: state.completedWidget,
-                                              builder:
-                                                  (context, value, child) =>
-                                                      Opacity(
-                                                opacity: value as double,
-                                                child: state.completedWidget,
-                                              ),
-                                            )
-                                          : SizedBox.shrink();
-                                    },
+                                  Stack(
+                                    children: [
+                                      ExtendedImage.network(
+                                        widget.artist.coverUrl,
+                                        fit: BoxFit.cover,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: mobileSliverContentHeight,
+                                        enableLoadState: true,
+                                        enableMemoryCache: false,
+                                        cache: true,
+                                        loadStateChanged:
+                                            (ExtendedImageState state) {
+                                          return state.extendedImageLoadState ==
+                                                  LoadState.completed
+                                              ? TweenAnimationBuilder(
+                                                  tween: Tween<double>(
+                                                      begin: 0.0, end: 1.0),
+                                                  duration: const Duration(
+                                                      milliseconds: 800),
+                                                  child: state.completedWidget,
+                                                  builder:
+                                                      (context, value, child) =>
+                                                          Opacity(
+                                                    opacity: value as double,
+                                                    child:
+                                                        state.completedWidget,
+                                                  ),
+                                                )
+                                              : SizedBox.shrink();
+                                        },
+                                      ),
+                                      Positioned.fill(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Colors.black26,
+                                                Colors.transparent,
+                                              ],
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              stops: [
+                                                0.0,
+                                                1.0,
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   TweenAnimationBuilder<double>(
                                     tween: Tween<double>(
@@ -863,40 +913,68 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                       opacity: value,
                                       child: GestureDetector(
                                         onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => AlertDialog(
-                                              contentPadding:
-                                                  EdgeInsets.fromLTRB(
-                                                      20.0, 20.0, 20.0, 0.0),
-                                              content: Text(
-                                                widget.artist.description
-                                                    .split('From Wikipedia')
-                                                    .first
-                                                    .trim(),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline3,
-                                              ),
-                                              actions: [
-                                                MaterialButton(
-                                                  onPressed:
-                                                      Navigator.of(context).pop,
-                                                  child: Text(
-                                                    Language.instance.OK,
-                                                    style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
+                                          if (widget
+                                              .artist.description.isNotEmpty) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: Text(
+                                                    widget.artist.artistName),
+                                                contentPadding:
+                                                    EdgeInsets.only(top: 20.0),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    const Divider(
+                                                      height: 1.0,
+                                                      thickness: 1.0,
+                                                    ),
+                                                    ConstrainedBox(
+                                                      constraints:
+                                                          BoxConstraints(
+                                                        maxHeight: 360.0,
+                                                      ),
+                                                      child:
+                                                          SingleChildScrollView(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 24.0,
+                                                          vertical: 16.0,
+                                                        ),
+                                                        child: Text(
+                                                          widget.artist
+                                                              .description,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline3,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const Divider(
+                                                      height: 1.0,
+                                                      thickness: 1.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed:
+                                                        Navigator.of(context)
+                                                            .pop,
+                                                    child: Text(
+                                                      Language.instance.OK,
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
+                                                ],
+                                              ),
+                                            );
+                                          }
                                         },
                                         child: Container(
                                           color: Colors.grey.shade900,
-                                          height: 128.0,
+                                          height: mobileSliverLabelHeight,
                                           width:
                                               MediaQuery.of(context).size.width,
                                           padding: EdgeInsets.symmetric(
@@ -913,7 +991,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                                     .artist.artistName.overflow,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline1
+                                                    .headline6
                                                     ?.copyWith(
                                                       color: Colors.white,
                                                       fontSize: 24.0,
@@ -958,15 +1036,15 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width +
-                                  MediaQuery.of(context).padding.top -
-                                  64.0,
+                              top: mobileSliverFABYPos,
                               right: 16.0 + 64.0,
                               child: TweenAnimationBuilder(
                                 curve: Curves.easeOut,
                                 tween: Tween<double>(
                                     begin: 0.0,
-                                    end: detailsVisible ? 1.0 : 0.0),
+                                    end: detailsVisible && secondary != null
+                                        ? 1.0
+                                        : 0.0),
                                 duration: Duration(milliseconds: 200),
                                 builder: (context, value, _) => Transform.scale(
                                   scale: value as double,
@@ -993,15 +1071,15 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width +
-                                  MediaQuery.of(context).padding.top -
-                                  64.0,
+                              top: mobileSliverFABYPos,
                               right: 16.0,
                               child: TweenAnimationBuilder(
                                 curve: Curves.easeOut,
                                 tween: Tween<double>(
                                     begin: 0.0,
-                                    end: detailsVisible ? 1.0 : 0.0),
+                                    end: detailsVisible && secondary != null
+                                        ? 1.0
+                                        : 0.0),
                                 duration: Duration(milliseconds: 200),
                                 builder: (context, value, _) => Transform.scale(
                                   scale: value as double,
@@ -1019,8 +1097,8 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                           : 0],
                                       child: Icon(Icons.shuffle),
                                       onPressed: () {
-                                        Web.open(widget.artist.data.entries
-                                            .first.value.elements
+                                        Web.instance.open(widget.artist.data
+                                            .entries.first.value.elements
                                             .cast<Track>());
                                       },
                                     ),
@@ -1085,14 +1163,15 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                     height: height + 8.0,
                                     child: HorizontalList(
                                       padding: EdgeInsets.only(
-                                        left: tileMargin,
+                                        left: tileMargin * 2.0,
                                         bottom: 8.0,
                                       ),
                                       children: e.value.elements
                                           .map(
                                             (f) => Padding(
                                               padding: EdgeInsets.only(
-                                                  right: tileMargin),
+                                                right: tileMargin * 2.0,
+                                              ),
                                               child: WebAlbumLargeTile(
                                                 album: f as Album,
                                                 width: width,
@@ -1109,14 +1188,15 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                     height: height * 0.8 + 8.0,
                                     child: HorizontalList(
                                       padding: EdgeInsets.only(
-                                        left: tileMargin,
+                                        left: tileMargin * 2.0,
                                         bottom: 8.0,
                                       ),
                                       children: e.value.elements
                                           .map(
                                             (f) => Padding(
                                               padding: EdgeInsets.only(
-                                                  right: tileMargin),
+                                                right: tileMargin * 2.0,
+                                              ),
                                               child: WebVideoLargeTile(
                                                 track: Track.fromWebVideo(
                                                     f.toJson()),
@@ -1134,14 +1214,15 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                     height: height + 8.0,
                                     child: HorizontalList(
                                       padding: EdgeInsets.only(
-                                        left: tileMargin,
+                                        left: tileMargin * 2.0,
                                         bottom: 8.0,
                                       ),
                                       children: e.value.elements
                                           .map(
                                             (f) => Padding(
                                               padding: EdgeInsets.only(
-                                                  right: tileMargin),
+                                                right: tileMargin * 2.0,
+                                              ),
                                               child: WebPlaylistLargeTile(
                                                 playlist: f as Playlist,
                                                 width: width,
@@ -1158,14 +1239,15 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                     height: width + 28.0 + 8.0,
                                     child: HorizontalList(
                                       padding: EdgeInsets.only(
-                                        left: tileMargin,
+                                        left: tileMargin * 2.0,
                                         bottom: 8.0,
                                       ),
                                       children: e.value.elements
                                           .map(
                                             (f) => Padding(
                                               padding: EdgeInsets.only(
-                                                  right: tileMargin),
+                                                right: tileMargin * 2.0,
+                                              ),
                                               child: WebArtistLargeTile(
                                                 artist: f as Artist,
                                                 width: width,

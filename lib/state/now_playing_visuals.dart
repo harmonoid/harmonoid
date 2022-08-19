@@ -6,7 +6,6 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
 
@@ -52,10 +51,13 @@ class NowPlayingVisuals {
   }
 
   /// Adds a new user provided visual to the list of user visuals & saves it to app's cache [Directory].
-  Future<void> add(Uint8List data) async {
-    final file = File(join(instance.directory.path, Uuid().v4()));
-    await file.writeAsBytes(data);
-    instance.user.add(file.path);
+  Future<void> add(File file) async {
+    final path = join(
+      instance.directory.path,
+      Uuid().v4(),
+    );
+    await file.copy_(path);
+    instance.user.add(path);
   }
 
   /// Removes a previously added visual & deletes it from app's cache [Directory].
@@ -71,8 +73,13 @@ const kPreloadedNowPlayingVisualsCount = 9;
 
 /// [List] of image file extensions to filter the [File]s correctly.
 const kSupportedImageFormats = [
-  'GIF',
   'JPG',
   'JPEG',
   'PNG',
+  'WEBP',
+  'GIF',
+  'BMP',
+  'TIF',
+  'TIFF',
+  'TGA',
 ];

@@ -9,13 +9,14 @@
 import 'dart:math';
 import 'dart:ui';
 import 'dart:async';
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:provider/provider.dart';
+import 'package:media_library/media_library.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:animations/animations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -23,11 +24,12 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
-import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/constants/language.dart';
+import 'package:harmonoid/utils/palette_generator.dart';
+import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
+import 'package:harmonoid/constants/language.dart';
 
 class AlbumTab extends StatelessWidget {
   final controller = ScrollController();
@@ -36,35 +38,39 @@ class AlbumTab extends StatelessWidget {
   }) : super(key: key);
 
   Widget build(BuildContext context) {
+    // Is dense or not ?
+    final baseWidth = (Configuration.instance.mobileDenseAlbumTabLayout
+        ? kDenseAlbumTileWidth
+        : kAlbumTileWidth);
+    final baseHeight = (Configuration.instance.mobileDenseAlbumTabLayout
+        ? kDenseAlbumTileHeight
+        : kAlbumTileHeight);
     final elementsPerRow = (MediaQuery.of(context).size.width - tileMargin) ~/
-        (kAlbumTileWidth + tileMargin);
+        (baseWidth + tileMargin);
     final double width = isMobile
         ? (MediaQuery.of(context).size.width -
                 (elementsPerRow + 1) * tileMargin) /
             elementsPerRow
-        : kAlbumTileWidth;
-    final double height = isMobile
-        ? width * kAlbumTileHeight / kAlbumTileWidth
-        : kAlbumTileHeight;
+        : baseWidth;
+    final double height =
+        isMobile ? width * baseHeight / baseWidth : baseHeight;
 
     return Consumer<Collection>(
       builder: (context, collection, _) {
-        if (collection.collectionSortType == CollectionSort.artist && isDesktop)
+        if (collection.albumsSort == AlbumsSort.artist && isDesktop)
           return DesktopAlbumArtistTab();
         final data = tileGridListWidgetsWithScrollbarSupport(
           context: context,
           tileHeight: height,
           tileWidth: width,
           elementsPerRow: elementsPerRow,
-          subHeader: null,
-          leadingSubHeader: null,
-          leadingWidget: null,
           widgetCount: Collection.instance.albums.length,
           builder: (BuildContext context, int index) => AlbumTile(
             height: height,
             width: width,
             album: Collection.instance.albums[index],
             key: ValueKey(Collection.instance.albums[index]),
+            dense: Configuration.instance.mobileDenseAlbumTabLayout,
           ),
         );
         return isDesktop
@@ -105,22 +111,22 @@ class AlbumTab extends StatelessWidget {
                             data.data.length - 1,
                           )]
                               .first as Album;
-                          switch (Collection.instance.collectionSortType) {
-                            case CollectionSort.aToZ:
+                          switch (Collection.instance.albumsSort) {
+                            case AlbumsSort.aToZ:
                               {
                                 return Text(
                                   album.albumName[0].toUpperCase(),
                                   style: Theme.of(context).textTheme.headline1,
                                 );
                               }
-                            case CollectionSort.dateAdded:
+                            case AlbumsSort.dateAdded:
                               {
                                 return Text(
                                   '${album.timeAdded.label}',
                                   style: Theme.of(context).textTheme.headline4,
                                 );
                               }
-                            case CollectionSort.year:
+                            case AlbumsSort.year:
                               {
                                 return Text(
                                   album.year,
@@ -186,7 +192,7 @@ class DesktopAlbumArtistTab extends StatelessWidget {
       double last = -1 * (tileMargin + 12.0);
       // Grid generated for each iteration of album artist.
       List<Widget> widgets = [];
-      if (collection.collectionOrderType == CollectionOrder.ascending) {
+      if (collection.albumsOrderType == OrderType.ascending) {
         for (final key in collection.albumArtists.keys) {
           offsets[key] =
               36.0 + (kAlbumTileHeight + tileMargin) * widgets.length + last;
@@ -252,7 +258,7 @@ class DesktopAlbumArtistTab extends StatelessWidget {
         itemExtents.addAll(List.generate(
             widgets.length, (_) => (kAlbumTileHeight + tileMargin)));
       }
-      if (collection.collectionOrderType == CollectionOrder.descending) {
+      if (collection.albumsOrderType == OrderType.descending) {
         for (final key in collection.albumArtists.keys.toList().reversed) {
           offsets[key] =
               36.0 + (kAlbumTileHeight + tileMargin) * widgets.length + last;
@@ -331,8 +337,7 @@ class DesktopAlbumArtistTab extends StatelessWidget {
                 child: InkWell(
                   onTap: () {
                     scrollController.animateTo(
-                      offsets[collection.collectionOrderType ==
-                              CollectionOrder.ascending
+                      offsets[collection.albumsOrderType == OrderType.ascending
                           ? collection.albumArtists.keys.elementAt(i)
                           : collection.albumArtists.keys.toList().elementAt(
                               collection.albumArtists.keys.length - i - 1)]!,
@@ -349,8 +354,7 @@ class DesktopAlbumArtistTab extends StatelessWidget {
                       right: 8.0,
                     ),
                     child: Text(
-                      collection.collectionOrderType ==
-                              CollectionOrder.ascending
+                      collection.albumsOrderType == OrderType.ascending
                           ? collection.albumArtists.keys
                               .elementAt(i)
                               .name
@@ -393,12 +397,14 @@ class AlbumTile extends StatelessWidget {
   final double height;
   final double width;
   final Album album;
+  final bool dense;
 
   const AlbumTile({
     Key? key,
     required this.album,
     required this.height,
     required this.width,
+    this.dense = false,
   }) : super(key: key);
 
   Widget build(BuildContext context) {
@@ -474,23 +480,30 @@ class AlbumTile extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 2),
-                              child: Text(
-                                '${album.albumArtistName} • ${album.year}',
-                                style: isDesktop
-                                    ? Theme.of(context)
-                                        .textTheme
-                                        .headline3
-                                        ?.copyWith(
-                                          fontSize: 12.0,
-                                        )
-                                    : Theme.of(context).textTheme.headline3,
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
+                            if (!Configuration
+                                .instance.mobileDenseAlbumTabLayout)
+                              Padding(
+                                padding: EdgeInsets.only(top: 2),
+                                child: Text(
+                                  [
+                                    if (!['', kUnknownArtist]
+                                        .contains(album.albumArtistName))
+                                      album.albumArtistName,
+                                    if (!['', kUnknownYear]
+                                        .contains(album.year))
+                                      album.year,
+                                  ].join(' • '),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline3
+                                      ?.copyWith(
+                                        fontSize: 12.0,
+                                      ),
+                                  maxLines: 1,
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -512,7 +525,6 @@ class AlbumTile extends StatelessWidget {
                   builder: (subContext) => AlertDialog(
                     title: Text(
                       Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-                      style: Theme.of(subContext).textTheme.headline1,
                     ),
                     content: Text(
                       Language.instance.COLLECTION_ALBUM_DELETE_DIALOG_BODY
@@ -523,8 +535,7 @@ class AlbumTile extends StatelessWidget {
                       style: Theme.of(subContext).textTheme.headline3,
                     ),
                     actions: [
-                      MaterialButton(
-                        textColor: Theme.of(context).primaryColor,
+                      TextButton(
                         onPressed: () async {
                           await Collection.instance.delete(album);
                           Navigator.of(subContext).pop();
@@ -532,8 +543,7 @@ class AlbumTile extends StatelessWidget {
                         },
                         child: Text(Language.instance.YES),
                       ),
-                      MaterialButton(
-                        textColor: Theme.of(context).primaryColor,
+                      TextButton(
                         onPressed: Navigator.of(subContext).pop,
                         child: Text(Language.instance.NO),
                       ),
@@ -542,12 +552,18 @@ class AlbumTile extends StatelessWidget {
                 );
               },
               onTap: () async {
-                if (palette == null) {
-                  final result = await PaletteGenerator.fromImageProvider(
-                      getAlbumArt(album, small: true));
-                  palette = result.colors;
+                try {
+                  if (palette == null) {
+                    final result = await PaletteGenerator.fromImageProvider(
+                        getAlbumArt(album, small: true));
+                    palette = result.colors;
+                  }
+                  await precacheImage(getAlbumArt(album), context);
+                  MobileNowPlayingController.instance.hide();
+                } catch (exception, stacktrace) {
+                  debugPrint(exception.toString());
+                  debugPrint(stacktrace.toString());
                 }
-                await precacheImage(getAlbumArt(album), context);
                 open();
               },
               child: Container(
@@ -556,7 +572,7 @@ class AlbumTile extends StatelessWidget {
                 child: Column(
                   children: [
                     Ink.image(
-                      image: getAlbumArt(album, small: true),
+                      image: getAlbumArt(album),
                       fit: BoxFit.cover,
                       height: width,
                       width: width,
@@ -564,7 +580,7 @@ class AlbumTile extends StatelessWidget {
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 8.0,
+                          horizontal: dense ? 8.0 : 12.0,
                         ),
                         width: width,
                         child: Column(
@@ -574,28 +590,35 @@ class AlbumTile extends StatelessWidget {
                           children: [
                             Text(
                               album.albumName.overflow,
-                              style: Theme.of(context).textTheme.headline2,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline2
+                                  ?.copyWith(
+                                    fontSize: dense ? 14.0 : 18.0,
+                                    fontWeight: dense ? null : FontWeight.w700,
+                                  ),
                               textAlign: TextAlign.left,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 2),
-                              child: Text(
-                                '${album.albumArtistName} • ${album.year}',
-                                style: isDesktop
-                                    ? Theme.of(context)
-                                        .textTheme
-                                        .headline3
-                                        ?.copyWith(
-                                          fontSize: 12.0,
-                                        )
-                                    : Theme.of(context).textTheme.headline3,
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
+                            if (!dense)
+                              Padding(
+                                padding: EdgeInsets.only(top: 2),
+                                child: Text(
+                                  [
+                                    if (!['', kUnknownArtist]
+                                        .contains(album.albumArtistName))
+                                      album.albumArtistName,
+                                    if (!['', kUnknownYear]
+                                        .contains(album.year))
+                                      album.year,
+                                  ].join(' • '),
+                                  style: Theme.of(context).textTheme.headline3,
+                                  maxLines: 1,
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -646,8 +669,10 @@ class AlbumScreenState extends State<AlbumScreen>
                     getAlbumArt(widget.album, small: true))
                 .then((palette) {
               setState(() {
-                color = palette.colors.first;
-                secondary = palette.colors.last;
+                if (palette.colors != null) {
+                  color = palette.colors!.first;
+                  secondary = palette.colors!.last;
+                }
                 detailsVisible = true;
               });
             });
@@ -661,13 +686,12 @@ class AlbumScreenState extends State<AlbumScreen>
     }
     if (isMobile) {
       Timer(Duration(milliseconds: 100), () {
-        this
-            .controller
+        controller
             .animateTo(
-              0.0,
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            )
+          0.0,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        )
             .then((_) {
           Timer(Duration(milliseconds: 50), () {
             setState(() {
@@ -699,6 +723,20 @@ class AlbumScreenState extends State<AlbumScreen>
 
   @override
   Widget build(BuildContext context) {
+    const mobileSliverLabelHeight = 128.0;
+    double mobileSliverContentHeight = MediaQuery.of(context).size.width;
+    double mobileSliverExpandedHeight = mobileSliverContentHeight -
+        MediaQuery.of(context).padding.top +
+        mobileSliverLabelHeight;
+    double mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    if (mobileSliverExpandedHeight >
+        MediaQuery.of(context).size.height * 3 / 5) {
+      mobileSliverExpandedHeight = MediaQuery.of(context).size.height * 3 / 5;
+      mobileSliverContentHeight = mobileSliverExpandedHeight -
+          mobileSliverLabelHeight +
+          MediaQuery.of(context).padding.top;
+      mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    }
     return Consumer<Collection>(
       builder: (context, value, child) {
         final tracks = widget.album.tracks.toList();
@@ -1312,21 +1350,40 @@ class AlbumScreenState extends State<AlbumScreen>
                           SliverAppBar(
                             systemOverlayStyle: SystemUiOverlayStyle(
                               statusBarColor: Colors.transparent,
-                              statusBarIconBrightness:
-                                  (color?.computeLuminance() ?? 0.0) < 0.5
+                              statusBarIconBrightness: detailsVisible
+                                  ? Brightness.light
+                                  : (color?.computeLuminance() ??
+                                              (Theme.of(context).brightness ==
+                                                      Brightness.dark
+                                                  ? 0.0
+                                                  : 1.0)) <
+                                          0.5
                                       ? Brightness.light
                                       : Brightness.dark,
                             ),
-                            expandedHeight: MediaQuery.of(context).size.width +
-                                136.0 -
-                                MediaQuery.of(context).padding.top,
+                            expandedHeight: mobileSliverExpandedHeight,
                             pinned: true,
                             leading: IconButton(
                               onPressed: Navigator.of(context).maybePop,
                               icon: Icon(
                                 Icons.arrow_back,
-                                color: [Color(0xFF212121), Colors.white][
-                                    (color?.computeLuminance() ?? 0.0) > 0.5
+                                color: detailsVisible
+                                    ? Theme.of(context)
+                                        .extension<IconColors>()
+                                        ?.appBarDarkIconColor
+                                    : [
+                                        Theme.of(context)
+                                            .extension<IconColors>()
+                                            ?.appBarLightIconColor,
+                                        Theme.of(context)
+                                            .extension<IconColors>()
+                                            ?.appBarDarkIconColor,
+                                      ][(color?.computeLuminance() ??
+                                                (Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? 0.0
+                                                    : 1.0)) >
+                                            0.5
                                         ? 0
                                         : 1],
                               ),
@@ -1351,9 +1408,6 @@ class AlbumScreenState extends State<AlbumScreen>
                                       title: Text(
                                         Language.instance
                                             .COLLECTION_ALBUM_DELETE_DIALOG_HEADER,
-                                        style: Theme.of(subContext)
-                                            .textTheme
-                                            .headline1,
                                       ),
                                       content: Text(
                                         Language.instance
@@ -1367,19 +1421,16 @@ class AlbumScreenState extends State<AlbumScreen>
                                             .headline3,
                                       ),
                                       actions: [
-                                        MaterialButton(
-                                          textColor:
-                                              Theme.of(context).primaryColor,
+                                        TextButton(
                                           onPressed: () async {
                                             await Collection.instance
                                                 .delete(widget.album);
-                                            Navigator.of(subContext).pop();
+                                            Navigator.of(subContext).maybePop();
+                                            Navigator.of(subContext).maybePop();
                                           },
                                           child: Text(Language.instance.YES),
                                         ),
-                                        MaterialButton(
-                                          textColor:
-                                              Theme.of(context).primaryColor,
+                                        TextButton(
                                           onPressed:
                                               Navigator.of(subContext).pop,
                                           child: Text(Language.instance.NO),
@@ -1390,14 +1441,31 @@ class AlbumScreenState extends State<AlbumScreen>
                                 },
                                 icon: Icon(
                                   Icons.delete,
-                                  color: [Color(0xFF212121), Colors.white][
-                                      (color?.computeLuminance() ?? 0.0) > 0.5
+                                  color: detailsVisible
+                                      ? Theme.of(context)
+                                          .extension<IconColors>()
+                                          ?.appBarActionDarkIconColor
+                                      : [
+                                          Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionLightIconColor,
+                                          Theme.of(context)
+                                              .extension<IconColors>()
+                                              ?.appBarActionDarkIconColor,
+                                        ][(color?.computeLuminance() ??
+                                                  (Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? 0.0
+                                                      : 1.0)) >
+                                              0.5
                                           ? 0
                                           : 1],
                                 ),
                                 iconSize: 24.0,
                                 splashRadius: 20.0,
                               ),
+                              const SizedBox(width: 8.0),
                             ],
                             title: TweenAnimationBuilder<double>(
                               tween: Tween<double>(
@@ -1411,14 +1479,21 @@ class AlbumScreenState extends State<AlbumScreen>
                                   widget.album.albumName.overflow,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline1
+                                      .headline6
                                       ?.copyWith(
-                                          color: [
-                                        Color(0xFF212121),
-                                        Colors.white
-                                      ][(color?.computeLuminance() ?? 0.0) > 0.5
-                                              ? 0
-                                              : 1]),
+                                        color: [
+                                          Color(0xFF212121),
+                                          Colors.white,
+                                        ][(color?.computeLuminance() ??
+                                                    (Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? 0.0
+                                                        : 1.0)) >
+                                                0.5
+                                            ? 0
+                                            : 1],
+                                      ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -1430,13 +1505,35 @@ class AlbumScreenState extends State<AlbumScreen>
                                 FlexibleSpaceBar(
                                   background: Column(
                                     children: [
-                                      ExtendedImage(
-                                        image: getAlbumArt(widget.album),
-                                        fit: BoxFit.cover,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height:
-                                            MediaQuery.of(context).size.width,
+                                      Stack(
+                                        children: [
+                                          ExtendedImage(
+                                            image: getAlbumArt(widget.album),
+                                            fit: BoxFit.cover,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: mobileSliverContentHeight,
+                                          ),
+                                          Positioned.fill(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.black26,
+                                                    Colors.transparent,
+                                                  ],
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter,
+                                                  stops: [
+                                                    0.0,
+                                                    0.5,
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       TweenAnimationBuilder<double>(
                                         tween: Tween<double>(
@@ -1448,7 +1545,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                           opacity: value,
                                           child: Container(
                                             color: color,
-                                            height: 136.0,
+                                            height: mobileSliverLabelHeight,
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
@@ -1465,16 +1562,19 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       .album.albumName.overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline1
+                                                      .headline6
                                                       ?.copyWith(
                                                         color: [
+                                                          Color(0xFF212121),
                                                           Colors.white,
-                                                          Color(0xFF212121)
                                                         ][(color?.computeLuminance() ??
-                                                                    0.0) >
+                                                                    (Theme.of(context).brightness ==
+                                                                            Brightness.dark
+                                                                        ? 0.0
+                                                                        : 1.0)) >
                                                                 0.5
-                                                            ? 1
-                                                            : 0],
+                                                            ? 0
+                                                            : 1],
                                                         fontSize: 24.0,
                                                       ),
                                                   maxLines: 1,
@@ -1487,16 +1587,19 @@ class AlbumScreenState extends State<AlbumScreen>
                                                       .overflow,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline1
+                                                      .headline2
                                                       ?.copyWith(
                                                         color: [
+                                                          Color(0xFF363636),
                                                           Color(0xFFD9D9D9),
-                                                          Color(0xFF363636)
                                                         ][(color?.computeLuminance() ??
-                                                                    0.0) >
+                                                                    (Theme.of(context).brightness ==
+                                                                            Brightness.dark
+                                                                        ? 0.0
+                                                                        : 1.0)) >
                                                                 0.5
-                                                            ? 1
-                                                            : 0],
+                                                            ? 0
+                                                            : 1],
                                                         fontSize: 16.0,
                                                       ),
                                                   maxLines: 1,
@@ -1508,16 +1611,19 @@ class AlbumScreenState extends State<AlbumScreen>
                                                   '${widget.album.year}',
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline1
+                                                      .headline2
                                                       ?.copyWith(
                                                         color: [
+                                                          Color(0xFF363636),
                                                           Color(0xFFD9D9D9),
-                                                          Color(0xFF363636)
                                                         ][(color?.computeLuminance() ??
-                                                                    0.0) >
+                                                                    (Theme.of(context).brightness ==
+                                                                            Brightness.dark
+                                                                        ? 0.0
+                                                                        : 1.0)) >
                                                                 0.5
-                                                            ? 1
-                                                            : 0],
+                                                            ? 0
+                                                            : 1],
                                                         fontSize: 16.0,
                                                       ),
                                                   maxLines: 1,
@@ -1533,9 +1639,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                   ),
                                 ),
                                 Positioned(
-                                  top: MediaQuery.of(context).size.width +
-                                      MediaQuery.of(context).padding.top -
-                                      64.0,
+                                  top: mobileSliverFABYPos,
                                   right: 16.0 + 64.0,
                                   child: TweenAnimationBuilder(
                                     curve: Curves.easeOut,
@@ -1576,9 +1680,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                   ),
                                 ),
                                 Positioned(
-                                  top: MediaQuery.of(context).size.width +
-                                      MediaQuery.of(context).padding.top -
-                                      64.0,
+                                  top: mobileSliverFABYPos,
                                   right: 16.0,
                                   child: TweenAnimationBuilder(
                                     curve: Curves.easeOut,
@@ -1639,6 +1741,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                   onLongPress: () async {
                                     var result;
                                     await showModalBottomSheet(
+                                      isScrollControlled: true,
                                       context: context,
                                       builder: (context) => Container(
                                         child: Column(
@@ -1660,7 +1763,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                       tracks[i],
                                       result,
                                       recursivelyPopNavigatorOnDeleteIf: () =>
-                                          tracks.isEmpty,
+                                          widget.album.tracks.isEmpty,
                                     );
                                   },
                                   child: Column(
@@ -1739,6 +1842,7 @@ class AlbumScreenState extends State<AlbumScreen>
                                                 onPressed: () async {
                                                   var result;
                                                   await showModalBottomSheet(
+                                                    isScrollControlled: true,
                                                     context: context,
                                                     builder: (context) =>
                                                         Container(

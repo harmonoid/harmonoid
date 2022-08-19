@@ -25,22 +25,21 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
     return SettingsTile(
       title: Language.instance.NOW_PLAYING_SCREEN,
       subtitle: Language.instance.NOW_PLAYING_SCREEN_SETTING_SUBTITLE,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
-        child: Container(
-          width: isDesktop ? 480.0 : MediaQuery.of(context).size.width - 32.0,
-          alignment: Alignment.center,
-          padding: isDesktop ? EdgeInsets.only(top: 2.0) : null,
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Container(
+        width: isDesktop ? 540.0 : MediaQuery.of(context).size.width - 32.0,
+        alignment: Alignment.center,
+        padding: isDesktop ? EdgeInsets.only(top: 2.0) : null,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                MaterialButton(
-                  padding: EdgeInsets.zero,
+                const SizedBox(width: 8.0),
+                TextButton(
                   onPressed: () async {
                     await Configuration.instance.save(
                       highlightedLyricsSize: 24.0,
-                      unhighlightedLyricsSize: 16.0,
+                      unhighlightedLyricsSize: 14.0,
                     );
                     setState(() {});
                   },
@@ -51,47 +50,58 @@ class NowPlayingScreenState extends State<NowPlayingScreenSetting> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 8.0),
-                Text(
-                  '${Language.instance.HIGHLIGHTED_LYRICS_SIZE}: ${Configuration.instance.highlightedLyricsSize.toStringAsFixed(1)}',
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-                const SizedBox(height: 8.0),
-                ScrollableSlider(
-                  min: 4.0,
-                  max: 96.0,
-                  value: Configuration.instance.highlightedLyricsSize,
-                  onScrolledUp: () async {},
-                  onScrolledDown: () async {},
-                  onChanged: (v) async {
-                    await Configuration.instance.save(
-                      highlightedLyricsSize: v,
-                    );
-                    setState(() {});
-                  },
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  '${Language.instance.UNHIGHLIGHTED_LYRICS_SIZE}: ${Configuration.instance.unhighlightedLyricsSize.toStringAsFixed(1)}',
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-                const SizedBox(height: 8.0),
-                ScrollableSlider(
-                  min: 4.0,
-                  max: 96.0,
-                  value: Configuration.instance.unhighlightedLyricsSize,
-                  onScrolledUp: () async {},
-                  onScrolledDown: () async {},
-                  onChanged: (v) async {
-                    await Configuration.instance.save(
-                      unhighlightedLyricsSize: v,
-                    );
-                    setState(() {});
-                  },
-                ),
               ],
             ),
-          ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 2.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8.0),
+                  Text(
+                    '${Language.instance.HIGHLIGHTED_LYRICS_SIZE}: ${Configuration.instance.highlightedLyricsSize.toStringAsFixed(1)}',
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  const SizedBox(height: 8.0),
+                  ScrollableSlider(
+                    min: 4.0,
+                    max: 96.0,
+                    value: Configuration.instance.highlightedLyricsSize,
+                    onScrolledUp: () async {},
+                    onScrolledDown: () async {},
+                    onChanged: (v) async {
+                      await Configuration.instance.save(
+                        highlightedLyricsSize: v,
+                      );
+                      setState(() {});
+                    },
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    '${Language.instance.UNHIGHLIGHTED_LYRICS_SIZE}: ${Configuration.instance.unhighlightedLyricsSize.toStringAsFixed(1)}',
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  const SizedBox(height: 8.0),
+                  ScrollableSlider(
+                    min: 4.0,
+                    max: 96.0,
+                    value: Configuration.instance.unhighlightedLyricsSize,
+                    onScrolledUp: () async {},
+                    onScrolledDown: () async {},
+                    onChanged: (v) async {
+                      await Configuration.instance.save(
+                        unhighlightedLyricsSize: v,
+                      );
+                      setState(() {});
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

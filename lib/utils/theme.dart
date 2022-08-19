@@ -6,6 +6,8 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 
+// DO NOT IMPORT ANYTHING FROM `package:harmonoid` IN THIS FILE.
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -88,7 +90,7 @@ ThemeData createTheme({
       ),
       headline3: TextStyle(
         fontWeight: FontWeight.normal,
-        color: isLight ? Colors.black54 : Colors.white.withOpacity(0.54),
+        color: isLight ? Colors.black54 : Colors.white70,
         fontSize: 14.0,
       ),
       headline4: TextStyle(
@@ -98,18 +100,15 @@ ThemeData createTheme({
       ),
       headline5: TextStyle(
         fontWeight: FontWeight.normal,
-        color: isLight ? Colors.black54 : Colors.white.withOpacity(0.54),
+        color: isLight ? Colors.black54 : Colors.white70,
         fontSize: 14.0,
-      ),
-      headline6: TextStyle(
-        fontWeight: FontWeight.normal,
-        color: isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
-        fontSize: 18.0,
       ),
     );
   }
   return ThemeData(
-    /// Explicitly using [ChipThemeData] on Linux since it seems to be falling back to Ubuntu's font family.
+    // ignore: deprecated_member_use
+    androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
+    // Explicitly using [ChipThemeData] on Linux since it seems to be falling back to Ubuntu's font family.
     chipTheme: Platform.isLinux
         ? ChipThemeData(
             backgroundColor: color,
@@ -132,8 +131,38 @@ ThemeData createTheme({
             brightness: Brightness.dark,
           )
         : null,
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all<Color>(color),
+        overlayColor: MaterialStateProperty.all(
+          color.withOpacity(0.05),
+        ),
+        textStyle: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+            ? MaterialStateProperty.all(
+                TextStyle(
+                  letterSpacing: 0.8,
+                  fontWeight: FontWeight.w600,
+                ),
+              )
+            : null,
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(color),
+        textStyle: (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+            ? MaterialStateProperty.all(
+                TextStyle(
+                  letterSpacing: 0.8,
+                  fontWeight: FontWeight.w600,
+                ),
+              )
+            : null,
+      ),
+    ),
     textSelectionTheme: TextSelectionThemeData(
       cursorColor: color,
+      selectionHandleColor: color,
       selectionColor: color.withOpacity(0.2),
     ),
     scrollbarTheme: ScrollbarThemeData(
@@ -161,11 +190,16 @@ ThemeData createTheme({
         },
       ),
     ),
-    splashFactory: InkRipple.splashFactory,
+    splashFactory: Platform.isWindows || Platform.isMacOS || Platform.isLinux
+        ? InkRipple.splashFactory
+        : InkSparkle.splashFactory,
+    highlightColor: Platform.isWindows || Platform.isMacOS || Platform.isLinux
+        ? null
+        : Colors.transparent,
     primaryColorLight: color,
     primaryColor: color,
     primaryColorDark: color,
-    scaffoldBackgroundColor: isLight ? Colors.grey.shade100 : Color(0xFF121212),
+    scaffoldBackgroundColor: isLight ? Colors.white : Color(0xFF121212),
     toggleableActiveColor: color,
     snackBarTheme: SnackBarThemeData(
       backgroundColor: isLight ? Color(0xFF202020) : Colors.white,
@@ -195,23 +229,31 @@ ThemeData createTheme({
           : isLight
               ? Colors.white
               : Color(0xFF272727),
+      foregroundColor:
+          isLight ? Colors.black87 : Colors.white.withOpacity(0.87),
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: isLight ? Colors.white12 : Colors.black12,
         statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
       ),
       elevation: 4.0,
       iconTheme: IconThemeData(
-        color: isLight ? Colors.black54 : Colors.white54,
+        color: isLight
+            ? Color.lerp(Colors.white, Colors.black, 0.70)
+            : Color.lerp(Colors.black, Colors.white, 1.0),
         size: 24.0,
       ),
       actionsIconTheme: IconThemeData(
-        color: isLight ? Colors.black54 : Colors.white54,
+        color: isLight
+            ? Color.lerp(Colors.white, Colors.black, 0.70)
+            : Color.lerp(Colors.black, Colors.white, 1.0),
         size: 24.0,
       ),
     ),
     iconTheme: IconThemeData(
-      color: isLight ? Color(0xFF757575) : Color(0xFF8A8A8A),
-      size: 24,
+      color: isLight
+          ? Color.lerp(Colors.white, Colors.black, 0.54)
+          : Color.lerp(Colors.black, Colors.white, 0.54),
+      size: 24.0,
     ),
     dialogBackgroundColor: isLight ? Colors.white : Color(0xFF202020),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -226,16 +268,19 @@ ThemeData createTheme({
       brightness: isLight ? Brightness.light : Brightness.dark,
     ),
     tooltipTheme: TooltipThemeData(
-      textStyle: TextStyle(
-        fontSize: 12.0,
-        color: isLight ? Colors.white : Colors.black,
-      ),
-      decoration: Platform.isWindows || Platform.isLinux || Platform.isMacOS
-          ? BoxDecoration(
-              color: isLight ? Colors.black : Colors.white,
-              borderRadius: BorderRadius.circular(4.0),
+      textStyle: Platform.isWindows || Platform.isLinux || Platform.isMacOS
+          ? TextStyle(
+              fontSize: 12.0,
+              color: isLight ? Colors.white : Colors.black,
             )
           : null,
+      decoration: BoxDecoration(
+        color: isLight ? Colors.black : Colors.white,
+        borderRadius: Platform.isAndroid || Platform.isIOS
+            ? BorderRadius.circular(16.0)
+            : BorderRadius.circular(4.0),
+      ),
+      height: Platform.isAndroid || Platform.isIOS ? 32.0 : null,
       verticalOffset: Platform.isWindows || Platform.isLinux || Platform.isMacOS
           ? 36.0
           : null,
@@ -245,25 +290,91 @@ ThemeData createTheme({
       waitDuration: Duration(seconds: 1),
     ),
     fontFamily: Platform.isLinux ? 'Inter' : null,
+    extensions: {
+      IconColors(
+        Color.lerp(Colors.white, Colors.black, 0.54),
+        Color.lerp(Colors.black, Colors.white, 0.54),
+        Color.lerp(Colors.white, Colors.black, 0.70),
+        Color.lerp(Colors.black, Colors.white, 1.0),
+        Color.lerp(Colors.white, Colors.black, 0.70),
+        Color.lerp(Colors.black, Colors.white, 1.0),
+      ),
+    },
   );
 }
 
-const kAccents = [
-  Accent(Color(0xFF6200EA), Color(0xFF7C4DFF)),
-  Accent(Color(0xFFF55A34), Color(0xFFF55A34)),
-  Accent(Color(0xFFE53935), Color(0xFFE53935)),
-  Accent(Color(0xFF4285F4), Color(0xFF82B1FF)),
-  Accent(Color(0xFFF4B400), Color(0xFFFFE57F)),
-  Accent(Color(0xFF0F9D58), Color(0xFF0F9D58)),
-  Accent(Color(0xFF89CDD0), Color(0xFF89CDD0)),
-  Accent(Color(0xFF5B51D8), Color(0xFFD1C4E9)),
-  Accent(Color(0xFFF50057), Color(0xFFFF80AB)),
-  Accent(Color(0xFF424242), Color(0xFF757575)),
-];
+class IconColors extends ThemeExtension<IconColors> {
+  final Color? lightIconColor;
+  final Color? darkIconColor;
+  final Color? appBarLightIconColor;
+  final Color? appBarDarkIconColor;
+  final Color? appBarActionLightIconColor;
+  final Color? appBarActionDarkIconColor;
 
-class Accent {
-  final Color light;
-  final Color dark;
+  IconColors(
+    this.lightIconColor,
+    this.darkIconColor,
+    this.appBarLightIconColor,
+    this.appBarDarkIconColor,
+    this.appBarActionLightIconColor,
+    this.appBarActionDarkIconColor,
+  );
 
-  const Accent(this.light, this.dark);
+  @override
+  ThemeExtension<IconColors> copyWith({
+    Color? lightIconColor,
+    Color? darkIconColor,
+    Color? appBarLightIconColor,
+    Color? appBarDarkIconColor,
+    Color? appBarActionLightIconColor,
+    Color? appBarActionDarkIconColor,
+  }) {
+    return IconColors(
+      lightIconColor ?? this.lightIconColor,
+      darkIconColor ?? this.darkIconColor,
+      appBarLightIconColor ?? this.appBarLightIconColor,
+      appBarDarkIconColor ?? this.appBarDarkIconColor,
+      appBarActionLightIconColor ?? this.appBarActionLightIconColor,
+      appBarActionDarkIconColor ?? this.appBarActionDarkIconColor,
+    );
+  }
+
+  @override
+  ThemeExtension<IconColors> lerp(ThemeExtension<IconColors>? other, double t) {
+    if (other is! IconColors) {
+      return this;
+    }
+    return IconColors(
+      Color.lerp(
+        lightIconColor,
+        other.lightIconColor,
+        t,
+      ),
+      Color.lerp(
+        darkIconColor,
+        other.darkIconColor,
+        t,
+      ),
+      Color.lerp(
+        appBarLightIconColor,
+        other.appBarLightIconColor,
+        t,
+      ),
+      Color.lerp(
+        appBarDarkIconColor,
+        other.appBarDarkIconColor,
+        t,
+      ),
+      Color.lerp(
+        appBarActionLightIconColor,
+        other.appBarActionLightIconColor,
+        t,
+      ),
+      Color.lerp(
+        appBarActionDarkIconColor,
+        other.appBarActionDarkIconColor,
+        t,
+      ),
+    );
+  }
 }

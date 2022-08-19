@@ -13,7 +13,7 @@ import 'package:flutter_lyric/lyrics_reader_model.dart';
 
 import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/configuration.dart';
-import 'package:harmonoid/models/media.dart';
+import 'package:media_library/media_library.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';
@@ -162,7 +162,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                     .map((e) => FileImage(File(e)))
                     .toList()
                     .cast<ImageProvider>(),
-            mouseValue: Playback.instance.volume,
+            mouseValue: Playback.instance.volume.clamp(0.0, 100.0),
             onMouseScrollUp: () {
               Playback.instance.setVolume(
                 (Playback.instance.volume + 5.0).clamp(0.0, 100.0),
@@ -389,42 +389,51 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
-                                              Text(
-                                                [
-                                                  playback.tracks[i]
-                                                      .trackArtistNames
-                                                      .take(2)
-                                                      .join(', ')
-                                                      .overflow,
-                                                  if (playback.tracks[i]
-                                                          .albumName !=
-                                                      kUnknownAlbum)
-                                                    playback.tracks[i].albumName
-                                                ].join(' • '),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline3
-                                                    ?.copyWith(
-                                                  fontSize: 16.0,
-                                                  color: Colors.white70,
-                                                  shadows: <Shadow>[
-                                                    Shadow(
-                                                      offset: Offset(-2.0, 2.0),
-                                                      blurRadius: 3.0,
-                                                      color: Color.fromARGB(
-                                                          96, 0, 0, 0),
-                                                    ),
-                                                    Shadow(
-                                                      offset: Offset(2.0, 2.0),
-                                                      blurRadius: 8.0,
-                                                      color: Color.fromARGB(
-                                                          128, 0, 0, 0),
-                                                    ),
-                                                  ],
+                                              if (!playback
+                                                  .tracks[playback.index.clamp(
+                                                      0,
+                                                      playback.tracks.length -
+                                                          1)]
+                                                  .hasNoAvailableArtists)
+                                                Text(
+                                                  [
+                                                    playback.tracks[i]
+                                                        .trackArtistNames
+                                                        .take(2)
+                                                        .join(', ')
+                                                        .overflow,
+                                                    if (playback.tracks[i]
+                                                            .albumName !=
+                                                        kUnknownAlbum)
+                                                      playback
+                                                          .tracks[i].albumName
+                                                  ].join(' • '),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline3
+                                                      ?.copyWith(
+                                                    color: Colors.white70,
+                                                    shadows: <Shadow>[
+                                                      Shadow(
+                                                        offset:
+                                                            Offset(-2.0, 2.0),
+                                                        blurRadius: 3.0,
+                                                        color: Color.fromARGB(
+                                                            96, 0, 0, 0),
+                                                      ),
+                                                      Shadow(
+                                                        offset:
+                                                            Offset(2.0, 2.0),
+                                                        blurRadius: 8.0,
+                                                        color: Color.fromARGB(
+                                                            128, 0, 0, 0),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
                                               if (![kUnknownYear, ''].contains(
                                                   playback.tracks[i].year))
                                                 Text(
@@ -433,7 +442,6 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                                       .textTheme
                                                       .headline3
                                                       ?.copyWith(
-                                                    fontSize: 16.0,
                                                     color: Colors.white70,
                                                     shadows: <Shadow>[
                                                       Shadow(
@@ -462,7 +470,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                       }(),
                                     ),
                                   ),
-                                  const SizedBox(width: 16.0),
+                                  const SizedBox(width: 32.0),
                                 ],
                               ),
                             ),
@@ -492,7 +500,6 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 playback.position.label,
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16.0,
                                 ),
                               ),
                             ),
@@ -547,7 +554,6 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 playback.duration.label,
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16.0,
                                 ),
                               ),
                             ),
@@ -733,7 +739,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 ),
                               ],
                             ),
-                            if (Plugins.isWebMedia(
+                            if (LibmpvPluginUtils.isSupported(
                                 playback.tracks[playback.index].uri))
                               IconButton(
                                 splashRadius: 20.0,
@@ -750,7 +756,7 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 color: Colors.white,
                                 tooltip: Language.instance.OPEN_IN_BROWSER,
                               ),
-                            if (Plugins.isWebMedia(
+                            if (LibmpvPluginUtils.isSupported(
                                 playback.tracks[playback.index].uri))
                               IconButton(
                                 splashRadius: 20.0,
@@ -789,15 +795,17 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                 inferSliderInactiveTrackColor: false,
                                 min: 0,
                                 max: 100.0,
-                                value: playback.volume,
+                                value: playback.volume.clamp(0.0, 100.0),
                                 onScrolledUp: () {
                                   playback.setVolume(
-                                    (playback.volume + 5.0).clamp(0.0, 100.0),
+                                    (playback.volume.clamp(0.0, 100.0) + 5.0)
+                                        .clamp(0.0, 100.0),
                                   );
                                 },
                                 onScrolledDown: () {
                                   playback.setVolume(
-                                    (playback.volume - 5.0).clamp(0.0, 100.0),
+                                    (playback.volume.clamp(0.0, 100.0) - 5.0)
+                                        .clamp(0.0, 100.0),
                                   );
                                 },
                                 onChanged: (value) {
@@ -1214,7 +1222,7 @@ class CarouselState extends State<Carousel> {
                 bottom: 96.0 + 16.0,
               ),
               child: FloatingActionButton(
-                heroTag: 'playlist_button',
+                heroTag: 'playlist_button_modern_now_playing_screen',
                 onPressed: () {
                   setState(() {
                     playlistVisible = !playlistVisible;
@@ -1483,14 +1491,18 @@ class LyricsStyle extends LyricUI {
         );
 
   @override
-  TextStyle getPlayingExtTextStyle() =>
-      TextStyle(color: Colors.grey[300], fontSize: defaultExtSize);
+  TextStyle getPlayingExtTextStyle() => TextStyle(
+        color: Colors.grey[300],
+        fontSize: defaultExtSize,
+        height: 1.2,
+      );
 
   @override
   TextStyle getOtherExtTextStyle() => TextStyle(
         color: Colors.grey[300],
         fontSize: defaultExtSize,
         fontFamily: Platform.isLinux ? 'Inter' : null,
+        height: 1.2,
       );
 
   @override
@@ -1511,7 +1523,7 @@ class LyricsStyle extends LyricUI {
         ],
         overflow: TextOverflow.ellipsis,
         fontFamily: Platform.isLinux ? 'Inter' : null,
-        height: Configuration.instance.unhighlightedLyricsSize + 20.0,
+        height: 1.2,
       );
 
   @override
@@ -1533,7 +1545,7 @@ class LyricsStyle extends LyricUI {
         ],
         overflow: TextOverflow.ellipsis,
         fontFamily: Platform.isLinux ? 'Inter' : null,
-        height: Configuration.instance.highlightedLyricsSize + 20.0,
+        height: 1.2,
       );
 
   @override

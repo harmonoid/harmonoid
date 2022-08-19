@@ -17,15 +17,20 @@ if __name__ == "__main__":
                 language = dict(json.loads(file.read()))
                 language[string] = value
                 keys = list(language.keys())
-                file.seek(0)
-                file.write(
-                    json.dumps(
-                        dict(sorted(language.items())),
-                        indent=2,
-                        ensure_ascii=False,
+                with open(
+                    f"assets/translations/{file_name}",
+                    "w",
+                    encoding="utf_8",
+                    errors="ignore",
+                ) as writeable:
+                    writeable.write(
+                        json.dumps(
+                            dict(sorted(language.items())),
+                            indent=2,
+                            ensure_ascii=False,
+                        )
+                        + "\n"
                     )
-                    + "\n"
-                )
         keys.sort()
         with open(
             "lib/constants/strings.dart", "w", encoding="utf_8", errors="ignore"
@@ -43,15 +48,18 @@ class Strings {
             "lib/constants/language.dart", "r+", encoding="utf_8", errors="ignore"
         ) as file:
             contents = file.read()
-            file.seek(0)
-            file.write(
-                contents.split("var asset = jsonDecode(string);")[0]
-                + "var asset = jsonDecode(string);\n"
-            )
-            for key in keys:
-                file.write(f"    this.{key} = asset['{key}']!;\n")
-            file.write(
-                """    Configuration.instance.save(languageRegion: languageRegion);
+            file.close()
+            with open(
+                "lib/constants/language.dart", "r+", encoding="utf_8", errors="ignore"
+            ) as writeable:
+                writeable.write(
+                    contents.split("var asset = jsonDecode(string);")[0]
+                    + "var asset = jsonDecode(string);\n"
+                )
+                for key in keys:
+                    writeable.write(f"    this.{key} = asset['{key}']!;\n")
+                writeable.write(
+                    """    Configuration.instance.save(languageRegion: languageRegion);
     this.current = languageRegion;
     this.notifyListeners();
   }
@@ -61,4 +69,4 @@ class Strings {
   void dispose() {}
 }
 """
-            )
+                )

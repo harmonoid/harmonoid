@@ -17,7 +17,7 @@ class MobileNowPlayingController {
   final GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState> fabKey =
       GlobalKey<MiniNowPlayingBarRefreshCollectionButtonState>();
   ValueNotifier<Iterable<Color>?> palette = ValueNotifier(null);
-  bool get isHidden => barKey.currentState!.isHidden;
+  bool get isHidden => barKey.currentState?.isHidden ?? true;
 
   MobileNowPlayingController() {
     MobileNowPlayingController.instance = this;
@@ -35,5 +35,9 @@ class MobileNowPlayingController {
 
   void maximize() {
     barKey.currentState?.maximize();
+  }
+
+  void restore() {
+    barKey.currentState?.restore();
   }
 }

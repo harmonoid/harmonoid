@@ -83,6 +83,7 @@ class VersionState extends State<VersionSetting>
       subtitle: Language.instance.SETTING_APP_VERSION_SUBTITLE,
       child: Column(
         children: [
+          const SizedBox(height: 4.0),
           getVersionTableRow(
             Language.instance.SETTING_APP_VERSION_INSTALLED + ':',
             Release(tagName: kVersion),
@@ -94,12 +95,11 @@ class VersionState extends State<VersionSetting>
           ),
         ],
       ),
-      margin: EdgeInsets.all(16.0),
+      margin: EdgeInsets.symmetric(horizontal: 16.0),
       actions: kVersion == latestRelease.tagName
           ? null
           : [
-              MaterialButton(
-                padding: EdgeInsets.zero,
+              TextButton(
                 onPressed: () => launchUrl(
                   Uri.parse('https://github.com/harmonoid/harmonoid/releases'),
                   mode: LaunchMode.externalApplication,

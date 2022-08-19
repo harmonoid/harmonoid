@@ -16,21 +16,23 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:system_media_transport_controls/system_media_transport_controls.dart';
 
 import 'package:harmonoid/core/collection.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/core/intent.dart';
-import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/core/hotkeys.dart';
+import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/core/app_state.dart';
+import 'package:harmonoid/core/configuration.dart';
 import 'package:harmonoid/state/collection_refresh.dart';
 import 'package:harmonoid/state/now_playing_visuals.dart';
-import 'package:harmonoid/interface/harmonoid.dart';
-import 'package:harmonoid/interface/exception.dart';
-import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/updater.dart';
 import 'package:harmonoid/utils/argument_vector_handler.dart';
 import 'package:harmonoid/utils/window_close_handler.dart';
+import 'package:harmonoid/interface/harmonoid.dart';
+import 'package:harmonoid/interface/exception.dart';
+import 'package:harmonoid/constants/language.dart';
 
 const String kTitle = 'Harmonoid';
-const String kVersion = 'v0.2.8';
+const String kVersion = 'v0.2.9';
 const String kAuthor = 'Hitesh Kumar Saini <saini123hitesh@gmail.com>';
 const String kLicense = 'End-User License Agreement for Harmonoid';
 
@@ -44,24 +46,24 @@ Future<void> main(List<String> args) async {
   }
   try {
     if (Platform.isWindows) {
-      await Configuration.initialize();
-      await AppState.initialize();
-      await NowPlayingVisuals.initialize();
-      await MPV.initialize();
-      if (kReleaseMode || kProfileMode) {
-        await SMTC.initialize();
-      }
-      await Intent.initialize(args: args);
-      await HotKeys.initialize();
-      WindowCloseHandler.initialize();
-      ArgumentVectorHandler.initialize();
-      DiscordRPC.initialize();
       doWhenWindowReady(() {
         appWindow.minSize = Size(960, 640);
         appWindow.size = Size(1024, 640);
         appWindow.alignment = Alignment.center;
         appWindow.show();
       });
+      await Configuration.initialize();
+      await AppState.initialize();
+      await NowPlayingVisuals.initialize();
+      await MPV.initialize();
+      if (kReleaseMode || kProfileMode) {
+        await SystemMediaTransportControls.initialize();
+      }
+      await Intent.initialize(args: args);
+      await HotKeys.initialize();
+      WindowCloseHandler.initialize();
+      ArgumentVectorHandler.initialize();
+      DiscordRPC.initialize();
     }
     if (Platform.isLinux) {
       await Configuration.initialize();
@@ -79,6 +81,11 @@ Future<void> main(List<String> args) async {
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
+      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.black,
+        systemNavigationBarDividerColor: Colors.black,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ));
       if (await Permission.storage.isDenied) {
         PermissionStatus storagePermissionState =
             await Permission.storage.request();
@@ -92,12 +99,20 @@ Future<void> main(List<String> args) async {
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
       await Intent.initialize();
+      await Lyrics.initialize();
     }
     await Collection.initialize(
       collectionDirectories: Configuration.instance.collectionDirectories,
       cacheDirectory: Configuration.instance.cacheDirectory,
-      collectionSortType: Configuration.instance.collectionSortType,
-      collectionOrderType: Configuration.instance.collectionOrderType,
+      albumsSort: Configuration.instance.albumsSort,
+      artistsSort: Configuration.instance.artistsSort,
+      tracksSort: Configuration.instance.tracksSort,
+      genresSort: Configuration.instance.genresSort,
+      albumsOrderType: Configuration.instance.albumsOrderType,
+      tracksOrderType: Configuration.instance.tracksOrderType,
+      artistsOrderType: Configuration.instance.artistsOrderType,
+      genresOrderType: Configuration.instance.genresOrderType,
+      minimumFileSize: Configuration.instance.minimumFileSize,
     );
     await Collection.instance.refresh(
       onProgress: (progress, total, _) {
@@ -105,6 +120,7 @@ Future<void> main(List<String> args) async {
       },
       update: Configuration.instance.automaticMusicLookup,
     );
+    await Playback.initialize();
     await Language.initialize();
     Updater.initialize();
     runApp(
@@ -113,6 +129,8 @@ Future<void> main(List<String> args) async {
   } catch (exception, stacktrace) {
     debugPrint(exception.toString());
     debugPrint(stacktrace.toString());
+    WindowCloseHandler.initialize();
+    ArgumentVectorHandler.initialize();
     runApp(
       ExceptionApp(
         exception: exception,

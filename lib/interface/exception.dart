@@ -10,8 +10,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/utils/widgets.dart';
@@ -27,8 +27,12 @@ class ExceptionApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: createTheme(
-        color: kAccents.first.light,
+        color: Colors.red.shade800,
         themeMode: ThemeMode.light,
+      ).copyWith(
+        highlightColor: Colors.white10,
+        splashColor: Colors.white10,
+        hoverColor: Colors.white10,
       ),
       themeMode: ThemeMode.light,
       home: _ExceptionApp(
@@ -39,7 +43,7 @@ class ExceptionApp extends StatelessWidget {
   }
 }
 
-class _ExceptionApp extends StatelessWidget {
+class _ExceptionApp extends StatefulWidget {
   final Object exception;
   final StackTrace stacktrace;
   _ExceptionApp({
@@ -48,145 +52,332 @@ class _ExceptionApp extends StatelessWidget {
     required this.stacktrace,
   }) : super(key: key);
 
+  @override
+  __ExceptionAppState createState() => __ExceptionAppState();
+}
+
+class __ExceptionAppState extends State<_ExceptionApp> {
+  final ScrollController controller = ScrollController();
+  EdgeInsetsDirectional padding = EdgeInsetsDirectional.only(
+    start: 16.0,
+    bottom: 48.0,
+  );
+
+  void listener() {
+    setState(() {
+      padding = EdgeInsetsDirectional.only(
+        start: 16.0,
+        bottom: (48.0 *
+                (1 -
+                    controller.offset /
+                        (196.0 -
+                            kToolbarHeight -
+                            MediaQuery.of(context).padding.top)))
+            .clamp(
+          16.0,
+          48.0,
+        ),
+      );
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(listener);
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(listener);
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Platform.isWindows || Platform.isLinux || Platform.isMacOS
         ? Scaffold(
             body: Column(
               children: [
-                DesktopAppBar(
-                  leading: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 40.0,
-                      width: 40.0,
-                      child: Icon(Icons.error),
+                Stack(
+                  children: [
+                    Material(
+                      color: Theme.of(context).primaryColor,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            right: 0.0,
+                            bottom: 0.0,
+                            child: Transform.translate(
+                              offset: Offset(16.0, 48.0),
+                              child: Icon(
+                                Icons.close_outlined,
+                                color: Colors.red.shade900,
+                                size: 356.0,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 324.0,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    top: desktopTitleBarHeight + 16.0,
+                                    left: 36.0,
+                                    right: 36.0,
+                                    bottom: 16.0,
+                                  ),
+                                  child: Text(
+                                    'Error',
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      fontSize: 96.0,
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                  ),
+                                ),
+                                Divider(
+                                  color: Colors.white24,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 16.0,
+                                    left: 36.0,
+                                    right: 36.0,
+                                  ),
+                                  child: Text(
+                                    widget.exception.toString().overflow,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary
+                                          .withOpacity(0.87),
+                                      fontSize: 14.0,
+                                    ),
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Material(
+                                  color: Colors.transparent,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      top: 16.0,
+                                      left: 20.0,
+                                      right: 20.0,
+                                      bottom: 16.0,
+                                    ),
+                                    child: ButtonBar(
+                                      alignment: MainAxisAlignment.start,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Clipboard.setData(
+                                              ClipboardData(
+                                                text:
+                                                    'Exception: ${widget.exception.toString()}\nStacktrace: ${widget.stacktrace.toString()}',
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            'COPY',
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            launchUrl(
+                                              Uri.https(
+                                                'github.com',
+                                                '/harmonoid/harmonoid/issues/new',
+                                                {
+                                                  'assignees': 'alexmercerind',
+                                                  'labels': 'bug',
+                                                  'template': 'bug_report.md',
+                                                },
+                                              ),
+                                              mode: LaunchMode
+                                                  .externalApplication,
+                                            );
+                                          },
+                                          child: Text(
+                                            ' REPORT',
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      elevation: 4.0,
                     ),
-                  ),
-                  title: 'Exception',
+                    if (Platform.isWindows)
+                      DesktopTitleBar(
+                        color: Theme.of(context).primaryColor,
+                        hideMaximizeAndRestoreButton: true,
+                      ),
+                  ],
                 ),
                 Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                  child: CustomListView(
+                    padding: EdgeInsets.only(
+                      top: 16.0,
+                      left: 36.0,
+                      right: 36.0,
+                      bottom: 16.0,
+                    ),
                     children: [
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              exception.toString(),
-                              style: Theme.of(context).textTheme.headline2,
-                            ),
-                            SizedBox(height: 8.0),
-                            Text(
-                              stacktrace.toString(),
-                              style: Theme.of(context).textTheme.headline3,
-                            ),
-                          ],
+                      Text(
+                        'Stack trace',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w600,
                         ),
-                        margin: EdgeInsets.symmetric(horizontal: 16.0),
+                      ),
+                      const SizedBox(height: 16.0),
+                      Text(
+                        widget.stacktrace.toString(),
                       ),
                     ],
                   ),
-                ),
-                ButtonBar(
-                  children: [
-                    MaterialButton(
-                      onPressed: () => launchUrl(
-                        Uri.parse(
-                            'https://github.com/harmonoid/harmonoid/issues'),
-                        mode: LaunchMode.externalApplication,
-                      ),
-                      child: Text(
-                        'REPORT',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                    MaterialButton(
-                      onPressed: () {
-                        if (Platform.isWindows) {
-                          appWindow.close();
-                        } else {
-                          SystemNavigator.pop();
-                        }
-                      },
-                      child: Text(
-                        'EXIT',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
           )
         : Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Exception',
-                style: Theme.of(context).textTheme.headline1,
-              ),
-            ),
-            body: Column(
+            floatingActionButton: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    children: [
-                      Container(
+                FloatingActionButton(
+                  tooltip: 'COPY',
+                  backgroundColor: Colors.black,
+                  onPressed: () {
+                    Clipboard.setData(
+                      ClipboardData(
+                        text:
+                            'Exception: ${widget.exception.toString()}\nStacktrace: ${widget.stacktrace.toString()}',
+                      ),
+                    );
+                  },
+                  child: Icon(
+                    Icons.copy,
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                FloatingActionButton(
+                  tooltip: 'REPORT',
+                  backgroundColor: Colors.black,
+                  onPressed: () {
+                    launchUrl(
+                      Uri.https(
+                        'github.com',
+                        '/harmonoid/harmonoid/issues/new',
+                        {
+                          'assignees': 'alexmercerind',
+                          'labels': 'bug',
+                          'template': 'bug_report.md',
+                        },
+                      ),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  },
+                  child: Icon(
+                    Icons.bug_report,
+                  ),
+                ),
+              ],
+            ),
+            body: CustomScrollView(
+              controller: controller,
+              slivers: [
+                SliverAppBar(
+                  systemOverlayStyle: SystemUiOverlayStyle(
+                    statusBarBrightness: Brightness.light,
+                    statusBarIconBrightness: Brightness.light,
+                  ),
+                  expandedHeight: 196.0,
+                  pinned: true,
+                  snap: false,
+                  forceElevated: true,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text('Error'),
+                    titlePadding: padding,
+                    background: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerRight,
+                          height: 196.0,
+                          width: MediaQuery.of(context).size.width,
+                          child: Transform.translate(
+                            offset: Offset(32.0, 32.0),
+                            child: Icon(
+                              Icons.close_outlined,
+                              color: Colors.red.shade900,
+                              size: 232.0,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 16.0, right: 16.0),
+                          child: Text(
+                            widget.exception.toString().overflow,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimary
+                                  .withOpacity(0.87),
+                              fontSize: 14.0,
+                            ),
+                            maxLines: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              exception.toString(),
-                              style: Theme.of(context).textTheme.headline2,
+                            SubHeader(
+                              'Stack trace',
                             ),
-                            SizedBox(height: 8.0),
-                            Text(
-                              stacktrace.toString(),
-                              style: Theme.of(context).textTheme.headline3,
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text(
+                                widget.stacktrace.toString(),
+                              ),
                             ),
                           ],
                         ),
-                        margin: EdgeInsets.symmetric(horizontal: 16.0),
                       ),
                     ],
                   ),
-                ),
-                ButtonBar(
-                  children: [
-                    MaterialButton(
-                      onPressed: () => launchUrl(
-                        Uri.parse(
-                            'https://github.com/harmonoid/harmonoid/issues'),
-                        mode: LaunchMode.externalApplication,
-                      ),
-                      child: Text(
-                        'REPORT',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                    MaterialButton(
-                      onPressed: () {
-                        if (Platform.isWindows) {
-                          appWindow.close();
-                        } else {
-                          SystemNavigator.pop();
-                        }
-                      },
-                      child: Text(
-                        'EXIT',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),

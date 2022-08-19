@@ -9,15 +9,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:harmonoid/utils/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:media_library/media_library.dart';
 
 import 'package:harmonoid/core/collection.dart';
-import 'package:harmonoid/models/media.dart';
+import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/constants/language.dart';
-import 'package:harmonoid/utils/widgets.dart';
-import 'package:harmonoid/core/playback.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/track.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
@@ -62,8 +62,8 @@ class SearchTabState extends State<SearchTab> {
           artists.addAll(
             [
               ArtistTile(
-                height: kDesktopArtistTileHeight,
-                width: kDesktopArtistTileWidth,
+                height: kArtistTileHeight,
+                width: kArtistTileWidth,
                 artist: media,
               ),
               const SizedBox(
@@ -219,16 +219,15 @@ class SearchTabState extends State<SearchTab> {
                                                   children: tileGridListWidgets(
                                                     context: context,
                                                     tileHeight:
-                                                        kDesktopArtistTileHeight,
-                                                    tileWidth:
-                                                        kDesktopArtistTileWidth,
-                                                    elementsPerRow: (MediaQuery
-                                                                    .of(context)
-                                                                .size
-                                                                .width -
-                                                            tileMargin) ~/
-                                                        (kDesktopArtistTileWidth +
-                                                            tileMargin),
+                                                        kArtistTileHeight,
+                                                    tileWidth: kArtistTileWidth,
+                                                    elementsPerRow:
+                                                        (MediaQuery.of(context)
+                                                                    .size
+                                                                    .width -
+                                                                tileMargin) ~/
+                                                            (kArtistTileWidth +
+                                                                tileMargin),
                                                     subHeader: null,
                                                     leadingSubHeader: null,
                                                     widgetCount:
@@ -266,7 +265,7 @@ class SearchTabState extends State<SearchTab> {
                           ),
                         if (artists.isNotEmpty)
                           Container(
-                            height: kDesktopArtistTileHeight + 10.0,
+                            height: kArtistTileHeight + 10.0,
                             width: MediaQuery.of(context).size.width,
                             child: ListView(
                               padding: EdgeInsets.only(
@@ -362,8 +361,8 @@ class _FloatingSearchBarSearchTabState
           artists.addAll(
             [
               ArtistTile(
-                width: kDesktopArtistTileWidth,
-                height: kDesktopArtistTileHeight,
+                width: kArtistTileWidth,
+                height: kArtistTileHeight,
                 artist: media,
               ),
               const SizedBox(
@@ -407,11 +406,13 @@ class _FloatingSearchBarSearchTabState
       elevation: 4.0,
       margin: EdgeInsets.zero,
       child: SizedBox(
-        height: MediaQuery.of(context).size.height -
-            kMobileSearchBarHeight -
-            16.0 -
-            MediaQuery.of(context).padding.vertical -
-            MediaQuery.of(context).viewInsets.vertical,
+        height: (MediaQuery.of(context).size.height -
+                kMobileSearchBarHeight -
+                36.0 -
+                MediaQuery.of(context).padding.vertical -
+                MediaQuery.of(context).viewInsets.vertical)
+            .clamp(480.0, 1 << 32)
+            .toDouble(),
         width: MediaQuery.of(context).size.width,
         child: albums.isNotEmpty || artists.isNotEmpty || tracks.isNotEmpty
             ? Consumer<Collection>(
@@ -432,9 +433,6 @@ class _FloatingSearchBarSearchTabState
                                     appBar: AppBar(
                                       title: Text(
                                         Language.instance.ALBUM,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6,
                                       ),
                                     ),
                                     body: NowPlayingBarScrollHideNotifier(
@@ -501,9 +499,6 @@ class _FloatingSearchBarSearchTabState
                                     appBar: AppBar(
                                       title: Text(
                                         Language.instance.ARTIST,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6,
                                       ),
                                     ),
                                     body: Container(

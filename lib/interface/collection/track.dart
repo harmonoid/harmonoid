@@ -7,23 +7,22 @@
 ///
 
 import 'dart:async';
-
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
-import 'package:extended_image/extended_image.dart';
+import 'package:libmpv/libmpv.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:desktop/desktop.dart' as desktop;
-import 'package:animations/animations.dart';
-import 'package:harmonoid/state/desktop_now_playing_controller.dart';
-import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
+import 'package:desktop/desktop.dart' as desktop;
+import 'package:media_library/media_library.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 
 import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/playback.dart';
+import 'package:harmonoid/state/desktop_now_playing_controller.dart';
 import 'package:harmonoid/interface/home.dart';
 import 'package:harmonoid/interface/collection/album.dart';
 import 'package:harmonoid/interface/collection/artist.dart';
-import 'package:harmonoid/models/media.dart';
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/dimensions.dart';
@@ -49,6 +48,7 @@ class TrackTab extends StatelessWidget {
                         Theme.of(context).colorScheme.secondary,
                     borderHoverColor: Theme.of(context).colorScheme.secondary,
                   ),
+                  // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
                   child: desktop.ListTable(
                     onPressed: (index, _) {
                       Playback.instance.open(
@@ -99,7 +99,6 @@ class TrackTab extends StatelessWidget {
                     },
                     tableHeaderBuilder: (context, index, constraints) =>
                         Container(
-                      height: 36.0,
                       alignment: Alignment.center,
                       child: Text(
                         [
@@ -110,6 +109,8 @@ class TrackTab extends StatelessWidget {
                           Language.instance.YEAR
                         ][index],
                         style: Theme.of(context).textTheme.headline2,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     tableRowBuilder: (context, index, property, constraints) =>
@@ -293,22 +294,22 @@ class TrackTab extends StatelessWidget {
                           0,
                           collection.tracks.length - 1,
                         )];
-                        switch (collection.collectionSortType) {
-                          case CollectionSort.aToZ:
+                        switch (collection.tracksSort) {
+                          case TracksSort.aToZ:
                             {
                               return Text(
                                 track.trackName[0].toUpperCase(),
                                 style: Theme.of(context).textTheme.headline1,
                               );
                             }
-                          case CollectionSort.dateAdded:
+                          case TracksSort.dateAdded:
                             {
                               return Text(
                                 '${track.timeAdded.label}',
                                 style: Theme.of(context).textTheme.headline4,
                               );
                             }
-                          case CollectionSort.year:
+                          case TracksSort.year:
                             {
                               return Text(
                                 '${track.year}',
@@ -479,35 +480,33 @@ class TrackTileState extends State<TrackTile> {
                                     .map(
                                   (e) => TextSpan(
                                     text: e,
-                                    recognizer:
-                                        !Plugins.isWebMedia(widget.track.uri)
-                                            ? (TapGestureRecognizer()
-                                              ..onTap = () {
-                                                DesktopNowPlayingController
-                                                    .instance
-                                                    .hide();
-                                                navigatorKey.currentState?.push(
-                                                  PageRouteBuilder(
-                                                    pageBuilder: ((context,
-                                                            animation,
-                                                            secondaryAnimation) =>
-                                                        FadeThroughTransition(
-                                                          animation: animation,
-                                                          secondaryAnimation:
-                                                              secondaryAnimation,
-                                                          child: ArtistScreen(
-                                                            artist: Collection
-                                                                .instance
-                                                                .artistsSet
-                                                                .lookup(Artist(
-                                                                    artistName:
-                                                                        e))!,
-                                                          ),
-                                                        )),
-                                                  ),
-                                                );
-                                              })
-                                            : null,
+                                    recognizer: !LibmpvPluginUtils.isSupported(
+                                            widget.track.uri)
+                                        ? (TapGestureRecognizer()
+                                          ..onTap = () {
+                                            DesktopNowPlayingController.instance
+                                                .hide();
+                                            navigatorKey.currentState?.push(
+                                              PageRouteBuilder(
+                                                pageBuilder: ((context,
+                                                        animation,
+                                                        secondaryAnimation) =>
+                                                    FadeThroughTransition(
+                                                      animation: animation,
+                                                      secondaryAnimation:
+                                                          secondaryAnimation,
+                                                      child: ArtistScreen(
+                                                        artist: Collection
+                                                            .instance.artistsSet
+                                                            .lookup(Artist(
+                                                                artistName:
+                                                                    e))!,
+                                                      ),
+                                                    )),
+                                              ),
+                                            );
+                                          })
+                                        : null,
                                   ),
                                 )
                                     .forEach((element) {
@@ -613,9 +612,7 @@ class TrackTileState extends State<TrackTile> {
                                           widget.track.albumName !=
                                               kUnknownAlbum)
                                         widget.track.albumName.overflow,
-                                      if (widget.track.trackArtistNames
-                                          .join('')
-                                          .isNotEmpty)
+                                      if (!widget.track.hasNoAvailableArtists)
                                         widget.track.trackArtistNames
                                             .take(2)
                                             .join(', ')
@@ -762,8 +759,8 @@ class TrackTileState extends State<TrackTile> {
                                         .map(
                                       (e) => TextSpan(
                                         text: e,
-                                        recognizer: !Plugins.isWebMedia(
-                                                widget.track.uri)
+                                        recognizer: !LibmpvPluginUtils
+                                                .isSupported(widget.track.uri)
                                             ? (TapGestureRecognizer()
                                               ..onTap = () {
                                                 navigatorKey.currentState?.push(
@@ -905,9 +902,8 @@ class TrackTileState extends State<TrackTile> {
                                               widget.track.albumName !=
                                                   kUnknownAlbum)
                                             widget.track.albumName.overflow,
-                                          if (widget.track.trackArtistNames
-                                              .join('')
-                                              .isNotEmpty)
+                                          if (!widget
+                                              .track.hasNoAvailableArtists)
                                             widget.track.trackArtistNames
                                                 .take(2)
                                                 .join(', ')
@@ -947,6 +943,7 @@ class TrackTileState extends State<TrackTile> {
   void _showBottomSheet() async {
     int? result;
     await showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (context) => Container(
         child: Column(

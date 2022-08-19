@@ -7,16 +7,16 @@
 ///
 
 import 'dart:convert' as convert;
-import 'package:harmonoid/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 
 import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+
+import 'package:harmonoid/main.dart';
 
 const kContributors = [
   [
@@ -595,93 +595,59 @@ class AboutPageState extends State<AboutPage> {
             appBar: AppBar(
               title: Text(
                 'About',
-                style: Theme.of(context).textTheme.headline1,
               ),
             ),
             body: NowPlayingBarScrollHideNotifier(
               child: CustomListView(
                 children: [
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    margin: EdgeInsets.only(
-                      left: 8.0,
-                      right: 8.0,
-                      top: 8.0,
-                      bottom: 8.0,
-                    ),
-                    elevation: 4.0,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('assets/images/project.png'),
-                                radius: 28.0,
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Harmonoid',
-                                    style:
-                                        Theme.of(context).textTheme.headline1,
-                                  ),
-                                  Text(
-                                    '@alexmercerind',
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 16.0),
-                          ],
+                  Column(
+                    children: [
+                      CorrectedListTile(
+                        height: 72.0,
+                        iconData: Icons.info,
+                        title: 'Installed version',
+                        subtitle: kVersion,
+                      ),
+                      CorrectedListTile(
+                        height: 72.0,
+                        iconData: Icons.code,
+                        onTap: () => launchUrlString(
+                          'https://github.com/harmonoid/harmonoid',
+                          mode: LaunchMode.externalApplication,
                         ),
-                        const Divider(height: 1.0, thickness: 1.0),
-                        CorrectedListTile(
-                          height: 72.0,
-                          iconData: Icons.info,
-                          title: 'Installed version',
-                          subtitle: kVersion,
+                        title: 'GitHub',
+                        subtitle: 'Visit development repository',
+                      ),
+                      CorrectedListTile(
+                        height: 72.0,
+                        iconData: Icons.attach_money,
+                        onTap: () => launchUrlString(
+                          'https://alexmercerind.github.io/donate',
+                          mode: LaunchMode.externalApplication,
                         ),
-                        CorrectedListTile(
-                          height: 72.0,
-                          iconData: Icons.code,
-                          onTap: () => launchUrlString(
-                              'https://github.com/harmonoid/harmonoid'),
-                          title: 'GitHub',
-                          subtitle: 'Visit development repository',
+                        title: 'Donate',
+                        subtitle: 'Support the project development',
+                      ),
+                      CorrectedListTile(
+                        height: 72.0,
+                        iconData: Icons.translate,
+                        onTap: () => launchUrlString(
+                          'https://github.com/harmonoid/harmonoid/tree/master/assets/translations',
+                          mode: LaunchMode.externalApplication,
                         ),
-                        CorrectedListTile(
-                          height: 72.0,
-                          iconData: Icons.attach_money,
-                          onTap: () => launchUrlString(
-                              'https://alexmercerind.github.io/donate'),
-                          title: 'Donate',
-                          subtitle: 'Support the project development',
+                        title: 'Translate',
+                        subtitle: 'Provide or update existing translations',
+                      ),
+                      CorrectedListTile(
+                        height: 64.0,
+                        iconData: Icons.book,
+                        onTap: () => launchUrlString(
+                          'https://github.com/harmonoid/harmonoid/wiki/License',
+                          mode: LaunchMode.externalApplication,
                         ),
-                        CorrectedListTile(
-                          height: 72.0,
-                          iconData: Icons.translate,
-                          onTap: () => launchUrlString(
-                              'https://github.com/harmonoid/harmonoid/tree/master/assets/translations'),
-                          title: 'Translate',
-                          subtitle: 'Provide or update existing translations',
-                        ),
-                        CorrectedListTile(
-                          height: 64.0,
-                          iconData: Icons.book,
-                          onTap: () => launchUrlString(
-                              'https://github.com/harmonoid/harmonoid/wiki/License'),
-                          title: 'License',
-                        ),
-                      ],
-                    ),
+                        title: 'License',
+                      ),
+                    ],
                   ),
                 ],
               ),
