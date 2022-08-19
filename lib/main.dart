@@ -57,7 +57,7 @@ Future<void> main(List<String> args) async {
       await NowPlayingVisuals.initialize();
       await MPV.initialize();
       if (kReleaseMode || kProfileMode) {
-        await SMTC.initialize();
+        await SystemMediaTransportControls.initialize();
       }
       await Intent.initialize(args: args);
       await HotKeys.initialize();

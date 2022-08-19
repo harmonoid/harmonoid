@@ -401,8 +401,8 @@ class Playback extends ChangeNotifier {
         if (Platform.isWindows) {
           try {
             WindowsTaskbar.resetWindowTitle();
-            smtc.create();
-            smtc.events.listen((value) {
+            SystemMediaTransportControls.instance.create();
+            SystemMediaTransportControls.instance.events.listen((value) {
               switch (value) {
                 case SMTCEvent.play:
                   instance.play();
@@ -514,20 +514,26 @@ class Playback extends ChangeNotifier {
             ]);
           }
           try {
-            smtc.set_status(isPlaying ? SMTCStatus.playing : SMTCStatus.paused);
-            smtc.set_music_data(
-              album_title: track.albumName,
-              album_artist: track.albumArtistName,
-              artist: track.trackArtistNames.take(2).join(', '),
+            SystemMediaTransportControls.instance.setStatus(
+              isPlaying ? SMTCStatus.playing : SMTCStatus.paused,
+            );
+            SystemMediaTransportControls.instance.setMusicData(
               title: track.trackName,
-              track_number: track.trackNumber,
+              artist: track.trackArtistNames.take(2).join(', '),
+              albumTitle: track.albumName,
+              albumArtist: track.albumArtistName,
+              trackNumber: track.trackNumber,
             );
             if (LibmpvPluginUtils.isSupported(track.uri)) {
               final artwork = getAlbumArt(track, small: true);
-              smtc.set_artwork((artwork as ExtendedNetworkImageProvider).url);
+              SystemMediaTransportControls.instance.setArtwork(
+                (artwork as ExtendedNetworkImageProvider).url,
+              );
             } else {
               final artwork = getAlbumArt(track);
-              smtc.set_artwork((artwork as ExtendedFileImageProvider).file);
+              SystemMediaTransportControls.instance.setArtwork(
+                (artwork as ExtendedFileImageProvider).file,
+              );
             }
           } catch (exception, stacktrace) {
             debugPrint(exception.toString());

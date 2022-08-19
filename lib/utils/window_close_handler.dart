@@ -83,25 +83,23 @@ abstract class WindowCloseHandler {
       return false;
     } else {
       try {
-        if (Platform.isLinux) {
-          await Collection.instance.dispose();
-          await Intent.instance.tagger.dispose();
-          await Playback.instance.libmpv?.dispose();
-        }
-      } catch (exception, stacktrace) {
-        debugPrint(exception.toString());
-        debugPrint(stacktrace.toString());
-      }
-      try {
         await Playback.instance.saveAppState();
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
       }
       try {
+        await Collection.instance.dispose();
+        await Intent.instance.tagger.dispose();
+        await Playback.instance.libmpv?.dispose();
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+      try {
         if (Platform.isWindows) {
-          smtc.clear();
-          smtc.dispose();
+          SystemMediaTransportControls.instance.clear();
+          SystemMediaTransportControls.instance.dispose();
         }
       } catch (exception, stacktrace) {
         debugPrint(exception.toString());
