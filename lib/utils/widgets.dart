@@ -249,7 +249,7 @@ class SortBarFixedHolder extends StatelessWidget {
           ),
         ),
         SizedBox(width: tileMargin),
-        if (Random().nextInt(100) == 50)
+        if (Random().nextInt(400) == 50)
           Text(
             'Yeah! You found the easter egg. 🥚',
             style: Theme.of(context).textTheme.headline3,

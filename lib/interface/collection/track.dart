@@ -106,6 +106,7 @@ class TrackTab extends StatelessWidget {
                             ),
                           ),
                           itemCount: collection.tracks.length,
+                          itemExtent: 32.0,
                           colFraction: {
                             0: 36.0 / MediaQuery.of(context).size.width,
                             1: 0.36,
