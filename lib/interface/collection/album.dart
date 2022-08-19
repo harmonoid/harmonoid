@@ -31,11 +31,34 @@ import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/constants/language.dart';
 
-class AlbumTab extends StatelessWidget {
-  final controller = ScrollController();
+class AlbumTab extends StatefulWidget {
   AlbumTab({
     Key? key,
   }) : super(key: key);
+
+  @override
+  _AlbumTabState createState() => _AlbumTabState();
+}
+
+class _AlbumTabState extends State<AlbumTab> {
+  final ValueNotifier<bool> hover = ValueNotifier<bool>(false);
+  final controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(listener);
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(listener);
+    super.dispose();
+  }
+
+  void listener() {
+    hover.value = !controller.offset.isZero;
+  }
 
   Widget build(BuildContext context) {
     // Is dense or not ?
@@ -75,14 +98,34 @@ class AlbumTab extends StatelessWidget {
         );
         return isDesktop
             ? Collection.instance.albums.isNotEmpty
-                ? CustomListViewBuilder(
-                    padding: EdgeInsets.only(
-                      top: tileMargin,
-                    ),
-                    itemCount: data.widgets.length,
-                    itemExtents: List.generate(
-                        data.widgets.length, (index) => height + tileMargin),
-                    itemBuilder: (context, i) => data.widgets[i],
+                ? Stack(
+                    children: [
+                      CustomListViewBuilder(
+                        controller: controller,
+                        itemCount: 1 + data.widgets.length,
+                        itemExtents: [
+                              28.0 + tileMargin,
+                            ] +
+                            List.generate(
+                              data.widgets.length,
+                              (index) => height + tileMargin,
+                            ),
+                        itemBuilder: (context, i) => i == 0
+                            ? SortBarFixedHolder(
+                                child: SortBar(
+                                  tab: 0,
+                                  hover: hover,
+                                  fixed: true,
+                                ),
+                              )
+                            : data.widgets[i - 1],
+                      ),
+                      SortBar(
+                        tab: 0,
+                        hover: hover,
+                        fixed: false,
+                      ),
+                    ],
                   )
                 : Center(
                     child: ExceptionWidget(
@@ -165,10 +208,32 @@ class AlbumTab extends StatelessWidget {
   }
 }
 
-class DesktopAlbumArtistTab extends StatelessWidget {
+class DesktopAlbumArtistTab extends StatefulWidget {
   DesktopAlbumArtistTab({Key? key}) : super(key: key);
 
-  final ScrollController scrollController = ScrollController();
+  @override
+  _DesktopAlbumArtistTabState createState() => _DesktopAlbumArtistTabState();
+}
+
+class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
+  final ValueNotifier<bool> hover = ValueNotifier<bool>(false);
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(listener);
+  }
+
+  @override
+  void dispose() {
+    scrollController.removeListener(listener);
+    super.dispose();
+  }
+
+  void listener() {
+    hover.value = !scrollController.offset.isZero;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -377,14 +442,31 @@ class DesktopAlbumArtistTab extends StatelessWidget {
             width: 1.0,
           ),
           Expanded(
-            child: CustomListViewBuilder(
-              padding: EdgeInsets.only(
-                top: tileMargin,
-              ),
-              controller: scrollController,
-              itemCount: children.length,
-              itemExtents: itemExtents,
-              itemBuilder: (context, i) => children[i],
+            child: Stack(
+              children: [
+                CustomListViewBuilder(
+                  controller: scrollController,
+                  itemCount: 1 + children.length,
+                  itemExtents: [
+                        28.0 + tileMargin,
+                      ] +
+                      itemExtents,
+                  itemBuilder: (context, i) => i == 0
+                      ? SortBarFixedHolder(
+                          child: SortBar(
+                            tab: 0,
+                            hover: hover,
+                            fixed: true,
+                          ),
+                        )
+                      : children[i - 1],
+                ),
+                SortBar(
+                  tab: 0,
+                  hover: hover,
+                  fixed: false,
+                ),
+              ],
             ),
           ),
         ],

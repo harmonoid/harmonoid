@@ -30,8 +30,34 @@ import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/constants/language.dart';
 
-class ArtistTab extends StatelessWidget {
+class ArtistTab extends StatefulWidget {
+  ArtistTab({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _ArtistTabState createState() => _ArtistTabState();
+}
+
+class _ArtistTabState extends State<ArtistTab> {
+  final ValueNotifier<bool> hover = ValueNotifier<bool>(false);
   final controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(listener);
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(listener);
+    super.dispose();
+  }
+
+  void listener() {
+    hover.value = !controller.offset.isZero;
+  }
 
   Widget build(BuildContext context) {
     // Enforcing larger [tileMargin] on mobile.
@@ -82,12 +108,34 @@ class ArtistTab extends StatelessWidget {
         return isDesktop
             ? collection.artists.isNotEmpty
                 ? () {
-                    return CustomListViewBuilder(
-                      padding: EdgeInsets.only(top: tileMargin),
-                      itemCount: data.widgets.length,
-                      itemExtents: List.generate(
-                          data.widgets.length, (_) => height + tileMargin),
-                      itemBuilder: (_, i) => data.widgets[i],
+                    return Stack(
+                      children: [
+                        CustomListViewBuilder(
+                          controller: controller,
+                          itemCount: 1 + data.widgets.length,
+                          itemExtents: [
+                                28.0 + tileMargin,
+                              ] +
+                              List.generate(
+                                data.widgets.length,
+                                (index) => height + tileMargin,
+                              ),
+                          itemBuilder: (context, i) => i == 0
+                              ? SortBarFixedHolder(
+                                  child: SortBar(
+                                    tab: 2,
+                                    hover: hover,
+                                    fixed: true,
+                                  ),
+                                )
+                              : data.widgets[i - 1],
+                        ),
+                        SortBar(
+                          tab: 2,
+                          hover: hover,
+                          fixed: false,
+                        ),
+                      ],
                     );
                   }()
                 : Center(

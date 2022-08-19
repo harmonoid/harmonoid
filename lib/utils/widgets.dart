@@ -20,6 +20,7 @@ import 'package:flutter/material.dart'
     hide ReorderableDragStartListener, Intent;
 import 'package:flutter/foundation.dart';
 import 'package:animations/animations.dart';
+import 'package:harmonoid/core/playback.dart';
 import 'package:media_library/media_library.dart';
 import 'package:external_path/external_path.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -195,6 +196,586 @@ class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
     return data == null
         ? widget.loadingBuilder(context)
         : widget.builder(context, data);
+  }
+}
+
+class SortBarFixedHolder extends StatelessWidget {
+  final Widget child;
+  const SortBarFixedHolder({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(width: tileMargin),
+        Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(4.0),
+          child: InkWell(
+            onTap: () {
+              Playback.instance.open(
+                [...Collection.instance.tracks]..shuffle(),
+              );
+            },
+            borderRadius: BorderRadius.circular(4.0),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 6.0,
+                vertical: 2.0,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.shuffle,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  const SizedBox(
+                    width: 4.0,
+                  ),
+                  Text(
+                    Language.instance.SHUFFLE,
+                    style: Theme.of(context).textTheme.headline3?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(width: tileMargin),
+        if (Random().nextInt(100) == 50)
+          Text(
+            'Yeah! You found the easter egg. 🥚',
+            style: Theme.of(context).textTheme.headline3,
+          )
+        else if (DateTime.now().day == 25 && DateTime.now().month == 12)
+          Text(
+            'Merry Christmas! ❄️',
+            style: Theme.of(context).textTheme.headline3,
+          )
+        else if (DateTime.now().day == 1 && DateTime.now().month == 1)
+          Text(
+            'Happy New Year! 🎈',
+            style: Theme.of(context).textTheme.headline3,
+          ),
+        Spacer(),
+        child,
+      ],
+    );
+  }
+}
+
+class SortBar extends StatefulWidget {
+  final int tab;
+  final bool fixed;
+  final ValueNotifier<bool> hover;
+  SortBar({
+    Key? key,
+    required this.tab,
+    required this.fixed,
+    required this.hover,
+  }) : super(key: key);
+
+  @override
+  State<SortBar> createState() => _SortBarState();
+}
+
+class _SortBarState extends State<SortBar> {
+  bool _hover0 = false;
+  bool _hover1 = false;
+  final GlobalKey _key0 = GlobalKey();
+  final GlobalKey _key1 = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    final tab = widget.tab;
+    final child = Consumer<Collection>(
+      builder: (context, collection, _) => Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(width: 8.0),
+          MouseRegion(
+            onEnter: (e) => setState(() => _hover0 = true),
+            onExit: (e) => setState(() => _hover0 = false),
+            child: InkWell(
+              key: _key0,
+              borderRadius: BorderRadius.circular(4.0),
+              onTap: () async {
+                final value = await showMenu(
+                  elevation: 4.0,
+                  context: context,
+                  position: RelativeRect.fromLTRB(
+                    _key0.globalPaintBounds!.left - (widget.fixed ? 0.0 : 8.0),
+                    _key0.globalPaintBounds!.bottom +
+                        tileMargin / (widget.fixed ? 2.0 : 1.0),
+                    MediaQuery.of(context).size.width,
+                    MediaQuery.of(context).size.height,
+                  ),
+                  items: <PopupMenuEntry>[
+                    ...{
+                      0: <PopupMenuItem>[
+                        CheckedPopupMenuItem(
+                          checked:
+                              Collection.instance.albumsSort == AlbumsSort.aToZ,
+                          value: AlbumsSort.aToZ,
+                          padding: EdgeInsets.zero,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(
+                              Language.instance.A_TO_Z,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ),
+                        CheckedPopupMenuItem(
+                          checked: Collection.instance.albumsSort ==
+                              AlbumsSort.dateAdded,
+                          value: AlbumsSort.dateAdded,
+                          padding: EdgeInsets.zero,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(
+                              Language.instance.DATE_ADDED,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ),
+                        CheckedPopupMenuItem(
+                          checked:
+                              Collection.instance.albumsSort == AlbumsSort.year,
+                          value: AlbumsSort.year,
+                          padding: EdgeInsets.zero,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(
+                              Language.instance.YEAR,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ),
+                        CheckedPopupMenuItem(
+                          checked: Collection.instance.albumsSort ==
+                              AlbumsSort.artist,
+                          value: AlbumsSort.artist,
+                          padding: EdgeInsets.zero,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(
+                              Language.instance.ARTIST,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ),
+                      ],
+                      1: <PopupMenuItem>[
+                        CheckedPopupMenuItem(
+                          checked:
+                              Collection.instance.tracksSort == TracksSort.aToZ,
+                          value: TracksSort.aToZ,
+                          padding: EdgeInsets.zero,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(
+                              Language.instance.A_TO_Z,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ),
+                        CheckedPopupMenuItem(
+                          checked: Collection.instance.tracksSort ==
+                              TracksSort.dateAdded,
+                          value: TracksSort.dateAdded,
+                          padding: EdgeInsets.zero,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(
+                              Language.instance.DATE_ADDED,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ),
+                        CheckedPopupMenuItem(
+                          checked:
+                              Collection.instance.tracksSort == TracksSort.year,
+                          value: TracksSort.year,
+                          padding: EdgeInsets.zero,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(
+                              Language.instance.YEAR,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ),
+                      ],
+                      2: <PopupMenuItem>[
+                        CheckedPopupMenuItem(
+                          checked: Collection.instance.artistsSort ==
+                              ArtistsSort.aToZ,
+                          value: ArtistsSort.aToZ,
+                          padding: EdgeInsets.zero,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(
+                              Language.instance.A_TO_Z,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ),
+                        CheckedPopupMenuItem(
+                          checked: Collection.instance.artistsSort ==
+                              ArtistsSort.dateAdded,
+                          value: ArtistsSort.dateAdded,
+                          padding: EdgeInsets.zero,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(
+                              Language.instance.DATE_ADDED,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ),
+                      ],
+                      3: <PopupMenuItem>[
+                        CheckedPopupMenuItem(
+                          checked:
+                              Collection.instance.genresSort == GenresSort.aToZ,
+                          value: GenresSort.aToZ,
+                          padding: EdgeInsets.zero,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(
+                              Language.instance.A_TO_Z,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ),
+                        CheckedPopupMenuItem(
+                          checked: Collection.instance.genresSort ==
+                              GenresSort.dateAdded,
+                          value: GenresSort.dateAdded,
+                          padding: EdgeInsets.zero,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            title: Text(
+                              Language.instance.DATE_ADDED,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ),
+                      ],
+                    }[tab]!,
+                  ],
+                );
+                if (value is AlbumsSort) {
+                  await Collection.instance.sort(albumsSort: value);
+                  await Configuration.instance.save(albumsSort: value);
+                }
+                if (value is TracksSort) {
+                  await Collection.instance.sort(tracksSort: value);
+                  await Configuration.instance.save(tracksSort: value);
+                }
+                if (value is ArtistsSort) {
+                  await Collection.instance.sort(artistsSort: value);
+                  await Configuration.instance.save(artistsSort: value);
+                }
+                if (value is GenresSort) {
+                  await Collection.instance.sort(genresSort: value);
+                  await Configuration.instance.save(genresSort: value);
+                }
+              },
+              child: Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: 2.0),
+                height: 28.0,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 4.0),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${Language.instance.SORT_BY}: ',
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                          TextSpan(
+                            text: {
+                              0: {
+                                AlbumsSort.aToZ: Language.instance.A_TO_Z,
+                                AlbumsSort.dateAdded:
+                                    Language.instance.DATE_ADDED,
+                                AlbumsSort.year: Language.instance.YEAR,
+                                AlbumsSort.artist: Language.instance.ARTIST,
+                              }[collection.albumsSort]!,
+                              1: {
+                                TracksSort.aToZ: Language.instance.A_TO_Z,
+                                TracksSort.dateAdded:
+                                    Language.instance.DATE_ADDED,
+                                TracksSort.year: Language.instance.YEAR,
+                              }[collection.tracksSort]!,
+                              2: {
+                                ArtistsSort.aToZ: Language.instance.A_TO_Z,
+                                ArtistsSort.dateAdded:
+                                    Language.instance.DATE_ADDED,
+                              }[collection.artistsSort]!,
+                              3: {
+                                GenresSort.aToZ: Language.instance.A_TO_Z,
+                                GenresSort.dateAdded:
+                                    Language.instance.DATE_ADDED,
+                              }[collection.genresSort]!,
+                            }[tab]!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline4
+                                ?.copyWith(
+                                  color: Theme.of(context).primaryColor,
+                                  decoration:
+                                      _hover0 ? TextDecoration.underline : null,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 4.0),
+                    Icon(
+                      Icons.expand_more,
+                      size: 18.0,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 4.0),
+          MouseRegion(
+            onEnter: (e) => setState(() => _hover1 = true),
+            onExit: (e) => setState(() => _hover1 = false),
+            child: InkWell(
+              key: _key1,
+              borderRadius: BorderRadius.circular(4.0),
+              onTap: () async {
+                final value = await showMenu(
+                  elevation: 4.0,
+                  context: context,
+                  position: RelativeRect.fromLTRB(
+                    MediaQuery.of(context).size.width,
+                    _key1.globalPaintBounds!.bottom +
+                        tileMargin / (widget.fixed ? 2.0 : 1.0),
+                    tileMargin + (widget.fixed ? 8.0 : 0.0),
+                    0.0,
+                  ),
+                  items: <PopupMenuEntry>[
+                    CheckedPopupMenuItem(
+                      checked: {
+                        0: Collection.instance.albumsOrderType ==
+                            OrderType.ascending,
+                        1: Collection.instance.tracksOrderType ==
+                            OrderType.ascending,
+                        2: Collection.instance.artistsOrderType ==
+                            OrderType.ascending,
+                        3: Collection.instance.genresOrderType ==
+                            OrderType.ascending,
+                      }[tab]!,
+                      value: OrderType.ascending,
+                      padding: EdgeInsets.zero,
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        title: Text(
+                          Language.instance.ASCENDING,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ),
+                    ),
+                    CheckedPopupMenuItem(
+                      checked: {
+                        0: Collection.instance.albumsOrderType ==
+                            OrderType.descending,
+                        1: Collection.instance.tracksOrderType ==
+                            OrderType.descending,
+                        2: Collection.instance.artistsOrderType ==
+                            OrderType.descending,
+                        3: Collection.instance.genresOrderType ==
+                            OrderType.descending,
+                      }[tab]!,
+                      value: OrderType.descending,
+                      padding: EdgeInsets.zero,
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        title: Text(
+                          Language.instance.DESCENDING,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+                if (value is OrderType) {
+                  switch (tab) {
+                    case 0:
+                      {
+                        await Collection.instance.sort(albumsOrderType: value);
+                        await Configuration.instance
+                            .save(albumsOrderType: value);
+                        break;
+                      }
+                    case 1:
+                      {
+                        await Collection.instance.sort(tracksOrderType: value);
+                        await Configuration.instance
+                            .save(tracksOrderType: value);
+                        break;
+                      }
+                    case 2:
+                      {
+                        await Collection.instance.sort(artistsOrderType: value);
+                        await Configuration.instance
+                            .save(artistsOrderType: value);
+                        break;
+                      }
+                    case 3:
+                      {
+                        await Collection.instance.sort(genresOrderType: value);
+                        await Configuration.instance
+                            .save(genresOrderType: value);
+                        break;
+                      }
+                  }
+                }
+              },
+              child: Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: 2.0),
+                height: 28.0,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 4.0),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${Language.instance.ORDER}: ',
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                          TextSpan(
+                            text: {
+                              0: {
+                                OrderType.ascending:
+                                    Language.instance.ASCENDING,
+                                OrderType.descending:
+                                    Language.instance.DESCENDING,
+                              }[collection.albumsOrderType]!,
+                              1: {
+                                OrderType.ascending:
+                                    Language.instance.ASCENDING,
+                                OrderType.descending:
+                                    Language.instance.DESCENDING,
+                              }[collection.tracksOrderType]!,
+                              2: {
+                                OrderType.ascending:
+                                    Language.instance.ASCENDING,
+                                OrderType.descending:
+                                    Language.instance.DESCENDING,
+                              }[collection.artistsOrderType]!,
+                              3: {
+                                OrderType.ascending:
+                                    Language.instance.ASCENDING,
+                                OrderType.descending:
+                                    Language.instance.DESCENDING,
+                              }[collection.genresOrderType]!,
+                            }[tab]!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline4
+                                ?.copyWith(
+                                  color: Theme.of(context).primaryColor,
+                                  decoration:
+                                      _hover1 ? TextDecoration.underline : null,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 4.0),
+                    Icon(
+                      Icons.expand_more,
+                      size: 18.0,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8.0),
+        ],
+      ),
+    );
+    return widget.fixed
+        ? ValueListenableBuilder<bool>(
+            valueListenable: widget.hover,
+            child: child,
+            builder: (context, hover, child) => TweenAnimationBuilder<double>(
+              tween: Tween<double>(begin: 0.0, end: hover ? 0.0 : 1.0),
+              duration: const Duration(milliseconds: 200),
+              child: Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.only(right: tileMargin),
+                child: child,
+              ),
+              builder: (context, value, child) => Opacity(
+                opacity: value,
+                child: child,
+              ),
+            ),
+          )
+        : ValueListenableBuilder<bool>(
+            valueListenable: widget.hover,
+            child: child,
+            builder: (context, hover, child) => AnimatedPositioned(
+              curve: Curves.easeInOut,
+              duration: const Duration(milliseconds: 200),
+              top: hover ? 0 : -64.0,
+              right: tileMargin,
+              child: Card(
+                color: Theme.of(context).appBarTheme.backgroundColor,
+                margin: EdgeInsets.only(top: tileMargin),
+                elevation: 4.0,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    top: 8.0,
+                    bottom: 8.0,
+                  ),
+                  child: child,
+                ),
+              ),
+            ),
+          );
   }
 }
 
@@ -1697,7 +2278,7 @@ class _MobileSortByButtonState extends State<MobileSortByButton> {
                       kMobileSearchBarHeight +
                       2 * tileMargin,
                 ) &
-                Size(160.0, 160.0),
+                Size(240.0, 240.0),
             Rect.fromLTWH(
               0,
               0,

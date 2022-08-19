@@ -405,6 +405,22 @@ class CollectionScreenState extends State<CollectionScreen>
                                       width: 12.0,
                                     ),
                                     PlayFileOrURLButton(),
+                                    // TweenAnimationBuilder<double>(
+                                    //   tween: Tween<double>(
+                                    //     begin: 0.0,
+                                    //     end: index.value == 3 ? 0.0 : 1.0,
+                                    //   ),
+                                    //   duration: Duration(milliseconds: 200),
+                                    //   child: CollectionSortButton(
+                                    //     tab: index.value,
+                                    //   ),
+                                    //   builder: (context, value, child) =>
+                                    //       Opacity(
+                                    //     opacity: value,
+                                    //     child:
+                                    //         value == 0.0 ? Container() : child,
+                                    //   ),
+                                    // ),
                                     CollectionMoreButton(),
                                     Tooltip(
                                       message: Language.instance.SETTING,
@@ -578,7 +594,7 @@ class CollectionScreenState extends State<CollectionScreen>
                                           kMobileSearchBarHeight +
                                           2 * tileMargin,
                                     ) &
-                                    Size(160.0, 160.0),
+                                    Size(228.0, 320.0),
                                 Rect.fromLTWH(
                                   0,
                                   0,
