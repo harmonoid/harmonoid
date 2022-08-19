@@ -3095,6 +3095,27 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
           actions: [
             TextButton(
               child: Text(
+                Language.instance.GO_TO_SETTINGS.toUpperCase(),
+              ),
+              style: TextButton.styleFrom(
+                disabledForegroundColor: Theme.of(context).disabledColor,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FadeThroughTransition(
+                      fillColor: Colors.transparent,
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: Settings(),
+                    ),
+                  ),
+                );
+              },
+            ),
+            TextButton(
+              child: Text(
                 Language.instance.DONE.toUpperCase(),
               ),
               style: TextButton.styleFrom(
