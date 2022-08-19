@@ -760,7 +760,11 @@ class _SortBarState extends State<SortBar> {
             builder: (context, hover, child) => AnimatedPositioned(
               curve: Curves.easeInOut,
               duration: const Duration(milliseconds: 200),
-              top: hover ? 0 : -64.0,
+              top: hover
+                  ? widget.tab == 1
+                      ? 28.0
+                      : 0
+                  : -64.0,
               right: tileMargin,
               child: Card(
                 color: Theme.of(context).appBarTheme.backgroundColor,

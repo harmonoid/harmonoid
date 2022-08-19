@@ -28,9 +28,38 @@ import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/utils/dimensions.dart';
 import 'package:harmonoid/utils/rendering.dart';
 
-class TrackTab extends StatelessWidget {
-  final controller = ScrollController();
+class TrackTab extends StatefulWidget {
   TrackTab({Key? key}) : super(key: key);
+
+  @override
+  _TrackTabState createState() => _TrackTabState();
+}
+
+class _TrackTabState extends State<TrackTab> {
+  double _lastOffset = 0.0;
+  final hover = ValueNotifier<bool>(true);
+  final controller = ScrollController();
+
+  void listener() {
+    if (this.controller.offset > _lastOffset) {
+      this.hover.value = false;
+    } else if (this.controller.offset < _lastOffset) {
+      this.hover.value = true;
+    }
+    _lastOffset = this.controller.offset;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(listener);
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(listener);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,254 +78,241 @@ class TrackTab extends StatelessWidget {
                     borderHoverColor: Theme.of(context).colorScheme.secondary,
                   ),
                   // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
-                  child: Column(
+                  child: Stack(
+                    alignment: Alignment.topRight,
                     children: [
-                      Container(
-                        alignment: Alignment.bottomCenter,
-                        height: 28.0 + tileMargin,
-                        child: SortBarFixedHolder(
-                          child: SortBar(
-                            tab: 1,
-                            fixed: true,
-                            hover: ValueNotifier<bool>(false),
+                      desktop.ListTable(
+                        controller: controller,
+                        onPressed: (index, _) {
+                          Playback.instance.open(
+                            collection.tracks,
+                            index: index,
+                          );
+                        },
+                        onSecondaryPress: (index, position) async {
+                          final result = await showMenu(
+                            elevation: 4.0,
+                            context: context,
+                            position: RelativeRect.fromRect(
+                              Offset(position.left, position.top) &
+                                  Size(228.0, 320.0),
+                              Rect.fromLTWH(
+                                0,
+                                0,
+                                MediaQuery.of(context).size.width,
+                                MediaQuery.of(context).size.height,
+                              ),
+                            ),
+                            items: trackPopupMenuItems(context),
+                          );
+                          await trackPopupMenuHandle(
+                            context,
+                            collection.tracks[index],
+                            result,
+                          );
+                        },
+                        colCount: 5,
+                        headerColumnBorder: BorderSide(
+                          color: Theme.of(context).dividerColor,
+                          width: 0.0,
+                        ),
+                        tableBorder: desktop.TableBorder(
+                          verticalInside: BorderSide(
+                            color: Theme.of(context).dividerColor,
+                          ),
+                          top: BorderSide(
+                            color: Theme.of(context).dividerColor,
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: desktop.ListTable(
-                          onPressed: (index, _) {
-                            Playback.instance.open(
-                              collection.tracks,
-                              index: index,
-                            );
-                          },
-                          onSecondaryPress: (index, position) async {
-                            final result = await showMenu(
-                              elevation: 4.0,
-                              context: context,
-                              position: RelativeRect.fromRect(
-                                Offset(position.left, position.top) &
-                                    Size(228.0, 320.0),
-                                Rect.fromLTWH(
-                                  0,
-                                  0,
-                                  MediaQuery.of(context).size.width,
-                                  MediaQuery.of(context).size.height,
-                                ),
-                              ),
-                              items: trackPopupMenuItems(context),
-                            );
-                            await trackPopupMenuHandle(
-                              context,
-                              collection.tracks[index],
-                              result,
-                            );
-                          },
-                          colCount: 5,
-                          headerColumnBorder: BorderSide(
-                            color: Theme.of(context).dividerColor,
-                            width: 0.0,
+                        itemCount: collection.tracks.length,
+                        itemExtent: 32.0,
+                        colFraction: {
+                          0: 36.0 / MediaQuery.of(context).size.width,
+                          1: 0.36,
+                          4: 128.0 / MediaQuery.of(context).size.width,
+                        },
+                        tableHeaderBuilder: (context, index, constraints) =>
+                            Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            [
+                              '#',
+                              Language.instance.TRACK_SINGLE,
+                              Language.instance.ARTIST,
+                              Language.instance.ALBUM_SINGLE,
+                              Language.instance.YEAR
+                            ][index],
+                            style: Theme.of(context).textTheme.headline2,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          tableBorder: desktop.TableBorder(
-                            verticalInside: BorderSide(
-                              color: Theme.of(context).dividerColor,
-                            ),
-                            top: BorderSide(
-                              color: Theme.of(context).dividerColor,
-                            ),
+                        ),
+                        tableRowBuilder:
+                            (context, index, property, constraints) =>
+                                Container(
+                          constraints: constraints,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.0,
                           ),
-                          itemCount: collection.tracks.length,
-                          itemExtent: 32.0,
-                          colFraction: {
-                            0: 36.0 / MediaQuery.of(context).size.width,
-                            1: 0.36,
-                            4: 128.0 / MediaQuery.of(context).size.width,
-                          },
-                          tableHeaderBuilder: (context, index, constraints) =>
-                              Container(
-                            alignment: Alignment.center,
-                            child: Text(
-                              [
-                                '#',
-                                Language.instance.TRACK_SINGLE,
-                                Language.instance.ARTIST,
-                                Language.instance.ALBUM_SINGLE,
-                                Language.instance.YEAR
-                              ][index],
-                              style: Theme.of(context).textTheme.headline2,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          tableRowBuilder:
-                              (context, index, property, constraints) =>
-                                  Container(
-                            constraints: constraints,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
-                            alignment: property == 0
-                                ? Alignment.center
-                                : Alignment.centerLeft,
-                            child: () {
-                              if ([0, 1, 4].contains(property)) {
-                                return ContextMenuArea(
-                                  onPressed: (e) async {
-                                    final result = await showMenu(
-                                      elevation: 4.0,
-                                      context: context,
-                                      position: RelativeRect.fromRect(
-                                        Offset(e.position.dx, e.position.dy) &
-                                            Size(228.0, 320.0),
-                                        Rect.fromLTWH(
-                                          0,
-                                          0,
-                                          MediaQuery.of(context).size.width,
-                                          MediaQuery.of(context).size.height,
-                                        ),
+                          alignment: property == 0
+                              ? Alignment.center
+                              : Alignment.centerLeft,
+                          child: () {
+                            if ([0, 1, 4].contains(property)) {
+                              return ContextMenuArea(
+                                onPressed: (e) async {
+                                  final result = await showMenu(
+                                    elevation: 4.0,
+                                    context: context,
+                                    position: RelativeRect.fromRect(
+                                      Offset(e.position.dx, e.position.dy) &
+                                          Size(228.0, 320.0),
+                                      Rect.fromLTWH(
+                                        0,
+                                        0,
+                                        MediaQuery.of(context).size.width,
+                                        MediaQuery.of(context).size.height,
                                       ),
-                                      items: trackPopupMenuItems(context),
-                                    );
-                                    await trackPopupMenuHandle(
-                                      context,
-                                      collection.tracks[index],
-                                      result,
+                                    ),
+                                    items: trackPopupMenuItems(context),
+                                  );
+                                  await trackPopupMenuHandle(
+                                    context,
+                                    collection.tracks[index],
+                                    result,
+                                  );
+                                },
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Playback.instance.open(
+                                      collection.tracks,
+                                      index: index,
                                     );
                                   },
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Playback.instance.open(
-                                        collection.tracks,
-                                        index: index,
-                                      );
-                                    },
-                                    child: Text(
-                                      [
-                                        '${collection.tracks[index].trackNumber}',
-                                        collection.tracks[index].trackName,
-                                        collection
-                                            .tracks[index].trackArtistNames
-                                            .join(', '),
-                                        collection.tracks[index].albumName,
-                                        collection.tracks[index].year
-                                            .toString(),
-                                      ][property],
-                                      overflow: TextOverflow.ellipsis,
-                                      style:
-                                          Theme.of(context).textTheme.headline4,
-                                    ),
+                                  child: Text(
+                                    [
+                                      '${collection.tracks[index].trackNumber}',
+                                      collection.tracks[index].trackName,
+                                      collection.tracks[index].trackArtistNames
+                                          .join(', '),
+                                      collection.tracks[index].albumName,
+                                      collection.tracks[index].year.toString(),
+                                    ][property],
+                                    overflow: TextOverflow.ellipsis,
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
                                   ),
-                                );
-                              } else if (property == 2) {
-                                final elements = <TextSpan>[];
-                                collection.tracks[index].trackArtistNames
-                                    .map(
-                                  (e) => TextSpan(
-                                    text: e,
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
+                                ),
+                              );
+                            } else if (property == 2) {
+                              final elements = <TextSpan>[];
+                              collection.tracks[index].trackArtistNames
+                                  .map(
+                                (e) => TextSpan(
+                                  text: e,
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Playback.instance
+                                              .interceptPositionChangeRebuilds =
+                                          true;
+                                      navigatorKey.currentState?.push(
+                                        PageRouteBuilder(
+                                          pageBuilder: ((context, animation,
+                                                  secondaryAnimation) =>
+                                              FadeThroughTransition(
+                                                animation: animation,
+                                                secondaryAnimation:
+                                                    secondaryAnimation,
+                                                child: ArtistScreen(
+                                                  artist: Collection
+                                                      .instance.artistsSet
+                                                      .lookup(Artist(
+                                                          artistName: e))!,
+                                                ),
+                                              )),
+                                        ),
+                                      );
+                                      Timer(const Duration(milliseconds: 400),
+                                          () {
                                         Playback.instance
                                                 .interceptPositionChangeRebuilds =
-                                            true;
-                                        navigatorKey.currentState?.push(
-                                          PageRouteBuilder(
-                                            pageBuilder: ((context, animation,
-                                                    secondaryAnimation) =>
-                                                FadeThroughTransition(
-                                                  animation: animation,
-                                                  secondaryAnimation:
-                                                      secondaryAnimation,
-                                                  child: ArtistScreen(
-                                                    artist: Collection
-                                                        .instance.artistsSet
-                                                        .lookup(Artist(
-                                                            artistName: e))!,
-                                                  ),
-                                                )),
-                                          ),
-                                        );
-                                        Timer(const Duration(milliseconds: 400),
-                                            () {
+                                            false;
+                                      });
+                                    },
+                                ),
+                              )
+                                  .forEach((element) {
+                                elements.add(element);
+                                elements.add(TextSpan(text: ', '));
+                              });
+                              elements.removeLast();
+                              return HyperLink(
+                                style: Theme.of(context).textTheme.headline4,
+                                text: TextSpan(
+                                  children: elements,
+                                ),
+                              );
+                            } else if (property == 3) {
+                              return HyperLink(
+                                style: Theme.of(context).textTheme.headline4,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: collection.tracks[index].albumName,
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
                                           Playback.instance
                                                   .interceptPositionChangeRebuilds =
-                                              false;
-                                        });
-                                      },
-                                  ),
-                                )
-                                    .forEach((element) {
-                                  elements.add(element);
-                                  elements.add(TextSpan(text: ', '));
-                                });
-                                elements.removeLast();
-                                return HyperLink(
-                                  style: Theme.of(context).textTheme.headline4,
-                                  text: TextSpan(
-                                    children: elements,
-                                  ),
-                                );
-                              } else if (property == 3) {
-                                return HyperLink(
-                                  style: Theme.of(context).textTheme.headline4,
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text:
-                                            collection.tracks[index].albumName,
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
+                                              true;
+                                          navigatorKey.currentState?.push(
+                                            PageRouteBuilder(
+                                              pageBuilder: ((context, animation,
+                                                      secondaryAnimation) =>
+                                                  FadeThroughTransition(
+                                                    animation: animation,
+                                                    secondaryAnimation:
+                                                        secondaryAnimation,
+                                                    child: AlbumScreen(
+                                                      album: Collection
+                                                          .instance.albumsSet
+                                                          .lookup(
+                                                        Album(
+                                                          albumName: collection
+                                                              .tracks[index]
+                                                              .albumName,
+                                                          year: collection
+                                                              .tracks[index]
+                                                              .year,
+                                                          albumArtistName:
+                                                              collection
+                                                                  .tracks[index]
+                                                                  .albumArtistName,
+                                                        ),
+                                                      )!,
+                                                    ),
+                                                  )),
+                                            ),
+                                          );
+                                          Timer(
+                                              const Duration(milliseconds: 400),
+                                              () {
                                             Playback.instance
                                                     .interceptPositionChangeRebuilds =
-                                                true;
-                                            navigatorKey.currentState?.push(
-                                              PageRouteBuilder(
-                                                pageBuilder: ((context,
-                                                        animation,
-                                                        secondaryAnimation) =>
-                                                    FadeThroughTransition(
-                                                      animation: animation,
-                                                      secondaryAnimation:
-                                                          secondaryAnimation,
-                                                      child: AlbumScreen(
-                                                        album: Collection
-                                                            .instance.albumsSet
-                                                            .lookup(
-                                                          Album(
-                                                            albumName:
-                                                                collection
-                                                                    .tracks[
-                                                                        index]
-                                                                    .albumName,
-                                                            year: collection
-                                                                .tracks[index]
-                                                                .year,
-                                                            albumArtistName:
-                                                                collection
-                                                                    .tracks[
-                                                                        index]
-                                                                    .albumArtistName,
-                                                          ),
-                                                        )!,
-                                                      ),
-                                                    )),
-                                              ),
-                                            );
-                                            Timer(
-                                                const Duration(
-                                                    milliseconds: 400), () {
-                                              Playback.instance
-                                                      .interceptPositionChangeRebuilds =
-                                                  false;
-                                            });
-                                          },
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-                            }(),
-                          ),
+                                                false;
+                                          });
+                                        },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          }(),
                         ),
+                      ),
+                      SortBar(
+                        tab: 1,
+                        fixed: false,
+                        hover: hover,
                       ),
                     ],
                   ),
