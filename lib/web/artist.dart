@@ -341,6 +341,20 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
     final double height = isMobile
         ? width * kAlbumTileHeight / kAlbumTileWidth
         : kAlbumTileHeight;
+    const mobileSliverLabelHeight = 116.0;
+    double mobileSliverContentHeight = MediaQuery.of(context).size.width * 0.6;
+    double mobileSliverExpandedHeight = mobileSliverContentHeight -
+        MediaQuery.of(context).padding.top +
+        mobileSliverLabelHeight;
+    double mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    if (mobileSliverExpandedHeight >
+        MediaQuery.of(context).size.height * 3 / 5) {
+      mobileSliverExpandedHeight = MediaQuery.of(context).size.height * 3 / 5;
+      mobileSliverContentHeight = mobileSliverExpandedHeight -
+          mobileSliverLabelHeight +
+          MediaQuery.of(context).padding.top;
+      mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    }
     return isDesktop
         ? Scaffold(
             body: Stack(
@@ -770,10 +784,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                           statusBarColor: Colors.transparent,
                           statusBarIconBrightness: Brightness.light,
                         ),
-                        expandedHeight:
-                            MediaQuery.of(context).size.width * 0.6 +
-                                128.0 -
-                                MediaQuery.of(context).padding.top,
+                        expandedHeight: mobileSliverExpandedHeight,
                         pinned: true,
                         leading: IconButton(
                           onPressed: Navigator.of(context).maybePop,
@@ -847,9 +858,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                         fit: BoxFit.cover,
                                         width:
                                             MediaQuery.of(context).size.width,
-                                        height:
-                                            MediaQuery.of(context).size.width *
-                                                0.6,
+                                        height: mobileSliverContentHeight,
                                         enableLoadState: true,
                                         enableMemoryCache: false,
                                         cache: true,
@@ -965,7 +974,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                                         },
                                         child: Container(
                                           color: Colors.grey.shade900,
-                                          height: 128.0,
+                                          height: mobileSliverLabelHeight,
                                           width:
                                               MediaQuery.of(context).size.width,
                                           padding: EdgeInsets.symmetric(
@@ -1027,9 +1036,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width * 0.6 +
-                                  MediaQuery.of(context).padding.top -
-                                  64.0,
+                              top: mobileSliverFABYPos,
                               right: 16.0 + 64.0,
                               child: TweenAnimationBuilder(
                                 curve: Curves.easeOut,
@@ -1064,9 +1071,7 @@ class _WebArtistScreenState extends State<WebArtistScreen> {
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width * 0.6 +
-                                  MediaQuery.of(context).padding.top -
-                                  64.0,
+                              top: mobileSliverFABYPos,
                               right: 16.0,
                               child: TweenAnimationBuilder(
                                 curve: Curves.easeOut,

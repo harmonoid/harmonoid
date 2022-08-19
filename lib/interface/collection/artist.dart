@@ -724,11 +724,11 @@ class ArtistScreenState extends State<ArtistScreen>
 
   @override
   Widget build(BuildContext context) {
-    const mobileSliverLabelHeight = 116.0;
-    double mobileSliverExpandedHeight = MediaQuery.of(context).size.width -
+    const mobileSliverLabelHeight = 108.0;
+    double mobileSliverContentHeight = MediaQuery.of(context).size.width;
+    double mobileSliverExpandedHeight = mobileSliverContentHeight -
         MediaQuery.of(context).padding.top +
         mobileSliverLabelHeight;
-    double mobileSliverContentHeight = MediaQuery.of(context).size.width;
     double mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
     if (mobileSliverExpandedHeight >
         MediaQuery.of(context).size.height * 3 / 5) {
@@ -1420,7 +1420,7 @@ class ArtistScreenState extends State<ArtistScreen>
                                           opacity: value,
                                           child: Container(
                                             color: color,
-                                            height: 116.0,
+                                            height: mobileSliverLabelHeight,
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,

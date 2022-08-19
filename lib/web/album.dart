@@ -384,6 +384,20 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
 
   @override
   Widget build(BuildContext context) {
+    const mobileSliverLabelHeight = 116.0;
+    double mobileSliverContentHeight = MediaQuery.of(context).size.width * 0.6;
+    double mobileSliverExpandedHeight = mobileSliverContentHeight -
+        MediaQuery.of(context).padding.top +
+        mobileSliverLabelHeight;
+    double mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    if (mobileSliverExpandedHeight >
+        MediaQuery.of(context).size.height * 3 / 5) {
+      mobileSliverExpandedHeight = MediaQuery.of(context).size.height * 3 / 5;
+      mobileSliverContentHeight = mobileSliverExpandedHeight -
+          mobileSliverLabelHeight +
+          MediaQuery.of(context).padding.top;
+      mobileSliverFABYPos = mobileSliverContentHeight - 32.0;
+    }
     return isDesktop
         ? Scaffold(
             body: Container(
@@ -818,9 +832,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                           statusBarColor: Colors.transparent,
                           statusBarIconBrightness: Brightness.light,
                         ),
-                        expandedHeight: MediaQuery.of(context).size.width +
-                            128.0 -
-                            MediaQuery.of(context).padding.top,
+                        expandedHeight: mobileSliverExpandedHeight,
                         pinned: true,
                         leading: IconButton(
                           onPressed: Navigator.of(context).maybePop,
@@ -894,8 +906,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                         fit: BoxFit.cover,
                                         width:
                                             MediaQuery.of(context).size.width,
-                                        height:
-                                            MediaQuery.of(context).size.width,
+                                        height: mobileSliverContentHeight,
                                         enableLoadState: true,
                                         enableMemoryCache: false,
                                         cache: true,
@@ -1011,7 +1022,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                                         },
                                         child: Container(
                                           color: Colors.grey.shade900,
-                                          height: 128.0,
+                                          height: mobileSliverLabelHeight,
                                           width:
                                               MediaQuery.of(context).size.width,
                                           padding: EdgeInsets.symmetric(
@@ -1057,9 +1068,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width +
-                                  MediaQuery.of(context).padding.top -
-                                  64.0,
+                              top: mobileSliverFABYPos,
                               right: 16.0 + 64.0,
                               child: TweenAnimationBuilder(
                                 curve: Curves.easeOut,
@@ -1094,9 +1103,7 @@ class WebAlbumScreenState extends State<WebAlbumScreen>
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width +
-                                  MediaQuery.of(context).padding.top -
-                                  64.0,
+                              top: mobileSliverFABYPos,
                               right: 16.0,
                               child: TweenAnimationBuilder(
                                 curve: Curves.easeOut,
