@@ -178,6 +178,7 @@ class Strings {
   late String REMIND_ME_NEXT_TIME;
   late String REMOVE;
   late String REMOVE_FROM_PLAYLIST;
+  late String RENAME;
   late String REPEAT;
   late String RESET_PITCH;
   late String RESET_SPEED;

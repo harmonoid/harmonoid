@@ -382,6 +382,7 @@ class Language extends Strings with ChangeNotifier {
     this.REMIND_ME_NEXT_TIME = asset['REMIND_ME_NEXT_TIME']!;
     this.REMOVE = asset['REMOVE']!;
     this.REMOVE_FROM_PLAYLIST = asset['REMOVE_FROM_PLAYLIST']!;
+    this.RENAME = asset['RENAME']!;
     this.REPEAT = asset['REPEAT']!;
     this.RESET_PITCH = asset['RESET_PITCH']!;
     this.RESET_SPEED = asset['RESET_SPEED']!;
