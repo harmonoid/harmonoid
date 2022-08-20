@@ -201,12 +201,11 @@ class _WebRecommendationsState extends State<WebRecommendations>
       Configuration.instance.webRecent.isEmpty;
   late ScrollController _scrollController = ScrollController();
   final HashMap<String, Color> colorKeys = HashMap<String, Color>();
-  final int _velocity = 40;
 
   @override
   void initState() {
     super.initState();
-    // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
+    // TODO: MUST BE REMOVED BEFORE Flutter 3.1.0.
     if (Platform.isWindows) {
       _scrollController.addListener(
         () {
@@ -215,8 +214,8 @@ class _WebRecommendationsState extends State<WebRecommendations>
           if (scrollDirection != ScrollDirection.idle) {
             var scrollEnd = _scrollController.offset +
                 (scrollDirection == ScrollDirection.reverse
-                    ? _velocity
-                    : -_velocity);
+                    ? kWindowsScrollDelta
+                    : -kWindowsScrollDelta);
             scrollEnd = min(_scrollController.position.maxScrollExtent,
                 max(_scrollController.position.minScrollExtent, scrollEnd));
             _scrollController.jumpTo(scrollEnd);

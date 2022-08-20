@@ -304,14 +304,16 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
         }
       });
     }
-    // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
+    // TODO: MUST BE REMOVED BEFORE Flutter 3.1.0.
     if (Platform.isWindows) {
       scrollController.addListener(
         () {
           final scrollDirection = scrollController.position.userScrollDirection;
           if (scrollDirection != ScrollDirection.idle) {
             var scrollEnd = scrollController.offset +
-                (scrollDirection == ScrollDirection.reverse ? 60 : -60);
+                (scrollDirection == ScrollDirection.reverse
+                    ? kWindowsScrollDelta
+                    : -kWindowsScrollDelta);
             scrollEnd = min(scrollController.position.maxScrollExtent,
                 max(scrollController.position.minScrollExtent, scrollEnd));
             scrollController.jumpTo(scrollEnd);

@@ -45,10 +45,9 @@ import 'package:harmonoid/interface/settings/about.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/web.dart';
 
-class CustomListView extends StatelessWidget {
-  late final ScrollController controller;
+class CustomListView extends StatefulWidget {
+  final ScrollController? controller;
   final double? cacheExtent;
-  final int velocity = 40;
   final List<Widget> children;
   final Axis? scrollDirection;
   final bool? shrinkWrap;
@@ -57,33 +56,40 @@ class CustomListView extends StatelessWidget {
   final ScrollViewKeyboardDismissBehavior? keyboardDismissBehavior;
 
   CustomListView({
-    ScrollController? controller,
     required this.children,
+    this.controller,
     this.scrollDirection,
     this.shrinkWrap,
     this.padding,
     this.itemExtent,
     this.cacheExtent,
     this.keyboardDismissBehavior,
-  }) {
-    if (controller != null) {
-      this.controller = controller;
-    } else {
-      this.controller = ScrollController();
-    }
-    // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
+  });
+
+  @override
+  _CustomListViewState createState() => _CustomListViewState();
+}
+
+class _CustomListViewState extends State<CustomListView> {
+  late final ScrollController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = widget.controller ?? ScrollController();
+    // TODO: MUST BE REMOVED BEFORE Flutter 3.1.0.
     if (Platform.isWindows) {
-      this.controller.addListener(
+      controller.addListener(
         () {
-          final scrollDirection = this.controller.position.userScrollDirection;
+          final scrollDirection = controller.position.userScrollDirection;
           if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = this.controller.offset +
+            var scrollEnd = controller.offset +
                 (scrollDirection == ScrollDirection.reverse
-                    ? velocity
-                    : -velocity);
-            scrollEnd = math.min(this.controller.position.maxScrollExtent,
-                math.max(this.controller.position.minScrollExtent, scrollEnd));
-            this.controller.jumpTo(scrollEnd);
+                    ? kWindowsScrollDelta
+                    : -kWindowsScrollDelta);
+            scrollEnd = math.min(controller.position.maxScrollExtent,
+                math.max(controller.position.minScrollExtent, scrollEnd));
+            controller.jumpTo(scrollEnd);
           }
         },
       );
@@ -91,23 +97,29 @@ class CustomListView extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView(
-      cacheExtent: cacheExtent,
-      keyboardDismissBehavior:
-          keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.onDrag,
-      padding: padding ?? EdgeInsets.zero,
+      cacheExtent: widget.cacheExtent,
+      keyboardDismissBehavior: widget.keyboardDismissBehavior ??
+          ScrollViewKeyboardDismissBehavior.onDrag,
+      padding: widget.padding ?? EdgeInsets.zero,
       controller: controller,
-      scrollDirection: scrollDirection ?? Axis.vertical,
-      shrinkWrap: shrinkWrap ?? false,
-      children: children,
-      itemExtent: itemExtent,
+      scrollDirection: widget.scrollDirection ?? Axis.vertical,
+      shrinkWrap: widget.shrinkWrap ?? false,
+      children: widget.children,
+      itemExtent: widget.itemExtent,
     );
   }
 }
 
-class CustomListViewBuilder extends StatelessWidget {
-  late final ScrollController controller;
+class CustomListViewBuilder extends StatefulWidget {
+  final ScrollController? controller;
   final int velocity = 40;
   final int itemCount;
   final List<double> itemExtents;
@@ -117,32 +129,39 @@ class CustomListViewBuilder extends StatelessWidget {
   final EdgeInsets? padding;
 
   CustomListViewBuilder({
-    ScrollController? controller,
     required this.itemCount,
     required this.itemExtents,
     required this.itemBuilder,
+    this.controller,
     this.scrollDirection,
     this.shrinkWrap,
     this.padding,
-  }) {
-    if (controller != null) {
-      this.controller = controller;
-    } else {
-      this.controller = ScrollController();
-    }
-    // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
+  });
+
+  @override
+  _CustomListViewBuilderState createState() => _CustomListViewBuilderState();
+}
+
+class _CustomListViewBuilderState extends State<CustomListViewBuilder> {
+  late final ScrollController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = widget.controller ?? ScrollController();
+    // TODO: MUST BE REMOVED BEFORE Flutter 3.1.0.
     if (Platform.isWindows) {
-      this.controller.addListener(
+      controller.addListener(
         () {
-          final scrollDirection = this.controller.position.userScrollDirection;
+          final scrollDirection = controller.position.userScrollDirection;
           if (scrollDirection != ScrollDirection.idle) {
-            var scrollEnd = this.controller.offset +
+            var scrollEnd = controller.offset +
                 (scrollDirection == ScrollDirection.reverse
-                    ? velocity
-                    : -velocity);
-            scrollEnd = math.min(this.controller.position.maxScrollExtent,
-                math.max(this.controller.position.minScrollExtent, scrollEnd));
-            this.controller.jumpTo(scrollEnd);
+                    ? kWindowsScrollDelta
+                    : -kWindowsScrollDelta);
+            scrollEnd = math.min(controller.position.maxScrollExtent,
+                math.max(controller.position.minScrollExtent, scrollEnd));
+            controller.jumpTo(scrollEnd);
           }
         },
       );
@@ -150,13 +169,75 @@ class CustomListViewBuilder extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return KnownExtentsListView.builder(
       controller: controller,
-      itemExtents: itemExtents,
-      itemCount: itemCount,
-      itemBuilder: itemBuilder,
-      padding: padding,
+      itemExtents: widget.itemExtents,
+      itemCount: widget.itemCount,
+      itemBuilder: widget.itemBuilder,
+      padding: widget.padding,
+    );
+  }
+}
+
+class CustomSingleChildScrollView extends StatefulWidget {
+  final ScrollController? controller;
+  final Widget child;
+  CustomSingleChildScrollView({
+    Key? key,
+    this.controller,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  State<CustomSingleChildScrollView> createState() =>
+      _CustomSingleChildScrollViewState();
+}
+
+class _CustomSingleChildScrollViewState
+    extends State<CustomSingleChildScrollView> {
+  late final ScrollController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = widget.controller ?? ScrollController();
+    // TODO: MUST BE REMOVED BEFORE Flutter 3.1.0.
+    if (Platform.isWindows) {
+      controller.addListener(
+        () {
+          final scrollDirection = controller.position.userScrollDirection;
+          if (scrollDirection != ScrollDirection.idle) {
+            var scrollEnd = controller.offset +
+                (scrollDirection == ScrollDirection.reverse
+                    ? kWindowsScrollDelta
+                    : -kWindowsScrollDelta);
+            scrollEnd = math.min(controller.position.maxScrollExtent,
+                math.max(controller.position.minScrollExtent, scrollEnd));
+            controller.jumpTo(scrollEnd);
+          }
+        },
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      controller: controller,
+      child: widget.child,
     );
   }
 }
@@ -3000,12 +3081,7 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
                                 ),
                           Expanded(
                             child: Text(
-                              directory.path
-                                  .replaceAll(
-                                    '/storage/emulated/0/',
-                                    '',
-                                  )
-                                  .overflow,
+                              directory.path.overflow,
                               style: isMobile
                                   ? Theme.of(context).textTheme.subtitle1
                                   : Theme.of(context).textTheme.headline3,

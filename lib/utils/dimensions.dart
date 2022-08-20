@@ -25,3 +25,5 @@ const double kMobileNowPlayingBarHeight = 66.0;
 const double kDesktopTileMargin = 16.0;
 const double kDesktopAppBarHeight = 64.0;
 const double kDesktopNowPlayingBarHeight = 84.0;
+
+const double kWindowsScrollDelta = 40.0;
