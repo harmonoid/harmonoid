@@ -241,8 +241,8 @@ packages:
     dependency: "direct main"
     description:
       path: "plugins/file_selector/file_selector_linux"
-      ref: HEAD
-      resolved-ref: "89c350f787e1d7bff12b3517e5671146211ee70e"
+      ref: "4bc2c310e8acf3740ea0c2b326b3ef71280391f8"
+      resolved-ref: "4bc2c310e8acf3740ea0c2b326b3ef71280391f8"
       url: "https://github.com/google/flutter-desktop-embedding.git"
     source: git
     version: "0.0.2+1"
@@ -903,5 +903,5 @@ packages:
     source: path
     version: "0.0.1"
 sdks:
-  dart: ">=2.19.0-31.0.dev <3.0.0"
+  dart: ">=2.17.0 <3.0.0"
   flutter: ">=3.0.0"

@@ -53,6 +53,7 @@ dependencies:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/file_selector/file_selector_linux
+      ref: 4bc2c310e8acf3740ea0c2b326b3ef71280391f8
 
   # Third-party UI widgets or "pure-dart" packages.
 
