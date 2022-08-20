@@ -142,6 +142,7 @@ ThemeData createTheme({
                 TextStyle(
                   letterSpacing: 0.8,
                   fontWeight: FontWeight.w600,
+                  fontFamily: Platform.isLinux ? 'Inter' : null,
                 ),
               )
             : null,
