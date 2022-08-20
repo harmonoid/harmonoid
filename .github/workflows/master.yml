@@ -103,6 +103,8 @@ jobs:
 
       - run: rm -r "assets/icons"
       - run: mkdir "assets/icons"
+      - run: rm pubspec.yaml
+      - run: mv pubspec.linux.yaml pubspec.yaml
 
       - run: flutter config --enable-linux-desktop
       - run: flutter pub upgrade

@@ -152,6 +152,27 @@ flutter:
     - assets/images/
     - assets/translations/
     - assets/preloaded_visuals/
+  fonts:
+    - family: "Inter"
+      fonts:
+        - asset: assets/fonts/Inter-Thin.otf
+          weight: 100
+        - asset: assets/fonts/Inter-ExtraLight.otf
+          weight: 200
+        - asset: assets/fonts/Inter-Light.otf
+          weight: 300
+        - asset: assets/fonts/Inter-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Inter-ExtraBold.otf
+          weight: 800
+        - asset: assets/fonts/Inter-Black.otf
+          weight: 900
 
 msix_config:
   msix_version: 0.2.9.0
