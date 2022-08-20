@@ -3101,8 +3101,11 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
               child: Text(
                 Language.instance.GO_TO_SETTINGS.toUpperCase(),
               ),
-              style: TextButton.styleFrom(
-                disabledForegroundColor: Theme.of(context).disabledColor,
+              style: ButtonStyle(
+                foregroundColor: _TextButtonDefaultColorCompat(
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).disabledColor,
+                ),
               ),
               onPressed: () {
                 Navigator.of(context).push(
@@ -3122,8 +3125,11 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
               child: Text(
                 Language.instance.DONE.toUpperCase(),
               ),
-              style: TextButton.styleFrom(
-                disabledForegroundColor: Theme.of(context).disabledColor,
+              style: ButtonStyle(
+                foregroundColor: _TextButtonDefaultColorCompat(
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).disabledColor,
+                ),
               ),
               onPressed: missingDirectories.isEmpty
                   ? Navigator.of(context).maybePop
@@ -3133,6 +3139,27 @@ class _FoldersNotFoundDialogState extends State<FoldersNotFoundDialog> {
         );
       },
     );
+  }
+}
+
+@immutable
+class _TextButtonDefaultColorCompat extends MaterialStateProperty<Color?> {
+  _TextButtonDefaultColorCompat(this.color, this.disabled);
+
+  final Color? color;
+  final Color? disabled;
+
+  @override
+  Color? resolve(Set<MaterialState> states) {
+    if (states.contains(MaterialState.disabled)) {
+      return disabled;
+    }
+    return color;
+  }
+
+  @override
+  String toString() {
+    return '{disabled: $disabled, otherwise: $color}';
   }
 }
 
