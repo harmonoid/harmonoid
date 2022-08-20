@@ -27,7 +27,7 @@ jobs:
           flutter-version: "3.0.0"
           channel: "stable"
 
-      - run: rmdir "assets/fonts" /Q /S
+      - run: rmdir /Q /S "assets/fonts"
       - run: mkdir "assets/fonts"
 
       - run: flutter config --enable-windows-desktop
@@ -201,8 +201,10 @@ jobs:
       
       - run: flutter pub upgrade
       - run: flutter pub get
-      - run: flutter build apk --verbose
-      - run: cp build/app/outputs/flutter-apk/app-release.apk harmonoid-android.apk
+      - run: flutter build apk --verbose --split-per-abi
+      - run: cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk harmonoid-android-arm64-v8a-release.apk
+      - run: cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk harmonoid-android-armeabi-v7a-release.apk
+      - run: cp build/app/outputs/flutter-apk/app-x86_64-release.apk harmonoid-android-x86_64-release.apk
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -215,5 +217,7 @@ jobs:
           body: ""
           tag_name: "vnext"
           files: |
-            harmonoid-android.apk
+            harmonoid-android-arm64-v8a-release.apk
+            harmonoid-android-armeabi-v7a-release.apk
+            harmonoid-android-x86_64-release.apk
           token: ${{ secrets.ACCESS_TOKEN }}
