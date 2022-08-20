@@ -27,7 +27,9 @@ jobs:
           flutter-version: "3.0.0"
           channel: "stable"
 
-      - run: rmdir /s /q "assets/fonts"
+      - run: |
+          rmdir /s /q "assets/fonts"
+        shell: cmd
       - run: mkdir "assets/fonts"
 
       - run: flutter config --enable-windows-desktop
