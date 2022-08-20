@@ -69,8 +69,9 @@ class _TrackTabState extends State<TrackTab> {
               ? desktop.ListTableTheme(
                   data: desktop.ListTableThemeData(
                     borderColor: Theme.of(context).dividerColor,
-                    hoverColor: Theme.of(context).dividerColor,
-                    highlightColor: Theme.of(context).primaryColor,
+                    highlightColor:
+                        Theme.of(context).dividerColor.withOpacity(0.4),
+                    hoverColor: Theme.of(context).dividerColor.withOpacity(0.2),
                     borderHighlightColor: Theme.of(context).primaryColor,
                     borderIndicatorColor: Theme.of(context).primaryColor,
                     borderHoverColor: Theme.of(context).primaryColor,

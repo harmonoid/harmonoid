@@ -326,10 +326,12 @@ class CollectionScreenState extends State<CollectionScreen>
                                   children: [
                                     Container(
                                       height: 40.0,
-                                      width: 280.0,
+                                      width: 298.0,
                                       alignment: Alignment.center,
                                       margin: EdgeInsets.only(
-                                          top: 0.0, bottom: 0.0),
+                                        top: 0.0,
+                                        bottom: 0.0,
+                                      ),
                                       padding: EdgeInsets.only(top: 2.0),
                                       child: Focus(
                                         onFocusChange: (hasFocus) {

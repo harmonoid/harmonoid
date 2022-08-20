@@ -403,9 +403,12 @@ class _DesktopAlbumArtistTabState extends State<DesktopAlbumArtistTab> {
                   onTap: () {
                     scrollController.animateTo(
                       offsets[collection.albumsOrderType == OrderType.ascending
-                          ? collection.albumArtists.keys.elementAt(i)
-                          : collection.albumArtists.keys.toList().elementAt(
-                              collection.albumArtists.keys.length - i - 1)]!,
+                              ? collection.albumArtists.keys.elementAt(i)
+                              : collection.albumArtists.keys.toList().elementAt(
+                                  collection.albumArtists.keys.length -
+                                      i -
+                                      1)]! +
+                          28.0,
                       duration: Duration(milliseconds: 100),
                       curve: Curves.easeInOut,
                     );
