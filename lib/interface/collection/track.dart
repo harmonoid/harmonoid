@@ -68,16 +68,14 @@ class _TrackTabState extends State<TrackTab> {
           ? collection.tracks.isNotEmpty
               ? desktop.ListTableTheme(
                   data: desktop.ListTableThemeData(
-                    highlightColor:
-                        Theme.of(context).dividerColor.withOpacity(0.4),
-                    hoverColor: Theme.of(context).dividerColor.withOpacity(0.2),
-                    borderHighlightColor:
-                        Theme.of(context).colorScheme.secondary,
-                    borderIndicatorColor:
-                        Theme.of(context).colorScheme.secondary,
-                    borderHoverColor: Theme.of(context).colorScheme.secondary,
+                    borderColor: Theme.of(context).dividerColor,
+                    hoverColor: Theme.of(context).dividerColor,
+                    highlightColor: Theme.of(context).primaryColor,
+                    borderHighlightColor: Theme.of(context).primaryColor,
+                    borderIndicatorColor: Theme.of(context).primaryColor,
+                    borderHoverColor: Theme.of(context).primaryColor,
                   ),
-                  // TODO: Tightly coupled Windows specific scrolling configuration. MUST BE REMOVED BEFORE Flutter 3.1.0 migration.
+                  // TODO: MUST BE REMOVED BEFORE Flutter 3.1.0.
                   child: Stack(
                     alignment: Alignment.topRight,
                     children: [
@@ -114,7 +112,7 @@ class _TrackTabState extends State<TrackTab> {
                         colCount: 5,
                         headerColumnBorder: BorderSide(
                           color: Theme.of(context).dividerColor,
-                          width: 0.0,
+                          width: 1.0,
                         ),
                         tableBorder: desktop.TableBorder(
                           verticalInside: BorderSide(
@@ -127,24 +125,27 @@ class _TrackTabState extends State<TrackTab> {
                         itemCount: collection.tracks.length,
                         itemExtent: 32.0,
                         colFraction: {
-                          0: 36.0 / MediaQuery.of(context).size.width,
+                          0: 0.04,
                           1: 0.36,
-                          4: 128.0 / MediaQuery.of(context).size.width,
+                          4: 0.12,
                         },
                         tableHeaderBuilder: (context, index, constraints) =>
                             Container(
                           alignment: Alignment.center,
-                          child: Text(
-                            [
-                              '#',
-                              Language.instance.TRACK_SINGLE,
-                              Language.instance.ARTIST,
-                              Language.instance.ALBUM_SINGLE,
-                              Language.instance.YEAR
-                            ][index],
-                            style: Theme.of(context).textTheme.headline2,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          child: Transform.translate(
+                            offset: Offset(4.0, 0.0),
+                            child: Text(
+                              [
+                                '#',
+                                Language.instance.TRACK_SINGLE,
+                                Language.instance.ARTIST,
+                                Language.instance.ALBUM_SINGLE,
+                                Language.instance.YEAR
+                              ][index],
+                              style: Theme.of(context).textTheme.headline2,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                         tableRowBuilder:
