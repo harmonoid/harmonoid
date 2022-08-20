@@ -27,6 +27,9 @@ jobs:
           flutter-version: "3.0.0"
           channel: "stable"
 
+      - run: rmdir "assets/fonts" /Q /S
+      - run: mkdir "assets/fonts"
+
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
       - run: flutter build windows
@@ -97,6 +100,10 @@ jobs:
           channel: "stable"
       - run: sudo apt-get update
       - run: sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev mpv libmpv-dev dpkg-dev rpm
+
+      - run: rm -r "assets/icons"
+      - run: mkdir "assets/icons"
+
       - run: flutter config --enable-linux-desktop
       - run: flutter pub upgrade
       - run: flutter pub get
@@ -185,6 +192,13 @@ jobs:
       - run: cp "${{ steps.create_key_store.outputs.filePath }}" android/app/keystore.jks
       - run: cp "${{ steps.create_key_properties.outputs.filePath }}" android/key.properties
 
+      - run: rm -r "assets/fonts"
+      - run: mkdir "assets/fonts"
+      - run: rm -r "assets/icons"
+      - run: mkdir "assets/icons"
+      - run: rm -r "assets/preloaded_visuals"
+      - run: mkdir "assets/preloaded_visuals"
+      
       - run: flutter pub upgrade
       - run: flutter pub get
       - run: flutter build apk --verbose
