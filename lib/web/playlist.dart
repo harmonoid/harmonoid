@@ -383,7 +383,7 @@ class WebPlaylistScreenState extends State<WebPlaylistScreen>
   @override
   Widget build(BuildContext context) {
     const mobileSliverLabelHeight = 116.0;
-    double mobileSliverContentHeight = MediaQuery.of(context).size.width * 0.6;
+    double mobileSliverContentHeight = MediaQuery.of(context).size.width;
     double mobileSliverExpandedHeight = mobileSliverContentHeight -
         MediaQuery.of(context).padding.top +
         mobileSliverLabelHeight;
