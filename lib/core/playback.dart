@@ -295,7 +295,7 @@ class Playback extends ChangeNotifier {
     }
     if (Platform.isAndroid || Platform.isIOS) {
       audioService?.setSpeed(rate);
-      audioService?.setVolume(volume);
+      audioService?.setVolume(volume / 100.0);
       audioService?.setPitch(pitch);
       audioService?.setRepeatMode(
         AudioServiceRepeatMode.values[playlistLoopMode.index],
@@ -910,11 +910,12 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         mediaItem.add(queue.value[e]);
       }
     });
-    _player.volumeStream.listen(
-      (e) => playback
-        ..volume = e
-        ..notify(),
-    );
+    // Handled within [Playback] instance.
+    // _player.volumeStream.listen(
+    //   (e) => playback
+    //     ..volume = e * 100.0
+    //     ..notify(),
+    // );
     _player.speedStream.listen(
       (e) => playback
         ..rate = e
@@ -1002,17 +1003,31 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
   }
 
   @override
-  Future<void> skipToQueueItem(index) => _player.seek(
+  Future<void> skipToQueueItem(index) {
+    if (index != _player.currentIndex) {
+      return _player.seek(
         Duration.zero,
         index: index,
       );
+    }
+    return Future.value(null);
+  }
 
   @override
   Future<void> setSpeed(speed) => _player.setSpeed(speed);
 
   /// For the [Playback] implementation.
   /// Not a part of `package:audio_service`.
-  Future<void> setVolume(volume) => _player.setVolume(volume);
+  Future<void> setVolume(volume) async {
+    if (volume <= 1.0) {
+      await _player.setVolume(volume);
+      await _playerAndroidLoudnessEnhancer.setEnabled(false);
+    } else {
+      _player.setVolume(1.0);
+      await _playerAndroidLoudnessEnhancer.setEnabled(true);
+      await _playerAndroidLoudnessEnhancer.setTargetGain(20.0 * (volume - 1.0));
+    }
+  }
 
   /// For the [Playback] implementation.
   /// Not a part of `package:audio_service`.
