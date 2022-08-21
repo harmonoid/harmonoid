@@ -821,18 +821,10 @@ class _SortBarState extends State<SortBar> {
         ? ValueListenableBuilder<bool>(
             valueListenable: widget.hover,
             child: child,
-            builder: (context, hover, child) => TweenAnimationBuilder<double>(
-              tween: Tween<double>(begin: 0.0, end: hover ? 0.0 : 1.0),
-              duration: const Duration(milliseconds: 200),
-              child: Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.only(right: tileMargin),
-                child: child,
-              ),
-              builder: (context, value, child) => Opacity(
-                opacity: value,
-                child: child,
-              ),
+            builder: (context, hover, child) => Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(right: tileMargin),
+              child: child,
             ),
           )
         : ValueListenableBuilder<bool>(
