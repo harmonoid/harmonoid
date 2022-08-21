@@ -816,6 +816,7 @@ Uri? validate(String text) {
 ///
 ImageProvider getAlbumArt(
   Media media, {
+  int? cacheWidth,
   bool small = false,
 }) {
   ImageProvider? image;
@@ -846,7 +847,7 @@ ImageProvider getAlbumArt(
   }
   // [ResizeImage.resizeIfNeeded] is only needed for local images.
   if (small && !(image is ExtendedNetworkImageProvider)) {
-    return ResizeImage.resizeIfNeeded(null, 200, image);
+    return ResizeImage.resizeIfNeeded(null, cacheWidth ?? 200, image);
   } else {
     return image;
   }

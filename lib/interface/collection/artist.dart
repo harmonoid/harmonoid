@@ -524,7 +524,15 @@ class ArtistTile extends StatelessWidget {
                                       tag: 'artist_art_${artist.artistName}',
                                       child: ClipOval(
                                         child: ExtendedImage(
-                                          image: getAlbumArt(artist),
+                                          image: getAlbumArt(
+                                            artist,
+                                            small: true,
+                                            cacheWidth: ((width - 8.0) *
+                                                    MediaQuery.of(context)
+                                                        .size
+                                                        .width) ~/
+                                                1,
+                                          ),
                                           height: width - 8.0,
                                           width: width - 8.0,
                                         ),
@@ -621,7 +629,15 @@ class ArtistTile extends StatelessWidget {
                                       tag: 'artist_art_${artist.artistName}',
                                       child: ClipOval(
                                         child: ExtendedImage(
-                                          image: getAlbumArt(artist),
+                                          image: getAlbumArt(
+                                            artist,
+                                            small: true,
+                                            cacheWidth: ((width - 8.0) *
+                                                    MediaQuery.of(context)
+                                                        .size
+                                                        .width) ~/
+                                                1,
+                                          ),
                                           height: width - 8.0,
                                           width: width - 8.0,
                                         ),

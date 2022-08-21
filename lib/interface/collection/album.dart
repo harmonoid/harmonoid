@@ -654,7 +654,14 @@ class AlbumTile extends StatelessWidget {
                 child: Column(
                   children: [
                     Ink.image(
-                      image: getAlbumArt(album),
+                      image: getAlbumArt(
+                        album,
+                        small: true,
+                        cacheWidth:
+                            ((dense ? kDenseAlbumTileWidth : kAlbumTileHeight) *
+                                    MediaQuery.of(context).size.width) ~/
+                                1,
+                      ),
                       fit: BoxFit.cover,
                       height: width,
                       width: width,
