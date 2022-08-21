@@ -1182,7 +1182,6 @@ class MiniNowPlayingBarRefreshCollectionButtonState
                         icon: Icons.add,
                         activeIcon: Icons.close,
                         spacing: 8.0,
-                        tooltip: Language.instance.CREATE_NEW_PLAYLIST,
                         heroTag: 'create-playlist-fab',
                         elevation: 8.0,
                         animationCurve: Curves.easeInOut,

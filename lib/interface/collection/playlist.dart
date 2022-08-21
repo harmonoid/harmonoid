@@ -357,6 +357,280 @@ class PlaylistTile extends StatefulWidget {
 class PlaylistTileState extends State<PlaylistTile> {
   bool reactToSecondaryPress = false;
 
+  List<PopupMenuItem<int>> get items => [
+        PopupMenuItem<int>(
+          padding: EdgeInsets.zero,
+          value: 0,
+          child: ListTile(
+            leading: Icon(
+              Platform.isWindows ? FluentIcons.delete_16_regular : Icons.delete,
+            ),
+            title: Text(
+              Language.instance.DELETE,
+              style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+            ),
+          ),
+        ),
+        PopupMenuItem<int>(
+          padding: EdgeInsets.zero,
+          value: 1,
+          child: ListTile(
+            leading: Icon(
+              Platform.isWindows
+                  ? FluentIcons.rename_16_regular
+                  : Icons.text_format,
+            ),
+            title: Text(
+              Language.instance.RENAME,
+              style: isDesktop ? Theme.of(context).textTheme.headline4 : null,
+            ),
+          ),
+        ),
+        if (!isDesktop && !MobileNowPlayingController.instance.isHidden)
+          PopupMenuItem<int>(
+            padding: EdgeInsets.zero,
+            child: SizedBox(height: kMobileNowPlayingBarHeight),
+          ),
+      ];
+
+  Future<void> handleSelection(int? result) async {
+    switch (result) {
+      case 0:
+        {
+          await showDialog(
+            context: context,
+            builder: (subContext) => AlertDialog(
+              title: Text(
+                Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER,
+              ),
+              content: Text(
+                Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY
+                    .replaceAll(
+                  'NAME',
+                  '${widget.playlist.name}',
+                ),
+                style: Theme.of(subContext).textTheme.headline3,
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    await Collection.instance.playlistDelete(widget.playlist);
+                    Navigator.of(subContext).pop();
+                  },
+                  child: Text(Language.instance.YES),
+                ),
+                TextButton(
+                  onPressed: Navigator.of(subContext).pop,
+                  child: Text(Language.instance.NO),
+                ),
+              ],
+            ),
+          );
+          break;
+        }
+      case 1:
+        {
+          if (isDesktop) {
+            String rename = widget.playlist.name;
+            await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text(
+                  Language.instance.RENAME,
+                ),
+                content: Container(
+                  height: 40.0,
+                  width: 280.0,
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+                  padding: EdgeInsets.only(top: 2.0),
+                  child: Focus(
+                    onFocusChange: (hasFocus) {
+                      if (hasFocus) {
+                        HotKeys.instance.disableSpaceHotKey();
+                      } else {
+                        HotKeys.instance.enableSpaceHotKey();
+                      }
+                    },
+                    child: TextFormField(
+                      initialValue: widget.playlist.name,
+                      autofocus: true,
+                      cursorWidth: 1.0,
+                      onChanged: (value) => rename = value,
+                      onFieldSubmitted: (String value) async {
+                        if (value.isNotEmpty && value != widget.playlist.name) {
+                          widget.playlist.name = value;
+                          Collection.instance.playlistsSaveToCache();
+                          Navigator.of(context).maybePop();
+                          setState(() {});
+                        }
+                      },
+                      cursorColor:
+                          Theme.of(context).brightness == Brightness.light
+                              ? Color(0xFF212121)
+                              : Colors.white,
+                      textAlignVertical: TextAlignVertical.bottom,
+                      style: Theme.of(context).textTheme.headline4,
+                      decoration: inputDecoration(
+                        context,
+                        Language.instance.PLAYLISTS_TEXT_FIELD_LABEL,
+                      ),
+                    ),
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    child: Text(
+                      Language.instance.OK,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    onPressed: () async {
+                      if (rename.isNotEmpty && rename != widget.playlist.name) {
+                        widget.playlist.name = rename;
+                        Collection.instance.playlistsSaveToCache();
+                        Navigator.of(context).maybePop();
+                        setState(() {});
+                      }
+                    },
+                  ),
+                  TextButton(
+                    child: Text(
+                      Language.instance.CANCEL,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    onPressed: Navigator.of(context).maybePop,
+                  ),
+                ],
+              ),
+            );
+          }
+          if (isMobile) {
+            await Navigator.of(context).maybePop();
+            String input = '';
+            final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+            await showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              elevation: 8.0,
+              useRootNavigator: true,
+              backgroundColor: Theme.of(context).cardColor,
+              builder: (context) => StatefulBuilder(
+                builder: (context, setState) {
+                  return Container(
+                    margin: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom -
+                          MediaQuery.of(context).padding.bottom,
+                    ),
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 4.0),
+                        Form(
+                          key: formKey,
+                          child: TextFormField(
+                            initialValue: widget.playlist.name,
+                            autofocus: true,
+                            autocorrect: false,
+                            validator: (value) {
+                              final error = value == null
+                                  ? null
+                                  : validate(value) == null
+                                      ? ''
+                                      : null;
+                              debugPrint(error.toString());
+                              return error;
+                            },
+                            onChanged: (value) => input = value,
+                            keyboardType: TextInputType.url,
+                            textCapitalization: TextCapitalization.none,
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (value) async {
+                              if (value.isNotEmpty &&
+                                  value != widget.playlist.name) {
+                                widget.playlist.name = value;
+                                Collection.instance.playlistsSaveToCache();
+                                Navigator.of(context).maybePop();
+                                setState(() {});
+                              }
+                            },
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.fromLTRB(
+                                12,
+                                30,
+                                12,
+                                6,
+                              ),
+                              hintText:
+                                  Language.instance.PLAYLISTS_TEXT_FIELD_LABEL,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .iconTheme
+                                      .color!
+                                      .withOpacity(0.4),
+                                  width: 1.8,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context)
+                                      .iconTheme
+                                      .color!
+                                      .withOpacity(0.4),
+                                  width: 1.8,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 1.8,
+                                ),
+                              ),
+                              errorStyle: TextStyle(height: 0.0),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4.0),
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (input.isNotEmpty &&
+                                input != widget.playlist.name) {
+                              widget.playlist.name = input;
+                              Collection.instance.playlistsSaveToCache();
+                              Navigator.of(context).maybePop();
+                              setState(() {});
+                            }
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          child: Text(
+                            Language.instance.RENAME.toUpperCase(),
+                            style: TextStyle(letterSpacing: 2.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          }
+          break;
+        }
+      default:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Listener(
@@ -379,161 +653,9 @@ class PlaylistTileState extends State<PlaylistTile> {
               MediaQuery.of(context).size.height,
             ),
           ),
-          items: [
-            PopupMenuItem<int>(
-              padding: EdgeInsets.zero,
-              value: 0,
-              child: ListTile(
-                leading: Icon(
-                  Platform.isWindows
-                      ? FluentIcons.delete_16_regular
-                      : Icons.delete,
-                ),
-                title: Text(
-                  Language.instance.DELETE,
-                  style:
-                      isDesktop ? Theme.of(context).textTheme.headline4 : null,
-                ),
-              ),
-            ),
-            PopupMenuItem<int>(
-              padding: EdgeInsets.zero,
-              value: 1,
-              child: ListTile(
-                leading: Icon(
-                  Platform.isWindows
-                      ? FluentIcons.rename_16_regular
-                      : Icons.text_format,
-                ),
-                title: Text(
-                  Language.instance.RENAME,
-                  style:
-                      isDesktop ? Theme.of(context).textTheme.headline4 : null,
-                ),
-              ),
-            ),
-          ],
+          items: items,
         );
-        switch (result) {
-          case 0:
-            {
-              await showDialog(
-                context: context,
-                builder: (subContext) => AlertDialog(
-                  title: Text(
-                    Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER,
-                  ),
-                  content: Text(
-                    Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY
-                        .replaceAll(
-                      'NAME',
-                      '${widget.playlist.name}',
-                    ),
-                    style: Theme.of(subContext).textTheme.headline3,
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () async {
-                        await Collection.instance
-                            .playlistDelete(widget.playlist);
-                        Navigator.of(subContext).pop();
-                      },
-                      child: Text(Language.instance.YES),
-                    ),
-                    TextButton(
-                      onPressed: Navigator.of(subContext).pop,
-                      child: Text(Language.instance.NO),
-                    ),
-                  ],
-                ),
-              );
-              break;
-            }
-          case 1:
-            {
-              String rename = widget.playlist.name;
-              await showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(
-                    Language.instance.RENAME,
-                  ),
-                  content: Container(
-                    height: 40.0,
-                    width: 280.0,
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
-                    padding: EdgeInsets.only(top: 2.0),
-                    child: Focus(
-                      onFocusChange: (hasFocus) {
-                        if (hasFocus) {
-                          HotKeys.instance.disableSpaceHotKey();
-                        } else {
-                          HotKeys.instance.enableSpaceHotKey();
-                        }
-                      },
-                      child: TextFormField(
-                        initialValue: widget.playlist.name,
-                        autofocus: true,
-                        cursorWidth: 1.0,
-                        onChanged: (value) => rename = value,
-                        onFieldSubmitted: (String value) async {
-                          if (value.isNotEmpty &&
-                              value != widget.playlist.name) {
-                            widget.playlist.name = value;
-                            Collection.instance.playlistsSaveToCache();
-                            Navigator.of(context).maybePop();
-                            setState(() {});
-                          }
-                        },
-                        cursorColor:
-                            Theme.of(context).brightness == Brightness.light
-                                ? Color(0xFF212121)
-                                : Colors.white,
-                        textAlignVertical: TextAlignVertical.bottom,
-                        style: Theme.of(context).textTheme.headline4,
-                        decoration: inputDecoration(
-                          context,
-                          Language.instance.PLAYLISTS_TEXT_FIELD_LABEL,
-                        ),
-                      ),
-                    ),
-                  ),
-                  actions: [
-                    TextButton(
-                      child: Text(
-                        Language.instance.OK,
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      onPressed: () async {
-                        if (rename.isNotEmpty &&
-                            rename != widget.playlist.name) {
-                          widget.playlist.name = rename;
-                          Collection.instance.playlistsSaveToCache();
-                          Navigator.of(context).maybePop();
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    TextButton(
-                      child: Text(
-                        Language.instance.CANCEL,
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      onPressed: Navigator.of(context).maybePop,
-                    ),
-                  ],
-                ),
-              );
-              break;
-            }
-          default:
-            break;
-        }
+        await handleSelection(result);
       },
       child: Material(
         color: Colors.transparent,
@@ -570,42 +692,29 @@ class PlaylistTileState extends State<PlaylistTile> {
                   Playback.instance.interceptPositionChangeRebuilds = false;
                 });
               },
-          onLongPress: () {
-            if (widget.playlist.id < 0) return;
-            if (isMobile) {
-              showDialog(
-                context: context,
-                builder: (subContext) => AlertDialog(
-                  title: Text(
-                    Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_HEADER,
-                  ),
-                  content: Text(
-                    Language.instance.COLLECTION_PLAYLIST_DELETE_DIALOG_BODY
-                        .replaceAll(
-                      'NAME',
-                      widget.playlist.name,
+          onLongPress: widget.playlist.id < 0 || isDesktop
+              ? null
+              : () async {
+                  int? result;
+                  await showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) => Container(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: items
+                            .map(
+                              (item) => PopupMenuItem(
+                                child: item.child,
+                                onTap: () => result = item.value,
+                              ),
+                            )
+                            .toList(),
+                      ),
                     ),
-                    style: Theme.of(subContext).textTheme.headline3,
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () async {
-                        await Collection.instance.playlistDelete(
-                          widget.playlist,
-                        );
-                        Navigator.of(subContext).pop();
-                      },
-                      child: Text(Language.instance.YES),
-                    ),
-                    TextButton(
-                      onPressed: Navigator.of(subContext).pop,
-                      child: Text(Language.instance.NO),
-                    ),
-                  ],
-                ),
-              );
-            }
-          },
+                  );
+                  await handleSelection(result);
+                },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -666,11 +775,49 @@ class PlaylistTileState extends State<PlaylistTile> {
                       ),
                     ),
                     const SizedBox(width: 12.0),
-                    Container(
-                      width: 64.0,
-                      height: 64.0,
-                      alignment: Alignment.center,
-                    ),
+                    if (widget.playlist.id >= 0 && isMobile)
+                      Container(
+                        width: 64.0,
+                        height: 64.0,
+                        alignment: Alignment.center,
+                        child: IconButton(
+                          onPressed: () async {
+                            int? result;
+                            await showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) => Container(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: items
+                                      .map(
+                                        (item) => PopupMenuItem(
+                                          child: item.child,
+                                          onTap: () => result = item.value,
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              ),
+                            );
+                            await handleSelection(result);
+                          },
+                          icon: Icon(Icons.more_vert),
+                          iconSize: 24.0,
+                          splashRadius: 20.0,
+                        ),
+                      )
+                    else if (widget.playlist.id >= 0 && isDesktop)
+                      Container(
+                        width: 64.0,
+                        height: 64.0,
+                        alignment: Alignment.center,
+                        child: ContextMenuButton<int>(
+                          onSelected: (result) => handleSelection(result),
+                          color: Theme.of(context).iconTheme.color,
+                          itemBuilder: (_) => items,
+                        ),
+                      ),
                   ],
                 ),
               ),
