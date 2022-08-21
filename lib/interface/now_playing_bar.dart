@@ -1183,25 +1183,20 @@ class _ControlPanelState extends State<ControlPanel> {
             ),
           ],
           const SizedBox(height: 12.0),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 20.0,
-              bottom: isMobile ? 12.0 : 8.0,
-              top: isMobile ? 8.0 : 4.0,
-            ),
-            child: Text(
-              isDesktop
-                  ? Language.instance.SPEED
-                  : Language.instance.SPEED.toUpperCase(),
-              style: isDesktop
-                  ? Theme.of(context).textTheme.headline4
-                  : Theme.of(context).textTheme.overline?.copyWith(
-                        color: Theme.of(context).textTheme.headline3?.color,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-            ),
-          ),
+          if (isDesktop)
+            Padding(
+              padding: EdgeInsets.only(
+                left: 20.0,
+                bottom: 8.0,
+                top: 4.0,
+              ),
+              child: Text(
+                Language.instance.SPEED,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            )
+          else
+            const SizedBox(height: 8.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1212,7 +1207,7 @@ class _ControlPanelState extends State<ControlPanel> {
                 onPressed: () {
                   playback.setRate(1.0);
                 },
-                iconSize: isMobile ? null : 20.0,
+                iconSize: isMobile ? 28.0 : 20.0,
                 splashRadius: isMobile ? null : 18.0,
                 tooltip: Language.instance.RESET_SPEED,
                 icon: Icon(
@@ -1222,6 +1217,7 @@ class _ControlPanelState extends State<ControlPanel> {
               const SizedBox(width: 12.0),
               Expanded(
                 child: ScrollableSlider(
+                  mobile: true,
                   min: 0.5,
                   max: 2.0,
                   value: playback.rate.clamp(0.5, 2.0),
@@ -1266,14 +1262,18 @@ class _ControlPanelState extends State<ControlPanel> {
                       );
                     },
                     textAlign: TextAlign.center,
-                    textAlignVertical: TextAlignVertical.center,
+                    textAlignVertical: isMobile
+                        ? TextAlignVertical.bottom
+                        : TextAlignVertical.center,
                     style:
                         isMobile ? null : Theme.of(context).textTheme.headline4,
                     decoration: inputDecoration(
                       context,
                       '',
                     ).copyWith(
-                      contentPadding: EdgeInsets.all(0.0),
+                      contentPadding: isMobile
+                          ? EdgeInsets.only(bottom: 15.6)
+                          : EdgeInsets.all(0.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide.none,
@@ -1297,25 +1297,20 @@ class _ControlPanelState extends State<ControlPanel> {
               const SizedBox(width: 16.0),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 20.0,
-              bottom: isMobile ? 12.0 : 8.0,
-              top: isMobile ? 8.0 : 4.0,
-            ),
-            child: Text(
-              isDesktop
-                  ? Language.instance.PITCH
-                  : Language.instance.PITCH.toUpperCase(),
-              style: isDesktop
-                  ? Theme.of(context).textTheme.headline4
-                  : Theme.of(context).textTheme.overline?.copyWith(
-                        color: Theme.of(context).textTheme.headline3?.color,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-            ),
-          ),
+          if (isDesktop)
+            Padding(
+              padding: EdgeInsets.only(
+                left: 20.0,
+                bottom: 8.0,
+                top: 4.0,
+              ),
+              child: Text(
+                Language.instance.PITCH,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            )
+          else
+            const SizedBox(height: 8.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1324,7 +1319,7 @@ class _ControlPanelState extends State<ControlPanel> {
               IconButton(
                 padding: EdgeInsets.all(8.0),
                 onPressed: () => playback.setPitch(1.0),
-                iconSize: isMobile ? null : 20.0,
+                iconSize: isMobile ? 28.0 : 20.0,
                 splashRadius: isMobile ? null : 18.0,
                 tooltip: Language.instance.RESET_PITCH,
                 icon: Icon(FluentIcons.pulse_20_filled),
@@ -1332,6 +1327,7 @@ class _ControlPanelState extends State<ControlPanel> {
               const SizedBox(width: 12.0),
               Expanded(
                 child: ScrollableSlider(
+                  mobile: true,
                   min: 0.5,
                   max: 1.5,
                   value: playback.pitch.clamp(0.5, 1.5),
@@ -1376,14 +1372,18 @@ class _ControlPanelState extends State<ControlPanel> {
                     },
                     scrollPhysics: NeverScrollableScrollPhysics(),
                     textAlign: TextAlign.center,
-                    textAlignVertical: TextAlignVertical.center,
+                    textAlignVertical: isMobile
+                        ? TextAlignVertical.bottom
+                        : TextAlignVertical.center,
                     style:
                         isMobile ? null : Theme.of(context).textTheme.headline4,
                     decoration: inputDecoration(
                       context,
                       '',
                     ).copyWith(
-                      contentPadding: EdgeInsets.all(0.0),
+                      contentPadding: isMobile
+                          ? EdgeInsets.only(bottom: 15.6)
+                          : EdgeInsets.all(0.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide.none,
@@ -1407,25 +1407,20 @@ class _ControlPanelState extends State<ControlPanel> {
               const SizedBox(width: 16.0),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 20.0,
-              bottom: isMobile ? 12.0 : 8.0,
-              top: isMobile ? 8.0 : 4.0,
-            ),
-            child: Text(
-              isDesktop
-                  ? Language.instance.VOLUME_BOOST
-                  : Language.instance.VOLUME_BOOST.toUpperCase(),
-              style: isDesktop
-                  ? Theme.of(context).textTheme.headline4
-                  : Theme.of(context).textTheme.overline?.copyWith(
-                        color: Theme.of(context).textTheme.headline3?.color,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-            ),
-          ),
+          if (isDesktop)
+            Padding(
+              padding: EdgeInsets.only(
+                left: 20.0,
+                bottom: 8.0,
+                top: 4.0,
+              ),
+              child: Text(
+                Language.instance.VOLUME_BOOST,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            )
+          else
+            const SizedBox(height: 8.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1438,7 +1433,7 @@ class _ControlPanelState extends State<ControlPanel> {
                     playback.setVolume(100.0);
                   }
                 },
-                iconSize: isMobile ? null : 20.0,
+                iconSize: isMobile ? 28.0 : 20.0,
                 splashRadius: isMobile ? null : 18.0,
                 tooltip: Language.instance.DISABLE_VOLUME_BOOST,
                 icon: Icon(Icons.volume_up),
@@ -1446,6 +1441,7 @@ class _ControlPanelState extends State<ControlPanel> {
               const SizedBox(width: 12.0),
               Expanded(
                 child: ScrollableSlider(
+                  mobile: true,
                   min: 100.0,
                   max: 200.0,
                   value: playback.volume.clamp(100.0, 200.0),
@@ -1490,14 +1486,18 @@ class _ControlPanelState extends State<ControlPanel> {
                     },
                     scrollPhysics: NeverScrollableScrollPhysics(),
                     textAlign: TextAlign.center,
-                    textAlignVertical: TextAlignVertical.center,
+                    textAlignVertical: isMobile
+                        ? TextAlignVertical.bottom
+                        : TextAlignVertical.center,
                     style:
                         isMobile ? null : Theme.of(context).textTheme.headline4,
                     decoration: inputDecoration(
                       context,
                       '',
                     ).copyWith(
-                      contentPadding: EdgeInsets.all(0.0),
+                      contentPadding: isMobile
+                          ? EdgeInsets.only(bottom: 15.6)
+                          : EdgeInsets.all(0.0),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
                         borderSide: BorderSide.none,
@@ -1521,7 +1521,7 @@ class _ControlPanelState extends State<ControlPanel> {
               const SizedBox(width: 16.0),
             ],
           ),
-          const SizedBox(height: 8.0),
+          const SizedBox(height: 16.0),
         ],
       ),
     );

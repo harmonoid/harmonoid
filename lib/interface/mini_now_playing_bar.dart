@@ -843,30 +843,16 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                           switch (result) {
                                                                                             case 0:
                                                                                               {
-                                                                                                showModalBottomSheet(
-                                                                                                    isScrollControlled: true,
-                                                                                                    backgroundColor: Colors.transparent,
-                                                                                                    context: context,
-                                                                                                    builder: (context) {
-                                                                                                      return StatefulBuilder(
-                                                                                                        builder: (context, setState) {
-                                                                                                          final bottom = MediaQuery.of(context).viewInsets.bottom - MediaQuery.of(context).padding.bottom;
-                                                                                                          debugPrint(bottom.toString());
-                                                                                                          return Card(
-                                                                                                            clipBehavior: Clip.antiAlias,
-                                                                                                            margin: EdgeInsets.only(
-                                                                                                              left: 8.0,
-                                                                                                              right: 8.0,
-                                                                                                              bottom: ((bottom == 0.0 ? kBottomNavigationBarHeight : bottom) + 8.0).clamp(0, 1 << 32).toDouble(),
-                                                                                                            ),
-                                                                                                            elevation: 8.0,
-                                                                                                            child: ControlPanel(
-                                                                                                              onPop: () {},
-                                                                                                            ),
-                                                                                                          );
-                                                                                                        },
-                                                                                                      );
-                                                                                                    });
+                                                                                                await Future.delayed(const Duration(milliseconds: 200));
+                                                                                                await showDialog(
+                                                                                                  context: context,
+                                                                                                  builder: (context) => AlertDialog(
+                                                                                                    contentPadding: EdgeInsets.zero,
+                                                                                                    content: ControlPanel(
+                                                                                                      onPop: () {},
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                );
                                                                                                 break;
                                                                                               }
                                                                                             case 1:
@@ -884,7 +870,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                               }
                                                                                             case 3:
                                                                                               {
-                                                                                                showAddToPlaylistDialog(
+                                                                                                await showAddToPlaylistDialog(
                                                                                                   context,
                                                                                                   track,
                                                                                                   elevated: true,
