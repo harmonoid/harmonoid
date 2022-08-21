@@ -1031,7 +1031,9 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                             ],
                                           ),
                                         ),
-                                      if (percentage < 1.0)
+                                      if (height <
+                                          MediaQuery.of(context).size.width -
+                                              64.0)
                                         Opacity(
                                           opacity: (1 - percentage * 5)
                                               .clamp(0.0, 1.0),
@@ -1179,11 +1181,12 @@ class MiniNowPlayingBarRefreshCollectionButtonState
                     ? SpeedDial(
                         icon: Icons.add,
                         activeIcon: Icons.close,
-                        spacing: 5.0,
+                        spacing: 8.0,
                         tooltip: Language.instance.CREATE_NEW_PLAYLIST,
                         heroTag: 'create-playlist-fab',
                         elevation: 8.0,
-                        animationCurve: Curves.elasticInOut,
+                        animationCurve: Curves.easeInOut,
+                        animationDuration: const Duration(milliseconds: 200),
                         children: [
                           SpeedDialChild(
                             child: const Icon(Icons.downloading),
