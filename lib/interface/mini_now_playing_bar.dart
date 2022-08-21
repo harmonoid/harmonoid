@@ -78,8 +78,8 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
   }
 
   late AnimationController playOrPause;
-  late VoidCallback listener;
   int index = Playback.instance.index;
+  int currentPage = Playback.instance.index;
   Track? track;
   Iterable<Widget> comingUpTracks = [];
   bool showAlbumArtButton = false;
@@ -101,97 +101,6 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
       vsync: this,
       duration: Duration(milliseconds: 200),
     );
-    listener = () async {
-      if (Playback.instance.isPlaying) {
-        playOrPause.forward();
-      } else {
-        playOrPause.reverse();
-      }
-      if (Playback.instance.index < 0 ||
-          Playback.instance.index >= Playback.instance.tracks.length) {
-        return;
-      }
-      if (index != Playback.instance.index) {
-        try {
-          await precacheImage(
-            getAlbumArt(
-              Playback.instance.tracks[index.clamp(
-                0,
-                Playback.instance.tracks.length,
-              )],
-            ),
-            context,
-          );
-          // Precache adjacent album arts for smoother swipe transitions to the next/previous track.
-          await Future.wait([
-            precacheImage(
-              getAlbumArt(
-                Playback.instance.tracks[(index - 1).clamp(
-                  0,
-                  Playback.instance.tracks.length,
-                )],
-              ),
-              context,
-            ),
-            precacheImage(
-              getAlbumArt(
-                Playback.instance.tracks[(index + 1).clamp(
-                  0,
-                  Playback.instance.tracks.length,
-                )],
-              ),
-              context,
-            ),
-          ]);
-        } catch (exception, stacktrace) {
-          debugPrint(exception.toString());
-          debugPrint(stacktrace.toString());
-        }
-        if (pageController.hasClients) {
-          pageController.animateToPage(
-            Playback.instance.index,
-            duration: Duration(milliseconds: 400),
-            curve: Curves.easeInOut,
-          );
-        } else {
-          pageController = PageController(
-            initialPage: Playback.instance.index,
-          );
-        }
-        setState(() => index = Playback.instance.index);
-      }
-      final track = Playback.instance.tracks[Playback.instance.index];
-      if (this.track != track ||
-          comingUpTracks.length.compareTo(Playback.instance.tracks.length) !=
-              0) {
-        this.track = track;
-        comingUpTracks = Playback.instance.tracks
-            .skip(Playback.instance.index + 1)
-            .toList()
-            .asMap()
-            .entries
-            .map((e) => TrackTile(
-                  track: e.value,
-                  index: e.key,
-                  disableContextMenu: true,
-                  leading: Container(
-                    height: 56.0,
-                    width: 56.0,
-                    alignment: Alignment.center,
-                    child: Text(
-                      '${e.key + Playback.instance.index + 1}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline3
-                          ?.copyWith(fontSize: 18.0),
-                    ),
-                  ),
-                  onPressed: () {
-                    Playback.instance.jump(Playback.instance.index + e.key + 1);
-                  },
-                ));
-      }
-    };
     Playback.instance.addListener(listener);
   }
 
@@ -199,6 +108,91 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
   void dispose() {
     Playback.instance.removeListener(listener);
     super.dispose();
+  }
+
+  Future<void> listener() async {
+    if (Playback.instance.isPlaying) {
+      playOrPause.forward();
+    } else {
+      playOrPause.reverse();
+    }
+    if (Playback.instance.index < 0 ||
+        Playback.instance.index >= Playback.instance.tracks.length) {
+      return;
+    }
+    if (index != Playback.instance.index) {
+      if (pageController.hasClients) {
+        pageController.animateToPage(
+          Playback.instance.index,
+          duration: Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        pageController = PageController(
+          initialPage: Playback.instance.index,
+        );
+      }
+      setState(() {
+        index = Playback.instance.index;
+        currentPage = Playback.instance.index;
+      });
+      try {
+        // Precache adjacent album arts for smoother swipe transitions to the next/previous track.
+        Future.wait([
+          precacheImage(
+            getAlbumArt(
+              Playback.instance.tracks[(Playback.instance.index - 1).clamp(
+                0,
+                Playback.instance.tracks.length,
+              )],
+            ),
+            context,
+          ),
+          precacheImage(
+            getAlbumArt(
+              Playback.instance.tracks[(Playback.instance.index + 1).clamp(
+                0,
+                Playback.instance.tracks.length,
+              )],
+            ),
+            context,
+          ),
+        ]);
+      } catch (exception, stacktrace) {
+        debugPrint(exception.toString());
+        debugPrint(stacktrace.toString());
+      }
+    }
+    final track = Playback.instance.tracks[Playback.instance.index];
+    if (this.track != track ||
+        comingUpTracks.length.compareTo(Playback.instance.tracks.length) != 0) {
+      this.track = track;
+      comingUpTracks = Playback.instance.tracks
+          .skip(Playback.instance.index + 1)
+          .toList()
+          .asMap()
+          .entries
+          .map((e) => TrackTile(
+                track: e.value,
+                index: e.key,
+                disableContextMenu: true,
+                leading: Container(
+                  height: 56.0,
+                  width: 56.0,
+                  alignment: Alignment.center,
+                  child: Text(
+                    '${e.key + Playback.instance.index + 1}',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline3
+                        ?.copyWith(fontSize: 18.0),
+                  ),
+                ),
+                onPressed: () {
+                  Playback.instance.jump(Playback.instance.index + e.key + 1);
+                },
+              ));
+    }
   }
 
   @override
@@ -655,308 +649,318 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                         MediaQuery.of(context)
                                                             .size
                                                             .width,
-                                                    child: PageView(
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      controller:
-                                                          pageController,
-                                                      onPageChanged: (value) =>
+                                                    child: NotificationListener<
+                                                        ScrollNotification>(
+                                                      onNotification:
+                                                          (ScrollNotification
+                                                              notification) {
+                                                        if (notification
+                                                                    .depth ==
+                                                                0 &&
+                                                            notification
+                                                                is ScrollEndNotification &&
+                                                            notification.metrics
+                                                                    .axis ==
+                                                                Axis.horizontal) {
                                                           Playback.instance
-                                                              .jump(value),
-                                                      children:
-                                                          Playback
-                                                              .instance.tracks
-                                                              .map(
-                                                                (e) => Stack(
-                                                                  children: [
-                                                                    SizedBox(
-                                                                      child: Transform
-                                                                          .scale(
-                                                                        // Scale up the network images on smaller screens.
-                                                                        scale: LibmpvPluginUtils.isSupported(e.uri) &&
-                                                                                MediaQuery.of(context).size.width + kDetailsAreaHeight + kControlsAreaHeight + kBottomNavigationBarHeight > MediaQuery.of(context).size.height
-                                                                            ? 1.4
-                                                                            : 1.0,
-                                                                        child:
-                                                                            ExtendedImage(
-                                                                          image:
-                                                                              getAlbumArt(e),
-                                                                          width: MediaQuery.of(context)
-                                                                              .size
-                                                                              .width,
-                                                                          height: MediaQuery.of(context)
-                                                                              .size
-                                                                              .width,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    TweenAnimationBuilder<
-                                                                        double>(
-                                                                      tween: Tween<
-                                                                              double>(
-                                                                          begin:
-                                                                              0,
-                                                                          end:
-                                                                              1.0),
-                                                                      child:
-                                                                          Stack(
-                                                                        children: [
-                                                                          Container(
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              gradient: LinearGradient(
-                                                                                colors: [
-                                                                                  Colors.black38,
-                                                                                  Colors.transparent,
-                                                                                ],
-                                                                                stops: [
-                                                                                  0.0,
-                                                                                  0.5,
-                                                                                ],
-                                                                                begin: Alignment.topCenter,
-                                                                                end: Alignment.bottomCenter,
-                                                                              ),
-                                                                            ),
-                                                                            height: MediaQuery.of(context).size.width + kDetailsAreaHeight + kControlsAreaHeight + kBottomNavigationBarHeight < MediaQuery.of(context).size.height
-                                                                                ? MediaQuery.of(context).size.width
-                                                                                : MediaQuery.of(context).size.height - kDetailsAreaHeight - kControlsAreaHeight - kBottomNavigationBarHeight,
+                                                              .jump(
+                                                                  currentPage);
+                                                        }
+                                                        return false;
+                                                      },
+                                                      child: PageView(
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        controller:
+                                                            pageController,
+                                                        onPageChanged: (page) {
+                                                          currentPage = page;
+                                                        },
+                                                        children:
+                                                            Playback
+                                                                .instance.tracks
+                                                                .map(
+                                                                  (e) => Stack(
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        child: Transform
+                                                                            .scale(
+                                                                          // Scale up the network images on smaller screens.
+                                                                          scale: LibmpvPluginUtils.isSupported(e.uri) && MediaQuery.of(context).size.width + kDetailsAreaHeight + kControlsAreaHeight + kBottomNavigationBarHeight > MediaQuery.of(context).size.height
+                                                                              ? 1.4
+                                                                              : 1.0,
+                                                                          child:
+                                                                              ExtendedImage(
+                                                                            image:
+                                                                                getAlbumArt(e),
                                                                             width:
                                                                                 MediaQuery.of(context).size.width,
+                                                                            height:
+                                                                                MediaQuery.of(context).size.width,
+                                                                            fit:
+                                                                                BoxFit.cover,
                                                                           ),
-                                                                          Positioned
-                                                                              .fill(
-                                                                            child:
-                                                                                Material(
-                                                                              color: Colors.transparent,
-                                                                              child: Row(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                                children: [
-                                                                                  Container(
-                                                                                    padding: EdgeInsets.only(
-                                                                                      top: MediaQuery.of(context).padding.top + 8.0,
-                                                                                      left: 8.0,
-                                                                                      right: 8.0,
-                                                                                      bottom: 8.0,
+                                                                        ),
+                                                                      ),
+                                                                      TweenAnimationBuilder<
+                                                                          double>(
+                                                                        tween: Tween<double>(
+                                                                            begin:
+                                                                                0,
+                                                                            end:
+                                                                                1.0),
+                                                                        child:
+                                                                            Stack(
+                                                                          children: [
+                                                                            Container(
+                                                                              decoration: BoxDecoration(
+                                                                                gradient: LinearGradient(
+                                                                                  colors: [
+                                                                                    Colors.black38,
+                                                                                    Colors.transparent,
+                                                                                  ],
+                                                                                  stops: [
+                                                                                    0.0,
+                                                                                    0.5,
+                                                                                  ],
+                                                                                  begin: Alignment.topCenter,
+                                                                                  end: Alignment.bottomCenter,
+                                                                                ),
+                                                                              ),
+                                                                              height: MediaQuery.of(context).size.width + kDetailsAreaHeight + kControlsAreaHeight + kBottomNavigationBarHeight < MediaQuery.of(context).size.height ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height - kDetailsAreaHeight - kControlsAreaHeight - kBottomNavigationBarHeight,
+                                                                              width: MediaQuery.of(context).size.width,
+                                                                            ),
+                                                                            Positioned.fill(
+                                                                              child: Material(
+                                                                                color: Colors.transparent,
+                                                                                child: Row(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                                  children: [
+                                                                                    Container(
+                                                                                      padding: EdgeInsets.only(
+                                                                                        top: MediaQuery.of(context).padding.top + 8.0,
+                                                                                        left: 8.0,
+                                                                                        right: 8.0,
+                                                                                        bottom: 8.0,
+                                                                                      ),
+                                                                                      child: IconButton(
+                                                                                        onPressed: () {
+                                                                                          controller.animateToHeight(
+                                                                                            state: PanelState.MIN,
+                                                                                          );
+                                                                                        },
+                                                                                        color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
+                                                                                        icon: Icon(Icons.close),
+                                                                                        splashRadius: 24.0,
+                                                                                      ),
                                                                                     ),
-                                                                                    child: IconButton(
-                                                                                      onPressed: () {
-                                                                                        controller.animateToHeight(
-                                                                                          state: PanelState.MIN,
-                                                                                        );
-                                                                                      },
-                                                                                      color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
-                                                                                      icon: Icon(Icons.close),
-                                                                                      splashRadius: 24.0,
-                                                                                    ),
-                                                                                  ),
-                                                                                  const Spacer(),
-                                                                                  Container(
-                                                                                    padding: EdgeInsets.only(
-                                                                                      top: MediaQuery.of(context).padding.top + 8.0,
-                                                                                      left: 8.0,
-                                                                                      right: 8.0,
-                                                                                      bottom: 8.0,
-                                                                                    ),
-                                                                                    child: IconButton(
-                                                                                      onPressed: () async {
-                                                                                        final track = Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)];
+                                                                                    const Spacer(),
+                                                                                    Container(
+                                                                                      padding: EdgeInsets.only(
+                                                                                        top: MediaQuery.of(context).padding.top + 8.0,
+                                                                                        left: 8.0,
+                                                                                        right: 8.0,
+                                                                                        bottom: 8.0,
+                                                                                      ),
+                                                                                      child: IconButton(
+                                                                                        onPressed: () async {
+                                                                                          final track = Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)];
 
-                                                                                        int? result;
-                                                                                        await showModalBottomSheet(
-                                                                                          isScrollControlled: true,
-                                                                                          backgroundColor: Colors.transparent,
-                                                                                          context: context,
-                                                                                          builder: (context) => Card(
-                                                                                            margin: EdgeInsets.only(
-                                                                                              left: 8.0,
-                                                                                              right: 8.0,
-                                                                                              bottom: kBottomNavigationBarHeight + 8.0,
-                                                                                            ),
-                                                                                            clipBehavior: Clip.antiAlias,
-                                                                                            elevation: 8.0,
-                                                                                            child: Container(
-                                                                                              child: Column(
-                                                                                                mainAxisSize: MainAxisSize.min,
-                                                                                                children: [
-                                                                                                  PopupMenuItem(
-                                                                                                    onTap: () => result = 0,
-                                                                                                    value: 0,
-                                                                                                    child: ListTile(
-                                                                                                      leading: Icon(Icons.equalizer),
-                                                                                                      title: Text(Language.instance.CONTROL_PANEL),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                  if (LibmpvPluginUtils.isSupported(track.uri))
+                                                                                          int? result;
+                                                                                          await showModalBottomSheet(
+                                                                                            isScrollControlled: true,
+                                                                                            backgroundColor: Colors.transparent,
+                                                                                            context: context,
+                                                                                            builder: (context) => Card(
+                                                                                              margin: EdgeInsets.only(
+                                                                                                left: 8.0,
+                                                                                                right: 8.0,
+                                                                                                bottom: kBottomNavigationBarHeight + 8.0,
+                                                                                              ),
+                                                                                              clipBehavior: Clip.antiAlias,
+                                                                                              elevation: 8.0,
+                                                                                              child: Container(
+                                                                                                child: Column(
+                                                                                                  mainAxisSize: MainAxisSize.min,
+                                                                                                  children: [
                                                                                                     PopupMenuItem(
-                                                                                                      onTap: () => result = 1,
-                                                                                                      value: 1,
+                                                                                                      onTap: () => result = 0,
+                                                                                                      value: 0,
                                                                                                       child: ListTile(
-                                                                                                        leading: Icon(Icons.link),
-                                                                                                        title: Text(Language.instance.COPY_LINK),
+                                                                                                        leading: Icon(Icons.equalizer),
+                                                                                                        title: Text(Language.instance.CONTROL_PANEL),
                                                                                                       ),
                                                                                                     ),
-                                                                                                  if (LibmpvPluginUtils.isSupported(track.uri))
+                                                                                                    if (LibmpvPluginUtils.isSupported(track.uri))
+                                                                                                      PopupMenuItem(
+                                                                                                        onTap: () => result = 1,
+                                                                                                        value: 1,
+                                                                                                        child: ListTile(
+                                                                                                          leading: Icon(Icons.link),
+                                                                                                          title: Text(Language.instance.COPY_LINK),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    if (LibmpvPluginUtils.isSupported(track.uri))
+                                                                                                      PopupMenuItem(
+                                                                                                        onTap: () => result = 2,
+                                                                                                        value: 2,
+                                                                                                        child: ListTile(
+                                                                                                          leading: Icon(Icons.open_in_new),
+                                                                                                          title: Text(Language.instance.OPEN_IN_BROWSER),
+                                                                                                        ),
+                                                                                                      ),
                                                                                                     PopupMenuItem(
-                                                                                                      onTap: () => result = 2,
-                                                                                                      value: 2,
+                                                                                                      onTap: () => result = 3,
+                                                                                                      value: 3,
                                                                                                       child: ListTile(
-                                                                                                        leading: Icon(Icons.open_in_new),
-                                                                                                        title: Text(Language.instance.OPEN_IN_BROWSER),
+                                                                                                        leading: Icon(Icons.playlist_add),
+                                                                                                        title: Text(Language.instance.ADD_TO_PLAYLIST),
                                                                                                       ),
                                                                                                     ),
-                                                                                                  PopupMenuItem(
-                                                                                                    onTap: () => result = 3,
-                                                                                                    value: 3,
-                                                                                                    child: ListTile(
-                                                                                                      leading: Icon(Icons.playlist_add),
-                                                                                                      title: Text(Language.instance.ADD_TO_PLAYLIST),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                  PopupMenuItem(
-                                                                                                    onTap: () => result = 5,
-                                                                                                    value: 5,
-                                                                                                    child: ListTile(
-                                                                                                      leading: Icon(Icons.share),
-                                                                                                      title: Text(Language.instance.SHARE),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                  if (Lyrics.instance.current.length > 2)
                                                                                                     PopupMenuItem(
-                                                                                                      onTap: () => result = 4,
-                                                                                                      value: 4,
+                                                                                                      onTap: () => result = 5,
+                                                                                                      value: 5,
                                                                                                       child: ListTile(
-                                                                                                        leading: Icon(Icons.text_format),
-                                                                                                        title: Text(Language.instance.SHOW_LYRICS),
+                                                                                                        leading: Icon(Icons.share),
+                                                                                                        title: Text(Language.instance.SHARE),
                                                                                                       ),
                                                                                                     ),
-                                                                                                ],
+                                                                                                    if (Lyrics.instance.current.length > 2)
+                                                                                                      PopupMenuItem(
+                                                                                                        onTap: () => result = 4,
+                                                                                                        value: 4,
+                                                                                                        child: ListTile(
+                                                                                                          leading: Icon(Icons.text_format),
+                                                                                                          title: Text(Language.instance.SHOW_LYRICS),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                  ],
+                                                                                                ),
                                                                                               ),
                                                                                             ),
-                                                                                          ),
-                                                                                        );
-                                                                                        switch (result) {
-                                                                                          case 0:
-                                                                                            {
-                                                                                              showModalBottomSheet(
-                                                                                                  isScrollControlled: true,
-                                                                                                  backgroundColor: Colors.transparent,
-                                                                                                  context: context,
-                                                                                                  builder: (context) {
-                                                                                                    return StatefulBuilder(
-                                                                                                      builder: (context, setState) {
-                                                                                                        final bottom = MediaQuery.of(context).viewInsets.bottom - MediaQuery.of(context).padding.bottom;
-                                                                                                        debugPrint(bottom.toString());
-                                                                                                        return Card(
-                                                                                                          clipBehavior: Clip.antiAlias,
-                                                                                                          margin: EdgeInsets.only(
-                                                                                                            left: 8.0,
-                                                                                                            right: 8.0,
-                                                                                                            bottom: ((bottom == 0.0 ? kBottomNavigationBarHeight : bottom) + 8.0).clamp(0, 1 << 32).toDouble(),
-                                                                                                          ),
-                                                                                                          elevation: 8.0,
-                                                                                                          child: ControlPanel(
-                                                                                                            onPop: () {},
-                                                                                                          ),
-                                                                                                        );
-                                                                                                      },
-                                                                                                    );
-                                                                                                  });
-                                                                                              break;
-                                                                                            }
-                                                                                          case 1:
-                                                                                            {
-                                                                                              Clipboard.setData(ClipboardData(text: track.uri.toString()));
-                                                                                              break;
-                                                                                            }
-                                                                                          case 2:
-                                                                                            {
-                                                                                              launchUrl(
-                                                                                                track.uri,
-                                                                                                mode: LaunchMode.externalApplication,
-                                                                                              );
-                                                                                              break;
-                                                                                            }
-                                                                                          case 3:
-                                                                                            {
-                                                                                              showAddToPlaylistDialog(
-                                                                                                context,
-                                                                                                track,
-                                                                                                elevated: true,
-                                                                                              );
-                                                                                              break;
-                                                                                            }
-                                                                                          case 4:
-                                                                                            {
-                                                                                              await showGeneralDialog(
-                                                                                                useRootNavigator: false,
-                                                                                                context: context,
-                                                                                                pageBuilder: (context, animation, secondaryAnimation) {
-                                                                                                  return LyricsScreen();
-                                                                                                },
-                                                                                              );
-                                                                                              break;
-                                                                                            }
-                                                                                          case 5:
-                                                                                            {
-                                                                                              if (track.uri.isScheme('FILE')) {
-                                                                                                Share.shareFiles(
-                                                                                                  [
-                                                                                                    track.uri.toFilePath()
-                                                                                                  ],
-                                                                                                  subject: '${track.trackName} • ${[
-                                                                                                    '',
-                                                                                                    kUnknownArtist,
-                                                                                                  ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName}',
-                                                                                                );
-                                                                                              } else {
-                                                                                                Share.share(
-                                                                                                  '${track.trackName} • ${[
-                                                                                                    '',
-                                                                                                    kUnknownArtist,
-                                                                                                  ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName} • ${track.uri.toString()}',
-                                                                                                );
+                                                                                          );
+                                                                                          switch (result) {
+                                                                                            case 0:
+                                                                                              {
+                                                                                                showModalBottomSheet(
+                                                                                                    isScrollControlled: true,
+                                                                                                    backgroundColor: Colors.transparent,
+                                                                                                    context: context,
+                                                                                                    builder: (context) {
+                                                                                                      return StatefulBuilder(
+                                                                                                        builder: (context, setState) {
+                                                                                                          final bottom = MediaQuery.of(context).viewInsets.bottom - MediaQuery.of(context).padding.bottom;
+                                                                                                          debugPrint(bottom.toString());
+                                                                                                          return Card(
+                                                                                                            clipBehavior: Clip.antiAlias,
+                                                                                                            margin: EdgeInsets.only(
+                                                                                                              left: 8.0,
+                                                                                                              right: 8.0,
+                                                                                                              bottom: ((bottom == 0.0 ? kBottomNavigationBarHeight : bottom) + 8.0).clamp(0, 1 << 32).toDouble(),
+                                                                                                            ),
+                                                                                                            elevation: 8.0,
+                                                                                                            child: ControlPanel(
+                                                                                                              onPop: () {},
+                                                                                                            ),
+                                                                                                          );
+                                                                                                        },
+                                                                                                      );
+                                                                                                    });
+                                                                                                break;
                                                                                               }
+                                                                                            case 1:
+                                                                                              {
+                                                                                                Clipboard.setData(ClipboardData(text: track.uri.toString()));
+                                                                                                break;
+                                                                                              }
+                                                                                            case 2:
+                                                                                              {
+                                                                                                launchUrl(
+                                                                                                  track.uri,
+                                                                                                  mode: LaunchMode.externalApplication,
+                                                                                                );
+                                                                                                break;
+                                                                                              }
+                                                                                            case 3:
+                                                                                              {
+                                                                                                showAddToPlaylistDialog(
+                                                                                                  context,
+                                                                                                  track,
+                                                                                                  elevated: true,
+                                                                                                );
+                                                                                                break;
+                                                                                              }
+                                                                                            case 4:
+                                                                                              {
+                                                                                                await showGeneralDialog(
+                                                                                                  useRootNavigator: false,
+                                                                                                  context: context,
+                                                                                                  pageBuilder: (context, animation, secondaryAnimation) {
+                                                                                                    return LyricsScreen();
+                                                                                                  },
+                                                                                                );
+                                                                                                break;
+                                                                                              }
+                                                                                            case 5:
+                                                                                              {
+                                                                                                if (track.uri.isScheme('FILE')) {
+                                                                                                  Share.shareFiles(
+                                                                                                    [
+                                                                                                      track.uri.toFilePath()
+                                                                                                    ],
+                                                                                                    subject: '${track.trackName} • ${[
+                                                                                                      '',
+                                                                                                      kUnknownArtist,
+                                                                                                    ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName}',
+                                                                                                  );
+                                                                                                } else {
+                                                                                                  Share.share(
+                                                                                                    '${track.trackName} • ${[
+                                                                                                      '',
+                                                                                                      kUnknownArtist,
+                                                                                                    ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName} • ${track.uri.toString()}',
+                                                                                                  );
+                                                                                                }
+                                                                                                break;
+                                                                                              }
+                                                                                            default:
                                                                                               break;
-                                                                                            }
-                                                                                          default:
-                                                                                            break;
-                                                                                        }
-                                                                                      },
-                                                                                      color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
-                                                                                      icon: Icon(Icons.more_vert),
-                                                                                      splashRadius: 24.0,
+                                                                                          }
+                                                                                        },
+                                                                                        color: Theme.of(context).extension<IconColors>()?.appBarDarkIconColor,
+                                                                                        icon: Icon(Icons.more_vert),
+                                                                                        splashRadius: 24.0,
+                                                                                      ),
                                                                                     ),
-                                                                                  ),
-                                                                                ],
+                                                                                  ],
+                                                                                ),
                                                                               ),
                                                                             ),
-                                                                          ),
-                                                                        ],
+                                                                          ],
+                                                                        ),
+                                                                        duration:
+                                                                            Duration(
+                                                                          milliseconds:
+                                                                              400,
+                                                                        ),
+                                                                        builder: (
+                                                                          context,
+                                                                          value,
+                                                                          child,
+                                                                        ) =>
+                                                                            Opacity(
+                                                                          opacity:
+                                                                              value,
+                                                                          child:
+                                                                              child,
+                                                                        ),
                                                                       ),
-                                                                      duration:
-                                                                          Duration(
-                                                                        milliseconds:
-                                                                            400,
-                                                                      ),
-                                                                      builder: (
-                                                                        context,
-                                                                        value,
-                                                                        child,
-                                                                      ) =>
-                                                                          Opacity(
-                                                                        opacity:
-                                                                            value,
-                                                                        child:
-                                                                            child,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              )
-                                                              .toList(),
+                                                                    ],
+                                                                  ),
+                                                                )
+                                                                .toList(),
+                                                      ),
                                                     ),
                                                   );
                                                 }()
