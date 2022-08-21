@@ -13,7 +13,8 @@ import 'package:libmpv/libmpv.dart';
 import 'package:provider/provider.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:collection/collection.dart';
-import 'package:harmonoid/state/lyrics.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:media_library/media_library.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
@@ -29,11 +30,11 @@ import 'package:harmonoid/utils/widgets.dart';
 import 'package:harmonoid/utils/theme.dart';
 import 'package:harmonoid/interface/now_playing_bar.dart';
 import 'package:harmonoid/interface/collection/track.dart';
+import 'package:harmonoid/state/lyrics.dart';
 import 'package:harmonoid/state/now_playing_color_palette.dart';
 import 'package:harmonoid/state/mobile_now_playing_controller.dart';
 import 'package:harmonoid/constants/language.dart';
 import 'package:harmonoid/web/utils/widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 const kDetailsAreaHeight = 96.0;
 const kControlsAreaHeight = 136.0;
@@ -763,7 +764,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                       onPressed: () async {
                                                                                         final track = Playback.instance.tracks[Playback.instance.index.clamp(0, Playback.instance.tracks.length)];
 
-                                                                                        late final int result;
+                                                                                        int? result;
                                                                                         await showModalBottomSheet(
                                                                                           isScrollControlled: true,
                                                                                           backgroundColor: Colors.transparent,
@@ -774,6 +775,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                               right: 8.0,
                                                                                               bottom: kBottomNavigationBarHeight + 8.0,
                                                                                             ),
+                                                                                            clipBehavior: Clip.antiAlias,
                                                                                             elevation: 8.0,
                                                                                             child: Container(
                                                                                               child: Column(
@@ -813,6 +815,14 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                                       title: Text(Language.instance.ADD_TO_PLAYLIST),
                                                                                                     ),
                                                                                                   ),
+                                                                                                  PopupMenuItem(
+                                                                                                    onTap: () => result = 5,
+                                                                                                    value: 5,
+                                                                                                    child: ListTile(
+                                                                                                      leading: Icon(Icons.share),
+                                                                                                      title: Text(Language.instance.SHARE),
+                                                                                                    ),
+                                                                                                  ),
                                                                                                   if (Lyrics.instance.current.length > 2)
                                                                                                     PopupMenuItem(
                                                                                                       onTap: () => result = 4,
@@ -831,30 +841,29 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                           case 0:
                                                                                             {
                                                                                               showModalBottomSheet(
-                                                                                                isScrollControlled: true,
-                                                                                                backgroundColor: Colors.transparent,
-                                                                                                context: context,
-                                                                                                builder: (context) => Card(
-                                                                                                  margin: EdgeInsets.only(
-                                                                                                    left: 8.0,
-                                                                                                    right: 8.0,
-                                                                                                    bottom: kBottomNavigationBarHeight + 8.0,
-                                                                                                  ),
-                                                                                                  elevation: 8.0,
-                                                                                                  child: StatefulBuilder(
-                                                                                                    builder: (context, setState) {
-                                                                                                      return Container(
-                                                                                                        margin: EdgeInsets.only(
-                                                                                                          bottom: MediaQuery.of(context).viewInsets.bottom - MediaQuery.of(context).padding.bottom,
-                                                                                                        ),
-                                                                                                        child: ControlPanel(
-                                                                                                          onPop: () {},
-                                                                                                        ),
-                                                                                                      );
-                                                                                                    },
-                                                                                                  ),
-                                                                                                ),
-                                                                                              );
+                                                                                                  isScrollControlled: true,
+                                                                                                  backgroundColor: Colors.transparent,
+                                                                                                  context: context,
+                                                                                                  builder: (context) {
+                                                                                                    return StatefulBuilder(
+                                                                                                      builder: (context, setState) {
+                                                                                                        final bottom = MediaQuery.of(context).viewInsets.bottom - MediaQuery.of(context).padding.bottom;
+                                                                                                        debugPrint(bottom.toString());
+                                                                                                        return Card(
+                                                                                                          clipBehavior: Clip.antiAlias,
+                                                                                                          margin: EdgeInsets.only(
+                                                                                                            left: 8.0,
+                                                                                                            right: 8.0,
+                                                                                                            bottom: ((bottom == 0.0 ? kBottomNavigationBarHeight : bottom) + 8.0).clamp(0, 1 << 32).toDouble(),
+                                                                                                          ),
+                                                                                                          elevation: 8.0,
+                                                                                                          child: ControlPanel(
+                                                                                                            onPop: () {},
+                                                                                                          ),
+                                                                                                        );
+                                                                                                      },
+                                                                                                    );
+                                                                                                  });
                                                                                               break;
                                                                                             }
                                                                                           case 1:
@@ -888,6 +897,28 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                                   return LyricsScreen();
                                                                                                 },
                                                                                               );
+                                                                                              break;
+                                                                                            }
+                                                                                          case 5:
+                                                                                            {
+                                                                                              if (track.uri.isScheme('FILE')) {
+                                                                                                Share.shareFiles(
+                                                                                                  [
+                                                                                                    track.uri.toFilePath()
+                                                                                                  ],
+                                                                                                  subject: '${track.trackName} • ${[
+                                                                                                    '',
+                                                                                                    kUnknownArtist,
+                                                                                                  ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName}',
+                                                                                                );
+                                                                                              } else {
+                                                                                                Share.share(
+                                                                                                  '${track.trackName} • ${[
+                                                                                                    '',
+                                                                                                    kUnknownArtist,
+                                                                                                  ].contains(track.albumArtistName) ? track.trackArtistNames.take(2).join(', ') : track.albumArtistName} • ${track.uri.toString()}',
+                                                                                                );
+                                                                                              }
                                                                                               break;
                                                                                             }
                                                                                           default:

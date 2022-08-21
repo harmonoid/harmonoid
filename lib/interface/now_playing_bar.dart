@@ -1186,8 +1186,8 @@ class _ControlPanelState extends State<ControlPanel> {
           Padding(
             padding: EdgeInsets.only(
               left: 20.0,
-              bottom: 8.0,
-              top: 4.0,
+              bottom: isMobile ? 12.0 : 8.0,
+              top: isMobile ? 8.0 : 4.0,
             ),
             child: Text(
               isDesktop
@@ -1242,8 +1242,8 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
               const SizedBox(width: 16.0),
               Container(
-                width: isMobile ? 56.0 : 42.0,
-                height: isMobile ? 56.0 : 32.0,
+                width: isMobile ? 52.0 : 42.0,
+                height: isMobile ? 38.0 : 32.0,
                 child: Focus(
                   onFocusChange: (hasFocus) {
                     focused = hasFocus;
@@ -1300,8 +1300,8 @@ class _ControlPanelState extends State<ControlPanel> {
           Padding(
             padding: EdgeInsets.only(
               left: 20.0,
-              bottom: 8.0,
-              top: 4.0,
+              bottom: isMobile ? 12.0 : 8.0,
+              top: isMobile ? 8.0 : 4.0,
             ),
             child: Text(
               isDesktop
@@ -1352,8 +1352,8 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
               const SizedBox(width: 16.0),
               Container(
-                width: isMobile ? 56.0 : 42.0,
-                height: isMobile ? 56.0 : 32.0,
+                width: isMobile ? 52.0 : 42.0,
+                height: isMobile ? 38.0 : 32.0,
                 child: Focus(
                   onFocusChange: (hasFocus) {
                     focused = hasFocus;
@@ -1410,8 +1410,8 @@ class _ControlPanelState extends State<ControlPanel> {
           Padding(
             padding: EdgeInsets.only(
               left: 20.0,
-              bottom: 8.0,
-              top: 4.0,
+              bottom: isMobile ? 12.0 : 8.0,
+              top: isMobile ? 8.0 : 4.0,
             ),
             child: Text(
               isDesktop
@@ -1466,8 +1466,8 @@ class _ControlPanelState extends State<ControlPanel> {
               ),
               const SizedBox(width: 16.0),
               Container(
-                width: isMobile ? 56.0 : 42.0,
-                height: isMobile ? 56.0 : 32.0,
+                width: isMobile ? 52.0 : 42.0,
+                height: isMobile ? 38.0 : 32.0,
                 child: Focus(
                   onFocusChange: (hasFocus) {
                     focused = hasFocus;

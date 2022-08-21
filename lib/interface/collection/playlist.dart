@@ -206,7 +206,12 @@ class PlaylistTab extends StatelessWidget {
                   height: 16.0,
                 ),
               ...Collection.instance.playlists
-                  .map((e) => PlaylistTile(playlist: e))
+                  .map(
+                    (e) => PlaylistTile(
+                      playlist: e,
+                      enableTrailingButton: true,
+                    ),
+                  )
                   .toList(),
             ],
           ),
@@ -341,12 +346,14 @@ class PlaylistThumbnail extends StatelessWidget {
 }
 
 class PlaylistTile extends StatefulWidget {
+  final bool enableTrailingButton;
   final Playlist playlist;
   final void Function()? onTap;
 
   PlaylistTile({
     Key? key,
     required this.playlist,
+    this.enableTrailingButton: false,
     this.onTap,
   }) : super(key: key);
 
@@ -640,6 +647,7 @@ class PlaylistTileState extends State<PlaylistTile> {
       },
       onPointerUp: (e) async {
         if (!reactToSecondaryPress) return;
+        if (!widget.enableTrailingButton) return;
         if (widget.playlist.id < 0) return;
         final result = await showMenu(
           elevation: 4.0,
@@ -692,7 +700,9 @@ class PlaylistTileState extends State<PlaylistTile> {
                   Playback.instance.interceptPositionChangeRebuilds = false;
                 });
               },
-          onLongPress: widget.playlist.id < 0 || isDesktop
+          onLongPress: widget.playlist.id < 0 ||
+                  isDesktop ||
+                  !widget.enableTrailingButton
               ? null
               : () async {
                   int? result;
@@ -775,7 +785,9 @@ class PlaylistTileState extends State<PlaylistTile> {
                       ),
                     ),
                     const SizedBox(width: 12.0),
-                    if (widget.playlist.id >= 0 && isMobile)
+                    if (widget.playlist.id >= 0 &&
+                        isMobile &&
+                        widget.enableTrailingButton)
                       Container(
                         width: 64.0,
                         height: 64.0,
@@ -807,7 +819,9 @@ class PlaylistTileState extends State<PlaylistTile> {
                           splashRadius: 20.0,
                         ),
                       )
-                    else if (widget.playlist.id >= 0 && isDesktop)
+                    else if (widget.playlist.id >= 0 &&
+                        isDesktop &&
+                        widget.enableTrailingButton)
                       Container(
                         width: 64.0,
                         height: 64.0,
