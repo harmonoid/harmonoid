@@ -5,6 +5,8 @@
 ///
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
@@ -173,8 +175,13 @@ class _WebSearchBarState extends State<WebSearchBar> {
           },
           child: Container(
             height: 40.0,
-            width: 280.0,
-            padding: EdgeInsets.only(bottom: 1.0),
+            width: 298.0,
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(
+              top: 0.0,
+              bottom: 0.0,
+            ),
+            padding: EdgeInsets.only(top: 2.0),
             child: Focus(
               onFocusChange: (hasFocus) {
                 if (hasFocus) {
@@ -209,6 +216,28 @@ class _WebSearchBarState extends State<WebSearchBar> {
                 decoration: inputDecoration(
                   context,
                   Language.instance.COLLECTION_SEARCH_WELCOME,
+                  trailingIcon: Transform.rotate(
+                    angle: pi / 2,
+                    child: Tooltip(
+                      message: Language.instance.SEARCH,
+                      child: Icon(
+                        Icons.search,
+                        size: 20.0,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                    ),
+                  ),
+                  trailingIconOnPressed: () {
+                    if (controller.text.isNotEmpty) {
+                      searchOrPlay(controller.text);
+                    }
+                  },
+                ).copyWith(
+                  contentPadding: EdgeInsets.only(
+                    left: 10.0,
+                    bottom: 10.0,
+                    right: 10.0,
+                  ),
                 ),
               ),
             ),

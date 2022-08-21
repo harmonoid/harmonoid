@@ -6,7 +6,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_linux
   dart_discord_rpc
   file_selector_linux
-  flutter_lyric
   flutter_platform_alert
   flutter_window_close
   screen_retriever

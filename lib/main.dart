@@ -46,6 +46,8 @@ Future<void> main(List<String> args) async {
   }
   try {
     if (Platform.isWindows) {
+      WindowCloseHandler.initialize();
+      ArgumentVectorHandler.initialize();
       doWhenWindowReady(() {
         appWindow.minSize = Size(960, 640);
         appWindow.size = Size(1024, 640);
@@ -61,19 +63,17 @@ Future<void> main(List<String> args) async {
       }
       await Intent.initialize(args: args);
       await HotKeys.initialize();
-      WindowCloseHandler.initialize();
-      ArgumentVectorHandler.initialize();
       DiscordRPC.initialize();
     }
     if (Platform.isLinux) {
+      WindowCloseHandler.initialize();
+      ArgumentVectorHandler.initialize();
       await Configuration.initialize();
       await AppState.initialize();
       await NowPlayingVisuals.initialize();
       await MPV.initialize();
       await Intent.initialize(args: args);
       await HotKeys.initialize();
-      WindowCloseHandler.initialize();
-      ArgumentVectorHandler.initialize();
       DiscordRPC.initialize();
     }
     if (Platform.isAndroid) {
@@ -97,7 +97,6 @@ Future<void> main(List<String> args) async {
       }
       await Configuration.initialize();
       await AppState.initialize();
-      await NowPlayingVisuals.initialize();
       await Intent.initialize();
       await Lyrics.initialize();
     }

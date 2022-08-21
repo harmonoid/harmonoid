@@ -133,6 +133,7 @@ class WebTrackLargeTileState extends State<WebTrackLargeTile> {
                                       fontSize: 14.0,
                                       color:
                                           isDark ? Colors.white : Colors.black,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                 textAlign: TextAlign.left,
                                 maxLines: 2,
