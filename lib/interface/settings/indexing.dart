@@ -171,6 +171,7 @@ class IndexingState extends State<IndexingSetting>
                                 minimumFileSize: value,
                               );
                               setState(() {});
+                              await showShouldBeReindexedDialog();
                             },
                             child: Text(
                               Language.instance.OK,
@@ -703,8 +704,8 @@ class IndexingState extends State<IndexingSetting>
     }
   }
 
-  void showShouldBeReindexedDialog() {
-    showDialog(
+  Future<void> showShouldBeReindexedDialog() {
+    return showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Theme.of(context).cardColor,

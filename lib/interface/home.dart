@@ -53,10 +53,16 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final ValueNotifier<TabRoute> tabControllerNotifier = ValueNotifier<TabRoute>(
-    TabRoute(isMobile ? 2 : 0, TabRouteSender.systemNavigationBackButton),
+    TabRoute(
+      Configuration.instance.libraryTab,
+      TabRouteSender.systemNavigationBackButton,
+    ),
   );
   final List<TabRoute> tabControllerRouteStack = <TabRoute>[
-    TabRoute(isMobile ? 2 : 0, TabRouteSender.systemNavigationBackButton),
+    TabRoute(
+      Configuration.instance.libraryTab,
+      TabRouteSender.systemNavigationBackButton,
+    ),
   ];
   final MobileNowPlayingController mobileNowPlayingController =
       MobileNowPlayingController();
