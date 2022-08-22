@@ -439,7 +439,6 @@ class Playback extends ChangeNotifier {
           androidNotificationChannelName: 'Harmonoid',
           androidNotificationIcon: 'drawable/ic_stat_music_note',
           androidNotificationOngoing: true,
-          androidStopForegroundOnPause: true,
         ),
       );
     }
@@ -957,9 +956,10 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
     );
   }
 
-  /// Public getter for `package:just_audio` [Player] for [Stream] subscriptions inside
-  /// the [Player] instance.
-  AudioPlayer get player => _player;
+  @override
+  Future<void> onTaskRemoved() async {
+    await stop();
+  }
 
   @override
   Future<void> play() async {
@@ -1125,7 +1125,6 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
 
   @override
   Future<void> setShuffleMode(shuffleMode) {
-    debugPrint(shuffleMode.toString());
     return _player.setShuffleModeEnabled(
       {
         AudioServiceShuffleMode.all: true,
@@ -1152,13 +1151,18 @@ class _HarmonoidMobilePlayer extends BaseAudioHandler
         MediaAction.setShuffleMode,
         MediaAction.setSpeed,
       },
-      androidCompactActionIndices: const [0, 1, 2],
+      androidCompactActionIndices: const [
+        0,
+        1,
+        2,
+      ],
       processingState: const {
         ProcessingState.idle: AudioProcessingState.idle,
         ProcessingState.loading: AudioProcessingState.loading,
         ProcessingState.buffering: AudioProcessingState.buffering,
         ProcessingState.ready: AudioProcessingState.ready,
-        ProcessingState.completed: AudioProcessingState.completed,
+        // Hide the media session notification when the currently playing media or playlist is complete.
+        ProcessingState.completed: AudioProcessingState.idle,
       }[_player.processingState]!,
       // The audio playback needs to be interpreted as paused once the playback of a media is completed.
       playing:
