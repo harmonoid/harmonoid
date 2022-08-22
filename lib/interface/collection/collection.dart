@@ -7,6 +7,7 @@
 ///
 
 import 'dart:math';
+import 'dart:async';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -54,14 +55,22 @@ class CollectionScreenState extends State<CollectionScreen>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   final FocusNode node = FocusNode();
   final PageController pageController =
-      PageController(initialPage: isMobile ? 2 : 0);
+      PageController(initialPage: Configuration.instance.libraryTab);
   final ValueNotifier<String> query = ValueNotifier<String>('');
   String queryStr = '';
-  final ValueNotifier<int> index = ValueNotifier(isMobile ? 2 : 0);
-  int currentIndex = isMobile ? 2 : 0;
+  final ValueNotifier<int> index = ValueNotifier(
+    Configuration.instance.libraryTab,
+  );
+  int currentIndex = Configuration.instance.libraryTab;
 
   @override
   bool get wantKeepAlive => true;
+
+  FutureOr<void> saveCurrentTab() {
+    if (index.value != Configuration.instance.libraryTab) {
+      return Configuration.instance.save(libraryTab: index.value);
+    }
+  }
 
   @override
   void initState() {
@@ -80,6 +89,7 @@ class CollectionScreenState extends State<CollectionScreen>
         widget.floatingSearchBarController.show();
       });
     }
+    index.addListener(saveCurrentTab);
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         if (!Collection.instance.collectionDirectories
@@ -109,6 +119,7 @@ class CollectionScreenState extends State<CollectionScreen>
   @override
   void dispose() {
     HotKeyManager.instance.unregister(searchBarHotkey);
+    index.removeListener(saveCurrentTab);
     super.dispose();
   }
 

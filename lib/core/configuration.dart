@@ -104,6 +104,7 @@ class Configuration extends ConfigurationKeys {
     OrderType? artistsOrderType,
     OrderType? genresOrderType,
     int? minimumFileSize,
+    int? libraryTab,
   }) async {
     if (collectionDirectories != null) {
       this.collectionDirectories = collectionDirectories;
@@ -202,6 +203,9 @@ class Configuration extends ConfigurationKeys {
     if (minimumFileSize != null) {
       this.minimumFileSize = minimumFileSize;
     }
+    if (libraryTab != null) {
+      this.libraryTab = libraryTab;
+    }
     await storage.write(
       {
         'collectionDirectories': this
@@ -241,6 +245,7 @@ class Configuration extends ConfigurationKeys {
         'artistsOrderType': this.artistsOrderType.index,
         'genresOrderType': this.genresOrderType.index,
         'minimumFileSize': this.minimumFileSize,
+        'libraryTab': this.libraryTab,
       },
     );
   }
@@ -299,6 +304,7 @@ class Configuration extends ConfigurationKeys {
     artistsOrderType = OrderType.values[current['artistsOrderType']];
     genresOrderType = OrderType.values[current['genresOrderType']];
     minimumFileSize = current['minimumFileSize'];
+    libraryTab = current['libraryTab'];
   }
 }
 
@@ -336,6 +342,7 @@ abstract class ConfigurationKeys {
   late OrderType artistsOrderType;
   late OrderType genresOrderType;
   late int minimumFileSize;
+  late int libraryTab;
 }
 
 Future<Map<String, dynamic>> get _defaultConfiguration async => {
@@ -356,7 +363,7 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
         }[Platform.operatingSystem]!(),
       ],
       'languageRegion': 0,
-      'themeMode': isMobile ? 0 : 1,
+      'themeMode': isDesktop ? 1 : 0,
       'automaticAccent': false,
       'notificationLyrics': true,
       'collectionSearchRecent': [],
@@ -377,7 +384,7 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'mobileDenseAlbumTabLayout': false,
       'mobileDenseArtistTabLayout': true,
       'mobileGridArtistTabLayout': true,
-      'albumsSort': isMobile ? 0 : 3,
+      'albumsSort': isDesktop ? 3 : 0,
       'tracksSort': 0,
       'artistsSort': 0,
       'genresSort': 0,
@@ -386,4 +393,5 @@ Future<Map<String, dynamic>> get _defaultConfiguration async => {
       'artistsOrderType': 0,
       'genresOrderType': 0,
       'minimumFileSize': 1024 * 1024,
+      'libraryTab': isDesktop ? 0 : 2,
     };
