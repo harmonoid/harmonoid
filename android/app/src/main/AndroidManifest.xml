@@ -10,7 +10,7 @@
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <application android:usesCleartextTraffic="true" android:requestLegacyExternalStorage="true" android:name="${applicationName}" android:label="Music" android:icon="@mipmap/ic_launcher">
-    <activity android:exported="true" android:name=".MainActivity" android:launchMode="singleTask" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize" tools:ignore="Instantiatable">
+    <activity android:exported="true" android:name=".MainActivity" android:launchMode="singleTask" android:theme="@style/Theme.App.Starting" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize" tools:ignore="Instantiatable">
       <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
