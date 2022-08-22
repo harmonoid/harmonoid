@@ -826,7 +826,7 @@ class MiniNowPlayingBarState extends State<MiniNowPlayingBar>
                                                                                                         title: Text(Language.instance.SHARE),
                                                                                                       ),
                                                                                                     ),
-                                                                                                    if (Lyrics.instance.current.length > 2)
+                                                                                                    if (Lyrics.instance.current.length > 1)
                                                                                                       PopupMenuItem(
                                                                                                         onTap: () => result = 4,
                                                                                                         value: 4,
@@ -1397,11 +1397,11 @@ class _LyricsScreenState extends State<LyricsScreen> {
             alignment: Alignment.center,
             child: Consumer<Lyrics>(
               builder: (context, lyrics, _) => () {
-                if (Lyrics.instance.current.length > 2) {
+                if (Lyrics.instance.current.length > 1) {
                   return TweenAnimationBuilder<double>(
                     tween: Tween<double>(
                       begin: 0.0,
-                      end: (Lyrics.instance.current.length > 2 &&
+                      end: (Lyrics.instance.current.length > 1 &&
                               Configuration.instance.lyricsVisible)
                           ? 1.0
                           : 0.0,
@@ -1429,29 +1429,17 @@ class _LyricsScreenState extends State<LyricsScreen> {
                             padding: EdgeInsets.all(tileMargin * 2),
                             model: LyricsReaderModel()
                               ..lyrics = Lyrics.instance.current
-                                  .map(
-                                    (e) => LyricsLineModel()
-                                      ..mainText = e.words
-                                      ..startTime = e.time
-                                      ..endTime = Lyrics
-                                          .instance
-                                          .current[(Lyrics.instance.current
-                                                      .indexOf(Lyrics
-                                                          .instance.current
-                                                          .firstWhere(
-                                                              (element) =>
-                                                                  element
-                                                                      .time ==
-                                                                  e.time)) +
-                                                  1)
-                                              .clamp(
-                                                  0,
-                                                  Lyrics.instance.current
-                                                          .length -
-                                                      1)]
-                                          .time,
-                                  )
-                                  .toList(),
+                                  .asMap()
+                                  .entries
+                                  .map((e) {
+                                return LyricsLineModel()
+                                  ..mainText = e.value.words
+                                  ..startTime = e.value.time
+                                  ..endTime = e.key + 1 <
+                                          Lyrics.instance.current.length
+                                      ? Lyrics.instance.current[e.key + 1].time
+                                      : 1 << 32;
+                              }).toList(),
                             position: playback.position.inMilliseconds,
                             lyricUi: () {
                               final colors = palette.palette ??

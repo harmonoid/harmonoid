@@ -151,7 +151,6 @@ class Lyrics extends ChangeNotifier {
             await dismissNotification();
           }
           final response = await http.get(uri);
-          current.add(Lyric(time: -1, words: ''));
           if (response.statusCode == 200) {
             current.addAll(
               (convert.jsonDecode(response.body) as List<dynamic>)
@@ -199,7 +198,7 @@ class Lyrics extends ChangeNotifier {
 
   static const _kNotificationID = 7;
   static const _kNotificationChannelKey = 'com.alexmercerind.harmonoid.lyrics';
-  static const _kNotificationChannelName = 'Harmonoid Lyrics';
+  static const _kNotificationChannelName = 'Harmonoid';
   static const _kNotificationChannelDescription = 'Channel for showing lyrics.';
   static const _kNotificationHideButtonKey = 'hide_button';
 

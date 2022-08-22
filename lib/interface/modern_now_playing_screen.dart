@@ -187,11 +187,11 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                     ),
                     child: Consumer<Lyrics>(
                       builder: (context, lyrics, _) => () {
-                        if (Lyrics.instance.current.length > 2) {
+                        if (Lyrics.instance.current.length > 1) {
                           return TweenAnimationBuilder<double>(
                             tween: Tween<double>(
                               begin: 0.0,
-                              end: (Lyrics.instance.current.length > 2 &&
+                              end: (Lyrics.instance.current.length > 1 &&
                                       Configuration.instance.lyricsVisible)
                                   ? 1.0
                                   : 0.0,
@@ -221,32 +221,18 @@ class ModernNowPlayingState extends State<ModernNowPlayingScreen>
                                         horizontal: 12.0),
                                     model: LyricsReaderModel()
                                       ..lyrics = Lyrics.instance.current
-                                          .map(
-                                            (e) => LyricsLineModel()
-                                              ..mainText = e.words
-                                              ..startTime = e.time
-                                              ..endTime = Lyrics
-                                                  .instance
-                                                  .current[(Lyrics
-                                                              .instance.current
-                                                              .indexOf(Lyrics
-                                                                  .instance
-                                                                  .current
-                                                                  .firstWhere((element) =>
-                                                                      element
-                                                                          .time ==
-                                                                      e.time)) +
-                                                          1)
-                                                      .clamp(
-                                                          0,
-                                                          Lyrics
-                                                                  .instance
-                                                                  .current
-                                                                  .length -
-                                                              1)]
-                                                  .time,
-                                          )
-                                          .toList(),
+                                          .asMap()
+                                          .entries
+                                          .map((e) {
+                                        return LyricsLineModel()
+                                          ..mainText = e.value.words
+                                          ..startTime = e.value.time
+                                          ..endTime = e.key + 1 <
+                                                  Lyrics.instance.current.length
+                                              ? Lyrics.instance
+                                                  .current[e.key + 1].time
+                                              : 1 << 32;
+                                      }).toList(),
                                     position: playback.position.inMilliseconds,
                                     lyricUi: LyricsStyle()
                                       ..defaultSize = Configuration
