@@ -404,12 +404,6 @@ class CollectionScreenState extends State<CollectionScreen>
                                                 });
                                               node.requestFocus();
                                             },
-                                          ).copyWith(
-                                            contentPadding: EdgeInsets.only(
-                                              left: 10.0,
-                                              bottom: 10.0,
-                                              right: 10.0,
-                                            ),
                                           ),
                                         ),
                                       ),

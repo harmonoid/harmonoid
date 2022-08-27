@@ -721,7 +721,17 @@ InputDecoration inputDecoration(
               iconSize: 24.0,
             ),
           ),
-    contentPadding: null,
+    contentPadding: trailingIcon == null
+        ? EdgeInsets.only(
+            left: 10.0,
+            bottom: 18.0,
+            right: 10.0,
+          )
+        : EdgeInsets.only(
+            left: 10.0,
+            bottom: 10.0,
+            right: 10.0,
+          ),
     hintText: hintText,
     hintStyle: isDesktop
         ? Theme.of(context).textTheme.headline3?.copyWith(

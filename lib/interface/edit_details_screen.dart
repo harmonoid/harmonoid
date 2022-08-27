@@ -304,6 +304,12 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
                                                       bottom: 14.0,
                                                     ),
                                                   ),
+                                                  cursorWidth: 1.0,
+                                                  cursorColor: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.light
+                                                      ? Color(0xFF212121)
+                                                      : Colors.white,
                                                   onChanged: (v) {
                                                     final value = v.isEmpty
                                                         ? null
