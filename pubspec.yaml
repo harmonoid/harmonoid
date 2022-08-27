@@ -152,6 +152,7 @@ flutter:
     - assets/images/
     - assets/translations/
     - assets/preloaded_visuals/
+    - assets/platform/
 
 msix_config:
   msix_version: 0.2.9.0

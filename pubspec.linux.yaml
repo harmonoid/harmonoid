@@ -152,6 +152,7 @@ flutter:
     - assets/images/
     - assets/translations/
     - assets/preloaded_visuals/
+    - assets/platform/
   fonts:
     - family: "Inter"
       fonts:

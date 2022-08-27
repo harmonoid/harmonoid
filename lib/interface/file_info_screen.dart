@@ -6,6 +6,7 @@
 /// Use of this source code is governed by the End-User License Agreement for Harmonoid that can be found in the EULA.txt file.
 ///
 import 'dart:convert';
+import 'dart:io';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart' hide Intent;
 import 'package:flutter/services.dart';
@@ -16,6 +17,7 @@ import 'package:harmonoid/core/collection.dart';
 import 'package:harmonoid/core/hotkeys.dart';
 import 'package:harmonoid/utils/rendering.dart';
 import 'package:harmonoid/utils/widgets.dart';
+import 'package:harmonoid/utils/tagger_client.dart';
 import 'package:harmonoid/constants/language.dart';
 
 class FileInfoScreen extends StatefulWidget {
@@ -350,22 +352,22 @@ class FileInfoScreen extends StatefulWidget {
 
 class _FileInfoScreenState extends State<FileInfoScreen> {
   Track? track;
+  Tagger? tagger;
+  TaggerClient? client;
   Map<String, dynamic> metadata = {};
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (isDesktop) {
-        final tagger = Tagger();
+      if (Platform.isWindows) {
+        tagger = Tagger(verbose: true);
         try {
           metadata.addAll(
-            await tagger.parse(
+            await tagger!.parse(
               Media(
                 widget.uri.toString(),
               ),
-              duration: true,
-              bitrate: true,
               coverDirectory: Collection.instance.albumArtDirectory,
               timeout: widget.timeout,
             ),
@@ -377,11 +379,26 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
           debugPrint(exception.toString());
           debugPrint(stacktrace.toString());
         }
-        tagger.dispose();
-      } else if (isMobile) {
+      } else if (Platform.isLinux) {
+        client = TaggerClient(verbose: true);
         try {
-          final metadata =
-              await Collection.instance.retrievePlatformSpecificMetadataFromUri(
+          metadata.addAll(
+            await client!.parse(
+              widget.uri.toString(),
+              coverDirectory: Collection.instance.albumArtDirectory,
+              timeout: widget.timeout,
+            ),
+          );
+          track = Track.fromTagger(metadata);
+          cleanup();
+          setState(() {});
+        } catch (exception, stacktrace) {
+          debugPrint(exception.toString());
+          debugPrint(stacktrace.toString());
+        }
+      } else if (Platform.isAndroid) {
+        try {
+          final metadata = await Collection.instance.parse(
             widget.uri,
             Collection.instance.albumArtDirectory,
             timeout: widget.timeout,
@@ -439,6 +456,13 @@ class _FileInfoScreenState extends State<FileInfoScreen> {
         }
       }
     }
+  }
+
+  @override
+  void dispose() {
+    tagger?.dispose();
+    client?.dispose();
+    super.dispose();
   }
 
   @override

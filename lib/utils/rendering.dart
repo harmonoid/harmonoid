@@ -830,6 +830,9 @@ ImageProvider getAlbumArt(
         ).toString(),
         cache: true,
       );
+    } else if (!media.uri.isScheme('FILE')) {
+      // Album arts are not supported for online [Media] URLs.
+      image = ExtendedFileImageProvider(Collection.instance.unknownAlbumArt);
     }
   }
   if (image == null) {
